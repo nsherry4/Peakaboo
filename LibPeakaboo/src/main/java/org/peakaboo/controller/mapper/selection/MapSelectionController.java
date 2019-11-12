@@ -48,6 +48,11 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		shapeSelection = new ShapeSelection(mappingController);
 		
 		map.addListener(m -> {
+			
+			if (!isSelectable() && hasSelection()) {
+				clearSelection();
+			}
+			
 			if (currentMode == null) {
 				currentMode = map.getFitting().getActiveMode();
 			}
@@ -110,7 +115,13 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 *         otherwise
 	 */
 	public boolean isReplottable() {
-		return hasSelection() && map.getFitting().getActiveMode().isTranslatable() && map.rawDataController.isReplottable();
+		return hasSelection() && isSelectable();
+	}
+	
+	public boolean isSelectable() {
+		return map.getFitting().getActiveMode().isTranslatable() //The current mapping mode can map it back to source spectra 
+				&& map.rawDataController.isReplottable() //The original data source supports replotting
+				&& map.getFiltering().isReplottable(); //The filters applied don't prohibit replotting
 	}
 
 	public void clearSelection() {
@@ -121,7 +132,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 
 	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
-		if (!isTranslatable()) {
+		if (!isSelectable()) {
+			clearSelection();
 			return;
 		}
 		newSelection = getSelection().selectPoint(clickedAt, singleSelect);
@@ -132,7 +144,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 	
 	public void startDragSelection(Coord<Integer> point, boolean modify) {
-		if (!isTranslatable()) {
+		if (!isSelectable()) {
+			clearSelection();
 			return;
 		}
 		if (!modify) clearSelection();
@@ -143,7 +156,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 	public void addDragSelection(Coord<Integer> point) {
-		if (!isTranslatable()) {
+		if (!isSelectable()) {
+			clearSelection();
 			return;
 		}
 		
@@ -152,7 +166,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 	public void releaseDragSelection(Coord<Integer> point) {
-		if (!isTranslatable()) {
+		if (!isSelectable()) {
+			clearSelection();
 			return;
 		}
 		
@@ -293,11 +308,6 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 
 	public Optional<Group> getParameters() {
 		return getSelection().getParameters();
-	}
-
-	
-	private boolean isTranslatable() {
-		return map.getFitting().getActiveMode().isTranslatable();
 	}
 	
 	public List<Integer> trimSelectionToBounds(List<Integer> points, boolean spatial) {
