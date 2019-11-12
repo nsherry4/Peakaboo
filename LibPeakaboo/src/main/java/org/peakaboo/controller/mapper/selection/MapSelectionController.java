@@ -1,6 +1,5 @@
 package org.peakaboo.controller.mapper.selection;
 
-import java.nio.channels.FileChannel.MapMode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,16 +47,29 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		similarSelection = new SimilarSelection(mappingController);
 		shapeSelection = new ShapeSelection(mappingController);
 		
-		//TODO: This should be better at preserving selections
 		map.addListener(m -> {
 			if (currentMode == null) {
 				currentMode = map.getFitting().getActiveMode();
 			}
-			if (map.getFitting().getActiveMode() != currentMode) {
-				currentMode = map.getFitting().getActiveMode();
+			ModeController newMode = map.getFitting().getActiveMode();
+			ModeController oldMode = currentMode;
+			currentMode = newMode;
+			
+			if (newMode == oldMode) {
+				return;
+			} else if (!newMode.isSpatial()) {
+				//new mode is not spatial, so bringing over selected points makes no sense
 				clearSelection();
+			} else if (oldMode.isSpatial()) {
+				//the old mode and new mode are both spatial, so just keep the points
+			} else if (!oldMode.isSpatial()) {
+				//the old mode is not spatial, so we have to translate the points back to 
+				//spatial points before keeping them
+				currentSelection = oldMode.translateSelection(currentSelection);
 			}
+
 		});
+		
 		
 	}
 
@@ -288,14 +300,14 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		return map.getFitting().getActiveMode().isTranslatable();
 	}
 	
-	public List<Integer> trimSelectionToBounds(List<Integer> points, boolean translated) {
+	public List<Integer> trimSelectionToBounds(List<Integer> points, boolean spatial) {
 		
 		//This is a bit tricky -- the fitting map mode generally comes before filtering
 		//since it has to select which transition series get included and how, but it also
 		//comes after, in the sense that once filtering is done, the mode determines what 
 		//kind of processing is done to turn the maps into displayed data.
 		Coord<Integer> dimensions;
-		if (translated) {
+		if (spatial) {
 			dimensions = map.getUserDimensions().getDimensions();
 		} else {
 			dimensions = map.getFitting().getActiveMode().getData().getSize();
