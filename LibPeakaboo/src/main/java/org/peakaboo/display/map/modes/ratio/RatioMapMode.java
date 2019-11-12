@@ -9,6 +9,7 @@ import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Ratios;
 import org.peakaboo.framework.cyclops.Spectrum;
@@ -120,9 +121,8 @@ public class RatioMapMode extends MapMode {
 
 				
 		
-		Spectrum invalidPoints = ratiodata.second;
+		Spectrum invalidPoints = new ISpectrum(ratiodata.second);
 		final float datamax = dr.maxYIntensity;
-		
 		
 		invalidPoints.map_i((Float value) -> {
 			if (value == 1f) return datamax;
