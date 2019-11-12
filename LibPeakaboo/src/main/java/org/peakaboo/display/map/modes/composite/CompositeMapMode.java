@@ -92,7 +92,7 @@ public class CompositeMapMode extends MapMode{
 		map.setAxisPainters(axisPainters);
 		
 		
-		
+		//why are we resetting this value?
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
 

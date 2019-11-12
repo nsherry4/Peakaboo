@@ -57,6 +57,11 @@ public class CorrelationMapMode extends MapMode {
 		dr.viewTransform = ViewTransform.LINEAR;
 		dr.screenOrientation = false;
 		dr.maxYIntensity = correlationData.getData().max();
+		
+		//why are we resetting this value?
+		boolean oldVector = dr.drawToVectorSurface;
+		dr.drawToVectorSurface = backend.isVectorSurface();
+		
 		map.setDrawingRequest(dr);
 
 		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
@@ -97,7 +102,7 @@ public class CorrelationMapMode extends MapMode {
 		//Selection Painter
 		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
 		if (selectionPainter == null) {
-			selectionPainter = new SelectionMaskPainter(new PaletteColour(0x55000000), settings.selectedPoints, correlationData.getSize().x, correlationData.getSize().y);
+			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xff000000), settings.selectedPoints, correlationData.getSize().x, correlationData.getSize().y);
 			selectionPainterRef = new SoftReference<>(selectionPainter);
 		} else {
 			selectionPainter.configure(correlationData.getSize().x, correlationData.getSize().y, settings.selectedPoints);
@@ -107,6 +112,8 @@ public class CorrelationMapMode extends MapMode {
 		map.setPainters(mapPainters);
 		
 		map.draw();
+		
+		dr.drawToVectorSurface = oldVector;
 	}
 
 	@Override
