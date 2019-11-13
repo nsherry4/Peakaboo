@@ -23,7 +23,6 @@ import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
@@ -122,15 +121,8 @@ public class MappingController extends EventfulType<MapUpdateType>
 		return fittingController;
 	}
 	
-	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
-	{
-		return plotcontroller.data().getDataSourceForSubset(getUserDimensions().getUserDataWidth(), getUserDimensions().getUserDataHeight(), cstart, cend);
-	}
-
-	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
-	{
-		Coord<Integer> dimensions = new Coord<>(getUserDimensions().getUserDataWidth(), getUserDimensions().getUserDataHeight());
-		return plotcontroller.data().getDataSourceForSubset(points, dimensions);
+	public SelectionDataSource getDataSourceForSubset(List<Integer> points) {
+		return plotcontroller.data().getDataSourceForSubset(points, getUserDimensions().getDimensions());
 	}
 	
 	

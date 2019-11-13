@@ -107,8 +107,8 @@ class DragSelection extends AbstractSelection {
 		final int xend = getEnd().x;
 		final int yend = getEnd().y;
 		
-		for (int x : new Range(xstart, xend)) {
-			for (int y : new Range(ystart, yend)){
+		for (int y : new Range(ystart, yend)) {
+			for (int x : new Range(xstart, xend)) {
 				indexes.add( grid.getIndexFromXY(x, y) );
 			}
 		}

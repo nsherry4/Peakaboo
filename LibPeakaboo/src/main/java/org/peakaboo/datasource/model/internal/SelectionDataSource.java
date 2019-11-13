@@ -19,6 +19,7 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.util.Mutable;
 
 /**
  * Represents a random selection of data points from another DataSource
@@ -28,12 +29,14 @@ import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize {
 
 	private DataSource source;
+	private Coord<Integer> sourceDimensions;
 	private List<Integer> selectedIndexes;
 	private DataSourceAnalysis analysis;
 	
 	private Coord<Integer> dimensions;
 	private Coord<Integer> offset;
 	private GridPerspective<Integer> sourceGrid, selectionGrid;
+	private Mutable<Boolean> rectangular = new Mutable<Boolean>(null);
 	
 	/**
 	 * Creates a new, derived data source from an existing data source
@@ -44,6 +47,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	public SelectionDataSource(DataSource source, Coord<Integer> dimensions, List<Integer> selectedIndexes) {
 		this.source = source;
 		this.selectedIndexes = new ArrayList<>(selectedIndexes);
+		this.sourceDimensions = dimensions;
 		
 		//we don't reanalyze in the constructor for performance reasons
 		this.analysis = new DataSourceAnalysis();
@@ -66,10 +70,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		offset = new Coord<>(minx, miny);
 		selectionGrid = new GridPerspective<Integer>(this.dimensions.x, this.dimensions.y, 0);
 	}
-	
-	public boolean isContiguous() {
-		return false;
-	}
+
 	
 	@Override
 	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
@@ -198,6 +199,49 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		return new Coord<Integer>(x, y);
 	}
 	
+
+	@Override
+	public boolean isRectangular() {
+		if (rectangular.get() == null) {
+			rectangular.set(calcRectangular());
+		}
+		return rectangular.get();
+	}
+	
+	private boolean calcRectangular() {
+		//we need to use the real dimensions here because non-spacial 
+		//map modes will have to translate back to actual map points
+		//before we can deal with it as a rectangular area of spectra
+		GridPerspective<Float> grid = new GridPerspective<Float>(
+				sourceDimensions.x, 
+				sourceDimensions.y, 
+				0f);
+		int minx = grid.width;
+		int miny = grid.height;
+		int maxx = 0;
+		int maxy = 0;
+		boolean selected[] = new boolean[grid.size()];
+		for (int i : selectedIndexes) {
+			selected[i] = true;
+			IntPair coord = grid.getXYFromIndex(i);
+			minx = Math.min(minx, coord.first);
+			miny = Math.min(miny, coord.second);
+			maxx = Math.max(maxx, coord.first);
+			maxy = Math.max(maxy, coord.second);
+		}
+		
+		for (int x = minx; x <= maxx; x++) {
+			for (int y = miny; y <= maxy; y++) {
+				int index = grid.getIndexFromXY(x, y);
+				if (!selected[index]) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
 	
 	
 }

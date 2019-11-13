@@ -1,6 +1,5 @@
 package org.peakaboo.controller.plotter.data;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +19,6 @@ import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.FilterSet;
@@ -125,17 +123,6 @@ public class DataController extends Eventful
 
 	}
 
-
-
-	public CroppedDataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
-	{
-		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
-	}
-
-	public SelectionDataSource getDataSourceForSubset(List<Integer> points) {
-		Coord<Integer> dimensions = new Coord<>(this.getDataSet().getScanData().scanCount(), 1);
-		return getDataSourceForSubset(points, dimensions);
-	}
 	public SelectionDataSource getDataSourceForSubset(List<Integer> points, Coord<Integer> dimensions) {
 		return new SelectionDataSource(dataModel.getDataSource(), dimensions, points);
 	}

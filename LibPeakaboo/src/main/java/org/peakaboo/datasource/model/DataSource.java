@@ -23,7 +23,7 @@ public interface DataSource
 {
 	
 	
-	default boolean isContiguous() {
+	default boolean isRectangular() {
 		return true;
 	}
 

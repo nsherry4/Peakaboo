@@ -64,7 +64,7 @@ public class Mapping
 
 		int mapsize = dataset.getScanData().scanCount();
 		//Handle non-contiguous datasets
-		boolean noncontiguous = !dataset.getDataSource().isContiguous() && dataset.getDataSource().getDataSize().isPresent();
+		boolean noncontiguous = !dataset.getDataSource().isRectangular() && dataset.getDataSource().getDataSize().isPresent();
 		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
 		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
 		if (noncontiguous) {
@@ -119,7 +119,7 @@ public class Mapping
 		
 		DataSet dataset = data.getDataSet();
 		int mapsize = dataset.getScanData().scanCount();
-		boolean noncontiguous = !dataset.getDataSource().isContiguous() && dataset.getDataSource().getDataSize().isPresent();
+		boolean noncontiguous = !dataset.getDataSource().isRectangular() && dataset.getDataSource().getDataSize().isPresent();
 		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
 		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
 		if (noncontiguous) {
@@ -159,7 +159,7 @@ public class Mapping
 			
 			//build the RawMapSet now that the map Spectrum has been populated
 			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), map);
-			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), finalMapsize, data.getDataSet().getDataSource().isContiguous(), true);
+			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), finalMapsize, data.getDataSet().getDataSource().isRectangular(), true);
 			return rawmaps;
 		});
 
