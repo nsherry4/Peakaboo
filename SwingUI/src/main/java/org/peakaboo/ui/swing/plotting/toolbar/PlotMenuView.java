@@ -15,7 +15,7 @@ import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {
 
-	private JCheckBoxMenuItem logPlot, consistentScale, monochrome, raw, fittings;
+	private JCheckBoxMenuItem logPlot, consistentScale, monochrome, raw, title, fittings;
 	private JCheckBoxMenuItem markings, intensities;
 	private JRadioButtonMenuItem individual, average, maximum;
 	
@@ -128,6 +128,15 @@ public class PlotMenuView extends JPopupMenu {
 				controller.view()::setShowRawData,
 				null, 
 				KeyEvent.VK_O
+		);
+		
+		title = PlotMenuUtils.createMenuCheckItem(plot,
+				"Show Dataset Title", 
+				null, 
+				"Toggles showing the dataset title in the plot",
+				controller.view()::setShowTitle,
+				null, 
+				null
 		);		
 
 		monochrome = PlotMenuUtils.createMenuCheckItem(plot,
@@ -147,6 +156,7 @@ public class PlotMenuView extends JPopupMenu {
 		this.add(markings);
 		this.add(intensities);
 		this.add(raw);
+		this.add(title);
 		this.add(monochrome);
 
 		

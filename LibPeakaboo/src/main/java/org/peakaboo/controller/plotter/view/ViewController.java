@@ -218,6 +218,15 @@ public class ViewController extends Eventful
 	}
 	
 	
+	public boolean getShowTitle() {
+		return viewModel.session.showTitle;
+	}
+	
+	public void setShowTitle(boolean showTitle) {
+		viewModel.session.showTitle = showTitle;
+		updateListeners();
+	}
+	
 
 	
 	/**
@@ -271,6 +280,7 @@ public class ViewController extends Eventful
 		settings.showElementFitMarkers = getShowElementMarkers();
 		settings.showIndividualFittings = getShowIndividualSelections();
 		settings.logTransform = getViewLog();
+		settings.title = getShowTitle()? plot.data().getTitle() : null;
 		
 		return settings;
 	}

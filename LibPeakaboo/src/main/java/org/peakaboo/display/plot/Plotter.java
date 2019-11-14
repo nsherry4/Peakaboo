@@ -382,7 +382,7 @@ public class Plotter {
 
 
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, "Relative Intensity", null, null, "Energy (keV)"));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, "Relative Intensity", null, settings.title, "Energy (keV)"));
 		
 		axisPainters.add(new TickMarkAxisPainter(tickRight, tickBottom, tickTop, tickLeft));
 		axisPainters.add(new LineAxisPainter(true, true, false, true));
