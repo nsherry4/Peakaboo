@@ -15,6 +15,7 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.ToolTipManager;
 import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
@@ -93,6 +94,18 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 
 	}
 	
+	public static boolean hasTheme() {
+		return getTheme() != null;
+	}
+	
+	public static Theme getTheme() {
+		try {
+			return (Theme) UIManager.get("stratus-theme");
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+	
 	@Override
 	public UIDefaults getDefaults() {
 		UIDefaults ret = super.getDefaults();
@@ -100,6 +113,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		
 
 		// UI/Theme Overrides
+		reg(ret, "stratus-theme", theme);
 		reg(ret, "nimbusSelection", theme.getHighlight());
 		reg(ret, "nimbusSelectionBackground", theme.getHighlight());
 		reg(ret, "nimbusFocus", theme.getHighlight());
@@ -116,6 +130,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		reg(ret, "text", theme.getControlText());
 		reg(ret, "menu", theme.getMenu());
 		reg(ret, "control", theme.getControl());
+		reg(ret, "negative", theme.getNegative());
 		
 		
 		//Stratus specific values

@@ -77,17 +77,17 @@ public class ButtonPainter extends StatefulPainter {
     	}
     	
     	//ENABLED is default
-    	palette.fillTop = Stratus.lighten(base, 0.06f);
-    	palette.fillBottom = Stratus.darken(base, 0.06f);
-    	palette.bevel = Stratus.lighten(palette.fillTop, 0.1f);
+    	palette.fillTop = Stratus.lighten(base, getTheme().widgetCurve());
+    	palette.fillBottom = Stratus.darken(base, getTheme().widgetCurve());
+    	palette.bevel = Stratus.lighten(palette.fillTop, getTheme().bevelStrength());
     	palette.text = getTheme().getControlText();
     	palette.dash = getTheme().getWidgetDashAlpha();
     	palette.border = getTheme().getWidgetBorderAlpha();
     	palette.shadow = getTheme().getShadow();
     	
     	if (isPressed() || isSelected()) {
-    		palette.fillTop = Stratus.darken(base, 0.03f);
-    		palette.fillBottom = Stratus.darken(base, 0.03f);
+    		palette.fillTop = Stratus.darken(getTheme().getNegative(), getTheme().widgetCurve()/2f);
+    		palette.fillBottom = Stratus.darken(getTheme().getNegative(), getTheme().widgetCurve()/2f);
     	}
 
     	
@@ -97,8 +97,8 @@ public class ButtonPainter extends StatefulPainter {
     		
     		//Disabled and selected, like toggle button
         	if (isSelected()) {
-        		palette.fillTop = Stratus.darken(palette.fillTop, 0.06f);
-        		palette.fillBottom = Stratus.darken(palette.fillBottom, 0.06f);
+        		palette.fillTop = Stratus.darken(palette.fillTop, getTheme().widgetCurve());
+        		palette.fillBottom = Stratus.darken(palette.fillBottom, getTheme().widgetCurve());
         	}
     		
     	}
@@ -125,7 +125,7 @@ public class ButtonPainter extends StatefulPainter {
     		Color base = object.getBackground();
     		ButtonPalette custom = new ButtonPalette(palette);
     		setupPalette(custom, base);
-    		custom.border = Stratus.darken(object.getBackground(), 0.1f);
+    		custom.border = Stratus.darken(object.getBackground(), getTheme().borderStrength());
     		return custom;
     	}
     	
@@ -145,18 +145,12 @@ public class ButtonPainter extends StatefulPainter {
 
 
     
-    protected void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {
-    	    	
-    	float pad = margin;
-
-
-    	
-    	drawBorder(object, width, height, pad, g, palette);
-    	drawMain(object, width, height, pad, g, palette);
-    	drawShadow(object, width, height, pad, g, palette);
-    	drawBevel(object, width, height, pad, g, palette);
-    	drawDash(object, width, height, pad, g, palette);
-	
+    protected void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {  	
+    	drawBorder(object, width, height, margin, g, palette);
+    	drawMain(object, width, height, margin, g, palette);
+    	drawShadow(object, width, height, margin, g, palette);
+    	drawBevel(object, width, height, margin, g, palette);
+    	drawDash(object, width, height, margin, g, palette);
     }
 
     

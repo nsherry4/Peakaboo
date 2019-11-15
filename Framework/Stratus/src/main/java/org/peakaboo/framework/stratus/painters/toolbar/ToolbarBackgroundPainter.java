@@ -19,7 +19,7 @@ public class ToolbarBackgroundPainter extends SimpleThemed implements Painter<JC
     
     public ToolbarBackgroundPainter(Theme theme) {
     	super(theme);
-    	this.c1 = getTheme().getControl();
+    	this.c1 = getTheme().getNegative();
     	this.c2 = Stratus.darken(c1, 0.01f);
     	this.c3 = Stratus.darken(c2, 0.01f);
     	this.c4 = Stratus.darken(c3, 0.01f);

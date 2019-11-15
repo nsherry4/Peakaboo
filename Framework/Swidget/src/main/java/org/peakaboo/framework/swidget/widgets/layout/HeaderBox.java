@@ -29,6 +29,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import org.peakaboo.framework.stratus.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
@@ -46,6 +48,8 @@ public class HeaderBox extends PaintedPanel {
 	private JPanel rightWrap, closePanel;
 	private Runnable onClose;
 	boolean showClose;
+		
+	private Theme theme = null;
 	
 	//dragging
 	private Point initialClick;
@@ -81,6 +85,10 @@ public class HeaderBox extends PaintedPanel {
 		close = HeaderBox.closeButton().withAction(() -> onClose.run());
 		closePanel = new ClearPanel(new BorderLayout());
 		closePanel.add(close, BorderLayout.CENTER);
+		
+		if (StratusLookAndFeel.hasTheme()) {
+			theme = StratusLookAndFeel.getTheme();
+		}
 		
 		addMouseListener(new MouseAdapter() {
 			
@@ -138,10 +146,32 @@ public class HeaderBox extends PaintedPanel {
 		
 	}
 	
+	private Color getBase() {
+		Color c;
+		if (theme != null) {
+			c = StratusLookAndFeel.getTheme().getNegative();
+		} else {
+			c = UIManager.getColor("negative");
+			if (c == null) {
+				c = getBackground();
+			}
+		}
+		return c;
+	}
+	
+	private float getCurve() {
+		if (theme != null) {
+			return theme.widgetCurve();
+		} else {
+			return 0.05f;
+		}
+	}
+	
 	private void make() {
 		
 		removeAll();
-		base = getBackground();
+		base = getBase();
+
 		
 		setBorder(Spacing.bMedium());
 		setLayout(new BorderLayout());
@@ -172,7 +202,7 @@ public class HeaderBox extends PaintedPanel {
 		}
 		
 		setBackgroundPaint(new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
-			lighten(base, 0.05f),
+			lighten(base, getCurve()),
 			base
 		}));
 		

@@ -14,7 +14,7 @@ public class PaintedPanel extends ClearPanel
 {
 	
 	private boolean drawBackground;
-	private Paint backgroundPaint = new Color(0f, 0f, 0f, 0.1f);
+	private Paint backgroundPaint = null;
 	
 	public PaintedPanel(boolean drawBackground)
 	{
@@ -56,11 +56,14 @@ public class PaintedPanel extends ClearPanel
 			g = g.create();
 			Graphics2D g2 = (Graphics2D) g;
 			
-			g2.setColor(UIManager.getColor("control"));
+			if (backgroundPaint != null) {
+				g2.setPaint(backgroundPaint);
+			} else {
+				g2.setColor(UIManager.getColor("control"));
+
+			}
 			g2.fillRect(0, 0, getWidth(), getHeight());
 
-			g2.setPaint(backgroundPaint);
-			g2.fillRect(0, 0, getWidth(), getHeight());
 		}
 
 		super.paintComponent(g);

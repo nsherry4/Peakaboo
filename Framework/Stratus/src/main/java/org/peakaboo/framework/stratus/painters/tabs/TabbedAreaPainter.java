@@ -34,11 +34,11 @@ public class TabbedAreaPainter extends SimpleThemed implements Painter<JComponen
 		}
 		
 		if (enabled) {
-			t1 = Stratus.darken(getTheme().getControl(), 0.03f);
-			t2 = getTheme().getControl();
+			t1 = Stratus.darken(getTheme().getNegative(), 0.03f);
+			t2 = getTheme().getNegative();
 		} else {
-			t1 = getTheme().getControl();
-			t2 = getTheme().getControl();
+			t1 = getTheme().getNegative();
+			t2 = getTheme().getNegative();
 		}
 		
 	}
