@@ -56,8 +56,9 @@ public class PaintedPanel extends ClearPanel
 			g = g.create();
 			Graphics2D g2 = (Graphics2D) g;
 			
-			if (backgroundPaint != null) {
-				g2.setPaint(backgroundPaint);
+			Paint paint = getBackgroundPaint();
+			if (paint != null) {
+				g2.setPaint(paint);
 			} else {
 				g2.setColor(UIManager.getColor("control"));
 

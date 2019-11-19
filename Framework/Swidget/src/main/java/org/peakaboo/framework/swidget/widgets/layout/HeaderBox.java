@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.LayoutManager2;
 import java.awt.LinearGradientPaint;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
@@ -46,7 +47,7 @@ import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
 
 public class HeaderBox extends PaintedPanel {
 	
-	private Color base;
+	
 	
 	private Component left, centre, right;
 	private Component close;
@@ -151,17 +152,26 @@ public class HeaderBox extends PaintedPanel {
 		
 	}
 	
-	private Color getBase() {
-		Color c;
+	
+	@Override
+	public Paint getBackgroundPaint() {
+		Color base = getBackground();
+		float curve = 0.05f;
+		
 		if (theme != null) {
-			c = Stratus.getTheme().getNegative();
-		} else {
-			c = UIManager.getColor("negative");
-			if (c == null) {
-				c = getBackground();
+			if (Stratus.focusedWindow(this)) {
+				base = theme.getNegative();
+				curve = theme.widgetCurve();
+			} else {
+				base = theme.getControl();
+				curve = 0f;
 			}
 		}
-		return c;
+		
+		return new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
+				lighten(base, curve/2f),
+				darken(base, curve/2f)
+			});
 	}
 	
 	private float getCurve() {
@@ -174,9 +184,7 @@ public class HeaderBox extends PaintedPanel {
 	
 	private void make() {
 		
-		removeAll();
-		base = getBase();
-
+		removeAll();	
 		
 		setBorder(Spacing.bMedium());
 		setLayout(new BorderLayout());
@@ -205,13 +213,6 @@ public class HeaderBox extends PaintedPanel {
 		if (right != null || showClose) { 
 			inner.add(rightWrap);
 		}
-		
-		
-		setBackgroundPaint(new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
-			lighten(base, getCurve()/2f),
-			darken(base, getCurve()/2f)
-		}));
-		
 		
 		Border b = Spacing.bMedium();
 		if (isDrawBackground()) {

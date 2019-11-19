@@ -92,6 +92,8 @@ public class Stratus {
     
 	
 	public static boolean focusedWindow(JComponent component) {
+		if (component == null) return true;
+		if (component.getRootPane() == null) return true;
 		Object prop = component.getRootPane().getClientProperty(Stratus.KEY_WINDOW_FOCUSED);
 		if (prop == null) {
 			return true;
