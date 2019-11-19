@@ -47,6 +47,7 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.models.ListTableModel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
@@ -244,9 +245,9 @@ public class SavePicture extends JPanel
 	private void showDialog() {
 		
 		if (owner instanceof Window) {
-			dialog = new JDialog((Window)owner);
+			dialog = new LiveDialog((Window)owner);
 		} else {
-			dialog = new JDialog();
+			dialog = new LiveDialog();
 		}
 
 		dialog.setTitle("Save as Image");

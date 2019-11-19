@@ -29,7 +29,18 @@ public class CheckButtonPainter extends ButtonPainter {
 	
 	@Override
     protected ButtonPalette makePalette(JComponent object) {
-    	return palette;
+    	
+		ButtonPalette custom = new ButtonPalette(palette);
+		Theme theme = getTheme();
+		
+		if (!Stratus.focusedWindow(object)) {
+    		custom.fillTop = theme.getControl();
+    		custom.fillBottom = theme.getControl();
+    		custom.fillArray = new Color[] {custom.fillTop, custom.fillBottom};
+    		custom.fillPoints = new float[] {0, 1f};
+		}
+		
+		return custom;
     }
 	
 }

@@ -21,6 +21,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import javax.swing.plaf.synth.Region;
+import javax.swing.plaf.synth.SynthPanelUI;
 
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.components.StratusComboBoxUI;
@@ -94,17 +96,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 
 	}
 	
-	public static boolean hasTheme() {
-		return getTheme() != null;
-	}
-	
-	public static Theme getTheme() {
-		try {
-			return (Theme) UIManager.get("stratus-theme");
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
+
 	
 	@Override
 	public UIDefaults getDefaults() {
@@ -264,8 +256,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Button[Focused].backgroundPainter", 					new LinkedButtonPainter(theme, ButtonState.FOCUSED));
 			reg(ret, "Button[MouseOver].backgroundPainter", 					new LinkedButtonPainter(theme, ButtonState.MOUSEOVER));
 			reg(ret, "Button[Pressed].backgroundPainter", 					new LinkedButtonPainter(theme, ButtonState.PRESSED));
-					
-	
+
 			//BUTTON on TOOLBAR
 			reg(ret, "ToolBar:Button.foreground", 						theme.getControlText());
 			reg(ret, "ToolBar:Button.textForeground",					theme.getControlText());

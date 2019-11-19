@@ -16,7 +16,7 @@ import org.peakaboo.framework.swidget.dialogues.HeaderDialog;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.LiveFrame;
+import org.peakaboo.framework.swidget.live.LiveFrame;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;

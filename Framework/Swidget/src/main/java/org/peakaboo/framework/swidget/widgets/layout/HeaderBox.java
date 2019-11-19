@@ -28,7 +28,9 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import javax.swing.plaf.synth.Region;
 
+import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
@@ -43,7 +45,7 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
 
 public class HeaderBox extends PaintedPanel {
-
+	
 	private Color base;
 	
 	private Component left, centre, right;
@@ -51,7 +53,7 @@ public class HeaderBox extends PaintedPanel {
 	private JPanel rightWrap, closePanel;
 	private Runnable onClose;
 	boolean showClose;
-		
+	
 	private Theme theme = null;
 	
 	//dragging
@@ -82,15 +84,15 @@ public class HeaderBox extends PaintedPanel {
 	public HeaderBox() {
 		this(null, "", null);
 	}
-
-	private void init() {
+	
+	private void init() {	
 		rightWrap = new ClearPanel(new BorderLayout(Spacing.medium, Spacing.medium));
 		close = HeaderBox.closeButton().withAction(() -> onClose.run());
 		closePanel = new ClearPanel(new BorderLayout());
 		closePanel.add(close, BorderLayout.CENTER);
 		
-		if (StratusLookAndFeel.hasTheme()) {
-			theme = StratusLookAndFeel.getTheme();
+		if (Swidget.isStratusLaF()) {
+			theme = Stratus.getTheme();
 		}
 		
 		addMouseListener(new MouseAdapter() {
@@ -152,7 +154,7 @@ public class HeaderBox extends PaintedPanel {
 	private Color getBase() {
 		Color c;
 		if (theme != null) {
-			c = StratusLookAndFeel.getTheme().getNegative();
+			c = Stratus.getTheme().getNegative();
 		} else {
 			c = UIManager.getColor("negative");
 			if (c == null) {
@@ -204,16 +206,18 @@ public class HeaderBox extends PaintedPanel {
 			inner.add(rightWrap);
 		}
 		
+		
 		setBackgroundPaint(new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
 			lighten(base, getCurve()/2f),
 			darken(base, getCurve()/2f)
 		}));
 		
+		
 		Border b = Spacing.bMedium();
 		if (isDrawBackground()) {
 			Color borderColour = new Color(0x20000000, true);
 			if (Swidget.isStratusLaF()) {
-				borderColour = StratusLookAndFeel.getTheme().getWidgetBorderAlpha();
+				borderColour = Stratus.getTheme().getWidgetBorderAlpha();
 			}
 			b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, borderColour), b);
 		} else {

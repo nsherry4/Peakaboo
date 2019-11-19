@@ -83,12 +83,12 @@ public class ButtonPainter extends StatefulPainter {
     	palette.bevel = Stratus.lighten(palette.fillTop, getTheme().bevelStrength());
     	palette.text = getTheme().getControlText();
     	palette.dash = getTheme().getWidgetDashAlpha();
-    	palette.border = getTheme().getWidgetBorderAlpha();
+    	palette.border = getTheme().getWidgetBorder();
     	palette.shadow = getTheme().getShadow();
     	
     	if (isPressed() || isSelected()) {
-    		palette.fillTop = Stratus.darken(getTheme().getNegative(), getTheme().widgetCurve()/2f);
-    		palette.fillBottom = Stratus.darken(getTheme().getNegative(), getTheme().widgetCurve()/2f);
+    		palette.fillTop = Stratus.darken(base, getTheme().widgetCurve()/2f);
+    		palette.fillBottom = Stratus.darken(base, getTheme().widgetCurve()/2f);
     	}
 
     	
@@ -106,6 +106,7 @@ public class ButtonPainter extends StatefulPainter {
     	
 		palette.fillArray = new Color[] {palette.fillTop, palette.fillBottom};
 		palette.fillPoints = new float[] {0, 1f};
+		
     }
     
     
@@ -120,19 +121,36 @@ public class ButtonPainter extends StatefulPainter {
     		return palette;
     	}
     	
-    	boolean isCustomColour = object.getBackground().getClass().getName().equals("java.awt.Color"); 
+    	Theme theme = getTheme();
+    	ButtonPalette custom = new ButtonPalette(palette);
     	
-    	if (isCustomColour) {
-    		Color base = object.getBackground();
-    		ButtonPalette custom = new ButtonPalette(palette);
-    		setupPalette(custom, base);
-    		custom.border = Stratus.darken(object.getBackground(), getTheme().borderStrength());
-    		return custom;
+    	if (isCustomColour(object)) {
+    		setupPalette(custom, object.getBackground());
+    		custom.border = Stratus.darken(object.getBackground(), theme.borderStrength());
     	}
     	
-    	return palette;
+    	if (!Stratus.focusedWindow(object)) {
+    		custom.border = Stratus.lighten(custom.border);
+        	if (isCustomColour(object)) {
+        		custom.fillTop = object.getBackground();
+        		custom.fillBottom = object.getBackground();
+        		custom.fillArray = new Color[] {custom.fillTop, custom.fillBottom};
+        		custom.fillPoints = new float[] {0, 1f};
+        	} else {
+        		custom.fillTop = theme.getControl();
+        		custom.fillBottom = theme.getControl();
+        		custom.fillArray = new Color[] {custom.fillTop, custom.fillBottom};
+        		custom.fillPoints = new float[] {0, 1f};
+        	}
+    	}
+    	
+    	return custom;
     }
 
+    private boolean isCustomColour(JComponent object) {
+    	return object.getBackground().getClass().getName().equals("java.awt.Color");
+    }
+    
     @Override
     public final void paint(Graphics2D g, JComponent object, int width, int height) {
     	if (!isBorderPainted(object)) {
@@ -151,11 +169,13 @@ public class ButtonPainter extends StatefulPainter {
 
     
     protected void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {
+    	boolean focusedWindow = Stratus.focusedWindow(object);
     	drawBorder(object, width, height, margin, g, palette);
     	drawMain(object, width, height, margin, g, palette);
-    	drawShadow(object, width, height, margin, g, palette);
-    	drawBevel(object, width, height, margin, g, palette);
-    	drawDash(object, width, height, margin, g, palette);
+   		drawShadow(object, width, height, margin, g, palette);
+   		drawBevel(object, width, height, margin, g, palette);
+   		drawDash(object, width, height, margin, g, palette);
+    	
     }
 
     
@@ -257,7 +277,7 @@ public class ButtonPainter extends StatefulPainter {
     
     
     protected boolean isBorderPainted(JComponent component) {
-    	Object prop = component.getClientProperty("stratus-button-border-painted");
+    	Object prop = component.getClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED);
     	if (prop == null) { 
     		return true;
     	}

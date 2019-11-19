@@ -2,8 +2,16 @@ package org.peakaboo.framework.stratus;
 
 import java.awt.Color;
 
+import javax.swing.JComponent;
+import javax.swing.UIManager;
+
+import org.peakaboo.framework.stratus.theme.Theme;
+
 public class Stratus {
 
+	public static final String KEY_WINDOW_FOCUSED = "stratus-window-focus";
+	public static final String KEY_BUTTON_BORDER_PAINTED = "stratus-button-border-painted";
+	
     public enum ButtonState {
     	DISABLED,
     	ENABLED,
@@ -21,6 +29,18 @@ public class Stratus {
 //	public static Color border = new Color(0x575D5D);
 //	
 
+    
+	public static boolean hasTheme() {
+		return getTheme() != null;
+	}
+	
+	public static Theme getTheme() {
+		try {
+			return (Theme) UIManager.get("stratus-theme");
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
 		
 	public static Color lighten(Color src) {
 		return lighten(src, 0.05f);
@@ -70,5 +90,17 @@ public class Stratus {
 		return new Color(src.getRed(), src.getGreen(), src.getBlue(), (int)Math.max(src.getAlpha()-(amount*255), 0f));
 	}
     
+	
+	public static boolean focusedWindow(JComponent component) {
+		Object prop = component.getRootPane().getClientProperty(Stratus.KEY_WINDOW_FOCUSED);
+		if (prop == null) {
+			return true;
+		}
+		try {
+			return (boolean)prop;
+		} catch (ClassCastException e) {
+			return true;
+		}
+	}
     	
 }

@@ -60,6 +60,11 @@ public class TabbedAreaPainter extends SimpleThemed implements Painter<JComponen
 			c1 = n1;
 			c2 = n2;
 		}
+		
+		if (!Stratus.focusedWindow(object)) {
+			c1 = getTheme().getControl();
+			c2 = c1;
+		}
 
 		//if (width != lastWidth || height != lastHeight || lastPaint == null) {
 		lastPaint = new LinearGradientPaint(0, 0, 0, 6, new float[] {0, 1f}, new Color[] {c1, c2});

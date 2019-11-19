@@ -17,6 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
@@ -73,7 +74,7 @@ public class LayerDialog {
 	}
 	
 	public void showInWindow(Window frame, boolean alwaysOnTop) {
-		JDialog dialog = new JDialog(frame);
+		JDialog dialog = new LiveDialog(frame);
 		hider = () -> dialog.setVisible(false);
 		dialog.setTitle(this.title);
 		dialog.setModal(true);

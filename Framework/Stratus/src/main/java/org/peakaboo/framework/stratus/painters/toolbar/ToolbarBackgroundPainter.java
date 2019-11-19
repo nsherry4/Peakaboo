@@ -21,13 +21,16 @@ public class ToolbarBackgroundPainter extends SimpleThemed implements Painter<JC
     	super(theme);
     	this.c1 = Stratus.lighten(theme.getNegative(), theme.widgetCurve()/2f);
     	this.c2 = Stratus.darken(theme.getNegative(), theme.widgetCurve()/2f);
-
     }
 
     @Override
     public void paint(Graphics2D g, JComponent object, int width, int height) {
-   	
-        g.setPaint(new LinearGradientPaint(0, 0, 0, height, points, new Color[] {c1, c2}));
+    	if (Stratus.focusedWindow(object)) {
+    		g.setPaint(new LinearGradientPaint(0, 0, 0, height, points, new Color[] {c1, c2}));	
+    	} else {
+    		g.setPaint(new LinearGradientPaint(0, 0, 0, height, points, new Color[] {getTheme().getControl(), getTheme().getControl()}));
+    	}
+        
         g.fillRect(0, 0, width-1, height-1);
     }
 

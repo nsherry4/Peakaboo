@@ -17,9 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -28,6 +26,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
@@ -37,7 +36,7 @@ import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
 import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 
 
-public class AboutDialogue extends JDialog
+public class AboutDialogue extends LiveDialog
 {
 	
 	Window owner;

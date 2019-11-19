@@ -10,10 +10,10 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
@@ -21,7 +21,7 @@ import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 
 
-public class PropertyDialogue extends JDialog
+public class PropertyDialogue extends LiveDialog
 {
 
 	public PropertyDialogue(String title, Window owner, TitledPanel... panels)

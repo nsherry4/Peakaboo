@@ -20,6 +20,7 @@ import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
+import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -122,7 +123,7 @@ public class ImageButtonConfigurator {
 		boolean isNimbus = Swidget.isNumbusDerivedLaF();
 		
 		if (Swidget.isStratusLaF()) {
-			button.putClientProperty("stratus-button-border-painted", config.bordered == BORDER_STYLE.ALWAYS);	
+			button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, config.bordered == BORDER_STYLE.ALWAYS);	
 		} else {
 			button.setContentAreaFilled(config.bordered == BORDER_STYLE.ALWAYS);
 			button.setBorderPainted(config.bordered == BORDER_STYLE.ALWAYS);
@@ -274,14 +275,14 @@ public class ImageButtonConfigurator {
 
 		if (config.bordered == BORDER_STYLE.ALWAYS || showBackground ) {
 			if (Swidget.isStratusLaF()) {
-				button.putClientProperty("stratus-button-border-painted", true);	
+				button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, true);	
 			} else {
 				button.setContentAreaFilled(true);
 				button.setBorderPainted(true);
 			}
 		} else {
 			if (Swidget.isStratusLaF()) {
-				button.putClientProperty("stratus-button-border-painted", false);	
+				button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, false);	
 			} else {
 				button.setContentAreaFilled(true);
 				button.setBorderPainted(true);

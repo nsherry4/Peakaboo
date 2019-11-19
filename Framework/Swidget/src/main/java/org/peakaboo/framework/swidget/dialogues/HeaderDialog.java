@@ -1,21 +1,19 @@
 package org.peakaboo.framework.swidget.dialogues;
 
 import java.awt.AWTEvent;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.Window;
 
-import javax.swing.JDialog;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderPanel;
 
-public class HeaderDialog extends JDialog {
+public class HeaderDialog extends LiveDialog {
 
 
 	private HeaderPanel root;

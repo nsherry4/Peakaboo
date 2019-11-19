@@ -8,8 +8,9 @@ import javax.swing.JDialog;
 import javax.swing.WindowConstants;
 
 import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 
-public class ExecutorSetViewDialog extends JDialog {
+public class ExecutorSetViewDialog extends LiveDialog {
 
 	ExecutorSet<?> executors;
 	ExecutorSetView panel;
