@@ -21,9 +21,7 @@ public class Stratus {
 //	public static Color border = new Color(0x575D5D);
 //	
 
-	
-	public static float borderRadius = 5;
-	
+		
 	public static Color lighten(Color src) {
 		return lighten(src, 0.05f);
 	}

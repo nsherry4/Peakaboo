@@ -78,18 +78,16 @@ public class Swidget
 		
 	}
 
-	public static boolean isNumbusDerivedLaF()
-	{
-		
-		try
-		{
+	public static boolean isNumbusDerivedLaF() {
+		try {
 			return NimbusLookAndFeel.class.isAssignableFrom(UIManager.getLookAndFeel().getClass());
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			return false;
 		}
-		
+	}
+
+	public static boolean isStratusLaF() {
+		return UIManager.getLookAndFeel().getClass().toString().contains("Stratus");
 	}
 	
 	public static String lineWrap(Component c, String text) {

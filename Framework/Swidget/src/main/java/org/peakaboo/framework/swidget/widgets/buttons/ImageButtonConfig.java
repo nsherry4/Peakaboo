@@ -5,13 +5,18 @@ import javax.swing.border.Border;
 import org.peakaboo.framework.swidget.icons.IconSize;
 
 public class ImageButtonConfig {
-	String imagename = null;
-	String text = "";
-	String tooltip = null;
+	
+	public static enum BORDER_STYLE {
+		ALWAYS, ACTIVE, NEVER;
+	}
+	
+	public String imagename = null;
+	public String text = "";
+	public String tooltip = null;
 	public ImageButtonLayout layout = null;
-	boolean bordered = true;
-	IconSize size = IconSize.BUTTON;
-	Border border = null;
-	ImageButtonSize buttonSize = null;
-	Runnable onAction = null;
+	public BORDER_STYLE bordered = BORDER_STYLE.ALWAYS;
+	public IconSize size = IconSize.BUTTON;
+	public Border border = null;
+	public ImageButtonSize buttonSize = null;
+	public Runnable onAction = null;
 }

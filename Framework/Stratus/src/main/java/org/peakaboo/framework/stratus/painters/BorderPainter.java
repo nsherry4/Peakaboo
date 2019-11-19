@@ -19,10 +19,6 @@ public class BorderPainter implements Painter<JComponent> {
 	protected float size;
 	protected float radius;
 	
-	public BorderPainter(Color colour) {
-		this(colour, 1, Stratus.borderRadius);
-	}
-	
 	public BorderPainter(Color colour, float size, float radius) {
 		this.colour = colour;
 		this.size = size;

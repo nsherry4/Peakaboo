@@ -2,6 +2,7 @@ package org.peakaboo.framework.stratus.painters;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
 
 import javax.swing.JComponent;
@@ -16,6 +17,10 @@ public class ComboBoxArrowPainter implements Painter<JComponent> {
 
 	@Override
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
+		
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		
 		GeneralPath arrow = new GeneralPath();
 		
 		float modX = width/12f;

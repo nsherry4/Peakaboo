@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_STYLE;
 
 public class ImageButtonConfigurator {
 	
@@ -120,8 +121,12 @@ public class ImageButtonConfigurator {
 				
 		boolean isNimbus = Swidget.isNumbusDerivedLaF();
 		
-		button.setContentAreaFilled(config.bordered);
-		button.setBorderPainted(config.bordered);
+		if (Swidget.isStratusLaF()) {
+			button.putClientProperty("stratus-button-border-painted", config.bordered == BORDER_STYLE.ALWAYS);	
+		} else {
+			button.setContentAreaFilled(config.bordered == BORDER_STYLE.ALWAYS);
+			button.setBorderPainted(config.bordered == BORDER_STYLE.ALWAYS);
+		}
 		
 		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
 		
@@ -265,15 +270,25 @@ public class ImageButtonConfigurator {
 	
 	void setButtonBorder(boolean forceBorder) {
 		ButtonModel m = button.getModel();
-		boolean showBackground = button.isEnabled() && (m.isSelected() || m.isRollover() || m.isPressed() || m.isArmed() || forceBorder);
+		boolean showBackground = button.isEnabled() && config.bordered == BORDER_STYLE.ACTIVE && (m.isSelected() || m.isRollover() || m.isPressed() || m.isArmed() || button.hasFocus() || forceBorder);
 
-		if (config.bordered || showBackground || (button.isEnabled() && button.hasFocus()) ) {
-			button.setBorderPainted(true);
-			button.setContentAreaFilled(true);
+		if (config.bordered == BORDER_STYLE.ALWAYS || showBackground ) {
+			if (Swidget.isStratusLaF()) {
+				button.putClientProperty("stratus-button-border-painted", true);	
+			} else {
+				button.setContentAreaFilled(true);
+				button.setBorderPainted(true);
+			}
 		} else {
-			button.setBorderPainted(false);
-			button.setContentAreaFilled(false);
+			if (Swidget.isStratusLaF()) {
+				button.putClientProperty("stratus-button-border-painted", false);	
+			} else {
+				button.setContentAreaFilled(true);
+				button.setBorderPainted(true);
+			}
 		}
+	
+
 		
 		button.repaint();
 	}

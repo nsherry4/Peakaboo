@@ -52,7 +52,7 @@ public class ButtonPainter extends StatefulPainter {
 	
 	private ButtonPalette palette = new ButtonPalette();
 	    
-    protected float radius = Stratus.borderRadius;
+    protected float radius = 0;
     protected float borderWidth = 1;
     protected int margin = 1;
     
@@ -67,6 +67,7 @@ public class ButtonPainter extends StatefulPainter {
     	super(theme, buttonStates);
     	setupPalette(palette, getTheme().getWidget());
     	this.margin = margin;
+    	this.radius = theme.borderRadius();
     }
     
     private void setupPalette(ButtonPalette palette, Color base) {
@@ -134,7 +135,11 @@ public class ButtonPainter extends StatefulPainter {
 
     @Override
     public final void paint(Graphics2D g, JComponent object, int width, int height) {
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    	if (!isBorderPainted(object)) {
+    		return;
+    	}
+    	
+    	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		
 		paint(g, object, width, height, makePalette(object));
@@ -145,7 +150,7 @@ public class ButtonPainter extends StatefulPainter {
 
 
     
-    protected void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {  	
+    protected void paint(Graphics2D g, JComponent object, int width, int height, ButtonPalette palette) {
     	drawBorder(object, width, height, margin, g, palette);
     	drawMain(object, width, height, margin, g, palette);
     	drawShadow(object, width, height, margin, g, palette);
@@ -250,6 +255,19 @@ public class ButtonPainter extends StatefulPainter {
     	return palette.dash;
     }
     
+    
+    protected boolean isBorderPainted(JComponent component) {
+    	Object prop = component.getClientProperty("stratus-button-border-painted");
+    	if (prop == null) { 
+    		return true;
+    	}
+    	try {
+    		boolean painted = (boolean) prop;
+    		return painted;
+    	} catch (ClassCastException e) {
+    		return true;
+    	}
+    }
     
     
 }

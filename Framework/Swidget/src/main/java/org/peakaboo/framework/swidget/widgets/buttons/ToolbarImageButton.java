@@ -10,6 +10,7 @@ import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_STYLE;
 
 
 //TODO: Can't base this on ImageButton anymore
@@ -19,7 +20,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 	
 	private void firstconfig() {
 		config().size = IconSize.TOOLBAR_SMALL;
-		config().bordered = false;
+		config().bordered = BORDER_STYLE.ACTIVE;
 	}
 	
 	public ToolbarImageButton() {

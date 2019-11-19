@@ -25,7 +25,7 @@ public class SliderTrackPainter extends SimpleThemed implements Painter<JCompone
 	@Override
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
 		
-		float radius = Stratus.borderRadius;
+		float radius = getTheme().borderRadius();
 		
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);

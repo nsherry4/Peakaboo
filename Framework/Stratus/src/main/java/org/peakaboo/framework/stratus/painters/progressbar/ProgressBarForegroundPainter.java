@@ -45,7 +45,7 @@ public class ProgressBarForegroundPainter extends SimpleThemed implements Painte
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
     	
 		int pad = 2;
-		float radius = Stratus.borderRadius;
+		float radius = getTheme().borderRadius();
 		
 		//LinearGradientPaint cannot handle the start and end point being the same
 		if (height == 0) height = 1;

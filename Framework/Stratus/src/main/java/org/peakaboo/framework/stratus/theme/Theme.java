@@ -66,6 +66,14 @@ public interface Theme {
 	default float borderStrength() {
 		return 0.1f;
 	}
+	
+	
+	/**
+	 * Radius of various rounded corners for widgets
+	 */
+	default float borderRadius() {
+		return 5f;
+	}
 	 
 	
 	

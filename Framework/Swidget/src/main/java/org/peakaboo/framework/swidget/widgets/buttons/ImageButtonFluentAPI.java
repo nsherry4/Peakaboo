@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_STYLE;
 
 interface ImageButtonFluentAPI<B extends AbstractButton> {
 
@@ -38,11 +39,16 @@ interface ImageButtonFluentAPI<B extends AbstractButton> {
 
 	
 	default B withBordered(boolean bordered) {
-		getImageButtonConfig().bordered = bordered;
+		getImageButtonConfig().bordered = bordered ? BORDER_STYLE.ALWAYS : BORDER_STYLE.ACTIVE;
 		makeButton();
 		return getSelf();
 	}
 	
+	default B withBordered(ImageButtonConfig.BORDER_STYLE borderStyle) {
+		getImageButtonConfig().bordered = borderStyle;
+		makeButton();
+		return getSelf();
+	}
 
 	
 	default B withIcon(StockIcon stock) {

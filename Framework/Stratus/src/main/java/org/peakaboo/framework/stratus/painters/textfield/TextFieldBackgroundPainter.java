@@ -21,13 +21,15 @@ import org.peakaboo.framework.stratus.theme.Theme;
 public class TextFieldBackgroundPainter extends StatefulPainter {
 
 	protected int margin = 2;
-	protected float radius = Stratus.borderRadius;
+	protected float radius = 0;
 	protected float[] points = new float[] {0f, 0.25f};
 	
 	protected Color c1, c2;
 	
 	public TextFieldBackgroundPainter(Theme theme, ButtonState... buttonStates) {
 		super(theme, buttonStates);
+		
+		this.radius = theme.borderRadius();
 		
 		if (!isDisabled()) {
 			c1 = Stratus.darken(getTheme().getRecessedControl(), 0.025f);

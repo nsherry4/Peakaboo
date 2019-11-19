@@ -33,8 +33,9 @@ public class ScrollBarThumbPainter extends SimpleThemed implements Painter<JComp
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
 
     	float pad = 3;
-    	float radius = Stratus.borderRadius*2;
-
+    	float radius = getTheme().borderRadius()*2;
+    	radius = Math.min(radius, Math.min(width, height) - (pad*2));
+    	
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
     	

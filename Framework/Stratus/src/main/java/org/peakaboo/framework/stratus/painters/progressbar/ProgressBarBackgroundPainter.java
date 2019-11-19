@@ -34,7 +34,7 @@ public class ProgressBarBackgroundPainter extends SimpleThemed implements Painte
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
     	
     	float pad = margin;
-    	float radius = Stratus.borderRadius;
+    	float radius = getTheme().borderRadius();
     	
     	//Bevel under button
     	g.setPaint(getTheme().getWidgetBevel());

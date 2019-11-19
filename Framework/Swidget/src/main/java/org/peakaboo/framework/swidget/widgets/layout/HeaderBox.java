@@ -32,12 +32,15 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.PaintedPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
 
 public class HeaderBox extends PaintedPanel {
 
@@ -202,16 +205,18 @@ public class HeaderBox extends PaintedPanel {
 		}
 		
 		setBackgroundPaint(new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
-			lighten(base, getCurve()),
-			base
+			lighten(base, getCurve()/2f),
+			darken(base, getCurve()/2f)
 		}));
 		
 		Border b = Spacing.bMedium();
 		if (isDrawBackground()) {
-			b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x20000000, true)), b);
-			b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x60000000, true)), b);
+			Color borderColour = new Color(0x20000000, true);
+			if (Swidget.isStratusLaF()) {
+				borderColour = StratusLookAndFeel.getTheme().getWidgetBorderAlpha();
+			}
+			b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, borderColour), b);
 		} else {
-			b = new CompoundBorder(new EmptyBorder(0, 0, 1, 0), b);
 			b = new CompoundBorder(new EmptyBorder(0, 0, 1, 0), b);
 		}
 		setBorder(b);
@@ -317,6 +322,13 @@ public class HeaderBox extends PaintedPanel {
     	float[] hsb = new float[3];
     	Color.RGBtoHSB(src.getRed(), src.getGreen(), src.getBlue(), hsb);
     	hsb[2] = Math.min(1f, hsb[2] + amount);
+    	return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
+    }
+	
+	private static Color darken(Color src, float amount) {
+    	float[] hsb = new float[3];
+    	Color.RGBtoHSB(src.getRed(), src.getGreen(), src.getBlue(), hsb);
+    	hsb[2] = Math.max(0f, hsb[2] - amount);
     	return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
     }
 
