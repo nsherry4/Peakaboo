@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.LayoutManager2;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
@@ -32,12 +34,11 @@ import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.PaintedPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 
-public class HeaderBox extends PaintedPanel {
+public class HeaderBox extends JPanel {
 	
 	
 	
@@ -55,7 +56,6 @@ public class HeaderBox extends PaintedPanel {
 	
 	
 	public HeaderBox(Component left, String title, Component right) {
-		super(true);
 		this.left = left;
 		this.right = right;
 		this.centre = makeHeaderTitle(title);
@@ -65,7 +65,6 @@ public class HeaderBox extends PaintedPanel {
 	}
 	
 	public HeaderBox(Component left, Component centre, Component right) {
-		super(true);
 		this.left = left;
 		this.centre = centre;
 		this.right = right;
@@ -145,8 +144,7 @@ public class HeaderBox extends PaintedPanel {
 	}
 	
 	
-	@Override
-	public Paint getBackgroundPaint() {
+	private Paint getBackgroundPaint() {
 		Color base = getBackground();
 		float curve = 0.05f;
 		
@@ -156,7 +154,6 @@ public class HeaderBox extends PaintedPanel {
 				curve = theme.widgetCurve();
 			} else {
 				base = theme.getControl();
-				curve = 0f;
 			}
 		}
 		
@@ -164,6 +161,27 @@ public class HeaderBox extends PaintedPanel {
 				lighten(base, curve/2f),
 				darken(base, curve/2f)
 			});
+	}
+	
+
+	@Override
+	public void paintComponent(Graphics g)
+	{
+		
+		super.paintComponent(g);
+		
+		g = g.create();
+		Graphics2D g2 = (Graphics2D) g;
+		
+		Paint paint = getBackgroundPaint();
+		if (paint != null) {
+			g2.setPaint(paint);
+		} else {
+			g2.setColor(UIManager.getColor("control"));
+
+		}
+		g2.fillRect(0, 0, getWidth(), getHeight());
+
 	}
 	
 	private float getCurve() {
@@ -207,15 +225,11 @@ public class HeaderBox extends PaintedPanel {
 		}
 		
 		Border b = Spacing.bMedium();
-		if (isDrawBackground()) {
-			Color borderColour = new Color(0x20000000, true);
-			if (Swidget.isStratusLaF()) {
-				borderColour = Stratus.getTheme().getWidgetBorderAlpha();
-			}
-			b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, borderColour), b);
-		} else {
-			b = new CompoundBorder(new EmptyBorder(0, 0, 1, 0), b);
+		Color borderColour = new Color(0x20000000, true);
+		if (Swidget.isStratusLaF()) {
+			borderColour = Stratus.getTheme().getWidgetBorderAlpha();
 		}
+		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, borderColour), b);
 		setBorder(b);
 		
 	}
@@ -275,14 +289,7 @@ public class HeaderBox extends PaintedPanel {
 	public boolean getShowClose() {
 		return showClose;
 	}
-	
-	@Override
-	public void setDrawBackground(boolean drawBackground) {
-		super.setDrawBackground(drawBackground);
-		make();
-	}
-	
-	
+
 	
 	
 	
