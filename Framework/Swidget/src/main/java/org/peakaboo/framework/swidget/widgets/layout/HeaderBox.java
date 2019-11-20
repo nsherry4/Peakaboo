@@ -13,11 +13,8 @@ import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,21 +26,16 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-import javax.swing.plaf.synth.Region;
 
 import org.peakaboo.framework.stratus.Stratus;
-import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.PaintedPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
 
 public class HeaderBox extends PaintedPanel {
 	

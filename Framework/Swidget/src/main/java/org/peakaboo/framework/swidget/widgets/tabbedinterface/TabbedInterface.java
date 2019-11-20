@@ -3,7 +3,6 @@ package org.peakaboo.framework.swidget.widgets.tabbedinterface;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.swing.Icon;

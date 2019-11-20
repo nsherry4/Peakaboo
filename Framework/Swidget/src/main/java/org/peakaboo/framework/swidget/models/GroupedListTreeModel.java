@@ -9,11 +9,16 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-
+/**
+ * TreeModel which takes a list of items and a key function and groups the items
+ * by key.
+ * 
+ * @author NAS
+ */
 public class GroupedListTreeModel<T> extends DefaultTreeModel {
 	
 	private List<T> items;
-	private DefaultMutableTreeNode root;
+	private DefaultMutableTreeNode rootNode;
 	private Function<T, String> groupBy;
 	
 	public GroupedListTreeModel(List<T> items, Function<T, String> groupBy) {
@@ -24,7 +29,7 @@ public class GroupedListTreeModel<T> extends DefaultTreeModel {
 	}
 	
 	private void build() {
-		root = new DefaultMutableTreeNode();
+		rootNode = new DefaultMutableTreeNode();
 		
 		//Discover group names
 		Set<String> groups = new HashSet<>();
@@ -35,7 +40,7 @@ public class GroupedListTreeModel<T> extends DefaultTreeModel {
 		//build 2-level tree
 		for (String group : groups) {
 			DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group);
-			root.add(groupNode);
+			rootNode.add(groupNode);
 			
 			for (T item : items) {
 				if (group.equals(this.groupBy.apply(item))) {
@@ -46,7 +51,7 @@ public class GroupedListTreeModel<T> extends DefaultTreeModel {
 			
 		}
 		
-		super.setRoot(root);
+		super.setRoot(rootNode);
 		
 	}
 	

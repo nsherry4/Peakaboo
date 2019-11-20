@@ -1,11 +1,9 @@
 package org.peakaboo.framework.swidget.dialogues;
 
 import java.awt.AWTEvent;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Toolkit;
 
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.framework.swidget.Swidget;

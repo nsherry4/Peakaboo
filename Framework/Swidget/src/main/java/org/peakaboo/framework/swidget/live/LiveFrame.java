@@ -16,7 +16,7 @@ import org.peakaboo.framework.stratus.Stratus;
  * for Operating Systems to provide previews, overviews, or thumbnails of
  * minimized windows. LiveFrame detects calls from RepaintManager checking the
  * window state, and lies to it.
- * 
+ * <br/><br/>
  * This class also listens to the frame's focus and sets a JComponent client
  * property on the root component indicating if the window is focused or not.
  * This is used by Stratus to paint the components differently depending on the

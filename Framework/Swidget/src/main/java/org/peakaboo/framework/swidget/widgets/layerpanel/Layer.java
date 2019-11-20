@@ -2,7 +2,6 @@ package org.peakaboo.framework.swidget.widgets.layerpanel;
 
 import javax.swing.JComponent;
 import javax.swing.JLayer;
-import javax.swing.JPanel;
 
 public interface Layer {
 

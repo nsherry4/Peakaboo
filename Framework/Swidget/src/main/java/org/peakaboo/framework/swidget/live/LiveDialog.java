@@ -1,6 +1,5 @@
 package org.peakaboo.framework.swidget.live;
 
-import java.awt.Frame;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;

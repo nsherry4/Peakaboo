@@ -1,7 +1,6 @@
 package org.peakaboo.framework.swidget.widgets.layerpanel.widgets;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -15,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.framework.swidget.Swidget;

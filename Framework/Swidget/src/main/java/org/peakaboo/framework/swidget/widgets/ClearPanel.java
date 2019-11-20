@@ -6,9 +6,15 @@ import java.awt.LayoutManager;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 
-
+/**
+ * JPanel designed to act like it's not even there. ClearPanel will never paint
+ * anything to the screen and will pass calls to setEnabled through to child
+ * Components
+ * 
+ * @author NAS
+ *
+ */
 public class ClearPanel extends JPanel
 {
 

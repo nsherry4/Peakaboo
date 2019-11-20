@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Builds a basic table model out of a {@link List}
+ * @author NAS
+ */
 public class ListTableModel<T> extends AbstractTableModel {
 	
 	private List<T> items;

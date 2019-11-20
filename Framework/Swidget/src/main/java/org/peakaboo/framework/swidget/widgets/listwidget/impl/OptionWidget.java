@@ -1,6 +1,5 @@
 package org.peakaboo.framework.swidget.widgets.listwidget.impl;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -11,7 +10,6 @@ import java.util.function.Function;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 
-import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.JTextLabel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
