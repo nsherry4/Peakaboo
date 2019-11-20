@@ -5,23 +5,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Rectangle;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
 
 import org.peakaboo.framework.swidget.dialogues.AboutDialogue;
 import org.peakaboo.framework.swidget.dialogues.AboutDialogue.Contents;
-import org.peakaboo.framework.swidget.widgets.CenteringPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layout.CenteringLayout;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderTabBuilder;
 import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
 
@@ -53,9 +49,10 @@ public class AboutLayer extends HeaderLayer {
 			String[] creditParts = credit.split(": ");
 			credits.put(creditParts[0], creditParts[1]);
 		}
-		JPanel panel = new PropertyPanel(credits, false, 0);
-		
-		return new CenteringPanel(panel);
+		PropertyPanel creditsPanel = new PropertyPanel(credits, false, 0);
+		JPanel container = new JPanel(new CenteringLayout());
+		container.add(creditsPanel);
+		return container;
 	}
 	
 	private static Component licencePanel(AboutDialogue.Contents contents) {

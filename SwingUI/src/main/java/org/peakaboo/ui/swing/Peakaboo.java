@@ -126,23 +126,7 @@ public class Peakaboo
 			}
 		});
 	}
-	
-	private static void setAppTitle(String title) {
-		//This was broken with Java 8/9
-//		try
-//		{
-//		    Toolkit toolkit = Toolkit.getDefaultToolkit();
-//		    Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
-//		    awtAppClassNameField.setAccessible(true);
-//		    awtAppClassNameField.set(toolkit, title);
-//		}
-//		catch (NoSuchFieldException | IllegalAccessException e)
-//		{
-//		    e.printStackTrace();
-//		}
 		
-	}
-	
 	private static void startGCTimer() {
 		gcTimer = new Timer(1000*60, e -> {  
 			System.gc(); 
@@ -180,7 +164,6 @@ public class Peakaboo
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/org/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
-		setAppTitle("Peakaboo 5");
 		
 		
 		//warm up the peak table, which is lazy

@@ -3,6 +3,8 @@ package org.peakaboo.ui.swing.mapping.sidebar;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import javax.swing.ButtonGroup;
+
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.selection.MapSelectionController.SelectionType;
@@ -14,7 +16,6 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
 import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
-import org.peakaboo.framework.swidget.widgets.toggle.ToggleGroup;
 
 public class MapSelectionPanel extends SettingsPanel {
 
@@ -48,11 +49,11 @@ public class MapSelectionPanel extends SettingsPanel {
 				.withTooltip("Select Hand-Drawn Shape")
 				.withButtonSize(ImageButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SHAPE));
-		ToggleGroup selGroup = new ToggleGroup();
-		selGroup.registerButton(selRect);
-		selGroup.registerButton(selEllipse);
-		selGroup.registerButton(selSimilar);
-		selGroup.registerButton(selShape);
+		ButtonGroup selGroup = new ButtonGroup();
+		selGroup.add(selRect);
+		selGroup.add(selEllipse);
+		selGroup.add(selSimilar);
+		selGroup.add(selShape);
 		Consumer<SelectionType> onSelChange = s -> {
 			if (currentSelectionType == s) {
 				return;
@@ -61,16 +62,16 @@ public class MapSelectionPanel extends SettingsPanel {
 			
 			switch (s) {
 			case ELLIPSE:
-				selGroup.setToggled(selEllipse);
+				selGroup.setSelected(selEllipse.getModel(), true);
 				break;
 			case RECTANGLE:
-				selGroup.setToggled(selRect);
+				selGroup.setSelected(selRect.getModel(), true);
 				break;
 			case SIMILAR:
-				selGroup.setToggled(selSimilar);
+				selGroup.setSelected(selSimilar.getModel(), true);
 				break;			
 			case SHAPE:
-				selGroup.setToggled(selShape);
+				selGroup.setSelected(selShape.getModel(), true);
 				break;
 			}
 			

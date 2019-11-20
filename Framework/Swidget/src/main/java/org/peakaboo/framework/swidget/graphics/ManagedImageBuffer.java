@@ -9,6 +9,8 @@ import java.lang.ref.SoftReference;
  * Manages the allocation of a {@link BufferedImage} of a changing size. The
  * provided BufferedImage will be at least as large as the last call to
  * {@link ManagedImageBuffer#resize(int, int)}, and possibly somewhat larger.
+ * This helps reduce the number of large buffer allocations by reusing the same
+ * buffer when possible.
  */
 public class ManagedImageBuffer {
 

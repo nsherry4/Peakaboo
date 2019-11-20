@@ -17,7 +17,7 @@ import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.toggle.ItemToggleButton;
+import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
 
 public class PlotScanNumber extends ClearPanel {
 
@@ -36,14 +36,12 @@ public class PlotScanNumber extends ClearPanel {
 		scanNo.getEditor().setPreferredSize(new Dimension(50, 0));
 		scanLabel = new JLabel("Scan");
 		scanLabel.setBorder(Spacing.bSmall());
-		scanBlock = new ItemToggleButton(
-			StockIcon.CHOOSE_CANCEL,
-			"Flag this scan to exclude it and extrapolate it from neighbouring points in maps", "");
+		scanBlock = new ToggleImageButton(StockIcon.CHOOSE_CANCEL)
+				.withTooltip("Flag this scan to exclude it and extrapolate it from neighbouring points in maps");
 		
 		this.add(scanLabel);
 		this.add(Box.createHorizontalStrut(2));
 		this.add(scanNo);
-		this.add(Box.createHorizontalStrut(4));
 		this.add(scanBlock);
 		this.add(Box.createHorizontalStrut(4));
 		
