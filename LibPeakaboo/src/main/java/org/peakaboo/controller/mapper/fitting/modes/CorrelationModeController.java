@@ -31,7 +31,9 @@ public class CorrelationModeController extends ModeController {
 	private Map<ITransitionSeries, Integer> sides = new LinkedHashMap<>();
 	private boolean clip = false;
 	private int bins = 100;
-	public Map<Integer, List<Integer>> translation;
+	
+	private Map<Integer, List<Integer>> translation = new LinkedHashMap<>();
+	private boolean invalidated = true;
 	
 	public CorrelationModeController(MappingController map) {
 		super(map);
@@ -127,10 +129,11 @@ public class CorrelationModeController extends ModeController {
 		
 		//we track which points on the original (spatial) maps each bin in the correlation map
 		//comes from so that selections can be mapped back to them
-		translation = new LinkedHashMap<>(bins*bins);
+		translation.clear();
 		for (int i = 0; i < bins*bins; i++) {
 			translation.put(i, new ArrayList<>());
 		}
+		invalidated = false;
 		
 		for (int i = 0; i < xData.size(); i++) {
 
@@ -200,7 +203,7 @@ public class CorrelationModeController extends ModeController {
 
 	@Override
 	public List<Integer> translateSelection(List<Integer> points) {
-		if (translation == null) {
+		if (invalidated) {
 			getData();
 		}
 		Set<Integer> translated = new HashSet<>();
