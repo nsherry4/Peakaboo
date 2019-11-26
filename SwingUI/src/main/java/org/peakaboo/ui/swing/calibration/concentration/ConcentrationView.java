@@ -20,8 +20,8 @@ import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
@@ -40,13 +40,13 @@ public class ConcentrationView extends HeaderLayer {
 		getContentRoot().setPreferredSize(new Dimension(700, 350));
 		
 		
-		ImageButton save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS)
-				.withButtonSize(ImageButtonSize.LARGE)
+		FluentButton save = new FluentButton(StockIcon.DOCUMENT_SAVE_AS)
+				.withButtonSize(FluentButtonSize.LARGE)
 				.withTooltip("Save as CSV")
 				.withAction(this::saveData);
 		
-		ImageButton copy = new ImageButton(StockIcon.EDIT_COPY)
-				.withButtonSize(ImageButtonSize.LARGE)
+		FluentButton copy = new FluentButton(StockIcon.EDIT_COPY)
+				.withButtonSize(FluentButtonSize.LARGE)
 				.withTooltip("Copy to clipboard")
 				.withAction(this::copyData);
 		

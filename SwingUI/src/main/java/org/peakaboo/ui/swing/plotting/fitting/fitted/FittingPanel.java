@@ -32,8 +32,8 @@ import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls.ElementCount;
@@ -72,12 +72,12 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		JPopupMenu addMenu = createAddMenu();
 
-		ImageButton addButton = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Add Fittings");
+		FluentButton addButton = new FluentButton(StockIcon.EDIT_ADD).withTooltip("Add Fittings");
 		addButton.withAction(() -> {
 			addMenu.show(addButton, 0, addButton.getHeight());
 		});
 		
-		ImageButton removeButton = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Fittings").withAction(() -> {
+		FluentButton removeButton = new FluentButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Fittings").withAction(() -> {
 			int rows[] = fitTable.getSelectedRows();
 			List<ITransitionSeries> tss = Arrays.stream(rows).boxed().map(i -> controller.getFittedTransitionSeries().get(i)).collect(toList());
 				
@@ -88,20 +88,20 @@ public class FittingPanel extends ClearPanel implements Changeable
 			owner.changed();
 		});
 		
-		ImageButton clearButton = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Fittings").withAction(() -> {
+		FluentButton clearButton = new FluentButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Fittings").withAction(() -> {
 			controller.clearTransitionSeries();
 			owner.changed();
 		});
 		
 		controls = new ListControls(addButton, removeButton, clearButton);
 		
-		ImageButton selectAll = new ImageButton(StockIcon.SELECTION_ALL)
-				.withButtonSize(ImageButtonSize.COMPACT)
+		FluentButton selectAll = new FluentButton(StockIcon.SELECTION_ALL)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select All")
 				.withBordered(false)
 				.withAction(() -> controller.setAllTransitionSeriesVisibility(true));
-		ImageButton selectNone = new ImageButton(StockIcon.SELECTION_NONE)
-				.withButtonSize(ImageButtonSize.COMPACT)
+		FluentButton selectNone = new FluentButton(StockIcon.SELECTION_NONE)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select None")
 				.withBordered(false)
 				.withAction(() -> controller.setAllTransitionSeriesVisibility(false));

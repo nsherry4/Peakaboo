@@ -18,7 +18,7 @@ import javax.swing.border.MatteBorder;
 
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 
@@ -26,7 +26,7 @@ public abstract class ListPickerLayer<T> extends HeaderLayer {
 	
 	private List<T> items;
 	private Consumer<T> onAccept;
-	private ImageButton accept, reject;
+	private FluentButton accept, reject;
 	private PickerList<T> reflist;
 	
 	static class PickerList<T> extends JPanel {
@@ -103,8 +103,8 @@ public abstract class ListPickerLayer<T> extends HeaderLayer {
 		
 		reflist = new PickerList<>(this, getTable(items));
 		
-		accept = new ImageButton("OK").withStateDefault().withAction(() -> this.onAccept.accept(reflist.getSelectedReference()));
-		reject = new ImageButton("Cancel").withAction(this::remove);
+		accept = new FluentButton("OK").withStateDefault().withAction(() -> this.onAccept.accept(reflist.getSelectedReference()));
+		reject = new FluentButton("Cancel").withAction(this::remove);
 		
 		getHeader().setComponents(reject, title, accept);
 		setBody(reflist);

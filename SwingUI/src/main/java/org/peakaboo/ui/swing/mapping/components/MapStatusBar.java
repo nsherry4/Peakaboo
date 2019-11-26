@@ -16,8 +16,8 @@ import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.ZoomSlider;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapStatusBar extends JPanel {
@@ -54,7 +54,7 @@ public class MapStatusBar extends JPanel {
 		JPopupMenu zoomMenu = new JPopupMenu();
 		zoomMenu.setBorder(Spacing.bNone());
 		zoomMenu.add(zoom);
-		ImageButton zoomButton = new ImageButton(StockIcon.FIND).withTooltip("Zoom").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
+		FluentButton zoomButton = new FluentButton(StockIcon.FIND).withTooltip("Zoom").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
 		zoomButton.addActionListener(e -> {
 			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
 		});

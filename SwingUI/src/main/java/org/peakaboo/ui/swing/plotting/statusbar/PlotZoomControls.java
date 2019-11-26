@@ -9,11 +9,11 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.ZoomSlider;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 
-public class PlotZoomControls extends ImageButton {
+public class PlotZoomControls extends FluentButton {
 	
 	private PlotController controller;
 	
@@ -23,7 +23,7 @@ public class PlotZoomControls extends ImageButton {
 	public PlotZoomControls(PlotController controller) {
 		super(StockIcon.FIND);
 		super.withTooltip("Zoom")
-			.withLayout(ImageButtonLayout.IMAGE)
+			.withLayout(FluentButtonLayout.IMAGE)
 			.withBordered(false);
 		
 		this.controller = controller;
@@ -39,7 +39,7 @@ public class PlotZoomControls extends ImageButton {
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
 
 		
-		final ToggleImageButton lockHorizontal = new ToggleImageButton("", StockIcon.MISC_LOCKED).withTooltip("Lock Vertical Zoom to Window Size");
+		final FluentToggleButton lockHorizontal = new FluentToggleButton("", StockIcon.MISC_LOCKED).withTooltip("Lock Vertical Zoom to Window Size");
 		lockHorizontal.setSelected(true);
 		lockHorizontal.addActionListener(e -> {
 			controller.view().setLockPlotHeight(lockHorizontal.isSelected());

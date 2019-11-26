@@ -12,12 +12,12 @@ import javax.swing.border.TitledBorder;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 
 public class ScaleModeWidget extends JPanel {
 
-	private ToggleImageButton relativeButton, absoluteButton;
+	private FluentToggleButton relativeButton, absoluteButton;
 	
 	public ScaleModeWidget(MapFittingController viewController, String relative, String absolute, boolean warnRelative) {
 		
@@ -34,8 +34,8 @@ public class ScaleModeWidget extends JPanel {
 			absoluteButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.ABSOLUTE);
 		});
 		
-		relativeButton = new ToggleImageButton(relative);
-		absoluteButton = new ToggleImageButton(absolute);
+		relativeButton = new FluentToggleButton(relative);
+		absoluteButton = new FluentToggleButton(absolute);
 		
 		ButtonGroup scaleGroup = new ButtonGroup();
 		scaleGroup.add(relativeButton);

@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.buttons.components.menuitem;
+package org.peakaboo.framework.swidget.widgets.fluent.menuitem;
 
 import java.awt.event.ActionEvent;
 
@@ -10,24 +10,24 @@ import javax.swing.KeyStroke;
 
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.widgets.buttons.components.SwidgetComponentFluentAPI;
+import org.peakaboo.framework.swidget.widgets.fluent.FluentAPI;
 
-public class SwidgetMenuItem extends JMenuItem implements SwidgetMenuItemFluentAPI<SwidgetMenuItem, SwidgetMenuItemConfig>{
+public class FluentMenuItem extends JMenuItem implements FluentMenuItemAPI<FluentMenuItem, FluentMenuItemConfig>{
 
-	private SwidgetMenuItemConfig config = new SwidgetMenuItemConfig();
+	private FluentMenuItemConfig config = new FluentMenuItemConfig();
 
-	public SwidgetMenuItem() {
+	public FluentMenuItem() {
 		this.addActionListener(this::action);
 		makeWidget();
 	}
 	
 	@Override
-	public SwidgetMenuItem getSelf() {
+	public FluentMenuItem getSelf() {
 		return this;
 	}
 
 	@Override
-	public SwidgetMenuItemConfig getComponentConfig() {
+	public FluentMenuItemConfig getComponentConfig() {
 		return config;
 	}
 
@@ -48,7 +48,7 @@ public class SwidgetMenuItem extends JMenuItem implements SwidgetMenuItemFluentA
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					SwidgetMenuItem.this.action(e);
+					FluentMenuItem.this.action(e);
 				}
 			};
 			config.keystrokeParent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(config.keystroke, config.keystroke.toString());

@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.buttons;
+package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
@@ -18,15 +18,15 @@ import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_STYLE;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonConfig.BORDER_STYLE;
 
-public class ImageButtonConfigurator {
+public class FluentButtonConfigurator {
 	
 	protected AbstractButton button;
-	protected ImageButtonFluentAPI<? extends JComponent, ImageButtonConfig> api;
-	protected ImageButtonConfig config;
+	protected FluentButtonAPI<? extends JComponent, FluentButtonConfig> api;
+	protected FluentButtonConfig config;
 	
-	public ImageButtonConfigurator(AbstractButton button, ImageButtonFluentAPI<? extends JComponent, ImageButtonConfig> api, ImageButtonConfig config) {
+	public FluentButtonConfigurator(AbstractButton button, FluentButtonAPI<? extends JComponent, FluentButtonConfig> api, FluentButtonConfig config) {
 		this.button = button;
 		this.api = api;
 		this.config = config;
@@ -126,12 +126,12 @@ public class ImageButtonConfigurator {
 		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
 		
 		
-		ImageButtonLayout mode = config.layout;
+		FluentButtonLayout mode = config.layout;
 		if (mode == null) {
 			mode = guessLayout();
 		}
 
-		ImageButtonSize buttonSize = config.buttonSize;
+		FluentButtonSize buttonSize = config.buttonSize;
 		if(buttonSize == null) {
 			buttonSize = guessButtonSize(mode);
 		}
@@ -150,7 +150,7 @@ public class ImageButtonConfigurator {
 			case IMAGE:
 
 				if (isNimbus) { 
-					button.setBorder(buttonSize == ImageButtonSize.COMPACT ? Spacing.bMedium() : Spacing.bLarge());
+					button.setBorder(buttonSize == FluentButtonSize.COMPACT ? Spacing.bMedium() : Spacing.bLarge());
 				} else {
 					button.setMargin(Spacing.iSmall());
 				}
@@ -210,33 +210,33 @@ public class ImageButtonConfigurator {
 		
 	}
 	
-	protected ImageButtonLayout guessLayout() {
-		ImageButtonLayout mode = ImageButtonLayout.IMAGE_ON_SIDE;
+	protected FluentButtonLayout guessLayout() {
+		FluentButtonLayout mode = FluentButtonLayout.IMAGE_ON_SIDE;
 		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
 		if (config.imagename == null || image.getIconHeight() == -1) {
-			mode = ImageButtonLayout.TEXT;
+			mode = FluentButtonLayout.TEXT;
 		} else if (config.text == null || "".equals(config.text)) {
-			mode = ImageButtonLayout.IMAGE;
+			mode = FluentButtonLayout.IMAGE;
 		}
 		return mode;
 	}
 	
-	protected ImageButtonSize guessButtonSize(ImageButtonLayout mode) {
-		if (mode == ImageButtonLayout.IMAGE) {
-			return ImageButtonSize.COMPACT;
+	protected FluentButtonSize guessButtonSize(FluentButtonLayout mode) {
+		if (mode == FluentButtonLayout.IMAGE) {
+			return FluentButtonSize.COMPACT;
 		}
-		return ImageButtonSize.LARGE;
+		return FluentButtonSize.LARGE;
 		
 	}
 	
 	protected Dimension getPreferredSize(Dimension superPreferred) {
 				
-		ImageButtonLayout mode = config.layout;
+		FluentButtonLayout mode = config.layout;
 		if (mode == null) {
 			mode = guessLayout();
 		}
 		
-		ImageButtonSize buttonSize = config.buttonSize;
+		FluentButtonSize buttonSize = config.buttonSize;
 		if (buttonSize == null) {
 			buttonSize = guessButtonSize(mode);
 		}
@@ -244,7 +244,7 @@ public class ImageButtonConfigurator {
 		int prefHeight = 32, prefWidth = 80;
 		
 		Dimension preferred = superPreferred;
-		if (buttonSize == ImageButtonSize.LARGE) {
+		if (buttonSize == FluentButtonSize.LARGE) {
 			
 			switch (mode) {
 			case IMAGE:
@@ -288,7 +288,7 @@ public class ImageButtonConfigurator {
 		button.repaint();
 	}
 
-	public ImageButtonConfig getConfiguration() {
+	public FluentButtonConfig getConfiguration() {
 		return config;
 	}
 	

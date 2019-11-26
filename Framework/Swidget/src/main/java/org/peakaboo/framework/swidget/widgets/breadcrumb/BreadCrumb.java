@@ -17,8 +17,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 
 public class BreadCrumb<T> extends JPanel {
 
@@ -32,7 +32,7 @@ public class BreadCrumb<T> extends JPanel {
 	private Consumer<T> onSelect;
 	private String alignment = BorderLayout.CENTER;
 	
-	private ImageButton goLeft, goRight;
+	private FluentButton goLeft, goRight;
 
 	private Function<T, BreadCrumbEntry<T>> entryBuilder;
 	
@@ -56,12 +56,12 @@ public class BreadCrumb<T> extends JPanel {
 		this.formatter = formatter;
 		this.onSelect = onSelect;
 		
-		goLeft  = new ImageButton()
-				.withButtonSize(ImageButtonSize.COMPACT)
+		goLeft  = new FluentButton()
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(this::doGoLeft);
 		goLeft.setIcon(new ImageIcon(BreadCrumb.class.getClassLoader().getResource("swidget/widgets/breadcrumb/arrow-left.png")));
-		goRight = new ImageButton()
-				.withButtonSize(ImageButtonSize.COMPACT)
+		goRight = new FluentButton()
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(this::doGoRight);
 		goRight.setIcon(new ImageIcon(BreadCrumb.class.getClassLoader().getResource("swidget/widgets/breadcrumb/arrow-right.png")));
 

@@ -19,8 +19,8 @@ import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
@@ -75,12 +75,12 @@ public class MapFittingPanel extends ClearPanel
 		modeSelectPanel.setBorder(Spacing.bSmall());
 		
 		
-		ImageButton selectAll = new ImageButton(StockIcon.SELECTION_ALL)
-				.withButtonSize(ImageButtonSize.COMPACT)
+		FluentButton selectAll = new FluentButton(StockIcon.SELECTION_ALL)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select All")
 				.withAction(() -> controller.getActiveMode().setAllVisible(true));
-		ImageButton selectNone = new ImageButton(StockIcon.SELECTION_NONE)
-				.withButtonSize(ImageButtonSize.COMPACT)
+		FluentButton selectNone = new FluentButton(StockIcon.SELECTION_NONE)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select None")
 				.withAction(() -> controller.getActiveMode().setAllVisible(false));
 		ButtonLinker linker = new ButtonLinker(selectNone, selectAll);

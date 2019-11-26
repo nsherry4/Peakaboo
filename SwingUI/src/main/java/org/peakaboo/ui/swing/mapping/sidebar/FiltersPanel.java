@@ -31,7 +31,7 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.models.GroupedListTreeModel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
@@ -173,21 +173,21 @@ public class FiltersPanel extends JPanel {
 		
 		
 		
-		ImageButton add = new ImageButton(StockIcon.EDIT_ADD)
+		FluentButton add = new FluentButton(StockIcon.EDIT_ADD)
 			.withTooltip("Add Filter")
 			.withAction(() -> {
 				layout.show(this, PANEL_ADD);
 				//TODO: Remove Me
 				//controller.add(new AverageMapFilter());
 		});
-		ImageButton remove = new ImageButton(StockIcon.EDIT_REMOVE)
+		FluentButton remove = new FluentButton(StockIcon.EDIT_REMOVE)
 			.withTooltip("Remove Filter")
 			.withAction(() -> {
 				int index = filterTable.getSelectionModel().getAnchorSelectionIndex();
 				if (index < 0 || index >= controller.size()) { return; }
 				controller.remove(index);
 		});
-		ImageButton clear = new ImageButton(StockIcon.EDIT_CLEAR)
+		FluentButton clear = new FluentButton(StockIcon.EDIT_CLEAR)
 			.withTooltip("Clear Filters")
 			.withAction(() -> {
 				controller.clear();
@@ -274,7 +274,7 @@ class MapFilterWidget extends ListWidget<MapFilter> {
 
 class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	
-	private ImageButton button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL);
+	private FluentButton button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL);
 	private MapFilter filter;
 	
 	private static Map<MapFilter, MapFilterDialog> dialogs = new HashMap<>();

@@ -2,11 +2,11 @@ package org.peakaboo.framework.swidget.widgets.breadcrumb;
 
 import java.util.function.Function;
 
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 
 public class BreadCrumbEntry<T> {
-	private ToggleImageButton button;
+	private FluentToggleButton button;
 	private T item;
 	private Function<T, String> formatter;
 	protected BreadCrumb<T> parent;
@@ -22,9 +22,9 @@ public class BreadCrumbEntry<T> {
 	/**
 	 * Make the button
 	 */
-	protected ToggleImageButton make() {
-		button = new ToggleImageButton(formatter.apply(item));
-		button.withButtonSize(ImageButtonSize.COMPACT);
+	protected FluentToggleButton make() {
+		button = new FluentToggleButton(formatter.apply(item));
+		button.withButtonSize(FluentButtonSize.COMPACT);
 		if (item.equals(parent.getSelected())) {
 			button.setSelected(true);
 		}
@@ -64,7 +64,7 @@ public class BreadCrumbEntry<T> {
 	/**
 	 * Returns the button representing this entry
 	 */
-	public ToggleImageButton getButton() {
+	public FluentToggleButton getButton() {
 		return button;
 	}
 	

@@ -96,8 +96,8 @@ import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener.Buttons;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
@@ -368,12 +368,12 @@ public class PlotPanel extends TabbedLayerPanel
 				paramPanel.getHeader().setCentre("Options");
 				paramPanel.getHeader().setShowClose(false);
 				
-				ImageButton ok = new ImageButton("OK").withStateDefault();
+				FluentButton ok = new FluentButton("OK").withStateDefault();
 				ok.addActionListener(e -> {
 					PlotPanel.this.removeLayer(layer);
 					finished.accept(true);
 				});
-				ImageButton cancel = new ImageButton("Cancel");
+				FluentButton cancel = new FluentButton("Cancel");
 				cancel.addActionListener(e -> {
 					PlotPanel.this.removeLayer(layer);
 					finished.accept(false);
@@ -410,14 +410,14 @@ public class PlotPanel extends TabbedLayerPanel
 			
 			@Override
 			public void onSessionHasData(File sessionFile, Consumer<Boolean> load) {
-				ImageButton buttonYes = new ImageButton("Yes")
+				FluentButton buttonYes = new FluentButton("Yes")
 						.withStateDefault()
 						.withAction(() -> {
 							controller.io().setBothFromSession(sessionFile);
 							load.accept(true);
 						});
 				
-				ImageButton buttonNo = new ImageButton("No")
+				FluentButton buttonNo = new FluentButton("No")
 						.withAction(() -> {
 							load.accept(false);
 						});
@@ -1048,10 +1048,10 @@ public class PlotPanel extends TabbedLayerPanel
 		textfield.setText(controller.fitting().getAnnotation(selected));
 		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, MessageType.QUESTION);
 		dialogbox.set(dialog);
-		dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
+		dialog.addLeft(new FluentButton("Cancel").withAction(() -> {
 			dialog.hide();
 		}));
-		dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
+		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
 			controller.fitting().setAnnotation(selected, textfield.getText());
 			dialog.hide();
 		}));
@@ -1128,10 +1128,10 @@ public class PlotPanel extends TabbedLayerPanel
 		textfield.setText(controller.data().getTitle());
 		LayerDialog dialog = new LayerDialog("Change Dataset Title", textfield, MessageType.QUESTION);
 		dialogbox.set(dialog);
-		dialog.addLeft(new ImageButton("Cancel").withAction(() -> {
+		dialog.addLeft(new FluentButton("Cancel").withAction(() -> {
 			dialog.hide();
 		}));
-		dialog.addRight(new ImageButton("OK").withStateDefault().withAction(() -> {
+		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
 			controller.data().setTitle(textfield.getText());
 			dialog.hide();
 		}));

@@ -21,7 +21,7 @@ import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.ui.swing.plotting.fitting.MutableTableModel;
@@ -195,16 +195,16 @@ class FilterList extends ClearPanel {
 
 	private JPanel createControlPanel(){
 		
-		ImageButton addButton = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Add Filter").withAction(() -> {
+		FluentButton addButton = new FluentButton(StockIcon.EDIT_ADD).withTooltip("Add Filter").withAction(() -> {
 			owner.showSelectPane();
 		});
 		
-		ImageButton removeButton = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Filter").withAction(() -> {
+		FluentButton removeButton = new FluentButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Filter").withAction(() -> {
 			if (t.getSelectedRow() == -1) return;
 			controller.removeFilter(t.getSelectedRow());
 		});
 		
-		ImageButton clearButton = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Filters").withAction(() -> {
+		FluentButton clearButton = new FluentButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Filters").withAction(() -> {
 			controller.clearFilters();
 		});
 		

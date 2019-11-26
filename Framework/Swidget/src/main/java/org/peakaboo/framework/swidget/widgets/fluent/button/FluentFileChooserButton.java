@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.buttons;
+package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,9 +14,9 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
-public class FileChooserImageButton extends JButton implements ImageButtonFluentAPI<FileChooserImageButton, ImageButtonConfig> {
+public class FluentFileChooserButton extends JButton implements FluentButtonAPI<FluentFileChooserButton, FluentButtonConfig> {
 
-	private ImageButtonConfigurator configurator;
+	private FluentButtonConfigurator configurator;
 	
 	private File file;
 	private String overrideText = null;
@@ -25,7 +25,7 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 	private JLabel lblText;
 	private JLabel lblIcon;
 	
-	public FileChooserImageButton(File file) {
+	public FluentFileChooserButton(File file) {
 		super();
 		
 		panelContents = new ClearPanel(new BorderLayout());
@@ -38,7 +38,7 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 		this.add(panelContents);
 
 		
-		configurator = new ImageButtonConfigurator(this, this, new ImageButtonConfig()) {
+		configurator = new FluentButtonConfigurator(this, this, new FluentButtonConfig()) {
 			protected Dimension getPreferredSize(Dimension superPreferred) {
 
 				int prefHeight = 0, prefWidth = 160;
@@ -57,7 +57,7 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 	
 	
 	@Override
-	public ImageButtonConfig getComponentConfig() {
+	public FluentButtonConfig getComponentConfig() {
 		return getConfigurator().getConfiguration();
 	}
 
@@ -67,12 +67,12 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 	}
 
 	@Override
-	public FileChooserImageButton getSelf() {
+	public FluentFileChooserButton getSelf() {
 		return this;
 	}
 
 	@Override
-	public ImageButtonConfigurator getConfigurator() {
+	public FluentButtonConfigurator getConfigurator() {
 		return configurator;
 	}
 
@@ -130,7 +130,7 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 		
 	}
 
-	public FileChooserImageButton withFile(File file) {
+	public FluentFileChooserButton withFile(File file) {
 		setFile(file);
 		return this;
 	}

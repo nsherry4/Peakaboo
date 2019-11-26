@@ -21,8 +21,8 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 
 
@@ -40,7 +40,7 @@ public class SwingAutoDialog extends LiveDialog
 	private boolean selected_ok = false;
 	
 	
-	private ImageButton info;
+	private FluentButton info;
 
 	
 	public SwingAutoDialog(Window owner, Group group) {
@@ -99,14 +99,14 @@ public class SwingAutoDialog extends LiveDialog
 		
 		if (buttons == AutoDialogButtons.OK_CANCEL) {
 			
-			ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
+			FluentButton ok = new FluentButton("OK", StockIcon.CHOOSE_OK);
 			ok.addActionListener(e -> {
 				this.selected_ok = true;
 				System.err.println("Set OK");
 				SwingAutoDialog.this.setVisible(false);
 			});
 			
-			ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
+			FluentButton cancel = new FluentButton("Cancel", StockIcon.CHOOSE_CANCEL);
 			cancel.addActionListener(e -> {
 				SwingAutoDialog.this.setVisible(false);
 			});
@@ -116,7 +116,7 @@ public class SwingAutoDialog extends LiveDialog
 			
 		} else if (buttons == AutoDialogButtons.CLOSE) {
 			
-			ImageButton close = new ImageButton("Close", StockIcon.WINDOW_CLOSE);
+			FluentButton close = new FluentButton("Close", StockIcon.WINDOW_CLOSE);
 			close.addActionListener(e -> {
 				SwingAutoDialog.this.setVisible(false);
 			});
@@ -126,7 +126,7 @@ public class SwingAutoDialog extends LiveDialog
 		}
 		
 		
-		info = new ImageButton(StockIcon.BADGE_HELP).withTooltip("More Information").withLayout(ImageButtonLayout.IMAGE).withBordered(true);
+		info = new FluentButton(StockIcon.BADGE_HELP).withTooltip("More Information").withLayout(FluentButtonLayout.IMAGE).withBordered(true);
 		info.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e)

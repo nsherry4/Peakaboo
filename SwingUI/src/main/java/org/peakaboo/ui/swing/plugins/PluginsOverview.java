@@ -66,8 +66,8 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
@@ -130,13 +130,13 @@ public class PluginsOverview extends HeaderLayer {
 		
 		
 		//header controls
-		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
-		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
-		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		add = new FluentButton(StockIcon.EDIT_ADD).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
+		remove = new FluentButton(StockIcon.EDIT_REMOVE).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		reload = new FluentButton(StockIcon.ACTION_REFRESH).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
 		remove.setEnabled(false);
 		
-		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
+		browse = new FluentButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new FluentButton(StockIcon.GO_DOWN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonLinker edits = new ButtonLinker(add, remove, reload);
 		ButtonLinker tools = new ButtonLinker(browse, download);
@@ -201,12 +201,12 @@ public class PluginsOverview extends HeaderLayer {
 				"Are you sure you want to delete the container with the plugins:\n\n" + listToUL(container.getPlugins()), 
 				MessageType.QUESTION)
 			.addRight(
-				new ImageButton("Delete").withAction(() -> {
+				new FluentButton("Delete").withAction(() -> {
 					plugin.getContainer().delete();
 					this.reload();
 				}).withStateCritical()
 				)
-			.addLeft(new ImageButton("Cancel"))
+			.addLeft(new FluentButton("Cancel"))
 			.showIn(parent);
 		
 		
@@ -407,14 +407,14 @@ public class PluginsOverview extends HeaderLayer {
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(640, 480));
 		
-		ImageButton b1 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
-		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
+		FluentButton b1 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
+		FluentButton b2 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
 
-		ImageButton b3 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
-		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
+		FluentButton b3 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
+		FluentButton b4 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
 		
-		ImageButton b5 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
-		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
+		FluentButton b5 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
+		FluentButton b6 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
 		
 		ButtonBox box = new ButtonBox();
 		

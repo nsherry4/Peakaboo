@@ -1,14 +1,14 @@
-package org.peakaboo.framework.swidget.widgets.buttons.components.menuitem;
+package org.peakaboo.framework.swidget.widgets.fluent.menuitem;
 
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
-import org.peakaboo.framework.swidget.widgets.buttons.components.SwidgetComponentFluentAPI;
+import org.peakaboo.framework.swidget.widgets.fluent.FluentAPI;
 
-public interface SwidgetMenuItemFluentAPI<
-		B extends JComponent & SwidgetMenuItemFluentAPI<B, C>, 
-		C extends SwidgetMenuItemConfig
-	> extends SwidgetComponentFluentAPI<B, C> {
+public interface FluentMenuItemAPI<
+		B extends JComponent & FluentMenuItemAPI<B, C>, 
+		C extends FluentMenuItemConfig
+	> extends FluentAPI<B, C> {
 	
 	default B withKeyStroke(KeyStroke key, JComponent parent) {
 		getComponentConfig().keystroke = key;

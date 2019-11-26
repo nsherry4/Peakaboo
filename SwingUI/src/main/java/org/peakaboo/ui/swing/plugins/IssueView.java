@@ -14,7 +14,7 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.JTextLabel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
 import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 
@@ -37,9 +37,9 @@ public class IssueView extends JPanel {
 		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 		JPanel actionPanel = new JPanel(new GridBagLayout());
-		ImageButton action = null;
+		FluentButton action = null;
 		if (issue.hasFix()) {
-			action = new ImageButton(issue.fixName());
+			action = new FluentButton(issue.fixName());
 			if (issue.isFixDestructuve()) {
 				action.withStateCritical();
 			} else {

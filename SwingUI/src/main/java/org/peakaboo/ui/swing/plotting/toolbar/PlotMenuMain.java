@@ -15,7 +15,7 @@ import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.components.menuitem.SwidgetMenuItem;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuMain extends JPopupMenu {
@@ -27,7 +27,7 @@ public class PlotMenuMain extends JPopupMenu {
 		this.controller = controller;
 		
 		
-		SwidgetMenuItem mOpen = new SwidgetMenuItem()
+		FluentMenuItem mOpen = new FluentMenuItem()
 				.withText("Open Data\u2026")
 				.withTooltip("Opens new data sets.")
 				.withIcon(StockIcon.DOCUMENT_OPEN)
@@ -36,20 +36,20 @@ public class PlotMenuMain extends JPopupMenu {
 				.withAction(plot::actionOpenData);
 		this.add(mOpen);
 
-		save = new SwidgetMenuItem()
+		save = new FluentMenuItem()
 				.withText("Save Session")
 				.withIcon(StockIcon.DOCUMENT_SAVE)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK), plot)
 				.withAction(plot::actionSaveSession);
 		this.add(save);
 
-		saveAs = new SwidgetMenuItem()
+		saveAs = new FluentMenuItem()
 				.withText("Save Session As\u2026")
 				.withIcon(StockIcon.DOCUMENT_SAVE_AS)
 				.withAction(plot::actionSaveSessionAs);
 		this.add(saveAs);
 		
-		SwidgetMenuItem mLoad = new SwidgetMenuItem()
+		FluentMenuItem mLoad = new FluentMenuItem()
 				.withText("Load Session")
 				.withAction(plot::actionLoadSession);
 		this.add(mLoad);
@@ -58,7 +58,7 @@ public class PlotMenuMain extends JPopupMenu {
 		this.addSeparator();
 
 		
-		undo = new SwidgetMenuItem()
+		undo = new FluentMenuItem()
 				.withText("Undo")
 				.withTooltip("Undoes a previous action")
 				.withIcon(StockIcon.EDIT_UNDO)
@@ -67,7 +67,7 @@ public class PlotMenuMain extends JPopupMenu {
 				.withAction(() -> controller.history().undo());
 		this.add(undo);
 
-		redo = new SwidgetMenuItem()
+		redo = new FluentMenuItem()
 				.withText("Redo")
 				.withTooltip("Redoes a previously undone action")
 				.withIcon(StockIcon.EDIT_REDO)
@@ -80,7 +80,7 @@ public class PlotMenuMain extends JPopupMenu {
 
 		
 		//HELP Menu
-		JMenuItem plugins = new SwidgetMenuItem()
+		JMenuItem plugins = new FluentMenuItem()
 				.withText("Plugins")
 				.withTooltip("Manage Peakaboo's plugins")
 				.withAction(plot::actionShowPlugins);
@@ -90,13 +90,13 @@ public class PlotMenuMain extends JPopupMenu {
 		JMenu debug = new JMenu("Logs & Bugs");
 		
 		
-		JMenuItem logs = new SwidgetMenuItem()
+		JMenuItem logs = new FluentMenuItem()
 				.withText("Show Logs")
 				.withAction(plot::actionShowLogs);
 		debug.add(logs);
 
 		Mutable<Boolean> isDebug = new Mutable<>(false);
-		JMenuItem debugLog = new SwidgetMenuItem()
+		JMenuItem debugLog = new FluentMenuItem()
 				.withText("Verbose Logging")
 				.withTooltip("Generates extra logging information for troubleshooting purposes")
 				.withAction(() -> {
@@ -109,12 +109,12 @@ public class PlotMenuMain extends JPopupMenu {
 				});
 		debug.add(debugLog);
 		
-		JMenuItem bugreport = new SwidgetMenuItem()
+		JMenuItem bugreport = new FluentMenuItem()
 				.withText("Report a Bug")
 				.withAction(plot::actionReportBug);
 		debug.add(bugreport);
 		
-		JMenuItem console = new SwidgetMenuItem()
+		JMenuItem console = new FluentMenuItem()
 				.withText("Debug Console")
 				.withAction(plot::actionDebugConsole);
 		debug.add(console);
@@ -123,14 +123,14 @@ public class PlotMenuMain extends JPopupMenu {
 		this.add(debug);
 		
 		
-		JMenuItem help = new SwidgetMenuItem()
+		JMenuItem help = new FluentMenuItem()
 				.withText("Help")
 				.withIcon(StockIcon.BADGE_HELP)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), plot)
 				.withAction(plot::actionHelp);
 		this.add(help);
 		
-		JMenuItem about = new SwidgetMenuItem()
+		JMenuItem about = new FluentMenuItem()
 				.withText("About")
 				.withIcon(StockIcon.MISC_ABOUT)
 				.withAction(plot::actionAbout);

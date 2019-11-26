@@ -29,8 +29,8 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
@@ -53,7 +53,7 @@ public class ProfileManager extends HeaderLayer {
 	private boolean nameShown = false;
 
 	
-	private ImageButton create, open, clear, save;
+	private FluentButton create, open, clear, save;
 	
 	public ProfileManager(PlotPanel parent, PlotController controller) {
 		super(parent, true);
@@ -86,20 +86,20 @@ public class ProfileManager extends HeaderLayer {
 
 		
 		
-		create = new ImageButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		create = new FluentButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
 			promptCreateProfile(this::actionLoadCalibrationReference);
 		});
 		
-		open = new ImageButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		open = new FluentButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
 			actionLoadCalibrationProfile();
 		});
 		
-		clear = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		clear = new FluentButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
 			controller.calibration().setCalibrationProfile(new CalibrationProfile(), null);
 			
 		});
 		
-		save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration Profile").withButtonSize(ImageButtonSize.LARGE).withAction(() -> {
+		save = new FluentButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
 			actionSaveCalibrationProfile();
 		});
 		save.setEnabled(controller.calibration().hasCalibrationReference());
@@ -119,8 +119,8 @@ public class ProfileManager extends HeaderLayer {
 	private void promptCreateProfile(Runnable onAccept) {
 		String text = Swidget.lineWrap(parent, "Z-Calibration Profiles describe and correct the variable elemental sensitivity of an experimental setup. They are a necessary part of determining sample concentrations.\n\nThis will replace any existing work with the settings and fittings needed to create a new Z-Calibration Profile.\n\nYou should have a reference data set open before proceeding.");
 		LayerDialog dialog = new LayerDialog("Create Z-Calibration Profile?", text, MessageType.QUESTION);
-		ImageButton ok = new ImageButton("OK").withAction(onAccept).withStateDefault();
-		ImageButton cancel = new ImageButton("Cancel");
+		FluentButton ok = new FluentButton("OK").withAction(onAccept).withStateDefault();
+		FluentButton cancel = new FluentButton("Cancel");
 		dialog.addLeft(cancel);
 		dialog.addRight(ok);
 		dialog.showIn(parent);

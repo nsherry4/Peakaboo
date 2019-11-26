@@ -7,8 +7,8 @@ import java.awt.datatransfer.StringSelection;
 
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ErrorPanel;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
 
 public class ErrorDialog extends HeaderDialog {
@@ -23,8 +23,8 @@ public class ErrorDialog extends HeaderDialog {
 		setBody(error);
 		
 		
-		ImageButton copy = new ImageButton(StockIcon.EDIT_COPY)
-				.withButtonSize(ImageButtonSize.LARGE)
+		FluentButton copy = new FluentButton(StockIcon.EDIT_COPY)
+				.withButtonSize(FluentButtonSize.LARGE)
 				.withTooltip("Copy error to clipboard")
 				.withAction(this::copyData);
 		getHeader().setLeft(copy);

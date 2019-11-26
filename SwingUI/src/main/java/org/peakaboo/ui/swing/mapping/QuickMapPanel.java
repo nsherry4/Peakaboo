@@ -17,7 +17,7 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
@@ -33,7 +33,7 @@ public class QuickMapPanel extends HeaderLayer {
 
 	private MappingController controller;
 	private MapCanvas canvas;
-	private ToolbarImageButton plotSelection;
+	private FluentToolbarButton plotSelection;
 	
 	public QuickMapPanel(LayerPanel plotTab, TabbedInterface<TabbedLayerPanel> plotTabs, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
 		super(plotTab, true, true);
@@ -84,8 +84,8 @@ public class QuickMapPanel extends HeaderLayer {
 		setBody(body);
 		
 		
-		ToolbarImageButton viewButton = MapperToolbar.createOptionsButton(plotTab, controller);
-		ToolbarImageButton sizingButton = createSizingButton(plotTab, controller);
+		FluentToolbarButton viewButton = MapperToolbar.createOptionsButton(plotTab, controller);
+		FluentToolbarButton sizingButton = createSizingButton(plotTab, controller);
 		ButtonBox bbox = new ButtonBox(0, false);
 		bbox.setOpaque(false);
 		bbox.addRight(sizingButton);
@@ -105,9 +105,9 @@ public class QuickMapPanel extends HeaderLayer {
 		
 	}
 	
-	public static ToolbarImageButton createSizingButton(LayerPanel panel, MappingController controller) {
+	public static FluentToolbarButton createSizingButton(LayerPanel panel, MappingController controller) {
 		
-		ToolbarImageButton opts = new ToolbarImageButton();
+		FluentToolbarButton opts = new FluentToolbarButton();
 		opts.withIcon(StockIcon.MENU_SETTINGS).withTooltip("Map Dimensions Menu");
 		JPopupMenu menu = new JPopupMenu();
 		

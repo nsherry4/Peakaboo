@@ -26,9 +26,9 @@ import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
@@ -253,7 +253,7 @@ public class Correlation extends JPanel {
 
 class AxisWidget extends ListWidget<ITransitionSeries> {
 
-	ToggleImageButton group1, group2;
+	FluentToggleButton group1, group2;
 	ButtonGroup group;
 	ButtonLinker linker;
 	MapFittingController controller;
@@ -263,8 +263,8 @@ class AxisWidget extends ListWidget<ITransitionSeries> {
 	public AxisWidget(MapFittingController controller) {
 		this.controller = controller;
 		
-		group1 = new ToggleImageButton("X").withButtonSize(ImageButtonSize.COMPACT);
-		group2 = new ToggleImageButton("Y").withButtonSize(ImageButtonSize.COMPACT);
+		group1 = new FluentToggleButton("X").withButtonSize(FluentButtonSize.COMPACT);
+		group2 = new FluentToggleButton("Y").withButtonSize(FluentButtonSize.COMPACT);
 		group1.setPreferredSize(new Dimension(26, 26));
 		group2.setPreferredSize(new Dimension(26, 26));
 		group = new ButtonGroup();

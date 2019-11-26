@@ -18,14 +18,14 @@ import org.peakaboo.framework.eventful.EventfulEnumListener;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 public class TaskMonitorPanel extends JPanel {
 
-	private ImageButton cancel; 
+	private FluentButton cancel; 
 	
 	public TaskMonitorPanel(String title, TaskMonitor<?>... monitors) {
 		this(title, Arrays.asList(monitors).stream().map(TaskMonitorView::new).collect(Collectors.toList()));
@@ -39,7 +39,7 @@ public class TaskMonitorPanel extends JPanel {
 
 		this.setLayout(new BorderLayout());
 		
-		cancel = new ImageButton("Cancel").withStateCritical();
+		cancel = new FluentButton("Cancel").withStateCritical();
 		cancel.addActionListener(e -> {
 			List<TaskMonitorView> reversed = new ArrayList<>(observerViews);
 			Collections.reverse(reversed);

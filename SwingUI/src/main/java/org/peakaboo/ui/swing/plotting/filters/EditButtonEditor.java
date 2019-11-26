@@ -19,15 +19,15 @@ import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 
 
 class EditButtonEditor extends DefaultCellEditor
 {
 
-	private ImageButton				button;
+	private FluentButton				button;
 	private JPanel 					container;
 	
 	private Window					owner;
@@ -49,7 +49,7 @@ class EditButtonEditor extends DefaultCellEditor
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
+		button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
 		button.addActionListener(e -> fireEditingStopped());
 		button.setOpaque(false);
 		

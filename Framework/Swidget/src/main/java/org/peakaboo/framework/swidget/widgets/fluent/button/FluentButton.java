@@ -1,41 +1,40 @@
-package org.peakaboo.framework.swidget.widgets.buttons;
+package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 
 import java.awt.Dimension;
 
-import javax.swing.JToggleButton;
+import javax.swing.JButton;
 
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 
 
+public class FluentButton extends JButton implements FluentButtonAPI<FluentButton, FluentButtonConfig> {
+	
+	private FluentButtonConfigurator configurator;
+	
 
-public class ToggleImageButton extends JToggleButton implements ImageButtonFluentAPI<ToggleImageButton, ImageButtonConfig>
-{
-
-	private ImageButtonConfigurator configurator;
-
-	public ToggleImageButton() {
+	public FluentButton() {
 		init();
 		makeWidget();
 	}
 	
-	public ToggleImageButton(String text) {
+	public FluentButton(String text) {
 		config().text = text;
 		
 		init();
 		makeWidget();
 	}
 	
-	public ToggleImageButton(StockIcon icon) {
+	public FluentButton(StockIcon icon) {
 		config().imagename = icon.toIconName();
 
 		init();
 		makeWidget();
 	}
 
-	public ToggleImageButton(StockIcon icon, IconSize size) {
+	public FluentButton(StockIcon icon, IconSize size) {
 		config().imagename = icon.toIconName();
 		config().size = size;
 
@@ -44,7 +43,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 	}
 
 	
-	public ToggleImageButton(String text, StockIcon icon) {
+	public FluentButton(String text, StockIcon icon) {
 		config().text = text;
 		config().imagename = icon.toIconName();
 
@@ -52,7 +51,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 		makeWidget();
 	}
 	
-	public ToggleImageButton(String text, String icon) {
+	public FluentButton(String text, String icon) {
 		config().text = text;
 		config().imagename = icon;
 
@@ -61,31 +60,19 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 	}
 	
 	
-	@Override
-	public void setSelected(boolean selected) {
-		super.setSelected(selected);
-		setButtonBorder();
-	}
-	
-	
-	
-	
-	
-	
-
 	
 	/**
 	 * For internal use only
 	 */
 	@Override
-	public ImageButtonConfigurator getConfigurator() {
+	public FluentButtonConfigurator getConfigurator() {
 		if (configurator == null) {
-			configurator = new ImageButtonConfigurator(this, this, new ImageButtonConfig());
+			configurator = new FluentButtonConfigurator(this, this, new FluentButtonConfig());
 		}
 		return configurator;
 	}
 	
-	private ImageButtonConfig config() {
+	private FluentButtonConfig config() {
 		return getConfigurator().getConfiguration();
 	}
 	
@@ -101,7 +88,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 	 * For internal use only
 	 */
 	@Override
-	public ImageButtonConfig getComponentConfig() {
+	public FluentButtonConfig getComponentConfig() {
 		return config();
 	}
 	
@@ -109,7 +96,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 	 * For internal use only
 	 */
 	@Override
-	public ToggleImageButton getSelf() {
+	public FluentButton getSelf() {
 		return this;
 	}
 	
@@ -152,5 +139,8 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 			super.setToolTipText(Swidget.lineWrapHTML(this, text));
 		}
 	}
+
+
+
 
 }

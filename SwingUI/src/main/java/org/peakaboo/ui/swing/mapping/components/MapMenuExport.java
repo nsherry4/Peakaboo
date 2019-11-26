@@ -8,7 +8,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.components.menuitem.SwidgetMenuItem;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentMenuItem;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapMenuExport extends JPopupMenu {
@@ -22,7 +22,7 @@ public class MapMenuExport extends JPopupMenu {
 	public MapMenuExport(MapperPanel plot) {
 				
 		
-		snapshotMenuItem = new SwidgetMenuItem()
+		snapshotMenuItem = new FluentMenuItem()
 				.withText("Export as Image\u2026")
 				.withTooltip("Exports the current plot as an image")
 				.withIcon(StockIcon.DEVICE_CAMERA)
@@ -31,14 +31,14 @@ public class MapMenuExport extends JPopupMenu {
 				.withAction(plot::actionSavePicture);
 		this.add(snapshotMenuItem);
 
-		exportCSV = new SwidgetMenuItem()
+		exportCSV = new FluentMenuItem()
 				.withText("Export as CSV")
 				.withTooltip("Export the current map as a comma separated value file")
 				.withAction(plot::actionSaveCSV);
 		this.add(exportCSV);
 		
 
-		exportArchive = new SwidgetMenuItem()
+		exportArchive = new FluentMenuItem()
 				.withText("All-In-One Zip Archive")
 				.withTooltip("Export all selected maps as images and comma separated value files in a zip archive")
 				.withAction(plot::actionSaveArchive);

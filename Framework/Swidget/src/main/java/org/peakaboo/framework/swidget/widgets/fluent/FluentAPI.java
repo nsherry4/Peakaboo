@@ -1,13 +1,13 @@
-package org.peakaboo.framework.swidget.widgets.buttons.components;
+package org.peakaboo.framework.swidget.widgets.fluent;
 
 import javax.swing.JComponent;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 
-public interface SwidgetComponentFluentAPI<
-		B extends JComponent & SwidgetComponentFluentAPI<B, C>, 
-		C extends SwidgetComponentConfig
+public interface FluentAPI<
+		B extends JComponent & FluentAPI<B, C>, 
+		C extends FluentConfig
 	> {
 	
 	/**

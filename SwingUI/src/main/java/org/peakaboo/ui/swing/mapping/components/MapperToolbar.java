@@ -19,7 +19,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
@@ -27,7 +27,7 @@ import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapperToolbar extends JToolBar {
 
-	private ToolbarImageButton	showConcentrations, examineSubset;
+	private FluentToolbarButton	showConcentrations, examineSubset;
 
 	public MapperToolbar(MapperPanel panel, MappingController controller) {
 
@@ -43,7 +43,7 @@ public class MapperToolbar extends JToolBar {
 		c.weighty = 0;
 		c.insets = new Insets(2, 2, 2, 2);
 		
-		ToolbarImageButton export = createExportMenuButton(panel);
+		FluentToolbarButton export = createExportMenuButton(panel);
 		this.add(export, c);
 		c.gridx++;
 		
@@ -52,7 +52,7 @@ public class MapperToolbar extends JToolBar {
 		
 		
 		if (Peakaboo.SHOW_QUANTITATIVE)  {
-			showConcentrations = new ToolbarImageButton("Concentration")
+			showConcentrations = new FluentToolbarButton("Concentration")
 					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Get fitting concentration for the selection")
 					.withSignificance(true);
@@ -119,9 +119,9 @@ public class MapperToolbar extends JToolBar {
 	}
 	
 
-	public static ToolbarImageButton createOptionsButton(LayerPanel panel, MappingController controller) {
+	public static FluentToolbarButton createOptionsButton(LayerPanel panel, MappingController controller) {
 		
-		ToolbarImageButton opts = new ToolbarImageButton();
+		FluentToolbarButton opts = new FluentToolbarButton();
 		opts.withIcon("menu-view").withTooltip("Map Settings Menu");
 		JPopupMenu menu = new MapMenuView(controller);
 		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
@@ -130,8 +130,8 @@ public class MapperToolbar extends JToolBar {
 	}
 	
 	
-	private ToolbarImageButton createExportMenuButton(MapperPanel panel) {
-		ToolbarImageButton exportMenuButton = new ToolbarImageButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Maps");
+	private FluentToolbarButton createExportMenuButton(MapperPanel panel) {
+		FluentToolbarButton exportMenuButton = new FluentToolbarButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Maps");
 		JPopupMenu exportMenu = new MapMenuExport(panel);
 		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
 		return exportMenuButton;

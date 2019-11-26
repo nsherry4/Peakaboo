@@ -13,8 +13,8 @@ import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 
 public class MapSelectionPanel extends SettingsPanel {
@@ -29,25 +29,25 @@ public class MapSelectionPanel extends SettingsPanel {
 		
 		
 		
-		ToggleImageButton selRect = new ToggleImageButton()
+		FluentToggleButton selRect = new FluentToggleButton()
 				.withIcon("select-rectangular", IconSize.BUTTON)
 				.withTooltip("Select Rectangle")
-				.withButtonSize(ImageButtonSize.COMPACT)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.RECTANGLE));
-		ToggleImageButton selEllipse = new ToggleImageButton()
+		FluentToggleButton selEllipse = new FluentToggleButton()
 				.withIcon("select-ellipse", IconSize.BUTTON)
 				.withTooltip("Select Ellipse")
-				.withButtonSize(ImageButtonSize.COMPACT)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.ELLIPSE));
-		ToggleImageButton selSimilar = new ToggleImageButton()
+		FluentToggleButton selSimilar = new FluentToggleButton()
 				.withIcon("select-continuous-area", IconSize.BUTTON)
 				.withTooltip("Select By Similarity")
-				.withButtonSize(ImageButtonSize.COMPACT)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SIMILAR));
-		ToggleImageButton selShape = new ToggleImageButton()
+		FluentToggleButton selShape = new FluentToggleButton()
 				.withIcon("select-lasso", IconSize.BUTTON)
 				.withTooltip("Select Hand-Drawn Shape")
-				.withButtonSize(ImageButtonSize.COMPACT)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SHAPE));
 		ButtonGroup selGroup = new ButtonGroup();
 		selGroup.add(selRect);

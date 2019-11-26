@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.buttons;
+package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 import java.awt.Color;
 
@@ -8,13 +8,13 @@ import javax.swing.border.Border;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_STYLE;
-import org.peakaboo.framework.swidget.widgets.buttons.components.SwidgetComponentFluentAPI;
+import org.peakaboo.framework.swidget.widgets.fluent.FluentAPI;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonConfig.BORDER_STYLE;
 
-interface ImageButtonFluentAPI<
-		B extends JComponent & ImageButtonFluentAPI<B, C>, 
-		C extends ImageButtonConfig
-	> extends SwidgetComponentFluentAPI<B, C> {
+interface FluentButtonAPI<
+		B extends JComponent & FluentButtonAPI<B, C>, 
+		C extends FluentButtonConfig
+	> extends FluentAPI<B, C> {
 
 	
 
@@ -24,7 +24,7 @@ interface ImageButtonFluentAPI<
 	/**
 	 * For internal use only
 	 */
-	ImageButtonConfigurator getConfigurator();
+	FluentButtonConfigurator getConfigurator();
 	
 	
 	void setForeground(Color c);
@@ -38,7 +38,7 @@ interface ImageButtonFluentAPI<
 		return getSelf();
 	}
 	
-	default B withBordered(ImageButtonConfig.BORDER_STYLE borderStyle) {
+	default B withBordered(FluentButtonConfig.BORDER_STYLE borderStyle) {
 		getComponentConfig().bordered = borderStyle;
 		makeWidget();
 		return getSelf();
@@ -53,13 +53,13 @@ interface ImageButtonFluentAPI<
 	}
 	
 	
-	default B withLayout(ImageButtonLayout layout) {
+	default B withLayout(FluentButtonLayout layout) {
 		getComponentConfig().layout = layout;
 		makeWidget();
 		return getSelf();
 	}
 	
-	default B withButtonSize(ImageButtonSize buttonSize) {
+	default B withButtonSize(FluentButtonSize buttonSize) {
 		getComponentConfig().buttonSize = buttonSize;
 		makeWidget();
 		return getSelf();

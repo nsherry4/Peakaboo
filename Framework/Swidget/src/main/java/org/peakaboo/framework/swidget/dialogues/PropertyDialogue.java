@@ -16,7 +16,7 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 
@@ -55,7 +55,7 @@ public class PropertyDialogue extends LiveDialog
 		
 		//Button Box
 		ButtonBox bbox = new ButtonBox();
-		ImageButton close = new ImageButton("Close", StockIcon.WINDOW_CLOSE);
+		FluentButton close = new FluentButton("Close", StockIcon.WINDOW_CLOSE);
 		close.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e)

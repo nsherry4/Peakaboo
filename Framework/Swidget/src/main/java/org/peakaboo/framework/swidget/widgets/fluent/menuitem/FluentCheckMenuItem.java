@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.buttons.components.menuitem;
+package org.peakaboo.framework.swidget.widgets.fluent.menuitem;
 
 import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
@@ -12,26 +12,26 @@ import javax.swing.JComponent;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 
-public class SwidgetCheckMenuItem extends JCheckBoxMenuItem implements SwidgetMenuItemFluentAPI<SwidgetCheckMenuItem, SwidgetMenuItemConfig> {
+public class FluentCheckMenuItem extends JCheckBoxMenuItem implements FluentMenuItemAPI<FluentCheckMenuItem, FluentMenuItemConfig> {
 
-	private SwidgetMenuItemConfig config = new SwidgetMenuItemConfig();
+	private FluentMenuItemConfig config = new FluentMenuItemConfig();
 	
-	public SwidgetCheckMenuItem() {
+	public FluentCheckMenuItem() {
 		this.addActionListener(this::action);
 		makeWidget();
 	}
 	
 	@Override
-	public SwidgetCheckMenuItem getSelf() {
+	public FluentCheckMenuItem getSelf() {
 		return this;
 	}
 	
 	@Override
-	public SwidgetMenuItemConfig getComponentConfig() {
+	public FluentMenuItemConfig getComponentConfig() {
 		return config;
 	}
 	
-	public SwidgetCheckMenuItem withAction(Consumer<Boolean> action) {
+	public FluentCheckMenuItem withAction(Consumer<Boolean> action) {
 		if (action == null) {
 			getComponentConfig().onAction = null;
 		} else {
@@ -57,7 +57,7 @@ public class SwidgetCheckMenuItem extends JCheckBoxMenuItem implements SwidgetMe
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					SwidgetCheckMenuItem.this.action(e);
+					FluentCheckMenuItem.this.action(e);
 				}
 			};
 			config.keystrokeParent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(config.keystroke, config.keystroke.toString());

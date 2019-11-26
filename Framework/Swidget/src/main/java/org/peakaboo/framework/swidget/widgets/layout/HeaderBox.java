@@ -35,8 +35,8 @@ import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 
 public class HeaderBox extends JPanel {
 	
@@ -315,8 +315,8 @@ public class HeaderBox extends JPanel {
 
 	
 	public static HeaderBox createYesNo(String title, String yesString, Runnable yesAction, String noString, Runnable noAction) {
-		ImageButton yes = new ImageButton(yesString).withStateDefault().withAction(yesAction);
-		ImageButton no = new ImageButton(noString).withAction(noAction);
+		FluentButton yes = new FluentButton(yesString).withStateDefault().withAction(yesAction);
+		FluentButton no = new FluentButton(noString).withAction(noAction);
 		return new HeaderBox(no, title, yes);
 	}
 	
@@ -336,11 +336,11 @@ public class HeaderBox extends JPanel {
     	return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
     }
 
-	public static ImageButton closeButton() {
-		ImageButton close = new ImageButton()
+	public static FluentButton closeButton() {
+		FluentButton close = new FluentButton()
 				.withTooltip("Close")
 				.withIcon(StockIcon.WINDOW_CLOSE)
-				.withButtonSize(ImageButtonSize.LARGE)
+				.withButtonSize(FluentButtonSize.LARGE)
 				.withBordered(false);
 		return close;
 	}
@@ -451,7 +451,7 @@ public class HeaderBox extends JPanel {
 		frame.pack();
 		frame.getContentPane().setLayout(new BorderLayout());
 		
-		HeaderBox box = new HeaderBox(null, "Title Text", new ImageButton("Right Side of the Window"));
+		HeaderBox box = new HeaderBox(null, "Title Text", new FluentButton("Right Side of the Window"));
 		frame.add(box, BorderLayout.NORTH);
 		
 		frame.setVisible(true);

@@ -18,7 +18,7 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.live.LiveFrame;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
@@ -131,10 +131,10 @@ public class PlotFrame extends LiveFrame
 				hd.getHeader().setShowClose(false);
 				hd.setPreferredSize(new Dimension(500, 160));
 				
-				ImageButton close = new ImageButton("Exit")
+				FluentButton close = new FluentButton("Exit")
 						.withStateCritical()
 						.withAction(closeAction);
-				ImageButton stay = new ImageButton("Cancel")
+				FluentButton stay = new FluentButton("Cancel")
 						.withAction(() -> hd.setVisible(false));
 				hd.getHeader().setRight(close);
 				hd.getHeader().setLeft(stay);

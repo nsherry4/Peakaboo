@@ -11,8 +11,8 @@ import javax.swing.KeyStroke;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
-import org.peakaboo.framework.swidget.widgets.buttons.components.menuitem.SwidgetCheckMenuItem;
-import org.peakaboo.framework.swidget.widgets.buttons.components.menuitem.SwidgetRadioMenuItem;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentCheckMenuItem;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentRadioMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {
@@ -28,7 +28,7 @@ public class PlotMenuView extends JPopupMenu {
 
 		ButtonGroup viewGroup = new ButtonGroup();
 
-		individual = new SwidgetRadioMenuItem()
+		individual = new FluentRadioMenuItem()
 				.withText(ChannelCompositeMode.NONE.show())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_I)
@@ -38,7 +38,7 @@ public class PlotMenuView extends JPopupMenu {
 		this.add(individual);
 		
 
-		average = new SwidgetRadioMenuItem()
+		average = new FluentRadioMenuItem()
 				.withText(ChannelCompositeMode.AVERAGE.show())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_M)
@@ -48,7 +48,7 @@ public class PlotMenuView extends JPopupMenu {
 		this.add(average);
 		
 
-		maximum = new SwidgetRadioMenuItem()
+		maximum = new FluentRadioMenuItem()
 				.withText(ChannelCompositeMode.MAXIMUM.show())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_T)
@@ -73,46 +73,46 @@ public class PlotMenuView extends JPopupMenu {
 
 
 		
-		logPlot = new SwidgetCheckMenuItem()
+		logPlot = new FluentCheckMenuItem()
 				.withText("Logarithmic Scale")
 				.withTooltip("Toggles the plot between a linear and logarithmic scale")
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_L)
 				.withAction(controller.view()::setViewLog);
 
-		consistentScale = new SwidgetCheckMenuItem()
+		consistentScale = new FluentCheckMenuItem()
 				.withText("Consistent Scale")
 				.withTooltip("All spectra in a dataset will be displayed with a consisntent scale")
 				.withAction(controller.view()::setConsistentScale);
 				
-		fittings = new SwidgetCheckMenuItem()
+		fittings = new FluentCheckMenuItem()
 				.withText("Individual Fittings")
 				.withTooltip("Switches between showing all fittings as a single curve and showing all fittings individually")
 				.withMnemonic(KeyEvent.VK_F)
 				.withAction(controller.view()::setShowIndividualSelections);
 
-		markings = new SwidgetCheckMenuItem()
+		markings = new FluentCheckMenuItem()
 				.withText("Transition Lines")
 				.withTooltip("Label fittings with lines denoting their transition energies")
 				.withAction(controller.view()::setShowElementMarkers);
 
-		intensities = new SwidgetCheckMenuItem()
+		intensities = new FluentCheckMenuItem()
 				.withText("Fitting Intensities")
 				.withTooltip("Label fittings with their intensities")
 				.withAction(controller.view()::setShowElementIntensities);
 	
-		raw = new SwidgetCheckMenuItem()
+		raw = new FluentCheckMenuItem()
 				.withText("Raw Data Outline")
 				.withTooltip("Toggles an outline of the original raw data")
 				.withMnemonic(KeyEvent.VK_R)
 				.withAction(controller.view()::setShowRawData);
 
-		title = new SwidgetCheckMenuItem()
+		title = new FluentCheckMenuItem()
 				.withText("Show Dataset Title")
 				.withTooltip("Toggles showing the dataset title in the plot")
 				.withAction(controller.view()::setShowTitle);
 		
-		monochrome = new SwidgetCheckMenuItem()
+		monochrome = new FluentCheckMenuItem()
 				.withText("Monochrome")
 				.withTooltip("Toggles the monochrome colour palette")
 				.withMnemonic(KeyEvent.VK_M)

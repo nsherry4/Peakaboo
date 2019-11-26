@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.buttons.components.menuitem;
+package org.peakaboo.framework.swidget.widgets.fluent.menuitem;
 
 import java.awt.event.ActionEvent;
 
@@ -10,22 +10,22 @@ import javax.swing.JRadioButtonMenuItem;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 
-public class SwidgetRadioMenuItem extends JRadioButtonMenuItem implements SwidgetMenuItemFluentAPI<SwidgetRadioMenuItem, SwidgetMenuItemConfig> {
+public class FluentRadioMenuItem extends JRadioButtonMenuItem implements FluentMenuItemAPI<FluentRadioMenuItem, FluentMenuItemConfig> {
 
-	private SwidgetMenuItemConfig config = new SwidgetMenuItemConfig();
+	private FluentMenuItemConfig config = new FluentMenuItemConfig();
 	
-	public SwidgetRadioMenuItem() {
+	public FluentRadioMenuItem() {
 		this.addActionListener(this::action);
 		makeWidget();
 	}
 	
 	@Override
-	public SwidgetRadioMenuItem getSelf() {
+	public FluentRadioMenuItem getSelf() {
 		return this;
 	}
 
 	@Override
-	public SwidgetMenuItemConfig getComponentConfig() {
+	public FluentMenuItemConfig getComponentConfig() {
 		return config;
 	}
 
@@ -46,7 +46,7 @@ public class SwidgetRadioMenuItem extends JRadioButtonMenuItem implements Swidge
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					SwidgetRadioMenuItem.this.action(e);
+					FluentRadioMenuItem.this.action(e);
 				}
 			};
 			config.keystrokeParent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(config.keystroke, config.keystroke.toString());

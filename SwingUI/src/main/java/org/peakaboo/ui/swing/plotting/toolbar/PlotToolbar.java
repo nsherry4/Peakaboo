@@ -21,7 +21,7 @@ import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMap;
@@ -35,11 +35,11 @@ public class PlotToolbar extends JToolBar {
 	private PlotController controller;
 	private PlotPanel plot;
 	
-	private ToolbarImageButton exportMenuButton;
-	private ToolbarImageButton saveButton;
-	private ToolbarImageButton toolbarMap;
-	private ToolbarImageButton toolbarConcentrations;
-	private ToolbarImageButton toolbarInfo;
+	private FluentToolbarButton exportMenuButton;
+	private FluentToolbarButton saveButton;
+	private FluentToolbarButton toolbarMap;
+	private FluentToolbarButton toolbarConcentrations;
+	private FluentToolbarButton toolbarInfo;
 
 	
 	private PlotMenuEnergy energyMenu;
@@ -71,7 +71,7 @@ public class PlotToolbar extends JToolBar {
 		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
-		ToolbarImageButton ibutton = new ToolbarImageButton("Open", "document-open").withTooltip("Open a new data set or session");
+		FluentToolbarButton ibutton = new FluentToolbarButton("Open", "document-open").withTooltip("Open a new data set or session");
 		ibutton.addActionListener(e -> plot.actionOpenData());
 		this.add(ibutton, c);
 
@@ -80,7 +80,7 @@ public class PlotToolbar extends JToolBar {
 
 
 		c.gridx += 1;
-		saveButton = new ToolbarImageButton("Save", StockIcon.DOCUMENT_SAVE_AS).withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use");
+		saveButton = new FluentToolbarButton("Save", StockIcon.DOCUMENT_SAVE_AS).withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use");
 		saveButton.withAction(plot::actionSaveSession);
 		this.add(saveButton, c);
 		
@@ -93,14 +93,14 @@ public class PlotToolbar extends JToolBar {
 		
 		
 		
-		toolbarInfo = new ToolbarImageButton("Scan Info", StockIcon.BADGE_INFO).withTooltip("Displays extended information about this data set");
+		toolbarInfo = new FluentToolbarButton("Scan Info", StockIcon.BADGE_INFO).withTooltip("Displays extended information about this data set");
 		toolbarInfo.addActionListener(e -> plot.actionShowInfo());
 		c.gridx += 1;
 		toolbarInfo.setEnabled(false);
 		this.add(toolbarInfo, c);
 	
 		if (Peakaboo.SHOW_QUANTITATIVE) {
-			toolbarConcentrations = new ToolbarImageButton("Concentration")
+			toolbarConcentrations = new FluentToolbarButton("Concentration")
 					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
 					.withSignificance(false)
@@ -111,7 +111,7 @@ public class PlotToolbar extends JToolBar {
 			this.add(toolbarConcentrations, c);
 		}
 		
-		toolbarMap = new ToolbarImageButton("Map Fittings")
+		toolbarMap = new FluentToolbarButton("Map Fittings")
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
 				.withSignificance(true).withAction(plot::actionMap);
@@ -159,29 +159,29 @@ public class PlotToolbar extends JToolBar {
 		
 	}
 	
-	private ToolbarImageButton createExportMenuButton() {
-		exportMenuButton = new ToolbarImageButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Data");
+	private FluentToolbarButton createExportMenuButton() {
+		exportMenuButton = new FluentToolbarButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Data");
 		exportMenu = new PlotMenuExport(plot);
 		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
 		return exportMenuButton;
 	}
 
-	private ToolbarImageButton createEnergyMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton().withIcon("menu-energy").withTooltip("Energy & Peak Calibration");
+	private FluentToolbarButton createEnergyMenuButton() {
+		FluentToolbarButton menuButton = new FluentToolbarButton().withIcon("menu-energy").withTooltip("Energy & Peak Calibration");
 		energyMenu = new PlotMenuEnergy(plot, controller);
 		menuButton.addActionListener(e -> energyMenu.show(menuButton, (int)(menuButton.getWidth() - energyMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
 	
-	private ToolbarImageButton createMainMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton(StockIcon.MENU_MAIN).withTooltip("Main Menu");
+	private FluentToolbarButton createMainMenuButton() {
+		FluentToolbarButton menuButton = new FluentToolbarButton(StockIcon.MENU_MAIN).withTooltip("Main Menu");
 		mainMenu = new PlotMenuMain(plot, controller);
 		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
 
-	private ToolbarImageButton createViewMenuButton() {
-		ToolbarImageButton menuButton = new ToolbarImageButton().withIcon("menu-view").withTooltip("Plot Settings Menu");
+	private FluentToolbarButton createViewMenuButton() {
+		FluentToolbarButton menuButton = new FluentToolbarButton().withIcon("menu-view").withTooltip("Plot Settings Menu");
 		viewMenu = new PlotMenuView(plot, controller);
 		menuButton.addActionListener(e -> viewMenu.show(menuButton, (int)(menuButton.getWidth() - viewMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;

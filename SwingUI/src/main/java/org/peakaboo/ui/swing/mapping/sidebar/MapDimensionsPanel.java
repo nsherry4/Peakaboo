@@ -18,8 +18,8 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 
@@ -29,7 +29,7 @@ public class MapDimensionsPanel extends JPanel {
 	private JSpinner height;
 	
 	//either guess or reset, depending on if we have the original dimensions or not
-	private ImageButton magic; 
+	private FluentButton magic; 
 	
 	public MapDimensionsPanel(LayerPanel tabPanel, MappingController controller) {
 		this(tabPanel, controller, false);
@@ -82,10 +82,10 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		if (!controller.rawDataController.hasOriginalDataDimensions()) {
-			magic = new ImageButton(compact ? "Guess" : "Guess Dimensions")
+			magic = new FluentButton(compact ? "Guess" : "Guess Dimensions")
 					.withIcon("auto", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Try to detect the map's dimensions.")
-					.withLayout(ImageButtonLayout.IMAGE_ON_SIDE)
+					.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
 					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;
@@ -122,9 +122,9 @@ public class MapDimensionsPanel extends JPanel {
 			});
 			this.add(magic, c);
 		} else {
-			magic = new ImageButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
+			magic = new FluentButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
 					.withTooltip("Reset the dimensions to those given in the data set.")
-					.withLayout(ImageButtonLayout.IMAGE)
+					.withLayout(FluentButtonLayout.IMAGE)
 					.withBordered(false);
 			c.gridx = 0;
 			c.gridwidth = 2;
@@ -148,7 +148,7 @@ public class MapDimensionsPanel extends JPanel {
 		
 	}
 
-	public ImageButton getMagicDimensionsButton() {
+	public FluentButton getMagicDimensionsButton() {
 		return magic;
 	}
 	

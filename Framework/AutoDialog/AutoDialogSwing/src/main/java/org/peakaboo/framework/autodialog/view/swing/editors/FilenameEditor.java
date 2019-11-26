@@ -18,8 +18,8 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileFilter;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFileChooser;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 public class FilenameEditor extends AbstractSwingEditor<String> {
 
@@ -96,7 +96,7 @@ class FileSelector extends JPanel
 	
 	public FileSelector(final FilenameEditor parent, FileNameStyle style) {
 		super(new BorderLayout());
-		open = new ImageButton().withIcon(StockIcon.DOCUMENT_OPEN).withTooltip("Browse for Files").withLayout(ImageButtonLayout.IMAGE);
+		open = new FluentButton().withIcon(StockIcon.DOCUMENT_OPEN).withTooltip("Browse for Files").withLayout(FluentButtonLayout.IMAGE);
 		
 		filenameField = new JTextField(10);
 		filenameField.setEditable(false);

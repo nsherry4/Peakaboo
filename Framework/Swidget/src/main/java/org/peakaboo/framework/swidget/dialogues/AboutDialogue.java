@@ -28,7 +28,7 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
@@ -80,7 +80,7 @@ public class AboutDialogue extends LiveDialog
 		
 		ButtonBox bbox = new ButtonBox();
 		
-		ImageButton btnCredit = new ImageButton()
+		FluentButton btnCredit = new FluentButton()
 				.withIcon(StockIcon.MISC_ABOUT, IconSize.BUTTON)
 				.withText("Credits")
 				.withTooltip("View Credits")
@@ -92,7 +92,7 @@ public class AboutDialogue extends LiveDialog
 		bbox.addLeft(btnCredit);
 		
 		
-		ImageButton btnLicence = new ImageButton()
+		FluentButton btnLicence = new FluentButton()
 				.withIcon(StockIcon.MIME_TEXT, IconSize.BUTTON)
 				.withText("Licence")
 				.withTooltip("View Licence")
@@ -103,7 +103,7 @@ public class AboutDialogue extends LiveDialog
 		bbox.addLeft(btnLicence);	
 
 
-		ImageButton btnClose = new ImageButton().withIcon(StockIcon.WINDOW_CLOSE, IconSize.BUTTON).withText("Close").withTooltip("Close this window");
+		FluentButton btnClose = new FluentButton().withIcon(StockIcon.WINDOW_CLOSE, IconSize.BUTTON).withText("Close").withTooltip("Close this window");
 		btnClose.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent arg0)

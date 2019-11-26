@@ -50,7 +50,7 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.models.ListTableModel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
@@ -279,8 +279,8 @@ public class SavePicture extends JPanel
 
 
 	
-	private ImageButton saveButton() {
-		ImageButton ok = new ImageButton("Save");
+	private FluentButton saveButton() {
+		FluentButton ok = new FluentButton("Save");
 		ok.addActionListener(e -> {
 			Cursor oldCursor = getCursor();
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -290,8 +290,8 @@ public class SavePicture extends JPanel
 		return ok;
 	}
 
-	private ImageButton cancelButton() {
-		ImageButton cancel = new ImageButton("Cancel");
+	private FluentButton cancelButton() {
+		FluentButton cancel = new FluentButton("Cancel");
 		cancel.addActionListener(e -> {
 			onComplete.accept(Optional.empty());
 			hide();

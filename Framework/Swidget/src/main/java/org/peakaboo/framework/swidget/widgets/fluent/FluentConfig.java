@@ -1,8 +1,8 @@
-package org.peakaboo.framework.swidget.widgets.buttons.components;
+package org.peakaboo.framework.swidget.widgets.fluent;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 
-public class SwidgetComponentConfig {
+public class FluentConfig {
 
 	public String imagename = null;
 	public IconSize size = IconSize.BUTTON;

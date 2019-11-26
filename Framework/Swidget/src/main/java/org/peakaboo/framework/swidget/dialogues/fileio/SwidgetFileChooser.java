@@ -20,10 +20,10 @@ import javax.swing.plaf.basic.BasicFileChooserUI;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
 import org.peakaboo.framework.swidget.widgets.filechooser.breadcrumb.FileBreadCrumb;
 import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
 import org.peakaboo.framework.swidget.widgets.filechooser.places.PlacesWidget;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 
@@ -36,11 +36,11 @@ public class SwidgetFileChooser extends JFileChooser {
 	private JList filelist;
 
 	//replacement widgets
-	private ImageButton makeDirButton;
+	private FluentButton makeDirButton;
 	private PlacesWidget placesWidget;
 	private HeaderBox headerWidget;
 	private JPanel chooserPanel;
-	private ImageButton affirmative, negative;
+	private FluentButton affirmative, negative;
 	
 	//Callbacks
 	private Runnable onAccept, onCancel;
@@ -125,8 +125,8 @@ public class SwidgetFileChooser extends JFileChooser {
 	private HeaderBox makeHeaderWidget() {
 		
 		JPanel breadcrumb = this.getBreadcrumb();
-		affirmative = new ImageButton(getApproveButtonText()).withStateDefault();
-		negative = new ImageButton("Cancel");
+		affirmative = new FluentButton(getApproveButtonText()).withStateDefault();
+		negative = new FluentButton("Cancel");
 		
 		addPropertyChangeListener(JFileChooser.APPROVE_BUTTON_TEXT_CHANGED_PROPERTY, evt -> {
 			
@@ -183,7 +183,7 @@ public class SwidgetFileChooser extends JFileChooser {
 
 	private JPanel getBreadcrumb() {
 		
-		makeDirButton = new ImageButton(StockIcon.PLACE_FOLDER_NEW);
+		makeDirButton = new FluentButton(StockIcon.PLACE_FOLDER_NEW);
 		makeDirButton.setAction(bmkdir.getAction());
 		makeDirButton.withText("").withIcon(StockIcon.PLACE_FOLDER_NEW);
 		

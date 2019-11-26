@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
@@ -197,8 +197,8 @@ public class SwidgetFilePanels {
 						title, 
 						body, 
 						MessageType.QUESTION)
-					.addLeft(new ImageButton("Cancel").withAction(() -> onResult.accept(false)))
-					.addRight(new ImageButton("Replace").withAction(() -> onResult.accept(true)))
+					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
+					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
 					.showIn((LayerPanel) parent);
 				
 			} else if (parent instanceof Window) {
@@ -207,8 +207,8 @@ public class SwidgetFilePanels {
 						title, 
 						body, 
 						MessageType.QUESTION)
-					.addLeft(new ImageButton("Cancel").withAction(() -> onResult.accept(false)))
-					.addRight(new ImageButton("Replace").withAction(() -> onResult.accept(true)))
+					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
+					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
 					.showInWindow((Window)parent);
 			} else {
 				

@@ -16,8 +16,8 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 
 public abstract class TSSelectorGroup extends JPanel implements Scrollable
@@ -26,7 +26,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	protected FittingController controller;
 
 	protected List<TSSelector>	selectors;
-	protected ImageButton		addButton;
+	protected FluentButton		addButton;
 	
 	private int					minSelectors;
 	
@@ -37,10 +37,10 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 		
 		setLayout(new GridBagLayout());
 		
-		addButton = new ImageButton()
+		addButton = new FluentButton()
 				.withIcon(StockIcon.EDIT_ADD, IconSize.BUTTON)
 				.withTooltip("Add")
-				.withLayout(ImageButtonLayout.IMAGE)
+				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
 		addButton.addActionListener(new ActionListener() {
 
@@ -92,12 +92,12 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	
 	
-	protected ImageButton createRemoveButton(final TSSelector tss)
+	protected FluentButton createRemoveButton(final TSSelector tss)
 	{
-		ImageButton remove = new ImageButton()
+		FluentButton remove = new FluentButton()
 				.withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON)
 				.withTooltip("Remove")
-				.withLayout(ImageButtonLayout.IMAGE)
+				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
 
 		remove.addActionListener(new ActionListener() {

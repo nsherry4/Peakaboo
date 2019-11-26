@@ -12,15 +12,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 
 public class ZoomSlider extends JPanel
 {
 
 	private JSlider zoomSlider;
-	private ImageButton in, out;
+	private FluentButton in, out;
 	private ChangeListener zoomSliderListener;
 	
 	public ZoomSlider(int start, int end, final int step, Consumer<Integer> onChange)
@@ -28,8 +28,8 @@ public class ZoomSlider extends JPanel
 
 		setLayout(new BorderLayout());
 
-		out = new ImageButton().withIcon(StockIcon.ZOOM_OUT).withTooltip("Zoom Out").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
-		in = new ImageButton().withIcon(StockIcon.ZOOM_IN).withTooltip("Zoom In").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
+		out = new FluentButton().withIcon(StockIcon.ZOOM_OUT).withTooltip("Zoom Out").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
+		in = new FluentButton().withIcon(StockIcon.ZOOM_IN).withTooltip("Zoom In").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
 
 
 		zoomSlider = new JSlider(start, end);

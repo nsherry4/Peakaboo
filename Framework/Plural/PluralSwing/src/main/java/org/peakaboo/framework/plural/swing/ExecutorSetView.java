@@ -20,7 +20,7 @@ import org.peakaboo.framework.plural.executor.ExecutorState;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
@@ -41,7 +41,7 @@ public class ExecutorSetView extends JPanel
 	{
 		this.setLayout(new BorderLayout());
 
-		ImageButton cancel = new ImageButton("Cancel").withStateCritical().withAction(() -> {
+		FluentButton cancel = new FluentButton("Cancel").withStateCritical().withAction(() -> {
 			executors.requestAbortWorking();
 		});
 		
