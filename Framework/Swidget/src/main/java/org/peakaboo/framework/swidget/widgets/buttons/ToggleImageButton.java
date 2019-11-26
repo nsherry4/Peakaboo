@@ -11,28 +11,28 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 
 
 
-public class ToggleImageButton extends JToggleButton implements ImageButtonFluentAPI<ToggleImageButton>
+public class ToggleImageButton extends JToggleButton implements ImageButtonFluentAPI<ToggleImageButton, ImageButtonConfig>
 {
 
 	private ImageButtonConfigurator configurator;
 
 	public ToggleImageButton() {
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	public ToggleImageButton(String text) {
 		config().text = text;
 		
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	public ToggleImageButton(StockIcon icon) {
 		config().imagename = icon.toIconName();
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 
 	public ToggleImageButton(StockIcon icon, IconSize size) {
@@ -40,7 +40,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 		config().size = size;
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 
 	
@@ -49,7 +49,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 		config().imagename = icon.toIconName();
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	public ToggleImageButton(String text, String icon) {
@@ -57,7 +57,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 		config().imagename = icon;
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	
@@ -93,7 +93,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 	 * For internal use only
 	 */
 	@Override
-	public void makeButton() {
+	public void makeWidget() {
 		getConfigurator().makeButton();
 	}
 	
@@ -101,7 +101,7 @@ public class ToggleImageButton extends JToggleButton implements ImageButtonFluen
 	 * For internal use only
 	 */
 	@Override
-	public ImageButtonConfig getImageButtonConfig() {
+	public ImageButtonConfig getComponentConfig() {
 		return config();
 	}
 	

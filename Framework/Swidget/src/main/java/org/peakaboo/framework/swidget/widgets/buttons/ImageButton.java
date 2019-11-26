@@ -10,28 +10,28 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 
 
-public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageButton> {
+public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageButton, ImageButtonConfig> {
 	
 	private ImageButtonConfigurator configurator;
 	
 
 	public ImageButton() {
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	public ImageButton(String text) {
 		config().text = text;
 		
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	public ImageButton(StockIcon icon) {
 		config().imagename = icon.toIconName();
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 
 	public ImageButton(StockIcon icon, IconSize size) {
@@ -39,7 +39,7 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 		config().size = size;
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 
 	
@@ -48,7 +48,7 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 		config().imagename = icon.toIconName();
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	public ImageButton(String text, String icon) {
@@ -56,7 +56,7 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 		config().imagename = icon;
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	
@@ -80,7 +80,7 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 	 * For internal use only
 	 */
 	@Override
-	public void makeButton() {
+	public void makeWidget() {
 		getConfigurator().makeButton();
 	}
 	
@@ -88,7 +88,7 @@ public class ImageButton extends JButton implements ImageButtonFluentAPI<ImageBu
 	 * For internal use only
 	 */
 	@Override
-	public ImageButtonConfig getImageButtonConfig() {
+	public ImageButtonConfig getComponentConfig() {
 		return config();
 	}
 	

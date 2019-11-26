@@ -14,7 +14,7 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_S
 
 
 //TODO: Can't base this on ImageButton anymore
-public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<ToolbarImageButton>{
+public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<ToolbarImageButton, ImageButtonConfig>{
 
 	private ToolbarImageButtonConfigurator configurator;
 	
@@ -26,7 +26,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 	public ToolbarImageButton() {
 		firstconfig();
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	
@@ -36,7 +36,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 		config().imagename = icon.toIconName();
 		
 		init();
-		makeButton();
+		makeWidget();
 	}
 
 	public ToolbarImageButton(StockIcon icon, IconSize size) {
@@ -45,7 +45,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 		config().size = size;
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 
 	
@@ -55,7 +55,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 		config().imagename = icon.toIconName();
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	public ToolbarImageButton(String text, String icon) {
@@ -64,7 +64,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 		config().imagename = icon;
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 	
 	
@@ -74,7 +74,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 		config().text = text;
 
 		init();
-		makeButton();
+		makeWidget();
 	}
 
 
@@ -84,7 +84,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 	public ToolbarImageButton withSignificance(boolean significant) {
 		getConfigurator().isSignificant = significant;
 		
-		makeButton();
+		makeWidget();
 		return this;
 	}
 	
@@ -109,7 +109,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 	 * For internal use only
 	 */
 	@Override
-	public void makeButton() {
+	public void makeWidget() {
 		getConfigurator().makeButton();
 	}
 	
@@ -117,7 +117,7 @@ public class ToolbarImageButton extends JButton implements ImageButtonFluentAPI<
 	 * For internal use only
 	 */
 	@Override
-	public ImageButtonConfig getImageButtonConfig() {
+	public ImageButtonConfig getComponentConfig() {
 		return config();
 	}
 	
@@ -177,7 +177,7 @@ class ToolbarImageButtonConfigurator extends ImageButtonConfigurator {
 	
 	public boolean isSignificant = false;
 	
-	public ToolbarImageButtonConfigurator(AbstractButton button, ImageButtonFluentAPI<? extends AbstractButton> api, ImageButtonConfig config) {
+	public ToolbarImageButtonConfigurator(AbstractButton button, ImageButtonFluentAPI<? extends AbstractButton, ImageButtonConfig> api, ImageButtonConfig config) {
 		super(button, api, config);
 	}
 	

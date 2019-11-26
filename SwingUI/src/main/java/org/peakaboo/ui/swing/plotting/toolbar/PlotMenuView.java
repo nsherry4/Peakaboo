@@ -11,6 +11,8 @@ import javax.swing.KeyStroke;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
+import org.peakaboo.framework.swidget.widgets.buttons.components.menuitem.SwidgetCheckMenuItem;
+import org.peakaboo.framework.swidget.widgets.buttons.components.menuitem.SwidgetRadioMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {
@@ -26,37 +28,31 @@ public class PlotMenuView extends JPopupMenu {
 
 		ButtonGroup viewGroup = new ButtonGroup();
 
-		individual = PlotMenuUtils.createMenuRadioItem(plot,
-				ChannelCompositeMode.NONE.show(), 
-				null, null, 
-				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.NONE), 
-				KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), 
-				KeyEvent.VK_I
-			);
+		individual = new SwidgetRadioMenuItem()
+				.withText(ChannelCompositeMode.NONE.show())
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_I)
+				.withAction(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.NONE));
 		individual.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE);
 		viewGroup.add(individual);
 		this.add(individual);
 		
 
-		average = PlotMenuUtils.createMenuRadioItem(plot,
-				ChannelCompositeMode.AVERAGE.show(), 
-				null, null, 
-				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE), 
-				KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), 
-				KeyEvent.VK_M
-			);
+		average = new SwidgetRadioMenuItem()
+				.withText(ChannelCompositeMode.AVERAGE.show())
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_M)
+				.withAction(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE));
 		average.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE);
 		viewGroup.add(average);
 		this.add(average);
 		
 
-		maximum = PlotMenuUtils.createMenuRadioItem(plot,
-				ChannelCompositeMode.MAXIMUM.show(), 
-				null, null, 
-				o -> controller.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM),
-				KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), 
-				KeyEvent.VK_T
-			);
+		maximum = new SwidgetRadioMenuItem()
+				.withText(ChannelCompositeMode.MAXIMUM.show())
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_T)
+				.withAction(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM));
 		maximum.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM);
 		viewGroup.add(maximum);
 		this.add(maximum);
@@ -77,78 +73,50 @@ public class PlotMenuView extends JPopupMenu {
 
 
 		
-		logPlot = PlotMenuUtils.createMenuCheckItem(plot,
-				"Logarithmic Scale", 
-				null, 
-				"Toggles the plot between a linear and logarithmic scale",
-				controller.view()::setViewLog,
-				KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), 
-				KeyEvent.VK_L
-		);
+		logPlot = new SwidgetCheckMenuItem()
+				.withText("Logarithmic Scale")
+				.withTooltip("Toggles the plot between a linear and logarithmic scale")
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_L)
+				.withAction(controller.view()::setViewLog);
 
-		consistentScale = PlotMenuUtils.createMenuCheckItem(plot,
-				"Consistent Scale", 
-				null, 
-				"All spectra in a dataset will be displayed with a consisntent scale",
-				controller.view()::setConsistentScale,
-				null, 
-				null
-		);
+		consistentScale = new SwidgetCheckMenuItem()
+				.withText("Consistent Scale")
+				.withTooltip("All spectra in a dataset will be displayed with a consisntent scale")
+				.withAction(controller.view()::setConsistentScale);
 				
-		fittings = PlotMenuUtils.createMenuCheckItem(plot,
-				"Individual Fittings", 
-				null, 
-				"Switches between showing all fittings as a single curve and showing all fittings individually",
-				controller.view()::setShowIndividualSelections,
-				null, 
-				KeyEvent.VK_O
-		);
+		fittings = new SwidgetCheckMenuItem()
+				.withText("Individual Fittings")
+				.withTooltip("Switches between showing all fittings as a single curve and showing all fittings individually")
+				.withMnemonic(KeyEvent.VK_F)
+				.withAction(controller.view()::setShowIndividualSelections);
 
-		markings = PlotMenuUtils.createMenuCheckItem(plot,
-				"Transition Lines", 
-				null, 
-				"Label fittings with lines denoting their transition energies",
-				controller.view()::setShowElementMarkers,
-				null, null
-		);
+		markings = new SwidgetCheckMenuItem()
+				.withText("Transition Lines")
+				.withTooltip("Label fittings with lines denoting their transition energies")
+				.withAction(controller.view()::setShowElementMarkers);
 
-		intensities = PlotMenuUtils.createMenuCheckItem(plot,
-				"Fitting Intensities", 
-				null, 
-				"Label fittings with their intensities",
-				controller.view()::setShowElementIntensities,
-				null, 
-				null
-		);
+		intensities = new SwidgetCheckMenuItem()
+				.withText("Fitting Intensities")
+				.withTooltip("Label fittings with their intensities")
+				.withAction(controller.view()::setShowElementIntensities);
 	
-		raw = PlotMenuUtils.createMenuCheckItem(plot,
-				"Raw Data Outline", 
-				null, 
-				"Toggles an outline of the original raw data",
-				controller.view()::setShowRawData,
-				null, 
-				KeyEvent.VK_O
-		);
-		
-		title = PlotMenuUtils.createMenuCheckItem(plot,
-				"Show Dataset Title", 
-				null, 
-				"Toggles showing the dataset title in the plot",
-				controller.view()::setShowTitle,
-				null, 
-				null
-		);		
+		raw = new SwidgetCheckMenuItem()
+				.withText("Raw Data Outline")
+				.withTooltip("Toggles an outline of the original raw data")
+				.withMnemonic(KeyEvent.VK_R)
+				.withAction(controller.view()::setShowRawData);
 
-		monochrome = PlotMenuUtils.createMenuCheckItem(plot,
-				"Monochrome", 
-				null, 
-				"Toggles the monochrome colour palette",
-				controller.view()::setMonochrome,
-				null, 
-				KeyEvent.VK_M
-		);
+		title = new SwidgetCheckMenuItem()
+				.withText("Show Dataset Title")
+				.withTooltip("Toggles showing the dataset title in the plot")
+				.withAction(controller.view()::setShowTitle);
 		
-
+		monochrome = new SwidgetCheckMenuItem()
+				.withText("Monochrome")
+				.withTooltip("Toggles the monochrome colour palette")
+				.withMnemonic(KeyEvent.VK_M)
+				.withAction(controller.view()::setMonochrome);
 
 		this.add(logPlot);
 		this.add(consistentScale);

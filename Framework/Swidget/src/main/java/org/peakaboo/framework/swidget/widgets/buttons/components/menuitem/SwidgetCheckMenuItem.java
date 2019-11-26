@@ -1,0 +1,88 @@
+package org.peakaboo.framework.swidget.widgets.buttons.components.menuitem;
+
+import java.awt.event.ActionEvent;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+
+import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.IconSize;
+
+public class SwidgetCheckMenuItem extends JCheckBoxMenuItem implements SwidgetMenuItemFluentAPI<SwidgetCheckMenuItem, SwidgetMenuItemConfig> {
+
+	private SwidgetMenuItemConfig config = new SwidgetMenuItemConfig();
+	
+	public SwidgetCheckMenuItem() {
+		this.addActionListener(this::action);
+		makeWidget();
+	}
+	
+	@Override
+	public SwidgetCheckMenuItem getSelf() {
+		return this;
+	}
+	
+	@Override
+	public SwidgetMenuItemConfig getComponentConfig() {
+		return config;
+	}
+	
+	public SwidgetCheckMenuItem withAction(Consumer<Boolean> action) {
+		if (action == null) {
+			getComponentConfig().onAction = null;
+		} else {
+			getComponentConfig().onAction = () -> action.accept(this.isSelected());
+		}
+		return getSelf();
+	}
+
+	@Override
+	public void makeWidget() {
+		this.setText(config.text);
+		this.setToolTipText(config.tooltip);
+		
+		if (config.imagename == null) {
+			this.setIcon(null);
+		} else {
+			this.setIcon(IconFactory.getImageIcon(config.imagename, IconSize.BUTTON));
+		}
+		this.setMnemonic(config.mnemonic == null ? 0 : config.mnemonic);
+
+		if (config.keystroke != null && config.keystrokeParent != null) {
+			Action action = new AbstractAction() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					SwidgetCheckMenuItem.this.action(e);
+				}
+			};
+			config.keystrokeParent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(config.keystroke, config.keystroke.toString());
+			config.keystrokeParent.getActionMap().put(config.keystroke.toString(), null);
+			config.keystrokeParent.getActionMap().put(config.keystroke.toString(), action);
+		}
+		
+	}
+
+	private void action(ActionEvent e) {
+		
+		boolean orig = this.isSelected();
+		boolean state = !orig;
+		if (e.getSource() == this) {
+			//event is from this checkbox so it's state has already been flipped
+			state = orig;
+		} else {
+			//event is from somewhere else, like a keystroke bound to this checkbox
+			//so we have to flip the widget state manually.
+			this.setSelected(state);
+		}
+		
+		//now that the widget check state is consistent, call our action
+		config.onAction.run();
+
+	}
+	
+}

@@ -14,7 +14,7 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
-public class FileChooserImageButton extends JButton implements ImageButtonFluentAPI<FileChooserImageButton> {
+public class FileChooserImageButton extends JButton implements ImageButtonFluentAPI<FileChooserImageButton, ImageButtonConfig> {
 
 	private ImageButtonConfigurator configurator;
 	
@@ -57,12 +57,12 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 	
 	
 	@Override
-	public ImageButtonConfig getImageButtonConfig() {
+	public ImageButtonConfig getComponentConfig() {
 		return getConfigurator().getConfiguration();
 	}
 
 	@Override
-	public void makeButton() {
+	public void makeWidget() {
 		getConfigurator().makeButton();		
 	}
 
@@ -95,7 +95,7 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 	public void setFile(File file) {
 		this.file = file;
 		
-		makeButton();
+		makeWidget();
 		postMake();
 	}
 	
@@ -108,7 +108,7 @@ public class FileChooserImageButton extends JButton implements ImageButtonFluent
 
 	public void setOverrideText(String overrideText) {
 		this.overrideText = overrideText;
-		makeButton();
+		makeWidget();
 		postMake();
 	}
 

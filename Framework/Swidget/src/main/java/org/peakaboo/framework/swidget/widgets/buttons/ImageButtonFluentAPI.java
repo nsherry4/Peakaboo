@@ -3,29 +3,23 @@ package org.peakaboo.framework.swidget.widgets.buttons;
 import java.awt.Color;
 
 import javax.swing.AbstractButton;
+import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_STYLE;
+import org.peakaboo.framework.swidget.widgets.buttons.components.SwidgetComponentFluentAPI;
 
-interface ImageButtonFluentAPI<B extends AbstractButton> {
+interface ImageButtonFluentAPI<
+		B extends JComponent & ImageButtonFluentAPI<B, C>, 
+		C extends ImageButtonConfig
+	> extends SwidgetComponentFluentAPI<B, C> {
 
 	
-	/**
-	 * For internal use only
-	 */
-	ImageButtonConfig getImageButtonConfig();
+
 	
-	/**
-	 * For internal use only
-	 */
-	void makeButton();
-	
-	/**
-	 * For internal use only
-	 */
-	B getSelf();
+
 	
 	/**
 	 * For internal use only
@@ -39,70 +33,35 @@ interface ImageButtonFluentAPI<B extends AbstractButton> {
 
 	
 	default B withBordered(boolean bordered) {
-		getImageButtonConfig().bordered = bordered ? BORDER_STYLE.ALWAYS : BORDER_STYLE.ACTIVE;
-		makeButton();
+		getComponentConfig().bordered = bordered ? BORDER_STYLE.ALWAYS : BORDER_STYLE.ACTIVE;
+		makeWidget();
 		return getSelf();
 	}
 	
 	default B withBordered(ImageButtonConfig.BORDER_STYLE borderStyle) {
-		getImageButtonConfig().bordered = borderStyle;
-		makeButton();
+		getComponentConfig().bordered = borderStyle;
+		makeWidget();
 		return getSelf();
 	}
 
 	
-	default B withIcon(StockIcon stock) {
-		return withIcon(stock, getImageButtonConfig().size);
-	}
-	
-	default B withIcon(StockIcon stock, IconSize size) {
-		return withIcon(stock.toIconName(), size);
-	}
-	
-	default B withIcon(String filename) {
-		return withIcon(filename, getImageButtonConfig().size);
-	}
-	
-	default B withIcon(String filename, IconSize size) {
-		getImageButtonConfig().imagename = filename;
-		getImageButtonConfig().size = size;
-		makeButton();
-		return getSelf();
-	}
 	
 	default B withBorder(Border border) {
-		getImageButtonConfig().border = border;
-		makeButton();
+		getComponentConfig().border = border;
+		makeWidget();
 		return getSelf();
 	}
 	
-	default B withText(String text) {
-		getImageButtonConfig().text = text;
-		makeButton();
-		return getSelf();
-	}
-	
-	default B withTooltip(String tooltip) {
-		getImageButtonConfig().tooltip = tooltip;
-		makeButton();
-		return getSelf();
-	}
-
 	
 	default B withLayout(ImageButtonLayout layout) {
-		getImageButtonConfig().layout = layout;
-		makeButton();
+		getComponentConfig().layout = layout;
+		makeWidget();
 		return getSelf();
 	}
 	
 	default B withButtonSize(ImageButtonSize buttonSize) {
-		getImageButtonConfig().buttonSize = buttonSize;
-		makeButton();
-		return getSelf();
-	}
-	
-	default B withAction(Runnable action) {
-		getImageButtonConfig().onAction = action;
+		getComponentConfig().buttonSize = buttonSize;
+		makeWidget();
 		return getSelf();
 	}
 	

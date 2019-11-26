@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
 import org.peakaboo.framework.stratus.Stratus;
@@ -22,10 +23,10 @@ import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonConfig.BORDER_S
 public class ImageButtonConfigurator {
 	
 	protected AbstractButton button;
-	protected ImageButtonFluentAPI<? extends AbstractButton> api;
+	protected ImageButtonFluentAPI<? extends JComponent, ImageButtonConfig> api;
 	protected ImageButtonConfig config;
 	
-	public ImageButtonConfigurator(AbstractButton button, ImageButtonFluentAPI<? extends AbstractButton> api, ImageButtonConfig config) {
+	public ImageButtonConfigurator(AbstractButton button, ImageButtonFluentAPI<? extends JComponent, ImageButtonConfig> api, ImageButtonConfig config) {
 		this.button = button;
 		this.api = api;
 		this.config = config;

@@ -12,6 +12,7 @@ import org.peakaboo.datasink.plugin.DataSinkPlugin;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.buttons.components.menuitem.SwidgetMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuExport extends JPopupMenu {
@@ -29,50 +30,49 @@ public class PlotMenuExport extends JPopupMenu {
 		exportSinks = new JMenu("Raw Data");
 		
 		for (BoltPluginPrototype<? extends DataSinkPlugin> plugin : DataSinkPluginManager.SYSTEM.getPlugins()) {
-			exportSinks.add(PlotMenuUtils.createMenuItem(plot,
-					plugin.getName(), null, null,
-					e -> plot.actionExportData(plugin.create()),
-					null, null
-			));
+			exportSinks.add(new SwidgetMenuItem()
+					.withText(plugin.getName())
+					.withAction(() -> plot.actionExportData(plugin.create()))
+				);
 		}
 		
 		this.add(exportSinks);
 		
 
 		
-		snapshotMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Plot as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Saves the current plot as an image",
-				e -> plot.actionSavePicture(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
-		);
+		snapshotMenuItem = new SwidgetMenuItem()
+				.withText("Plot as Image\u2026")
+				.withTooltip("Saves the current plot as an image")
+				.withIcon(StockIcon.DEVICE_CAMERA)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_P)
+				.withAction(plot::actionSavePicture);
 		this.add(snapshotMenuItem);
 
-		exportFilteredSpectrumMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Filtered Spectrum as CSV", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered spectrum to a CSV file",
-				e -> plot.actionSaveFilteredSpectrum(),
-				null, null
-		);
+		exportFilteredSpectrumMenuItem = new SwidgetMenuItem()
+				.withText("Filtered Spectrum as CSV")
+				.withTooltip("Saves the filtered spectrum to a CSV file")
+				.withIcon(StockIcon.DOCUMENT_EXPORT)
+				.withAction(plot::actionSaveFilteredSpectrum);
 		this.add(exportFilteredSpectrumMenuItem);
 		
-		exportFilteredDataMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Filtered Data Set as CSV", StockIcon.DOCUMENT_EXPORT.toMenuIcon(), "Saves the filtered dataset to a CSV file",
-				e -> plot.actionSaveFilteredDataSet(),
-				null, null
-		);
+		exportFilteredDataMenuItem = new SwidgetMenuItem()
+				.withText("Filtered Data Set as CSV")
+				.withTooltip("Saves the filtered dataset to a CSV file")
+				.withIcon(StockIcon.DOCUMENT_EXPORT)
+				.withAction(plot::actionSaveFilteredDataSet);
 		this.add(exportFilteredDataMenuItem);
 		
-		exportFittingsMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Fittings as Text", null, "Saves the current fitting data to a text file",
-				e -> plot.actionSaveFittingInformation(),
-				null, null
-		);
+		exportFittingsMenuItem = new SwidgetMenuItem()
+				.withText("Fittings as Text")
+				.withTooltip("Saves the current fitting data to a text file")
+				.withAction(plot::actionSaveFittingInformation);
 		this.add(exportFittingsMenuItem);
 
-		exportArchive = PlotMenuUtils.createMenuItem(plot,
-				"All-In-One Zip Archive", null, "Saves the plot, session file, z-calibration and fittings",
-				e -> plot.actionExportArchive(),
-				null, null
-		);
+		exportArchive = new SwidgetMenuItem()
+				.withText("All-In-One Zip Archive")
+				.withTooltip("Saves the plot, session file, z-calibration and fittings")
+				.withAction(plot::actionExportArchive);
 		this.add(exportArchive);
 		
 
