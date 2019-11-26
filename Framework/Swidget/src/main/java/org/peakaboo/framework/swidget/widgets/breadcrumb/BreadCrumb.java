@@ -39,9 +39,9 @@ public class BreadCrumb<T> extends JPanel {
 	MouseWheelListener onScroll = e -> {
 		int wheel = e.getWheelRotation();
 		if (wheel <= -1) {
-			doGoLeft();
+			doScrollLeft();
 		} else if (wheel >= 1) {
-			doGoRight();
+			doScrollRight();
 		}
 	};
 	
@@ -58,11 +58,11 @@ public class BreadCrumb<T> extends JPanel {
 		
 		goLeft  = new FluentButton()
 				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(this::doGoLeft);
+				.withAction(this::doScrollLeft);
 		goLeft.setIcon(new ImageIcon(BreadCrumb.class.getClassLoader().getResource("swidget/widgets/breadcrumb/arrow-left.png")));
 		goRight = new FluentButton()
 				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(this::doGoRight);
+				.withAction(this::doScrollRight);
 		goRight.setIcon(new ImageIcon(BreadCrumb.class.getClassLoader().getResource("swidget/widgets/breadcrumb/arrow-right.png")));
 
 		entryBuilder = item -> new BreadCrumbEntry<>(this, item, formatter);
@@ -90,15 +90,15 @@ public class BreadCrumb<T> extends JPanel {
 	/**
 	 * Indicates if there are more entries to the left/up of the current range
 	 */
-	private boolean canGoLeft() {
+	private boolean canScrollLeft() {
 		return first > 0;
 	}
 
 	/**
 	 * Expands the range of visible entries left/up by one
 	 */
-	private void doGoLeft() {
-		if (!canGoLeft()) {
+	private void doScrollLeft() {
+		if (!canScrollLeft()) {
 			return;
 		}
 		requested = Math.max(0, first-1);
@@ -108,15 +108,15 @@ public class BreadCrumb<T> extends JPanel {
 	/**
 	 * Indicates if there are more entries to the right/down of the current range
 	 */
-	private boolean canGoRight() {
+	private boolean canScrollRight() {
 		return last < entries.size();
 	}
 	
 	/**
 	 * Expands the range of visible entries right/down by one
 	 */
-	private void doGoRight() {
-		if (!canGoRight()) {
+	private void doScrollRight() {
+		if (!canScrollRight()) {
 			return;
 		}
 		requested = Math.min(entries.size(), last);
@@ -143,6 +143,44 @@ public class BreadCrumb<T> extends JPanel {
 	}
 	
 	/**
+	 * Indicates if the breadcrumb's selection can be moved one entry to the left
+	 */
+	public boolean canNavigateLeft() {
+		return selected > 0;
+	}
+	
+	/**
+	 * Indicates if the breadcrumb's selection can be moved one entry to the right
+	 */
+	public boolean canNavigateRight() {
+		return selected < entries.size() - 1;
+	}
+	
+	/**
+	 * Moves the breadcrumb's selection one entry to the left and invokes the onSelect callback.
+	 */
+	public void doNavigateLeft() {
+		if (!canNavigateLeft()) {
+			return;
+		}
+		setSelectedIndex(selected-1);
+		onSelect.accept(getSelected());
+		make();
+	}
+	
+	/**
+	 * Moves the breadcrumb's selection one entry to the right and invokes the onSelect callback.
+	 */
+	public void doNavigateRight() {
+		if (!canNavigateRight()) {
+			return;
+		}
+		setSelectedIndex(selected+1);
+		onSelect.accept(getSelected());
+		make();
+	}
+	
+	/**
 	 * Sets the selected item in the breadcrumb
 	 */
 	public void setSelected(T item) {
@@ -163,6 +201,24 @@ public class BreadCrumb<T> extends JPanel {
 		for (BreadCrumbEntry<T> entry : entries) {
 			entry.onSelection(item);
 		}
+	}
+	
+	/**
+	 * Sets the selected item in the breadcrumb by index
+	 */
+	private void setSelectedIndex(int index) {
+		if (index == selected) {
+			return;
+		}
+		if (index < 0 || index >= entries.size()) {
+			throw new IndexOutOfBoundsException("Index " + index + " out of bounds for list of size " + entries.size());
+		}
+		this.selected = index;
+		T item = entries.get(index).getItem();
+		for (BreadCrumbEntry<T> entry : entries) {
+			entry.onSelection(item);
+		}
+		make();
 	}
 	
 	/**
@@ -280,7 +336,7 @@ public class BreadCrumb<T> extends JPanel {
 		}
 		
 		//grow the list downwards toward the end
-		while (canGoRight() && !requestedDown) {
+		while (canScrollRight() && !requestedDown) {
 			int needed = entriesWidth(subset(first, last+1));
 			if (needed < width) {
 				last++;
@@ -290,7 +346,7 @@ public class BreadCrumb<T> extends JPanel {
 		}
 		
 		//grow the list upwards towards the start
-		while (canGoLeft() && !requestedUp) {
+		while (canScrollLeft() && !requestedUp) {
 			int needed = entriesWidth(subset(first-1, last));
 			if (needed < width) {
 				first--;
@@ -299,8 +355,8 @@ public class BreadCrumb<T> extends JPanel {
 			}
 		}
 		
-		goLeft.setEnabled(canGoLeft());
-		goRight.setEnabled(canGoRight());
+		goLeft.setEnabled(canScrollLeft());
+		goRight.setEnabled(canScrollRight());
 		
 		List<AbstractButton> buttons = new ArrayList<>();
 		buttons.add(goLeft);
@@ -345,6 +401,13 @@ public class BreadCrumb<T> extends JPanel {
 			}
 		}
 		return -1;
+	}
+	
+	public void focusSelectedButton() {
+		if (getSelected() == null) {
+			return;
+		}
+		entries.get(selected).getButton().requestFocusInWindow();
 	}
 	
 	/**

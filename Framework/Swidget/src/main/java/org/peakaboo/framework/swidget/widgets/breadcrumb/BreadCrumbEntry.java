@@ -1,5 +1,8 @@
 package org.peakaboo.framework.swidget.widgets.breadcrumb;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.function.Function;
 
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
@@ -20,7 +23,7 @@ public class BreadCrumbEntry<T> {
 	}
 	
 	/**
-	 * Make the button
+	 * Make the button. This should only be called once during the constructor.
 	 */
 	protected FluentToggleButton make() {
 		button = new FluentToggleButton(formatter.apply(item));
@@ -36,6 +39,20 @@ public class BreadCrumbEntry<T> {
 		});
 		
 		button.addMouseWheelListener(parent.onScroll);
+		
+		button.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_UP) {
+					parent.doNavigateLeft();
+					parent.focusSelectedButton();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_DOWN) {
+					parent.doNavigateRight();
+					parent.focusSelectedButton();
+				}
+			}
+		});
 		
 		width = button.getPreferredSize().width;
 		

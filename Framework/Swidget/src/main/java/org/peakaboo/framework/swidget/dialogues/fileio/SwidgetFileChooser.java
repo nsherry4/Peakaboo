@@ -22,7 +22,7 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.filechooser.breadcrumb.FileBreadCrumb;
 import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
-import org.peakaboo.framework.swidget.widgets.filechooser.places.PlacesWidget;
+import org.peakaboo.framework.swidget.widgets.filechooser.places.PlacesPanel;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
@@ -37,7 +37,7 @@ public class SwidgetFileChooser extends JFileChooser {
 
 	//replacement widgets
 	private FluentButton makeDirButton;
-	private PlacesWidget placesWidget;
+	private PlacesPanel placesWidget;
 	private HeaderBox headerWidget;
 	private JPanel chooserPanel;
 	private FluentButton affirmative, negative;
@@ -173,10 +173,10 @@ public class SwidgetFileChooser extends JFileChooser {
 
 	}
 	
-	private PlacesWidget makePlacesWidget() {
-		PlacesWidget placesWidget = null;
+	private PlacesPanel makePlacesWidget() {
+		PlacesPanel placesWidget = null;
 		if (places != null) {
-			placesWidget = new PlacesWidget(this, places);
+			placesWidget = new PlacesPanel(this, places);
 		}
 		return placesWidget;
 	}

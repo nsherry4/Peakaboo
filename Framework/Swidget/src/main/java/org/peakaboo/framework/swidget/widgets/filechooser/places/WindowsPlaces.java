@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 import org.peakaboo.framework.swidget.Swidget;
 
-public class WindowsPlaces implements Places {
+class WindowsPlaces implements Places {
 
 	List<Place> places = new ArrayList<>();
 	static Map<String, Optional<File>> lookups = new HashMap<>();

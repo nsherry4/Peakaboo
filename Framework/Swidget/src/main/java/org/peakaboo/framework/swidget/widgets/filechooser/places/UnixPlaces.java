@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.filechooser.FileSystemView;
 
-public class UnixPlaces implements Places {
+class UnixPlaces implements Places {
 	
 	Map<String, String> aliases = new HashMap<>(); {
 		aliases.put("XDG_DESKTOP_DIR", "Desktop");
