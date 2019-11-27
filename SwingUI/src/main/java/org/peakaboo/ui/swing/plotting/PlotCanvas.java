@@ -421,7 +421,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 	
 	public void setNeedsRedraw() {
-		plotter.setNeedsRedraw();
+		plotter.invalidate();
 	}
 
 

@@ -426,7 +426,7 @@ public class Plotter {
 	}
 	
 	
-	public void setNeedsRedraw() {
+	public void invalidate() {
 		lastSize = null;
 		plotDrawing = null;
 	}

@@ -5,9 +5,7 @@ import java.util.function.Consumer;
 
 public class EventfulConfig {
 
-	public static Consumer<Runnable> uiThreadRunner = r -> {
-		throw new RuntimeException("Eventful UI Hook has not been configured");
-	};
+	public static Consumer<Runnable> uiThreadRunner = r -> r.run();
 	
 	private static LinkedBlockingQueue<Runnable> globalDeliveryQueue = new LinkedBlockingQueue<>();
 	public static void deliver(Runnable job) {
