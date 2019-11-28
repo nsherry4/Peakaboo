@@ -10,13 +10,8 @@ import org.peakaboo.framework.stratus.theme.Theme;
 
 public class TextFieldBorderPainter extends StatefulPainter {
 
-	protected int margin = 2;
-	protected float radius = 0;
-	protected float[] points = new float[] {0f, 0.25f};
-	
 	public TextFieldBorderPainter(Theme theme, ButtonState... buttonStates) {
 		super(theme, buttonStates);
-		this.radius = theme.borderRadius();
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ import javax.swing.Painter;
 
 public class BorderPainter implements Painter<JComponent> {
 
-	protected Color colour, bevel;
+	protected Color colour;
 	protected float size;
 	protected float radius;
 	

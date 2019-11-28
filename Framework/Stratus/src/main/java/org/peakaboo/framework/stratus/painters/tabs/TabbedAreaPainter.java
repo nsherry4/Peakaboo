@@ -17,14 +17,11 @@ public class TabbedAreaPainter extends SimpleThemed implements Painter<JComponen
 
 	protected Color n1, n2, t1, t2;
 	
-	protected boolean enabled = true;
-
 	private int lastWidth=-1, lastHeight=-1;
 	private Paint lastPaint;
 	
 	public TabbedAreaPainter(Theme theme, boolean enabled) {
 		super(theme);
-		this.enabled = enabled;
 		if (enabled) {
 			n1 = Stratus.darken(getTheme().getControl(), 0.15f);
 			n2 = Stratus.darken(getTheme().getControl(), 0.1f);
