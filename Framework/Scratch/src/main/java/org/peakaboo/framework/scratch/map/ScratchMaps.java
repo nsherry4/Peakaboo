@@ -7,7 +7,6 @@ import org.peakaboo.framework.scratch.DiskStrategy;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.ScratchException;
 import org.peakaboo.framework.scratch.ScratchLog;
-import org.peakaboo.framework.scratch.list.ScratchList;
 import org.peakaboo.framework.scratch.map.file.ScratchDiskMap;
 import org.peakaboo.framework.scratch.map.memory.ScratchHashMap;
 

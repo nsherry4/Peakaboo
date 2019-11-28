@@ -1,13 +1,11 @@
 package org.peakaboo.ui.swing.mapping.components;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.mapper.MappingController;

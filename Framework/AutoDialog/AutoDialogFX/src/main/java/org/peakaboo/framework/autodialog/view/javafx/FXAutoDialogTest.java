@@ -3,10 +3,6 @@ package org.peakaboo.framework.autodialog.view.javafx;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.peakaboo.framework.eventful.EventfulConfig;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.stage.Stage;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
@@ -21,6 +17,11 @@ import org.peakaboo.framework.autodialog.model.style.editors.TextAreaStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.TabbedLayoutStyle;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
+import org.peakaboo.framework.eventful.EventfulConfig;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
 
 public class FXAutoDialogTest extends Application {

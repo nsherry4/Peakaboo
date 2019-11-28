@@ -1,5 +1,7 @@
 package org.peakaboo.framework.cyclops.visualization.palette.palettes;
 
+import java.awt.Color;
+
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 /**

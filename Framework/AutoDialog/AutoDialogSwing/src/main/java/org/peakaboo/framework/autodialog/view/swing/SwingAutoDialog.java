@@ -7,15 +7,13 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
-
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
+import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;

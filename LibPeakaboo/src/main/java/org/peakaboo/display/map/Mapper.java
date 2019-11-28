@@ -1,8 +1,6 @@
 package org.peakaboo.display.map;
 
 
-import java.lang.ref.SoftReference;
-
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.common.PeakabooConfiguration.MemorySize;
 import org.peakaboo.display.map.modes.MapMode;

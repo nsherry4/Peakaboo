@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -37,6 +36,7 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
+import org.peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
 
 /**
  * This class makes it easy to drag and drop files from the operating system to

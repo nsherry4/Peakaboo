@@ -1,8 +1,5 @@
 package org.peakaboo.framework.cyclops.visualization.palette;
 
-import java.util.List;
-
-
 public enum Palette
 {
 

@@ -1,7 +1,6 @@
 package org.peakaboo.mapping.filter.model;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;

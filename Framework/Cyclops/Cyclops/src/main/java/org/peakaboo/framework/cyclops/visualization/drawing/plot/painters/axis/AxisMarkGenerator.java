@@ -3,11 +3,9 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.Surface;
-import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 
 
 public class AxisMarkGenerator

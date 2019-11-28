@@ -9,7 +9,6 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import org.jdesktop.swingx.combobox.ListComboBoxModel;
-
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
 

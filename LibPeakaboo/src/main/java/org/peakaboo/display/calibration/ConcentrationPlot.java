@@ -8,7 +8,6 @@ import java.util.function.Function;
 
 import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.curvefit.peak.table.Element;
-import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;

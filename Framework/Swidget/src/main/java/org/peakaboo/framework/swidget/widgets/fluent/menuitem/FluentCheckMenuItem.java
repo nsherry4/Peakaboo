@@ -2,7 +2,6 @@ package org.peakaboo.framework.swidget.widgets.fluent.menuitem;
 
 import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;

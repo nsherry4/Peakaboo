@@ -2,8 +2,6 @@ package org.peakaboo.framework.stratus.theme;
 
 import java.awt.Color;
 
-import org.peakaboo.framework.stratus.Stratus;
-
 public interface Theme {
 
 	//Highlighted items/text, eg menu items, text, table entries

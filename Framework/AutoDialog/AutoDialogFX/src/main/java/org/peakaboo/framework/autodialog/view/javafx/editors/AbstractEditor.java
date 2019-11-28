@@ -1,8 +1,8 @@
 package org.peakaboo.framework.autodialog.view.javafx.editors;
 
-import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
+import org.peakaboo.framework.eventful.EventfulType;
 
 
 public abstract class AbstractEditor<T> implements FXEditor<T> {

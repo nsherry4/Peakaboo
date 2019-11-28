@@ -6,7 +6,6 @@ import javax.swing.JPopupMenu;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
-import org.peakaboo.ui.swing.Peakaboo;
 
 public class MapMenuView extends JPopupMenu {
 

@@ -1,8 +1,5 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.optim.MaxEval;
 import org.apache.commons.math3.optim.MaxIter;

@@ -10,7 +10,6 @@ import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;

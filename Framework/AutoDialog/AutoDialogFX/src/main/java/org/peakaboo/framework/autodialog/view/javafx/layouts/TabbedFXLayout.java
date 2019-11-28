@@ -3,6 +3,9 @@ package org.peakaboo.framework.autodialog.view.javafx.layouts;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.autodialog.view.javafx.FXView;
 
 import javafx.geometry.Insets;
@@ -10,9 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.autodialog.model.Parameter;
-import org.peakaboo.framework.autodialog.model.Value;
 
 public class TabbedFXLayout extends AbstractFXLayout {
 

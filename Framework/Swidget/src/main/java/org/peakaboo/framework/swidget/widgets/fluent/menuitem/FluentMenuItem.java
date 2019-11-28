@@ -6,11 +6,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
 
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.widgets.fluent.FluentAPI;
 
 public class FluentMenuItem extends JMenuItem implements FluentMenuItemAPI<FluentMenuItem, FluentMenuItemConfig>{
 

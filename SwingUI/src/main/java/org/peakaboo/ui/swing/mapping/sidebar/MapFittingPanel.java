@@ -22,9 +22,9 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
+import org.peakaboo.ui.swing.mapping.sidebar.modes.Correlation;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
-import org.peakaboo.ui.swing.mapping.sidebar.modes.Correlation;
 
 
 public class MapFittingPanel extends ClearPanel

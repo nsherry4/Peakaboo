@@ -1,20 +1,13 @@
 package org.peakaboo.controller.mapper.fitting.modes;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.display.map.modes.composite.CompositeModeData;
-import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Spectrum;
-import org.peakaboo.framework.eventful.Eventful;
 import org.peakaboo.mapping.filter.Interpolation;
 
 public class CompositeModeController extends ModeController {

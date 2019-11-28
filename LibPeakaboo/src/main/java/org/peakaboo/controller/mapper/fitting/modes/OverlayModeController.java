@@ -2,14 +2,11 @@ package org.peakaboo.controller.mapper.fitting.modes;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
@@ -17,7 +14,6 @@ import org.peakaboo.display.map.modes.overlay.OverlayChannel;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.display.map.modes.overlay.OverlayModeData;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;

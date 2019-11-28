@@ -1,5 +1,9 @@
 package org.peakaboo.framework.autodialog.view.javafx.layouts;
 
+import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.Value;
+import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
 import org.peakaboo.framework.autodialog.view.javafx.FXView;
 import org.peakaboo.framework.autodialog.view.javafx.editors.FXEditorFactory;
 
@@ -8,10 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.autodialog.model.Parameter;
-import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
 
 public class SimpleFXLayout extends AbstractFXLayout {
 

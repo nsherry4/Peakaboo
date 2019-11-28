@@ -3,8 +3,6 @@ package org.peakaboo.controller.mapper.fitting.modes;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,10 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
-import org.peakaboo.display.map.modes.correlation.CorrelationMapMode;
 import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;

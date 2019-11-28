@@ -2,23 +2,18 @@ package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
@@ -26,15 +21,12 @@ import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
-import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetListCellRenderer;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
-import org.peakaboo.ui.swing.mapping.colours.ColourComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 

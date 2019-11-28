@@ -17,7 +17,6 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 

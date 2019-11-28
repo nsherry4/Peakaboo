@@ -1,7 +1,6 @@
 package org.peakaboo.dataset;
 
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,12 +20,10 @@ import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.DummyScanData;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
-import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
 import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;

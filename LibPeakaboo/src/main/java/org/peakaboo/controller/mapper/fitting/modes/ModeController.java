@@ -12,7 +12,6 @@ import java.util.Map;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.MapModeData;
-import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.eventful.Eventful;

@@ -1,7 +1,5 @@
 package org.peakaboo.framework.bolt.plugin.core;
 
-import java.net.URL;
-
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 /**

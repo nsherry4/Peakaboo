@@ -9,7 +9,6 @@ import org.peakaboo.datasink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.datasink.model.components.interaction.Interaction;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.framework.plural.Plural;
-import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 public interface DataSink {

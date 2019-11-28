@@ -2,12 +2,9 @@ package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 import java.awt.Color;
 
-import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.FluentAPI;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonConfig.BORDER_STYLE;
 

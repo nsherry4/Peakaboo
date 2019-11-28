@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.composite.CompositeModeData;
 import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
@@ -22,7 +20,6 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.Spectrum;
-import org.peakaboo.framework.eventful.EventfulType;
 
 /**
  * Represents a selection of similar points, which may not be contiguous 

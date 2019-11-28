@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
-import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.MapMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Spectrum;
@@ -27,7 +27,6 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.Le
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 import com.google.common.base.Function;

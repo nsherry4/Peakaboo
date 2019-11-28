@@ -1,10 +1,11 @@
 package org.peakaboo.framework.autodialog.view.javafx.editors;
 
 
-import javafx.scene.Node;
-import javafx.scene.control.ChoiceBox;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
+
+import javafx.scene.Node;
+import javafx.scene.control.ChoiceBox;
 
 public class ListEditor<T> extends AbstractEditor<T>{
 

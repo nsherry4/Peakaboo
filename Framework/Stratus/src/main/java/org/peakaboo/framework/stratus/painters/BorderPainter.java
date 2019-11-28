@@ -10,8 +10,6 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
-import org.peakaboo.framework.stratus.Stratus;
-
 
 public class BorderPainter implements Painter<JComponent> {
 

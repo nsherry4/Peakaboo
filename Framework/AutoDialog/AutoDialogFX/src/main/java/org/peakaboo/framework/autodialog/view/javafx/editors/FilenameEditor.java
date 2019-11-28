@@ -2,13 +2,14 @@ package org.peakaboo.framework.autodialog.view.javafx.editors;
 
 import java.io.File;
 
+import org.peakaboo.framework.autodialog.model.Parameter;
+
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
-import org.peakaboo.framework.autodialog.model.Parameter;
 
 public class FilenameEditor extends AbstractEditor<File> {
 

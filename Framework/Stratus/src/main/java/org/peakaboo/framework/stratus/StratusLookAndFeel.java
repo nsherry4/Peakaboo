@@ -15,14 +15,11 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.ToolTipManager;
 import javax.swing.UIDefaults;
-import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-import javax.swing.plaf.synth.Region;
-import javax.swing.plaf.synth.SynthPanelUI;
 
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.components.StratusComboBoxUI;

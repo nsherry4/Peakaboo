@@ -16,7 +16,6 @@ import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileFilter;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFileChooser;
-import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;

@@ -7,7 +7,6 @@ import java.util.List;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;

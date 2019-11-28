@@ -13,7 +13,6 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.eventful.EventfulType;
 
 public class MapSelectionController extends EventfulType<MapUpdateType> {

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;
-import org.peakaboo.framework.cyclops.Spectrum;
 
 public class OverlayModeData implements MapModeData {
 

@@ -10,8 +10,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
-import org.peakaboo.framework.autodialog.model.style.Style;
-import org.peakaboo.framework.autodialog.model.style.editors.TextBoxStyle;
 
 public class TextBoxEditor extends AbstractSwingEditor<String> {
 

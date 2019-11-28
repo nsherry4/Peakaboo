@@ -12,9 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.framework.eventful.EventfulConfig;
-import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;

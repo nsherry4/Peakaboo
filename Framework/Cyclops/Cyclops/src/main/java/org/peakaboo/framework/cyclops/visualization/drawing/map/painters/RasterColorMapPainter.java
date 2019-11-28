@@ -8,7 +8,6 @@ import java.util.stream.IntStream;
 
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;

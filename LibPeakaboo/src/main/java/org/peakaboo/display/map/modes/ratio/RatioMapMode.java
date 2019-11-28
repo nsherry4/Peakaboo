@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
-import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.MapMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Pair;
@@ -20,10 +20,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPain
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapTechniqueFactory;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SelectionMaskPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationPalette;

@@ -10,13 +10,12 @@ import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import org.peakaboo.framework.autodialog.view.swing.SwingView;
-import org.peakaboo.framework.autodialog.view.swing.editors.SwingEditorFactory;
-
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
+import org.peakaboo.framework.autodialog.view.swing.SwingView;
+import org.peakaboo.framework.autodialog.view.swing.editors.SwingEditorFactory;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class SimpleSwingLayout extends AbstractSwingLayout {

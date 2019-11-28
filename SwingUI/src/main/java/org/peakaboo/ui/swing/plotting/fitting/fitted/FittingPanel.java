@@ -28,15 +28,14 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
-import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls.ElementCount;
+import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 import org.peakaboo.ui.swing.plotting.fitting.Changeable;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;

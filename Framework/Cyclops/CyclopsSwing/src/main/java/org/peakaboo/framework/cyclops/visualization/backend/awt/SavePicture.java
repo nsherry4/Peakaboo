@@ -2,7 +2,6 @@ package org.peakaboo.framework.cyclops.visualization.backend.awt;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -34,7 +33,6 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableColumn;
 

@@ -2,7 +2,6 @@ package org.peakaboo.framework.bolt.plugin.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.logging.Level;

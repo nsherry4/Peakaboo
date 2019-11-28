@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
-import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.painters.StatefulPainter;
 import org.peakaboo.framework.stratus.theme.Theme;

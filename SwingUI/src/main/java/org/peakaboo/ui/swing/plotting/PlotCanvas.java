@@ -7,17 +7,11 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -26,23 +20,16 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.PlotUpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.model.datafile.DataFiles;
 import org.peakaboo.datasource.model.datafile.PathDataFile;
-import org.peakaboo.datasource.model.datafile.URLDataFile;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
-import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 
 
 

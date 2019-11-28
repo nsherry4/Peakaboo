@@ -1,12 +1,10 @@
 package org.peakaboo.ui.swing.plotting.statusbar;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.plotter.PlotController;

@@ -2,7 +2,6 @@ package org.peakaboo.framework.swidget.widgets.breadcrumb;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.function.Function;
 
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;

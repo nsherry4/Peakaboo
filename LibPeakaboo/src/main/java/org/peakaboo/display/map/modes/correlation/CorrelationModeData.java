@@ -1,8 +1,5 @@
 package org.peakaboo.display.map.modes.correlation;
 
-import java.util.List;
-import java.util.Map;
-
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;

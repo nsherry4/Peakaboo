@@ -2,7 +2,6 @@ package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 import javax.swing.border.Border;
 
-import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.fluent.FluentConfig;
 
 public class FluentButtonConfig extends FluentConfig {

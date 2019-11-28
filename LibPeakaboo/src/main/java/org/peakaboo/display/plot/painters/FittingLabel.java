@@ -4,8 +4,8 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.SigDigits;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 
 public class FittingLabel extends DataLabel {
 

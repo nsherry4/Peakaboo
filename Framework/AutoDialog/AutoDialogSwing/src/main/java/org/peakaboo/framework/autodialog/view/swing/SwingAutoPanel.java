@@ -5,10 +5,9 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
-
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class SwingAutoPanel extends JPanel {

@@ -21,7 +21,6 @@ import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
 import org.peakaboo.curvefit.peak.search.searcher.DoubleDerivativePeakSearcher;
-import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;

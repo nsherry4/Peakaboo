@@ -3,7 +3,6 @@ package org.peakaboo.framework.swidget.widgets.filechooser.places;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FocusTraversalPolicy;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.io.File;

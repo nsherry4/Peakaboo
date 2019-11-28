@@ -11,7 +11,6 @@ import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.java.BoltJar;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltBrokenJarIssue;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltEmptyJarIssue;

@@ -3,9 +3,10 @@ package org.peakaboo.framework.autodialog.view.javafx.editors;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
+import org.peakaboo.framework.autodialog.model.Parameter;
+
 import javafx.scene.Node;
 import jfxtras.labs.scene.control.BigDecimalField;
-import org.peakaboo.framework.autodialog.model.Parameter;
 
 public class RealEditor extends AbstractEditor<Float> {
 

@@ -1,12 +1,12 @@
 package org.peakaboo.framework.autodialog.view.javafx;
 
+import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.javafx.layouts.FXLayoutFactory;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.peakaboo.framework.autodialog.model.Group;
 
 
 public class FXAutoDialog {

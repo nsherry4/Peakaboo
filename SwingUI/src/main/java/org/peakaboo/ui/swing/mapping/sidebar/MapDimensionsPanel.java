@@ -11,10 +11,10 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;

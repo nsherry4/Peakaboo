@@ -1,8 +1,9 @@
 package org.peakaboo.framework.autodialog.view.javafx.editors;
 
+import org.peakaboo.framework.autodialog.model.Parameter;
+
 import javafx.scene.Node;
 import javafx.scene.control.ProgressBar;
-import org.peakaboo.framework.autodialog.model.Parameter;
 
 public class ProgressBarEditor extends AbstractEditor<Double>{
 

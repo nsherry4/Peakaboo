@@ -1,6 +1,5 @@
 package org.peakaboo.ui.swing.plotting;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.util.Arrays;
@@ -13,25 +12,17 @@ import java.util.stream.Collectors;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.TitledBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.LeastSquaresCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
-import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
-import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
-import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;

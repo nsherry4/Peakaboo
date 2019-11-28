@@ -7,8 +7,8 @@ import java.util.List;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.MapScaleMode;
-import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.MapMode;
+import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
@@ -19,7 +19,6 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.Spectru
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScalePalette;

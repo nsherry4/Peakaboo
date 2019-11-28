@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
