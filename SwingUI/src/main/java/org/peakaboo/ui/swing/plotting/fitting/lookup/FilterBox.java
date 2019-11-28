@@ -17,6 +17,9 @@ import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
+/**
+ * A JTextField dressed up to look like a filter/search box
+ */
 public class FilterBox extends JTextField {
 
 	private ImageIcon icon = IconFactory.getImageIcon("filter", IconSize.BUTTON);

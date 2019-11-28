@@ -22,8 +22,6 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 
 public class BreadCrumb<T> extends JPanel {
 
-	private ButtonLinker linker;
-	private Function<T, String> formatter;
 	private List<T> items;
 	private int selected;
 	private int first, last, requested=-1; //first and last indexes shown
@@ -53,7 +51,6 @@ public class BreadCrumb<T> extends JPanel {
 	}
 	
 	public BreadCrumb(Function<T, String> formatter, Consumer<T> onSelect) {
-		this.formatter = formatter;
 		this.onSelect = onSelect;
 		
 		goLeft  = new FluentButton()

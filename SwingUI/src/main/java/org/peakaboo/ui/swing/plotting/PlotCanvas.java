@@ -44,7 +44,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	private PlotController controller;
 	private BiConsumer<Integer, Coord<Integer>>	onSingleClickCallback, onDoubleClickCallback, onRightClickCallback;
-	private PlotPanel plotPanel;
 	private Plotter plotter;
 
 	PlotCanvas(final PlotController controller, final PlotPanel parent)
@@ -55,7 +54,6 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 		this.controller = controller;
 		this.plotter = new Plotter();
-		this.plotPanel = parent;
 		this.setMinimumSize(new Dimension(100, 100));
 
 		//setCanvasSize();

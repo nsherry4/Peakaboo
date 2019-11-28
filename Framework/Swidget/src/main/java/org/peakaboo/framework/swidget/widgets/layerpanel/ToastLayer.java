@@ -192,26 +192,3 @@ public class ToastLayer implements Layer {
 
 
 }
-
-class TranslucentLabel extends JLabel {
-
-
-    public TranslucentLabel(String text) {
-        super(text);
-    }
-
-    @Override
-    public boolean isOpaque() {
-        return false;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setColor(getBackground());
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-        super.paintComponent(g2d);
-        g2d.dispose();
-    }
-
-}

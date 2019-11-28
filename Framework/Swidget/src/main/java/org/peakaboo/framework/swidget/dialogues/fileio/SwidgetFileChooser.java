@@ -69,8 +69,10 @@ public class SwidgetFileChooser extends JFileChooser {
 			
 			this.setLayout(new BorderLayout());
 			this.add(chooserPanel, BorderLayout.CENTER);
-			this.add(placesWidget, BorderLayout.WEST);
 			this.add(headerWidget, BorderLayout.NORTH);
+			if (placesWidget.supported()) {
+				this.add(placesWidget, BorderLayout.WEST);
+			}
 			
 			this.setPreferredSize(new Dimension(800, 350));
 						

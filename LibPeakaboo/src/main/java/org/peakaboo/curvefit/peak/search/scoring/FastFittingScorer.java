@@ -20,14 +20,12 @@ public class FastFittingScorer implements FittingScorer {
 	private ReadOnlySpectrum data;
 	private FittingParameters parameters;
 	private float energy;
-	private float max;
 	
 	
 	public FastFittingScorer(float energy, ReadOnlySpectrum data, FittingParameters parameters) {
 		this.data = data;
 		this.parameters = parameters;
 		this.energy = energy;
-		this.max = data.max();
 	}
 	
 	

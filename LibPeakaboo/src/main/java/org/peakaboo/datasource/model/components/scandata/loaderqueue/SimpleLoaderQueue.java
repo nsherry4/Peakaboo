@@ -18,13 +18,11 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	
 	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
-	private Analysis analysis;
 	
 	public SimpleLoaderQueue(SimpleScanData data, Analysis analysis) {
 		this(data, analysis, 1000);
 	}
 	public SimpleLoaderQueue(SimpleScanData data, Analysis analysis, int depth) {
-		this.analysis = analysis;
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {

@@ -114,10 +114,5 @@ public enum StockIcon {
 	{
 		return IconFactory.getImageIcon(toString(), size);
 	}
-	
-	public ImageIcon toMenuIcon()
-	{
-		return IconFactory.getImageIcon(toString(), IconSize.BUTTON);
-	}
-	
+		
 }

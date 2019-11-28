@@ -16,20 +16,7 @@ public class IconFactory {
 	public static ImageIcon getImageIcon(String imageName){
 		return getImageIcon(imageName, null);
 	}
-	
-
-	public static ImageIcon getMenuIcon(String imageName)
-	{
-		return getImageIcon(imageName, IconSize.BUTTON);
-	}
-	
-	public static ImageIcon getMenuIcon(StockIcon stock)
-	{
-		return stock.toImageIcon(IconSize.BUTTON);
-	}
-	
-	
-	
+		
 	public static ImageIcon getImageIcon(String imageName, IconSize size){
 		return getImageIcon(imageName, size, path);
 	}

@@ -82,11 +82,7 @@ public class FittedWidget extends ClearPanel
 		elementNumber.setForeground(cDetail);
 		elementIntensity.setForeground(cDetail);
 	}
-	
-	private void setForeground() {
-		setForeground(super.getForeground());
-	}
-	
+		
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (flagged) {

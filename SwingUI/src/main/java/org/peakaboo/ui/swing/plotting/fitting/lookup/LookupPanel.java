@@ -222,7 +222,6 @@ public class LookupPanel extends ClearPanel implements Changeable
 				else if (parent instanceof Element)
 				{
 					ITransitionSeries ts = (ITransitionSeries) child;
-					Element e = (Element) parent;
 					List<ITransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
 					return ofElement.indexOf(ts);
 										

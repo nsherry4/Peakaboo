@@ -71,13 +71,6 @@ public class BreadCrumbEntry<T> {
 	}
 	
 	/**
-	 * The name of this entry in the breadcrumb
-	 */
-	public String name() {
-		return formatter.apply(item);
-	}
-	
-	/**
 	 * Returns the button representing this entry
 	 */
 	public FluentToggleButton getButton() {

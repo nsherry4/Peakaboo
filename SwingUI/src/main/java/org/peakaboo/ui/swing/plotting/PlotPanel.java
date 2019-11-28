@@ -84,7 +84,6 @@ import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 import org.peakaboo.framework.plural.swing.ExecutorSetView;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.AboutDialogue;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconFactory;
@@ -516,7 +515,7 @@ public class PlotPanel extends TabbedLayerPanel
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
 		
 		
-		AboutDialogue.Contents contents = new AboutDialogue.Contents();
+		AboutLayer.Contents contents = new AboutLayer.Contents();
 		contents.name = Version.program_name;
 		contents.description = "XRF Analysis Software";
 		contents.linkAction = () -> DesktopApp.browser("http://peakaboo.org");

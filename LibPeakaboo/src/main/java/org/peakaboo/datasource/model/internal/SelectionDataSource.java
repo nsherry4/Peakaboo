@@ -35,7 +35,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	
 	private Coord<Integer> dimensions;
 	private Coord<Integer> offset;
-	private GridPerspective<Integer> sourceGrid, selectionGrid;
+	private GridPerspective<Integer> sourceGrid;
 	private Mutable<Boolean> rectangular = new Mutable<Boolean>(null);
 	
 	/**
@@ -68,7 +68,6 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		
 		this.dimensions = new Coord<>(maxx-minx+1, maxy-miny+1);
 		offset = new Coord<>(minx, miny);
-		selectionGrid = new GridPerspective<Integer>(this.dimensions.x, this.dimensions.y, 0);
 	}
 
 	
