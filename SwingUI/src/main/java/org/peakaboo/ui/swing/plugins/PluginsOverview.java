@@ -66,7 +66,7 @@ public class PluginsOverview extends HeaderLayer {
 	JTree tree;
 	LayerPanel parent;
 	
-	JButton close, add, remove, reload, browse, download;
+	JButton add, remove, reload, browse, download;
 	
 	public PluginsOverview(LayerPanel parent) {
 		super(parent, true);

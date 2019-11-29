@@ -41,7 +41,6 @@ import org.peakaboo.ui.swing.plotting.PlotFrame;
 public class Peakaboo
 {
 	private static Timer gcTimer;
-	public static PlotFrame plotWindow;
 	
 	public static final boolean SHOW_QUANTITATIVE = true;
 
@@ -84,7 +83,7 @@ public class Peakaboo
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
-			plotWindow = new PlotFrame();
+			new PlotFrame();
 		} catch (Throwable e) {
 			PeakabooLog.get().log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
 			System.exit(1);

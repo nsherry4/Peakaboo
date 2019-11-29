@@ -312,32 +312,6 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	
 }
 
-class MapFilterPluginWidget extends ListWidget<BoltPluginPrototype<? extends MapFilterPlugin>> {
-
-	private JLabel label = new JLabel();
-	
-	public MapFilterPluginWidget() {
-		label.setIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
-		label.setBorder(Spacing.bMedium());
-		setLayout(new BorderLayout());
-		add(label, BorderLayout.CENTER);
-	}
-	
-	@Override
-	public void setForeground(Color c) {
-		super.setForeground(c);
-		if (label == null) { return; }
-		label.setForeground(c);
-	}
-	
-	@Override
-	protected void onSetValue(BoltPluginPrototype<? extends MapFilterPlugin> value) {
-		label.setText(value.getName());
-	}
-	
-	
-}
-
 class MapFilterDialog extends SwingAutoDialog {
 	
 	MapFilterDialog(MapFilteringController controller, MapFilter filter, AutoDialogButtons buttons, Window window) {
