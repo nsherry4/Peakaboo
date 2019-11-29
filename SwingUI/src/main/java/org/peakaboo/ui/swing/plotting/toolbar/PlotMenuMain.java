@@ -70,7 +70,8 @@ public class PlotMenuMain extends JPopupMenu {
 				.withTooltip("Redoes a previously undone action")
 				.withIcon(StockIcon.EDIT_REDO)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), plot)
-				.withMnemonic(KeyEvent.VK_R);
+				.withMnemonic(KeyEvent.VK_R)
+				.withAction(() -> controller.history().redo());
 		this.add(redo);
 
 		

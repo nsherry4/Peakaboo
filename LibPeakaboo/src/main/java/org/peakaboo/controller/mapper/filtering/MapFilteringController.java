@@ -210,7 +210,7 @@ class CachedMaps {
 			EventfulSoftCache<AreaMap> mapcache = new EventfulSoftCache<>(() -> {
 				ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
 				AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
-				areamap = filters.applyUnsynchronized(areamap);
+				areamap = filters.apply(areamap);
 				return areamap;
 			});
 			
@@ -231,7 +231,7 @@ class CachedMaps {
 			sum = new AreaMap(total, map.getSize(), map.getRealDimensions());
 		} else {
 			sum = new AreaMap(new ISpectrum(size.x * size.y), size, null);
-			sum = filters.applyUnsynchronized(sum);
+			sum = filters.apply(sum);
 		}
 		
 	}
