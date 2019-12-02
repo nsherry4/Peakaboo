@@ -67,10 +67,6 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 	
 	private <T> JComboBox<?> makeCombo(Predicate<T> matchesCurrent, Consumer<T> onSelect, Function<T, String> pretty, T... items) {
-
-
-
-
 		
 		List<Box<T>> boxes = Arrays.asList(items).stream().map(t -> new Box<>(t, pretty)).collect(Collectors.toList());
 		
@@ -97,7 +93,6 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private JComponent peakFitting(PlotController controller) {
 		
-
 		SettingsPanel panel = new SettingsPanel(new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.medium));
 		panel.setOpaque(false);
 		panel.setBorder(Spacing.bMedium());

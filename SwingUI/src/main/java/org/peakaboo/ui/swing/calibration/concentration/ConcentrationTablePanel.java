@@ -55,6 +55,7 @@ public class ConcentrationTablePanel extends JPanel {
 				return 3;
 			}
 			
+			@Override
 			public String getColumnName(int columnIndex) {
 				if (columnIndex == 0) {
 					return "Element";

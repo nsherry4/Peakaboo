@@ -25,6 +25,7 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
 	
 	private boolean init = false;
 	
+	@Override
     public Component getTreeCellRendererComponent(JTree tree, Object value,
             boolean sel,
             boolean expanded,
@@ -33,7 +34,7 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
     	
     	super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
     	
-    	if (init == false) {
+    	if (!init) {
     		init = true;
     		setBorder(Spacing.bSmall());
     	}

@@ -155,7 +155,8 @@ public class ReferenceViewPanel extends HeaderLayer {
 		column.setCellRenderer(new ListWidgetTableCellRenderer<>(new ListWidget<ITransitionSeries>() {
 
 			private JLabel label;
-			{
+			
+			/* Constructor */ {
 				setLayout(new BorderLayout());
 				setBorder(Spacing.bSmall());
 				label = new JLabel();

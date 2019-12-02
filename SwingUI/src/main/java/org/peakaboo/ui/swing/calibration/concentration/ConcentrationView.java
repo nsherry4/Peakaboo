@@ -54,25 +54,14 @@ public class ConcentrationView extends HeaderLayer {
 		
 		
 		HeaderTabBuilder tabs = new HeaderTabBuilder();
-		tabs.addTab("Chart", buildChart());
-		tabs.addTab("Table", buildTable());
+		tabs.addTab("Chart", new ConcentrationPlotPanel(conc));
+		tabs.addTab("Table", new ConcentrationTablePanel(conc));
 		
 		setBody(tabs.getBody());
 		getHeader().setLeft(linker);
 		getHeader().setCentre(tabs.getTabStrip());
 		
 	}
-
-	private JPanel buildChart() {
-		JPanel chart = new ConcentrationPlotPanel(conc);
-		return chart;
-	}
-	
-	private JPanel buildTable( ) {
-		JPanel table = new ConcentrationTablePanel(conc);
-		return table;
-	}
-
 
 	private String textData(String delimiter) {
 		List<Element> es = conc.elementsByConcentration();

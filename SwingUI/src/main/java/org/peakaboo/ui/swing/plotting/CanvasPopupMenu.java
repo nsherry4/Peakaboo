@@ -24,9 +24,7 @@ public class CanvasPopupMenu extends JPopupMenu {
 			this.add(annotate);
 		}
 		
-		
 	}
-	
-	
+
 	
 }

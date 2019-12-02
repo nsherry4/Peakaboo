@@ -86,30 +86,30 @@ public class ProfileManager extends HeaderLayer {
 
 		
 		
-		create = new FluentButton(StockIcon.DOCUMENT_NEW).withTooltip("Create Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
-			promptCreateProfile(this::actionLoadCalibrationReference);
-		});
+		create = new FluentButton(StockIcon.DOCUMENT_NEW)
+				.withTooltip("Create Z-Calibration Profile")
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withAction(() -> promptCreateProfile(this::actionLoadCalibrationReference));
 		
-		open = new FluentButton(StockIcon.DOCUMENT_OPEN).withTooltip("Load Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
-			actionLoadCalibrationProfile();
-		});
+		open = new FluentButton(StockIcon.DOCUMENT_OPEN)
+				.withTooltip("Load Z-Calibration Profile")
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withAction(this::actionLoadCalibrationProfile);
 		
-		clear = new FluentButton(StockIcon.EDIT_CLEAR).withTooltip("Clear Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
-			controller.calibration().setCalibrationProfile(new CalibrationProfile(), null);
-			
-		});
+		clear = new FluentButton(StockIcon.EDIT_CLEAR)
+				.withTooltip("Clear Z-Calibration Profile")
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withAction(() -> controller.calibration().setCalibrationProfile(new CalibrationProfile(), null));
 		
-		save = new FluentButton(StockIcon.DOCUMENT_SAVE_AS).withTooltip("Save New Z-Calibration Profile").withButtonSize(FluentButtonSize.LARGE).withAction(() -> {
-			actionSaveCalibrationProfile();
-		});
+		save = new FluentButton(StockIcon.DOCUMENT_SAVE_AS)
+				.withTooltip("Save New Z-Calibration Profile")
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withAction(this::actionSaveCalibrationProfile);
+		
 		save.setEnabled(controller.calibration().hasCalibrationReference());
-		
 		ButtonLinker buttons = new ButtonLinker(create, open, save, clear);
-		
 		makeNamePanel();
-		
 
-		
 		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), buttons, null);
 		
 	}

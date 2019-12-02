@@ -11,7 +11,7 @@ import org.peakaboo.framework.swidget.widgets.layout.CenteringLayout;
 
 public class PluginMessageView extends JPanel {
 
-	public PluginMessageView(String message, int width) {
+	public PluginMessageView(String message) {
 		setBorder(Spacing.bHuge());
 		
 		JLabel label = new JLabel();
