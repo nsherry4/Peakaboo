@@ -25,8 +25,7 @@ import org.peakaboo.framework.cyclops.Spectrum;
  * 
  */
 
-public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
-{
+public abstract class AbstractFilter implements Serializable, JavaFilterPlugin {
 	
 	private List<Value<?>>		parameters;
 	public boolean				enabled;
@@ -47,43 +46,40 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	}
 	
 	
-	public AbstractFilter()
-	{
+	public AbstractFilter() {
 		this.parameters = new ArrayList<>();
 		this.enabled = true;
 	}
 
 	@Override
-	public final List<Value<?>> getParameters()
-	{
+	public final List<Value<?>> getParameters() {
 		return this.parameters;
 	}
 	
 	@Override
-	public final void setParameters(List<Value<?>> params)
-	{
+	public final void setParameters(List<Value<?>> params) {
 		parameters = params;
 	}
 	
-	protected void addParameter(Parameter<?> param)
-	{
+	protected void addParameter(Parameter<?> param) {
 		parameters.add(param);
 	}
 	
-	protected void addParameter(Parameter<?>... params)
-	{
+	protected void addParameter(Parameter<?>... params) {
 		for (Parameter<?> param : params) { addParameter(param); }
 	}
 	
 	
-
+	/**
+	 * Filter the given {@link Spectrum} and return the modified result
+	 * @param data the Spectrum to filter
+	 */
 	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset);
 		
 	
 
 	@Override
-	public ReadOnlySpectrum filter(ReadOnlySpectrum data, DataSet dataset)
-	{
+	public ReadOnlySpectrum filter(ReadOnlySpectrum data, DataSet dataset) {
 		
 		try{
 			ReadOnlySpectrum newdata = filterApplyTo(data, dataset);
@@ -97,15 +93,10 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 		}
 		
 	}
-	
-		
-	
 
-	public String toString()
-	{
+	public String toString() {
 		return this.getFilterName();
 	}
-	
 	
 	public boolean isEnabled() {
 		return enabled;
@@ -113,13 +104,6 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin
 	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
-	
-	
-
-
-	
-
-	
+	}	
 	
 }

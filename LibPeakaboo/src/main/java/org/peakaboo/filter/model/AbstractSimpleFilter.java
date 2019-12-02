@@ -4,6 +4,7 @@ import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 
+@Deprecated(forRemoval = true, since = "5.4")
 public abstract class AbstractSimpleFilter extends AbstractFilter
 {
 

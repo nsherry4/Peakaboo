@@ -58,12 +58,6 @@ public interface Filter {
 	}
 	
 
-//	/**
-//	 * Forces a check to ensure the Fitler's Parameters are valid.
-//	 * @return true if the new values are valid, false otherwise
-//	 */
-//	boolean validateParameters();
-
 	/**
 	 * Returns true if this filter can filter an arbitrarily-sized subset of the current data, false otherwise
 	 */

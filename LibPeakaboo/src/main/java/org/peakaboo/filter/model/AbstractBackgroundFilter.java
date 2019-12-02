@@ -11,8 +11,7 @@ import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
-public abstract class AbstractBackgroundFilter extends AbstractFilter
-{
+public abstract class AbstractBackgroundFilter extends AbstractFilter {
 
 	private Parameter<Integer> percent;
 	private Parameter<Boolean> preview;
@@ -21,8 +20,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	private Parameter<Boolean> partial;
 
 	
-	public AbstractBackgroundFilter()
-	{
+	public AbstractBackgroundFilter() {
 		
 		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90, this::validate);
 		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE, this::validate);
@@ -49,13 +47,11 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	@Override
-	public FilterType getFilterType()
-	{
+	public FilterType getFilterType() {
 		return FilterType.BACKGROUND;
 	}
 	
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
@@ -71,8 +67,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	
 	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent);
 	
-	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset)
-	{
+	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset) {
 		if (data == null) {
 			return null;
 		}
@@ -104,12 +99,12 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	@Override
-	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
-	{
+	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		ReadOnlySpectrum background = getBackground(data, dataset);
 		return SpectrumCalculations.subtractLists(data, background);
 	}
-		
+	
+	@Override
 	public boolean isPreviewOnly() {
 		return preview.getValue();
 	}

@@ -6,24 +6,21 @@ public enum FilterType
 	BACKGROUND {
 
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return "Background Removal";
 		}			
 	},
 	NOISE {
 
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return "Noise Removal";
 		}
 	},
 	MATHEMATICAL {
 
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return "Mathematical";
 		}
 
@@ -31,8 +28,7 @@ public enum FilterType
 	ADVANCED {
 
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return "Advanced";
 		}
 
@@ -40,8 +36,7 @@ public enum FilterType
 	PROGRAMMING {
 	
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return "Programming";
 		}
 					
@@ -49,20 +44,17 @@ public enum FilterType
 	OTHER {
 
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return "Other";
 		}
 
 	};
 	
-	public String getSubPackage()
-	{
+	public String getSubPackage() {
 		return "filters." + name().toLowerCase();
 	}
 	
-	public String getFilterTypeDescription()
-	{
+	public String getFilterTypeDescription() {
 		return toString() + " Filters";
 	}
 }
