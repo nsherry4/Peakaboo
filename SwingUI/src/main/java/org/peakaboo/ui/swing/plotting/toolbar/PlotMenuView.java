@@ -129,9 +129,7 @@ public class PlotMenuView extends JPopupMenu {
 
 		
 		updateWidgetValues();
-		controller.addListener(s -> {
-			updateWidgetValues();
-		});
+		controller.addListener(s -> updateWidgetValues());
 		
 	}
 

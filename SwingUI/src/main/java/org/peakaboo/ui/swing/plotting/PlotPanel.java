@@ -10,12 +10,12 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -130,7 +130,6 @@ public class PlotPanel extends TabbedLayerPanel
 	//===TOOLBAR WIDGETS===
 	private PlotToolbar                 toolBar;
 	private PlotStatusBar				statusBar;
-	private JScrollPane					scrolledCanvas;
 
 	
 	TabbedInterface<TabbedLayerPanel> 	tabs;
@@ -204,10 +203,7 @@ public class PlotPanel extends TabbedLayerPanel
 		canvas = new PlotCanvas(controller, this);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		
-		canvas.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e){}
-
+		canvas.addMouseMotionListener(new MouseMotionAdapter() {
 
 			public void mouseMoved(MouseEvent e)
 			{
@@ -220,7 +216,7 @@ public class PlotPanel extends TabbedLayerPanel
 		canvas.setRightClickCallback((channel, coords) -> {
 			//if the click is in the bounds of the data/plot
 			if (channel > -1 && channel < controller.data().getDataSet().getAnalysis().channelsPerScan()) {
-				CanvasPopupMenu menu = new CanvasPopupMenu(canvas, this, controller, channel);
+				CanvasPopupMenu menu = new CanvasPopupMenu(this, controller, channel);
 				menu.show(canvas, coords.x, coords.y);
 			}
 		});
@@ -247,7 +243,7 @@ public class PlotPanel extends TabbedLayerPanel
 		JPanel p = new JPanel();
 		p.setPreferredSize(new Dimension(1000, 100));
 		
-		scrolledCanvas = new JScrollPane(canvas);
+		JScrollPane scrolledCanvas = new JScrollPane(canvas);
 		scrolledCanvas.setAutoscrolls(true);
 		scrolledCanvas.setBorder(Spacing.bNone());
 		
@@ -264,23 +260,19 @@ public class PlotPanel extends TabbedLayerPanel
 		canvasPanel.add(statusBar, BorderLayout.SOUTH);
 		canvasPanel.setPreferredSize(new Dimension(600, 300));
 
-		canvasPanel.addComponentListener(new ComponentListener() {
+		canvasPanel.addComponentListener(new ComponentAdapter() {
 			
-			public void componentShown(ComponentEvent e){}
-					
+			@Override
 			public void componentResized(ComponentEvent e)
 			{
 				canvas.updateCanvasSize();
 			}
-			
-			public void componentMoved(ComponentEvent e){}
-			
-			public void componentHidden(ComponentEvent e){}
+
 		});
 		
-		JTabbedPane tabs = new JTabbedPane();
-		tabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
-		tabs.add(new FiltersetViewer(controller.filtering(), getTabbedInterface().getWindow()), 1);
+		JTabbedPane sidebarTabs = new JTabbedPane();
+		sidebarTabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
+		sidebarTabs.add(new FiltersetViewer(controller.filtering(), getTabbedInterface().getWindow()), 1);
 		
 		
 		c.gridx = 0;
@@ -290,10 +282,10 @@ public class PlotPanel extends TabbedLayerPanel
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.BOTH;
 		
-		tabs.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
+		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
-		tabs.setPreferredSize(new Dimension(225, tabs.getPreferredSize().height));
-		split.add(tabs, BorderLayout.WEST);
+		sidebarTabs.setPreferredSize(new Dimension(225, sidebarTabs.getPreferredSize().height));
+		split.add(sidebarTabs, BorderLayout.WEST);
 		split.add(canvasPanel, BorderLayout.CENTER);
 				
 		split.setBorder(Spacing.bNone());
@@ -314,11 +306,9 @@ public class PlotPanel extends TabbedLayerPanel
 	@Override
 	public String getTabTitle()
 	{
-		StringBuffer titleString;
-		titleString = new StringBuffer();
+		StringBuilder titleString = new StringBuilder();
 		
-		if (controller.data().hasDataSet())
-		{
+		if (controller.data().hasDataSet()) {
 			titleString.append(controller.data().getTitle());
 		} else {
 			titleString.append("No Data");

@@ -39,7 +39,7 @@ public class GuidedFittingPanel extends JPanel
 		this.controller = controller;
 		this.canvas = canvas;
 
-		potentials = new ArrayList<ITransitionSeries>();
+		potentials = new ArrayList<>();
 
 		selControls = new SelectionListControls("Fittings", "Click Plot to Fit") {
 

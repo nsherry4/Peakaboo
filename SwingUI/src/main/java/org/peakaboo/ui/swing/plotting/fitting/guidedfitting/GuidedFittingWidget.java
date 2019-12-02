@@ -34,7 +34,7 @@ class GuidedFittingWidget extends TSSelectorGroup
 	{
 		super(controller, 1);
 		
-		editButtons = new ArrayList<FluentButton>();
+		editButtons = new ArrayList<>();
 		
 		resetSelectors(true);
 		activeIndex = 0;
@@ -96,7 +96,7 @@ class GuidedFittingWidget extends TSSelectorGroup
 			c.weightx = 0.0;
 			FluentButton edit = createEditButton(selector, i);
 			editButtons.add(edit);
-			edit.setEnabled(! (i == activeIndex));
+			edit.setEnabled(i != activeIndex);
 			add(edit, c);
 			
 			c.gridx = 2;
@@ -121,7 +121,7 @@ class GuidedFittingWidget extends TSSelectorGroup
 		revalidate();
 		
 		
-		TSSelectorUpdated(true);
+		tsSelectorUpdated(true);
 
 
 	}
@@ -152,15 +152,11 @@ class GuidedFittingWidget extends TSSelectorGroup
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
 
-		edit.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				activeIndex = index;
-				disableAllSelectors();
-				selector.setEnabled(true);
-				edit.setEnabled(false);
-			}
+		edit.addActionListener(e -> {
+			activeIndex = index;
+			disableAllSelectors();
+			selector.setEnabled(true);
+			edit.setEnabled(false);
 		});
 
 		return edit;

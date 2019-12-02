@@ -22,18 +22,12 @@ class LookupRenderer extends DefaultTreeCellRenderer
 	private FittingController	controller;
 	private JLabel				tstLabel;
 
-	public LookupRenderer(FittingController controller)
-	{
-
+	public LookupRenderer(FittingController controller)	{
 		this.controller = controller;
-
 		tswidget = new LookupWidget();
-		
 		tstLabel = new JLabel();
 		tstLabel.setOpaque(true);
 		tstLabel.setBorder(Spacing.bTiny());
-		//tstLabel.setFont(tstLabel.getFont().deriveFont(Font.BOLD).deriveFont(tstLabel.getFont().getSize() * 1.25f));
-
 	}
 
 
@@ -64,7 +58,6 @@ class LookupRenderer extends DefaultTreeCellRenderer
 			tswidget.setName(ts.getShell().toString());
 
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
-			// element.setPreferredSize(new Dimension(0, element.getPreferredSize().height));
 
 			tswidget.setBorder(Spacing.bTiny());
 			

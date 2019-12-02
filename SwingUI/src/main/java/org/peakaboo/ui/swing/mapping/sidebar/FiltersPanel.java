@@ -47,8 +47,8 @@ public class FiltersPanel extends JPanel {
 	private Window window;
 	private CardLayout layout;
 	
-	private String PANEL_FILTERS = "PANEL_FILTERS";
-	private String PANEL_ADD = "PANEL_ADD";
+	private static final String PANEL_FILTERS = "PANEL_FILTERS";
+	private static final String PANEL_ADD = "PANEL_ADD";
 	
 	private MapFilteringController controller;
 	
@@ -177,8 +177,6 @@ public class FiltersPanel extends JPanel {
 			.withTooltip("Add Filter")
 			.withAction(() -> {
 				layout.show(this, PANEL_ADD);
-				//TODO: Remove Me
-				//controller.add(new AverageMapFilter());
 		});
 		FluentButton remove = new FluentButton(StockIcon.EDIT_REMOVE)
 			.withTooltip("Remove Filter")
@@ -307,7 +305,7 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	@Override
 	protected void onSetValue(MapFilter filter) {
 		this.filter = filter;
-		button.setVisible(filter.getParameters().size() > 0);
+		button.setVisible(!filter.getParameters().isEmpty());
 	}
 	
 }

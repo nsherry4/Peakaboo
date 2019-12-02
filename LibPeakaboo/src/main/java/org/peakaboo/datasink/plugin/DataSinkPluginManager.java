@@ -1,7 +1,9 @@
 package org.peakaboo.datasink.plugin;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasink.plugin.plugins.CSV;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
@@ -11,9 +13,13 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 
 	public static DataSinkPluginManager SYSTEM;
 	public static void init(File dataSinkDir) {
-		if (SYSTEM == null) {
-			SYSTEM = new DataSinkPluginManager(dataSinkDir);
-			SYSTEM.load();
+		try {
+			if (SYSTEM == null) {
+				SYSTEM = new DataSinkPluginManager(dataSinkDir);
+				SYSTEM.load();
+			}
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load data sink plugins", e);
 		}
 	}
 	

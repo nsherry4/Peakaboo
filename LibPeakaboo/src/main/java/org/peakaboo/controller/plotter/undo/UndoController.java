@@ -163,14 +163,10 @@ public class UndoController extends Eventful
 	
 	public boolean hasUnsavedWork() {
 		if (lastSave == null) {
-			return currentState != null && undoStack.size() >= 1;
+			return currentState != null && !undoStack.isEmpty();
 		}
 		
-		if (lastSave == currentState) {
-			return false;
-		}
-		
-		return true;
+		return lastSave != currentState;
 	}
 
 

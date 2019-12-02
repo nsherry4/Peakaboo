@@ -4,6 +4,7 @@ package org.peakaboo.ui.swing.plotting;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -45,30 +46,111 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	private PlotController controller;
 	private BiConsumer<Integer, Coord<Integer>>	onSingleClickCallback, onDoubleClickCallback, onRightClickCallback;
 	private Plotter plotter;
+	
+	private PlotPanel plotPanel;
 
 	PlotCanvas(final PlotController controller, final PlotPanel parent)
 	{
 
 		super();
+		this.plotPanel = parent; 
 		this.setFocusable(true);
 
 		this.controller = controller;
 		this.plotter = new Plotter();
 		this.setMinimumSize(new Dimension(100, 100));
 
-		//setCanvasSize();
+		addControllerListener();
+		addFileDropListener();
+		addMouseListener();
+		
+	}
+	
+	private void addMouseListener() {
+		addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				onMouseClicked(e);
+			}
+		});
+	}
+	
+	private void onMouseClicked(MouseEvent e) {
+		if (!controller.data().hasDataSet()) {
+			return;
+		}
+		
+		/*
+		 * Mouse clicking on the plot can be a few things
+		 * * Selecting a fitting 'for' a channel (single left click)
+		 * * Annotating a fitting 'for' a channel (double left click)
+		 * * Getting a popup menu 'for' a channel (right click)
+		 */
 
+		boolean oneclick = e.getClickCount() == 1;
+		boolean twoclick = e.getClickCount() == 2;
+		boolean rightclick = SwingUtilities.isRightMouseButton(e);
+		boolean leftclick = SwingUtilities.isLeftMouseButton(e);
+
+
+		Coord<Integer> mouseCoords = new Coord<>(e.getX(), e.getY());
+		int channel = plotter.getChannel(e.getX());
+		if (oneclick && leftclick) {
+			onSingleClick(channel, mouseCoords);
+		} else if (twoclick && leftclick) {
+			onDoubleClick(channel, mouseCoords);
+		} else if (oneclick && rightclick) {
+			onRightClick(channel, mouseCoords);
+		}
+				
+		//Make the plot canvas focusable
+		if (!PlotCanvas.this.hasFocus()) {
+			PlotCanvas.this.requestFocus();
+		}
+	}
+	
+	private void onSingleClick(int channel, Coord<Integer> mouseCoords) {		
+		if (onSingleClickCallback != null) {
+			onSingleClickCallback.accept(channel, mouseCoords);
+		} else {
+			ITransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(channel);
+	        controller.fitting().clearProposedTransitionSeries();
+	        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
+	        if (bestFit != null) {
+	            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit));
+	        }
+		}
+	}
+	
+	private void onDoubleClick(int channel, Coord<Integer> mouseCoords) {
+		if (onDoubleClickCallback != null) {
+			onDoubleClickCallback.accept(channel, mouseCoords);
+		}
+	}
+	
+	private void onRightClick(int channel, Coord<Integer> mouseCoords) {
+		if (controller.data().hasDataSet() && onRightClickCallback != null) {
+			onRightClickCallback.accept(channel, mouseCoords);
+		}
+	}
+	
+	
+	private void addControllerListener() {
 		controller.addListener(type -> {
 			switch (type) {
 			case UI:
 			case DATA:	
 			case UNDO:
 				updateCanvasSize();
-			default: break;
+				break;
+			default: 
+				break;
 			}
 		});
-		
-		
+	}
+	
+	private void addFileDropListener() {
 		new FileDrop(this, new FileDrop.Listener() {
 			
 			@Override
@@ -76,113 +158,25 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 				try {
 					
 					TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
-						if (!optfiles.isPresent()) {
-							return;
-						}
-						parent.load(optfiles.get().stream().map(PathDataFile::new).collect(Collectors.toList()));
+						if (!optfiles.isPresent()) { return; }
+						plotPanel.load(optfiles.get().stream().map(PathDataFile::new).collect(Collectors.toList()));
 					});
 
-					TaskMonitorPanel.onLayerPanel(monitor, parent);
-					
+					TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
 
-					
-					/* TODO: See about using URLDataFiles in the future
-					Path downloadDir = DataFiles.createDownloadDirectory();
-					List<DataFile> files = new ArrayList<>();
-					for (URL url : urls) {
-						String nameParts[] = url.getFile().split("/");
-						String name = nameParts[nameParts.length-1];
-						files.add(new URLDataFile(url, downloadDir, name));
-					}
-					parent.load(files);
-					*/
 				} catch (Exception e) {
 					PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
-					return;
 				}
 			}
 			
 			@Override
 			public void filesDropped(File[] files) {
-				parent.load(Arrays.asList(files).stream().map(PathDataFile::new).collect(Collectors.toList()));
+				plotPanel.load(Arrays.asList(files).stream().map(PathDataFile::new).collect(Collectors.toList()));
 			}
 		});
-
-
-		
-		addMouseListener(new MouseListener() {
-			
-			public void mouseReleased(MouseEvent e)
-			{}
-			
-		
-			public void mousePressed(MouseEvent e)
-			{}
-			
-		
-			public void mouseExited(MouseEvent e)
-			{}
-			
-		
-			public void mouseEntered(MouseEvent e)
-			{}
-			
-		
-			public void mouseClicked(MouseEvent e) {
-				
-				/*
-				 * Mouse clicking on the plot can be a few things
-				 * * Selecting a fitting 'for' a channel (single left click)
-				 * * Annotating a fitting 'for' a channel (double left click)
-				 * * Getting a popup menu 'for' a channel (right click)
-				 */
-
-				boolean oneclick = e.getClickCount() == 1;
-				boolean twoclick = e.getClickCount() == 2;
-				boolean rightclick = SwingUtilities.isRightMouseButton(e);
-				boolean leftclick = SwingUtilities.isLeftMouseButton(e);
-						
-				if (controller.data().hasDataSet()) {
-					
-					Coord<Integer> mouseCoords = new Coord<>(e.getX(), e.getY());
-					if (oneclick && leftclick) {
-						if (onSingleClickCallback != null) {
-							onSingleClickCallback.accept(plotter.getChannel(e.getX()), mouseCoords);
-						} else {
-							onSingleClick(e);
-						}
-					} else if (twoclick && leftclick) {
-						if (onDoubleClickCallback != null) {
-							onDoubleClickCallback.accept(plotter.getChannel(e.getX()), mouseCoords);
-						}
-					} else if (oneclick && rightclick) {
-						if (controller.data().hasDataSet() && onRightClickCallback != null) {
-							onRightClickCallback.accept(plotter.getChannel(e.getX()), mouseCoords);
-						}
-					}
-						
-					
-				}
-				
-				
-				//Make the plot canvas focusable
-				if (!PlotCanvas.this.hasFocus()) {
-					PlotCanvas.this.requestFocus();
-				}
-			}
-		});
-
 	}
 	
-	private void onSingleClick(MouseEvent e) {
 
-		ITransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(plotter.getChannel(e.getX()));
-        controller.fitting().clearProposedTransitionSeries();
-        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
-        if (bestFit != null) {
-            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit));
-        }
-	}
 
 
 
@@ -235,9 +229,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		}
 		
 		//Generate new size
-		Dimension newSize = new Dimension(newWidth, newHeight);
-		
-		return newSize;
+		return new Dimension(newWidth, newHeight);
 	}
 
 	void updateCanvasSize()
@@ -269,6 +261,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 	}
 
+	@Override
 	public void validate() {
 		updateCanvasSize();
 		super.validate();

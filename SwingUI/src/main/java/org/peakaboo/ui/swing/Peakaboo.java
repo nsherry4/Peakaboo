@@ -71,9 +71,6 @@ public class Peakaboo
 			String title = "Low Memory";
 						
 			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
-			
-			//dialog.setAlwaysOnTop(true);
-			//dialog.setVisible(true);
 		}
 	}
 	
@@ -196,21 +193,17 @@ public class Peakaboo
 			uiPerformanceTune();
 
 			//Init plugins
-			//TODO: This try-catch should be more granular, maybe in the managers themselves?
-			try {
-				FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
-				MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
-				DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
-				DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
-				CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
-			} catch (Throwable e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load plugins", e);
-			}
-			
+			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+			MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
+			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
+			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
+			CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
+
 			try {
 				peakLoader.join();
 			} catch (InterruptedException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load peak table", e);
+				PeakabooLog.get().log(Level.SEVERE, "Failed to start up properly, Peakaboo must now exit.", e);
+				System.exit(2);
 			}
 			runPeakaboo();
 		});

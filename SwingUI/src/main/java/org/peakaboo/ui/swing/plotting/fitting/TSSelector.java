@@ -58,13 +58,9 @@ public class TSSelector extends JPanel implements IEventful
 		tsLabel.setHorizontalAlignment(JLabel.CENTER);
 
 		
-		tsComboListener = new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				updateLabelText();
-				updateListeners();
-			}
+		tsComboListener = e -> {
+			updateLabelText();
+			updateListeners();
 		};
 		
 		tsCombo.addActionListener(tsComboListener);
@@ -84,7 +80,7 @@ public class TSSelector extends JPanel implements IEventful
 		if (tss == null) return;
 		
 		for (ITransitionSeries ts : tss) { tsCombo.addItem(ts); }
-		if (tss.size() > 0) tsCombo.setSelectedIndex(0);
+		if (!tss.isEmpty()) tsCombo.setSelectedIndex(0);
 		
 		updateLabelText();
 		

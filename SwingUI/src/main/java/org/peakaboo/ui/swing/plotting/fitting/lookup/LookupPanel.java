@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
@@ -36,7 +37,6 @@ public class LookupPanel extends ClearPanel implements Changeable
 {
 
 	private MutableTreeModel		utm;
-	private JTree					unfitTree;
 	private JTextField				search;
 	private String					query = "";
 	private List<Element>			filtered = null;
@@ -97,8 +97,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 			
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
+				//NOOP
 			}
 			
 			@Override
@@ -112,13 +111,10 @@ public class LookupPanel extends ClearPanel implements Changeable
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
+				//NOOP
 			}
 		});
-		search.addActionListener(e -> {
-			changed();
-		});
+		search.addActionListener(e -> changed());
 		
 		return panel;
 		
@@ -126,7 +122,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 	
 	private boolean match(Element e) {
 			
-		if (PeakTable.SYSTEM.getForElement(e).size() == 0) return false;
+		if (PeakTable.SYSTEM.getForElement(e).isEmpty()) return false;
 		
 		if (query.length() == 0) {
 			return true;
@@ -135,6 +131,7 @@ public class LookupPanel extends ClearPanel implements Changeable
 		if ((e.name().toLowerCase()).contains(query)) return true;
 		if ((e.toString().toLowerCase()).contains(query)) return true;
 		if ((e.atomicNumber()+"").toLowerCase().contains(query)) return true;
+		
 		return false;
 		
 	}
@@ -146,150 +143,15 @@ public class LookupPanel extends ClearPanel implements Changeable
 	public void changed()
 	{
 		utm.fireStructureChangeEvent();
-		//unfitTree.setSelectionRow(0);
 	}
 
 
 	private JScrollPane createLookupTable()
 	{
 
-		utm = new MutableTreeModel() {
+		utm = new LookupModel(controller, () -> filtered);
 
-			private List<TreeModelListener>	listeners;
-
-
-			public void valueForPathChanged(TreePath path, Object newValue)
-			{
-				if (path.getLastPathComponent() instanceof ITransitionSeries)
-				{
-					ITransitionSeries ts = (ITransitionSeries) path.getLastPathComponent();
-					boolean included = (Boolean) newValue;
-
-					if (included)
-					{
-						controller.addProposedTransitionSeries(ts);
-					}
-					else
-					{
-						controller.removeProposedTransitionSeries(ts);
-					}
-
-					controller.fittingProposalsInvalidated();
-
-				}
-				else if (path.getLastPathComponent() instanceof Element)
-				{
-					// do nothing
-				}
-			}
-
-
-			public void removeTreeModelListener(TreeModelListener l)
-			{
-				if (listeners == null) listeners = new ArrayList<TreeModelListener>();
-				listeners.remove(l);
-			}
-
-
-			public boolean isLeaf(Object node)
-			{
-
-				if (node instanceof ITransitionSeries)
-				{
-					return true;
-				}
-				else if (node instanceof Element)
-				{
-					return false;
-				}
-				return false;
-			}
-
-
-			public Object getRoot()
-			{
-				return "Fittings";
-			}
-
-
-			public int getIndexOfChild(Object parent, Object child)
-			{
-				if (parent instanceof String)
-				{
-					Element e = (Element) child;
-					return filtered.indexOf(e);
-				}
-				else if (parent instanceof Element)
-				{
-					ITransitionSeries ts = (ITransitionSeries) child;
-					List<ITransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
-					return ofElement.indexOf(ts);
-										
-				}
-				return 0;
-			}
-
-
-			public int getChildCount(Object parent)
-			{
-				if (parent instanceof Element)
-				{
-					Element e = (Element) parent;
-					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).size();
-				}
-				else if (parent instanceof String)
-				{
-					return filtered.size();
-				}
-				return 0;
-			}
-
-
-			public Object getChild(Object parent, int index)
-			{
-
-				if (parent instanceof String)
-				{
-					return filtered.get(index);
-				}
-				else if (parent instanceof Element)
-				{
-
-					Element e = (Element) parent;
-					return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).get(index);
-
-				}
-				return null;
-			}
-
-
-			public void addTreeModelListener(TreeModelListener l)
-			{
-				if (listeners == null) listeners = new ArrayList<TreeModelListener>();
-				listeners.add(l);
-
-			}
-
-
-			public void fireNodesChangeEvent()
-			{
-				for (TreeModelListener tml : listeners)
-				{
-					tml.treeNodesChanged(new TreeModelEvent(this, new TreePath(getRoot())));
-				}
-			}
-			
-			public void fireStructureChangeEvent()
-			{
-				for (TreeModelListener tml : listeners)
-				{
-					tml.treeStructureChanged(new TreeModelEvent(this, new TreePath(getRoot())));
-				}
-			}
-
-		};
-
-		unfitTree = new JTree(utm);
+		JTree unfitTree = new JTree(utm);
 		unfitTree.setShowsRootHandles(true);
 		unfitTree.setRootVisible(false);
 
@@ -303,17 +165,153 @@ public class LookupPanel extends ClearPanel implements Changeable
 		unfitTree.setEditable(true);
 		unfitTree.setCellEditor(new LookupEditor(unfitTree, renderer, controller));
 
-		/*
-		 * BasicTreeUI basicTreeUI = (BasicTreeUI) unfitTable.getUI();
-		 * basicTreeUI.setRightChildIndent((int)Math.round(basicTreeUI.getRightChildIndent() * 1.5));
-		 */
-
 		JScrollPane scroll = new JScrollPane(unfitTree);
-		// scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setPreferredSize(new Dimension(200, 0));
 		scroll.setBorder(Spacing.bNone());
 
 		return scroll;
 	}
 
+}
+
+class LookupModel implements MutableTreeModel {
+	
+	private List<TreeModelListener>	listeners;
+	private FittingController controller;
+	private Supplier<List<Element>> filtered;
+	
+	public LookupModel(FittingController controller, Supplier<List<Element>> filtered) {
+		this.controller = controller;
+		this.filtered = filtered;
+	}
+
+	public void valueForPathChanged(TreePath path, Object newValue)
+	{
+		if (path.getLastPathComponent() instanceof ITransitionSeries)
+		{
+			ITransitionSeries ts = (ITransitionSeries) path.getLastPathComponent();
+			boolean included = (Boolean) newValue;
+
+			if (included)
+			{
+				controller.addProposedTransitionSeries(ts);
+			}
+			else
+			{
+				controller.removeProposedTransitionSeries(ts);
+			}
+
+			controller.fittingProposalsInvalidated();
+
+		}
+		else if (path.getLastPathComponent() instanceof Element)
+		{
+			// do nothing
+		}
+	}
+
+
+	public void removeTreeModelListener(TreeModelListener l)
+	{
+		if (listeners == null) listeners = new ArrayList<>();
+		listeners.remove(l);
+	}
+
+
+	public boolean isLeaf(Object node)
+	{
+
+		if (node instanceof ITransitionSeries)
+		{
+			return true;
+		}
+		else if (node instanceof Element)
+		{
+			return false;
+		}
+		return false;
+	}
+
+
+	public Object getRoot()
+	{
+		return "Fittings";
+	}
+
+
+	public int getIndexOfChild(Object parent, Object child)
+	{
+		if (parent instanceof String)
+		{
+			Element e = (Element) child;
+			return filtered.get().indexOf(e);
+		}
+		else if (parent instanceof Element)
+		{
+			ITransitionSeries ts = (ITransitionSeries) child;
+			List<ITransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
+			return ofElement.indexOf(ts);
+								
+		}
+		return 0;
+	}
+
+
+	public int getChildCount(Object parent)
+	{
+		if (parent instanceof Element)
+		{
+			Element e = (Element) parent;
+			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).size();
+		}
+		else if (parent instanceof String)
+		{
+			return filtered.get().size();
+		}
+		return 0;
+	}
+
+
+	public Object getChild(Object parent, int index)
+	{
+
+		if (parent instanceof String)
+		{
+			return filtered.get().get(index);
+		}
+		else if (parent instanceof Element)
+		{
+
+			Element e = (Element) parent;
+			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).get(index);
+
+		}
+		return null;
+	}
+
+
+	public void addTreeModelListener(TreeModelListener l)
+	{
+		if (listeners == null) listeners = new ArrayList<>();
+		listeners.add(l);
+
+	}
+
+
+	public void fireNodesChangeEvent()
+	{
+		for (TreeModelListener tml : listeners)
+		{
+			tml.treeNodesChanged(new TreeModelEvent(this, new TreePath(getRoot())));
+		}
+	}
+	
+	public void fireStructureChangeEvent()
+	{
+		for (TreeModelListener tml : listeners)
+		{
+			tml.treeStructureChanged(new TreeModelEvent(this, new TreePath(getRoot())));
+		}
+	}
+	
 }

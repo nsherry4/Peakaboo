@@ -31,9 +31,7 @@ public class PlotZoomControls extends FluentButton {
 		zoomPanel = new ClearPanel();
 		zoomPanel.setBorder(Spacing.bMedium());
 		
-		zoomSlider = new ZoomSlider(10, 1000, 10, value -> {
-			controller.view().setZoom(value / 100f);
-		});
+		zoomSlider = new ZoomSlider(10, 1000, 10, value -> controller.view().setZoom(value / 100f));
 		zoomSlider.setOpaque(false);
 		zoomSlider.setValue(100);
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
@@ -41,9 +39,7 @@ public class PlotZoomControls extends FluentButton {
 		
 		final FluentToggleButton lockHorizontal = new FluentToggleButton("", StockIcon.MISC_LOCKED).withTooltip("Lock Vertical Zoom to Window Size");
 		lockHorizontal.setSelected(true);
-		lockHorizontal.addActionListener(e -> {
-			controller.view().setLockPlotHeight(lockHorizontal.isSelected());
-		});
+		lockHorizontal.addActionListener(e -> controller.view().setLockPlotHeight(lockHorizontal.isSelected()));
 		zoomPanel.add(lockHorizontal, BorderLayout.EAST);
 		
 		JPopupMenu zoomMenu = new JPopupMenu();

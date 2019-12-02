@@ -1,7 +1,9 @@
 package org.peakaboo.mapping.filter.model;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
@@ -32,9 +34,13 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 
 	public static MapFilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
-		if (SYSTEM == null) {
-			SYSTEM = new MapFilterPluginManager(filterDir);
-			SYSTEM.load();
+		try {
+			if (SYSTEM == null) {
+				SYSTEM = new MapFilterPluginManager(filterDir);
+				SYSTEM.load();
+			}
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load map filter plugins", e);
 		}
 	}
 	

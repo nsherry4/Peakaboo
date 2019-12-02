@@ -42,6 +42,11 @@ public interface ScanData extends Iterable<ReadOnlySpectrum>
 	 * Returns the number of scans in this data set.
 	 */
 	int scanCount();
+	
+	
+	default boolean isEmpty() {
+		return scanCount() == 0;
+	}
 
 	
 

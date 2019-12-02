@@ -46,17 +46,7 @@ class LookupEditor extends DefaultTreeCellEditor
 		tstLabel.setOpaque(true);
 		tstLabel.setBorder(Spacing.bTiny());
 
-		//tstLabel.setFont(tstLabel.getFont().deriveFont(Font.BOLD).deriveFont(tstLabel.getFont().getSize() * 1.25f));
-
-
-		tswidget.getCheckBox().addItemListener(new ItemListener() {
-
-			public void itemStateChanged(ItemEvent e)
-			{
-				//fireEditingStopped();
-				LookupEditor.this.stopCellEditing();
-			}
-		});
+		tswidget.getCheckBox().addItemListener(e -> LookupEditor.this.stopCellEditing());
 
 	}
 
@@ -76,7 +66,6 @@ class LookupEditor extends DefaultTreeCellEditor
 
 			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tswidget.setForeground(cellRenderer.getTextSelectionColor());
-			//tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
 			tswidget.setBorder(Spacing.bTiny());
 			
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
@@ -119,6 +108,7 @@ class LookupEditor extends DefaultTreeCellEditor
 		if (selected == null) return false;
 		if (selected instanceof TransitionShell) return false;
 		if (selected instanceof String) return false;
+		
 		return true;
 	}
 

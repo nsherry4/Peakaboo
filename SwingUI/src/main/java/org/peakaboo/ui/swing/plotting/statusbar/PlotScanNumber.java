@@ -46,27 +46,19 @@ public class PlotScanNumber extends ClearPanel {
 		this.add(Box.createHorizontalStrut(4));
 		
 
-		scanNo.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e)
-			{
-				JSpinner scan = (JSpinner) e.getSource();
-				int value = (Integer) ((scan).getValue());
-				controller.view().setScanNumber(value - 1);
-			}
+		scanNo.addChangeListener(e -> {
+			JSpinner scan = (JSpinner) e.getSource();
+			int value = (Integer) ((scan).getValue());
+			controller.view().setScanNumber(value - 1);
 		});
 		
 
 		scanBlock.setFocusable(false);
-		scanBlock.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				if (scanBlock.isSelected()) {
-					controller.data().getDiscards().discard(controller.view().getScanNumber());
-				} else {
-					controller.data().getDiscards().undiscard(controller.view().getScanNumber());
-				}
+		scanBlock.addActionListener(e -> {
+			if (scanBlock.isSelected()) {
+				controller.data().getDiscards().discard(controller.view().getScanNumber());
+			} else {
+				controller.data().getDiscards().undiscard(controller.view().getScanNumber());
 			}
 		});
 		

@@ -157,19 +157,9 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		PlotData data = new PlotData();
 		PlotSpectra dataForPlot = getDataForPlot();
 		
-		//TODO: Can this whole block be moved to the controller, since it just calls into controller a bunch?
-		data.selectionResults = fitting().getFittingSelectionResults();
-		data.proposedResults = fitting().getFittingProposalResults();
-		data.calibration = fitting().getEnergyCalibration();
-		data.detectorMaterial = fitting().getDetectorMaterial();
-		data.highlightedTransitionSeries = fitting().getHighlightedTransitionSeries();
-		data.proposedTransitionSeries = fitting().getProposedTransitionSeries();
-		data.annotations = fitting().getAnnotations();
-		
+		fitting().populatePlotData(data);	
 		data.consistentScale = view().getConsistentScale();
-		
 		data.dataset = data().getDataSet();
-		
 		data.filters = filtering().getActiveFilters();
 		
 		if (dataForPlot != null) {

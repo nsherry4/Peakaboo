@@ -1,7 +1,9 @@
 package org.peakaboo.filter.model;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
@@ -34,9 +36,13 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
 	public static FilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
-		if (SYSTEM == null) {
-			SYSTEM = new FilterPluginManager(filterDir);
-			SYSTEM.load();
+		try {
+			if (SYSTEM == null) {
+				SYSTEM = new FilterPluginManager(filterDir);
+				SYSTEM.load();
+			}
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load filter plugins", e);
 		}
 	}
 
@@ -53,7 +59,6 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		builtins = new BoltJavaBuiltinLoader<>(JavaFilterPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
-		//TODO: Add script loader
 	}
 	
 	private void registerCustomPlugins() {

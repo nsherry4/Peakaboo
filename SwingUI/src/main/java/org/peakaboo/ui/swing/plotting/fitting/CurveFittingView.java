@@ -36,10 +36,10 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	private PlotController	 	plotController;
 	private PlotPanel			plotPanel;
 
-	private final String		FITTED		= "Fitted";
-	private final String		LOOKUP		= "Lookup";
-	private final String		SUMMATION	= "Summation";
-	private final String		SMART		= "Smart";
+	private static final String		FITTED		= "Fitted";
+	private static final String		LOOKUP		= "Lookup";
+	private static final String		SUMMATION	= "Summation";
+	private static final String		SMART		= "Smart";
 
 
 	private FittingPanel		fittedPanel;
@@ -54,11 +54,11 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	
 
-	public CurveFittingView(FittingController _controller, PlotController plotController, PlotPanel plotPanel, PlotCanvas canvas)
+	public CurveFittingView(FittingController controller, PlotController plotController, PlotPanel plotPanel, PlotCanvas canvas)
 	{
 		super();
 		
-		this.controller = _controller;
+		this.controller = controller;
 		this.plotController = plotController;
 		this.plotPanel = plotPanel;
 
@@ -75,15 +75,11 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		this.add(cardPanel);
 
 		
-		controller.addListener(new EventfulTypeListener<Boolean>() {
-
-			public void change(Boolean b)
-			{
-				//b will be true if the fitting model has been changed in some way
-				//other than through the FittingController (ie load session, undo, etc)
-				if (b) {
-					changed();
-				}
+		controller.addListener(b -> {
+			//b will be true if the fitting model has been changed in some way
+			//other than through the FittingController (ie load session, undo, etc)
+			if (b) {
+				changed();
 			}
 		});
 

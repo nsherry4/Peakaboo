@@ -59,9 +59,6 @@ public class PlotToolbar extends JToolBar {
 		ibutton.addActionListener(e -> plot.actionOpenData());
 		this.add(ibutton, c);
 
-		// controls.add(button);
-
-
 
 		c.gridx += 1;
 		saveButton = new FluentToolbarButton("Save", StockIcon.DOCUMENT_SAVE_AS).withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use");

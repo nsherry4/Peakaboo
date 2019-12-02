@@ -49,7 +49,7 @@ public class SavedFittingSession {
 		//Save fitting selections
 		fittings = controller.fittingModel.selections.getFittedTransitionSeries()
 				.stream()
-				.map(ts -> new SerializedTransitionSeries(ts))
+				.map(SerializedTransitionSeries::new)
 				.collect(toList());
 		
 		annotations = new HashMap<>();

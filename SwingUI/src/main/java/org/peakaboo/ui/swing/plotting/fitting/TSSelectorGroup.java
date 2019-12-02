@@ -42,17 +42,13 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 				.withTooltip("Add")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
-		addButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				addTSSelector(true);
-				addButton.requestFocusInWindow();
-			}
+		addButton.addActionListener(e -> {
+			addTSSelector(true);
+			addButton.requestFocusInWindow();
 		});
 		
 				
-		selectors = new ArrayList<TSSelector>();
+		selectors = new ArrayList<>();
 		
 		
 	}
@@ -74,15 +70,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	{
 		
 		TSSelector sel = new TSSelector();
-		
-		sel.addListener(new EventfulListener() {
-			
-			public void change()
-			{
-				TSSelectorUpdated(active);
-			}
-		});
-		
+		sel.addListener(() -> tsSelectorUpdated(active));
 		selectors.add(sel);
 		
 		refreshGUI();
@@ -100,13 +88,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
 
-		remove.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				removeTSSelector(tss);
-			}
-		});
+		remove.addActionListener(e -> removeTSSelector(tss));
 
 		return remove;
 	}
@@ -124,7 +106,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 
 	}
 	
-	protected final void TSSelectorUpdated(final boolean active)
+	protected final void tsSelectorUpdated(final boolean active)
 	{
 		controller.clearProposedTransitionSeries();
 		List<ITransitionSeries> tss = getTransitionSeries();

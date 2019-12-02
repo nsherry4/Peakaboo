@@ -11,14 +11,10 @@ public class CanvasPopupMenu extends JPopupMenu {
 
 	private JMenuItem quickmap;
 		
-	public CanvasPopupMenu(PlotCanvas canvas, PlotPanel plot, PlotController controller, int channel) {
+	public CanvasPopupMenu(PlotPanel plot, PlotController controller, int channel) {
 		
 		quickmap = new JMenuItem("Quick Map Channel " + channel);
-		quickmap.addActionListener(e -> {
-			SwingUtilities.invokeLater(() -> {
-				plot.actionQuickMap(channel);
-			});
-		});
+		quickmap.addActionListener(e -> SwingUtilities.invokeLater(() -> plot.actionQuickMap(channel)));
 		this.add(quickmap);
 		
 		ITransitionSeries ts = controller.fitting().selectTransitionSeriesAtChannel(channel);
