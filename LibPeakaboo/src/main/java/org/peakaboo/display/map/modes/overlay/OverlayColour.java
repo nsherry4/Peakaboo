@@ -48,8 +48,7 @@ public enum OverlayColour {
 	};
 	
 	
-	public int toARGB()
-	{
+	public int toARGB() {
 		return 0;
 	}
 	

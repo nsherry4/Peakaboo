@@ -10,6 +10,7 @@ import org.peakaboo.common.PeakabooConfiguration.MemorySize;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.display.Display;
 import org.peakaboo.display.plot.painters.FittingLabel;
 import org.peakaboo.display.plot.painters.FittingMarkersPainter;
 import org.peakaboo.display.plot.painters.FittingPainter;
@@ -46,8 +47,7 @@ public class Plotter {
 
 	
 	private int spectrumSize = 2048;
-	private static final float OVERSIZE = 1.2f;
-	ManagedBuffer bufferer = new ManagedBuffer(OVERSIZE);
+	ManagedBuffer bufferer = new ManagedBuffer(Display.OVERSIZE);
 	
 	private Coord<Integer> lastSize;
 	private PlotDrawing plotDrawing;
@@ -70,7 +70,7 @@ public class Plotter {
 		
 		
 		//Should be use a buffer, or are we too tight on memory?
-		boolean doBuffer = useBuffer(size);
+		boolean doBuffer = Display.useBuffer(size);
 		 
 		if (context.getSurfaceType() != SurfaceType.RASTER) {
 			//We can't do raster-based buffering if the drawing target is vector/pdf
@@ -102,33 +102,6 @@ public class Plotter {
 		
 	}
 	
-	private static boolean useBuffer(Coord<Integer> size) {
-		
-		boolean doBuffer = true;
-		
-		int bufferSpace = (int)((size.x * OVERSIZE * size.y * OVERSIZE * 4) / 1024f / 1024f);
-		if (bufferSpace > 10 && PeakabooConfiguration.memorySize == MemorySize.TINY) {
-			doBuffer = false;
-		}
-		if (bufferSpace > 20 && PeakabooConfiguration.memorySize == MemorySize.SMALL) {
-			doBuffer = false;
-		}
-		if (bufferSpace > 40 && PeakabooConfiguration.memorySize == MemorySize.MEDIUM) {
-			doBuffer = false;
-		}
-		if (bufferSpace > 250 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
-			doBuffer = false;
-		}
-		
-		Runtime rt = Runtime.getRuntime();
-		int freemem = (int) (rt.freeMemory() / 1024f / 1024f);
-		if (bufferSpace * 1.5f > freemem) {
-			doBuffer = false;
-		}
-		
-		return doBuffer;
-		
-	}
 	
 	public PlotDrawing drawToBuffer(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
 

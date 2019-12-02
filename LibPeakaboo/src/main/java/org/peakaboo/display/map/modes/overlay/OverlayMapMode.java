@@ -1,12 +1,13 @@
 package org.peakaboo.display.map.modes.overlay;
 
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
@@ -29,13 +30,10 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPa
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
-import com.google.common.base.Function;
-
 public class OverlayMapMode extends MapMode {
 
 	private Map<OverlayColour, RasterSpectrumMapPainter> overlayMapPainters;
-	private SoftReference<SelectionMaskPainter> selectionPainterRef = new SoftReference<>(null);
-	
+		
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
@@ -60,7 +58,7 @@ public class OverlayMapMode extends MapMode {
 		List<Pair<PaletteColour, String>> colours = new ArrayList<>();
 		Function<OverlayColour, String> tsFormatter = colour -> overlayData.getData().get(colour).elements
 				.stream()
-				.map(ts -> ts.toString())
+				.map(ITransitionSeries::toString)
 				.collect(Collectors.reducing((a, b) -> a + ", " + b)).orElse("");
 		
 		if (overlayMapPainters == null) {
@@ -120,7 +118,7 @@ public class OverlayMapMode extends MapMode {
 		);
 
 			
-		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+		List<AxisPainter> axisPainters = new ArrayList<>();
 		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
@@ -131,14 +129,11 @@ public class OverlayMapMode extends MapMode {
 
 		
 		//Selection Painter
-		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
-		if (selectionPainter == null) {
-			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
-			selectionPainterRef = new SoftReference<>(selectionPainter);
-		} else {
-			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
-		}
-		
+		SelectionMaskPainter selectionPainter = super.getSelectionPainter(
+				new PaletteColour(0xffffffff), 
+				settings.selectedPoints, 
+				settings.userDataWidth, 
+				settings.userDataHeight);
 
 		
 		
@@ -173,7 +168,7 @@ public class OverlayMapMode extends MapMode {
 			addedColoursMapPainter.setPixels(addedColours);
 			
 			//set up the list of painters
-			List<MapPainter> painters = new ArrayList<MapPainter>();
+			List<MapPainter> painters = new ArrayList<>();
 			painters.add(new FloodMapPainter(new PaletteColour(0xff000000))); //background
 			painters.add(addedColoursMapPainter);
 			painters.add(selectionPainter);
@@ -185,7 +180,7 @@ public class OverlayMapMode extends MapMode {
 			
 		} else {
 			
-			List<MapPainter> painters = new ArrayList<MapPainter>();
+			List<MapPainter> painters = new ArrayList<>();
 			painters.add(new FloodMapPainter(new PaletteColour(0xff000000))); //background
 			for (OverlayColour colour : OverlayColour.values()) {
 				if (overlaySpectra.containsKey(colour) && overlayMapPainters.containsKey(colour) ) {

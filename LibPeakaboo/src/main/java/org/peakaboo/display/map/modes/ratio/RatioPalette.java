@@ -16,41 +16,31 @@ public class RatioPalette extends AbstractPalette
 	private List<PaletteColour>	spectrum;
 
 
-	public RatioPalette()
-	{
+	public RatioPalette() {
 		this.spectrum = Spectrums.RatioThermalScale();
 	}
 
 
-	public RatioPalette(boolean isMonochrome)
-	{
-		if (isMonochrome)
-		{
+	public RatioPalette(boolean isMonochrome) {
+		if (isMonochrome) {
 			this.spectrum = Spectrums.RatioMonochromeScale();
-		}
-		else
-		{
+		} else {
 			this.spectrum = Spectrums.RatioThermalScale();
 		}
 	}
 
 
-	public RatioPalette(int steps, boolean isMonochrome)
-	{
-		if (isMonochrome)
-		{
+	public RatioPalette(int steps, boolean isMonochrome) {
+		if (isMonochrome) {
 			this.spectrum = Spectrums.RatioMonochromeScale(steps);
-		}
-		else
-		{
+		} else {
 			this.spectrum = Spectrums.RatioThermalScale(steps);
 		}
 	}
 
 
 	@Override
-	public PaletteColour getFillColour(double intensity, double maximum)
-	{	
+	public PaletteColour getFillColour(double intensity, double maximum) {	
 		double percentage = (intensity + maximum) / (2 * maximum);
 		int index = (int) (spectrum.size() * percentage);
 

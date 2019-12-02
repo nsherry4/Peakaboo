@@ -1,6 +1,5 @@
 package org.peakaboo.display.map.modes.ratio;
 
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationP
 public class RatioMapMode extends MapMode {
 
 	private SpectrumMapPainter ratioMapPainter;
-	private SoftReference<SelectionMaskPainter> selectionPainterRef = new SoftReference<>(null);
 	
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
@@ -40,7 +38,7 @@ public class RatioMapMode extends MapMode {
 		backend.setSource(new PaletteColour(0xffffffff));
 		backend.fill();
 		
-		List<AbstractPalette> paletteList = new ArrayList<AbstractPalette>();
+		List<AbstractPalette> paletteList = new ArrayList<>();
 		
 
 		Pair<Spectrum, Spectrum> ratiodata = ((RatioModeData)data.mapModeData).getData();
@@ -73,7 +71,7 @@ public class RatioMapMode extends MapMode {
 		
 		
 		//generate a list of markers to be drawn along the spectrum to indicate the ratio at those points
-		List<Pair<Float, String>> spectrumMarkers = new ArrayList<Pair<Float, String>>();
+		List<Pair<Float, String>> spectrumMarkers = new ArrayList<>();
 
 		int increment = 1;
 		if (steps > 8) increment = (int) Math.ceil(steps / 8);
@@ -90,7 +88,7 @@ public class RatioMapMode extends MapMode {
 		
 		
 
-		List<AxisPainter> axisPainters = new ArrayList<AxisPainter>();
+		List<AxisPainter> axisPainters = new ArrayList<>();
 		
 		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
@@ -106,7 +104,7 @@ public class RatioMapMode extends MapMode {
 
 
 		
-		List<MapPainter> mapPainters = new ArrayList<MapPainter>();
+		List<MapPainter> mapPainters = new ArrayList<>();
 		if (ratioMapPainter == null) {
 			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, spectrumSteps); 
 		} else {
@@ -133,13 +131,11 @@ public class RatioMapMode extends MapMode {
 		
 		
 		//Selection Painter
-		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
-		if (selectionPainter == null) {
-			selectionPainter = new SelectionMaskPainter(new PaletteColour(0xffffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
-			selectionPainterRef = new SoftReference<>(selectionPainter);
-		} else {
-			selectionPainter.configure(settings.userDataWidth, settings.userDataHeight, settings.selectedPoints);
-		}
+		SelectionMaskPainter selectionPainter = super.getSelectionPainter(
+				new PaletteColour(0xffffffff), 
+				settings.selectedPoints, 
+				settings.userDataWidth, 
+				settings.userDataHeight);
 		mapPainters.add(selectionPainter);
 		
 		
