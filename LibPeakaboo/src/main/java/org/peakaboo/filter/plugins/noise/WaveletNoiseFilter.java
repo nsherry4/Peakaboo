@@ -3,7 +3,7 @@ package org.peakaboo.filter.plugins.noise;
 
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -22,14 +22,13 @@ import JSci.maths.wavelet.daubechies2.FastDaubechies2;
  */
 
 
-public final class WaveletNoiseFilter extends AbstractSimpleFilter
+public final class WaveletNoiseFilter extends AbstractFilter
 {
 
 	private Parameter<Integer> passes;
 
 
-	public WaveletNoiseFilter()
-	{
+	public WaveletNoiseFilter() {
 		super();
 	}
 	
@@ -45,28 +44,24 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 	
 	
 	@Override
-	public void initialize()
-	{
+	public void initialize() {
 		passes = new Parameter<>("Passes to Transform", new IntegerStyle(), 1, this::validate);
 		addParameter(passes);
 	}
 
 	@Override
-	public String getFilterName()
-	{
+	public String getFilterName() {
 		return "Wavelet Low-Pass";
 	}
 
 
 	@Override
-	public FilterType getFilterType()
-	{
+	public FilterType getFilterType() {
 		return FilterType.NOISE;
 	}
 
 
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 		int passCount;
 
 		// remove largest, least significant passes from the wavelet transform
@@ -81,8 +76,7 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 
 
 	@Override
-	public String getFilterDescription()
-	{
+	public String getFilterDescription() {
 		return "The "
 				+ getFilterName()
 				+ " filter attempts to reduce high-frequency noise by performing a Wavelet transformation on the spectrum. This breaks the data down into sections each representing a different frequency range. The high-frequency regions are then smoothed, and a reverse transform is applied.";
@@ -90,8 +84,7 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
-	{
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		Spectrum result;
 		int passCount= passes.getValue();
 
@@ -101,15 +94,13 @@ public final class WaveletNoiseFilter extends AbstractSimpleFilter
 	}
 	
 	@Override
-	public boolean pluginEnabled()
-	{
+	public boolean pluginEnabled() {
 		return true;
 	}
 
 
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return false;
 	}
 

@@ -1,7 +1,7 @@
 package org.peakaboo.filter.plugins.noise;
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -10,7 +10,7 @@ import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 
-public class LowStatisticsNoiseFilter extends AbstractSimpleFilter {
+public class LowStatisticsNoiseFilter extends AbstractFilter {
 
 	Parameter<Integer> pWindowSize;
 	Parameter<Float> pMaxSignal, pCentrepointFactor, pMaxSlope;

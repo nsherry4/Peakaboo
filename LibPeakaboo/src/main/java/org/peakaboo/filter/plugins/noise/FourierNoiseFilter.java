@@ -5,7 +5,7 @@ package org.peakaboo.filter.plugins.noise;
 import java.util.Arrays;
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
@@ -27,8 +27,7 @@ import JSci.maths.FourierMath;
  */
 
 
-public final class FourierNoiseFilter extends AbstractSimpleFilter
-{
+public final class FourierNoiseFilter extends AbstractFilter {
 	
 	private Parameter<Float> startWavelength;
 	private Parameter<Float> endWavelength;

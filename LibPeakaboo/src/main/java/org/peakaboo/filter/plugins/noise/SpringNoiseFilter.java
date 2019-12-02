@@ -2,7 +2,7 @@ package org.peakaboo.filter.plugins.noise;
 
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -20,15 +20,13 @@ import org.peakaboo.framework.cyclops.Spectrum;
  */
 
 
-public final class SpringNoiseFilter extends AbstractSimpleFilter
-{
+public final class SpringNoiseFilter extends AbstractFilter {
 
 	private Parameter<Integer> iterations;
 	private Parameter<Float> multiplier;
 	private Parameter<Float> falloff;
 
-	public SpringNoiseFilter()
-	{
+	public SpringNoiseFilter() {
 		super();
 	}
 	
@@ -38,8 +36,7 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 	}
 	
 	@Override
-	public void initialize()
-	{
+	public void initialize() {
 		iterations = new Parameter<>("Iterations", new IntegerStyle(), 20, this::validate);
 		multiplier = new Parameter<>("Linear Force Multiplier", new RealStyle(), 20.0f, this::validate);
 		falloff = new Parameter<>("Exponential Force Falloff Rate", new RealStyle(), 2.0f, this::validate);
@@ -50,23 +47,20 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 
 
 	@Override
-	public String getFilterName()
-	{
+	public String getFilterName() {
 		return "Spring Smoothing";
 	}
 
 
 
 	@Override
-	public FilterType getFilterType()
-	{
+	public FilterType getFilterType() {
 
 		return FilterType.NOISE;
 	}
 
 
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 
 		float mult, power;
 		int iters;
@@ -87,9 +81,7 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 
 
 	@Override
-	public String getFilterDescription()
-	{
-		// TODO Auto-generated method stub
+	public String getFilterDescription() {
 		return "The "
 				+ getFilterName()
 				+ " filter operates on the assumption that weak signal should be smoothed more than strong signal. It treats each adjacent pair of points as if they were connected by a spring. With each iteration, a tension force draws neighbouring points closer together. The Force Multiplier controls how strongly a pair of elements are pulled together, and the Force Falloff Rate controls how aggressively stronger signal is anchored in place, unmoved by spring forces. This prevents peak shapes from being distorted by the smoothing algorithm.";
@@ -97,8 +89,7 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 
 
 	@Override
-	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
-	{
+	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		data = SpringFilter(
 				data, 
 				multiplier.getValue().floatValue(), 
@@ -109,8 +100,7 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 	}
 
 	@Override
-	public boolean pluginEnabled()
-	{
+	public boolean pluginEnabled() {
 		return true;
 	}
 
@@ -121,8 +111,7 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 	}
 	
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return true;
 	}
 
@@ -141,8 +130,7 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 	 * @param iterations the number of iterations to perform the smoothing
 	 * @return the smoothed data
 	 */
-	public static Spectrum SpringFilter(ReadOnlySpectrum data, float forceMultiplier, float falloffExp, int iterations)
-	{
+	public static Spectrum SpringFilter(ReadOnlySpectrum data, float forceMultiplier, float falloffExp, int iterations) {
 		Spectrum result = new ISpectrum(data);
 		
 		for (int i = 0; i < iterations; i++)
@@ -154,8 +142,7 @@ public final class SpringNoiseFilter extends AbstractSimpleFilter
 
 	}
 	
-	private static void SpringFilterIteration(Spectrum data, float forceMultiplier, float falloffExp)
-	{
+	private static void SpringFilterIteration(Spectrum data, float forceMultiplier, float falloffExp) {
 
 	
 		Spectrum deltas = DerivativeMathFilter.deriv(data);

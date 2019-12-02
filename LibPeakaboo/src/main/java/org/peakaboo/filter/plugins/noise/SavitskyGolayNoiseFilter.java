@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
@@ -16,7 +16,7 @@ import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 
 //From Handbook of X-Ray Spectrometry
-public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
+public class SavitskyGolayNoiseFilter extends AbstractFilter {
 
 	private Parameter<Integer> reach;
 	private Parameter<Integer> order;
@@ -45,8 +45,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 	
 	@Override
-	public void initialize()
-	{
+	public void initialize() {
 		
 		reach = new Parameter<>("Half-Window Size", new IntegerStyle(), 4, this::validate);
 		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 3, this::validate);
@@ -77,8 +76,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 		}
 	}
 
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 	
 		//don't validate any combo we don't have fittings for
 		if (getCoeffs() == null) {
@@ -128,8 +126,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 
 	@Override
-	public String getFilterDescription()
-	{
+	public String getFilterDescription() {
 		return "The "
 				+ getFilterName()
 				+ " filter attempts to remove noise by fitting a polynomial to each point p0 and its surrounding points p0-n..p0+n, and then taking the value of the polynomial at point p0. For performance reasons, this filter's parameters are somewhat constrained.";

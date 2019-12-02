@@ -3,7 +3,7 @@ package org.peakaboo.filter.plugins.mathematical;
 
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
@@ -11,8 +11,7 @@ import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
-public class MultiplicationMathFilter extends AbstractSimpleFilter
-{
+public class MultiplicationMathFilter extends AbstractFilter {
 
 	private Parameter<Float> amount;
 	
@@ -22,54 +21,45 @@ public class MultiplicationMathFilter extends AbstractSimpleFilter
 	}
 	
 	@Override
-	public void initialize()
-	{
+	public void initialize() {
 		amount = new Parameter<>("Multiply By", new RealStyle(), 1.0f);
 		addParameter(amount);
 		
 	}
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
-	{
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		return SpectrumCalculations.multiplyBy(data, amount.getValue().floatValue());
 	}
 
 
 	@Override
-	public String getFilterDescription()
-	{
+	public String getFilterDescription() {
 		return "The " + getFilterName() + " filter multiplies all points on a spectrum by a constant value.";
 	}
 
 
 	@Override
-	public String getFilterName()
-	{
-		// TODO Auto-generated method stub
+	public String getFilterName() {
 		return "Multiply";
 	}
 
 
 	@Override
-	public FilterType getFilterType()
-	{
-		// TODO Auto-generated method stub
+	public FilterType getFilterType() {
 		return FilterType.MATHEMATICAL;
 	}
 
 
 
 	@Override
-	public boolean pluginEnabled()
-	{
+	public boolean pluginEnabled() {
 		return true;
 	}
 	
 	
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return true;
 	}
 

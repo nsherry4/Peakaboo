@@ -1,7 +1,7 @@
 package org.peakaboo.filter.plugins.advanced;
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
@@ -9,7 +9,7 @@ import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
-public class DatasetNormalizationFilter extends AbstractSimpleFilter {
+public class DatasetNormalizationFilter extends AbstractFilter {
 
 	private Parameter<Float> pHeight;
 	
@@ -66,7 +66,6 @@ public class DatasetNormalizationFilter extends AbstractSimpleFilter {
 
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
-		// TODO Auto-generated method stub
 		float max = dataset.getAnalysis().maximumIntensity();
 		float height = pHeight.getValue();
 		float ratio = max / height;
