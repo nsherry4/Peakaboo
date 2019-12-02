@@ -120,8 +120,7 @@ import org.peakaboo.ui.swing.plugins.PluginsOverview;
 
 
 
-public class PlotPanel extends TabbedLayerPanel
-{
+public class PlotPanel extends TabbedLayerPanel {
 
 	//Non-UI
 	private PlotController				controller;
@@ -174,14 +173,12 @@ public class PlotPanel extends TabbedLayerPanel
 		}
 	}
 	
-	public PlotController getController()
-	{
+	public PlotController getController() {
 		return controller;
 	}
 
 
-	private void setWidgetsState()
-	{
+	private void setWidgetsState() {
 
 		boolean hasData = controller.data().hasDataSet();
 		
@@ -198,8 +195,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 
-	private void initGUI()
-	{
+	private void initGUI() {
 
 		canvas = new PlotCanvas(controller, this);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -297,8 +293,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 
-	private void setTitleBar()
-	{
+	private void setTitleBar() {
 		String title = getTabTitle();
 		if (title.trim().length() == 0) title = "No Data";
 		getTabbedInterface().setTabTitle(this, title);
@@ -306,8 +301,7 @@ public class PlotPanel extends TabbedLayerPanel
 
 
 	@Override
-	public String getTabTitle()
-	{
+	public String getTabTitle() {
 		StringBuilder titleString = new StringBuilder();
 		
 		if (controller.data().hasDataSet()) {
@@ -429,8 +423,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 
-	private void mouseMoveCanvasEvent(int x)
-	{
+	private void mouseMoveCanvasEvent(int x) {
 
 		int channel = canvas.channelFromCoordinate(x);
 		float energy = controller.view().getEnergyForChannel(channel);
@@ -446,8 +439,7 @@ public class PlotPanel extends TabbedLayerPanel
 		StringBuilder sb = new StringBuilder();
 		String sep = ",  ";
 
-		if (values != null)
-		{
+		if (values != null) {
 
 			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
 			
@@ -468,9 +460,7 @@ public class PlotPanel extends TabbedLayerPanel
 				sb.append(fmtObj.format(values.second));
 			}
 
-		}
-		else
-		{
+		} else {
 			
 			sb.append("View: ");
 			sb.append(controller.view().getChannelCompositeMode().show());
@@ -499,8 +489,7 @@ public class PlotPanel extends TabbedLayerPanel
 	// UI ACTIONS
 	// ////////////////////////////////////////////////////////
 
-	public void actionAbout()
-	{
+	public void actionAbout() {
 		ImageIcon logo = IconFactory.getImageIcon( Version.logo );
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
 		
@@ -524,13 +513,11 @@ public class PlotPanel extends TabbedLayerPanel
 		
 	}
 	
-	public void actionHelp()
-	{
+	public void actionHelp() {
 		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
 	}
 	
-	public void actionOpenData()
-	{	
+	public void actionOpenData() {	
 		List<SimpleFileExtension> exts = new ArrayList<>();
 		for (DataSourcePlugin p : DataSourcePluginManager.SYSTEM.newInstances()) {
 			FileFormat f = p.getFileFormat();
@@ -608,8 +595,7 @@ public class PlotPanel extends TabbedLayerPanel
 
 	}
 	
-	public void actionMap()
-	{
+	public void actionMap() {
 
 		if (!controller.data().hasDataSet()) return;
 
@@ -690,8 +676,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 	}
 	
-	public void actionSaveSessionAs()
-	{
+	public void actionSaveSessionAs() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
 		
@@ -715,8 +700,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 	
 
-	public void actionSavePicture()
-	{
+	public void actionSavePicture() {
 		SavePicture sp = new SavePicture(this, canvas, controller.io().getLastFolder(), file -> {
 			if (file.isPresent()) {
 				controller.io().setLastFolder(file.get().getParentFile());
@@ -808,8 +792,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 
-	public void actionSaveFilteredDataSet()
-	{	
+	public void actionSaveFilteredDataSet() {	
 		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
 		SwidgetFilePanels.saveFile(this, "Save Fitted Data to CSV File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
@@ -834,8 +817,7 @@ public class PlotPanel extends TabbedLayerPanel
 		});
 	}
 	
-	public void actionSaveFilteredSpectrum()
-	{	
+	public void actionSaveFilteredSpectrum() {	
 		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
 		SwidgetFilePanels.saveFile(this, "Save Spectrum to CSV File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
@@ -882,8 +864,7 @@ public class PlotPanel extends TabbedLayerPanel
 	}
 
 	
-	public void actionShowInfo()
-	{
+	public void actionShowInfo() {
 		
 		Map<String, String> properties;
 		

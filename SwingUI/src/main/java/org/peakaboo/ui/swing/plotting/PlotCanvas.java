@@ -40,8 +40,7 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
  *         logic should add their own listeners
  */
 
-public class PlotCanvas extends GraphicsPanel implements Scrollable
-{
+public class PlotCanvas extends GraphicsPanel implements Scrollable {
 
 	private PlotController controller;
 	private BiConsumer<Integer, Coord<Integer>>	onSingleClickCallback, onDoubleClickCallback, onRightClickCallback;
@@ -49,8 +48,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	
 	private PlotPanel plotPanel;
 
-	PlotCanvas(final PlotController controller, final PlotPanel parent)
-	{
+	PlotCanvas(final PlotController controller, final PlotPanel parent) {
 
 		super();
 		this.plotPanel = parent; 
@@ -204,8 +202,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	private Dimension calculateCanvasSize() {
 		//Width
 		double parentWidth = 1.0;
-		if (this.getParent() != null)
-		{
+		if (this.getParent() != null) {
 			parentWidth = this.getParent().getWidth();
 		}
 
@@ -216,8 +213,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 		
 		//Height
 		double parentHeight = 1.0;
-		if (this.getParent() != null)
-		{
+		if (this.getParent() != null) {
 			parentHeight = this.getParent().getHeight();
 		}
 
@@ -321,15 +317,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 
 
 	@Override
-	public float getUsedHeight()
-	{
+	public float getUsedHeight() {
 		return getUsedHeight(1);
 	}
 
 
 	@Override
-	public float getUsedWidth()
-	{
+	public float getUsedWidth() {
 		return getUsedWidth(1);
 	}
 	
@@ -363,32 +357,27 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable
 	//**************************************************************
 	// Scrollable Interface
 	//**************************************************************
-	public Dimension getPreferredScrollableViewportSize()
-	{
+	public Dimension getPreferredScrollableViewportSize() {
 		return new Dimension(600, 1000);
 	}
 
 
-	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2)
-	{
+	public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
 		return channelWidth(50);
 	}
 
 
-	public boolean getScrollableTracksViewportHeight()
-	{
+	public boolean getScrollableTracksViewportHeight() {
 		return false;
 	}
 
 
-	public boolean getScrollableTracksViewportWidth()
-	{
+	public boolean getScrollableTracksViewportWidth() {
 		return false;
 	}
 
 
-	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2)
-	{
+	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 		return channelWidth(5);
 	}
 

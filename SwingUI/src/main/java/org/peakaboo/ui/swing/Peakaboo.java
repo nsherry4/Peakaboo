@@ -38,8 +38,7 @@ import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 
 
-public class Peakaboo
-{
+public class Peakaboo {
 	private static Timer gcTimer;
 	
 	public static final boolean SHOW_QUANTITATIVE = true;
@@ -111,22 +110,20 @@ public class Peakaboo
 			
 			@Override
 			public void flush() {
-				// TODO Auto-generated method stub
+				// NOOP
 				
 			}
 			
 			@Override
 			public void close() throws SecurityException {
-				// TODO Auto-generated method stub
+				// NOOP
 				
 			}
 		});
 	}
 		
 	private static void startGCTimer() {
-		gcTimer = new Timer(1000*60, e -> {  
-			System.gc(); 
-		});
+		gcTimer = new Timer(1000*60, e -> System.gc());
 		
 		gcTimer.setRepeats(true);
 		gcTimer.start();

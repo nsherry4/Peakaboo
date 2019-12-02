@@ -33,14 +33,12 @@ class FilterSelectionList extends ClearPanel
 
 	private JTree					tree;
 	
-	private SelectionListControls 	controls;
-
 	
-	FilterSelectionList(FilteringController _controller, FiltersetViewer _owner)
+	FilterSelectionList(FilteringController filteringController, FiltersetViewer ownerUI)
 	{
 
-		this.controller = _controller;
-		this.owner = _owner;
+		this.controller = filteringController;
+		this.owner = ownerUI;
 		
 		
 		this.setLayout(new BorderLayout());
@@ -57,111 +55,7 @@ class FilterSelectionList extends ClearPanel
 	private JTree createFilterTree()
 	{
 
-		TreeModel m = new TreeModel() {
-
-			public void valueForPathChanged(TreePath path, Object newValue)
-			{
-				// TODO Auto-generated method stub
-			}
-
-
-			public void removeTreeModelListener(TreeModelListener l)
-			{
-				// TODO Auto-generated method stub
-			}
-
-
-			public boolean isLeaf(Object node)
-			{
-				if (node instanceof BoltPluginPrototype<?>) {
-					return true;
-				}
-				return false;
-			}
-
-
-			public Object getRoot()
-			{
-				return "Filters";
-			}
-
-
-			public int getIndexOfChild(Object parent, Object child)
-			{
-
-				FilterType ft;
-
-				if (parent instanceof FilterType) {
-
-					ft = (FilterType) parent;
-					@SuppressWarnings("unchecked")
-					BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
-					
-					return FilterPluginManager.SYSTEM.getPlugins().indexOf(plugin);
-					
-
-				} else if (parent instanceof String) {
-
-					ft = (FilterType) child;
-					return ft.ordinal();
-
-				}
-				return 0;
-			}
-
-
-			public int getChildCount(Object parent)
-			{
-
-				if (parent instanceof FilterType) {
-
-					FilterType ft = (FilterType) parent;
-					int typeCount = 0;
-
-					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
-						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
-					}
-					return typeCount;
-
-				} else if (parent instanceof String) {
-					return FilterType.values().length;
-				}
-				return 0;
-			}
-
-
-			public Object getChild(Object parent, int index)
-			{
-
-				if (parent instanceof FilterType) {
-
-					index++;
-
-					FilterType ft = (FilterType) parent;
-					int typeCount = 0;
-
-					for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
-						if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
-						if (typeCount == index) return plugin;
-					}
-
-				} else if (parent instanceof String) {
-
-					return FilterType.values()[index];
-
-				}
-
-				return null;
-
-			}
-
-
-			public void addTreeModelListener(TreeModelListener l)
-			{
-				// TODO Auto-generated method stub
-			}
-		};
-
+		TreeModel m = new FilterSelectionTreeModel();
 
 		tree = new JTree(m);
 		tree.setRootVisible(false);
@@ -169,8 +63,6 @@ class FilterSelectionList extends ClearPanel
 		
 		FilterSelectionRenderer renderer = new FilterSelectionRenderer();
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
-		//renderer.setClosedIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
-		//renderer.setOpenIcon(StockIcon.PLACE_FOLDER_OPEN.toImageIcon(IconSize.BUTTON));
 		tree.setCellRenderer(renderer);
 
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -181,10 +73,9 @@ class FilterSelectionList extends ClearPanel
 	}
 
 
-	private JPanel createControls()
-	{
+	private JPanel createControls() {
 
-		controls = new SelectionListControls("Filter", "Add Filter") {
+		SelectionListControls controls = new SelectionListControls("Filter", "Add Filter") {
 		
 			@Override
 			protected void cancel()
@@ -218,4 +109,87 @@ class FilterSelectionList extends ClearPanel
 
 	}
 
+}
+
+class FilterSelectionTreeModel implements TreeModel {
+
+	public void valueForPathChanged(TreePath path, Object newValue) {
+		// NOOP
+	}
+
+	public void removeTreeModelListener(TreeModelListener l) {
+		// NOOP
+	}
+
+	public boolean isLeaf(Object node) {
+		if (node instanceof BoltPluginPrototype<?>) {
+			return true;
+		}
+		return false;
+	}
+
+	public Object getRoot() {
+		return "Filters";
+	}
+
+
+	public int getIndexOfChild(Object parent, Object child) {
+
+		if (parent instanceof FilterType) {
+			@SuppressWarnings("unchecked")
+			BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
+			return FilterPluginManager.SYSTEM.getPlugins().indexOf(plugin);
+		} else if (parent instanceof String) {
+			FilterType ft = (FilterType) child;
+			return ft.ordinal();
+		}
+		return 0;
+	}
+
+
+	public int getChildCount(Object parent) {
+
+		if (parent instanceof FilterType) {
+
+			FilterType ft = (FilterType) parent;
+			int typeCount = 0;
+
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
+				if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
+			}
+			return typeCount;
+
+		} else if (parent instanceof String) {
+			return FilterType.values().length;
+		}
+		return 0;
+	}
+
+
+	public Object getChild(Object parent, int index) {
+
+		if (parent instanceof FilterType) {
+
+			index++;
+
+			FilterType ft = (FilterType) parent;
+			int typeCount = 0;
+
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
+				if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
+				if (typeCount == index) return plugin;
+			}
+
+		} else if (parent instanceof String) {
+			return FilterType.values()[index];
+		}
+
+		return null;
+
+	}
+
+
+	public void addTreeModelListener(TreeModelListener l) {
+		// NOOP
+	}
 }

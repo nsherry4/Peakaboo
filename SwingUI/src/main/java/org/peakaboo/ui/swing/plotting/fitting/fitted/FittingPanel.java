@@ -78,7 +78,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 		FluentButton removeButton = new FluentButton(StockIcon.EDIT_REMOVE)
 			.withTooltip("Remove Selected Fittings")
 			.withAction(() -> {
-				int rows[] = fitTable.getSelectedRows();
+				int[] rows = fitTable.getSelectedRows();
 				List<ITransitionSeries> tss = Arrays.stream(rows)
 						.boxed()
 						.map(i -> controller.getFittedTransitionSeries().get(i))

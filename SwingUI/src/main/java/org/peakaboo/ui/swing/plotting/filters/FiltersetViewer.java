@@ -13,8 +13,8 @@ public class FiltersetViewer extends ClearPanel {
 	private FilteringController controller;
 	private CardLayout layout;
 	
-	private String EDIT = "EDIT";
-	private String SELECT = "SELECT";
+	private static final String EDIT = "EDIT";
+	private static final String SELECT = "SELECT";
 	
 	@Override
 	public String getName()
@@ -22,13 +22,13 @@ public class FiltersetViewer extends ClearPanel {
 		return "Data Filters";
 	}
 	
-	public FiltersetViewer(FilteringController _controller, Window owner){
+	public FiltersetViewer(FilteringController filteringController, Window owner){
 		
 		super();
 		
 		setPreferredSize(new Dimension(200, getPreferredSize().height));
 		
-		this.controller = _controller;
+		this.controller = filteringController;
 		
 		layout = new CardLayout();
 		this.setLayout(layout);

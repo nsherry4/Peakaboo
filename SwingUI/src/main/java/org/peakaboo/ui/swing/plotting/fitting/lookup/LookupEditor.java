@@ -20,8 +20,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 
-class LookupEditor extends DefaultTreeCellEditor
-{
+class LookupEditor extends DefaultTreeCellEditor {
 
 	private LookupWidget	tswidget;
 	private JLabel						tstLabel;
@@ -30,8 +29,7 @@ class LookupEditor extends DefaultTreeCellEditor
 
 
 
-	public LookupEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller)
-	{
+	public LookupEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller) {
 
 		super(tree, renderer);
 
@@ -52,14 +50,17 @@ class LookupEditor extends DefaultTreeCellEditor
 
 
 	@Override
-	public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
-			boolean leaf, int row)
-	{
+	public Component getTreeCellEditorComponent(
+			JTree tree, 
+			Object value, 
+			boolean isSelected, 
+			boolean expanded,
+			boolean leaf, 
+			int row) {
 
 		Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
 
-		if (value instanceof ITransitionSeries)
-		{
+		if (value instanceof ITransitionSeries) {
 
 			ITransitionSeries ts = (ITransitionSeries) value;
 			tswidget.setName(ts.getShell().toString());
@@ -71,19 +72,15 @@ class LookupEditor extends DefaultTreeCellEditor
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tswidget;
 
-		}
-		else if (value instanceof Element)
-		{
+		} else if (value instanceof Element) {
 			Element element = (Element) value;
 			tstLabel.setText(element.atomicNumber() + " " + element.toString() + " (" + element.name() + ")");
 			
 			tstLabel.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tstLabel.setForeground(cellRenderer.getTextSelectionColor());
 			tstLabel.setBorder(Spacing.bSmall());			
-			
-			
+
 			return tstLabel;
-		
 		}
 
 
@@ -94,15 +91,13 @@ class LookupEditor extends DefaultTreeCellEditor
 
 
 	@Override
-	public Object getCellEditorValue()
-	{
+	public Object getCellEditorValue() {
 		return tswidget.isSelected();
 	}
 
 
 	@Override
-	public boolean isCellEditable(EventObject e)
-	{
+	public boolean isCellEditable(EventObject e) {
 		Object selected = tree.getLastSelectedPathComponent();
 
 		if (selected == null) return false;

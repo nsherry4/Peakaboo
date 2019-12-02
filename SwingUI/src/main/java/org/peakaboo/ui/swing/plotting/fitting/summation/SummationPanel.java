@@ -14,20 +14,17 @@ import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 
 
-public class SummationPanel extends JPanel
-{
+public class SummationPanel extends JPanel {
 
 	private SummationWidget	summationWidget;
 	boolean active = true;
 
-	public SummationPanel(final FittingController controller, final CurveFittingView owner)
-	{
+	public SummationPanel(final FittingController controller, final CurveFittingView owner) {
 		
 		SelectionListControls selControls = new SelectionListControls("Summation", "Add Summation") {
 
 			@Override
-			protected void cancel()
-			{
+			protected void cancel() {
 				SummationPanel.this.active = false;
 				summationWidget.resetSelectors(active);
 
@@ -35,13 +32,11 @@ public class SummationPanel extends JPanel
 				controller.fittingProposalsInvalidated();
 
 				owner.dialogClose();
-
 			}
 
 
 			@Override
-			protected void approve()
-			{
+			protected void approve() {
 				//add all of the transition series that come back from the summation widget
 				summationWidget.getTransitionSeries().forEach(controller::addTransitionSeries);
 
@@ -50,7 +45,6 @@ public class SummationPanel extends JPanel
 				controller.fittingProposalsInvalidated();
 
 				owner.dialogClose();
-
 			}
 		};
 		selControls.setOpaque(false);
@@ -74,14 +68,12 @@ public class SummationPanel extends JPanel
 
 	}
 
-	public void setActive(boolean active)
-	{
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 	
 
-	public void resetSelectors()
-	{
+	public void resetSelectors() {
 		summationWidget.resetSelectors(active);
 	}
 

@@ -15,8 +15,7 @@ import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRend
 import org.peakaboo.framework.swidget.widgets.listwidget.impl.OptionWidget;
 
 
-public class DataSourceSelection extends ListPickerLayer<DataSourcePlugin>
-{
+public class DataSourceSelection extends ListPickerLayer<DataSourcePlugin> {
 
 	public DataSourceSelection(LayerPanel parent, List<DataSourcePlugin> dsps, Consumer<DataSourcePlugin> onSelect) {
 		super(parent, "Please Select Data Format", dsps, onSelect);		

@@ -17,30 +17,24 @@ import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 
 
 
-class SummationWidget extends TSSelectorGroup
-{
+class SummationWidget extends TSSelectorGroup {
 
 	private SummationPanel summationPanel;
 	
-	public SummationWidget(FittingController controller, SummationPanel parent)
-	{
-
+	public SummationWidget(FittingController controller, SummationPanel parent) {
 		super(controller, 2);
 		this.summationPanel = parent;
 		resetSelectors(true);
-		refreshGUI();
-		
+		refreshGUI();		
 	}
-	
-	
-
-	
-	
+		
 	@Override
-	public List<ITransitionSeries> getTransitionSeries()
-	{
+	public List<ITransitionSeries> getTransitionSeries() {
 		//get a list of all TransitionSeries to be summed
-		List<ITransitionSeries> tss = selectors.stream().map(e -> e.getTransitionSeries()).filter(Objects::nonNull).collect(Collectors.toList());
+		List<ITransitionSeries> tss = selectors.stream()
+				.map(TSSelector::getTransitionSeries)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 		List<ITransitionSeries> sum = new ArrayList<>();
 		sum.add(ITransitionSeries.pileup(tss));
 		return sum;
@@ -49,15 +43,13 @@ class SummationWidget extends TSSelectorGroup
 
 
 	@Override
-	public void setTransitionSeriesOptions(final List<ITransitionSeries> tss)
-	{
+	public void setTransitionSeriesOptions(final List<ITransitionSeries> tss) {
 		selectors.stream().forEach(selector -> selector.setTransitionSeries(tss));
 	}
 	
 
 	@Override
-	protected void refreshGUI()
-	{
+	protected void refreshGUI() {
 
 		removeAll();
 
@@ -104,21 +96,15 @@ class SummationWidget extends TSSelectorGroup
 	
 	
 	@Override
-	protected TSSelector addTSSelector(boolean active)
-	{	
+	protected TSSelector addTSSelector(boolean active) {	
 		TSSelector sel = super.addTSSelector(active);
 		
 		sel.setTransitionSeries(
 			controller.getFittedTransitionSeries().stream().filter(element ->element.getMode() == TransitionSeriesMode.PRIMARY).collect(Collectors.toList())		
 		);
 		
-		
 		return sel;
-				
 		
 	}
 
-
-
 }
-

@@ -24,8 +24,7 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 
 
-class EditButtonEditor extends DefaultCellEditor
-{
+class EditButtonEditor extends DefaultCellEditor {
 
 	private FluentButton				button;
 	private JPanel 					container;
@@ -41,8 +40,7 @@ class EditButtonEditor extends DefaultCellEditor
 	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
 
-	public EditButtonEditor(FilteringController controller, Window owner)
-	{
+	public EditButtonEditor(FilteringController controller, Window owner) {
 		super(new JCheckBox());
 
 		this.controller = controller;
@@ -55,20 +53,16 @@ class EditButtonEditor extends DefaultCellEditor
 		
 		container = new JPanel();
 		container.setBorder(Spacing.bNone());
-		
-		
-
 	}
 
 
 	@Override
-	public Component getTableCellEditorComponent(JTable table, Object _filter, boolean isSelected, int row, int column)
-	{
+	public Component getTableCellEditorComponent(JTable table, Object filterObject, boolean isSelected, int row, int column) {
 
-		filter = (Filter) _filter;
-		int numParameters = (_filter == null) ? 0 : filter.getParameters().size();
+		filter = (Filter) filterObject;
+		int numParameters = (filter == null) ? 0 : filter.getParameters().size();
 		
-		label = (_filter == null) ? "" : _filter.toString();
+		label = (filter == null) ? "" : filter.toString();
 		isPushed = true;
 		
 		
@@ -87,10 +81,10 @@ class EditButtonEditor extends DefaultCellEditor
 
 
 	@Override
-	public Object getCellEditorValue()
-	{
-		if (isPushed)
-		{
+	public Object getCellEditorValue() {
+		
+		if (isPushed) {
+			
 			FilterDialog dialog;
 
 			if (!settingsDialogs.containsKey(filter)) {
@@ -111,16 +105,14 @@ class EditButtonEditor extends DefaultCellEditor
 
 
 	@Override
-	public boolean stopCellEditing()
-	{
+	public boolean stopCellEditing() {
 		isPushed = false;
 		return super.stopCellEditing();
 	}
 
 
 	@Override
-	protected void fireEditingStopped()
-	{
+	protected void fireEditingStopped() {
 		super.fireEditingStopped();
 	}
 }

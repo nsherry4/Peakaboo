@@ -3,7 +3,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +32,9 @@ public class PlotFrame extends LiveFrame
 	
 	public PlotFrame() {
 	
-		
-		
 		tabControl = createTabControl();
 
 		addWindowListener(new TabWindowListener(this, tabControl));
-		
 		
 		setPreferredSize(new Dimension(1000, 473));
 		setIconImage(IconFactory.getImage(Version.logo));
@@ -68,10 +64,14 @@ public class PlotFrame extends LiveFrame
 			}
 
 			@Override
-			protected void destroyComponent(TabbedLayerPanel component){}
+			protected void destroyComponent(TabbedLayerPanel component){
+				//NOOP
+			}
 
 			@Override
-			protected void titleChanged(String title) {}
+			protected void titleChanged(String title) {
+				//NOOP
+			}
 
 			@Override
 			protected void titleDoubleClicked(TabbedLayerPanel component) {
@@ -104,8 +104,7 @@ class TabWindowListener extends WindowAdapter {
 	}
 	
 	@Override
-	public void windowClosing(WindowEvent e)
-	{
+	public void windowClosing(WindowEvent e) {
 		//Confirm close window/exit.
 		
 		// Used to mark if we need to prompt the user. If all tabs have no unsaved work,

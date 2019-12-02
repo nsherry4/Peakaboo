@@ -19,11 +19,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 
-class SubfilterEditor extends AbstractSwingEditor<Filter> 
-{
-	
-	//Param containing the subfilter
-	private SelectionParameter<Filter>	selparam;
+class SubfilterEditor extends AbstractSwingEditor<Filter> {
 	
 	//GUI
 	private JPanel						control;
@@ -40,9 +36,9 @@ class SubfilterEditor extends AbstractSwingEditor<Filter>
 	public void initialize(Parameter<Filter> p)
 	{
 		this.param = p;
-		this.selparam = (SelectionParameter<Filter>) p;
+		SelectionParameter<Filter> selparam = (SelectionParameter<Filter>) p;
 		
-		filterCombo = new JComboBox<Filter>(selparam.getPossibleValues().toArray(new Filter[0]));
+		filterCombo = new JComboBox<>(selparam.getPossibleValues().toArray(new Filter[0]));
 		control = new JPanel();
 		control.setLayout(new BorderLayout());
 		control.add(filterCombo, BorderLayout.NORTH);
@@ -53,19 +49,14 @@ class SubfilterEditor extends AbstractSwingEditor<Filter>
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
-		filterCombo.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue((Filter)filterCombo.getSelectedItem())) {
-					validateFailed();
-				}
-				changeFilter((Filter)filterCombo.getSelectedItem());
-				
+		filterCombo.addActionListener(e -> {
+			getEditorValueHook().updateListeners(getEditorValue());
+			if (!param.setValue((Filter)filterCombo.getSelectedItem())) {
+				validateFailed();
 			}
+			changeFilter((Filter)filterCombo.getSelectedItem());
 		});
 
 		param.setValue(getFilter());
@@ -94,7 +85,7 @@ class SubfilterEditor extends AbstractSwingEditor<Filter>
 		if (! filterCombo.getSelectedItem().equals(f)) filterCombo.setSelectedItem(f);
 		
 		//If this filter has parameters, show it, and remove all previous widgets
-		subfilterPanel.setVisible(f.getParameters().size() != 0);
+		subfilterPanel.setVisible(!f.getParameters().isEmpty());
 		if (subfilterView != null) subfilterPanel.removeAll();
 		
 		//set the new filter, and hook into the top level parameter group to invalidate the parent 

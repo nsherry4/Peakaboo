@@ -3,8 +3,6 @@ package org.peakaboo.ui.swing.plotting.fitting;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,15 +11,13 @@ import javax.swing.Scrollable;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 
-public abstract class TSSelectorGroup extends JPanel implements Scrollable
-{
+public abstract class TSSelectorGroup extends JPanel implements Scrollable {
 
 	protected FittingController controller;
 
@@ -30,8 +26,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	private int					minSelectors;
 	
-	public TSSelectorGroup(FittingController controller, int minimumSelectors)
-	{
+	public TSSelectorGroup(FittingController controller, int minimumSelectors) {
 		this.controller = controller;
 		this.minSelectors = minimumSelectors;
 		
@@ -42,6 +37,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 				.withTooltip("Add")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
+		
 		addButton.addActionListener(e -> {
 			addTSSelector(true);
 			addButton.requestFocusInWindow();
@@ -58,16 +54,14 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	public abstract void setTransitionSeriesOptions(final List<ITransitionSeries> tss);
 	public abstract List<ITransitionSeries> getTransitionSeries();
 	
-	protected void removeTSSelector(TSSelector tssel)
-	{
+	protected void removeTSSelector(TSSelector tssel) {
 		selectors.remove(tssel);
 		if (selectors.size() < minSelectors) addTSSelector(true);
 		refreshGUI();
 	}
 
 	
-	protected TSSelector addTSSelector(final boolean active)
-	{
+	protected TSSelector addTSSelector(final boolean active) {
 		
 		TSSelector sel = new TSSelector();
 		sel.addListener(() -> tsSelectorUpdated(active));
@@ -80,8 +74,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	
 	
-	protected FluentButton createRemoveButton(final TSSelector tss)
-	{
+	protected FluentButton createRemoveButton(final TSSelector tss) {
 		FluentButton remove = new FluentButton()
 				.withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON)
 				.withTooltip("Remove")
@@ -94,23 +87,20 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	}
 	
 	
-	public final void resetSelectors(boolean active)
-	{
+	public final void resetSelectors(boolean active) {
 		selectors.clear();
 		
-		for (int i = 0; i < minSelectors; i++)
-		{
+		for (int i = 0; i < minSelectors; i++) {
 			addTSSelector(active);	
 		}
 		
 
 	}
 	
-	protected final void tsSelectorUpdated(final boolean active)
-	{
+	protected final void tsSelectorUpdated(final boolean active) {
 		controller.clearProposedTransitionSeries();
 		List<ITransitionSeries> tss = getTransitionSeries();
-		if (tss == null) return;
+		if (tss == null) { return; }
 		
 		//add all of the transition series that come back from the summation widget
 		tss.stream().forEach(ts -> {
@@ -122,39 +112,32 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable
 	
 	/* SCROLLABLE METHODS */
 
-	public Dimension getPreferredScrollableViewportSize()
-	{
+	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
 	}
 
 
-	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction)
-	{
+	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
 		TSSelector s = selectors.get(0);
 		if (s == null) return 4;
 		return s.getPreferredSize().height;
 	}
 
 
-	public boolean getScrollableTracksViewportHeight()
-	{
+	public boolean getScrollableTracksViewportHeight() {
 		return false;
 	}
 
 
-	public boolean getScrollableTracksViewportWidth()
-	{
+	public boolean getScrollableTracksViewportWidth() {
 		return true;
 	}
 
 
-	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction)
-	{
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
 		TSSelector s = selectors.get(0);
 		if (s == null) return 1;
 		return s.getPreferredSize().height / 4;
 	}
-
-	
 	
 }
