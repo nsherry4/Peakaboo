@@ -34,8 +34,6 @@ public class FittedWidget extends ClearPanel
 		elementName = new JLabel("");
 		elementNumber = new JLabel("");
 		elementIntensity = new JLabel("");
-		//elementNumber.setHorizontalAlignment(JLabel.RIGHT);
-		//elementIntensity.setHorizontalAlignment(JLabel.RIGHT);
 		
 		elementContents.add(elementName, BorderLayout.CENTER);
 		elementContents.setBorder(Spacing.bLarge());
@@ -82,7 +80,8 @@ public class FittedWidget extends ClearPanel
 		elementNumber.setForeground(cDetail);
 		elementIntensity.setForeground(cDetail);
 	}
-		
+	
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (flagged) {
@@ -118,7 +117,7 @@ public class FittedWidget extends ClearPanel
 	}
 
 	public void setAtomicNumbers(List<Integer> atomicNumbers) {
-		String zstring = atomicNumbers.stream().map(i -> i.toString()).reduce((a, b) -> a + ", " + b).get();
+		String zstring = atomicNumbers.stream().map(i -> i.toString()).reduce((a, b) -> a + ", " + b).orElse("?");
 		elementNumber.setText("Z: " + zstring);
 	}
 	

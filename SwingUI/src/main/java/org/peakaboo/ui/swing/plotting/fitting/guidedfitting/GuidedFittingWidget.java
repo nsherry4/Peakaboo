@@ -47,7 +47,7 @@ class GuidedFittingWidget extends TSSelectorGroup
 	@Override
 	public List<ITransitionSeries> getTransitionSeries()
 	{
-		return selectors.stream().map(s -> s.getTransitionSeries()).collect(toList());
+		return selectors.stream().map(TSSelector::getTransitionSeries).collect(toList());
 	}
 
 	public ITransitionSeries getActiveTransitionSeries()

@@ -75,9 +75,9 @@ class FittingRenderer extends DefaultTableCellRenderer
 				tswidget.setAtomicNumber(ts.getElement().atomicNumber());
 				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
+				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(ITransitionSeries::getElement).collect(Collectors.toList());
 				tswidget.setAtomicNumbers(elements.stream().map(Element::atomicNumber).collect(Collectors.toList()));
-				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
+				tooltip = elements.stream().map(Element::toString).reduce((a, b) -> a + ", " + b).orElse("");
 			}
 			if (controller.hasAnnotation(ts)) {
 				tooltip += " - " + controller.getAnnotation(ts);

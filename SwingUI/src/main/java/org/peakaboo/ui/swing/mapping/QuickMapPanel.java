@@ -119,7 +119,11 @@ public class QuickMapPanel extends HeaderLayer {
 		dimensions.setOpaque(false);
 		menu.add(dimensions);
 		
-		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
+		opts.withAction(() -> {
+			int x = (int)(opts.getWidth() - menu.getPreferredSize().getWidth());
+			int y = opts.getHeight();
+			menu.show(opts, x, y);
+		});
 		
 		return opts;
 	}

@@ -159,12 +159,13 @@ public class PlotPanel extends TabbedLayerPanel
 			newVersionNotified = true;
 			
 			Thread versionCheck = new Thread(() -> {
+				
 				if (Version.hasNewVersion()) {
-					SwingUtilities.invokeLater(() -> {
-						this.pushLayer(new ToastLayer(this, "A new version of Peakaboo is available", () -> {
-							DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases");
-						}));	
-					});
+					SwingUtilities.invokeLater(() -> this.pushLayer(new ToastLayer(
+						this, 
+						"A new version of Peakaboo is available", 
+						() -> DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases")
+					)));
 				}
 				
 			}); //thread
@@ -205,6 +206,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		canvas.addMouseMotionListener(new MouseMotionAdapter() {
 
+			@Override
 			public void mouseMoved(MouseEvent e)
 			{
 				mouseMoveCanvasEvent(e.getX());
@@ -402,9 +404,7 @@ public class PlotPanel extends TabbedLayerPanel
 						});
 				
 				FluentButton buttonNo = new FluentButton("No")
-						.withAction(() -> {
-							load.accept(false);
-						});
+						.withAction(() -> load.accept(false));
 				
 				new LayerDialog(
 						"Open Associated Data Set?", 
@@ -522,7 +522,6 @@ public class PlotPanel extends TabbedLayerPanel
 		AboutLayer about = new AboutLayer(this, contents);
 		this.pushLayer(about);
 		
-		//new AboutDialogue(getTabbedInterface().getWindow(), contents);
 	}
 	
 	public void actionHelp()
@@ -707,16 +706,10 @@ public class PlotPanel extends TabbedLayerPanel
 	
 	
 	public void actionSaveSession(File file) {
-		try {
-			FileOutputStream os = new FileOutputStream(file);
+		try (FileOutputStream os = new FileOutputStream(file)) {
 			os.write(controller.getSavedSettings().serialize().getBytes());
-			os.close();
-			
-			//mark work up until this point as saved
 			controller.history().setSavePoint();
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
 		}
 	}
@@ -736,7 +729,7 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionExportArchive() {
 		Mutable<ExportPanel> export = new Mutable<>(null);
 		
-		export.set(new ExportPanel(this, canvas, () -> {
+		export.set(new ExportPanel(this, canvas, () -> 
 			
 			SwidgetFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(), new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
@@ -751,15 +744,13 @@ public class PlotPanel extends TabbedLayerPanel
 				actionExportArchiveToZip(file.get(), format, width, height);
 				
 				
-			});
-		}));
+			})
+		));
 	}
 	
 	private void actionExportArchiveToZip(File file, SurfaceType format, int width, int height) {
-		try {
-			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
-			
-			
+		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file))) {
+
 			//Save Plot
 			String ext = "";
 			switch (format) {
@@ -809,11 +800,7 @@ public class PlotPanel extends TabbedLayerPanel
 			e = new ZipEntry("session.peakaboo");
 			zos.putNextEntry(e);
 			zos.write(controller.getSavedSettings().serialize().getBytes());
-			zos.closeEntry();
-			
-			
-			zos.close();
-			
+			zos.closeEntry();			
 			
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Could not save archive", e);
@@ -900,7 +887,7 @@ public class PlotPanel extends TabbedLayerPanel
 		
 		Map<String, String> properties;
 		
-		properties = new LinkedHashMap<String, String>();
+		properties = new LinkedHashMap<>();
 		properties.put("Data Format", "" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
 		properties.put("Dataset Title", "" + controller.data().getTitle());
 		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
@@ -940,7 +927,7 @@ public class PlotPanel extends TabbedLayerPanel
 	public void actionGuessMaxEnergy() {
 		
 		if (controller == null) return;
-		if (controller.fitting().getVisibleTransitionSeries().size() < 1) {
+		if (controller.fitting().getVisibleTransitionSeries().isEmpty()) {
 			new LayerDialog(
 					"Cannot Detect Energy Calibration", 
 					"Detecting energy calibration requires that at least one element be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
@@ -1032,9 +1019,7 @@ public class PlotPanel extends TabbedLayerPanel
 		textfield.setText(controller.fitting().getAnnotation(selected));
 		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, MessageType.QUESTION);
 		dialogbox.set(dialog);
-		dialog.addLeft(new FluentButton("Cancel").withAction(() -> {
-			dialog.hide();
-		}));
+		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
 		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
 			controller.fitting().setAnnotation(selected, textfield.getText());
 			dialog.hide();
@@ -1073,12 +1058,10 @@ public class PlotPanel extends TabbedLayerPanel
 
 		Mutable<Boolean> done = new Mutable<>(false);
 		execset.addListener(() -> {
-			if (execset.getCompleted() && execset.getResult() != null) {
-				if (!done.get()) {
-					done.set(true);
-					QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, execset.getResult(), mapSession, controller);
-					this.pushLayer(maplayer);
-				}
+			if (execset.getCompleted() && execset.getResult() != null && done.get()) {
+				done.set(true);
+				QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, execset.getResult(), mapSession, controller);
+				this.pushLayer(maplayer);
 			}
 		});
 		
@@ -1112,9 +1095,7 @@ public class PlotPanel extends TabbedLayerPanel
 		textfield.setText(controller.data().getTitle());
 		LayerDialog dialog = new LayerDialog("Change Dataset Title", textfield, MessageType.QUESTION);
 		dialogbox.set(dialog);
-		dialog.addLeft(new FluentButton("Cancel").withAction(() -> {
-			dialog.hide();
-		}));
+		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
 		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
 			controller.data().setTitle(textfield.getText());
 			dialog.hide();

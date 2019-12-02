@@ -47,7 +47,9 @@ public class PlotZoomControls extends FluentButton {
 		zoomMenu.add(zoomPanel);
 		
 		this.addActionListener(e -> {
-			zoomMenu.show(this, (int)((-zoomMenu.getPreferredSize().getWidth()+this.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
+			int x = (int) ((-zoomMenu.getPreferredSize().getWidth() + this.getSize().getWidth()) / 2f);
+			int y = (int)-zoomMenu.getPreferredSize().getHeight();
+			zoomMenu.show(this, x, y);
 		});
 		
 	}

@@ -19,6 +19,11 @@ public class FluentMenuItem extends JMenuItem implements FluentMenuItemAPI<Fluen
 		makeWidget();
 	}
 	
+	public FluentMenuItem(String text) {
+		this();
+		withText(text);
+	}
+	
 	@Override
 	public FluentMenuItem getSelf() {
 		return this;
