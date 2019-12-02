@@ -70,7 +70,7 @@ public class MapFilterSet implements Iterable<MapFilter> {
 	}
 	
 	public List<MapFilter> getAllEnabled() {
-		return filters.stream().filter(f -> f.isEnabled()).collect(Collectors.toList());
+		return filters.stream().filter(MapFilter::isEnabled).collect(Collectors.toList());
 	}
 	
 	public AreaMap apply(AreaMap map) {

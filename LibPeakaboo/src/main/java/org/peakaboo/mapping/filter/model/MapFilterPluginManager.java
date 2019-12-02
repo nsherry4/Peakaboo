@@ -57,7 +57,6 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		builtins = new BoltJavaBuiltinLoader<>(JavaMapFilterPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
-		//TODO: Add script loader
 	}
 
 	private void registerCustomPlugins() {

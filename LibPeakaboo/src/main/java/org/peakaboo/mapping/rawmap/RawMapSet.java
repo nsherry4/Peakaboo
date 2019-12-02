@@ -24,8 +24,7 @@ import org.peakaboo.framework.cyclops.SpectrumCalculations;
  * 
  */
 
-public class RawMapSet implements Cloneable, Iterable<RawMap>
-{
+public class RawMapSet implements Cloneable, Iterable<RawMap> {
 
 	private List<RawMap>	maps;
 	private int				mapSize;
@@ -43,7 +42,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 	 */
 	public RawMapSet(List<ITransitionSeries> transitionSeries, int mapSize, boolean allPointsValid)
 	{
-		maps = new ArrayList<RawMap>();
+		maps = new ArrayList<>();
 		for (ITransitionSeries ts : transitionSeries) {
 			maps.add(new RawMap(ts, mapSize));
 		}
@@ -63,7 +62,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap>
 	public RawMapSet clone() throws CloneNotSupportedException
 	{
 			
-		List<RawMap> mapresults = new ArrayList<RawMap>();
+		List<RawMap> mapresults = new ArrayList<>();
 		
 		for (RawMap map : maps)
 		{

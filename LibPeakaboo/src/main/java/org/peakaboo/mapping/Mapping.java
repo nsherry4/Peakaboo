@@ -36,8 +36,11 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
  *
  */
 
-public class Mapping
-{
+public class Mapping {
+	
+	private Mapping() {
+		//Not Constructable
+	}
 
 	/**
 	 * Generates a map based on the given inputs. Returns a {@link StreamExecutor} which can execute this task asynchronously and return the result
@@ -137,11 +140,8 @@ public class Mapping
 		//timer
 		Mutable<Long> t1 = new Mutable<>();
 		Mutable<Long> t2 = new Mutable<>();
-		Runnable timer_pre = () -> {
-			//pre-task
-			t1.set(System.currentTimeMillis());
-		};
-		Runnable timer_post = () -> {
+		Runnable timerPre = () -> t1.set(System.currentTimeMillis());
+		Runnable timerPost = () -> {
 			t2.set(System.currentTimeMillis());
 			long seconds = (t2.get() - t1.get()) / 1000;
 			PeakabooLog.get().log(Level.INFO, "Generated a QuickMap in " + seconds + " seconds");
@@ -149,13 +149,17 @@ public class Mapping
 		
 		
 		//executor
-		return Plural.build("Generating Quick Map", maptask, timer_pre, (v) -> {
-			timer_post.run();
+		return Plural.build("Generating Quick Map", maptask, timerPre, v -> {
+			timerPost.run();
 			
 			//build the RawMapSet now that the map Spectrum has been populated
 			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), map);
-			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), finalMapsize, data.getDataSet().getDataSource().isRectangular(), true);
-			return rawmaps;
+			return new RawMapSet(
+					Collections.singletonList(rawmap), 
+					finalMapsize, 
+					data.getDataSet().getDataSource().isRectangular(), 
+					true
+				);
 		});
 
 		
