@@ -74,14 +74,12 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		//NOOP
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		//NOOP
 	}
 
 	@Override
@@ -94,8 +92,7 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		//NOOP
 	}
 	
 }

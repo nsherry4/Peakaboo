@@ -84,7 +84,7 @@ public class QuickMapPanel extends HeaderLayer {
 		setBody(body);
 		
 		
-		FluentToolbarButton viewButton = MapperToolbar.createOptionsButton(plotTab, controller);
+		FluentToolbarButton viewButton = MapperToolbar.createOptionsButton(controller);
 		FluentToolbarButton sizingButton = createSizingButton(plotTab, controller);
 		ButtonBox bbox = new ButtonBox(0, false);
 		bbox.setOpaque(false);
@@ -113,9 +113,7 @@ public class QuickMapPanel extends HeaderLayer {
 		
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);
 		dimensions.setBorder(Spacing.bMedium());
-		dimensions.getMagicDimensionsButton().addActionListener(e -> {
-			menu.setVisible(false);
-		});
+		dimensions.getMagicDimensionsButton().addActionListener(e -> menu.setVisible(false));
 		dimensions.setOpaque(false);
 		menu.add(dimensions);
 		

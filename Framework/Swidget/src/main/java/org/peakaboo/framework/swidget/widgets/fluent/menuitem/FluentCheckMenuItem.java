@@ -20,6 +20,11 @@ public class FluentCheckMenuItem extends JCheckBoxMenuItem implements FluentMenu
 		makeWidget();
 	}
 	
+	public FluentCheckMenuItem(String text) {
+		this();
+		withText(text);
+	}
+	
 	@Override
 	public FluentCheckMenuItem getSelf() {
 		return this;
@@ -39,6 +44,11 @@ public class FluentCheckMenuItem extends JCheckBoxMenuItem implements FluentMenu
 		return getSelf();
 	}
 
+	public FluentCheckMenuItem withSelected(boolean selected) {
+		setSelected(selected);
+		return getSelf();
+	}
+	
 	@Override
 	public void makeWidget() {
 		this.setText(config.text);

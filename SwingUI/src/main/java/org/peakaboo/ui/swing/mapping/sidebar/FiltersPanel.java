@@ -52,7 +52,6 @@ public class FiltersPanel extends JPanel {
 	
 	private MapFilteringController controller;
 	
-	private JTable filterTable;
 	private ListControls filterControls;
 	
 	public FiltersPanel(MapFilteringController controller, Window window) {
@@ -77,7 +76,7 @@ public class FiltersPanel extends JPanel {
 	}
 
 	private JPanel buildFiltersPanel() {
-		filterTable = new JTable(new TableModel() {
+		JTable filterTable = new JTable(new TableModel() {
 
 			@Override
 			public int getRowCount() {
@@ -133,13 +132,12 @@ public class FiltersPanel extends JPanel {
 
 			@Override
 			public void addTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-				
+				// NOOP
 			}
 
 			@Override
 			public void removeTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
+				// NOOP
 				
 			}});
 		filterTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -175,9 +173,7 @@ public class FiltersPanel extends JPanel {
 		
 		FluentButton add = new FluentButton(StockIcon.EDIT_ADD)
 			.withTooltip("Add Filter")
-			.withAction(() -> {
-				layout.show(this, PANEL_ADD);
-		});
+			.withAction(() -> layout.show(this, PANEL_ADD));
 		FluentButton remove = new FluentButton(StockIcon.EDIT_REMOVE)
 			.withTooltip("Remove Filter")
 			.withAction(() -> {
@@ -187,9 +183,7 @@ public class FiltersPanel extends JPanel {
 		});
 		FluentButton clear = new FluentButton(StockIcon.EDIT_CLEAR)
 			.withTooltip("Clear Filters")
-			.withAction(() -> {
-				controller.clear();
-		});
+			.withAction(controller::clear);
 		
 		filterControls = new ListControls(add, remove, clear);
 		
@@ -315,9 +309,7 @@ class MapFilterDialog extends SwingAutoDialog {
 	MapFilterDialog(MapFilteringController controller, MapFilter filter, AutoDialogButtons buttons, Window window) {
 		super(window, filter.getParameterGroup(), buttons);
 		
-		getGroup().getValueHook().addListener(o -> {
-			controller.filteredDataInvalidated();
-		});
+		getGroup().getValueHook().addListener(o -> controller.filteredDataInvalidated());
 		
 	}
 }

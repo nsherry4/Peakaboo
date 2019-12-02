@@ -25,15 +25,10 @@ import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 public class Overlay extends JPanel {
 
 	private MapFittingController viewController;
-	
-	private ScaleModeWidget scaleMode;
-	
+		
 	public Overlay(MapFittingController viewController) {
-
 		this.viewController = viewController;
-		
 		createElementsList();
-		
 	}
 
 	
@@ -41,7 +36,7 @@ public class Overlay extends JPanel {
 	private JPanel createScaleOptions() {
 		JPanel options = new JPanel(new BorderLayout());
 		
-		scaleMode = new ScaleModeWidget(viewController, "Colour", "All", true);
+		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Colour", "All", true);
 		options.add(scaleMode, BorderLayout.CENTER);
 				
 		return options;
@@ -78,15 +73,13 @@ public class Overlay extends JPanel {
 			}
 
 			public void removeTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 				
 				switch (columnIndex) {
-
 					case 0: return viewController.getTransitionSeriesEnabled(ts);
 					case 1: return false;
 					case 2: return true;
@@ -101,7 +94,6 @@ public class Overlay extends JPanel {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
-
 					case 0: return viewController.overlayMode().getVisibility(ts);
 					case 1: return ts;
 					case 2: return viewController.overlayMode().getColour(ts);
@@ -117,8 +109,7 @@ public class Overlay extends JPanel {
 
 			public String getColumnName(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return "Map";
 					case 1: return "Fitting";
 					case 2: return "Colour";
@@ -132,8 +123,7 @@ public class Overlay extends JPanel {
 
 			public Class<?> getColumnClass(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return Boolean.class;
 					case 1: return ITransitionSeries.class;
 					case 2: return OverlayColour.class;
@@ -142,8 +132,7 @@ public class Overlay extends JPanel {
 			}
 
 			public void addTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 		};
 

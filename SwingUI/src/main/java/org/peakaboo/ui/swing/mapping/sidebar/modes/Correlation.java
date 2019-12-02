@@ -64,14 +64,10 @@ public class Correlation extends JPanel {
 		
 		JCheckBox clip = new JCheckBox();
 		clip.setBorder(Spacing.bMedium());
-		clip.addActionListener(e -> {
-			viewController.correlationMode().setClip(clip.isSelected());
-		});
+		clip.addActionListener(e -> viewController.correlationMode().setClip(clip.isSelected()));
 		
 		JSpinner bins = new JSpinner(new SpinnerNumberModel(100, 25, 250, 1));
-		bins.addChangeListener(change -> {
-			viewController.correlationMode().setBins((Integer)bins.getValue());
-		});
+		bins.addChangeListener(change -> viewController.correlationMode().setBins((Integer)bins.getValue()));
 		viewController.correlationMode().addListener(() -> {
 			int oldValue = (Integer)bins.getValue();
 			int newValue = viewController.correlationMode().getBins();
@@ -126,8 +122,7 @@ public class Correlation extends JPanel {
 			}
 
 			public void removeTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -149,7 +144,6 @@ public class Correlation extends JPanel {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
-
 					case 0: return viewController.correlationMode().getVisibility(ts);
 					case 1: return ts;
 					case 2: return ts;
@@ -165,8 +159,7 @@ public class Correlation extends JPanel {
 
 			public String getColumnName(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return "Map";
 					case 1: return "Fitting";
 					case 2: return "Correlation Set";
@@ -180,8 +173,7 @@ public class Correlation extends JPanel {
 
 			public Class<?> getColumnClass(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return Boolean.class;
 					case 1: return ITransitionSeries.class;
 					case 2: return ITransitionSeries.class;
@@ -190,8 +182,7 @@ public class Correlation extends JPanel {
 			}
 
 			public void addTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 		};
 
@@ -222,16 +213,7 @@ public class Correlation extends JPanel {
 		column.setResizable(false);
 		column.setPreferredWidth(60);
 		column.setMaxWidth(60);
-		
-		/*ComboTableCellRenderer renderer = new ComboTableCellRenderer();
-		
-		comboBox.setRenderer(renderer);
-		
-		
-		
 
-		*/
-		
 		
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));

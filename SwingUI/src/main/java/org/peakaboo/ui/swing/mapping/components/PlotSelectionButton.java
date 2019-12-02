@@ -42,7 +42,7 @@ public class PlotSelectionButton extends FluentToolbarButton {
 		//update the bad scan indexes to match the new data source's indexing scheme
 		//TODO: Is there a better way to do this?
 		settings.data.discards = settings.data.discards.stream()
-				.map(index -> sds.getUpdatedIndex(index))
+				.map(sds::getUpdatedIndex)
 				.filter(index -> index > 0)
 				.collect(Collectors.toList()
 			);

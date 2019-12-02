@@ -69,7 +69,8 @@ public class MapperToolbar extends JToolBar {
 					for (int index : indexes) {
 						sum += data.get(index);
 					}
-					return sum /= indexes.size();
+					sum /= indexes.size();
+					return sum;
 				};
 				Concentrations ppm = Concentrations.calculate(tss, controller.getFitting().getCalibrationProfile(), intensityFunction);
 				
@@ -95,7 +96,7 @@ public class MapperToolbar extends JToolBar {
 		c.weightx = 0.0;
 		c.gridx++;
 		
-		this.add(createOptionsButton(panel, controller), c);
+		this.add(createOptionsButton(controller), c);
 		c.gridx++;
 		
 		
@@ -119,7 +120,7 @@ public class MapperToolbar extends JToolBar {
 	}
 	
 
-	public static FluentToolbarButton createOptionsButton(LayerPanel panel, MappingController controller) {
+	public static FluentToolbarButton createOptionsButton(MappingController controller) {
 		
 		FluentToolbarButton opts = new FluentToolbarButton();
 		opts.withIcon("menu-view").withTooltip("Map Settings Menu");

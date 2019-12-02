@@ -61,14 +61,10 @@ public class MapFittingPanel extends ClearPanel
 		//create combobox
 		final JComboBox<MapModes> modeSelectBox = new JComboBox<>(MapModes.values());
 		modeSelectBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-		modeSelectBox.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				MapModes mode = (MapModes)modeSelectBox.getSelectedItem();
-				controller.setMapDisplayMode(mode);
-				card.show(cardPanel, mode.toString());
-			}
+		modeSelectBox.addActionListener(e -> {
+			MapModes mode = (MapModes)modeSelectBox.getSelectedItem();
+			controller.setMapDisplayMode(mode);
+			card.show(cardPanel, mode.toString());
 		});
 		JPanel modeSelectPanel = new ClearPanel(new BorderLayout());
 		modeSelectPanel.add(modeSelectBox, BorderLayout.CENTER);

@@ -19,10 +19,7 @@ import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 public class Composite extends JPanel {
 	
 	private MapFittingController viewController;
-	
-	private ScaleModeWidget scaleMode;
-	
-	
+
 	public Composite(MapFittingController viewController) {
 		
 		this.viewController = viewController;
@@ -47,8 +44,7 @@ public class Composite extends JPanel {
 	
 	
 	private JPanel createScaleOptions() {
-		scaleMode = new ScaleModeWidget(viewController, "Visible", "All", false);
-		return scaleMode;
+		return new ScaleModeWidget(viewController, "Visible", "All", false);
 	}
 	
 
@@ -56,8 +52,7 @@ public class Composite extends JPanel {
 	{
 		TableModel m = new TableModel() {
 
-			public void setValueAt(Object value, int rowIndex, int columnIndex)
-			{
+			public void setValueAt(Object value, int rowIndex, int columnIndex) {
 				if (columnIndex == 0) {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
@@ -68,25 +63,21 @@ public class Composite extends JPanel {
 			}
 
 
-			public void removeTableModelListener(TableModelListener l)
-			{
-				// TODO Auto-generated method stub
-
+			public void removeTableModelListener(TableModelListener l) {
+				//NOOP
 			}
 
 
-			public boolean isCellEditable(int rowIndex, int columnIndex)
-			{
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				if (columnIndex == 0) {
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 					return viewController.getTransitionSeriesEnabled(ts);
-				};
+				}
 				return false;
 			}
 
 
-			public Object getValueAt(int rowIndex, int columnIndex)
-			{
+			public Object getValueAt(int rowIndex, int columnIndex) {
 				
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 				
@@ -99,36 +90,30 @@ public class Composite extends JPanel {
 			}
 
 
-			public int getRowCount()
-			{
+			public int getRowCount() {
 				return viewController.getAllTransitionSeries().size();
 			}
 
 
-			public String getColumnName(int columnIndex)
-			{
+			public String getColumnName(int columnIndex) {
 				if (columnIndex == 0) return "Map";
 				return "Fitting";
 			}
 
 
-			public int getColumnCount()
-			{
+			public int getColumnCount() {
 				return 2;
 			}
 
 
-			public Class<?> getColumnClass(int columnIndex)
-			{
+			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 0) return Boolean.class;
 				return ITransitionSeries.class;
 			}
 
 
-			public void addTableModelListener(TableModelListener l)
-			{
-				// TODO Auto-generated method stub
-
+			public void addTableModelListener(TableModelListener l) {
+				// NOOP
 			}
 		};
 

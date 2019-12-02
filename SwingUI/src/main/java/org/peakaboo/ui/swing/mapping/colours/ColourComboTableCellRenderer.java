@@ -33,7 +33,7 @@ public class ColourComboTableCellRenderer<T> implements ListCellRenderer<T>, Tab
 	{
 		renderer.setBorder(new MatteBorder(Spacing.iSmall(), Color.white));
 		
-		if ((value != null) && (value instanceof OverlayColour))
+		if ((value instanceof OverlayColour))
 		{
 			//Overlay Mode
 			Color c = new Color(((OverlayColour) value).toARGB());
@@ -41,7 +41,7 @@ public class ColourComboTableCellRenderer<T> implements ListCellRenderer<T>, Tab
 			renderer.setText("");
 			renderer.setBackground( c );
 		} 
-		else if (value != null && value instanceof Integer) 
+		else if (value instanceof Integer) 
 		{
 			//Ratio Mode
 			Color c = new Color(RatioColour.values()[((Integer)value) - 1].toARGB(), true);

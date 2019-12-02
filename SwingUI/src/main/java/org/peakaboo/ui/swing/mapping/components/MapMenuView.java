@@ -1,41 +1,44 @@
 package org.peakaboo.ui.swing.mapping.components;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentCheckMenuItem;
 
 public class MapMenuView extends JPopupMenu {
 
-	private JMenuItem title, spectrum, coords, dstitle, scalebar;
-	private JCheckBoxMenuItem monochrome;
+	private FluentCheckMenuItem title, spectrum, coords, dstitle, scalebar, monochrome;
 	
 	public MapMenuView(MappingController controller) {
 		
-		title = new JCheckBoxMenuItem("Show Elements List");
-		dstitle = new JCheckBoxMenuItem("Show Dataset Title");
-		spectrum = new JCheckBoxMenuItem("Show Spectrum");
-		coords = new JCheckBoxMenuItem("Show Coordinates");
-		scalebar = new JCheckBoxMenuItem("Show Scale Bar");
-		monochrome = new JCheckBoxMenuItem("Monochrome");
+		MapSettingsController settings = controller.getSettings();
 		
-
-		MapSettingsController viewSettings = controller.getSettings();
-		title.setSelected(viewSettings.getShowTitle());
-		spectrum.setSelected(viewSettings.getShowSpectrum());
-		coords.setSelected(viewSettings.getShowCoords());
-		dstitle.setSelected(viewSettings.getShowDatasetTitle());
-		scalebar.setSelected(viewSettings.getShowScaleBar());
-
-		spectrum.addActionListener(e -> viewSettings.setShowSpectrum(spectrum.isSelected()));
-		coords.addActionListener(e -> viewSettings.setShowCoords(coords.isSelected()));
-		title.addActionListener(e -> viewSettings.setShowTitle(title.isSelected()));
-		dstitle.addActionListener(e -> viewSettings.setShowDatasetTitle(dstitle.isSelected()));
-		scalebar.addActionListener(e -> viewSettings.setShowScaleBar(scalebar.isSelected()));
-		monochrome.addActionListener(e -> viewSettings.setMonochrome(monochrome.isSelected()));
+		title = new FluentCheckMenuItem("Show Elements List")
+				.withSelected(settings.getShowTitle())
+				.withAction(settings::setShowTitle);
 		
+		dstitle = new FluentCheckMenuItem("Show Dataset Title")
+				.withSelected(settings.getShowDatasetTitle())
+				.withAction(settings::setShowDatasetTitle);
+		
+		spectrum = new FluentCheckMenuItem("Show Spectrum")
+				.withSelected(settings.getShowSpectrum())
+				.withAction(settings::setShowSpectrum);
+				
+		coords = new FluentCheckMenuItem("Show Coordinates")
+				.withSelected(settings.getShowCoords())
+				.withAction(settings::setShowCoords);
+		
+		scalebar = new FluentCheckMenuItem("Show Scale Bar")
+				.withSelected(settings.getShowScaleBar())
+				.withAction(settings::setShowScaleBar);
+		
+		monochrome = new FluentCheckMenuItem("Monochrome")
+				.withSelected(settings.getMonochrome())
+				.withAction(settings::setMonochrome);
+
 		
 		this.add(title);
 		this.add(dstitle);

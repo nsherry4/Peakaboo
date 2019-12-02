@@ -50,8 +50,7 @@ public class Ratio extends JPanel {
 
 	
 	private JPanel createScaleOptions() {
-		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Colour", "All", true);
-		return scaleMode;
+		return new ScaleModeWidget(viewController, "Colour", "All", true);
 	}
 	
 	
@@ -89,15 +88,13 @@ public class Ratio extends JPanel {
 			}
 
 			public void removeTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 				
 				switch (columnIndex) {
-
 					case 0: return viewController.getTransitionSeriesEnabled(ts);
 					case 1: return false;
 					case 2: return true;
@@ -112,7 +109,6 @@ public class Ratio extends JPanel {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
-
 					case 0: return viewController.ratioMode().getVisibility(ts);
 					case 1: return ts;
 					case 2: return viewController.ratioMode().getSide(ts);
@@ -128,8 +124,7 @@ public class Ratio extends JPanel {
 
 			public String getColumnName(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return "Map";
 					case 1: return "Fitting";
 					case 2: return "Ratio Sets";
@@ -143,8 +138,7 @@ public class Ratio extends JPanel {
 
 			public Class<?> getColumnClass(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return Boolean.class;
 					case 1: return ITransitionSeries.class;
 					case 2: return Integer.class;
@@ -153,8 +147,7 @@ public class Ratio extends JPanel {
 			}
 
 			public void addTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 		};
 
@@ -177,7 +170,7 @@ public class Ratio extends JPanel {
 
 		
 		
-		Integer choices[] = {1,2};
+		Integer[] choices = {1,2};
 		ColourComboTableCellRenderer<Integer> renderer = new ColourComboTableCellRenderer<>();
 		JComboBox<Integer> comboBox = new JComboBox<>(choices);
 		comboBox.setRenderer(renderer);
@@ -185,16 +178,6 @@ public class Ratio extends JPanel {
 		column = table.getColumnModel().getColumn(2);
 		column.setCellRenderer(renderer);
 		column.setCellEditor(editor);
-		
-		/*ComboTableCellRenderer renderer = new ComboTableCellRenderer();
-		
-		comboBox.setRenderer(renderer);
-		
-		
-		
-
-		*/
-		
 		
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));

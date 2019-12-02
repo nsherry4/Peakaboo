@@ -23,7 +23,7 @@ public class MapStatusBar extends JPanel {
 	private JLabel status;
 	private MappingController controller;
 	
-	public MapStatusBar(MapperPanel tabPanel, MappingController controller) {
+	public MapStatusBar(MappingController controller) {
 		
 		this.controller = controller;
 		
@@ -43,9 +43,7 @@ public class MapStatusBar extends JPanel {
 		
 		
 		//zoom controls
-		ZoomSlider zoom = new ZoomSlider(10, 100, 1, value -> {
-			controller.getSettings().setZoom(value / 10f);
-		});
+		ZoomSlider zoom = new ZoomSlider(10, 100, 1, value -> controller.getSettings().setZoom(value / 10f));
 		zoom.setOpaque(false);
 		zoom.setBorder(Spacing.bMedium());
 		
@@ -54,7 +52,9 @@ public class MapStatusBar extends JPanel {
 		zoomMenu.add(zoom);
 		FluentButton zoomButton = new FluentButton(StockIcon.FIND).withTooltip("Zoom").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
 		zoomButton.addActionListener(e -> {
-			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
+			int x = (int)((-zoomMenu.getPreferredSize().getWidth() + zoomButton.getSize().getWidth()) / 2f);
+			int y = (int)-zoomMenu.getPreferredSize().getHeight();
+			zoomMenu.show(zoomButton, x, y);
 		});
 		
 		add(zoomButton, BorderLayout.EAST);

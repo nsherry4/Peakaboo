@@ -82,10 +82,6 @@ public class MapSelectionPanel extends SettingsPanel {
 		controller.addListener(t -> {
 			boolean enabled = controller.getFiltering().isReplottable();
 			this.setEnabled(enabled);
-			//threshold.setEnabled(enabled);
-			//padding.setEnabled(enabled);
-			//thresholdLabel.setEnabled(enabled);
-			//paddingLabel.setEnabled(enabled);
 			if (t == MapUpdateType.UI_OPTIONS) {
 				onSelChange.accept(controller.getSelection().getSelectionType());
 			}
