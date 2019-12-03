@@ -39,14 +39,19 @@ public class PileupSourceScorer implements FittingScorer {
 		float thisScore = tsHeight(ts);
 		thisScore /= data.max();
 		
+		float smallPileupScore = 1f;
+		if (sourceScore != 0) {
+			smallPileupScore = 1f - (thisScore / sourceScore);
+			smallPileupScore = Math.max(1f, Math.min(0f, smallPileupScore));
+		}
 		
-		float score = 1f - (thisScore / sourceScore);
-		score = Math.max(1f, Math.min(0f, score));
+
+		//prefer pileups which are from strong source peaks
+		float largeSourceScore = (float) Math.pow(sourceScore, 2);
 		
 		
-		score = sourceScore;
-		score = (float) Math.pow(sourceScore, 2);
-		return score;
+		
+		return smallPileupScore * largeSourceScore;
 		
 	}
 

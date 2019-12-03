@@ -85,17 +85,12 @@ public class DoubleDerivativePeakSearcher implements PeakSearcher {
 			}
 			
 		}
-		
-		//System.exit(0);
-		
 
-		channels.sort((a, b) -> {
-			return Float.compare(
-					score(b, data, dataMax, d2, d2Max),
-					score(a, data, dataMax, d2, d2Max)
-				);
-		});
-		
+		channels.sort((a, b) -> Float.compare(
+			score(b, data, dataMax, d2, d2Max),
+			score(a, data, dataMax, d2, d2Max)
+		));
+	
 		return channels;
 		
 	}

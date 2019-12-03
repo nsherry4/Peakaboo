@@ -38,11 +38,7 @@ public class DerivativePeakSearcher implements PeakSearcher {
 			float prev = delta.get(i-1);
 			float next = delta.get(i);
 			
-			if (prev > 0 && next <= 0 && prev-next > threshold) {
-				
-				//System.out.println("index = " + i);
-				//System.out.println("delta = " + (prev-next));
-				
+			if (prev > 0 && next <= 0 && prev-next > threshold) {				
 				inflections.add(i);
 			}
 		}
@@ -52,7 +48,6 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		List<Integer> refined = new ArrayList<>();
 		for (int i : inflections) {
 			while (true) {
-				//System.out.println(i);
 				if (i > 0 && filtered.get(i-1) > filtered.get(i)) {
 					i--;
 					continue;

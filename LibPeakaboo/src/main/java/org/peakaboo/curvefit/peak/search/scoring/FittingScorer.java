@@ -17,7 +17,7 @@ public interface FittingScorer extends Comparator<ITransitionSeries> {
 	default int compare(ITransitionSeries o1, ITransitionSeries o2) {
 		Float s1 = score(o1);
 		Float s2 = score(o2);
-		return -s1.compareTo(s2);
+		return s2.compareTo(s1);
 	}
 
 }

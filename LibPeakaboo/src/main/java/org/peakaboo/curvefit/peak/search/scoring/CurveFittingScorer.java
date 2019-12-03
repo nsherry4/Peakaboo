@@ -28,7 +28,6 @@ public class CurveFittingScorer implements FittingScorer {
 		FittingResult result = fitter.fit(data, curve.get());
 		float score = result.getCurveScale() / max;
 		score = (float) Math.sqrt(score);
-		//float score = result.getFit().sum();
 		return score;
 		
 	}

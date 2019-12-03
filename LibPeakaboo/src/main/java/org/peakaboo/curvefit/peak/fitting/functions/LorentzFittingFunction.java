@@ -44,9 +44,7 @@ public class LorentzFittingFunction implements FittingFunction {
 	
 	public float forEnergyAbsolute(float energy) {
 		
-		double value = 0.0;
-		
-		value = 
+		double value = 
 		(
 				                 gammaSquared
 			/*----------------------------------------------------*/ / 

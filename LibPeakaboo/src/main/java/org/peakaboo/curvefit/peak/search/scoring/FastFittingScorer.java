@@ -36,7 +36,7 @@ public class FastFittingScorer implements FittingScorer {
 		
 		//find the lowest multiplier as a constraint on signal fitted
 		float lowestMult = Float.MAX_VALUE;
-		if (transitions.size() == 0) { return 1; }
+		if (transitions.isEmpty()) { return 1; }
 		
 		for (Transition t : transitions) {
 			if (t.relativeIntensity == 0) { continue; }

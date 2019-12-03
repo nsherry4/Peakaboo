@@ -63,9 +63,7 @@ public class TopHatPeakSearcher implements PeakSearcher {
 			
 		}
 		
-		peaks.sort((a, b) -> {
-			return Float.compare(tophat.get(b), tophat.get(a));
-		});
+		peaks.sort((a, b) -> Float.compare(tophat.get(b), tophat.get(a)));
 		return peaks;
 		
 	}
