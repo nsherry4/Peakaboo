@@ -31,12 +31,12 @@
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-svggen</artifactId>
-			<version>1.9.1</version>
+			<version>1.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>fop</artifactId>
-			<version>2.2</version>
+			<artifactId>fop-core</artifactId>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
