@@ -75,7 +75,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 	@Override
 	public void setInteraction(Interaction interaction) {
-		
+		//NOOP
 	}
 	
 	@Override

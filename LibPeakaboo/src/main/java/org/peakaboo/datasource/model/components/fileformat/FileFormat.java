@@ -27,7 +27,8 @@ public interface FileFormat {
 	@Deprecated(since="5.4", forRemoval=true)
 	FileFormatCompatibility compatibility(List<Path> filenames);
 	
-	//TODO: this is temporary -- with 6.0 plugins should natively accept DataFiles
+	// TODO: this is temporary -- with 6.0 plugins should natively accept DataFiles
+	// and this method should be renamed 'compatibility'
 	default FileFormatCompatibility compatibilityWithDataFile(List<DataFile> datafiles) throws IOException {
 		List<Path> paths = new ArrayList<>();
 		for (DataFile f : datafiles) {

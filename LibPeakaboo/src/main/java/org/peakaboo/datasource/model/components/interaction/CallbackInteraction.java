@@ -5,12 +5,12 @@ import java.util.function.Supplier;
 
 public class CallbackInteraction implements Interaction {
 
-	private Consumer<Integer>	fn_openedScanCallback;
-	private Supplier<Boolean>	fn_isAborted;
-	private Consumer<Integer>	fn_readScanCallback;
-	private Consumer<Integer>	fn_getScanCountCallback;
+	private Consumer<Integer>	fnOpenedScanCallback;
+	private Supplier<Boolean>	fnIsAborted;
+	private Consumer<Integer>	fnReadScanCallback;
+	private Consumer<Integer>	fnGetScanCountCallback;
 	
-
+	//TODO: Peakaboo 6 - replace with IntConsumer, BooleanSupplier, etc
 	public CallbackInteraction(
 			Consumer<Integer> openedScanCallback,
 			Consumer<Integer> getScanCountCallback, 
@@ -18,34 +18,34 @@ public class CallbackInteraction implements Interaction {
 			Supplier<Boolean> isAborted
 		)
 	{
-		this.fn_openedScanCallback = openedScanCallback;
-		this.fn_readScanCallback = readScanCallback;
-		this.fn_isAborted = isAborted;
-		this.fn_getScanCountCallback = getScanCountCallback;
+		this.fnOpenedScanCallback = openedScanCallback;
+		this.fnReadScanCallback = readScanCallback;
+		this.fnIsAborted = isAborted;
+		this.fnGetScanCountCallback = getScanCountCallback;
 	}
 	
 	
 	@Override
 	public boolean checkReadAborted()
 	{
-		return fn_isAborted.get();
+		return fnIsAborted.get();
 	}
 	
 	@Override
 	public void notifyScanRead(int numRead)
 	{
-		fn_readScanCallback.accept(numRead);
+		fnReadScanCallback.accept(numRead);
 	}
 	
 	@Override
 	public void notifyScanCount(int scanCount)
 	{
-		fn_getScanCountCallback.accept(scanCount);
+		fnGetScanCountCallback.accept(scanCount);
 	}
 	
 	@Override
 	public void notifyScanOpened(int scanCount) {
-		fn_openedScanCallback.accept(scanCount);
+		fnOpenedScanCallback.accept(scanCount);
 	}
 
 	

@@ -58,6 +58,15 @@ public class PathDataFile implements DataFile {
 		return Files.exists(path);
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		//This line isn't needed, right? Java will just call the other method?
+		if (other instanceof PathDataFile) {
+			return equals((PathDataFile) other);
+		}
+		return false;
+	}
+	
 	public boolean equals(PathDataFile other) {
 		if (other == null) { return false; }
 		return this.path.equals(other.path);

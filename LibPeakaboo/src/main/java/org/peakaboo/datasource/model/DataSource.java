@@ -22,6 +22,18 @@ public interface DataSource
 {
 	
 	
+	class DataSourceReadException extends Exception {
+		
+		public DataSourceReadException(String message) {
+			super(message);
+		}
+		
+		public DataSourceReadException(String message, Throwable cause) {
+			super(message, cause);
+		}
+	}
+	
+	
 	default boolean isRectangular() {
 		return true;
 	}
@@ -70,13 +82,17 @@ public interface DataSource
 	 */
 	@Deprecated(since="5.4", forRemoval=true)
 	void read(List<Path> paths) throws Exception;
-
-	default void readDataFiles(List<DataFile> datafiles) throws Exception {
-		List<Path> paths = new ArrayList<>();
-		for (DataFile f : datafiles) {
-			paths.add(f.getAndEnsurePath());
-			getInteraction().notifyScanOpened(1);
+	
+	default void readDataFiles(List<DataFile> datafiles) throws DataSourceReadException {
+		try {
+			List<Path> paths = new ArrayList<>();
+			for (DataFile f : datafiles) {
+				paths.add(f.getAndEnsurePath());
+				getInteraction().notifyScanOpened(1);
+			}
+			this.read(paths);
+		} catch (Exception e) {
+			throw new DataSourceReadException("Failed to read data files", e);
 		}
-		this.read(paths);
 	}
 }

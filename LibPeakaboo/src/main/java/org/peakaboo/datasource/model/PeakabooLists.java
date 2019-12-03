@@ -32,6 +32,9 @@ import org.peakaboo.framework.scratch.list.ScratchLists;
 
 public final class PeakabooLists {
 
+	private PeakabooLists() {
+		// Not Constructable
+	}
 	
 	public static ScratchList<Spectrum> create() {
 		return create(PeakabooConfiguration.spectrumEncoder);

@@ -8,39 +8,35 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
 import org.peakaboo.datasource.model.datafile.DataFile;
 
-public class DataSourceLookup
-{
+public class DataSourceLookup {
 
-	public static List<DataSourcePlugin> findDataSourcesForFiles(List<DataFile> datafiles, List<DataSourcePlugin> dsps)
-	{	
+	public static List<DataSourcePlugin> findDataSourcesForFiles(List<DataFile> datafiles, List<DataSourcePlugin> dsps) {	
 		
-		List<DataSourcePlugin> maybe_by_filename = new ArrayList<>();
-		List<DataSourcePlugin> maybe_by_contents = new ArrayList<>();
-		List<DataSourcePlugin> yes_by_contents = new ArrayList<>();
+		List<DataSourcePlugin> maybeByFilename = new ArrayList<>();
+		List<DataSourcePlugin> maybeByContents = new ArrayList<>();
+		List<DataSourcePlugin> yesByContents = new ArrayList<>();
 		
 		PeakabooLog.get().log(Level.INFO, "Discovering compatible DataSource plugins");
 
-		for (DataSourcePlugin datasource : dsps)
-		{
+		for (DataSourcePlugin datasource : dsps) {
 			try {
 				FileFormatCompatibility compat = datasource.getFileFormat().compatibilityWithDataFile(new ArrayList<>(datafiles));
 				
 				PeakabooLog.get().log(Level.INFO, "DataSource plugin '" + datasource.pluginName() + "' (" + datasource.pluginUUID() + ") answers '" + compat.toString() + "'");
 				
 				if ( compat == FileFormatCompatibility.NO ) continue;
-				if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybe_by_filename.add(datasource); }
-				if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybe_by_contents.add(datasource); }
-				if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yes_by_contents.add(datasource); }
-			} 
-			catch (Throwable e) {
+				if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybeByFilename.add(datasource); }
+				if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybeByContents.add(datasource); }
+				if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yesByContents.add(datasource); }
+			} catch (Throwable e) {
 				PeakabooLog.get().log(Level.SEVERE, "Error while evaluating data sources", e);
 			} 
 		}
 			
 		
-		if (yes_by_contents.size() > 0) { return yes_by_contents; }
-		if (maybe_by_contents.size() > 0) { return maybe_by_contents; }
-		return maybe_by_filename;
+		if (!yesByContents.isEmpty()) { return yesByContents; }
+		if (!maybeByContents.isEmpty()) { return maybeByContents; }
+		return maybeByFilename;
 		
 	}
 

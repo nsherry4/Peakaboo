@@ -37,7 +37,6 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 		builtins = new BoltJavaBuiltinLoader<>(JavaDataSourcePlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
-		//TODO: Add script loader
 	}
 	
 	private void registerCustomPlugins() {

@@ -21,7 +21,9 @@ public class DummyAnalysis implements Analysis {
 	}
 
 	@Override
-	public void process(ReadOnlySpectrum t) {}
+	public void process(ReadOnlySpectrum t) {
+		//NOOP
+	}
 
 	@Override
 	public int channelsPerScan() {

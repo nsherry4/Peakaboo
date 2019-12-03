@@ -39,7 +39,7 @@ public class SimpleFileFormat implements FileFormat {
 	@Override
 	public FileFormatCompatibility compatibility(List<Path> paths) {
 		if (singleFile && paths.size() > 1) { return FileFormatCompatibility.NO; }
-		if (paths.size() == 0) { return FileFormatCompatibility.NO; }
+		if (paths.isEmpty()) { return FileFormatCompatibility.NO; }
 		boolean match = paths.stream().map(f -> this.compatibility(f) != FileFormatCompatibility.NO).reduce(true, (a, b) -> a && b);
 		if (match) { return FileFormatCompatibility.MAYBE_BY_FILENAME; }
 		return FileFormatCompatibility.NO;

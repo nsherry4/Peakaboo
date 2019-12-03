@@ -15,13 +15,13 @@ public class DummyDataSize implements DataSize {
 	@Override
 	public Coord<Integer> getDataDimensions()
 	{
-		return new Coord<Integer>(datasource.getScanData().scanCount(), 1);
+		return new Coord<>(datasource.getScanData().scanCount(), 1);
 	}
 
 
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
-		return new Coord<Integer>(index, 0);
+		return new Coord<>(index, 0);
 	}
 	
 }

@@ -5,7 +5,6 @@ import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
-import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.framework.cyclops.Spectrum;
 
 
@@ -19,10 +18,10 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
 	
-	public SimpleLoaderQueue(SimpleScanData data, Analysis analysis) {
-		this(data, analysis, 1000);
+	public SimpleLoaderQueue(SimpleScanData data) {
+		this(data, 1000);
 	}
-	public SimpleLoaderQueue(SimpleScanData data, Analysis analysis, int depth) {
+	public SimpleLoaderQueue(SimpleScanData data, int depth) {
 		
 		queue = new LinkedBlockingQueue<>(depth);
 		thread = new Thread(() -> {

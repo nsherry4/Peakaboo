@@ -36,7 +36,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	private Coord<Integer> dimensions;
 	private Coord<Integer> offset;
 	private GridPerspective<Integer> sourceGrid;
-	private Mutable<Boolean> rectangular = new Mutable<Boolean>(null);
+	private Mutable<Boolean> rectangular = new Mutable<>(null);
 	
 	/**
 	 * Creates a new, derived data source from an existing data source
@@ -53,7 +53,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		this.analysis = new DataSourceAnalysis();
 		this.analysis.init(source.getScanData().getAnalysis().channelsPerScan());
 		
-		sourceGrid = new GridPerspective<Integer>(dimensions.x, dimensions.y, 0);
+		sourceGrid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
 		int minx = dimensions.x;
 		int miny = dimensions.y;
 		int maxx = 0;
@@ -186,16 +186,12 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		int sourceIndex = getOriginalIndex(index);
 		IntPair sourceCoord = sourceGrid.getXYFromIndex(sourceIndex);
 		
-		//IntPair pair = selectionGrid.getXYFromIndex(index);
-		//return new Coord<>(pair.first, pair.second);
-
-		//IntPair sourceCoords = sourceGrid.getXYFromIndex(index);
 		int x = sourceCoord.first - offset.x;
 		int y = sourceCoord.second - offset.y;
 		if (x < 0 || x >= dimensions.x || y < 0 || y >= dimensions.y) {
 			throw new IndexOutOfBoundsException("Index " + index + " is out of bounds in a dataset of dimension " + dimensions);
 		}
-		return new Coord<Integer>(x, y);
+		return new Coord<>(x, y);
 	}
 	
 
@@ -211,7 +207,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		//we need to use the real dimensions here because non-spacial 
 		//map modes will have to translate back to actual map points
 		//before we can deal with it as a rectangular area of spectra
-		GridPerspective<Float> grid = new GridPerspective<Float>(
+		GridPerspective<Float> grid = new GridPerspective<>(
 				sourceDimensions.x, 
 				sourceDimensions.y, 
 				0f);
@@ -219,7 +215,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		int miny = grid.height;
 		int maxx = 0;
 		int maxy = 0;
-		boolean selected[] = new boolean[grid.size()];
+		boolean[] selected = new boolean[grid.size()];
 		for (int i : selectedIndexes) {
 			selected[i] = true;
 			IntPair coord = grid.getXYFromIndex(i);

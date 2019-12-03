@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.DataSource.DataSourceReadException;
 import org.peakaboo.datasource.model.components.datasize.DataSize;
 import org.peakaboo.datasource.model.components.datasize.DummyDataSize;
 import org.peakaboo.datasource.model.components.interaction.CallbackInteraction;
@@ -181,8 +182,7 @@ public class StandardDataSet implements DataSet
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
 					
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+				} catch (DataSourceReadException e) {
 					return new DatasetReadResult(e);
 				} catch (Throwable e) {
 					return new DatasetReadResult(e);

@@ -20,6 +20,7 @@ import org.yaml.snakeyaml.Yaml;
 
 public class URLDataFile implements DataFile {
 
+	private static final String URL_DATAFILE_PROTO = "urldatafile://";
 	private URL url;
 	private String name;
 	private Path file;
@@ -107,16 +108,25 @@ public class URLDataFile implements DataFile {
 		}
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		//This line isn't required, right? Java will just call the other equals method when given a URLDataFile?
+		if (other instanceof URLDataFile) {
+			return this.equals((URLDataFile)other);
+		}
+		return false;
+	}
+	
 	public boolean equals(URLDataFile other) {
 		if (other == null) { return false; }
-		if (this.url != other.url) { return false; }
-		if (this.name != other.name) { return false; } 
+		if (!this.url.toString().equals(other.url.toString())) { return false; }
+		if (!this.name.equals(other.name)) { return false; } 
 		return true;
 	}
 	
 	@Override
 	public int hashCode() {
-		return this.url.hashCode() + this.name.hashCode();
+		return this.url.toString().hashCode() + this.name.hashCode();
 	}
 
 	@Override
@@ -139,11 +149,11 @@ public class URLDataFile implements DataFile {
 		values.put("url", url.toString());
 		values.put("name", name);
 		String b64 = new String(Base64.getEncoder().encode(new Yaml().dump(values).getBytes()));
-		return "urldatafile://" + b64;
+		return URL_DATAFILE_PROTO + b64;
 	}
 	
 	private static URLDataFile deserialize(String s, Path downloadDir) {
-		String b64 = s.substring("urldatafile://".length());
+		String b64 = s.substring(URL_DATAFILE_PROTO.length());
 		String yaml = new String(Base64.getDecoder().decode(b64.getBytes()));
 		Map<String, String> values = new Yaml().load(yaml);
 		
@@ -159,7 +169,7 @@ public class URLDataFile implements DataFile {
 	}
 
 	public static boolean addressValid(String address) {
-		return address.startsWith("urldatafile://");
+		return address.startsWith(URL_DATAFILE_PROTO);
 	}
 	
 	public static URLDataFile fromAddress(String address, Path tempDir) {
