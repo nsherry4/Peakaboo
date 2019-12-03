@@ -79,7 +79,7 @@ public class StandardDataSet implements DataSet
 	 * @param paths the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<DataFile> paths, final DataSource dataSource)
+	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset(final List<DataFile> paths, final DataSource dataSource)
 	{
 
 		// sort the filenames alphanumerically. Files like "point2" should appear before "point10"
@@ -90,15 +90,9 @@ public class StandardDataSet implements DataSet
 		// Create the tasklist for reading the files
 		final ExecutorSet<DatasetReadResult> tasklist;
 		
-		/*
-		final EmptyMap opening = new EmptyMap("Opening Data Set");
-		final EmptyProgressingMap reading = new EmptyProgressingMap("Reading Scans");
-		final EmptyProgressingMap applying = new EmptyProgressingMap("Calculating Values");
-		*/
-		
-		final DummyExecutor opening = new DummyExecutor(true);//"Opening Data Set");
-		final DummyExecutor reading = new DummyExecutor();//"Reading Scans");
-		final DummyExecutor applying = new DummyExecutor();//"Calculating Values");
+		final DummyExecutor opening = new DummyExecutor(true);
+		final DummyExecutor reading = new DummyExecutor();
+		final DummyExecutor applying = new DummyExecutor();
 		
 		
 		tasklist = new ExecutorSet<DatasetReadResult>("Opening Data Set") {
@@ -148,8 +142,7 @@ public class StandardDataSet implements DataSet
 					
 	
 					
-					if (isAborted.get())
-					{
+					if (isAborted.get()) {
 						aborted();
 						return new DatasetReadResult(ReadStatus.CANCELLED);
 					}
@@ -165,8 +158,7 @@ public class StandardDataSet implements DataSet
 					readDataSource(dataSource, applying, isAborted);
 					
 					
-					if (isAborted.get())
-					{
+					if (isAborted.get()) {
 						aborted();
 						return new DatasetReadResult(ReadStatus.CANCELLED);
 					}
@@ -221,7 +213,7 @@ public class StandardDataSet implements DataSet
 		}
 		
 		if (hasRealSize) {
-			realCoords = new ArrayList<Coord<Number>>();
+			realCoords = new ArrayList<>();
 		}
 		
 		if (hasRealSize || isSubset) {
@@ -229,10 +221,8 @@ public class StandardDataSet implements DataSet
 				
 				if (isSubset) {
 					//subset data sources need to re-perform their analysis on the subset
-					if (ds instanceof SubsetDataSource) {
-						SubsetDataSource sds = (SubsetDataSource) ds;
-						sds.reanalyze(i);
-					}
+					SubsetDataSource sds = (SubsetDataSource) ds;
+					sds.reanalyze(i);
 				}
 				
 				if (hasRealSize) {

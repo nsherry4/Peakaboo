@@ -12,12 +12,8 @@ import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DummyAnalysis;
 
 
-public class EmptyDataSet implements DataSet
-{
+public class EmptyDataSet implements DataSet {
 
-
-
-	
 	@Override
 	public boolean hasGenuineScanData(){
 		return false;
@@ -26,17 +22,14 @@ public class EmptyDataSet implements DataSet
 
 
 	@Override
-	public void discard()
-	{
-		
+	public void discard() {
+		//NOOP
 	}
 
 
 
 	@Override
-	public DataSource getDataSource()
-	{
-		// TODO Auto-generated method stub
+	public DataSource getDataSource() {
 		return null;
 	}
 
@@ -54,31 +47,23 @@ public class EmptyDataSet implements DataSet
 
 	@Override
 	public DataSize getDataSize() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ScanData getScanData() {
-		// TODO Auto-generated method stub
 		return new DummyScanData();
 	}
 
 	@Override
 	public boolean hasGenuineDataSize() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-
-
 	@Override
 	public Analysis getAnalysis() {
-		// TODO Auto-generated method stub
 		return new DummyAnalysis();
 	}
-
-
 
 
 }

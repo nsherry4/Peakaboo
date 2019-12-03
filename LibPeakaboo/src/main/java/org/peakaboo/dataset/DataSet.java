@@ -1,6 +1,5 @@
 package org.peakaboo.dataset;
 
-import java.io.File;
 import java.util.Optional;
 
 import org.peakaboo.datasource.model.DataSource;
@@ -25,15 +24,6 @@ public interface DataSet {
 
 
 	Analysis getAnalysis();
-
-
-	/**
-	 * Gets the {@link File} representation of the data source. Could be a file path, a network address, or anything else
-	 * implementation specific
-	 * 
-	 * @return data source string
-	 */
-	//File getDataSourcePath();
 
 	
 	ScanData getScanData();

@@ -74,7 +74,7 @@ public class DataController extends Eventful
 
 		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final StandardDataSet dataset = new StandardDataSet();
-		final ExecutorSet<DatasetReadResult> readTasks = dataset.TASK_readFileListAsDataset(paths, dsp);
+		final ExecutorSet<DatasetReadResult> readTasks = dataset.asyncReadFileListAsDataset(paths, dsp);
 
 
 		

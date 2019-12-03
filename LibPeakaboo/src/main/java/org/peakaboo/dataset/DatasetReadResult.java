@@ -1,11 +1,9 @@
 package org.peakaboo.dataset;
 
-public class DatasetReadResult
-{
+public class DatasetReadResult {
 
 
-	public enum ReadStatus
-	{
+	public enum ReadStatus {
 		SUCCESS,
 		CANCELLED,
 		FAILED;	
@@ -15,24 +13,20 @@ public class DatasetReadResult
 	public String message;
 	public Throwable problem;
 	
-	public DatasetReadResult(ReadStatus result)
-	{
+	public DatasetReadResult(ReadStatus result) {
 		this(result, "");
 	}
 	
-	public DatasetReadResult(ReadStatus result, String message)
-	{
+	public DatasetReadResult(ReadStatus result, String message) {
 		this.status = result;
 		this.message = message;
 	}
 	
-	public DatasetReadResult(Throwable problem)
-	{
+	public DatasetReadResult(Throwable problem) {
 		this(problem, problem.getMessage());
 	}
 	
-	public DatasetReadResult(Throwable problem, String message)
-	{
+	public DatasetReadResult(Throwable problem, String message) {
 		this.status = ReadStatus.FAILED;
 		this.message = message;
 		this.problem = problem;
