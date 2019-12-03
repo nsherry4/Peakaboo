@@ -13,6 +13,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 public interface DataSink {
 
+	//TODO: How should this work w/ DataFile being used in DataSource?
 	void write(DataSource source, Path destination) throws IOException;
 
 	String getFormatExtension();

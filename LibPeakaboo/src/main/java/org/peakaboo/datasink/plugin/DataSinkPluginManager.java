@@ -36,7 +36,6 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 		builtins = new BoltJavaBuiltinLoader<>(JavaDataSinkPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
-		//TODO: Add script loader
 	}
 	
 	private void registerCustomPlugins() {
