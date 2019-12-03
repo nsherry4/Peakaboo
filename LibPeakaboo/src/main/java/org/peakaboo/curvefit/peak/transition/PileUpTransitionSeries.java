@@ -45,7 +45,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 	PileUpTransitionSeries(PileUpTransitionSeries other) {
 		this.visible = other.visible;
 		this.primaries = other.primaries.stream().map(ITransitionSeries::copy).collect(Collectors.toList());
-		if (this.primaries.size() == 0) {
+		if (this.primaries.isEmpty()) {
 			throw new IllegalArgumentException("No Primary Transitions Found");
 		}
 		this.transitions = new ArrayList<>(other.transitions);
@@ -74,17 +74,14 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 	
 	@Override
 	public int hashCode() {
-		return getPrimaryTransitionSeries().stream().map(ts -> ts.hashCode()).reduce(0, (a, b) -> a + b);
+		return getPrimaryTransitionSeries().stream().map(ITransitionSeries::hashCode).reduce(0, (a, b) -> a + b);
 	}
 		
 	@Override
 	public int compareTo(ITransitionSeries o) {
-		if (o.getElement() == getElement())
-		{
+		if (o.getElement() == getElement()) {
 			return -getShell().compareTo(o.getShell());
-		}
-		else
-		{
+		} else {
 			return -getElement().compareTo(o.getElement());
 		}
 	}
@@ -110,7 +107,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 		return primaries.stream()
 				.map(p -> p.getElement())
 				.min((a, b) -> Integer.compare(a.atomicNumber(), b.atomicNumber()))
-				.get();
+				.orElse(null);
 	}
 
 	@Override
@@ -130,7 +127,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 
 	@Override
 	public boolean hasTransitions() {
-		return transitions.size() != 0;
+		return !transitions.isEmpty();
 	}
 
 

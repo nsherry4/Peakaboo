@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 
 
-public class Transition implements Serializable, Comparable<Transition>{
+public class Transition implements Serializable, Comparable<Transition> {
 
 	/**
 	 * The energy value of this transition -- where the peak will be centred
@@ -29,8 +29,7 @@ public class Transition implements Serializable, Comparable<Transition>{
 	 * @param energyValue energy value of this Transition
 	 * @param relativeIntensity relative intensity of this Transition
 	 */
-	public Transition(float energyValue, float relativeIntensity, String name){
-
+	public Transition(float energyValue, float relativeIntensity, String name) {
 		this.energyValue = energyValue;
 		this.relativeIntensity = relativeIntensity;
 		this.name = name;
@@ -53,21 +52,38 @@ public class Transition implements Serializable, Comparable<Transition>{
 		return 0;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof Transition)) {
+			return false;
+		}
+		Transition ot = (Transition) other;
+		if (energyValue != ot.energyValue) { return false; }
+		if (relativeIntensity != ot.relativeIntensity) { return false; }
+		if (!name.equals(ot.name)) { return false; }
+		
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return (int) (energyValue + relativeIntensity + name.hashCode());
+	}
+	
 	/**
 	 * Creates a new Transition representing the effect of a detector recording both this Transition and the other given Transition simultaneously
 	 * @param other the other Transition
 	 * @return a new Transition representing simultaneous detection of both
 	 */
-	public Transition summation(Transition other)
-	{
+	public Transition summation(Transition other) {
 		return new Transition(energyValue + other.energyValue, relativeIntensity * other.relativeIntensity, "(" + this.name + " + " + other.name + ")");
 	}
 
 	
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "Transition '" + this.name + "': " + energyValue + "keV @ " + relativeIntensity;
 	}
+
 	
 }

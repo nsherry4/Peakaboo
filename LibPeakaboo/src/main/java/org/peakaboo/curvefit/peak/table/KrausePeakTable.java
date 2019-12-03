@@ -38,7 +38,6 @@ public class KrausePeakTable implements PeakTable {
 	}
 
 	public void readPeakTableManual() {
-		//PeakTable.clearSeries();
 		
 		int elementDataWidth = 2;
 
@@ -47,7 +46,7 @@ public class KrausePeakTable implements PeakTable {
 		
 
 		String line;
-		List<String> elements = new ArrayList<String>();
+		List<String> elements = new ArrayList<>();
 
 		try {
 
@@ -78,18 +77,11 @@ public class KrausePeakTable implements PeakTable {
 			lineSplit = element.split("\t");
 			sections = Arrays.asList(lineSplit);
 
-			//name
-			//Integer.parseInt(sections.get(0));
-			
-			//number
-			//sections.get(1);
 
 			int column = 2;
 
 			Transition k1, k2, k3;
 
-			// table.addElement( createTransition(sections, name, number,
-			// TransitionType.esc, column++) );
 
 
 			Element e = Element.values()[atomicNumber];
@@ -98,14 +90,11 @@ public class KrausePeakTable implements PeakTable {
 			PrimaryTransitionSeries ts = new PrimaryTransitionSeries(e, TransitionShell.K);
 
 			//escape
-			//createTransition(sections, column);
 			column += elementDataWidth;
 
-			// ts.setTransition(TransitionType.esc, esc);
 
 			// ka
 			//k
-			//createTransition(sections, column);
 			column += elementDataWidth;
 			k1 = createTransition(sections, column);
 			column += elementDataWidth;
@@ -119,7 +108,6 @@ public class KrausePeakTable implements PeakTable {
 
 			// kB
 			//k
-			//createTransition(sections, column);
 			column += elementDataWidth;
 			k1 = createTransition(sections, column);
 			column += elementDataWidth;
@@ -133,14 +121,11 @@ public class KrausePeakTable implements PeakTable {
 			ts.addTransition(k3);
 
 			add(ts);
-			//table.addSeries(ts.pileup());
-
 
 			ts = new PrimaryTransitionSeries(e, TransitionShell.L);
 			Transition la, lb1, lb2, lg1, lg2, lg3, lg4, ll;
 
 			//escape
-			//createTransition(sections, column);
 			column += elementDataWidth;
 
 			la = createTransition(sections, column);
@@ -184,15 +169,12 @@ public class KrausePeakTable implements PeakTable {
 			Transition ma1, mb1, mg;
 
 			//escape
-			//createTransition(sections, column);
 			column += elementDataWidth;
 
 			//mz
-			//createTransition(sections, column);
 			column += elementDataWidth;
 			
 			//unknown
-			//createTransition(sections, column);
 			column += elementDataWidth;
 			ma1 = createTransition(sections, column);
 			column += elementDataWidth;

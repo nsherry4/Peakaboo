@@ -33,9 +33,7 @@ public class CombinedPeakTable implements PeakTable {
 				return shellDiff;
 			}
 			
-			int zDiff = t1.getElement().atomicNumber() - t2.getElement().atomicNumber();
-			return zDiff;
-			
+			return t1.getElement().atomicNumber() - t2.getElement().atomicNumber();			
 		});
 		
 	}

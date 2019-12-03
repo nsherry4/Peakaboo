@@ -12,19 +12,16 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
  * @author NAS
  *
  */
-public class SerializedTransitionSeries
-{
+public class SerializedTransitionSeries {
 
 	public List<String> components;
 	public boolean visible;
 
-	public SerializedTransitionSeries()
-	{
-		components = new ArrayList<String>();
+	public SerializedTransitionSeries() {
+		components = new ArrayList<>();
 	}
 	
-	public SerializedTransitionSeries(ITransitionSeries ts)
-	{
+	public SerializedTransitionSeries(ITransitionSeries ts) {
 		this();
 		
 		components.clear();
@@ -38,8 +35,7 @@ public class SerializedTransitionSeries
 	}
 	
 
-	public Optional<ITransitionSeries> toTS()
-	{
+	public Optional<ITransitionSeries> deserialize() {
 		
 		List<ITransitionSeries> tss = new ArrayList<>();
 		ITransitionSeries created;
