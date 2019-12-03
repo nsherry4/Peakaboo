@@ -1,6 +1,8 @@
 package org.peakaboo.controller.mapper.selection;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +19,9 @@ class ShapeSelection extends AbstractSelection {
 
 	private List<Integer> points = new ArrayList<>();
 	
-	private int EMPTY = 0;
-	private int INSIDE = 1;
-	private int OUTSIDE = 2;
+	private static final int EMPTY = 0;
+	private static final int INSIDE = 1;
+	private static final int OUTSIDE = 2;
 	
 	
 	public ShapeSelection(MappingController mappingController) {
@@ -41,7 +43,7 @@ class ShapeSelection extends AbstractSelection {
 		// if there are already points in this trace, we want to make sure that the
 		// points are all contiguous. If a mouse is moving very fast, we might not get
 		// all of the points, so we interpolate
-		if (points.size() > 0) {
+		if (!points.isEmpty()) {
 			//check if the last point is touching
 			int lastIndex = points.get(points.size()-1);
 			IntPair lastPoint = grid.getXYFromIndex(lastIndex);
@@ -86,7 +88,7 @@ class ShapeSelection extends AbstractSelection {
 		}
 		
 		//if there *are* no outside edge points, then the entire area is selected
-		if (outside.size() == 0) {
+		if (outside.isEmpty()) {
 			points.clear();
 			for (int i = 0; i < grid.width*grid.height; i++) {
 				points.add(i);
@@ -112,7 +114,7 @@ class ShapeSelection extends AbstractSelection {
 			values.set(i, OUTSIDE);
 		}
 		//then floodfill the values matrix from each original outside point
-		Stack<Integer> stack = new Stack<>();
+		Deque<Integer> stack = new ArrayDeque<>();
 		stack.addAll(outside);
 		floodFill(values, stack, grid);
 		
@@ -125,8 +127,8 @@ class ShapeSelection extends AbstractSelection {
 		}
 	}
 	
-	private void floodFill(List<Integer> values, Stack<Integer> stack, GridPerspective<Float> grid) {	
-		while (stack.size() > 0) {
+	private void floodFill(List<Integer> values, Deque<Integer> stack, GridPerspective<Float> grid) {	
+		while (!stack.isEmpty()) {
 			int index = stack.pop();
 			values.set(index, OUTSIDE);
 
@@ -195,8 +197,8 @@ class ShapeSelection extends AbstractSelection {
 		//advance along the line and add all the pixels we encounter
 		float x = x1;
 		float y = y1;
-		int ix = x1;
-		int iy = y1;
+		int ix;
+		int iy;
 		int index;
 		for (float pos = 0f; pos < distance; pos += advance) {
 			
@@ -215,7 +217,7 @@ class ShapeSelection extends AbstractSelection {
 	}
 	
 	private GridPerspective<Float> grid() {
-		return new GridPerspective<Float>(size().x, size().y, 0f);
+		return new GridPerspective<>(size().x, size().y, 0f);
 	}
 	
 	private Coord<Integer> bounded(Coord<Integer> point) {

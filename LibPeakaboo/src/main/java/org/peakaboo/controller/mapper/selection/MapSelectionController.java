@@ -92,11 +92,10 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 
 
 	public boolean hasSelection() {
-		return currentSelection.size() > 0 || newSelection.size() > 0;
+		return ! (currentSelection.isEmpty() && newSelection.isEmpty());
 	}
 
 	public List<Integer> getPoints(boolean translated) {
-		//return currentSelection;
 		List<Integer> points = mergeSelections(dragFocalPoint, modify);
 		if (translated) {
 			return trimSelectionToBounds(translate(points), true);
@@ -180,14 +179,14 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	private List<Integer> mergeSelections(Coord<Integer> point, boolean modify) {
 		List<Integer> merged = new ArrayList<>();
 		if (!modify) {
-			if (newSelection.size() > 0) {
-				merged.addAll(newSelection);
-			} else {
+			if (newSelection.isEmpty()) {
 				merged.addAll(currentSelection);
+			} else {
+				merged.addAll(newSelection);				
 			}
 		} else {
 			Set<Integer> set = new HashSet<>();
-			GridPerspective<Float> grid = new GridPerspective<Float>(size().x, size().y, 0f);
+			GridPerspective<Float> grid = new GridPerspective<>(size().x, size().y, 0f);
 			
 			set.addAll(currentSelection);
 			if (set.contains(grid.getIndexFromXY(point)))	{

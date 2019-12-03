@@ -30,7 +30,7 @@ public class CompositeModeController extends ModeController {
 			data = sumVisibleMaps();
 		}
 		
-		GridPerspective<Float>	grid	= new GridPerspective<Float>(
+		GridPerspective<Float>	grid	= new GridPerspective<>(
 				getMap().getUserDimensions().getUserDataWidth(),
 				getMap().getUserDimensions().getUserDataHeight(),
 				0.0f);
@@ -41,10 +41,8 @@ public class CompositeModeController extends ModeController {
 
 		int w = getMap().getFiltering().getFilteredDataWidth();
 		int h = getMap().getFiltering().getFilteredDataHeight();
-		Coord<Integer> size = new Coord<Integer>(w, h);
-		CompositeModeData modedata = new CompositeModeData(data, size);
-		
-		return modedata;
+		Coord<Integer> size = new Coord<>(w, h);
+		return new CompositeModeData(data, size);
 		
 	}
 

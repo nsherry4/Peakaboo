@@ -21,13 +21,13 @@ public class RawDataModel
 	public SISize					realDimensionsUnits;
 	
 	
-	public Coord<Integer>			originalDimensions	= new Coord<Integer>(1, 1);
+	public Coord<Integer>			originalDimensions	= new Coord<>(1, 1);
 	public boolean					originalDimensionsProvided = false;
 	
 	public RawMapSet				mapResults			= null;
 	public String					datasetTitle		= "";
 	
-	public List<Integer>			badPoints			= new ArrayList<Integer>();
+	public List<Integer>			badPoints			= new ArrayList<>();
 	public CalibrationProfile 		calibrationProfile	= new CalibrationProfile();
 	
 

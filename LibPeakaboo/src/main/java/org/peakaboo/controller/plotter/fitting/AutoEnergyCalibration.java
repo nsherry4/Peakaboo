@@ -21,6 +21,9 @@ import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 
 public class AutoEnergyCalibration {
 
+	private AutoEnergyCalibration() {
+		// Not Constructable
+	}
 
 	/**
 	 * Generates a list of all possible energy calibration candidates

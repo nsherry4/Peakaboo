@@ -18,6 +18,7 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.Spectrum;
 
@@ -38,8 +39,8 @@ class SimilarSelection extends AbstractSelection {
 	
 	public SimilarSelection(MappingController map) {
 		super(map);
-		threshold = new Parameter<Float>("Threshold", new RealSpinnerStyle(), 1.2f, t -> t.getValue() >= 1f && t.getValue() <= 100f);
-		padding = new Parameter<Integer>("Padding", new IntegerSpinnerStyle(), 0, t -> t.getValue() >= 0 && t.getValue() <= 10);
+		threshold = new Parameter<>("Threshold", new RealSpinnerStyle(), 1.2f, t -> t.getValue() >= 1f && t.getValue() <= 100f);
+		padding = new Parameter<>("Padding", new IntegerSpinnerStyle(), 0, t -> t.getValue() >= 0 && t.getValue() <= 10);
 		parameters = new Group("Settings", threshold, padding);
 	}
 
@@ -52,27 +53,38 @@ class SimilarSelection extends AbstractSelection {
 		List<Integer> invalid = new ArrayList<>();
 		
 
-		
-		if (displayMode == MapModes.COMPOSITE) {
+		switch(displayMode) {
+		case COMPOSITE:
 			CompositeModeData compositeData = (CompositeModeData) map.getFitting().getMapModeData();
 			data = compositeData.getData();
-		} else if (displayMode == MapModes.RATIO) {
+			break;
+		
+		case CORRELATION:
+			CorrelationModeData correlationData = (CorrelationModeData) map.getFitting().getMapModeData();
+			data = correlationData.data;
+			break;
+
+		case RATIO:
 			RatioModeData ratiodata = (RatioModeData) map.getFitting().getMapModeData();
-			data = ratiodata.getData().first;
+			//we modity ratio data, so we make it a copy
+			data = new ISpectrum(ratiodata.getData().first);
 			Spectrum invalidMap = ratiodata.getData().second;
 			for (int i = 0; i < invalidMap.size(); i++) {
 				if (invalidMap.get(i) > 0f) {
 					invalid.add(i);
 				}
 			}
-		} else if (displayMode == MapModes.CORRELATION) {
-			CorrelationModeData correlationData = (CorrelationModeData) map.getFitting().getMapModeData();
-			data = correlationData.data;
+			break;
+			
+		case OVERLAY:
+		default:
+			throw new UnsupportedOperationException("Cannot perform similarity-based selection on this map mode");
 		}
+
 		
 		int w = size().x;
 		int h = size().y;
-		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
+		GridPerspective<Float> grid = new GridPerspective<>(w, h, null);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		
 		//If we're selecting on a ratio map, and the selected point is 1:10 instead of 10:1,
@@ -85,54 +97,11 @@ class SimilarSelection extends AbstractSelection {
 		}
 
 		
-		List<Integer> points = new ArrayList<>();
-		float thresholdValue = threshold.getValue();
+		List<Integer> points;
 		if (! contiguous) {
-			//All points, even those not touching
-			for (int y : new Range(0, h-1)) {
-				for (int x : new Range(0, w-1)) {
-					float other = grid.get(data, x, y);
-					// match +/- threshold percent
-					float otherMin = other / thresholdValue;
-					float otherMax = other * thresholdValue;
-					if (value >= otherMin && value <= otherMax) {
-						points.add(grid.getIndexFromXY(x, y));
-					}
-				}
-			}
+			points = selectNonContiguous(data, value, grid);
 		} else {
-			Set<Integer> pointSet = new HashSet<>();
-			int point = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
-			points.add(point);
-			pointSet.add(point);
-			int cursor = 0;
-			while (cursor < points.size()) {
-				point = points.get(cursor);
-				int x, y;
-				
-				int[] neighbours = new int[] {grid.north(point), grid.south(point), grid.east(point), grid.west(point)};
-				for (int neighbour : neighbours) {
-					//out-of-bounds, re-tread checks
-					if (neighbour == -1) continue;
-					if (pointSet.contains(neighbour)) continue;
-					
-					x = grid.getXYFromIndex(neighbour).first;
-					y = grid.getXYFromIndex(neighbour).second;
-					
-					float other = grid.get(data, x, y);
-					// match * or / threshold percent (eg threshold=1.2 so (other/1.2, other*1.2) 
-					float otherMin = other / thresholdValue;
-					float otherMax = other * thresholdValue;
-					if (value >= otherMin && value <= otherMax) {
-						points.add(neighbour);
-						pointSet.add(neighbour);
-					}
-				}
-
-				cursor++;
-			}
-			
-			
+			points = selectContiguous(data, clickedAt, grid);
 		}
 		
 		int paddingValue = padding.getValue();
@@ -147,13 +116,74 @@ class SimilarSelection extends AbstractSelection {
 		
 	}
 	
+	private List<Integer> selectContiguous(Spectrum data, 
+			Coord<Integer> clickedAt,
+			GridPerspective<Float> grid
+		) {
+		
+		List<Integer> points = new ArrayList<>();
+		Set<Integer> pointSet = new HashSet<>();
+		float value = grid.get(data, clickedAt.x, clickedAt.y);
+		float thresholdValue = threshold.getValue();
+		int point = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
+		points.add(point);
+		pointSet.add(point);
+		int cursor = 0;
+		while (cursor < points.size()) {
+			point = points.get(cursor);
+			int x, y;
+			
+			int[] neighbours = new int[] {grid.north(point), grid.south(point), grid.east(point), grid.west(point)};
+			for (int neighbour : neighbours) {
+				//out-of-bounds, re-tread checks
+				if (neighbour == -1) continue;
+				if (pointSet.contains(neighbour)) continue;
+				
+				x = grid.getXYFromIndex(neighbour).first;
+				y = grid.getXYFromIndex(neighbour).second;
+				
+				float other = grid.get(data, x, y);
+				// match * or / threshold percent (eg threshold=1.2 so (other/1.2, other*1.2) 
+				float otherMin = other / thresholdValue;
+				float otherMax = other * thresholdValue;
+				if (value >= otherMin && value <= otherMax) {
+					points.add(neighbour);
+					pointSet.add(neighbour);
+				}
+			}
+
+			cursor++;
+		}
+		
+		return points;
+	}
+
+
+	private List<Integer> selectNonContiguous(Spectrum data, float value, GridPerspective<Float> grid) {
+		//All points, even those not touching
+		List<Integer> points = new ArrayList<>();
+		float thresholdValue = threshold.getValue();
+		for (int y : new Range(0, grid.height-1)) {
+			for (int x : new Range(0, grid.width-1)) {
+				float other = grid.get(data, x, y);
+				// match +/- threshold percent
+				float otherMin = other / thresholdValue;
+				float otherMax = other * thresholdValue;
+				if (value >= otherMin && value <= otherMax) {
+					points.add(grid.getIndexFromXY(x, y));
+				}
+			}
+		}
+		return points;
+	}
+	
 	private List<Integer> padSelection(List<Integer> points) {
 		Set<Integer> pointSet = new HashSet<>();
 		pointSet.addAll(points);
 	
 		int w = size().x;
 		int h = size().y;
-		GridPerspective<Float> grid = new GridPerspective<Float>(w, h, null);
+		GridPerspective<Float> grid = new GridPerspective<>(w, h, null);
 		
 		//visit all existing points
 		for (Integer point : points) {

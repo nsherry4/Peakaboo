@@ -175,7 +175,7 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	 * Returns true if the map data is being changed by the filters
 	 */
 	public boolean isFiltering() {
-		return filters.getAll().stream().map(f -> f.isEnabled()).reduce(false, (a, b) -> a || b);
+		return filters.getAll().stream().map(MapFilter::isEnabled).reduce(false, (a, b) -> a || b);
 	}
 	
 	public Coord<Bounds<Number>> getRealDimensions() {

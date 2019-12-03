@@ -115,7 +115,7 @@ public abstract class ModeController extends Eventful {
 	protected static String getDatasetTitle(List<ITransitionSeries> list)
 	{
 		
-		List<String> elementNames = list.stream().map(ts -> ts.toString()).collect(toList());
+		List<String> elementNames = list.stream().map(ITransitionSeries::toString).collect(toList());
 		String title = elementNames.stream().collect(joining(", "));
 		if (title == null) return "-";
 		return title;

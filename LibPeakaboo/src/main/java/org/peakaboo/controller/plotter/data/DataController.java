@@ -3,6 +3,7 @@ package org.peakaboo.controller.plotter.data;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -69,10 +70,11 @@ public class DataController extends Eventful
 	// =============================================
 	
 
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<DataFile> paths, DataSourcePlugin dsp, Consumer<DatasetReadResult> onResult)
-	{
+	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset(
+			List<DataFile> paths, 
+			DataSourcePlugin dsp, 
+			Consumer<DatasetReadResult> onResult) {
 
-		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final StandardDataSet dataset = new StandardDataSet();
 		final ExecutorSet<DatasetReadResult> readTasks = dataset.asyncReadFileListAsDataset(paths, dsp);
 
@@ -101,12 +103,9 @@ public class DataController extends Eventful
 					return;
 					
 				case FAILED:
+				case CANCELLED:
 					//Error reporting is handled at the UI level in this case. 
 					//Just don't try to read the result.
-					onResult.accept(result);
-					return;
-					
-				case CANCELLED:
 					onResult.accept(result);
 					return;
 				}
@@ -203,13 +202,14 @@ public class DataController extends Eventful
 			ReadOnlySpectrum next = dataModel.getScanData().get(nextIndex);
 			
 			
-			public boolean hasNext()
-			{
+			public boolean hasNext() {
 				return next != null;
 			}
 
-			public ReadOnlySpectrum next()
-			{
+			public ReadOnlySpectrum next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
 				ReadOnlySpectrum current = next;
 				nextIndex = dataModel.getScanData().firstNonNullScanIndex(nextIndex+1);
 				if (nextIndex == -1) {
@@ -220,8 +220,8 @@ public class DataController extends Eventful
 				return current;
 			}
 
-			public void remove()
-			{
+			@Override
+			public void remove() {
 				throw new UnsupportedOperationException();
 			}};
 		

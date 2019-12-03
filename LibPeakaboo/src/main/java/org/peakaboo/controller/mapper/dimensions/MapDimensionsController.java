@@ -18,7 +18,7 @@ import org.peakaboo.framework.plural.streams.StreamExecutor;
 public class MapDimensionsController extends EventfulType<MapUpdateType>{
 
 	private MappingController mappingController;
-	private Coord<Integer> viewDimensions = new Coord<Integer>(1, 1);
+	private Coord<Integer> viewDimensions = new Coord<>(1, 1);
 	
 	public MapDimensionsController(MappingController mappingController) {
 		this.mappingController = mappingController;
@@ -26,7 +26,7 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 		if (mappingController.rawDataController.getOriginalDataDimensions() != null) {
 			viewDimensions = new Coord<>(mappingController.rawDataController.getOriginalDataWidth(), mappingController.rawDataController.getOriginalDataHeight());
 		} else {
-			viewDimensions = new Coord<Integer>(mappingController.rawDataController.getMapResultSet().getMap(0).size(), 1);
+			viewDimensions = new Coord<>(mappingController.rawDataController.getMapResultSet().getMap(0).size(), 1);
 		}
 		
 	}
@@ -166,6 +166,7 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 			}
 		}
 		
+		if (count == 0) { return 0; }
 		return delta/count;
 		
 	}

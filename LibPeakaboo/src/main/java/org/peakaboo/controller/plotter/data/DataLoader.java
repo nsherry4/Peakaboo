@@ -42,12 +42,11 @@ public abstract class DataLoader {
 		this.datafiles = datafiles;
 	}
 	
-	private void loadWithDataSource(DataSourcePlugin dsp)
-	{
-		if (datafiles != null)
-		{
+	private void loadWithDataSource(DataSourcePlugin dsp) {
+		
+		if (datafiles != null) {
 			
-			ExecutorSet<DatasetReadResult> reading = controller.data().TASK_readFileListAsDataset(datafiles, dsp, result -> {
+			ExecutorSet<DatasetReadResult> reading = controller.data().asyncReadFileListAsDataset(datafiles, dsp, result -> {
 					
 				if (result == null || result.status == ReadStatus.FAILED)
 				{
@@ -91,7 +90,7 @@ public abstract class DataLoader {
 	
 
 	public void load() {
-		if (datafiles.size() == 0) {
+		if (datafiles.isEmpty()) {
 			return;
 		}
 		
@@ -115,23 +114,16 @@ public abstract class DataLoader {
 		if (dataSourceUUID != null) {
 			formats.add(DataSourcePluginManager.SYSTEM.getByUUID(dataSourceUUID).create());
 		}
-		if (formats.size() == 0) {
+		if (formats.isEmpty()) {
 			List<DataSourcePlugin> candidates =  DataSourcePluginManager.SYSTEM.newInstances();
 			formats = DataSourceLookup.findDataSourcesForFiles(datafiles, candidates);
 		}
 		
-		if (formats.size() > 1)
-		{
-			onSelection(formats, datasource -> {
-				prompt(datasource);
-			});
-		}
-		else if (formats.size() == 0)
-		{
+		if (formats.size() > 1) {
+			onSelection(formats, this::prompt);
+		} else if (formats.isEmpty()) {
 			onFail(datafiles, "Could not determine the data format of the selected file(s)");
-		}
-		else
-		{
+		} else {
 			prompt(formats.get(0));
 		}
 		
@@ -204,7 +196,7 @@ public abstract class DataLoader {
 			}
 			
 			//If the data files in the saved session are different, offer to load the data set from the new session
-			if (sessionPathsExist && sessionPaths.size() > 0 && !sessionPaths.equals(currentPaths)) {
+			if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
 				
 				onSessionHasData(sessionFile, load -> {
 					if (load) {

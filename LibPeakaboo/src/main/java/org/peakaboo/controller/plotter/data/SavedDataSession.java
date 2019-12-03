@@ -18,7 +18,7 @@ public class SavedDataSession {
 	
 	public SavedDataSession storeFrom(DataController controller) {
 		this.discards = controller.getDiscards().list();
-		if (controller.getDataPaths().size() > 0 && controller.getDataPaths().get(0).addressable()) {
+		if (!controller.getDataPaths().isEmpty() && controller.getDataPaths().get(0).addressable()) {
 			this.files = controller.getDataPaths().stream().map(p -> p.address().get()).collect(Collectors.toList());	
 		}
 		this.dataSourcePluginUUID = controller.getDataSourcePluginUUID();

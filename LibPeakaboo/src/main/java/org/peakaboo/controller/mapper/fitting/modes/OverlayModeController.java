@@ -40,7 +40,7 @@ public class OverlayModeController extends ModeController {
 				.collect(toList());
 				
 
-		Map<OverlayColour, Spectrum> valueFunctionMaps = new HashMap<OverlayColour, Spectrum>();
+		Map<OverlayColour, Spectrum> valueFunctionMaps = new HashMap<>();
 		Map<OverlayColour, OverlayChannel> colourChannels = new HashMap<>();
 		
 		for (OverlayColour colour : OverlayColour.values()) {
@@ -56,8 +56,8 @@ public class OverlayModeController extends ModeController {
 					.map(e -> e.first)
 					.collect(toList());
 			
-			if (colourSpectrums != null && colourSpectrums.size() > 0) {
-				colourSpectrum = colourSpectrums.stream().reduce((a, b) -> SpectrumCalculations.addLists(a, b)).get();
+			if (colourSpectrums != null && !colourSpectrums.isEmpty()) {
+				colourSpectrum = colourSpectrums.stream().reduce(SpectrumCalculations::addLists).get();
 				valueFunctionMaps.put(colour, colourSpectrum);
 			} else {
 				colourSpectrum = null;
@@ -73,11 +73,9 @@ public class OverlayModeController extends ModeController {
 
 		int w = getMap().getFiltering().getFilteredDataWidth();
 		int h = getMap().getFiltering().getFilteredDataHeight();
-		Coord<Integer> size = new Coord<Integer>(w, h);
+		Coord<Integer> size = new Coord<>(w, h);
 		boolean relative = getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE;
-		OverlayModeData modedata = new OverlayModeData(colourChannels, size, relative);
-		
-		return modedata;
+		return new OverlayModeData(colourChannels, size, relative);
 		
 	}
 	

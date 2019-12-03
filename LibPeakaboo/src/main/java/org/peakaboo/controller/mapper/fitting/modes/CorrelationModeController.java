@@ -107,8 +107,6 @@ public class CorrelationModeController extends ModeController {
 		int index999 = (int)(xSorted.size() * 0.999f);
 		
 
-		//float s1max = s1Data.max();
-		//float s2max = s2Data.max();
 		//mnax value is 99.9th percentile in histogram
 		float xMax = xSorted.get(index999);
 		float yMax = ySorted.get(index999);
@@ -120,7 +118,7 @@ public class CorrelationModeController extends ModeController {
 		}
 		
 		
-		GridPerspective<Float> grid = new GridPerspective<Float>(bins, bins, 0f);
+		GridPerspective<Float> grid = new GridPerspective<>(bins, bins, 0f);
 		Spectrum correlation = new ISpectrum(bins*bins);
 		
 		//we track which points on the original (spatial) maps each bin in the correlation map

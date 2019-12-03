@@ -82,7 +82,7 @@ class DragSelection extends AbstractSelection {
 			return indexes;
 		}
 		
-		final GridPerspective<Float> grid = new GridPerspective<Float>(size().x, size().y, 0f);
+		final GridPerspective<Float> grid = new GridPerspective<>(size().x, size().y, 0f);
 		
 		switch (map.getSelection().getSelectionType()) {
 		case ELLIPSE:
@@ -188,8 +188,7 @@ class DragSelection extends AbstractSelection {
 
 	@Override
 	public List<Integer> releaseDragSelection(Coord<Integer> point) {
-		setEnd(point);
-		return getPoints();
+		return addDragSelection(point);
 	}
 	
 	

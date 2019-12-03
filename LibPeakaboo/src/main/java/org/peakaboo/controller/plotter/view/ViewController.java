@@ -203,9 +203,9 @@ public class ViewController extends Eventful
 		if (channel >= plot.data().getDataSet().getAnalysis().channelsPerScan()) return null;
 
 		PlotSpectra scans = plot.getDataForPlot();
-		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
+		if (scans == null) return new Pair<>(0.0f, 0.0f);
 
-		return new Pair<Float, Float>(scans.filtered.get(channel), scans.raw.get(channel));
+		return new Pair<>(scans.filtered.get(channel), scans.raw.get(channel));
 	}
 
 	

@@ -1,7 +1,8 @@
 package org.peakaboo.controller.plotter.undo;
 
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.eventful.Eventful;
@@ -14,8 +15,8 @@ public class UndoController extends Eventful
 	
 	
 	private UndoPoint currentState;
-	private Stack<UndoPoint> undoStack;
-	private Stack<UndoPoint> redoStack;
+	private Deque<UndoPoint> undoStack;
+	private Deque<UndoPoint> redoStack;
 	private boolean working = false;
 	
 	private UndoPoint lastSave;
@@ -24,8 +25,8 @@ public class UndoController extends Eventful
 	public UndoController(PlotController plotController)
 	{
 		this.plot = plotController;
-		undoStack = new Stack<UndoPoint>();
-		redoStack = new Stack<UndoPoint>();
+		undoStack = new ArrayDeque<>();
+		redoStack = new ArrayDeque<>();
 		lastSave = null;
 		currentState = null;
 		
