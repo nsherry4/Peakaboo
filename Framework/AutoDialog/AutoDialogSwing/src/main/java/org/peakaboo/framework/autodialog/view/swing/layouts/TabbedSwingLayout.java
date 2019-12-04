@@ -13,11 +13,10 @@ import org.peakaboo.framework.autodialog.model.Value;
 public class TabbedSwingLayout extends AbstractSwingLayout {
 
 	
-	private JTabbedPane tabs;
 	
 	public void layout() {
 		root.removeAll();
-		tabs = new JTabbedPane();
+		JTabbedPane tabs = new JTabbedPane();
 		root.setLayout(new BorderLayout());
 		
 		
@@ -29,7 +28,7 @@ public class TabbedSwingLayout extends AbstractSwingLayout {
 		}
 		Group general = new Group("General", generalList);
 		
-		if (general.getValue().size() > 0) {
+		if (!general.getValue().isEmpty()) {
 			tabs.addTab("General", null, SwingLayoutFactory.forGroup(general).getComponent(), null);
 		}
 		for (Value<?> value : group.getValue()) {

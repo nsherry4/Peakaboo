@@ -10,7 +10,7 @@ import org.peakaboo.framework.autodialog.view.swing.SwingView;
 
 public class FramesSwingLayout extends SimpleSwingLayout {
 
-	
+	@Override
 	protected JComponent component(SwingView view) {
 		if (view instanceof SwingLayout) {
 			//this is a layout (of a group). Put it in a frame

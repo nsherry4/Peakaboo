@@ -31,9 +31,7 @@ public class Test {
 	public static void main(String[] args) throws UnsupportedLookAndFeelException
 	{
 		UIManager.setLookAndFeel(new NimbusLookAndFeel());
-		Swidget.initialize(() -> {
-			gui();
-		}, "Test");
+		Swidget.initialize(Test::gui, "Test");
 	}
 			
 	public static void gui() {

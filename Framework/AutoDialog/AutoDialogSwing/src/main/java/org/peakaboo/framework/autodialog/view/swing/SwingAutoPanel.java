@@ -12,10 +12,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class SwingAutoPanel extends JPanel {
 
-	Group group;
-	
 	public SwingAutoPanel(Group group) {
-		this.group = group;
 		setLayout(new BorderLayout());
 		
 		JScrollPane scroller = new JScrollPane(SwingLayoutFactory.forGroup(group).getComponent());

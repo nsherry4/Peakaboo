@@ -4,8 +4,6 @@ package org.peakaboo.framework.autodialog.view.swing;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -27,15 +25,14 @@ import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 public class SwingAutoDialog extends LiveDialog
 {
 
-	//private IADController controller;
-	private Container parent;
+	private Container parentContainer;
 
 	private String helpTitle;
 	private String helpMessage;
 	
 	private Group group;
 	private AutoDialogButtons buttons;
-	private boolean selected_ok = false;
+	private boolean selectedOk = false;
 	
 	
 	private FluentButton info;
@@ -80,7 +77,7 @@ public class SwingAutoDialog extends LiveDialog
 		
 				
 		pack();
-		setLocationRelativeTo(parent);
+		setLocationRelativeTo(parentContainer);
 		setTitle(group.getName());
 		setVisible(true);
 	}
@@ -99,15 +96,12 @@ public class SwingAutoDialog extends LiveDialog
 			
 			FluentButton ok = new FluentButton("OK", StockIcon.CHOOSE_OK);
 			ok.addActionListener(e -> {
-				this.selected_ok = true;
-				System.err.println("Set OK");
+				this.selectedOk = true;
 				SwingAutoDialog.this.setVisible(false);
 			});
 			
 			FluentButton cancel = new FluentButton("Cancel", StockIcon.CHOOSE_CANCEL);
-			cancel.addActionListener(e -> {
-				SwingAutoDialog.this.setVisible(false);
-			});
+			cancel.addActionListener(e -> SwingAutoDialog.this.setVisible(false));
 			
 			bbox.addRight(0, cancel);
 			bbox.addRight(0, ok);
@@ -115,30 +109,26 @@ public class SwingAutoDialog extends LiveDialog
 		} else if (buttons == AutoDialogButtons.CLOSE) {
 			
 			FluentButton close = new FluentButton("Close", StockIcon.WINDOW_CLOSE);
-			close.addActionListener(e -> {
-				SwingAutoDialog.this.setVisible(false);
-			});
+			close.addActionListener(e -> SwingAutoDialog.this.setVisible(false));
 			
 			bbox.addRight(0, close);
 			
 		}
 		
 		
-		info = new FluentButton(StockIcon.BADGE_HELP).withTooltip("More Information").withLayout(FluentButtonLayout.IMAGE).withBordered(true);
-		info.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{	
-				JOptionPane.showMessageDialog(
+		info = new FluentButton(StockIcon.BADGE_HELP)
+				.withTooltip("More Information")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withBordered(true)
+				.withAction(() -> 
+					JOptionPane.showMessageDialog(
 						SwingAutoDialog.this, 
 						Swidget.lineWrapHTML(SwingAutoDialog.this, helpMessage),
 						helpTitle, 
 						JOptionPane.INFORMATION_MESSAGE, 
 						StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON)
-					);
-
-			}
-		});
+					)
+				);
 		info.setFocusable(false);
 		if (helpMessage == null) info.setVisible(false);
 		
@@ -174,17 +164,17 @@ public class SwingAutoDialog extends LiveDialog
 	}
 	
 	
-	
+	@Override
 	public Container getParent() {
-		return parent;
+		return parentContainer;
 	}
 
 	public void setParent(Container parent) {
-		this.parent = parent;
+		this.parentContainer = parent;
 	}
 
 	public boolean okSelected() {
-		return selected_ok;
+		return selectedOk;
 	}
 
 	public Group getGroup() {
