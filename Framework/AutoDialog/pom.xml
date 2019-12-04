@@ -19,7 +19,6 @@
 	<modules>
 		<module>AutoDialog</module>
 		<module>AutoDialogSwing</module>
-		<module>AutoDialogFX</module>
 	</modules>
 
 	<build>
