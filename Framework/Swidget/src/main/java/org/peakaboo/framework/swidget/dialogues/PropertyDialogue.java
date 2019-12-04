@@ -55,14 +55,8 @@ public class PropertyDialogue extends LiveDialog
 		
 		//Button Box
 		ButtonBox bbox = new ButtonBox();
-		FluentButton close = new FluentButton("Close", StockIcon.WINDOW_CLOSE);
-		close.addActionListener(new ActionListener() {
-		
-			public void actionPerformed(ActionEvent e)
-			{
-				PropertyDialogue.this.setVisible(false);
-			}
-		});
+		FluentButton close = new FluentButton("Close", StockIcon.WINDOW_CLOSE)
+				.withAction(() -> PropertyDialogue.this.setVisible(false));
 		bbox.addRight(0, close);
 		containerPanel.add(bbox, BorderLayout.SOUTH);
 		

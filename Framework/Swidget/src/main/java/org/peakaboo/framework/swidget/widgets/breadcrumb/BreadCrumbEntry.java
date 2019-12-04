@@ -30,9 +30,8 @@ public class BreadCrumbEntry<T> {
 		if (item.equals(parent.getSelected())) {
 			button.setSelected(true);
 		}
-		
-		button.addActionListener(e -> {
-			if (button.isSelected()) {
+		button.withAction(selected -> {
+			if (selected) {
 				parent.makeSelection(item);
 			}
 		});

@@ -5,8 +5,7 @@ import java.awt.Insets;
 import javax.swing.border.EmptyBorder;
 
 
-public class Spacing
-{
+public class Spacing {
 
 	public final static int none 	= 0;
 	public final static int tiny 	= 1;

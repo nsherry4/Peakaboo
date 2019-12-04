@@ -2,12 +2,14 @@ package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 
 import java.awt.Dimension;
+import java.util.function.Consumer;
 
 import javax.swing.JToggleButton;
 
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentCheckMenuItem;
 
 
 
@@ -68,8 +70,20 @@ public class FluentToggleButton extends JToggleButton implements FluentButtonAPI
 	}
 	
 	
+	public FluentToggleButton withSelected(boolean selected) {
+		setSelected(selected);
+		return getSelf();
+	}
 	
 	
+	public FluentToggleButton withAction(Consumer<Boolean> action) {
+		if (action == null) {
+			getComponentConfig().onAction = null;
+		} else {
+			getComponentConfig().onAction = () -> action.accept(this.isSelected());
+		}
+		return getSelf();
+	}
 	
 	
 

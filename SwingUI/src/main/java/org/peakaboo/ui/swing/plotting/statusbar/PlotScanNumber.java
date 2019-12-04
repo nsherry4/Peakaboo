@@ -25,7 +25,7 @@ public class PlotScanNumber extends ClearPanel {
 	
 	private JSpinner scanNo;
 	private JLabel scanLabel;
-	private JToggleButton scanBlock;
+	private FluentToggleButton scanBlock;
 	
 	public PlotScanNumber(PlotController controller) {
 		this.controller = controller;
@@ -37,7 +37,14 @@ public class PlotScanNumber extends ClearPanel {
 		scanLabel = new JLabel("Scan");
 		scanLabel.setBorder(Spacing.bSmall());
 		scanBlock = new FluentToggleButton(StockIcon.CHOOSE_CANCEL)
-				.withTooltip("Flag this scan to exclude it and extrapolate it from neighbouring points in maps");
+				.withTooltip("Flag this scan to exclude it and extrapolate it from neighbouring points in maps")
+				.withAction(selected -> {
+					if (selected) {
+						controller.data().getDiscards().discard(controller.view().getScanNumber());
+					} else {
+						controller.data().getDiscards().undiscard(controller.view().getScanNumber());
+					}
+				});
 		
 		this.add(scanLabel);
 		this.add(Box.createHorizontalStrut(2));
@@ -54,13 +61,6 @@ public class PlotScanNumber extends ClearPanel {
 		
 
 		scanBlock.setFocusable(false);
-		scanBlock.addActionListener(e -> {
-			if (scanBlock.isSelected()) {
-				controller.data().getDiscards().discard(controller.view().getScanNumber());
-			} else {
-				controller.data().getDiscards().undiscard(controller.view().getScanNumber());
-			}
-		});
 		
 		
 	}

@@ -39,14 +39,15 @@ public class TaskMonitorPanel extends JPanel {
 
 		this.setLayout(new BorderLayout());
 		
-		cancel = new FluentButton("Cancel").withStateCritical();
-		cancel.addActionListener(e -> {
-			List<TaskMonitorView> reversed = new ArrayList<>(observerViews);
-			Collections.reverse(reversed);
-			for (TaskMonitorView v : reversed) {
-				v.getExecutor().abort();
-			}
-		});
+		cancel = new FluentButton("Cancel")
+				.withStateCritical()
+				.withAction(() -> {
+					List<TaskMonitorView> reversed = new ArrayList<>(observerViews);
+					Collections.reverse(reversed);
+					for (TaskMonitorView v : reversed) {
+						v.getExecutor().abort();
+					}
+				});
 
 		
 		HeaderBox header = new HeaderBox(null, t, cancel);

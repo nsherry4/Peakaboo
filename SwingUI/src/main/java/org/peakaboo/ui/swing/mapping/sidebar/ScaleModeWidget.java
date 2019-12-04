@@ -34,22 +34,18 @@ public class ScaleModeWidget extends JPanel {
 			absoluteButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.ABSOLUTE);
 		});
 		
-		relativeButton = new FluentToggleButton(relative);
-		absoluteButton = new FluentToggleButton(absolute);
+		relativeButton = new FluentToggleButton(relative)
+				.withBorder(Spacing.bLarge())
+				.withSelected(viewController.getMapScaleMode() == MapScaleMode.RELATIVE)
+				.withAction(() -> viewController.setMapScaleMode(MapScaleMode.RELATIVE));
+		absoluteButton = new FluentToggleButton(absolute)
+				.withBorder(Spacing.bLarge())
+				.withSelected(viewController.getMapScaleMode() == MapScaleMode.ABSOLUTE)
+				.withAction(() -> viewController.setMapScaleMode(MapScaleMode.ABSOLUTE));
 		
 		ButtonGroup scaleGroup = new ButtonGroup();
 		scaleGroup.add(relativeButton);
 		scaleGroup.add(absoluteButton);
-		
-		
-		relativeButton.addActionListener(e -> viewController.setMapScaleMode(MapScaleMode.RELATIVE));
-		absoluteButton.addActionListener(e -> viewController.setMapScaleMode(MapScaleMode.ABSOLUTE));
-		
-		relativeButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.RELATIVE);
-		absoluteButton.setSelected(viewController.getMapScaleMode() == MapScaleMode.ABSOLUTE);
-		
-		styleButton(relativeButton);
-		styleButton(absoluteButton);
 		
 		ButtonBox box = new ButtonBox(0, false);
 		box.addLeft(absoluteButton);
@@ -59,15 +55,11 @@ public class ScaleModeWidget extends JPanel {
 			relativeButton.setToolTipText("This option gives qualitative results only");
 			relativeButton.setBackground(new Color(0x00FFA000));
 		}
-		
-		
+				
 		this.add(box, BorderLayout.CENTER);
 		
 	}
 	
-	private void styleButton(JToggleButton button) {
-		button.setBorder(Spacing.bLarge());
-		button.setPreferredSize(new Dimension(80, 32));
-	}
+
 	
 }

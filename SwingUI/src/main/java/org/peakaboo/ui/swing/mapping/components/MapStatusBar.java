@@ -50,8 +50,11 @@ public class MapStatusBar extends JPanel {
 		JPopupMenu zoomMenu = new JPopupMenu();
 		zoomMenu.setBorder(Spacing.bNone());
 		zoomMenu.add(zoom);
-		FluentButton zoomButton = new FluentButton(StockIcon.FIND).withTooltip("Zoom").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
-		zoomButton.addActionListener(e -> {
+		FluentButton zoomButton = new FluentButton(StockIcon.FIND)
+				.withTooltip("Zoom")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withBordered(false);
+		zoomButton.withAction(() -> {
 			int x = (int)((-zoomMenu.getPreferredSize().getWidth() + zoomButton.getSize().getWidth()) / 2f);
 			int y = (int)-zoomMenu.getPreferredSize().getHeight();
 			zoomMenu.show(zoomButton, x, y);

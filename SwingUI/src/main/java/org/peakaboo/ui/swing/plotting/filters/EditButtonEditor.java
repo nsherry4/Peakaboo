@@ -47,10 +47,11 @@ class EditButtonEditor extends DefaultCellEditor {
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
-		button.addActionListener(e -> fireEditingStopped());
-		button.setOpaque(false);
-		
+		button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL)
+				.withTooltip("Edit Filter")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withBordered(false)
+				.withAction(this::fireEditingStopped);
 		container = new JPanel();
 		container.setBorder(Spacing.bNone());
 	}

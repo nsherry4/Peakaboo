@@ -348,16 +348,17 @@ public class PlotPanel extends TabbedLayerPanel {
 				paramPanel.getHeader().setCentre("Options");
 				paramPanel.getHeader().setShowClose(false);
 				
-				FluentButton ok = new FluentButton("OK").withStateDefault();
-				ok.addActionListener(e -> {
-					PlotPanel.this.removeLayer(layer);
-					finished.accept(true);
-				});
-				FluentButton cancel = new FluentButton("Cancel");
-				cancel.addActionListener(e -> {
-					PlotPanel.this.removeLayer(layer);
-					finished.accept(false);
-				});
+				FluentButton ok = new FluentButton("OK")
+						.withStateDefault()
+						.withAction(() -> {
+							PlotPanel.this.removeLayer(layer);
+							finished.accept(true);
+						});
+				FluentButton cancel = new FluentButton("Cancel")
+						.withAction(() -> {
+							PlotPanel.this.removeLayer(layer);
+							finished.accept(false);
+						});
 				
 				paramPanel.getHeader().setLeft(cancel);
 				paramPanel.getHeader().setRight(ok);

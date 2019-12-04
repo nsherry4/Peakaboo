@@ -278,23 +278,19 @@ public class SavePicture extends JPanel
 
 	
 	private FluentButton saveButton() {
-		FluentButton ok = new FluentButton("Save");
-		ok.addActionListener(e -> {
+		return new FluentButton("Save").withAction(() -> {
 			Cursor oldCursor = getCursor();
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			saveSurfaceType(formatPicker.getSelectedSurfaceType());
 			setCursor(oldCursor);
 		});
-		return ok;
 	}
 
 	private FluentButton cancelButton() {
-		FluentButton cancel = new FluentButton("Cancel");
-		cancel.addActionListener(e -> {
+		return new FluentButton("Cancel").withAction(() -> {
 			onComplete.accept(Optional.empty());
 			hide();
 		});
-		return cancel;
 	}
 	
 

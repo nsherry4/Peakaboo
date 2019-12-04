@@ -128,12 +128,12 @@ public class PlotMenuEnergy extends JPopupMenu {
 		energyGuess = new FluentButton("Guess Calibration")
 				.withIcon("auto", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Try to detect the correct max energy value by matching fittings to strong signal. Use with care.")
-				.withBordered(false);
-		energyGuess.addActionListener(e -> {
-			//custom controls in a menu don't hide the menu when activated
-			this.setVisible(false);
-			plot.actionGuessMaxEnergy();	
-		});
+				.withBordered(false)
+				.withAction(() -> {
+					//custom controls in a menu don't hide the menu when activated
+					this.setVisible(false);
+					plot.actionGuessMaxEnergy();	
+				});
 		energy.addSetting(energyGuess);
 		
 		return energy;

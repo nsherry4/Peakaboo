@@ -94,22 +94,23 @@ public class SwingAutoDialog extends LiveDialog
 		
 		if (buttons == AutoDialogButtons.OK_CANCEL) {
 			
-			FluentButton ok = new FluentButton("OK", StockIcon.CHOOSE_OK);
-			ok.addActionListener(e -> {
-				this.selectedOk = true;
-				SwingAutoDialog.this.setVisible(false);
-			});
+			FluentButton ok = new FluentButton("OK")
+					.withStateDefault()
+					.withAction(() -> {
+						this.selectedOk = true;
+						SwingAutoDialog.this.setVisible(false);
+					});
 			
-			FluentButton cancel = new FluentButton("Cancel", StockIcon.CHOOSE_CANCEL);
-			cancel.addActionListener(e -> SwingAutoDialog.this.setVisible(false));
+			FluentButton cancel = new FluentButton("Cancel")
+					.withAction(() -> SwingAutoDialog.this.setVisible(false));
 			
-			bbox.addRight(0, cancel);
 			bbox.addRight(0, ok);
+			bbox.addRight(0, cancel);
 			
 		} else if (buttons == AutoDialogButtons.CLOSE) {
 			
-			FluentButton close = new FluentButton("Close", StockIcon.WINDOW_CLOSE);
-			close.addActionListener(e -> SwingAutoDialog.this.setVisible(false));
+			FluentButton close = new FluentButton("Close")
+					.withAction(() -> SwingAutoDialog.this.setVisible(false));
 			
 			bbox.addRight(0, close);
 			

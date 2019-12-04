@@ -55,14 +55,16 @@ public class PlotToolbar extends JToolBar {
 		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
-		FluentToolbarButton ibutton = new FluentToolbarButton("Open", "document-open").withTooltip("Open a new data set or session");
-		ibutton.addActionListener(e -> plot.actionOpenData());
+		FluentToolbarButton ibutton = new FluentToolbarButton("Open", "document-open")
+				.withTooltip("Open a new data set or session")
+				.withAction(plot::actionOpenData);
 		this.add(ibutton, c);
 
 
 		c.gridx += 1;
-		saveButton = new FluentToolbarButton("Save", StockIcon.DOCUMENT_SAVE_AS).withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use");
-		saveButton.withAction(plot::actionSaveSession);
+		saveButton = new FluentToolbarButton("Save", StockIcon.DOCUMENT_SAVE_AS)
+				.withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use")
+				.withAction(plot::actionSaveSession);
 		this.add(saveButton, c);
 		
 		c.gridx += 1;
@@ -143,28 +145,28 @@ public class PlotToolbar extends JToolBar {
 	private FluentToolbarButton createExportMenuButton() {
 		exportMenuButton = new FluentToolbarButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Data");
 		exportMenu = new PlotMenuExport(plot);
-		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
+		exportMenuButton.withAction(() -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
 		return exportMenuButton;
 	}
 
 	private FluentToolbarButton createEnergyMenuButton() {
 		FluentToolbarButton menuButton = new FluentToolbarButton().withIcon("menu-energy").withTooltip("Energy & Peak Calibration");
 		energyMenu = new PlotMenuEnergy(plot, controller);
-		menuButton.addActionListener(e -> energyMenu.show(menuButton, (int)(menuButton.getWidth() - energyMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
+		menuButton.withAction(() -> energyMenu.show(menuButton, (int)(menuButton.getWidth() - energyMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
 	
 	private FluentToolbarButton createMainMenuButton() {
 		FluentToolbarButton menuButton = new FluentToolbarButton(StockIcon.MENU_MAIN).withTooltip("Main Menu");
 		mainMenu = new PlotMenuMain(plot, controller);
-		menuButton.addActionListener(e -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
+		menuButton.withAction(() -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
 
 	private FluentToolbarButton createViewMenuButton() {
 		FluentToolbarButton menuButton = new FluentToolbarButton().withIcon("menu-view").withTooltip("Plot Settings Menu");
 		viewMenu = new PlotMenuView(plot, controller);
-		menuButton.addActionListener(e -> viewMenu.show(menuButton, (int)(menuButton.getWidth() - viewMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
+		menuButton.withAction(() -> viewMenu.show(menuButton, (int)(menuButton.getWidth() - viewMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
 		return menuButton;
 	}
 	

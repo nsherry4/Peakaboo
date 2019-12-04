@@ -25,9 +25,8 @@ public class HeaderTabBuilder {
 	
 	public void addTab(String title, Component component) {
 		body.add(component, title);
-		FluentToggleButton button = new FluentToggleButton(title).withAction(() -> {
-			layout.show(body, title);
-		});
+		FluentToggleButton button = new FluentToggleButton(title)
+				.withAction(() -> layout.show(body, title));
 		group.add(button);
 		linker.addButton(button);
 		

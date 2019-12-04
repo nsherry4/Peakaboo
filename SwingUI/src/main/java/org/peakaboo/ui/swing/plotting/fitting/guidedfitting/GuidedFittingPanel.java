@@ -20,8 +20,7 @@ import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 
 
-public class GuidedFittingPanel extends JPanel
-{
+public class GuidedFittingPanel extends JPanel {
 
 	private FittingController		controller;
 	private PlotCanvas				canvas;
@@ -34,8 +33,7 @@ public class GuidedFittingPanel extends JPanel
 	private List<ITransitionSeries>	potentials;
 
 
-	public GuidedFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas)
-	{
+	public GuidedFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas) {
 		this.controller = controller;
 		this.canvas = canvas;
 
@@ -44,16 +42,14 @@ public class GuidedFittingPanel extends JPanel
 		selControls = new SelectionListControls("Fittings", "Click Plot to Fit") {
 
 			@Override
-			protected void cancel()
-			{
+			protected void cancel() {
 				controller.clearProposedTransitionSeries();
 				owner.dialogClose();
 			}
 
 
 			@Override
-			protected void approve()
-			{
+			protected void approve() {
 				controller.commitProposedTransitionSeries();
 				owner.dialogClose();
 			}
@@ -84,8 +80,7 @@ public class GuidedFittingPanel extends JPanel
 	 * Flips the canvas between guided fitting (selection) mode (true) and normal
 	 * mode
 	 */
-	public void setSelectionMode(boolean mode)
-	{
+	public void setSelectionMode(boolean mode) {
 		if (mode)
 		{
 			guidedWidget.setTransitionSeriesOptions(null);
@@ -115,8 +110,7 @@ public class GuidedFittingPanel extends JPanel
 		}
 	}
 	
-	public void resetSelectors()
-	{
+	public void resetSelectors() {
 		guidedWidget.resetSelectors(true);
 	}
 

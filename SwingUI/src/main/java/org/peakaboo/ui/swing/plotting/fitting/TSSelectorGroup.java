@@ -38,7 +38,7 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable {
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
 		
-		addButton.addActionListener(e -> {
+		addButton.withAction(() -> {
 			addTSSelector(true);
 			addButton.requestFocusInWindow();
 		});
@@ -75,15 +75,13 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable {
 	
 	
 	protected FluentButton createRemoveButton(final TSSelector tss) {
-		FluentButton remove = new FluentButton()
+		return new FluentButton()
 				.withIcon(StockIcon.EDIT_REMOVE, IconSize.BUTTON)
 				.withTooltip("Remove")
 				.withLayout(FluentButtonLayout.IMAGE)
-				.withBordered(false);
+				.withBordered(false)
+				.withAction(() -> removeTSSelector(tss));
 
-		remove.addActionListener(e -> removeTSSelector(tss));
-
-		return remove;
 	}
 	
 	

@@ -118,42 +118,40 @@ public class MapDimensionsPanel extends JPanel {
 	
 	
 	private FluentButton makeGuessDimensionsButton(LayerPanel tabPanel, MappingController controller, boolean compact) {
-		FluentButton guessButton = new FluentButton(compact ? "Guess" : "Guess Dimensions")
+		return new FluentButton(compact ? "Guess" : "Guess Dimensions")
 				.withIcon("auto", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Try to detect the map's dimensions.")
 				.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
-				.withBordered(false);
-
-		guessButton.addActionListener(e -> {
-			StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
-			TaskMonitorView view = new TaskMonitorView(guessTask);
-			TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Dimensions", view);
-			ModalLayer layer = new ModalLayer(tabPanel, panel);
-			guessTask.addListener(event -> {
-				SwingUtilities.invokeLater(() -> {
-					if (event == Event.ABORTED) {
-						tabPanel.removeLayer(layer);
-					}
-					if (event == Event.COMPLETED) {
-					
-						tabPanel.removeLayer(layer);
-						
-						Coord<Integer> guess = guessTask.getResult().orElse(null);
-						if (guess != null) {
-							heightSpinner.setValue(1);
-							widthSpinner.setValue(1);
-							heightSpinner.setValue(guess.y);
-							widthSpinner.setValue(guess.x);
-						}							
-					}
-				});
-			});
-			tabPanel.pushLayer(layer);
-			guessTask.start();				
-
-		});
+				.withBordered(false)
+				.withAction(() -> {
+					StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
+					TaskMonitorView view = new TaskMonitorView(guessTask);
+					TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Dimensions", view);
+					ModalLayer layer = new ModalLayer(tabPanel, panel);
+					guessTask.addListener(event -> {
+						SwingUtilities.invokeLater(() -> {
+							if (event == Event.ABORTED) {
+								tabPanel.removeLayer(layer);
+							}
+							if (event == Event.COMPLETED) {
+							
+								tabPanel.removeLayer(layer);
+								
+								Coord<Integer> guess = guessTask.getResult().orElse(null);
+								if (guess != null) {
+									heightSpinner.setValue(1);
+									widthSpinner.setValue(1);
+									heightSpinner.setValue(guess.y);
+									widthSpinner.setValue(guess.x);
+								}							
+							}
+						});
+					});
+					tabPanel.pushLayer(layer);
+					guessTask.start();				
 		
-		return guessButton;
+				});
+		
 	}
 	
 	private FluentButton makeResetDimensionsButton(MappingController controller) {

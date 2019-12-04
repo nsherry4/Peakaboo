@@ -55,29 +55,28 @@ public class MapperToolbar extends JToolBar {
 			showConcentrations = new FluentToolbarButton("Concentration")
 					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
 					.withTooltip("Get fitting concentration for the selection")
-					.withSignificance(true);
-			
-			showConcentrations.addActionListener(e -> {
+					.withSignificance(true)
+					.withAction(() -> {
 				
-				List<Integer> indexes = controller.getSelection().getPoints(true);
-
-				List<ITransitionSeries> tss = controller.rawDataController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
-				Function<ITransitionSeries, Float> intensityFunction = ts -> {
-					CalibrationProfile profile = controller.getFitting().getCalibrationProfile();
-					ReadOnlySpectrum data = controller.rawDataController.getMapResultSet().getMap(ts).getData(profile);
-					float sum = 0;
-					for (int index : indexes) {
-						sum += data.get(index);
-					}
-					sum /= indexes.size();
-					return sum;
-				};
-				Concentrations ppm = Concentrations.calculate(tss, controller.getFitting().getCalibrationProfile(), intensityFunction);
-				
-				ConcentrationView concentrations = new ConcentrationView(ppm, panel);
-				panel.pushLayer(concentrations);
-								
-			});
+						List<Integer> indexes = controller.getSelection().getPoints(true);
+		
+						List<ITransitionSeries> tss = controller.rawDataController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
+						Function<ITransitionSeries, Float> intensityFunction = ts -> {
+							CalibrationProfile profile = controller.getFitting().getCalibrationProfile();
+							ReadOnlySpectrum data = controller.rawDataController.getMapResultSet().getMap(ts).getData(profile);
+							float sum = 0;
+							for (int index : indexes) {
+								sum += data.get(index);
+							}
+							sum /= indexes.size();
+							return sum;
+						};
+						Concentrations ppm = Concentrations.calculate(tss, controller.getFitting().getCalibrationProfile(), intensityFunction);
+						
+						ConcentrationView concentrations = new ConcentrationView(ppm, panel);
+						panel.pushLayer(concentrations);
+										
+					});
 			this.add(showConcentrations, c);
 			c.gridx++;
 		}
@@ -122,10 +121,17 @@ public class MapperToolbar extends JToolBar {
 
 	public static FluentToolbarButton createOptionsButton(MappingController controller) {
 		
-		FluentToolbarButton opts = new FluentToolbarButton();
-		opts.withIcon("menu-view").withTooltip("Map Settings Menu");
 		JPopupMenu menu = new MapMenuView(controller);
-		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
+		
+		FluentToolbarButton opts = new FluentToolbarButton()
+				.withIcon("menu-view")
+				.withTooltip("Map Settings Menu");
+		
+		opts.withAction(() -> {
+			int x = (int)(opts.getWidth() - menu.getPreferredSize().getWidth());
+			int y = opts.getHeight();
+			menu.show(opts, x, y);
+		});
 		
 		return opts;
 	}
@@ -134,7 +140,7 @@ public class MapperToolbar extends JToolBar {
 	private FluentToolbarButton createExportMenuButton(MapperPanel panel) {
 		FluentToolbarButton exportMenuButton = new FluentToolbarButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Maps");
 		JPopupMenu exportMenu = new MapMenuExport(panel);
-		exportMenuButton.addActionListener(e -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
+		exportMenuButton.withAction(() -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
 		return exportMenuButton;
 	}
 	

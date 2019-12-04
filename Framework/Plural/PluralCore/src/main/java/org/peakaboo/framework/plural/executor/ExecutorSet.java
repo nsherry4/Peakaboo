@@ -48,13 +48,9 @@ public abstract class ExecutorSet<T> extends Eventful implements Iterable<Plural
 		result = null;
 		this.description = description;
 
-		worker = new Thread(new Runnable() {
-
-			public void run()
-			{
-				T result = execute();
-				setResult(result);
-			}
+		worker = new Thread(() -> {
+			T workResult = execute();
+			setResult(workResult);
 		});
 		worker.setName(description);
 
@@ -117,13 +113,7 @@ public abstract class ExecutorSet<T> extends Eventful implements Iterable<Plural
 	{
 		e.setExecutorSet(this);
 		
-		e.addListener(new EventfulListener() {
-
-			public void change()
-			{
-				updateListeners();
-			}
-		});
+		e.addListener(this::updateListeners);
 		executors.add(e);
 	}
 	
