@@ -10,8 +10,7 @@ import javax.swing.event.ChangeListener;
 import org.peakaboo.framework.autodialog.model.Parameter;
 
 
-public class IntegerEditor extends AbstractSwingEditor<Integer>
-{
+public class IntegerEditor extends AbstractSwingEditor<Integer> {
 
 	private JSpinner control;
 	
@@ -20,63 +19,51 @@ public class IntegerEditor extends AbstractSwingEditor<Integer>
 	}
 	
 	@Override
-	public void initialize(Parameter<Integer> param)
-	{	
+	public void initialize(Parameter<Integer> param) {	
 		this.param = param;
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
 		control.getEditor().setPreferredSize(new Dimension(70, control.getEditor().getPreferredSize().height));
 		control.setValue(param.getValue());
 
-		
-		control.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue(getEditorValue())) {
-					validateFailed();
-				}
+		control.addChangeListener(e -> {
+			getEditorValueHook().updateListeners(getEditorValue());
+			if (!param.setValue(getEditorValue())) {
+				validateFailed();
 			}
 		});
 	}
 	
 	@Override
-	public boolean expandVertical()
-	{
+	public boolean expandVertical() {
 		return false;
 	}
 
 	@Override
-	public boolean expandHorizontal()
-	{
+	public boolean expandHorizontal() {
 		return false;
 	}
 
 	@Override
-	public LabelStyle getLabelStyle()
-	{
+	public LabelStyle getLabelStyle() {
 		return LabelStyle.LABEL_ON_SIDE;
 	}
 
 	@Override
-	public JComponent getComponent()
-	{
+	public JComponent getComponent() {
 		return control;
 	}
 
 	@Override
-	public void setEditorValue(Integer value)
-	{
+	public void setEditorValue(Integer value) {
 		control.setValue(value);
 	}
 
 	@Override
-	public Integer getEditorValue()
-	{
+	public Integer getEditorValue() {
 		return (Integer)control.getValue();
 	}
 	

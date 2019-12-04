@@ -40,7 +40,9 @@ public class SeparatorEditor extends AbstractSwingEditor<Object> {
 	}
 
 	@Override
-	public void setEditorValue(Object value) {}
+	public void setEditorValue(Object value) {
+		//NOOP
+	}
 
 	@Override
 	public Object getEditorValue() {
@@ -53,6 +55,8 @@ public class SeparatorEditor extends AbstractSwingEditor<Object> {
 	}
 	
 	@Override
-	protected void setEnabled(boolean enabled) {}
+	protected void setEnabled(boolean enabled) {
+		//NOOP
+	}
 	
 }

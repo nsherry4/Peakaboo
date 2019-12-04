@@ -13,7 +13,6 @@ public class IntegerSliderEditor extends WrappingEditor<Integer, JSlider> {
 	public IntegerSliderEditor() {
 		this(new JSlider());
 		component.setPreferredSize(new Dimension(150, 0));
-		
 	}
 	
 	public IntegerSliderEditor(JSlider component) {
@@ -22,7 +21,7 @@ public class IntegerSliderEditor extends WrappingEditor<Integer, JSlider> {
 
 	
 	@Override
-	public void setEditorValue(Integer value){
+	public void setEditorValue(Integer value) {
 		getComponent().setValue(value);
 	}
 	
@@ -33,16 +32,12 @@ public class IntegerSliderEditor extends WrappingEditor<Integer, JSlider> {
 
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
-		getComponent().addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue(getEditorValue())) {
-					validateFailed();
-				}
+		getComponent().addChangeListener(e -> {
+			getEditorValueHook().updateListeners(getEditorValue());
+			if (!param.setValue(getEditorValue())) {
+				validateFailed();
 			}
 		});				
 	}

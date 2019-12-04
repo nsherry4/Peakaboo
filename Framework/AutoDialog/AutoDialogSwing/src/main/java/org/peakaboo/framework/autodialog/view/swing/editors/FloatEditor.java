@@ -11,8 +11,7 @@ import javax.swing.event.ChangeListener;
 import org.peakaboo.framework.autodialog.model.Parameter;
 
 
-public class FloatEditor extends AbstractSwingEditor<Float>
-{
+public class FloatEditor extends AbstractSwingEditor<Float> {
 
 	private JSpinner control;
 	
@@ -21,13 +20,12 @@ public class FloatEditor extends AbstractSwingEditor<Float>
 	}
 	
 	@Override
-	public void initialize(Parameter<Float> param)
-	{
+	public void initialize(Parameter<Float> param) {
 		this.param = param;
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
 		
 		control.setModel(new SpinnerNumberModel((Float)param.getValue(), null, null, 0.1f));
@@ -35,14 +33,10 @@ public class FloatEditor extends AbstractSwingEditor<Float>
 		control.setValue((Float)param.getValue());
 		
 		
-		control.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue(getEditorValue())) {
-					validateFailed();
-				}
+		control.addChangeListener(e -> {
+			getEditorValueHook().updateListeners(getEditorValue());
+			if (!param.setValue(getEditorValue())) {
+				validateFailed();
 			}
 		});
 

@@ -23,8 +23,7 @@ public abstract class AbstractSwingEditor<T> implements SwingEditor<T> {
 	}
 	
 	@Override
-	public final void setFromParameter()
-	{
+	public final void setFromParameter() {
 		boolean equiv = false;
 		if (param.getValue() == null && getEditorValue() == null) {
 			equiv = true;
