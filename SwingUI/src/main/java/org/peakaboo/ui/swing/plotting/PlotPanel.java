@@ -17,8 +17,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -589,10 +591,14 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
 
-		ExecutorSet<Void> writer = DataSink.write(source, sink, file.toPath());
-		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
-		pushLayer(layer);
-		writer.startWorking();
+		try (OutputStream os = new FileOutputStream(file)) {
+			ExecutorSet<Void> writer = DataSink.write(source, sink, os);
+			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
+			pushLayer(layer);
+			writer.startWorking();
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Could not export data", e);
+		}
 
 	}
 	
