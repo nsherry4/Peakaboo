@@ -50,10 +50,8 @@ public class Group implements Value<List<Value<?>>> {
 		
 	}
 	
-	public String toString()
-	{
-		String str =  "Group: " + getName();
-		return str;
+	public String toString() {
+		return "Group: " + getName();
 	}
 
 	@Override
