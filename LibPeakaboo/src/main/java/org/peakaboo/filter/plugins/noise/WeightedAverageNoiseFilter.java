@@ -56,7 +56,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
-		data = WeightedMovingAverage(data, reach.getValue());
+		data = weightedMovingAverage(data, reach.getValue());
 		return data;
 	}
 
@@ -93,7 +93,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 	 *            the distance from the centrepoint to an edge of the set of numbers being averaged
 	 * @return a moving-average smoothed data set
 	 */
-	public static Spectrum WeightedMovingAverage(ReadOnlySpectrum data, int windowSpan) {
+	public static Spectrum weightedMovingAverage(ReadOnlySpectrum data, int windowSpan) {
 
 		/*
 		 * for a windowSpan n, the center-point's weight will be 2^n. 
@@ -132,7 +132,11 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 				pos++;
 			}
 
-			smoothed.set(i, sum / totalWeight);
+			if (totalWeight == 0) {
+				smoothed.set(i, 0);
+			} else {
+				smoothed.set(i, sum / totalWeight);
+			}
 
 		}
 

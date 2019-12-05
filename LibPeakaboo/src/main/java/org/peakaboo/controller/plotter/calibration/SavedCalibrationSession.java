@@ -48,8 +48,8 @@ public class SavedCalibrationSession {
 		
 		if (referenceUUID != null) {
 			CalibrationReference reference;
-			if (CalibrationPluginManager.SYSTEM.hasUUID(referenceUUID)) {
-				reference = CalibrationPluginManager.SYSTEM.getByUUID(referenceUUID).create();
+			if (CalibrationPluginManager.system().hasUUID(referenceUUID)) {
+				reference = CalibrationPluginManager.system().getByUUID(referenceUUID).create();
 			} else {
 				reference = CalibrationReference.load(referenceYaml);
 			}

@@ -32,7 +32,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
 
 public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 
-	public static MapFilterPluginManager SYSTEM;
+	private static MapFilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
 		try {
 			if (SYSTEM == null) {
@@ -43,7 +43,9 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load map filter plugins", e);
 		}
 	}
-	
+	public static MapFilterPluginManager system() {
+		return SYSTEM;
+	}
 	
 	
 	private BoltJavaBuiltinLoader<JavaMapFilterPlugin> builtins;

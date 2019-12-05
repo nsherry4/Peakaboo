@@ -10,7 +10,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 
 public class CalibrationPluginManager extends BoltPluginManager<CalibrationReference> {
 
-	public static CalibrationPluginManager SYSTEM;
+	private static CalibrationPluginManager SYSTEM;
 	public static void init(File filterDir) {
 		try {
 			if (SYSTEM == null) {
@@ -20,6 +20,9 @@ public class CalibrationPluginManager extends BoltPluginManager<CalibrationRefer
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load calibration plugins", e);
 		}
+	}
+	public static CalibrationPluginManager system() {
+		return SYSTEM;
 	}
 	
 	

@@ -90,7 +90,7 @@ public final class SpringNoiseFilter extends AbstractFilter {
 
 	@Override
 	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
-		data = SpringFilter(
+		data = springFilter(
 				data, 
 				multiplier.getValue().floatValue(), 
 				falloff.getValue().floatValue(), 
@@ -130,19 +130,19 @@ public final class SpringNoiseFilter extends AbstractFilter {
 	 * @param iterations the number of iterations to perform the smoothing
 	 * @return the smoothed data
 	 */
-	public static Spectrum SpringFilter(ReadOnlySpectrum data, float forceMultiplier, float falloffExp, int iterations) {
+	public static Spectrum springFilter(ReadOnlySpectrum data, float forceMultiplier, float falloffExp, int iterations) {
 		Spectrum result = new ISpectrum(data);
 		
 		for (int i = 0; i < iterations; i++)
 		{
-			SpringFilterIteration(result, forceMultiplier, falloffExp);
+			springFilterIteration(result, forceMultiplier, falloffExp);
 		}
 		
 		return result;
 
 	}
 	
-	private static void SpringFilterIteration(Spectrum data, float forceMultiplier, float falloffExp) {
+	private static void springFilterIteration(Spectrum data, float forceMultiplier, float falloffExp) {
 
 	
 		Spectrum deltas = DerivativeMathFilter.deriv(data);
@@ -169,7 +169,6 @@ public final class SpringNoiseFilter extends AbstractFilter {
 			dist = (float) Math.pow(dist, falloffExp);
 			if (dist < 1) dist = 1f;
 			
-			//distFromAverage = 1f;
 			if (force < 0)
 			{
 				force = Math.max(force,  (force / dist) * forceMultiplier);

@@ -154,6 +154,7 @@ public class HeaderBox extends JPanel {
 				curve = theme.widgetCurve();
 			} else {
 				base = theme.getControl();
+				curve = 0f;
 			}
 		}
 		

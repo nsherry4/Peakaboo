@@ -38,7 +38,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 	@Override
 	public void initialize() {
 		FileFormat format = new PlainText().getFileFormat();
-		spectrumFile = new Parameter<String>("Plaintext Dataset", new FileNameStyle(format.getFormatName(), format.getFileExtensions()), "");
+		spectrumFile = new Parameter<>("Plaintext Dataset", new FileNameStyle(format.getFormatName(), format.getFileExtensions()), "");
 		addParameter(spectrumFile);
 	}
 
@@ -70,7 +70,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 	}
 	
 	private synchronized void loadBackground(ReadOnlySpectrum data) {
-		if (loadedFile != spectrumFile.getValue()) {
+		if (!loadedFile.equals(spectrumFile.getValue())) {
 			
 			//If they haven't given a file yet
 			if (spectrumFile.getValue().length() == 0) {

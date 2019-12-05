@@ -39,7 +39,6 @@ public class SquareSnipBackgroundFilter extends AbstractBackgroundFilter {
 
 	@Override
 	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent) {
-		//TODO: parameterize
 		int window = pHalfWindow.getValue();
 		int iterations = pIterations.getValue();
 		

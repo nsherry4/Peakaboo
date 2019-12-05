@@ -11,7 +11,7 @@ import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 
-	public static DataSinkPluginManager SYSTEM;
+	private static DataSinkPluginManager SYSTEM;
 	public static void init(File dataSinkDir) {
 		try {
 			if (SYSTEM == null) {
@@ -22,7 +22,9 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load data sink plugins", e);
 		}
 	}
-	
+	public static DataSinkPluginManager system() {
+		return SYSTEM;
+	}
 
 	
 	private BoltJavaBuiltinLoader<JavaDataSinkPlugin> builtins;

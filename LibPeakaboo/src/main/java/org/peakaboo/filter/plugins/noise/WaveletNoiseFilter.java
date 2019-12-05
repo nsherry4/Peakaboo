@@ -88,7 +88,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 		Spectrum result;
 		int passCount= passes.getValue();
 
-		result = FWTLowPassFilter(data, passCount);
+		result = fwtLowPassFilter(data, passCount);
 
 		return result;
 	}
@@ -112,7 +112,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	 * @param passesToRemove the number of sections to be removed, starting with the largest, highest-frequency section
 	 * @return a Wavelet Low-Pass filtered dataset
 	 */
-	public static Spectrum FWTLowPassFilter(ReadOnlySpectrum data, int passesToRemove)
+	public static Spectrum fwtLowPassFilter(ReadOnlySpectrum data, int passesToRemove)
 	{
 
 		Spectrum result = new ISpectrum(data.size());

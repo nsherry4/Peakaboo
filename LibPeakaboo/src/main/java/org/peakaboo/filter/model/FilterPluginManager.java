@@ -34,7 +34,7 @@ import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
-	public static FilterPluginManager SYSTEM;
+	private static FilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
 		try {
 			if (SYSTEM == null) {
@@ -44,6 +44,9 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load filter plugins", e);
 		}
+	}
+	public static FilterPluginManager system() {
+		return SYSTEM;
 	}
 
 	

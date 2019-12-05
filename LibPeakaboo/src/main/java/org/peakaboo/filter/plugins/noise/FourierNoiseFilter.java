@@ -111,7 +111,7 @@ public final class FourierNoiseFilter extends AbstractFilter {
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
 	{
 		
-		data = FFT.LowPassFilter(
+		data = FFT.lowPassFilter(
 			data,
 			rolloff.getValue(),
 			startWavelength.getValue(),
@@ -176,7 +176,7 @@ class FFT {
 	}
 
 	
-	public static Complex[] DataToFFT(ReadOnlySpectrum data)
+	public static Complex[] dataToFFT(ReadOnlySpectrum data)
 	{
 		
 		// Fast Fourier Transform
@@ -194,7 +194,7 @@ class FFT {
 	}
 	
 
-	public static Spectrum FFTToData(Complex[] fft)
+	public static Spectrum fftToData(Complex[] fft)
 	{
 		// FFT Inverse Transform
 		fft = FourierMath.inverseTransform(fft);
@@ -225,7 +225,7 @@ class FFT {
 	 *            high-frequency noise
 	 * @return a Fast Fourier Transformation Low-Pass filtered data set
 	 */
-	public static Spectrum LowPassFilter(ReadOnlySpectrum data, FilterStyle style, float startWavelength,
+	public static Spectrum lowPassFilter(ReadOnlySpectrum data, FilterStyle style, float startWavelength,
 			float endWavelength)
 	{
 
@@ -264,7 +264,6 @@ class FFT {
 		endcutoff = Math.max(0, halfsize - endFrequency);
 				
 		return doFFTFilter(data, style, startcutoff, endcutoff);
-		// return getFFTBandstopFilter(data, cutoff, 0);
 
 	}
 
@@ -273,16 +272,16 @@ class FFT {
 	{
 
 		// FFT
-		Complex[] transformedData = DataToFFT(data);
+		Complex[] transformedData = dataToFFT(data);
 
 
 		// Do something with the transformed data
 		if (style == FilterStyle.LINEAR) {
-			FFTLinearStyle(transformedData, start, stop);
+			fftLinearStyle(transformedData, start, stop);
 		} else if (style == FilterStyle.SINE) {
-			FFTSineStyle(transformedData, start, stop);
+			fftSineStyle(transformedData, start, stop);
 		} else {
-			FFTCutoffStyle(transformedData, start);
+			fftCutoffStyle(transformedData, start);
 		}
 
 
@@ -301,7 +300,7 @@ class FFT {
 	}
 
 
-	private static void FFTCutoffStyle(Complex[] data, int start)
+	private static void fftCutoffStyle(Complex[] data, int start)
 	{
 
 		double centre = data.length / 2.0;
@@ -315,7 +314,7 @@ class FFT {
 	}
 
 
-	private static void FFTLinearStyle(Complex[] data, int start, int stop)
+	private static void fftLinearStyle(Complex[] data, int start, int stop)
 	{
 
 		// start and stop are distances from the centrepoint, so start should be a higher number than stop
@@ -325,7 +324,7 @@ class FFT {
 		// start and stop as expressed by distances from center
 		int di;
 
-		double percentLeftInLine = 0.0;
+		double percentLeftInLine;
 
 
 		for (int i = 0; i < data.length; i++) {
@@ -348,7 +347,7 @@ class FFT {
 	}
 
 
-	private static void FFTSineStyle(Complex[] data, int start, int stop)
+	private static void fftSineStyle(Complex[] data, int start, int stop)
 	{
 
 		// start and stop are distances from the centrepoint, so start should be a higher number than stop
@@ -358,7 +357,7 @@ class FFT {
 		// start and stop as expressed by distances from center
 		int di;
 
-		double percentLeftInLine = 0.0;
+		double percentLeftInLine;
 		double sine;
 
 		for (int i = 0; i < data.length; i++) {

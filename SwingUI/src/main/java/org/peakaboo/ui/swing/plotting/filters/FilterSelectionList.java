@@ -138,7 +138,7 @@ class FilterSelectionTreeModel implements TreeModel {
 		if (parent instanceof FilterType) {
 			@SuppressWarnings("unchecked")
 			BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
-			return FilterPluginManager.SYSTEM.getPlugins().indexOf(plugin);
+			return FilterPluginManager.system().getPlugins().indexOf(plugin);
 		} else if (parent instanceof String) {
 			FilterType ft = (FilterType) child;
 			return ft.ordinal();
@@ -154,7 +154,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			FilterType ft = (FilterType) parent;
 			int typeCount = 0;
 
-			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 			}
 			return typeCount;
@@ -175,7 +175,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			FilterType ft = (FilterType) parent;
 			int typeCount = 0;
 
-			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
 				if (typeCount == index) return plugin;
 			}

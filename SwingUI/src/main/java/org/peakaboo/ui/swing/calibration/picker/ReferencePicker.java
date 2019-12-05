@@ -28,7 +28,7 @@ public class ReferencePicker extends ListPickerLayer<CalibrationReference> {
 	private LayerPanel parent;
 		
 	public ReferencePicker(LayerPanel parent, Consumer<CalibrationReference> onAccept) {
-		super(parent, "Select Z-Calibration Reference", CalibrationPluginManager.SYSTEM.newInstances(), onAccept);
+		super(parent, "Select Z-Calibration Reference", CalibrationPluginManager.system().newInstances(), onAccept);
 		this.parent = parent;		
 	}
 	

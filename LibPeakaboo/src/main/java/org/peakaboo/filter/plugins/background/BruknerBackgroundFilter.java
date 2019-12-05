@@ -38,8 +38,8 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100, this::validate);
-		iterations = new Parameter<>("Iterations", new IntegerStyle(), 10, this::validate);
+		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100, this::validateBrukner);
+		iterations = new Parameter<>("Iterations", new IntegerStyle(), 10, this::validateBrukner);
 		
 		addParameter(width, iterations);
 	}
@@ -61,7 +61,7 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 	}
 
 
-	private boolean validate(Parameter<?> p)
+	private boolean validateBrukner(Parameter<?> p)
 	{
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
@@ -111,10 +111,10 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 	{
 
 		// FIRST STEP
-		float Iavg = data.sum() / data.size();
-		float Imin = data.min();
-		float diff = Iavg - Imin;
-		final float cutoff = Iavg + 2 * diff;
+		float iAvg = data.sum() / data.size();
+		float iMin = data.min();
+		float diff = iAvg - iMin;
+		final float cutoff = iAvg + 2 * diff;
 
 		Spectrum result = new ISpectrum(data); 
 

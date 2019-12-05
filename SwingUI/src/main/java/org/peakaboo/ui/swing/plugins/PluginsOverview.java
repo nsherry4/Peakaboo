@@ -192,7 +192,7 @@ public class PluginsOverview extends HeaderLayer {
 	}
 	
 	private String listToUL(List<?> stuff) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		buff.append("<ul>");
 		for (Object o : stuff) {
 			String name = o.toString();
@@ -216,11 +216,11 @@ public class PluginsOverview extends HeaderLayer {
 		boolean handled = false;
 		
 		try {
-			handled |= addFileToManager(file, DataSourcePluginManager.SYSTEM);
-			handled |= addFileToManager(file, DataSinkPluginManager.SYSTEM);
-			handled |= addFileToManager(file, FilterPluginManager.SYSTEM);
-			handled |= addFileToManager(file, MapFilterPluginManager.SYSTEM);
-			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.SYSTEM);
+			handled |= addFileToManager(file, DataSourcePluginManager.system());
+			handled |= addFileToManager(file, DataSinkPluginManager.system());
+			handled |= addFileToManager(file, FilterPluginManager.system());
+			handled |= addFileToManager(file, MapFilterPluginManager.system());
+			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.system());
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
@@ -266,11 +266,11 @@ public class PluginsOverview extends HeaderLayer {
 	
 	
 	public void reload() {
-		DataSourcePluginManager.SYSTEM.reload();
-		DataSinkPluginManager.SYSTEM.reload();
-		FilterPluginManager.SYSTEM.reload();
-		MapFilterPluginManager.SYSTEM.reload();
-		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.SYSTEM.reload();
+		DataSourcePluginManager.system().reload();
+		DataSinkPluginManager.system().reload();
+		FilterPluginManager.system().reload();
+		MapFilterPluginManager.system().reload();
+		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.system().reload();
 		tree.setModel(buildTreeModel());
 	}
 	
@@ -306,24 +306,24 @@ public class PluginsOverview extends HeaderLayer {
 		
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
 		
-		DefaultMutableTreeNode sourcesNode = createPluginManagerRootNode(DataSourcePluginManager.SYSTEM);
+		DefaultMutableTreeNode sourcesNode = createPluginManagerRootNode(DataSourcePluginManager.system());
 		plugins.add(sourcesNode);
 		
-		DefaultMutableTreeNode sinksNode = createPluginManagerRootNode(DataSinkPluginManager.SYSTEM);
+		DefaultMutableTreeNode sinksNode = createPluginManagerRootNode(DataSinkPluginManager.system());
 		plugins.add(sinksNode);
 		
-		DefaultMutableTreeNode filtersNode = createPluginManagerRootNode(FilterPluginManager.SYSTEM);
+		DefaultMutableTreeNode filtersNode = createPluginManagerRootNode(FilterPluginManager.system());
 		plugins.add(filtersNode);
 		
-		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterPluginManager.SYSTEM);
+		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterPluginManager.system());
 		plugins.add(mapFiltersNode);
 
 		
 		
 		if (Peakaboo.SHOW_QUANTITATIVE) {
-			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.SYSTEM);
+			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.system());
 			plugins.add(calibrationsNode);
-			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins()) {
+			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.system().getPlugins()) {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 				calibrationsNode.add(node);
 			}

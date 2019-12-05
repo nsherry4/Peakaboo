@@ -63,7 +63,7 @@ public class SerializedFilter {
 		//If it already exists, just return it, otherwise build a filter
 		if (filter != null) { return filter; }
 			
-		for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.SYSTEM.getPlugins()) {
+		for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 			if (
 				plugin.getUUID().equals(uuidOrClazz) || 
 				plugin.getImplementationClass().getName().equals(uuidOrClazz)

@@ -21,21 +21,20 @@ import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.yaml.snakeyaml.Yaml;
 
-public class SubFilter extends AbstractFilter
-{
+public class SubFilter extends AbstractFilter {
 
 	private Parameter<Integer> begin;
 	private Parameter<Integer> end;
 	private SelectionParameter<Filter> filter;
 		
 	@Override
-	public void initialize()
-	{
-		List<Filter> filters = FilterPluginManager.SYSTEM.newInstances().stream().filter(f -> f.pluginEnabled() && f.canFilterSubset()).collect(Collectors.toList());
+	public void initialize() {
+		List<Filter> filters = FilterPluginManager.system().newInstances().stream()
+				.filter(f -> f.pluginEnabled() && f.canFilterSubset())
+				.collect(Collectors.toList());
 		filters.add(0, new IdentityFilter());
 		
-		for (Filter f : filters)
-		{
+		for (Filter f : filters) {
 			f.initialize();
 		}
 		
@@ -45,7 +44,10 @@ public class SubFilter extends AbstractFilter
 		
 		Yaml yaml = new Yaml();
 		
-		ClassInfo<Filter> filterClassInfo = new SimpleClassInfo<Filter>(Filter.class, f -> yaml.dump(new SerializedFilter(f)), s -> ((SerializedFilter)yaml.load(s)).getFilter());
+		ClassInfo<Filter> filterClassInfo = new SimpleClassInfo<>(
+				Filter.class, 
+				f -> yaml.dump(new SerializedFilter(f)), 
+				s -> yaml.<SerializedFilter>load(s).getFilter());
 		
 		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0), filterClassInfo);
 		filter.setPossibleValues(filters);
@@ -61,8 +63,7 @@ public class SubFilter extends AbstractFilter
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
-	{
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		
 		int start = begin.getValue();
 		int stop = end.getValue();
@@ -73,7 +74,7 @@ public class SubFilter extends AbstractFilter
 		Spectrum result = new ISpectrum(data);
 		ReadOnlySpectrum subspectrum = data.subSpectrum(start, stop);
 		
-		subspectrum = filter.getValue().filter(subspectrum);
+		subspectrum = filter.getValue().filter(subspectrum, dataset);
 		
 		for (int i = start; i <= stop; i++)
 		{
@@ -84,31 +85,26 @@ public class SubFilter extends AbstractFilter
 	}
 
 	@Override
-	public String getFilterDescription()
-	{
+	public String getFilterDescription() {
 		return "The " + getFilterName() + " filter allows the application of another filter to a portion of a spectrum.";
 	}
 
 	@Override
-	public String getFilterName()
-	{
+	public String getFilterName() {
 		return "Filter Partial Spectrum";
 	}
 
 	@Override
-	public FilterType getFilterType()
-	{
+	public FilterType getFilterType() {
 		return FilterType.ADVANCED;
 	}
 
 	@Override
-	public boolean pluginEnabled()
-	{
+	public boolean pluginEnabled() {
 		return true;
 	}
 
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 		
 		int start = begin.getValue();
 		int stop = end.getValue();
@@ -123,8 +119,7 @@ public class SubFilter extends AbstractFilter
 	
 	
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return false;
 	}
 	

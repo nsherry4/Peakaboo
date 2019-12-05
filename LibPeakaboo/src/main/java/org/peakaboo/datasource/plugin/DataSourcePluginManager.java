@@ -12,7 +12,7 @@ import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin> {
 
-	public static DataSourcePluginManager SYSTEM;
+	private static DataSourcePluginManager SYSTEM;
 	public static synchronized void init(File dataSourceDir) {
 		try {
 			if (SYSTEM == null) {
@@ -23,7 +23,9 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load data source plugins", e);
 		}
 	}
-	
+	public static DataSourcePluginManager system() {
+		return SYSTEM;
+	}
 	
 	
 	private BoltJavaBuiltinLoader<JavaDataSourcePlugin> builtins;

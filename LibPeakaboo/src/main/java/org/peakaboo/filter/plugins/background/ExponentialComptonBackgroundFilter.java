@@ -26,15 +26,15 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 
 	@Override
 	public void initialize() {
-		pAttackStart = new Parameter<Integer>("Attack Start", new IntegerSpinnerStyle(), 500, this::validate);
-		pAttackEnd = new Parameter<Integer>("Attack End", new IntegerSpinnerStyle(), 800, this::validate);
-		pDecayStart = new Parameter<Integer>("Decay Start", new IntegerSpinnerStyle(), 1000, this::validate);
-		pDecayEnd = new Parameter<Integer>("Decay End", new IntegerSpinnerStyle(), 1200, this::validate);
+		pAttackStart = new Parameter<>("Attack Start", new IntegerSpinnerStyle(), 500, this::validateCompton);
+		pAttackEnd = new Parameter<>("Attack End", new IntegerSpinnerStyle(), 800, this::validateCompton);
+		pDecayStart = new Parameter<>("Decay Start", new IntegerSpinnerStyle(), 1000, this::validateCompton);
+		pDecayEnd = new Parameter<>("Decay End", new IntegerSpinnerStyle(), 1200, this::validateCompton);
 		
 		this.addParameter(pAttackStart, pAttackEnd, pDecayStart, pDecayEnd);
 	}
 
-	private boolean validate(Parameter<?> p) {
+	private boolean validateCompton(Parameter<?> p) {
 		if (pAttackStart.getValue() >= pAttackEnd.getValue()) return false;
 		if (pAttackEnd.getValue() >= pDecayStart.getValue()) return false;
 		if (pDecayStart.getValue() >= pDecayEnd.getValue()) return false;
@@ -84,8 +84,7 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 				float max = data.get(attackEnd);
 				float dist = (float)(i-attackStart) / (float)(attackEnd-attackStart);
 				
-				//                           scale         y = L*e^(g*x) is linear in log-lin
-				//float value = (float) ((max/Math.exp(max)) * Math.pow(Math.exp(max), dist));
+				//y = L*e^(g*x) is linear in log-lin
 				float value = (float) (max * Math.pow(Math.exp(Math.log(max)), dist));
 				//this function always starts w/ a value of 'max', and our plotting is all 
 				//done with log1p anyways, so this works out perfectly.
@@ -108,8 +107,7 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 				//decayEnd-i because we want to mirror/flip the curve on the back end 
 				float dist = (float)(decayEnd-i) / (float)(decayEnd-decayStart);
 
-				//                           scale         y = L*e^(g*x) is linear in log-lin
-				//float value = (float) ((max/Math.exp(max)) * Math.pow(Math.exp(max), dist));
+				//y = L*e^(g*x) is linear in log-lin
 				float value = (float) (max * Math.pow(Math.exp(Math.log(max)), dist));
 				//this function always starts w/ a value of 'max', and our plotting is all 
 				//done with log1p anyways, so this works out perfectly.

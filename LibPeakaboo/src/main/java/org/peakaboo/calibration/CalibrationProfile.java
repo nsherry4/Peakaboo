@@ -213,7 +213,7 @@ public class CalibrationProfile {
 			profile.interpolated.add(ts);
 		}
 		
-		profile.reference = CalibrationPluginManager.SYSTEM.getByUUID(serialized.referenceUUID).create();
+		profile.reference = CalibrationPluginManager.system().getByUUID(serialized.referenceUUID).create();
 		if (profile.reference == null) {
 			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
 		}

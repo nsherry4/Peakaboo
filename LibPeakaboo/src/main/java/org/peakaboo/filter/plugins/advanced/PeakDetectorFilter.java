@@ -30,7 +30,9 @@ public class PeakDetectorFilter extends AbstractFilter {
 	}
 
 	@Override
-	public void initialize() {}
+	public void initialize() {
+		//NOOP
+	}
 
 	@Override
 	public boolean canFilterSubset() {

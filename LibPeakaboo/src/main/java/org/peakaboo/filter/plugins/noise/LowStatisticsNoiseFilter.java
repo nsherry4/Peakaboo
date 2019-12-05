@@ -31,7 +31,8 @@ public class LowStatisticsNoiseFilter extends AbstractFilter {
 	}
 	
 	@Override
-	//TODO: Technically, the window size should be a multiple of the FWHM here, but we don't have access to that information. Maybe..?
+	// TODO: Technically, the window size should be a multiple of the FWHM here,
+	// but we don't have access to that information. Maybe..?
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		Spectrum out = new ISpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
