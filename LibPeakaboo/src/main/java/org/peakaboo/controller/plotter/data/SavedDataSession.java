@@ -3,7 +3,6 @@ package org.peakaboo.controller.plotter.data;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.peakaboo.datasource.model.datafile.DataFile;

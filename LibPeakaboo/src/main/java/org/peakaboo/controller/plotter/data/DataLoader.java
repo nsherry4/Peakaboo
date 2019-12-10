@@ -48,35 +48,10 @@ public abstract class DataLoader {
 			
 			ExecutorSet<DatasetReadResult> reading = controller.data().asyncReadFileListAsDataset(datafiles, dsp, result -> {
 					
-				if (result == null || result.status == ReadStatus.FAILED)
-				{
-					String message = "Peakaboo could not open this dataset";
-					message = "\nSource: " + dsp.getFileFormat().getFormatName();
-					
-					if (result != null && result.message != null) {
-						message += "\nMessage: " + result.message;
-					}
-					if (result != null && result.problem != null) {
-						message += "\nProblem: " + result.problem;
-					}
-					
-					PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
-					onFail(datafiles, message);
-					
+				if (result == null || result.status == ReadStatus.FAILED) {
+					onDataSourceLoadFailure(dsp, result);					
 				} else {
-					sessionCallback.run();
-					controller.data().setDataSourceParameters(sessionParameters);
-					controller.data().setDataPaths(datafiles);
-					
-					//Try and set the last-used folder for local UIs to refer to
-					//First, check the first data file for its folder
-					Optional<File> localDir = datafiles.get(0).localFolder();
-					if (localDir.isPresent()) {
-						controller.io().setLastFolder(localDir.get());
-					} else if (sessionFile != null) {
-						controller.io().setLastFolder(sessionFile.getParentFile());
-					}
-					onSuccess(datafiles, sessionFile);
+					onDataSourceLoadSuccess();
 				}						
 							
 			});
@@ -85,6 +60,40 @@ public abstract class DataLoader {
 			reading.startWorking();
 
 		}
+	}
+	
+	private void onDataSourceLoadSuccess() {
+		sessionCallback.run();
+		controller.data().setDataSourceParameters(sessionParameters);
+		controller.data().setDataPaths(datafiles);
+		
+		//Try and set the last-used folder for local UIs to refer to
+		//First, check the first data file for its folder
+		Optional<File> localDir = datafiles.get(0).localFolder();
+		if (localDir.isPresent()) {
+			controller.io().setLastFolder(localDir.get());
+		} else if (sessionFile != null) {
+			controller.io().setLastFolder(sessionFile.getParentFile());
+		}
+		onSuccess(datafiles, sessionFile);
+	}
+
+	private void onDataSourceLoadFailure(DataSourcePlugin dsp, DatasetReadResult result) {
+		String message = "\nSource: " + dsp.getFileFormat().getFormatName();
+		
+		if (result != null && result.message != null) {
+			message += "\nMessage: " + result.message;
+		}
+		if (result != null && result.problem != null) {
+			message += "\nProblem: " + result.problem;
+		}
+		
+		if (result != null) {
+			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
+		} else {
+			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException("Dataset Read Result was null"));
+		}
+		onFail(datafiles, message);
 	}
 	
 	
@@ -147,7 +156,7 @@ public abstract class DataLoader {
 				}
 			}
 			
-			onParameters(dsGroup, (accepted) -> {
+			onParameters(dsGroup, accepted -> {
 				if (accepted) {
 					//user accepted, save a copy of the new parameters
 					sessionParameters = dsGroup.serialize();
