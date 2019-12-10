@@ -13,6 +13,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
@@ -172,8 +173,8 @@ public class URLDataFile implements DataFile {
 		return address.startsWith(URL_DATAFILE_PROTO);
 	}
 	
-	public static URLDataFile fromAddress(String address, Path tempDir) {
-		return deserialize(address, tempDir);
+	public static URLDataFile fromAddress(String address, Supplier<Path> tempDir) {
+		return deserialize(address, tempDir.get());
 	}
 
 }

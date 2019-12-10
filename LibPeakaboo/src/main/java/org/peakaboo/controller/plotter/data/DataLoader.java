@@ -190,8 +190,13 @@ public abstract class DataLoader {
 			List<DataFile> currentPaths = controller.data().getDataPaths();
 			List<DataFile> sessionPaths = session.data.filesAsDataPaths();
 			
+			//Verify all paths exist
 			boolean sessionPathsExist = true;
 			for (DataFile d : sessionPaths) {
+				if (d == null) {
+					sessionPathsExist = false;
+					break;
+				}
 				sessionPathsExist &= d.exists();
 			}
 			

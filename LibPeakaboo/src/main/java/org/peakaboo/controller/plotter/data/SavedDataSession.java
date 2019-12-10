@@ -3,10 +3,13 @@ package org.peakaboo.controller.plotter.data;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.datafile.DataFiles;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 public class SavedDataSession {
 
@@ -47,9 +50,10 @@ public class SavedDataSession {
 	}
 	
 	public List<DataFile> filesAsDataPaths() {
-		//download dir not used by all DataFile impls, but required by some
-		Path dldir = DataFiles.createDownloadDirectory();
-		return this.files.stream().map(s -> DataFiles.construct(s, dldir)).collect(Collectors.toList());
+		EventfulCache<Path> lazyDownload = new EventfulNullableCache<>(DataFiles::createDownloadDirectory);
+		return this.files.stream()
+				.map(s -> DataFiles.construct(s, lazyDownload::getValue))
+				.collect(Collectors.toList());
 	}
 	
 }

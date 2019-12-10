@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class PathDataFile implements DataFile {
 	
@@ -100,7 +101,7 @@ public class PathDataFile implements DataFile {
 		return address.startsWith("/") || address.startsWith("file://");
 	}
 	
-	public static PathDataFile fromAddress(String address, Path tempDir) {
+	public static PathDataFile fromAddress(String address, Supplier<Path> tempDir) {
 		if (address.startsWith("file://")) {
 			address = address.substring(7);
 		}
