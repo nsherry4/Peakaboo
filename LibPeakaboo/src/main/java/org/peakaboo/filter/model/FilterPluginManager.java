@@ -54,8 +54,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	private BoltJavaBuiltinLoader<JavaFilterPlugin> builtins;
 	
 	public FilterPluginManager(File filterDir) {
-		super(FilterPlugin.class);
-		
+	
 		addLoader(new BoltJarDirectoryLoader<>(JavaFilterPlugin.class, filterDir));
 		addLoader(new BoltJarDirectoryLoader<>(JavaFilterPlugin.class));
 		

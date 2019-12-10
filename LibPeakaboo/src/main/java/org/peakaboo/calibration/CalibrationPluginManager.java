@@ -29,7 +29,6 @@ public class CalibrationPluginManager extends BoltPluginManager<CalibrationRefer
 	private BoltConfigBuiltinLoader<CalibrationReference> builtins;
 	
 	public CalibrationPluginManager(File directories) {
-		super(CalibrationReference.class);
 		
 		addLoader(new BoltConfigDirectoryLoader<>(
 				CalibrationReference.class, 

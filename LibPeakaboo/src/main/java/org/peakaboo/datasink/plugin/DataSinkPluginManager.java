@@ -30,7 +30,6 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 	private BoltJavaBuiltinLoader<JavaDataSinkPlugin> builtins;
 	
 	public DataSinkPluginManager(File dataSinkDir) {
-		super(DataSinkPlugin.class);
 		
 		addLoader(new BoltJarDirectoryLoader<>(JavaDataSinkPlugin.class, dataSinkDir));
 		addLoader(new BoltJarDirectoryLoader<>(JavaDataSinkPlugin.class));

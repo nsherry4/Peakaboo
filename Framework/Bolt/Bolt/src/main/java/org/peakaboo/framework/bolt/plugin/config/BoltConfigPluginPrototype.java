@@ -38,9 +38,8 @@ public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements Bo
 	@Override
 	public T create() {
 		
-		InputStream stream;
-		try {
-			stream = container.openStream();
+		try (InputStream stream = container.openStream()) {
+			
 			T plugin;
 			Scanner s = new Scanner(stream).useDelimiter("\\A");
 			if (s.hasNext()) {
@@ -50,7 +49,6 @@ public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements Bo
 				throw new IOException("Could not read file contents");
 			}
 			s.close();
-			stream.close();
 			return plugin;
 		} catch (IOException e) {
 			Bolt.logger().log(Level.WARNING, "Could not create plugin instance: " + container.getSourceName(), e);

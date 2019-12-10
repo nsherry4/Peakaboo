@@ -31,8 +31,7 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	private BoltJavaBuiltinLoader<JavaDataSourcePlugin> builtins;
 	
 	public DataSourcePluginManager(File dataSourceDir) {
-		super(DataSourcePlugin.class);
-		
+	
 		addLoader(new BoltJarDirectoryLoader<>(JavaDataSourcePlugin.class, dataSourceDir));
 		addLoader(new BoltJarDirectoryLoader<>(JavaDataSourcePlugin.class));
 		

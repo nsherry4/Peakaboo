@@ -27,28 +27,24 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 	private BoltPluginSet<P> plugins = new BoltPluginSet<>();
 	private List<BoltLoader<P>> loaders = new ArrayList<>();
 	
-	private Class<P> pluginClass;
-	
-	public BoltPluginManager(Class<P> pluginClass) {
-		this.pluginClass = pluginClass;
-	}
-	
+
+	@SuppressWarnings("unchecked")
 	public void addLoader(BoltLoader<? extends P> loader) {
 		loaders.add((BoltLoader<P>) loader);
 	}
 	
-	public synchronized final void reload() {
+	public final synchronized void reload() {
 		clear();
 		load();
 	}
 	
-	public synchronized final void clear() {
+	public final synchronized void clear() {
 		plugins = new BoltPluginSet<>();
 		loaded = false;
 	}
 	
-	public synchronized final void load() {
-		if (loaded == false) {
+	public final synchronized void load() {
+		if (!loaded) {
 			loaded = true;
 			
 			containers.clear();
@@ -66,7 +62,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 	}
 	
 	
-	public synchronized final List<BoltPluginPrototype<? extends P>> getPlugins() {
+	public final synchronized List<BoltPluginPrototype<? extends P>> getPlugins() {
 		load();
 		return plugins.getPlugins();
 	}
@@ -119,7 +115,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 	}
 
 	//TODO
-	public BoltContainer<? extends BoltPlugin> importOrUpgradeFile(File file) throws BoltImportException {
+	public BoltContainer<P> importOrUpgradeFile(File file) throws BoltImportException {
 	
 		// TODO: check if it's an upgrade for any of the containers in any of the other
 		// loaders? Do we care?

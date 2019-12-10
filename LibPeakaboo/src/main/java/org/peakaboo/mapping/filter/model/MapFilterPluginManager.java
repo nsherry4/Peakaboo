@@ -51,7 +51,6 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 	private BoltJavaBuiltinLoader<JavaMapFilterPlugin> builtins;
 	
 	private MapFilterPluginManager(File directories) {
-		super(MapFilterPlugin.class);
 		
 		addLoader(new BoltJarDirectoryLoader<>(JavaMapFilterPlugin.class, directories));
 		addLoader(new BoltJarDirectoryLoader<>(JavaMapFilterPlugin.class));
