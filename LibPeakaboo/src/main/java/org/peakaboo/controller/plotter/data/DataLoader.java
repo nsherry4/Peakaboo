@@ -172,7 +172,8 @@ public abstract class DataLoader {
 
 	private void loadSession() {
 		try {
-			if (!datafiles.get(0).writable()) {
+			//We don't want users saving a session loaded from /tmp
+			if (!datafiles.get(0).writable()) {		
 				//TODO: is writable the right thing to ask here? local vs non-local maybe?
 				//TODO: maybe in later versions, the UI can inspect this when determining if it can save instead of save-as
 				throw new IOException("Cannot load session from read-only source");

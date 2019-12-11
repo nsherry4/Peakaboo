@@ -1,21 +1,20 @@
 package org.peakaboo.datasource.model.components.interaction;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
+import java.util.function.IntConsumer;
 
 public class CallbackInteraction implements Interaction {
 
-	private Consumer<Integer>	fnOpenedScanCallback;
-	private Supplier<Boolean>	fnIsAborted;
-	private Consumer<Integer>	fnReadScanCallback;
-	private Consumer<Integer>	fnGetScanCountCallback;
+	private IntConsumer	fnOpenedScanCallback;
+	private BooleanSupplier	fnIsAborted;
+	private IntConsumer	fnReadScanCallback;
+	private IntConsumer	fnGetScanCountCallback;
 	
-	//TODO: Peakaboo 6 - replace with IntConsumer, BooleanSupplier, etc
 	public CallbackInteraction(
-			Consumer<Integer> openedScanCallback,
-			Consumer<Integer> getScanCountCallback, 
-			Consumer<Integer> readScanCallback,
-			Supplier<Boolean> isAborted
+			IntConsumer openedScanCallback,
+			IntConsumer getScanCountCallback, 
+			IntConsumer readScanCallback,
+			BooleanSupplier isAborted
 		)
 	{
 		this.fnOpenedScanCallback = openedScanCallback;
@@ -28,7 +27,7 @@ public class CallbackInteraction implements Interaction {
 	@Override
 	public boolean checkReadAborted()
 	{
-		return fnIsAborted.get();
+		return fnIsAborted.getAsBoolean();
 	}
 	
 	@Override

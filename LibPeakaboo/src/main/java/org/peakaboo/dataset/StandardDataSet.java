@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -63,8 +65,7 @@ public class StandardDataSet implements DataSet
 		this(ds, null, null);
 	}
 	
-	public StandardDataSet(DataSource ds, AbstractExecutor progress, Supplier<Boolean> isAborted)
-	{
+	public StandardDataSet(DataSource ds, AbstractExecutor<Void> progress, BooleanSupplier isAborted) {
 		super();
 		
 		readDataSource(ds, progress, isAborted);
@@ -114,35 +115,26 @@ public class StandardDataSet implements DataSet
 					// anon function to call when a scan is 'opened'. This is usually nothing, but
 					// when a scan is 'remote' or otherwise needs to be copied before being opened,
 					// there's work to be done here.
-					Consumer<Integer> openedScans = (Integer count) -> {
-						opening.workUnitCompleted(count);
-					};
+					IntConsumer openedScans = opening::workUnitCompleted;
 					
 					//anon function to call when we get the number of scans
-					Consumer<Integer> gotScanCount = (Integer count) ->	{
+					IntConsumer gotScanCount = count ->	{
 						reading.setWorkUnits(count);
 						opening.advanceState();
 						reading.advanceState();
 					};
 					
 					//anon function to call to check if the user has requested the operation be aborted
-					Supplier<Boolean> isAborted = () -> isAborted() || isAbortRequested();
+					BooleanSupplier isAborted = () -> isAborted() || isAbortRequested();
 					
 					//anon function to call when the loader reads a scan from the input data
-					Consumer<Integer> readScans = (Integer count) -> {
-						reading.workUnitCompleted(count);
-					};
+					IntConsumer readScans = reading::workUnitCompleted;
 					
-	
-
 					dataSource.setInteraction(new CallbackInteraction(openedScans, gotScanCount, readScans, isAborted));
 					dataSource.readDataFiles(paths);
 	
-					
-					
-	
-					
-					if (isAborted.get()) {
+
+					if (isAborted.getAsBoolean()) {
 						aborted();
 						return new DatasetReadResult(ReadStatus.CANCELLED);
 					}
@@ -158,7 +150,7 @@ public class StandardDataSet implements DataSet
 					readDataSource(dataSource, applying, isAborted);
 					
 					
-					if (isAborted.get()) {
+					if (isAborted.getAsBoolean()) {
 						aborted();
 						return new DatasetReadResult(ReadStatus.CANCELLED);
 					}
@@ -197,8 +189,7 @@ public class StandardDataSet implements DataSet
 
 	
 	
-	private void readDataSource(DataSource ds, AbstractExecutor applying, Supplier<Boolean> isAborted)
-	{
+	private void readDataSource(DataSource ds, AbstractExecutor<Void> applying, BooleanSupplier isAborted) {
 		
 		if (ds == null || ds.getScanData().scanCount() == 0) return;
 
@@ -232,7 +223,7 @@ public class StandardDataSet implements DataSet
 	
 				if (i % updateInterval == 0) {
 					if (applying != null) applying.workUnitCompleted(updateInterval);
-					if (isAborted != null && isAborted.get()) return;
+					if (isAborted != null && isAborted.getAsBoolean()) return;
 				}
 				if (i % gcInterval == 0) {
 					System.gc();

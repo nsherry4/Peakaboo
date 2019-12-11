@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -49,8 +50,7 @@ public class DataController extends Eventful
 	private String				dataSourcePluginUUID;
 	private List<Object>		dataSourceParameters;
 	
-	public DataController(PlotController plotController)
-	{
+	public DataController(PlotController plotController) {
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();
 		discards = new DiscardsList(plot);
@@ -70,7 +70,7 @@ public class DataController extends Eventful
 	// =============================================
 	
 
-	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset(
+	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset (
 			List<DataFile> paths, 
 			DataSourcePlugin dsp, 
 			Consumer<DatasetReadResult> onResult) {
@@ -126,14 +126,12 @@ public class DataController extends Eventful
 		return new SelectionDataSource(dataModel.getDataSource(), dimensions, points);
 	}
 
-	public boolean hasDataSet()
-	{
+	public boolean hasDataSet() {
 		return dataModel.hasGenuineScanData();
 	}
 
 
-	public void setDataSetProvider(DataSet dsp)
-	{
+	public void setDataSetProvider(DataSet dsp) {
 	
 		if (dsp == null) return;
 		
@@ -165,10 +163,9 @@ public class DataController extends Eventful
 	}
 	
 	
-	public void setDataSource(DataSource ds, AbstractExecutor progress, Supplier<Boolean> isAborted)
-	{
+	public void setDataSource(DataSource ds, AbstractExecutor<Void> progress, BooleanSupplier isAborted) {
 		StandardDataSet dataset = new StandardDataSet(ds, progress, isAborted);
-		if (!isAborted.get()) {
+		if (!isAborted.getAsBoolean()) {
 			setDataSetProvider(dataset);
 		}
 	}
@@ -184,8 +181,7 @@ public class DataController extends Eventful
 	
 
 	
-	public StreamExecutor<RawMapSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver)
-	{
+	public StreamExecutor<RawMapSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver) {
 		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver);
 	}
 	
@@ -193,8 +189,7 @@ public class DataController extends Eventful
 
 	
 	
-	public Iterator<ReadOnlySpectrum> getScanIterator()
-	{
+	public Iterator<ReadOnlySpectrum> getScanIterator() {
 		
 		return new Iterator<ReadOnlySpectrum>() {
 
