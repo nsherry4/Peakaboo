@@ -392,21 +392,22 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			
 			//CHECKBOX
+			int checkVOffset = 0;
 			reg(ret, "CheckBox[Disabled].iconPainter", new CheckButtonPainter(theme, ButtonState.DISABLED));
-			reg(ret, "CheckBox[Disabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.DISABLED), new CheckPainter(theme, 5, -1, false)));
+			reg(ret, "CheckBox[Disabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.DISABLED), new CheckPainter(theme, 5, checkVOffset, false)));
 			reg(ret, "CheckBox[Enabled].iconPainter", new CheckButtonPainter(theme, ButtonState.ENABLED));
-			reg(ret, "CheckBox[Enabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Enabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Focused+MouseOver].iconPainter", new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
-			reg(ret, "CheckBox[Focused+MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Focused+MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Focused+Pressed].iconPainter", new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
-			reg(ret, "CheckBox[Focused+Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Focused+Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Focused].iconPainter", new CheckButtonPainter(theme, ButtonState.FOCUSED));
-			reg(ret, "CheckBox[Focused+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Focused+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[MouseOver].iconPainter", new CheckButtonPainter(theme, ButtonState.MOUSEOVER));
-			reg(ret, "CheckBox[MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Pressed].iconPainter", new CheckButtonPainter(theme, ButtonState.PRESSED));
-			reg(ret, "CheckBox[Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.PRESSED), new CheckPainter(theme, 5, -1)));
-			reg(ret, "CheckBox[Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.PRESSED), new CheckPainter(theme, 5, checkVOffset)));
+			reg(ret, "CheckBox[Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, checkVOffset)));
 			
 			reg(ret, "CheckBox[Enabled].textForeground", theme.getControlText());
 			

@@ -118,7 +118,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     protected ButtonPalette makePalette(JComponent object) {
     	
     	if (object == null) {
-    		return palette;
+    		return new ButtonPalette(palette);
     	}
     	
     	Theme theme = getTheme();
@@ -128,7 +128,6 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     		setupPalette(custom, object.getBackground());
     		custom.border = Stratus.darken(object.getBackground(), theme.borderStrength());
     	}
-    	
     	if (!Stratus.focusedWindow(object)) {
     		custom.border = Stratus.lighten(custom.border);
         	if (isCustomColour(object)) {
@@ -213,19 +212,19 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     
     protected void drawBorder(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	//Border should be darker at the bottom when not pressed (bit of a shadow?)
-    	g.setPaint(borderPaint(width, height, pad, palette));
+    	g.setPaint(borderPaint(object, width, height, pad, palette));
     	g.fill(borderShape(object, width, height, pad));
     }
     
     protected void drawMain(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
-    	g.setPaint(mainPaint(width, height, pad, palette));
+    	g.setPaint(mainPaint(object, width, height, pad, palette));
     	g.fill(fillShape(object, width, height, pad));
 	}
 
     protected void drawBevel(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	//Bevel at top of button unless pressed
     	if (!(isPressed() || isSelected()) && !(isDisabled())) {
-	    	g.setPaint(bevelPaint(width, height, pad, palette));
+	    	g.setPaint(bevelPaint(object, width, height, pad, palette));
 	    	g.draw(bevelShape(object, width, height, pad));
     	}
     }
@@ -233,7 +232,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     protected void drawShadow(JComponent object, float width, float height, float pad, Graphics2D g, ButtonPalette palette) {
     	//Shadow at bottom of button unless pressed
     	if (!(isPressed() || isSelected()) && !(isDisabled())) {
-	    	g.setPaint(shadowPaint(width, height, pad, palette));
+	    	g.setPaint(shadowPaint(object, width, height, pad, palette));
 	    	g.draw(shadowShape(object, width, height, pad));
     	}
     }
@@ -242,7 +241,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     	//Focus dash if focused but not pressed
     	pad += 2;
     	if (isFocused() && !isPressed()) {
-        	g.setPaint(dashPaint(width, height, pad, palette));
+        	g.setPaint(dashPaint(object, width, height, pad, palette));
         	Stroke old = g.getStroke();
         	g.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] {2, 1}, 0f));
         	g.draw(dashShape(object, width, height, pad));
@@ -253,23 +252,23 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     
     
     
-    protected Paint shadowPaint(float width, float height, float pad, ButtonPalette palette) {
+    protected Paint shadowPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
     	return palette.shadow;
     }
 
-    protected Paint bevelPaint(float width, float height, float pad, ButtonPalette palette) {
+    protected Paint bevelPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
     	return palette.bevel;
     }
     
-    protected Paint mainPaint(float width, float height, float pad, ButtonPalette palette) {
+    protected Paint mainPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
     	return new LinearGradientPaint(0, pad, 0, height-pad, palette.fillPoints, palette.fillArray);
     }
     
-    protected Paint borderPaint(float width, float height, float pad, ButtonPalette palette) {
+    protected Paint borderPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
     	return palette.border;
     }
     
-    protected Paint dashPaint(float width, float height, float pad, ButtonPalette palette) {
+    protected Paint dashPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
     	return palette.dash;
     }
     
