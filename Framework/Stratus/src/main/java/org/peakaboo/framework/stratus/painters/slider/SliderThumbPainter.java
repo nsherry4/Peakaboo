@@ -12,10 +12,10 @@ import javax.swing.JComponent;
 
 import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
-import org.peakaboo.framework.stratus.painters.ButtonPainter;
+import org.peakaboo.framework.stratus.painters.AbstractButtonPainter;
 import org.peakaboo.framework.stratus.theme.Theme;
 
-public class SliderThumbPainter extends ButtonPainter {
+public class SliderThumbPainter extends AbstractButtonPainter {
 
 	private ButtonPalette palette;
 	

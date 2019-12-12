@@ -14,7 +14,7 @@ import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.theme.Theme;
 
-public class RadioButtonPainter extends ButtonPainter {
+public class RadioButtonPainter extends AbstractButtonPainter {
 
 	private boolean selected;
 	private ButtonPalette palette;

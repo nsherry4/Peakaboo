@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
+import org.peakaboo.framework.stratus.painters.AbstractButtonPainter;
 import org.peakaboo.framework.stratus.painters.ButtonPainter;
 import org.peakaboo.framework.stratus.theme.Theme;
 
