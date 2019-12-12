@@ -20,7 +20,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.components.StratusComboBoxUI;
@@ -47,8 +46,6 @@ import org.peakaboo.framework.stratus.painters.scrollbar.ScrollBarThumbPainter;
 import org.peakaboo.framework.stratus.painters.scrollbar.ScrollBarTrackPainter;
 import org.peakaboo.framework.stratus.painters.slider.SliderThumbPainter;
 import org.peakaboo.framework.stratus.painters.slider.SliderTrackPainter;
-import org.peakaboo.framework.stratus.painters.spinner.NextButtonPainter;
-import org.peakaboo.framework.stratus.painters.spinner.PreviousButtonPainter;
 import org.peakaboo.framework.stratus.painters.spinner.SpinnerArrowPainter;
 import org.peakaboo.framework.stratus.painters.tabs.TabPainter;
 import org.peakaboo.framework.stratus.painters.tabs.TabbedAreaPainter;
@@ -464,7 +461,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Focused+Selected].backgroundPainter", new EmptyPainter());
 			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter", new EmptyPainter());
 			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter", new EmptyPainter());
-			
+					
 			//don't draw the up/down buttons distinct from the whole spinner
 			reg(ret, "Spinner:\"Spinner.nextButton\"[Disabled].backgroundPainter", new EmptyPainter());
 			reg(ret, "Spinner:\"Spinner.nextButton\"[Enabled].backgroundPainter", new EmptyPainter());

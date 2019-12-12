@@ -79,7 +79,9 @@ public class StratusSpinnerUI extends SynthSpinnerUI {
         private Component nextButton = null;
         private Component previousButton = null;
         private Component editor = null;
-
+        //Need a little bit of space to keep elements from running into the background border
+        private static final Insets pad = new Insets(0, 2, 0, 2);
+        
         public void addLayoutComponent(String name, Component c) {
             if ("Next".equals(name)) {
                 nextButton = c;
@@ -89,6 +91,10 @@ public class StratusSpinnerUI extends SynthSpinnerUI {
             }
             else if ("Editor".equals(name)) {
                 editor = c;
+				// Changing the editor component after the widget is in use seems to cause it to
+				// become opaque and break the look of the spinner. We force it to not draw a
+				// background here
+                ((JComponent)editor).setOpaque(false);
             }
         }
 
@@ -121,8 +127,8 @@ public class StratusSpinnerUI extends SynthSpinnerUI {
             Dimension size = new Dimension(editorD.width, editorD.height);
             size.width += Math.max(nextD.width, previousD.width)*2;
             Insets insets = parent.getInsets();
-            size.width += insets.left + insets.right;
-            size.height += insets.top + insets.bottom;
+            size.width += insets.left + pad.left + insets.right + pad.right;
+            size.height += insets.top + pad.top + insets.bottom + pad.bottom;
             return size;
         }
 
@@ -138,8 +144,9 @@ public class StratusSpinnerUI extends SynthSpinnerUI {
 
         public void layoutContainer(Container parent) {
             Insets insets = parent.getInsets();
-            int availWidth = parent.getWidth() - (insets.left + insets.right);
-            int availHeight = parent.getHeight() - (insets.top + insets.bottom);
+            
+            int availWidth = parent.getWidth() - (insets.left + pad.left + insets.right + pad.right);
+            int availHeight = parent.getHeight() - (insets.top + pad.top + insets.bottom + pad.bottom);
             Dimension nextD = preferredSize(nextButton);
             Dimension previousD = preferredSize(previousButton);
             int buttonWidth = Math.max(nextD.width, previousD.width);
@@ -150,17 +157,17 @@ public class StratusSpinnerUI extends SynthSpinnerUI {
              */
             int editorX, buttonsX;
             if (parent.getComponentOrientation().isLeftToRight()) {
-                editorX = insets.left;
+                editorX = insets.left + pad.left;
                 buttonsX = editorX + editorWidth;
             }
             else {
-                buttonsX = insets.left;
+                buttonsX = insets.left + pad.left;
                 editorX = buttonsX + buttonsWidth;
             }
 
-            setBounds(editor, editorX, insets.top, editorWidth, availHeight);
-            setBounds(nextButton, buttonsX, insets.top, buttonWidth, availHeight);
-            setBounds(previousButton, buttonsX+buttonWidth, insets.top, buttonWidth, availHeight);
+            setBounds(editor, editorX, insets.top + pad.top, editorWidth, availHeight);
+            setBounds(previousButton, buttonsX, insets.top + pad.top, buttonWidth, availHeight);
+            setBounds(nextButton, buttonsX+buttonWidth, insets.top + pad.top, buttonWidth, availHeight);
         }
     }
     
