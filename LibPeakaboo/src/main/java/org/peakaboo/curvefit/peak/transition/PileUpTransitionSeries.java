@@ -106,7 +106,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 		//return minimum element from primaries
 		return primaries.stream()
 				.map(p -> p.getElement())
-				.min((a, b) -> Integer.compare(a.atomicNumber(), b.atomicNumber()))
+				.min(Element::compare)
 				.orElse(null);
 	}
 

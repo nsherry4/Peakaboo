@@ -27,7 +27,7 @@ public class Concentrations {
 	
 	public List<Element> elementsByZ() {
 		List<Element> sorted = new ArrayList<>(concentrations.keySet());
-		sorted.sort((e1, e2) -> Integer.compare(e1.atomicNumber(), e2.atomicNumber()));
+		sorted.sort(Element::compare);
 		return sorted;
 	}
 	
@@ -125,7 +125,7 @@ public class Concentrations {
 		//TODO: How to handle uncalibrated elements?
 		Map<Element, Float> ppm = new LinkedHashMap<>();
 		List<Element> sorted = new ArrayList<>(intensities.keySet());
-		sorted.sort((e1, e2) -> Integer.compare(e1.atomicNumber(), e2.atomicNumber()));
+		sorted.sort(Element::compare);
 		
 		for (Element element : sorted) {
 			ppm.put(element, intensities.get(element) / sum * 1e6f);
