@@ -101,16 +101,13 @@ public class PlainText extends AbstractDataSource
 				getInteraction().notifyScanCount(lineEstimate);
 			}
 			
-			if (getInteraction().checkReadAborted()) break;
+			if (getInteraction().checkReadAborted()) { break; }
 			
 			Spectrum scan = parseLine(row, parser.getDetectedFormat().getDelimiter());
 			
-			if (size > 0 && scan.size() != scanSize) 
-			{
+			if (size > 0 && scan.size() != scanSize)  {
 				throw new Exception("Spectra sizes are not equal");
-			}
-			else if (size == 0)
-			{
+			} else if (size == 0) {
 				scanSize = scan.size();
 			}
 			

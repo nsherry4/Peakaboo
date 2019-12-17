@@ -1,7 +1,6 @@
 package org.peakaboo.filter.model;
 
-public enum FilterType
-{
+public enum FilterType {
 	
 	BACKGROUND {
 

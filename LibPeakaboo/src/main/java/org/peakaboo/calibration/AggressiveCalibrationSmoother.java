@@ -51,12 +51,12 @@ public class AggressiveCalibrationSmoother implements CalibrationProcessor {
 		float value = 0;
 		for (int ordinal = lowest.ordinal(); ordinal <= highest.ordinal(); ordinal++) {
 			ITransitionSeries ts = new PrimaryTransitionSeries(Element.values()[ordinal], tst);
-						
-			if (ts != null && calibrations.containsKey(ts)) {
+
+			//Update the value with the current TS or carry forward the last one
+			if (calibrations.containsKey(ts)) {
 				value = calibrations.get(ts);
-			} else {
-				//Nothing, value equals the last value
 			}
+			
 			int index = ordinal - lowest.ordinal();
 			values.set(index, value);
 		}
