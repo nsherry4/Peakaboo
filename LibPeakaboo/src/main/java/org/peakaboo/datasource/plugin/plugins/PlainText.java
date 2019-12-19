@@ -87,7 +87,13 @@ public class PlainText extends AbstractDataSource
 		
 		
 		CsvParserSettings settings = new CsvParserSettings();
-		settings.setDelimiterDetectionEnabled(true, ' ', '\t', ',');
+		//Note: the order of the delimiters here matters (!) because it will 
+		//determine the delimiter chosen in the event of a tie. I believe that
+		//delimiter detection is based on frequency analysis. In the case where 
+		//the *real* delimiter is ", " the comma and space will appear the same
+		//number of times. It is important that the comma appear before the 
+		//space in this list so that it is chosen in those cases.
+		settings.setDelimiterDetectionEnabled(true, ',', '\t', ' ');
 		settings.setLineSeparatorDetectionEnabled(true);
 		settings.setMaxColumns(65536);
 		settings.setMaxCharsPerColumn(24);

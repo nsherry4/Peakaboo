@@ -392,7 +392,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			
 			//CHECKBOX
-			int checkVOffset = 0;
+			int checkVOffset = -1;
 			reg(ret, "CheckBox[Disabled].iconPainter", new CheckButtonPainter(theme, ButtonState.DISABLED));
 			reg(ret, "CheckBox[Disabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.DISABLED), new CheckPainter(theme, 5, checkVOffset, false)));
 			reg(ret, "CheckBox[Enabled].iconPainter", new CheckButtonPainter(theme, ButtonState.ENABLED));
