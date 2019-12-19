@@ -12,10 +12,12 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.datasource.model.components.datasize.DataSize;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
@@ -31,13 +33,18 @@ public class QuickMapPanel extends HeaderLayer {
 
 	private MappingController controller;
 	private MapCanvas canvas;
-	private ToolbarImageButton plotSelection;
+	private FluentToolbarButton plotSelection;
 	
 	public QuickMapPanel(LayerPanel plotTab, TabbedInterface<TabbedLayerPanel> plotTabs, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
 		super(plotTab, true, true);
 		
 		RawDataController rawDataController = new RawDataController();
-		rawDataController.setMapData(maps, "", Collections.emptyList(), null, null, null, new CalibrationProfile());
+		DataSize sizeinfo = plotcontroller.data().getDataSet().getDataSource().getDataSize().orElse(null);
+		Coord<Integer> mapsize = null;
+		if (sizeinfo != null) {
+			mapsize = sizeinfo.getDataDimensions();
+		}
+		rawDataController.setMapData(maps, "", Collections.emptyList(), mapsize, null, null, new CalibrationProfile());
 		this.controller = new MappingController(rawDataController, plotcontroller);
 		
 		// load saved dimensions, and when the window closes, save them
@@ -77,8 +84,8 @@ public class QuickMapPanel extends HeaderLayer {
 		setBody(body);
 		
 		
-		ToolbarImageButton viewButton = MapperToolbar.createOptionsButton(plotTab, controller);
-		ToolbarImageButton sizingButton = createSizingButton(plotTab, controller);
+		FluentToolbarButton viewButton = MapperToolbar.createOptionsButton(controller);
+		FluentToolbarButton sizingButton = createSizingButton(plotTab, controller);
 		ButtonBox bbox = new ButtonBox(0, false);
 		bbox.setOpaque(false);
 		bbox.addRight(sizingButton);
@@ -98,21 +105,23 @@ public class QuickMapPanel extends HeaderLayer {
 		
 	}
 	
-	public static ToolbarImageButton createSizingButton(LayerPanel panel, MappingController controller) {
+	public static FluentToolbarButton createSizingButton(LayerPanel panel, MappingController controller) {
 		
-		ToolbarImageButton opts = new ToolbarImageButton();
+		FluentToolbarButton opts = new FluentToolbarButton();
 		opts.withIcon(StockIcon.MENU_SETTINGS).withTooltip("Map Dimensions Menu");
 		JPopupMenu menu = new JPopupMenu();
 		
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);
 		dimensions.setBorder(Spacing.bMedium());
-		dimensions.getGuessDimensionsButton().addActionListener(e -> {
-			menu.setVisible(false);
-		});
+		dimensions.getMagicDimensionsButton().addActionListener(e -> menu.setVisible(false));
 		dimensions.setOpaque(false);
 		menu.add(dimensions);
 		
-		opts.addActionListener(e -> menu.show(opts, (int)(opts.getWidth() - menu.getPreferredSize().getWidth()), opts.getHeight()));
+		opts.withAction(() -> {
+			int x = (int)(opts.getWidth() - menu.getPreferredSize().getWidth());
+			int y = opts.getHeight();
+			menu.show(opts, x, y);
+		});
 		
 		return opts;
 	}

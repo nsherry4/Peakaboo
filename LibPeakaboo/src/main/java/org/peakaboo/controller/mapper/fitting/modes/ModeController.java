@@ -115,7 +115,7 @@ public abstract class ModeController extends Eventful {
 	protected static String getDatasetTitle(List<ITransitionSeries> list)
 	{
 		
-		List<String> elementNames = list.stream().map(ts -> ts.toString()).collect(toList());
+		List<String> elementNames = list.stream().map(ITransitionSeries::toString).collect(toList());
 		String title = elementNames.stream().collect(joining(", "));
 		if (title == null) return "-";
 		return title;
@@ -130,8 +130,34 @@ public abstract class ModeController extends Eventful {
 	
 	public abstract String longTitle();
 	public abstract MapModeData getData();
-	public abstract boolean isSelectable();
-	public abstract boolean isReplottable();
+	
+	
+	/**
+	 * Indicates if the current mode is able to be translated back to the original spectra and replotted
+	 */
+	public abstract boolean isTranslatable();
+	
+	/**
+	 * Indicates if the current mode is a spatial mode that maps individual pixels to points on a map
+	 */
+	public boolean isSpatial() {
+		return true;
+	}
+	
+	/**
+	 * Given a list of selected points on this map mode, translate the points back
+	 * to the spectra that generated those points. This should only ever be called
+	 * for map modes where isTranslatable is true
+	 */
+	public List<Integer> translateSelection(List<Integer> points) {
+		return points;
+	}
 
+	/**
+	 * Indicates if the current mode's values can be compared to one another to
+	 * guage how closely related they are. This is used for things like selection by
+	 * similarity and is basically the same thing as in comparison-based sorting
+	 */
+	public abstract boolean isComparable();
 	
 }

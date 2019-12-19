@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 
 import org.peakaboo.framework.autodialog.model.style.Style;
 import org.peakaboo.framework.autodialog.model.style.layouts.ColumnLayoutStyle;
-
 import org.peakaboo.framework.eventful.EventfulType;
 
 public class Group implements Value<List<Value<?>>> {
@@ -51,10 +50,8 @@ public class Group implements Value<List<Value<?>>> {
 		
 	}
 	
-	public String toString()
-	{
-		String str =  "Group: " + getName();
-		return str;
+	public String toString() {
+		return "Group: " + getName();
 	}
 
 	@Override

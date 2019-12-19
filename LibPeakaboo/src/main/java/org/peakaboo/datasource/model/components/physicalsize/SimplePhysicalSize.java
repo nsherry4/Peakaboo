@@ -55,10 +55,10 @@ public class SimplePhysicalSize implements PhysicalSize {
 			
 			for (Coord<Number> point : points) {
 				if (point == null) { continue; }
-				if (point.x.floatValue() < minx) minx = point.x.floatValue();
-				if (point.y.floatValue() < miny) miny = point.y.floatValue();
-				if (point.x.floatValue() > maxx) maxx = point.x.floatValue();
-				if (point.y.floatValue() > maxy) maxy = point.y.floatValue();
+				minx = Math.min(minx, point.x.floatValue());
+				miny = Math.min(miny, point.y.floatValue());
+				maxx = Math.max(maxx, point.x.floatValue());
+				maxy = Math.max(maxy, point.y.floatValue());
 			}
 			
 			dimensions = new Coord<>(new Bounds<Number>(minx, maxx), new Bounds<Number>(miny, maxy));

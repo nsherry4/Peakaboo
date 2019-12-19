@@ -41,7 +41,7 @@ public class SelectionMaskPainter extends RasterColorMapPainter {
 		}
 		for (Integer i : points) {
 			if (i >= size || i < 0) {
-				CyclopsLog.get().log(Level.WARNING, "Selected point " + i + " is out of bounds, ignoring");
+				CyclopsLog.get().log(Level.FINE, "Selected point " + i + " is out of bounds, ignoring");
 			} else {
 				colors.set(i, selectionColour);
 			}

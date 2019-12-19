@@ -7,8 +7,6 @@ public class SimpleDataSize implements DataSize {
 
 
 	int dataWidth, dataHeight;
-	
-	public SimpleDataSize() {}
 
 	public int getDataWidth() {
 		return dataWidth;

@@ -19,12 +19,12 @@ import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
+import org.peakaboo.ui.swing.mapping.sidebar.modes.Correlation;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
-import org.peakaboo.ui.swing.mapping.sidebar.modes.Correlation;
 
 
 public class MapFittingPanel extends ClearPanel
@@ -61,26 +61,22 @@ public class MapFittingPanel extends ClearPanel
 		//create combobox
 		final JComboBox<MapModes> modeSelectBox = new JComboBox<>(MapModes.values());
 		modeSelectBox.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
-		modeSelectBox.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{
-				MapModes mode = (MapModes)modeSelectBox.getSelectedItem();
-				controller.setMapDisplayMode(mode);
-				card.show(cardPanel, mode.toString());
-			}
+		modeSelectBox.addActionListener(e -> {
+			MapModes mode = (MapModes)modeSelectBox.getSelectedItem();
+			controller.setMapDisplayMode(mode);
+			card.show(cardPanel, mode.toString());
 		});
 		JPanel modeSelectPanel = new ClearPanel(new BorderLayout());
 		modeSelectPanel.add(modeSelectBox, BorderLayout.CENTER);
 		modeSelectPanel.setBorder(Spacing.bSmall());
 		
 		
-		ImageButton selectAll = new ImageButton(StockIcon.SELECTION_ALL)
-				.withButtonSize(ImageButtonSize.COMPACT)
+		FluentButton selectAll = new FluentButton(StockIcon.SELECTION_ALL)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select All")
 				.withAction(() -> controller.getActiveMode().setAllVisible(true));
-		ImageButton selectNone = new ImageButton(StockIcon.SELECTION_NONE)
-				.withButtonSize(ImageButtonSize.COMPACT)
+		FluentButton selectNone = new FluentButton(StockIcon.SELECTION_NONE)
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select None")
 				.withAction(() -> controller.getActiveMode().setAllVisible(false));
 		ButtonLinker linker = new ButtonLinker(selectNone, selectAll);

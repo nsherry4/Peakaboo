@@ -3,12 +3,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.peakaboo</groupId>
+		<artifactId>framework</artifactId>
+		<version>5.4-SNAPSHOT</version>
+	</parent>
 	<groupId>org.peakaboo.framework</groupId>
 	<artifactId>eventful</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Eventful</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

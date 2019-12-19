@@ -1,16 +1,10 @@
 package org.peakaboo.framework.plural.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.Box;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
@@ -18,10 +12,8 @@ import javax.swing.border.EmptyBorder;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.executor.ExecutorState;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 public class ExecutorSetView extends JPanel
@@ -41,7 +33,7 @@ public class ExecutorSetView extends JPanel
 	{
 		this.setLayout(new BorderLayout());
 
-		ImageButton cancel = new ImageButton("Cancel").withStateCritical().withAction(() -> {
+		FluentButton cancel = new FluentButton("Cancel").withStateCritical().withAction(() -> {
 			executors.requestAbortWorking();
 		});
 		

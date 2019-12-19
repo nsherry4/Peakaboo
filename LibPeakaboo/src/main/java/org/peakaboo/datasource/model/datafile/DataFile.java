@@ -1,5 +1,6 @@
 package org.peakaboo.datasource.model.datafile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -22,14 +23,14 @@ public interface DataFile extends AutoCloseable {
 	/**
 	 * Gets a relative filename for this DataFile.
 	 */
-	public String getFilename();
+	String getFilename();
 
 	/**
 	 * Returns an {@link InputStream} for this DataFile
 	 * 
 	 * @throws IOException
 	 */
-	public InputStream getInputStream() throws IOException;
+	InputStream getInputStream() throws IOException;
 
 	/**
 	 * Ensures that the data is available as a file on disk (or some filesystem
@@ -46,11 +47,49 @@ public interface DataFile extends AutoCloseable {
 	 * 
 	 * @throws IOException
 	 */
-	public Path getAndEnsurePath() throws IOException;
+	Path getAndEnsurePath() throws IOException;
 
 	/**
 	 * Returns the size of the file or stream if available
 	 */
-	public Optional<Long> size();
+	Optional<Long> size();
+	
+	
+	/**
+	 * Indicates if this resource can be represented as a String and re-accessed
+	 * later. Some formats may rely on having a "magic" object passed to the
+	 * constructor which cannot be serialized and re-accessed.
+	 * 
+	 * @return true if is it addressable (re-accessable), false otherwise
+	 */
+	default boolean addressable() {
+		return address().isPresent();
+	}
+	
+	/**
+	 * Provide the address of this resource, if it is addressable
+	 * @return an Optional<String> representation of the address if it is addressable, empty otherwise
+	 */
+	Optional<String> address();
+	
+
+	/**
+	 * Tests if the resource is currently accessable.
+	 * @return true if the resource is accessible, false otherwise
+	 */
+	boolean exists();
+
+	/**
+	 * Reports if the resource can be written to as well as read 
+	 * @return true if the source is writable, false otherwise
+	 */
+	boolean writable();
+	
+	/**
+	 * If applicable, returns the local folder which contains the datafile
+	 * @return a Optional<File> object representing the file's parent directory if applicable, an empty Optional otherwise
+	 */
+	Optional<File> localFolder();
+	
 	
 }

@@ -11,8 +11,8 @@ import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 
 public class CalibrationProfilePlot extends ZCalibrationPlot {
 

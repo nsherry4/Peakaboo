@@ -1,15 +1,15 @@
 package org.peakaboo.filter.plugins.advanced;
 
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 
-public class IdentityFilter extends AbstractSimpleFilter
+public class IdentityFilter extends AbstractFilter
 {
 
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return true;
 	}
 
@@ -19,43 +19,37 @@ public class IdentityFilter extends AbstractSimpleFilter
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
-	{
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		return data;
 	}
 
 
 	@Override
-	public String getFilterDescription()
-	{
+	public String getFilterDescription() {
 		return "This filter is the identity function -- it does no processing to the data";
 	}
 
 
 	@Override
-	public String getFilterName()
-	{
+	public String getFilterName() {
 		return "None";
 	}
 
 
 	@Override
-	public FilterType getFilterType()
-	{
+	public FilterType getFilterType() {
 		return FilterType.ADVANCED;
 	}
 
 
 	@Override
-	public void initialize()
-	{
-
+	public void initialize() {
+		//NOOP
 	}
 
 
 	@Override
-	public boolean pluginEnabled()
-	{
+	public boolean pluginEnabled() {
 		return false;
 	}
 	

@@ -23,7 +23,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
@@ -64,19 +63,17 @@ public class MapperPanel extends TabbedLayerPanel {
 	private JLabel					warnOnTooSmallDataset;
 	private MapStatusBar			statusBar;
 	
-	private MapperToolbar			toolbar;
-	
 	public MapperPanel(MappingController controller, TabbedInterface<TabbedLayerPanel> parentPlotter, TabbedInterface<TabbedLayerPanel> owner) {
 		super(owner);
 		
 		this.controller = controller;
 		this.parentPlotter = parentPlotter;
 
-		this.controller.addListener(t -> {
-			owner.setTabTitle(this, getTabTitle());
-		});
+		this.controller.addListener(t -> owner.setTabTitle(this, getTabTitle()));
 		
 		this.addComponentListener(new ComponentAdapter() {
+			
+			@Override
 			public void componentResized(ComponentEvent e) {
 				canvas.updateCanvasSize();
 			}
@@ -94,8 +91,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	}
 
 
-	private void init()
-	{
+	private void init() {
 
 		JComponent contentLayer = this.getContentLayer();
 		contentLayer.setLayout(new BorderLayout());
@@ -110,7 +106,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		split.add(mapCanvas, BorderLayout.CENTER);
 		contentLayer.add(split, BorderLayout.CENTER);
 		
-		toolbar = new MapperToolbar(this, controller);
+		MapperToolbar toolbar = new MapperToolbar(this, controller);
 		contentLayer.add(toolbar, BorderLayout.NORTH);
 		
 		
@@ -148,8 +144,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	}
 	
 
-	private JPanel createCanvasPanel()
-	{
+	private JPanel createCanvasPanel() {
 		canvas = new MapCanvas(controller, true);
 		JScrollPane canvasScroller = new JScrollPane(canvas);
 		canvasScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -175,12 +170,11 @@ public class MapperPanel extends TabbedLayerPanel {
 		warnOnTooSmallDataset.setOpaque(true);
 		warnOnTooSmallDataset.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		if (controller.getUserDimensions().getUserDataHeight() * controller.getUserDimensions().getUserDataWidth() == controller.rawDataController.getMapSize())
-		{
+		int userHeight = controller.getUserDimensions().getUserDataHeight();
+		int userWidth = controller.getUserDimensions().getUserDataWidth();
+		if (userHeight * userWidth == controller.rawDataController.getMapSize()) {
 			warnOnTooSmallDataset.setVisible(false);
-		}
-		else
-		{
+		} else {
 			warnOnTooSmallDataset.setVisible(true);
 		}
 
@@ -191,7 +185,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		canvasContainer.add(warnOnTooSmallDataset, c);
 
-		statusBar = new MapStatusBar(this, controller);
+		statusBar = new MapStatusBar(controller);
 
 		c.gridx = 0;
 		c.gridy = 2;
@@ -207,20 +201,11 @@ public class MapperPanel extends TabbedLayerPanel {
 		return parentPlotter;
 	}
 
-	private void fullRedraw()
-	{
-
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-
-			public void run()
-			{
-
-				MapperPanel.this.validate();
-				repaint();
-
-			}
+	private void fullRedraw() {
+		javax.swing.SwingUtilities.invokeLater(() -> {
+			MapperPanel.this.validate();
+			repaint();
 		});
-
 	}
 
 	

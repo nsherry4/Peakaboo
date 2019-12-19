@@ -1,12 +1,12 @@
 package org.peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -28,22 +28,17 @@ import org.peakaboo.calibration.CalibrationPluginManager;
 import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.common.Env;
 import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.datasink.plugin.DataSinkPlugin;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
-import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
-import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
-import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.filter.model.FilterPluginManager;
-import org.peakaboo.filter.plugins.FilterPlugin;
-import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.stratus.theme.LightTheme;
@@ -53,16 +48,14 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
-import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.plotting.FileDrop;
@@ -73,7 +66,7 @@ public class PluginsOverview extends HeaderLayer {
 	JTree tree;
 	LayerPanel parent;
 	
-	JButton close, add, remove, reload, browse, download;
+	JButton add, remove, reload, browse, download;
 	
 	public PluginsOverview(LayerPanel parent) {
 		super(parent, true);
@@ -84,24 +77,45 @@ public class PluginsOverview extends HeaderLayer {
 		JPanel body = new JPanel(new BorderLayout());
 		body.add(pluginTree(), BorderLayout.WEST);
 		details = new JPanel(new BorderLayout());
-		details.add(new PluginMessageView("No Selection", 0), BorderLayout.CENTER);
+		details.add(new PluginMessageView("No Selection"), BorderLayout.CENTER);
 		body.add(details, BorderLayout.CENTER);
-		new FileDrop(body, files -> {
-			for (File file : files) {
-				addPluginFile(file);
+		new FileDrop(body, new FileDrop.Listener() {
+			
+			@Override
+			public void urlsDropped(URL[] urls) {
+				
+				TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
+					if (!optfiles.isPresent()) {
+						return;
+					}
+					for (File file : optfiles.get()) {
+						addPluginFile(file);
+					}
+				});
+				
+				TaskMonitorPanel.onLayerPanel(monitor, parent);
+
+			}
+			
+			@Override
+			public void filesDropped(File[] files) {
+				for (File file : files) {
+					addPluginFile(file);
+				}
 			}
 		});
+
 		setBody(body);
 		
 		
 		//header controls
-		add = new ImageButton(StockIcon.EDIT_ADD).withButtonSize(ImageButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
-		remove = new ImageButton(StockIcon.EDIT_REMOVE).withButtonSize(ImageButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
-		reload = new ImageButton(StockIcon.ACTION_REFRESH).withButtonSize(ImageButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		add = new FluentButton(StockIcon.EDIT_ADD).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
+		remove = new FluentButton(StockIcon.EDIT_REMOVE).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		reload = new FluentButton(StockIcon.ACTION_REFRESH).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
 		remove.setEnabled(false);
 		
-		browse = new ImageButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new ImageButton(StockIcon.GO_DOWN).withButtonSize(ImageButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
+		browse = new FluentButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new FluentButton(StockIcon.GO_DOWN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonLinker edits = new ButtonLinker(add, remove, reload);
 		ButtonLinker tools = new ButtonLinker(browse, download);
@@ -166,19 +180,19 @@ public class PluginsOverview extends HeaderLayer {
 				"Are you sure you want to delete the container with the plugins:\n\n" + listToUL(container.getPlugins()), 
 				MessageType.QUESTION)
 			.addRight(
-				new ImageButton("Delete").withAction(() -> {
+				new FluentButton("Delete").withAction(() -> {
 					plugin.getContainer().delete();
 					this.reload();
 				}).withStateCritical()
 				)
-			.addLeft(new ImageButton("Cancel"))
+			.addLeft(new FluentButton("Cancel"))
 			.showIn(parent);
 		
 		
 	}
 	
 	private String listToUL(List<?> stuff) {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		buff.append("<ul>");
 		for (Object o : stuff) {
 			String name = o.toString();
@@ -202,11 +216,11 @@ public class PluginsOverview extends HeaderLayer {
 		boolean handled = false;
 		
 		try {
-			handled |= addFileToManager(file, DataSourcePluginManager.SYSTEM);
-			handled |= addFileToManager(file, DataSinkPluginManager.SYSTEM);
-			handled |= addFileToManager(file, FilterPluginManager.SYSTEM);
-			handled |= addFileToManager(file, MapFilterPluginManager.SYSTEM);
-			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.SYSTEM);
+			handled |= addFileToManager(file, DataSourcePluginManager.system());
+			handled |= addFileToManager(file, DataSinkPluginManager.system());
+			handled |= addFileToManager(file, FilterPluginManager.system());
+			handled |= addFileToManager(file, MapFilterPluginManager.system());
+			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.system());
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
@@ -252,11 +266,11 @@ public class PluginsOverview extends HeaderLayer {
 	
 	
 	public void reload() {
-		DataSourcePluginManager.SYSTEM.reload();
-		DataSinkPluginManager.SYSTEM.reload();
-		FilterPluginManager.SYSTEM.reload();
-		MapFilterPluginManager.SYSTEM.reload();
-		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.SYSTEM.reload();
+		DataSourcePluginManager.system().reload();
+		DataSinkPluginManager.system().reload();
+		FilterPluginManager.system().reload();
+		MapFilterPluginManager.system().reload();
+		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.system().reload();
 		tree.setModel(buildTreeModel());
 	}
 	
@@ -292,24 +306,24 @@ public class PluginsOverview extends HeaderLayer {
 		
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
 		
-		DefaultMutableTreeNode sourcesNode = createPluginManagerRootNode(DataSourcePluginManager.SYSTEM);
+		DefaultMutableTreeNode sourcesNode = createPluginManagerRootNode(DataSourcePluginManager.system());
 		plugins.add(sourcesNode);
 		
-		DefaultMutableTreeNode sinksNode = createPluginManagerRootNode(DataSinkPluginManager.SYSTEM);
+		DefaultMutableTreeNode sinksNode = createPluginManagerRootNode(DataSinkPluginManager.system());
 		plugins.add(sinksNode);
 		
-		DefaultMutableTreeNode filtersNode = createPluginManagerRootNode(FilterPluginManager.SYSTEM);
+		DefaultMutableTreeNode filtersNode = createPluginManagerRootNode(FilterPluginManager.system());
 		plugins.add(filtersNode);
 		
-		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterPluginManager.SYSTEM);
+		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterPluginManager.system());
 		plugins.add(mapFiltersNode);
 
 		
 		
 		if (Peakaboo.SHOW_QUANTITATIVE) {
-			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.SYSTEM);
+			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.system());
 			plugins.add(calibrationsNode);
-			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.SYSTEM.getPlugins()) {
+			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.system().getPlugins()) {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 				calibrationsNode.add(node);
 			}
@@ -336,13 +350,13 @@ public class PluginsOverview extends HeaderLayer {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			details.removeAll();
 			if (node == null) { 
-				details.add(new PluginMessageView("No Selection", 0), BorderLayout.CENTER);
+				details.add(new PluginMessageView("No Selection"), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else if (!node.isLeaf()) {
 				
 				BoltPluginManager<? extends BoltPlugin> manager = (BoltPluginManager<? extends BoltPlugin>) node.getUserObject();
 				String interfaceDesc = manager.getInterfaceDescription();
-				details.add(new PluginMessageView(interfaceDesc, 300), BorderLayout.CENTER);
+				details.add(new PluginMessageView(interfaceDesc), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else {
 				Object o = node.getUserObject();
@@ -372,14 +386,14 @@ public class PluginsOverview extends HeaderLayer {
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(640, 480));
 		
-		ImageButton b1 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
-		ImageButton b2 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
+		FluentButton b1 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
+		FluentButton b2 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
 
-		ImageButton b3 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
-		ImageButton b4 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
+		FluentButton b3 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
+		FluentButton b4 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
 		
-		ImageButton b5 = new ImageButton("OK").withButtonSize(ImageButtonSize.LARGE);
-		ImageButton b6 = new ImageButton("OK", StockIcon.CHOOSE_OK).withButtonSize(ImageButtonSize.LARGE);
+		FluentButton b5 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
+		FluentButton b6 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
 		
 		ButtonBox box = new ButtonBox();
 		

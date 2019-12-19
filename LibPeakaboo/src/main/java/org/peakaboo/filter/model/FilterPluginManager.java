@@ -1,16 +1,21 @@
 package org.peakaboo.filter.model;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
 import org.peakaboo.filter.plugins.advanced.PeakDetectorFilter;
 import org.peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.SubFilter;
 import org.peakaboo.filter.plugins.background.BruknerBackgroundFilter;
+import org.peakaboo.filter.plugins.background.ExponentialComptonBackgroundFilter;
 import org.peakaboo.filter.plugins.background.LinearTrimBackgroundFilter;
 import org.peakaboo.filter.plugins.background.PolynomialBackgroundFilter;
+import org.peakaboo.filter.plugins.background.SpectrumBackgroundFilter;
 import org.peakaboo.filter.plugins.background.SquareSnipBackgroundFilter;
 import org.peakaboo.filter.plugins.mathematical.AdditionMathFilter;
 import org.peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
@@ -29,12 +34,19 @@ import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
-	public static FilterPluginManager SYSTEM;
+	private static FilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
-		if (SYSTEM == null) {
-			SYSTEM = new FilterPluginManager(filterDir);
-			SYSTEM.load();
+		try {
+			if (SYSTEM == null) {
+				SYSTEM = new FilterPluginManager(filterDir);
+				SYSTEM.load();
+			}
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load filter plugins", e);
 		}
+	}
+	public static FilterPluginManager system() {
+		return SYSTEM;
 	}
 
 	
@@ -42,15 +54,13 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	private BoltJavaBuiltinLoader<JavaFilterPlugin> builtins;
 	
 	public FilterPluginManager(File filterDir) {
-		super(FilterPlugin.class);
-		
+	
 		addLoader(new BoltJarDirectoryLoader<>(JavaFilterPlugin.class, filterDir));
 		addLoader(new BoltJarDirectoryLoader<>(JavaFilterPlugin.class));
 		
 		builtins = new BoltJavaBuiltinLoader<>(JavaFilterPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
-		//TODO: Add script loader
 	}
 	
 	private void registerCustomPlugins() {
@@ -58,11 +68,15 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		builtins.load(IdentityFilter.class);
 		builtins.load(SubFilter.class);
 		builtins.load(SpectrumNormalizationFilter.class);
+		builtins.load(DatasetNormalizationFilter.class);
 		
 		builtins.load(BruknerBackgroundFilter.class);
 		builtins.load(LinearTrimBackgroundFilter.class);
 		builtins.load(PolynomialBackgroundFilter.class);
 		builtins.load(SquareSnipBackgroundFilter.class);
+		builtins.load(SpectrumBackgroundFilter.class);
+		
+		builtins.load(ExponentialComptonBackgroundFilter.class);
 		
 		builtins.load(AdditionMathFilter.class);
 		builtins.load(DerivativeMathFilter.class);

@@ -4,11 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * Borrows heavily from SciTypes RangeSet
@@ -23,7 +18,7 @@ public class LongRangeSet implements Serializable
 	private List<LongRange> ranges;
 	
 	/**
-	 * Create a new RangeSet containing no {@link Range}s
+	 * Create a new RangeSet containing no {@link LongRange}s
 	 */
 	public LongRangeSet()
 	{
@@ -32,8 +27,8 @@ public class LongRangeSet implements Serializable
 	
 
 	/**
-	 * Add the given {@link Range}
-	 * @param range the Range to add to this RangeSet
+	 * Add the given {@link LongRange}
+	 * @param range the LongRange to add to this LongRangeSet
 	 */
 	public void addRange(LongRange range)
 	{
@@ -61,8 +56,8 @@ public class LongRangeSet implements Serializable
 		
 
 	/**
-	 * Add all of the {@link Range}s from the given RangeSet to this RangeSet
-	 * @param rangeset the RangeSet to add the elements from
+	 * Add all of the {@link LongRange}s from the given LongRangeSet to this LongRangeSet
+	 * @param rangeset the LongRangeSet to add the elements from
 	 */
 	public void addRangeSet(LongRangeSet rangeset)
 	{
@@ -73,9 +68,9 @@ public class LongRangeSet implements Serializable
 	}
 	
 	/**
-	 * Removes this {@link LongRange} from the RangeSet. This does not simply remove the given Range object, rather it 
-	 * modifies the collection of Ranges so that none of the elements contained in the given Range are contained in this 
-	 * RangeSet anymore. Eg: [1..20:2,6..30:2].removeRange(2..29:1).toSink() => [1, 30] 
+	 * Removes this {@link LongRange} from the LongRangeSet. This does not simply remove the given LongRange object, rather it 
+	 * modifies the collection of LongRanges so that none of the elements contained in the given LongRange are contained in this 
+	 * LongRangeSet anymore. Eg: [1..20:2,6..30:2].removeRange(2..29:1).toSink() => [1, 30] 
 	 * @param range the Range the elements of which should be removed from this RangeSet
 	 */
 	public void removeRange(LongRange range)
@@ -115,9 +110,9 @@ public class LongRangeSet implements Serializable
 
 	
 	/**
-	 * Determines if this RangeSet is touching the given {@link Range}. For a definition of touching, see {@link Range#isTouching(Range)}
-	 * @param other the Range to compare
-	 * @return true if the given Range is touching this RangeSet, false otherwise
+	 * Determines if this LongRangeSet is touching the given {@link LongRange}. For a definition of touching, see {@link LongRange#isTouching(LongRange)}
+	 * @param other the LongRange to compare
+	 * @return true if the given Range is touching this LongRangeSet, false otherwise
 	 */
 	public boolean isTouching(LongRange other)
 	{
@@ -132,9 +127,9 @@ public class LongRangeSet implements Serializable
 	}
 	
 	/**
-	 * Determines if this RangeSet is touching the given other RangeSet. For a definition of touching, see {@link Range#isTouching(Range)}
-	 * @param other the RangeSet to compare
-	 * @return true if the given RangeSet is touching this RangeSet, false otherwise
+	 * Determines if this LongRangeSet is touching the given other LongRangeSet. For a definition of touching, see {@link LongRange#isTouching(LongRange)}
+	 * @param other the LongRangeSet to compare
+	 * @return true if the given LongRangeSet is touching this LongRangeSet, false otherwise
 	 */
 	public boolean isTouching(LongRangeSet other)
 	{
@@ -148,7 +143,7 @@ public class LongRangeSet implements Serializable
 	}
 	
 	/**
-	 * Determines if this RangeSet is overlapping the given {@link Range}. For a definition of overlapping, see {@link Range#isOverlapping(Range)}
+	 * Determines if this RangeSet is overlapping the given {@link LongRange}. For a definition of overlapping, see {@link LongRange#isOverlapping(LongRange)}
 	 * @param other the Range to compare
 	 * @return true if the given Range is overlapping this RangeSet, false otherwise
 	 */
@@ -165,9 +160,9 @@ public class LongRangeSet implements Serializable
 	}
 	
 	/**
-	 * Determines if this RangeSet is overlapping the given other RangeSet. For a definition of overlapping, see {@link Range#isOverlapping(Range)}
-	 * @param other the RangeSet to compare
-	 * @return true if the given other RangeSet is overlapping this RangeSet, false otherwise
+	 * Determines if this LongRangeSet is overlapping the given other LongRangeSet. For a definition of overlapping, see {@link LongRange#isOverlapping(LongRange)}
+	 * @param other the LongRangeSet to compare
+	 * @return true if the given other LongRangeSet is overlapping this LongRangeSet, false otherwise
 	 */
 	public boolean isCoincident(LongRangeSet other)
 	{
@@ -190,8 +185,8 @@ public class LongRangeSet implements Serializable
 	
 	
 	/**
-	 * Get a list of the {@link Range}s included in this RangeSet
-	 * @return a list of {@link Range}s making up this RangeSet
+	 * Get a list of the {@link LongRange}s included in this LongRangeSet
+	 * @return a list of {@link LongRange}s making up this LongRangeSet
 	 */
 	public List<LongRange> getRanges()
 	{

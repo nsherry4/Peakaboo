@@ -54,7 +54,7 @@ public class GreedyFittingSolver implements FittingSolver {
 		}
 
 		
-		FittingResultSet results = new FittingResultSet(resultTotalFit, data, resultFits, resultParameters);
+		FittingResultSet results = new FittingResultSet(resultTotalFit, remainder, resultFits, resultParameters);
 		return results;
 		
 	}

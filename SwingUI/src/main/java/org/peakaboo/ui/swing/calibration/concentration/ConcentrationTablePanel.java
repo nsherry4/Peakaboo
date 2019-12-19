@@ -1,13 +1,11 @@
 package org.peakaboo.ui.swing.calibration.concentration;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.AbstractTableModel;
 
@@ -57,6 +55,7 @@ public class ConcentrationTablePanel extends JPanel {
 				return 3;
 			}
 			
+			@Override
 			public String getColumnName(int columnIndex) {
 				if (columnIndex == 0) {
 					return "Element";

@@ -1,6 +1,7 @@
 package org.peakaboo.filter.plugins.noise;
 
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -9,7 +10,7 @@ import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 
-public class LowStatisticsNoiseFilter extends AbstractSimpleFilter {
+public class LowStatisticsNoiseFilter extends AbstractFilter {
 
 	Parameter<Integer> pWindowSize;
 	Parameter<Float> pMaxSignal, pCentrepointFactor, pMaxSlope;
@@ -30,8 +31,9 @@ public class LowStatisticsNoiseFilter extends AbstractSimpleFilter {
 	}
 	
 	@Override
-	//TODO: Technically, the window size should be a multiple of the FWHM here, but we don't have access to that information. Maybe..?
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {
+	// TODO: Technically, the window size should be a multiple of the FWHM here,
+	// but we don't have access to that information. Maybe..?
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		Spectrum out = new ISpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			out.set(i, filterChannel(i, data));
@@ -102,13 +104,11 @@ public class LowStatisticsNoiseFilter extends AbstractSimpleFilter {
 
 	@Override
 	public String getFilterDescription() {
-		// TODO Auto-generated method stub
-		return "Smooths signal per-channel by shrinking a moving-average window until either: <ul style='margin-left: 15px;'><li>The signal in the window is less than Max Signal</li><li>Both of the following are true:<ul style='margin-left: 15px;'><li>The signal in the window is less than Threshold x sqrt(centerpoint)</li><li>The slopes of the left vs. right windows is less than Max Slope</li></ul></li></ul>";
+		return "Smooths signal per-channel by shrinking a moving-average window until either: <ul><li>The signal in the window is less than Max Signal</li><li>Both of the following are true:<ul><li>The signal in the window is less than Threshold x sqrt(centerpoint)</li><li>The slopes of the left vs. right windows is less than Max Slope</li></ul></li></ul>";
 	}
 
 	@Override
 	public FilterType getFilterType() {
-		// TODO Auto-generated method stub
 		return FilterType.NOISE;
 	}
 

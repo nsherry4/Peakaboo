@@ -15,26 +15,24 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelector;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 
 
 
-class GuidedFittingWidget extends TSSelectorGroup
-{
+class GuidedFittingWidget extends TSSelectorGroup {
 
 	private int	activeIndex;
 	
-	private List<ImageButton> editButtons;
+	private List<FluentButton> editButtons;
 
 
-	public GuidedFittingWidget(FittingController controller)
-	{
+	public GuidedFittingWidget(FittingController controller) {
 		super(controller, 1);
 		
-		editButtons = new ArrayList<ImageButton>();
+		editButtons = new ArrayList<>();
 		
 		resetSelectors(true);
 		activeIndex = 0;
@@ -45,27 +43,23 @@ class GuidedFittingWidget extends TSSelectorGroup
 	
 
 	@Override
-	public List<ITransitionSeries> getTransitionSeries()
-	{
-		return selectors.stream().map(s -> s.getTransitionSeries()).collect(toList());
+	public List<ITransitionSeries> getTransitionSeries() {
+		return selectors.stream().map(TSSelector::getTransitionSeries).collect(toList());
 	}
 
-	public ITransitionSeries getActiveTransitionSeries()
-	{
+	public ITransitionSeries getActiveTransitionSeries() {
 		return selectors.get(activeIndex).getTransitionSeries();		
 	}
 	
 
 	@Override
-	public void setTransitionSeriesOptions(final List<ITransitionSeries> tss)
-	{
+	public void setTransitionSeriesOptions(final List<ITransitionSeries> tss) {
 		selectors.get(activeIndex).setTransitionSeries(tss);
 	}
 	
 	
 	@Override
-	protected void refreshGUI()
-	{
+	protected void refreshGUI() {
 
 		removeAll();
 
@@ -94,9 +88,9 @@ class GuidedFittingWidget extends TSSelectorGroup
 
 			c.gridx = 1;
 			c.weightx = 0.0;
-			ImageButton edit = createEditButton(selector, i);
+			FluentButton edit = createEditButton(selector, i);
 			editButtons.add(edit);
-			edit.setEnabled(! (i == activeIndex));
+			edit.setEnabled(i != activeIndex);
 			add(edit, c);
 			
 			c.gridx = 2;
@@ -121,21 +115,19 @@ class GuidedFittingWidget extends TSSelectorGroup
 		revalidate();
 		
 		
-		TSSelectorUpdated(true);
+		tsSelectorUpdated(true);
 
 
 	}
 
 	@Override
-	protected TSSelector addTSSelector(boolean active)
-	{	
+	protected TSSelector addTSSelector(boolean active) {	
 		activeIndex = selectors.size();
 		return super.addTSSelector(active);
 	}
 	
 	@Override
-	protected void removeTSSelector(TSSelector tssel)
-	{
+	protected void removeTSSelector(TSSelector tssel) {
 		if (selectors.get(activeIndex) == tssel || activeIndex == selectors.size()-1)
 		{
 			activeIndex = Math.max(0, selectors.size() - 2);
@@ -144,23 +136,18 @@ class GuidedFittingWidget extends TSSelectorGroup
 		super.removeTSSelector(tssel);
 	}
 
-	private ImageButton createEditButton(final TSSelector selector, final int index)
-	{
+	private FluentButton createEditButton(final TSSelector selector, final int index) {
 
-		final ImageButton edit = new ImageButton(StockIcon.EDIT_EDIT, IconSize.BUTTON)
+		final FluentButton edit = new FluentButton(StockIcon.EDIT_EDIT, IconSize.BUTTON)
 				.withTooltip("Edit this fitting")
-				.withLayout(ImageButtonLayout.IMAGE)
+				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);
 
-		edit.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				activeIndex = index;
-				disableAllSelectors();
-				selector.setEnabled(true);
-				edit.setEnabled(false);
-			}
+		edit.withAction(() -> {
+			activeIndex = index;
+			disableAllSelectors();
+			selector.setEnabled(true);
+			edit.setEnabled(false);
 		});
 
 		return edit;
@@ -168,14 +155,13 @@ class GuidedFittingWidget extends TSSelectorGroup
 	}
 
 
-	private void disableAllSelectors()
-	{
+	private void disableAllSelectors() {
 		for (TSSelector selector : selectors)
 		{
 			selector.setEnabled(false);
 		}
 		
-		for (ImageButton edit : editButtons)
+		for (FluentButton edit : editButtons)
 		{
 			edit.setEnabled(true);
 		}

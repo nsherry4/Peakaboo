@@ -5,7 +5,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.peakaboo.framework.plural.executor.AbstractExecutor;

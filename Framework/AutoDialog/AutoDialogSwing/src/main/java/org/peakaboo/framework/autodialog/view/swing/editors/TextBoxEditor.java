@@ -10,8 +10,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
-import org.peakaboo.framework.autodialog.model.style.Style;
-import org.peakaboo.framework.autodialog.model.style.editors.TextBoxStyle;
 
 public class TextBoxEditor extends AbstractSwingEditor<String> {
 
@@ -29,9 +27,8 @@ public class TextBoxEditor extends AbstractSwingEditor<String> {
 
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
-		//control.setPreferredSize(new Dimension(70, control.getPreferredSize().height));
 		control.setText(param.getValue());
 
 		
@@ -96,7 +93,7 @@ public class TextBoxEditor extends AbstractSwingEditor<String> {
 	@Override
 	public String getEditorValue()
 	{
-		return (String)control.getText();
+		return control.getText();
 	}
 	
 

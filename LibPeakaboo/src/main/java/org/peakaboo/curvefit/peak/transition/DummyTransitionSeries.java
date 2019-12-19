@@ -34,7 +34,9 @@ public class DummyTransitionSeries implements ITransitionSeries {
 	}
 
 	@Override
-	public void setVisible(boolean visible) {}
+	public void setVisible(boolean visible) {
+		//NOOP
+	}
 
 	@Override
 	public TransitionShell getShell() {

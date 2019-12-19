@@ -1,12 +1,14 @@
 package org.peakaboo.framework.swidget.widgets.breadcrumb;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.function.Function;
 
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 
 public class BreadCrumbEntry<T> {
-	private ToggleImageButton button;
+	private FluentToggleButton button;
 	private T item;
 	private Function<T, String> formatter;
 	protected BreadCrumb<T> parent;
@@ -20,22 +22,35 @@ public class BreadCrumbEntry<T> {
 	}
 	
 	/**
-	 * Make the button
+	 * Make the button. This should only be called once during the constructor.
 	 */
-	protected ToggleImageButton make() {
-		button = new ToggleImageButton(formatter.apply(item));
-		button.withButtonSize(ImageButtonSize.COMPACT);
+	protected FluentToggleButton make() {
+		button = new FluentToggleButton(formatter.apply(item));
+		button.withButtonSize(FluentButtonSize.COMPACT);
 		if (item.equals(parent.getSelected())) {
 			button.setSelected(true);
 		}
-		
-		button.addActionListener(e -> {
-			if (button.isSelected()) {
+		button.withAction(selected -> {
+			if (selected) {
 				parent.makeSelection(item);
 			}
 		});
 		
 		button.addMouseWheelListener(parent.onScroll);
+		
+		button.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_UP) {
+					parent.doNavigateLeft();
+					parent.focusSelectedButton();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_DOWN) {
+					parent.doNavigateRight();
+					parent.focusSelectedButton();
+				}
+			}
+		});
 		
 		width = button.getPreferredSize().width;
 		
@@ -55,16 +70,9 @@ public class BreadCrumbEntry<T> {
 	}
 	
 	/**
-	 * The name of this entry in the breadcrumb
-	 */
-	public String name() {
-		return formatter.apply(item);
-	}
-	
-	/**
 	 * Returns the button representing this entry
 	 */
-	public ToggleImageButton getButton() {
+	public FluentToggleButton getButton() {
 		return button;
 	}
 	

@@ -1,7 +1,6 @@
 package org.peakaboo.framework.swidget.widgets.layerpanel;
 
 import java.awt.AWTEvent;
-import java.awt.Component;
 import java.awt.event.InputEvent;
 
 import javax.swing.JComponent;

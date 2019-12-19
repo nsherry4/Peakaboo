@@ -1,26 +1,34 @@
 package org.peakaboo.calibration;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.framework.bolt.plugin.config.loader.BoltConfigBuiltinLoader;
 import org.peakaboo.framework.bolt.plugin.config.loader.BoltConfigDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 
 public class CalibrationPluginManager extends BoltPluginManager<CalibrationReference> {
 
-	public static CalibrationPluginManager SYSTEM;
+	private static CalibrationPluginManager SYSTEM;
 	public static void init(File filterDir) {
-		if (SYSTEM == null) {
-			SYSTEM = new CalibrationPluginManager(filterDir);
-			SYSTEM.load();
+		try {
+			if (SYSTEM == null) {
+				SYSTEM = new CalibrationPluginManager(filterDir);
+				SYSTEM.load();
+			}
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load calibration plugins", e);
 		}
+	}
+	public static CalibrationPluginManager system() {
+		return SYSTEM;
 	}
 	
 	
 	private BoltConfigBuiltinLoader<CalibrationReference> builtins;
 	
 	public CalibrationPluginManager(File directories) {
-		super(CalibrationReference.class);
 		
 		addLoader(new BoltConfigDirectoryLoader<>(
 				CalibrationReference.class, 

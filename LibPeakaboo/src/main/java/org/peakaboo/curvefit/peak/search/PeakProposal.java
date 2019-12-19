@@ -37,8 +37,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
  *
  */
 
-public class PeakProposal
-{
+public class PeakProposal {
 
 
 	
@@ -162,10 +161,9 @@ public class PeakProposal
 		exec.addExecutor(secondStage, "Identifying Fittings");
 
 		return exec;
-		
 
-		
 	}
+	
 	
 
 	//given the energy level of a peak and a list of existing new fits, check to 
@@ -303,23 +301,17 @@ public class PeakProposal
 		
 		
 		//now sort by score
-		List<Pair<ITransitionSeries, Float>> scoredGuesses = tss.stream()
+		return tss.stream()
 			//fast scorer to shrink downthe list
 			.map(ts -> new Pair<>(ts, fastCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p2.second.compareTo(p1.second))
 			.limit(guessCount)
 			.map(p -> p.first)
-			
 			//good scorer to put them in the best order
 			.map(ts -> new Pair<>(ts, goodCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p2.second.compareTo(p1.second))
-			//.map(p -> p.first)
-			
 			.collect(Collectors.toList());
 
-		
-		//take the best in sorted order based on score
-		return scoredGuesses;
 	}
 
 

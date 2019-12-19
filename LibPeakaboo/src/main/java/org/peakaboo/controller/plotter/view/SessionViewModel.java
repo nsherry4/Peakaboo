@@ -9,6 +9,7 @@ public class SessionViewModel {
 	public float				zoom;
 	public boolean				lockPlotHeight;
 	public boolean				logTransform;
+	public boolean				showTitle;
 	
 	public SessionViewModel() {
 
@@ -18,6 +19,7 @@ public class SessionViewModel {
 		zoom = 1.0f;
 		lockPlotHeight = true;
 		logTransform = true;
+		showTitle = false;
 		
 	}
 	

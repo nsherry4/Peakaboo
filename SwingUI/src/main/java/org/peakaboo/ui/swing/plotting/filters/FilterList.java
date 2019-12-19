@@ -21,7 +21,7 @@ import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
 import org.peakaboo.ui.swing.plotting.fitting.MutableTableModel;
@@ -38,12 +38,12 @@ class FilterList extends ClearPanel {
 	
 	private ListControls controls;
 	
-	FilterList(FilteringController _controller, Window ownerWindow, FiltersetViewer _owner){
+	FilterList(FilteringController filteringController, Window ownerWindow, FiltersetViewer ownerUI) {
 		
 		super();
 		
-		controller = _controller;
-		owner = _owner;
+		controller = filteringController;
+		owner = ownerUI;
 		
 		setLayout(new BorderLayout());
 		
@@ -52,28 +52,20 @@ class FilterList extends ClearPanel {
 		scroller.setBorder(Spacing.bNone());
 		
 		add(scroller, BorderLayout.CENTER);
-		//add(createControlPanel(), BorderLayout.SOUTH);
-		//add(new TitleGradientPanel("Data Filters", true, createControlPanel()), BorderLayout.NORTH);
 		add(createControlPanel(), BorderLayout.NORTH);
 		
-		controller.addListener(new EventfulListener() {
+		controller.addListener(() -> {
+			t.invalidate();
+			m.fireChangeEvent();
 			
-			public void change() {
-
-				t.invalidate();
-				m.fireChangeEvent();
-				
-				int elements = controller.getFilterCount();
-				
-				if ( elements == 0 ){
-					controls.setElementCount(ListControls.ElementCount.NONE);
-				} else if ( elements == 1 ){
-					controls.setElementCount(ListControls.ElementCount.ONE);
-				} else {
-					controls.setElementCount(ListControls.ElementCount.MANY);
-				}
-					
-				
+			int elements = controller.getFilterCount();
+			
+			if ( elements == 0 ){
+				controls.setElementCount(ListControls.ElementCount.NONE);
+			} else if ( elements == 1 ){
+				controls.setElementCount(ListControls.ElementCount.ONE);
+			} else {
+				controls.setElementCount(ListControls.ElementCount.MANY);
 			}
 		});
 		
@@ -82,69 +74,7 @@ class FilterList extends ClearPanel {
 	
 	private JTable createFilterTable(Window owner){
 		
-		m = new MutableTableModel() {
-		
-			List<TableModelListener> listeners;
-		
-			public void setValueAt(Object value, int rowIndex, int columnIndex) {
-				
-				if (columnIndex == 0){
-					boolean enabled = (Boolean)value;
-					controller.setFilterEnabled(rowIndex, enabled);
-				}
-				
-			}
-		
-			public void removeTableModelListener(TableModelListener l)
-			{
-				if (listeners == null) listeners = new ArrayList<TableModelListener>();
-				listeners.remove(l);
-			}
-		
-			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				if (columnIndex <= 1) return true;
-				return false;
-			}
-		
-			public Object getValueAt(int rowIndex, int columnIndex) {
-				if (columnIndex == 0) return controller.getFilterEnabled(rowIndex);
-				return controller.getActiveFilter(rowIndex);
-			}
-		
-			public int getRowCount() {
-				return controller.getFilterCount();
-			}
-		
-			public String getColumnName(int columnIndex) {
-				if (columnIndex == 0) return "Use";
-				if (columnIndex == 1) return "Edit";
-				return "Filter Order";
-			}
-		
-			public int getColumnCount() {
-				return 3;
-			}
-		
-			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 0) return Boolean.class;
-				return Filter.class;
-			}
-		
-			public void addTableModelListener(TableModelListener l)
-			{
-				if (listeners == null) listeners = new ArrayList<TableModelListener>();
-				listeners.add(l);
-			}
-
-
-			public void fireChangeEvent()
-			{
-				for (TableModelListener l : listeners)
-				{
-					l.tableChanged(new TableModelEvent(this));
-				}
-			}
-		};
+		m = new FilterTableModel(controller);
 		
 		t = new JTable(m);
 		t.setFillsViewportHeight(true);
@@ -153,7 +83,6 @@ class FilterList extends ClearPanel {
 		t.getColumnModel().getColumn(1).setCellEditor(new EditButtonEditor(controller, owner));
 		
 		t.getColumnModel().getColumn(2).setCellRenderer(new FilterRenderer());
-		//t.setRowHeight(10);
 		
 		t.setShowVerticalLines(false);
 		t.setShowHorizontalLines(false);
@@ -195,18 +124,19 @@ class FilterList extends ClearPanel {
 
 	private JPanel createControlPanel(){
 		
-		ImageButton addButton = new ImageButton(StockIcon.EDIT_ADD).withTooltip("Add Filter").withAction(() -> {
-			owner.showSelectPane();
-		});
+		FluentButton addButton = new FluentButton(StockIcon.EDIT_ADD)
+				.withTooltip("Add Filter")
+				.withAction(() -> owner.showSelectPane());
 		
-		ImageButton removeButton = new ImageButton(StockIcon.EDIT_REMOVE).withTooltip("Remove Selected Filter").withAction(() -> {
-			if (t.getSelectedRow() == -1) return;
-			controller.removeFilter(t.getSelectedRow());
-		});
+		FluentButton removeButton = new FluentButton(StockIcon.EDIT_REMOVE)
+				.withTooltip("Remove Selected Filter")
+				.withAction(() -> {
+					if (t.getSelectedRow() != -1) { controller.removeFilter(t.getSelectedRow()); }
+				});
 		
-		ImageButton clearButton = new ImageButton(StockIcon.EDIT_CLEAR).withTooltip("Clear All Filters").withAction(() -> {
-			controller.clearFilters();
-		});
+		FluentButton clearButton = new FluentButton(StockIcon.EDIT_CLEAR)
+				.withTooltip("Clear All Filters")
+				.withAction(() -> controller.clearFilters());
 		
 		controls = new ListControls(addButton, removeButton, clearButton);
 		
@@ -217,3 +147,69 @@ class FilterList extends ClearPanel {
 	}
 	
 }
+
+
+class FilterTableModel implements MutableTableModel {
+	
+	private List<TableModelListener> listeners;
+	private FilteringController controller;
+	
+	public FilterTableModel(FilteringController controller) {
+		this.controller = controller;
+	}
+	
+	public void setValueAt(Object value, int rowIndex, int columnIndex) {
+		
+		if (columnIndex == 0) {
+			boolean enabled = (Boolean)value;
+			controller.setFilterEnabled(rowIndex, enabled);
+		}
+		
+	}
+
+	public void removeTableModelListener(TableModelListener l) {
+		if (listeners == null) { listeners = new ArrayList<>(); }
+		listeners.remove(l);
+	}
+
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		if (columnIndex <= 1) { return true; }
+		return false;
+	}
+
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (columnIndex == 0) { return controller.getFilterEnabled(rowIndex); }
+		return controller.getActiveFilter(rowIndex);
+	}
+
+	public int getRowCount() {
+		return controller.getFilterCount();
+	}
+
+	public String getColumnName(int columnIndex) {
+		if (columnIndex == 0) return "Use";
+		if (columnIndex == 1) return "Edit";
+		return "Filter Order";
+	}
+
+	public int getColumnCount() {
+		return 3;
+	}
+
+	public Class<?> getColumnClass(int columnIndex) {
+		if (columnIndex == 0) { return Boolean.class; }
+		return Filter.class;
+	}
+
+	public void addTableModelListener(TableModelListener l) {
+		if (listeners == null) listeners = new ArrayList<>();
+		listeners.add(l);
+	}
+
+
+	public void fireChangeEvent() {
+		for (TableModelListener l : listeners) {
+			l.tableChanged(new TableModelEvent(this));
+		}
+	}
+};

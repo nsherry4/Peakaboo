@@ -19,7 +19,9 @@ public class SwingEditorFactory {
 		registerStyleProvider("integer-slider", IntegerSliderEditor::new);
 	}
 	
-	
+	private SwingEditorFactory() {
+		// Not Constructable
+	}
 	
 	
 	
@@ -53,6 +55,7 @@ public class SwingEditorFactory {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static <T> SwingEditor<T> fallback(CoreStyle fallbackStyle) {
 		switch (fallbackStyle) {
 			case BOOLEAN: return (SwingEditor<T>) new BooleanEditor();
@@ -60,7 +63,7 @@ public class SwingEditorFactory {
 			case TEXT_AREA: return (SwingEditor<T>) new TextAreaEditor();
 			case INTEGER: return (SwingEditor<T>) new IntegerEditor();
 			case FLOAT: return (SwingEditor<T>) new FloatEditor();
-			case LIST: return (SwingEditor<T>) new ListEditor<T>();
+			case LIST: return new ListEditor<>();
 			case SPACING: return (SwingEditor<T>) new SeparatorEditor();
 			default: return null;
 		}

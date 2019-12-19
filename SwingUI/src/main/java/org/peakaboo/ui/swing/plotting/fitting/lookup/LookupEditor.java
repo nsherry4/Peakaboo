@@ -20,8 +20,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 
-class LookupEditor extends DefaultTreeCellEditor
-{
+class LookupEditor extends DefaultTreeCellEditor {
 
 	private LookupWidget	tswidget;
 	private JLabel						tstLabel;
@@ -30,8 +29,7 @@ class LookupEditor extends DefaultTreeCellEditor
 
 
 
-	public LookupEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller)
-	{
+	public LookupEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller) {
 
 		super(tree, renderer);
 
@@ -46,55 +44,43 @@ class LookupEditor extends DefaultTreeCellEditor
 		tstLabel.setOpaque(true);
 		tstLabel.setBorder(Spacing.bTiny());
 
-		//tstLabel.setFont(tstLabel.getFont().deriveFont(Font.BOLD).deriveFont(tstLabel.getFont().getSize() * 1.25f));
-
-
-		tswidget.getCheckBox().addItemListener(new ItemListener() {
-
-			public void itemStateChanged(ItemEvent e)
-			{
-				//fireEditingStopped();
-				LookupEditor.this.stopCellEditing();
-			}
-		});
+		tswidget.getCheckBox().addItemListener(e -> LookupEditor.this.stopCellEditing());
 
 	}
 
 
 	@Override
-	public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
-			boolean leaf, int row)
-	{
+	public Component getTreeCellEditorComponent(
+			JTree tree, 
+			Object value, 
+			boolean isSelected, 
+			boolean expanded,
+			boolean leaf, 
+			int row) {
 
 		Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
 
-		if (value instanceof ITransitionSeries)
-		{
+		if (value instanceof ITransitionSeries) {
 
 			ITransitionSeries ts = (ITransitionSeries) value;
 			tswidget.setName(ts.getShell().toString());
 
 			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tswidget.setForeground(cellRenderer.getTextSelectionColor());
-			//tswidget.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, renderer.getBorderSelectionColor()));
 			tswidget.setBorder(Spacing.bTiny());
 			
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tswidget;
 
-		}
-		else if (value instanceof Element)
-		{
+		} else if (value instanceof Element) {
 			Element element = (Element) value;
 			tstLabel.setText(element.atomicNumber() + " " + element.toString() + " (" + element.name() + ")");
 			
 			tstLabel.setBackground(cellRenderer.getBackgroundSelectionColor());
 			tstLabel.setForeground(cellRenderer.getTextSelectionColor());
 			tstLabel.setBorder(Spacing.bSmall());			
-			
-			
+
 			return tstLabel;
-		
 		}
 
 
@@ -105,20 +91,19 @@ class LookupEditor extends DefaultTreeCellEditor
 
 
 	@Override
-	public Object getCellEditorValue()
-	{
+	public Object getCellEditorValue() {
 		return tswidget.isSelected();
 	}
 
 
 	@Override
-	public boolean isCellEditable(EventObject e)
-	{
+	public boolean isCellEditable(EventObject e) {
 		Object selected = tree.getLastSelectedPathComponent();
 
 		if (selected == null) return false;
 		if (selected instanceof TransitionShell) return false;
 		if (selected instanceof String) return false;
+		
 		return true;
 	}
 

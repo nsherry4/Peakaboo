@@ -1,15 +1,25 @@
 package org.peakaboo.datasource.model.datafile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class PathDataFile implements DataFile {
 	
 	private Path path;
+	
+	public PathDataFile(String filename) {
+		this(new File(filename));
+	}
+	
+	public PathDataFile(File file) {
+		this.path = file.toPath();
+	}
 	
 	public PathDataFile(Path path) {
 		this.path = path;
@@ -31,7 +41,7 @@ public class PathDataFile implements DataFile {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		//NOOP
 	}
 
@@ -43,5 +53,60 @@ public class PathDataFile implements DataFile {
 			return Optional.empty();
 		}
 	}
+
+	@Override
+	public boolean exists() {
+		return Files.exists(path);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		//This line isn't needed, right? Java will just call the other method?
+		if (other instanceof PathDataFile) {
+			return equals((PathDataFile) other);
+		}
+		return false;
+	}
+	
+	public boolean equals(PathDataFile other) {
+		if (other == null) { return false; }
+		return this.path.equals(other.path);
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.path.hashCode();
+	}
+
+	@Override
+	public Optional<File> localFolder() {
+		return Optional.of(path.getParent().toFile());
+	}
+
+	@Override
+	public boolean writable() {
+		return true;
+	}
+
+	@Override
+	public Optional<String> address() {
+		try {
+			return Optional.of("file://" + path.toFile().toString());
+		} catch (UnsupportedOperationException e) {
+			return Optional.empty();
+		}
+	}
+
+	public static boolean addressValid(String address) {
+		return address.startsWith("/") || address.startsWith("file://");
+	}
+	
+	public static PathDataFile fromAddress(String address, Supplier<Path> tempDir) {
+		if (address.startsWith("file://")) {
+			address = address.substring(7);
+		}
+		return new PathDataFile(address);
+	}
+	
 
 }

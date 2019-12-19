@@ -27,7 +27,7 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 
 	@Override
 	public void initialize() {
-		percent = new Parameter<>("Cutoff Percent", new RealSpinnerStyle(), 0.1f, this::validate);
+		percent = new Parameter<>("Cutoff Percent", new RealSpinnerStyle(), 1f, this::validate);
 		addParameter(percent);
 	}
 

@@ -26,28 +26,26 @@ public class TextAreaEditor extends WrappingEditor<String, JTextArea> {
 
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
 		component.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue(getEditorValue())) {
-					validateFailed();
-				}
+				update();
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue(getEditorValue())) {
-					validateFailed();
-				}
+				update();
 			}
 			
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
+				update();
+			}
+			
+			private void update() {
 				getEditorValueHook().updateListeners(getEditorValue());
 				if (!param.setValue(getEditorValue())) {
 					validateFailed();

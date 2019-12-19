@@ -15,11 +15,9 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.plural.swing.ExecutorSetView;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.ui.swing.plotting.PlotCanvas;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
@@ -31,17 +29,16 @@ import org.peakaboo.ui.swing.plotting.fitting.summation.SummationPanel;
 
 
 
-public class CurveFittingView extends ClearPanel implements Changeable
-{
+public class CurveFittingView extends ClearPanel implements Changeable {
 
 	private FittingController	controller;
 	private PlotController	 	plotController;
 	private PlotPanel			plotPanel;
 
-	private final String		FITTED		= "Fitted";
-	private final String		LOOKUP		= "Lookup";
-	private final String		SUMMATION	= "Summation";
-	private final String		SMART		= "Smart";
+	private static final String		FITTED		= "Fitted";
+	private static final String		LOOKUP		= "Lookup";
+	private static final String		SUMMATION	= "Summation";
+	private static final String		SMART		= "Smart";
 
 
 	private FittingPanel		fittedPanel;
@@ -56,11 +53,10 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 	
 
-	public CurveFittingView(FittingController _controller, PlotController plotController, PlotPanel plotPanel, PlotCanvas canvas)
-	{
+	public CurveFittingView(FittingController controller, PlotController plotController, PlotPanel plotPanel, PlotCanvas canvas) {
 		super();
 		
-		this.controller = _controller;
+		this.controller = controller;
 		this.plotController = plotController;
 		this.plotPanel = plotPanel;
 
@@ -77,15 +73,11 @@ public class CurveFittingView extends ClearPanel implements Changeable
 		this.add(cardPanel);
 
 		
-		controller.addListener(new EventfulTypeListener<Boolean>() {
-
-			public void change(Boolean b)
-			{
-				//b will be true if the fitting model has been changed in some way
-				//other than through the FittingController (ie load session, undo, etc)
-				if (b) {
-					changed();
-				}
+		controller.addListener(b -> {
+			//b will be true if the fitting model has been changed in some way
+			//other than through the FittingController (ie load session, undo, etc)
+			if (b) {
+				changed();
 			}
 		});
 
@@ -93,8 +85,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 
 
 	@Override
-	public String getName()
-	{
+	public String getName() {
 		return "Peak Fitting";
 	}
 
@@ -102,27 +93,24 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 
 
-	public void changed()
-	{
+	public void changed() {
 		fittedPanel.changed();
 		proposalPanel.changed();
 	}
 
-	public void elementalAdd()
-	{
+	public void elementalAdd() {
 		card.show(cardPanel, LOOKUP);
 		changed();
 	}
 	
-	public void summationAdd()
-	{
+	public void summationAdd() {
 		summationPanel.setActive(true);
 		summationPanel.resetSelectors();
 		card.show(cardPanel, SUMMATION);
 		changed();
 	}
 	
-	public void guidedAdd()
+	public void guidedAdd() 
 	{
 		if (plotController.data().hasDataSet() && plotController.fitting().getMaxEnergy() > 0f) {
 			smartPanel.resetSelectors();
@@ -137,7 +125,6 @@ public class CurveFittingView extends ClearPanel implements Changeable
 				).showIn(plotPanel);
 			
 		}
-		
 
 	}
 	
@@ -179,8 +166,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 
 	
 	
-	public void dialogClose()
-	{
+	public void dialogClose() {
 		card.show(cardPanel, FITTED);
 		smartPanel.setSelectionMode(false);
 		summationPanel.setActive(false);
@@ -189,8 +175,7 @@ public class CurveFittingView extends ClearPanel implements Changeable
 	
 
 
-	private JPanel createCardPanel()
-	{
+	private JPanel createCardPanel() {
 		JPanel panel = new ClearPanel();
 		card = new CardLayout();
 		panel.setLayout(card);
@@ -202,9 +187,6 @@ public class CurveFittingView extends ClearPanel implements Changeable
 
 		return panel;
 	}
-	
-	
-	
-	
+
 }
 

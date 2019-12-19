@@ -15,7 +15,7 @@ public class GaussianFittingFunction implements FittingFunction {
 
 	private FittingContext context;
 	private double base;
-	private double OneOverTwoSigmaSquared;
+	private double oneOverTwoSigmaSquared;
 	private float mean, height;
 	
 	@Override
@@ -34,7 +34,7 @@ public class GaussianFittingFunction implements FittingFunction {
 		);
 		
 		
-		OneOverTwoSigmaSquared = 1d / (2 * sigma * sigma);
+		oneOverTwoSigmaSquared = 1d / (2 * sigma * sigma);
 	}
 	
 	protected float calcSigma() {
@@ -48,7 +48,7 @@ public class GaussianFittingFunction implements FittingFunction {
 	}
 	
 	public float forEnergyAbsolute(float energy) {
-		double exp = - (Math.pow((energy - mean), 2)  *  OneOverTwoSigmaSquared);
+		double exp = - (Math.pow((energy - mean), 2)  *  oneOverTwoSigmaSquared);
 		return (float)(base * Math.exp(exp));
 	}
 

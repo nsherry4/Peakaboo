@@ -2,23 +2,18 @@ package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
@@ -26,15 +21,12 @@ import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
-import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetListCellRenderer;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
-import org.peakaboo.ui.swing.mapping.colours.ColourComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
@@ -72,14 +64,10 @@ public class Correlation extends JPanel {
 		
 		JCheckBox clip = new JCheckBox();
 		clip.setBorder(Spacing.bMedium());
-		clip.addActionListener(e -> {
-			viewController.correlationMode().setClip(clip.isSelected());
-		});
+		clip.addActionListener(e -> viewController.correlationMode().setClip(clip.isSelected()));
 		
 		JSpinner bins = new JSpinner(new SpinnerNumberModel(100, 25, 250, 1));
-		bins.addChangeListener(change -> {
-			viewController.correlationMode().setBins((Integer)bins.getValue());
-		});
+		bins.addChangeListener(change -> viewController.correlationMode().setBins((Integer)bins.getValue()));
 		viewController.correlationMode().addListener(() -> {
 			int oldValue = (Integer)bins.getValue();
 			int newValue = viewController.correlationMode().getBins();
@@ -134,8 +122,7 @@ public class Correlation extends JPanel {
 			}
 
 			public void removeTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -157,7 +144,6 @@ public class Correlation extends JPanel {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
-
 					case 0: return viewController.correlationMode().getVisibility(ts);
 					case 1: return ts;
 					case 2: return ts;
@@ -173,8 +159,7 @@ public class Correlation extends JPanel {
 
 			public String getColumnName(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return "Map";
 					case 1: return "Fitting";
 					case 2: return "Correlation Set";
@@ -188,8 +173,7 @@ public class Correlation extends JPanel {
 
 			public Class<?> getColumnClass(int columnIndex) {
 				
-				switch (columnIndex)
-				{
+				switch (columnIndex) {
 					case 0:	return Boolean.class;
 					case 1: return ITransitionSeries.class;
 					case 2: return ITransitionSeries.class;
@@ -198,8 +182,7 @@ public class Correlation extends JPanel {
 			}
 
 			public void addTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-
+				// NOOP
 			}
 		};
 
@@ -230,16 +213,7 @@ public class Correlation extends JPanel {
 		column.setResizable(false);
 		column.setPreferredWidth(60);
 		column.setMaxWidth(60);
-		
-		/*ComboTableCellRenderer renderer = new ComboTableCellRenderer();
-		
-		comboBox.setRenderer(renderer);
-		
-		
-		
 
-		*/
-		
 		
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));
@@ -253,7 +227,7 @@ public class Correlation extends JPanel {
 
 class AxisWidget extends ListWidget<ITransitionSeries> {
 
-	ToggleImageButton group1, group2;
+	FluentToggleButton group1, group2;
 	ButtonGroup group;
 	ButtonLinker linker;
 	MapFittingController controller;
@@ -263,8 +237,8 @@ class AxisWidget extends ListWidget<ITransitionSeries> {
 	public AxisWidget(MapFittingController controller) {
 		this.controller = controller;
 		
-		group1 = new ToggleImageButton("X").withButtonSize(ImageButtonSize.COMPACT);
-		group2 = new ToggleImageButton("Y").withButtonSize(ImageButtonSize.COMPACT);
+		group1 = new FluentToggleButton("X").withButtonSize(FluentButtonSize.COMPACT);
+		group2 = new FluentToggleButton("Y").withButtonSize(FluentButtonSize.COMPACT);
 		group1.setPreferredSize(new Dimension(26, 26));
 		group2.setPreferredSize(new Dimension(26, 26));
 		group = new ButtonGroup();

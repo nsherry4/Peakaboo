@@ -11,23 +11,23 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.plural.streams.StreamExecutor.Event;
-import org.peakaboo.framework.plural.streams.swing.StreamExecutorPanel;
-import org.peakaboo.framework.plural.streams.swing.StreamExecutorView;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 
 public class MapDimensionsPanel extends JPanel {
 
-	private JSpinner width;
-	private JSpinner height;
-	private ImageButton magic;
+	//either guess or reset, depending on if we have the original dimensions or not
+	private FluentButton magic; 
+	private JSpinner widthSpinner, heightSpinner;
 	
 	public MapDimensionsPanel(LayerPanel tabPanel, MappingController controller) {
 		this(tabPanel, controller, false);
@@ -47,9 +47,10 @@ public class MapDimensionsPanel extends JPanel {
 		c.weightx = 0.0;
 		c.weighty = 0.0;
 		c.gridy = 0;
-		width = new JSpinner();
-		width.setValue(controller.getUserDimensions().getUserDataWidth());
-		width.addChangeListener(e -> {
+		widthSpinner = new JSpinner();
+		widthSpinner.setValue(controller.getUserDimensions().getUserDataWidth());
+		widthSpinner.addChangeListener(e -> {
+			//Why is this like this instead of just widthSpinner.getValue()?
 			controller.getUserDimensions().setUserDataWidth((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
@@ -60,12 +61,12 @@ public class MapDimensionsPanel extends JPanel {
 		c.gridx = 1;
 		c.weightx = 0.0;
 		c.anchor = GridBagConstraints.LINE_END;
-		this.add(width, c);
+		this.add(widthSpinner, c);
 
 		c.gridy += 1;
-		height = new JSpinner();
-		height.setValue(controller.getUserDimensions().getUserDataHeight());
-		height.addChangeListener(e -> {
+		heightSpinner = new JSpinner();
+		heightSpinner.setValue(controller.getUserDimensions().getUserDataHeight());
+		heightSpinner.addChangeListener(e -> {
 			controller.getUserDimensions().setUserDataHeight((Integer) ((JSpinner) e.getSource()).getValue());
 		});
 
@@ -76,80 +77,92 @@ public class MapDimensionsPanel extends JPanel {
 		c.gridx = 1;
 		c.weightx = 0.0;
 		c.anchor = GridBagConstraints.LINE_END;
-		this.add(height, c);
+		this.add(heightSpinner, c);
 		
 		
 		if (!controller.rawDataController.hasOriginalDataDimensions()) {
-			magic = new ImageButton(compact ? "Guess" : "Guess Dimensions")
-					.withIcon("auto", IconSize.TOOLBAR_SMALL)
-					.withTooltip("Try to detect the map's dimensions.")
-					.withLayout(ImageButtonLayout.IMAGE_ON_SIDE)
-					.withBordered(false);
+			
+			magic = makeGuessDimensionsButton(tabPanel, controller, compact);
 			c.gridx = 0;
 			c.gridwidth = 2;
 			c.gridy += 1;
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
-			magic.addActionListener(e -> {
-				StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
-				StreamExecutorView view = new StreamExecutorView(guessTask);
-				StreamExecutorPanel panel = new StreamExecutorPanel("Detecting Dimensions", view);
-				ModalLayer layer = new ModalLayer(tabPanel, panel);
-				guessTask.addListener(event -> {
-					SwingUtilities.invokeLater(() -> {
-						if (event == Event.ABORTED) {
-							tabPanel.removeLayer(layer);
-						}
-						if (event == Event.COMPLETED) {
-						
-							tabPanel.removeLayer(layer);
-							
-							Coord<Integer> guess = guessTask.getResult().orElse(null);
-							if (guess != null) {
-								height.setValue(1);
-								width.setValue(1);
-								height.setValue(guess.y);
-								width.setValue(guess.x);
-							}							
-						}
-					});
-				});
-				tabPanel.pushLayer(layer);
-				guessTask.start();				
-
-			});
 			this.add(magic, c);
+			
 		} else {
-			ImageButton reset = new ImageButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
-					.withTooltip("Reset the dimensions to those given in the data set.")
-					.withLayout(ImageButtonLayout.IMAGE)
-					.withBordered(false);
+			
+			magic = makeResetDimensionsButton(controller);
 			c.gridx = 0;
 			c.gridwidth = 2;
 			c.gridy += 1;
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
-			reset.addActionListener(e -> {
-				height.setValue(controller.rawDataController.getOriginalDataHeight());
-				width.setValue(controller.rawDataController.getOriginalDataWidth());
-			});
-			this.add(reset, c);
+			this.add(magic, c);
+			
 		}
 		c.gridwidth = 1;
 		
 		
 		
 		controller.addListener(t -> {
-			width.setValue(controller.getUserDimensions().getUserDataWidth());
-			height.setValue(controller.getUserDimensions().getUserDataHeight());
+			widthSpinner.setValue(controller.getUserDimensions().getUserDataWidth());
+			heightSpinner.setValue(controller.getUserDimensions().getUserDataHeight());
 		});
 		
 	}
 
-	public ImageButton getGuessDimensionsButton() {
+	public FluentButton getMagicDimensionsButton() {
 		return magic;
 	}
 	
 	
+	private FluentButton makeGuessDimensionsButton(LayerPanel tabPanel, MappingController controller, boolean compact) {
+		return new FluentButton(compact ? "Guess" : "Guess Dimensions")
+				.withIcon("auto", IconSize.TOOLBAR_SMALL)
+				.withTooltip("Try to detect the map's dimensions.")
+				.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
+				.withBordered(false)
+				.withAction(() -> {
+					StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
+					TaskMonitorView view = new TaskMonitorView(guessTask);
+					TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Dimensions", view);
+					ModalLayer layer = new ModalLayer(tabPanel, panel);
+					guessTask.addListener(event -> {
+						SwingUtilities.invokeLater(() -> {
+							if (event == Event.ABORTED) {
+								tabPanel.removeLayer(layer);
+							}
+							if (event == Event.COMPLETED) {
+							
+								tabPanel.removeLayer(layer);
+								
+								Coord<Integer> guess = guessTask.getResult().orElse(null);
+								if (guess != null) {
+									heightSpinner.setValue(1);
+									widthSpinner.setValue(1);
+									heightSpinner.setValue(guess.y);
+									widthSpinner.setValue(guess.x);
+								}							
+							}
+						});
+					});
+					tabPanel.pushLayer(layer);
+					guessTask.start();				
+		
+				});
+		
+	}
+	
+	private FluentButton makeResetDimensionsButton(MappingController controller) {
+		return new FluentButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
+				.withTooltip("Reset the dimensions to those given in the data set.")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withBordered(false)
+				.withAction(() -> {
+					heightSpinner.setValue(controller.rawDataController.getOriginalDataHeight());
+					widthSpinner.setValue(controller.rawDataController.getOriginalDataWidth());
+				});
+	}
 	
 }

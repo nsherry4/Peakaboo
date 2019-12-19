@@ -37,15 +37,19 @@ public class SavedCalibrationSession {
 	public void loadInto(CalibrationController controller) {
 		
 		if (profileYaml != null) {
-			controller.setCalibrationProfile(CalibrationProfile.load(profileYaml), new File(profileFilename));
+			File source = null;
+			if (profileFilename != null) {
+				source = new File(profileFilename);
+			}
+			controller.setCalibrationProfile(CalibrationProfile.load(profileYaml), source);
 		} else {
 			controller.setCalibrationProfile(new CalibrationProfile(), null);
 		}
 		
 		if (referenceUUID != null) {
 			CalibrationReference reference;
-			if (CalibrationPluginManager.SYSTEM.hasUUID(referenceUUID)) {
-				reference = CalibrationPluginManager.SYSTEM.getByUUID(referenceUUID).create();
+			if (CalibrationPluginManager.system().hasUUID(referenceUUID)) {
+				reference = CalibrationPluginManager.system().getByUUID(referenceUUID).create();
 			} else {
 				reference = CalibrationReference.load(referenceYaml);
 			}

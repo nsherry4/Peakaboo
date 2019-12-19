@@ -14,8 +14,8 @@ import javax.swing.border.EmptyBorder;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
@@ -25,7 +25,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 	private PlotController controller;
 	
 	private JSpinner minEnergy, maxEnergy;
-	private ImageButton energyGuess;
+	private FluentButton energyGuess;
 	
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
@@ -50,8 +50,8 @@ public class PlotMenuEnergy extends JPopupMenu {
 		zcal.setOpaque(false);
 		zcal.setBorder(Spacing.bMedium());
 
-		JButton button = new ImageButton("Z-Calibration")
-				.withButtonSize(ImageButtonSize.COMPACT)
+		JButton button = new FluentButton("Z-Calibration")
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> {
 					this.setVisible(false);
 					plot.actionShowCalibrationProfileManager();		
@@ -69,8 +69,8 @@ public class PlotMenuEnergy extends JPopupMenu {
 		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
 		advanced.setOpaque(false);
 		advanced.setBorder(Spacing.bMedium());
-		JButton button = new ImageButton("Advanced Options")
-				.withButtonSize(ImageButtonSize.COMPACT)
+		JButton button = new FluentButton("Advanced Options")
+				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> {
 					this.setVisible(false);
 					plot.actionShowAdvancedOptions();		
@@ -125,15 +125,15 @@ public class PlotMenuEnergy extends JPopupMenu {
 		});
 		energy.addSetting(maxEnergy, "Maximum");
 
-		energyGuess = new ImageButton("Guess Calibration")
+		energyGuess = new FluentButton("Guess Calibration")
 				.withIcon("auto", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Try to detect the correct max energy value by matching fittings to strong signal. Use with care.")
-				.withBordered(false);
-		energyGuess.addActionListener(e -> {
-			//custom controls in a menu don't hide the menu when activated
-			this.setVisible(false);
-			plot.actionGuessMaxEnergy();	
-		});
+				.withBordered(false)
+				.withAction(() -> {
+					//custom controls in a menu don't hide the menu when activated
+					this.setVisible(false);
+					plot.actionGuessMaxEnergy();	
+				});
 		energy.addSetting(energyGuess);
 		
 		return energy;

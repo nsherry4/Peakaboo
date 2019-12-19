@@ -16,8 +16,8 @@ import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.eventful.IEventful;
 
 
-public class TSSelector extends JPanel implements IEventful
-{
+public class TSSelector extends JPanel implements IEventful {
+	
 	//EVENTFUL
 	private Eventful listenee;
 	
@@ -46,8 +46,7 @@ public class TSSelector extends JPanel implements IEventful
 	
 	private ActionListener tsComboListener;
 	
-	public TSSelector()
-	{
+	public TSSelector() {
 		listenee = new Eventful();
 		setLayout(new BorderLayout());
 
@@ -58,13 +57,9 @@ public class TSSelector extends JPanel implements IEventful
 		tsLabel.setHorizontalAlignment(JLabel.CENTER);
 
 		
-		tsComboListener = new ActionListener() {
-
-			public void actionPerformed(ActionEvent e)
-			{
-				updateLabelText();
-				updateListeners();
-			}
+		tsComboListener = e -> {
+			updateLabelText();
+			updateListeners();
 		};
 		
 		tsCombo.addActionListener(tsComboListener);
@@ -75,8 +70,7 @@ public class TSSelector extends JPanel implements IEventful
 	}
 
 
-	public void setTransitionSeries(List<ITransitionSeries> tss)
-	{
+	public void setTransitionSeries(List<ITransitionSeries> tss) {
 		
 		tsCombo.removeActionListener(tsComboListener);
 		tsCombo.removeAllItems();
@@ -84,7 +78,7 @@ public class TSSelector extends JPanel implements IEventful
 		if (tss == null) return;
 		
 		for (ITransitionSeries ts : tss) { tsCombo.addItem(ts); }
-		if (tss.size() > 0) tsCombo.setSelectedIndex(0);
+		if (!tss.isEmpty()) tsCombo.setSelectedIndex(0);
 		
 		updateLabelText();
 		
@@ -93,20 +87,17 @@ public class TSSelector extends JPanel implements IEventful
 		
 	}
 	
-	public ITransitionSeries getTransitionSeries()
-	{
+	public ITransitionSeries getTransitionSeries() {
 		return (ITransitionSeries) tsCombo.getSelectedItem();
 	}
 	
 	
 	@Override
-	public void setEnabled(boolean enabled)
-	{
+	public void setEnabled(boolean enabled) {
 		
 		this.removeAll();
 		
-		if (enabled)
-		{
+		if (enabled) {
 			add(tsCombo, BorderLayout.CENTER);
 		} else {
 			add(tsLabel, BorderLayout.CENTER);
@@ -116,10 +107,8 @@ public class TSSelector extends JPanel implements IEventful
 
 	}
 	
-	private void updateLabelText()
-	{
-		if (tsCombo.getSelectedItem() == null)
-		{
+	private void updateLabelText() {
+		if (tsCombo.getSelectedItem() == null) {
 			tsLabel.setText("");
 		} else {
 			tsLabel.setText(  tsCombo.getSelectedItem().toString()  );

@@ -21,10 +21,10 @@ import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
 import org.peakaboo.curvefit.peak.search.searcher.DoubleDerivativePeakSearcher;
-import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -160,7 +160,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public List<ITransitionSeries> getVisibleTransitionSeries()
 	{
-		return getFittedTransitionSeries().stream().filter(ts -> ts.isVisible()).collect(toList());
+		return getFittedTransitionSeries().stream().filter(ITransitionSeries::isVisible).collect(toList());
 	}
 
 	public float getTransitionSeriesIntensity(ITransitionSeries ts)
@@ -306,7 +306,7 @@ public class FittingController extends EventfulType<Boolean>
 	
 	public boolean canMap()
 	{
-		return ! (getVisibleTransitionSeries().size() == 0 || plot.data().getDataSet().getScanData().scanCount() == 0);
+		return ! (getVisibleTransitionSeries().isEmpty() || plot.data().getDataSet().getScanData().isEmpty());
 	}
 
 
@@ -491,10 +491,7 @@ public class FittingController extends EventfulType<Boolean>
 			return false;
 		}
 		String annotation = getAnnotation(ts);
-		if (annotation == null || annotation.trim().length() == 0) {
-			return false;
-		}
-		return true;
+		return annotation != null && annotation.trim().length() > 0;
 	}
 	
 	public String getAnnotation(ITransitionSeries ts) {
@@ -519,7 +516,7 @@ public class FittingController extends EventfulType<Boolean>
 		updateListeners(false);
 	}
 
-	public Boolean getShowEscapePeaks() {
+	public boolean getShowEscapePeaks() {
 		return fittingModel.selections.getFittingParameters().getShowEscapePeaks();
 	}
 
@@ -532,6 +529,16 @@ public class FittingController extends EventfulType<Boolean>
 		updateListeners(false);
 	}
 
+	
+	public void populatePlotData(PlotData data) {
+		data.selectionResults = getFittingSelectionResults();
+		data.proposedResults = getFittingProposalResults();
+		data.calibration = getEnergyCalibration();
+		data.detectorMaterial = getDetectorMaterial();
+		data.highlightedTransitionSeries = getHighlightedTransitionSeries();
+		data.proposedTransitionSeries = getProposedTransitionSeries();
+		data.annotations = getAnnotations();
+	}
 	
 	
 	

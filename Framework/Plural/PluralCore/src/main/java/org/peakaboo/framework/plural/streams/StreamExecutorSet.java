@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
+
 public class StreamExecutorSet<T> {
 
 	private List<StreamExecutor<?>> executors;
@@ -30,8 +32,8 @@ public class StreamExecutorSet<T> {
 		this.executors.get(0).start();
 	}
 
-	public StreamExecutor<T> last() {
-		return (StreamExecutor<T>) this.executors.get(this.executors.size()-1);
+	public TaskMonitor<T> last() {
+		return (TaskMonitor<T>) this.executors.get(this.executors.size()-1);
 	}
 	
 	

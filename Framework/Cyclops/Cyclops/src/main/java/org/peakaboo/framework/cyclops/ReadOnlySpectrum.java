@@ -56,6 +56,7 @@ public interface ReadOnlySpectrum extends Serializable, Iterable<Float> {
 	boolean equals(Object oother);
 
 	String toString();
+	String toString(String delimiter);
 	
 	
 	

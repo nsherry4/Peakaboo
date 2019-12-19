@@ -1,7 +1,5 @@
 package org.peakaboo.framework.bolt.plugin.core;
 
-import java.net.URL;
-
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 /**
@@ -59,7 +57,7 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 	 * @return true if this plugin's version is newer or the same, false if this plugin version is older, or if the UUIDs don't match
 	 */
 	default boolean isUpgradeFor(BoltPluginPrototype<?> other) {
-		if (getUUID() != other.getUUID()) {
+		if (!getUUID().equals(other.getUUID())) {
 			return false;
 		}
 		int cmp = AlphaNumericComparitor.compareVersions(getVersion(), other.getVersion());
@@ -73,7 +71,7 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 	}
 	
 	default boolean isNewerThan(BoltPluginPrototype<?> other) {
-		if (getUUID() != other.getUUID()) {
+		if (!getUUID().equals(other.getUUID())) {
 			return false;
 		}
 		int cmp = AlphaNumericComparitor.compareVersions(getVersion(), other.getVersion());

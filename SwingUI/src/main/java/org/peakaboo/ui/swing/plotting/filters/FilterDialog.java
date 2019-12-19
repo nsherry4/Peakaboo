@@ -8,7 +8,7 @@ import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
 import org.peakaboo.framework.autodialog.view.swing.editors.SwingEditorFactory;
 
-class FilterDialog extends SwingAutoDialog{
+class FilterDialog extends SwingAutoDialog {
 	
 	static {
 		SwingEditorFactory.registerStyleProvider("sub-filter", SubfilterEditor::new);
@@ -16,11 +16,7 @@ class FilterDialog extends SwingAutoDialog{
 	
 	FilterDialog(FilteringController controller, Filter filter, AutoDialogButtons buttons, Window window) {
 		super(window, filter.getParameterGroup(), buttons);
-		
-		getGroup().getValueHook().addListener(o -> {
-			controller.filteredDataInvalidated();
-		});
-		
+		getGroup().getValueHook().addListener(o -> controller.filteredDataInvalidated());
 	}
 	
 	

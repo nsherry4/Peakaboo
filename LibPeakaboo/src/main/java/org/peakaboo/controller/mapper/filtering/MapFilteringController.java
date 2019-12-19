@@ -1,6 +1,5 @@
 package org.peakaboo.controller.mapper.filtering;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -176,7 +175,7 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	 * Returns true if the map data is being changed by the filters
 	 */
 	public boolean isFiltering() {
-		return filters.getAll().stream().map(f -> f.isEnabled()).reduce(false, (a, b) -> a || b);
+		return filters.getAll().stream().map(MapFilter::isEnabled).reduce(false, (a, b) -> a || b);
 	}
 	
 	public Coord<Bounds<Number>> getRealDimensions() {
@@ -211,7 +210,7 @@ class CachedMaps {
 			EventfulSoftCache<AreaMap> mapcache = new EventfulSoftCache<>(() -> {
 				ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
 				AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
-				areamap = filters.applyUnsynchronized(areamap);
+				areamap = filters.apply(areamap);
 				return areamap;
 			});
 			
@@ -232,7 +231,7 @@ class CachedMaps {
 			sum = new AreaMap(total, map.getSize(), map.getRealDimensions());
 		} else {
 			sum = new AreaMap(new ISpectrum(size.x * size.y), size, null);
-			sum = filters.applyUnsynchronized(sum);
+			sum = filters.apply(sum);
 		}
 		
 	}

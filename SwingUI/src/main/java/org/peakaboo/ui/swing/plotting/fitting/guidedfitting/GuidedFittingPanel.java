@@ -14,15 +14,13 @@ import javax.swing.JScrollPane;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
 import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
 import org.peakaboo.ui.swing.plotting.PlotCanvas;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 
 
-public class GuidedFittingPanel extends JPanel
-{
+public class GuidedFittingPanel extends JPanel {
 
 	private FittingController		controller;
 	private PlotCanvas				canvas;
@@ -35,26 +33,23 @@ public class GuidedFittingPanel extends JPanel
 	private List<ITransitionSeries>	potentials;
 
 
-	public GuidedFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas)
-	{
+	public GuidedFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas) {
 		this.controller = controller;
 		this.canvas = canvas;
 
-		potentials = new ArrayList<ITransitionSeries>();
+		potentials = new ArrayList<>();
 
-		selControls = new SelectionListControls("Fittings") {
+		selControls = new SelectionListControls("Fittings", "Click Plot to Fit") {
 
 			@Override
-			protected void cancel()
-			{
+			protected void cancel() {
 				controller.clearProposedTransitionSeries();
 				owner.dialogClose();
 			}
 
 
 			@Override
-			protected void approve()
-			{
+			protected void approve() {
 				controller.commitProposedTransitionSeries();
 				owner.dialogClose();
 			}
@@ -73,7 +68,7 @@ public class GuidedFittingPanel extends JPanel
 		
 
 		this.add(scroll, BorderLayout.CENTER);
-		this.add(new TitlePaintedPanel("Click Plot to Fit", false, selControls), BorderLayout.NORTH);
+		this.add(selControls, BorderLayout.NORTH);
 
 		
 
@@ -85,8 +80,7 @@ public class GuidedFittingPanel extends JPanel
 	 * Flips the canvas between guided fitting (selection) mode (true) and normal
 	 * mode
 	 */
-	public void setSelectionMode(boolean mode)
-	{
+	public void setSelectionMode(boolean mode) {
 		if (mode)
 		{
 			guidedWidget.setTransitionSeriesOptions(null);
@@ -116,8 +110,7 @@ public class GuidedFittingPanel extends JPanel
 		}
 	}
 	
-	public void resetSelectors()
-	{
+	public void resetSelectors() {
 		guidedWidget.resetSelectors(true);
 	}
 

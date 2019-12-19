@@ -1,8 +1,6 @@
 package org.peakaboo.framework.autodialog.view.swing.editors;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -12,39 +10,28 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
+import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileFilter;
+import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFileChooser;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 public class FilenameEditor extends AbstractSwingEditor<String> {
 
-	private FileSelector control = new FileSelector(this);
-	
-
-	public FilenameEditor() {
-		
-	}
-	
-	public FilenameEditor(JFileChooser chooser) {
-		setFileChooser(chooser);
-	}
+	private FileSelector control;
 	
 	@Override
 	public void initialize(Parameter<String> param) {
 		this.param = param;
+		FileNameStyle style = (FileNameStyle) param.getStyle();
+		this.control = new FileSelector(this, style);
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
-	}
-	
-	public void setFileChooser(JFileChooser chooser) {
-		control.chooser = chooser;
-	}
-	
-	public JFileChooser getFileChooser() {
-		return control.chooser;
 	}
 	
 
@@ -90,60 +77,61 @@ public class FilenameEditor extends AbstractSwingEditor<String> {
 }
 
 
-class FileSelector extends JPanel
-{
+class FileSelector extends JPanel {
 	JTextField filenameField;
 	JButton open;
 	String filename;
-	JFileChooser chooser;
+	SwidgetFileChooser chooser;
 	
-	public FileSelector(final FilenameEditor parent) {
+	public FileSelector(final FilenameEditor parent, FileNameStyle style) {
 		super(new BorderLayout());
-		open = new ImageButton().withIcon(StockIcon.DOCUMENT_OPEN).withTooltip("Browse for Files").withLayout(ImageButtonLayout.IMAGE);
+		
 		
 		filenameField = new JTextField(10);
 		filenameField.setEditable(false);
 		
-		chooser = new JFileChooser();
+		chooser = new SwidgetFileChooser();
+		if (style.getTypeTitle() != null && style.getTypeExtensions() != null) {
+			chooser.setFileFilter(new SimpleFileFilter(new SimpleFileExtension(style.getTypeTitle(), style.getTypeExtensions())));	
+		}
 		
-		open.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				//display dialog
-				chooser.showOpenDialog(FileSelector.this);
-				
-				//return if no selection
-				if (chooser.getSelectedFile() == null) return;
-				
-				//update with selection
-				setFilename(chooser.getSelectedFile().toString());
-				parent.getEditorValueHook().updateListeners(parent.getEditorValue());
-				if (!parent.param.setValue(parent.getEditorValue())) {
-					parent.validateFailed();
-				}
-			}
-		});
+		
+		open = new FluentButton()
+				.withIcon(StockIcon.DOCUMENT_OPEN)
+				.withTooltip("Browse for Files")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withAction(() -> {
+					//display dialog
+					if (chooser.showOpenDialog(FileSelector.this) != JFileChooser.APPROVE_OPTION) {
+						return;
+					}
+					
+					//return if no selection
+					if (chooser.getSelectedFile() == null) return;
+					
+					//update with selection
+					setFilename(chooser.getSelectedFile().toString());
+					parent.getEditorValueHook().updateListeners(parent.getEditorValue());
+					if (!parent.param.setValue(parent.getEditorValue())) {
+						parent.validateFailed();
+					}
+				});
 		
 		add(open, BorderLayout.EAST);
 		add(filenameField);
 		
 	}
 	
-	public String getFilename()
-	{
+	public String getFilename() {
 		return filename;
 	}
 	
-	public void setFilename(String filename)
-	{
+	public void setFilename(String filename) {
 		this.filename = filename;
 		setFilenameField(filename);
 	}
 	
-	private void setFilenameField(String filename)
-	{
+	private void setFilenameField(String filename) {
 		
 		String name = "";
 		if (filename != null) {

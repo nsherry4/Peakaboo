@@ -2,12 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.peakaboo.framework</groupId>
+	<parent>
+		<groupId>org.peakaboo.framework</groupId>
+		<artifactId>plural</artifactId>
+		<version>5.4-SNAPSHOT</version>
+	</parent>
 	<artifactId>plural-core</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>PluralCore</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -24,7 +26,7 @@
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>eventful</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	

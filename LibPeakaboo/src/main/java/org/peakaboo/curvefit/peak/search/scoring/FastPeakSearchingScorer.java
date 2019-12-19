@@ -1,7 +1,6 @@
 package org.peakaboo.curvefit.peak.search.scoring;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;

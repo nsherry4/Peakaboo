@@ -17,14 +17,11 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
  * component from the plot after mapping has occurred and a {@link RawMapSet}
  * has been generated.
  */
-public class RawDataController extends EventfulType<MapUpdateType>
-{
+public class RawDataController extends EventfulType<MapUpdateType> {
 
 	RawDataModel mapModel;
-	
-	
-	public RawDataController()
-	{
+		
+	public RawDataController() {
 		mapModel = new RawDataModel();
 	}
 	
@@ -41,10 +38,8 @@ public class RawDataController extends EventfulType<MapUpdateType>
 			Coord<Integer> dataDimensions,
 			Coord<Bounds<Number>> realDimensions,
 			SISize realDimensionsUnits, 
-			CalibrationProfile calibrationProfile
-			
-	)
-	{
+			CalibrationProfile calibrationProfile		
+	) {
 	
 		
 		mapModel.mapResults = data;
@@ -61,8 +56,7 @@ public class RawDataController extends EventfulType<MapUpdateType>
 
 	}
 	
-	public int getMapSize()
-	{
+	public int getMapSize() {
 		return mapModel.mapSize();
 	}
 
@@ -95,43 +89,45 @@ public class RawDataController extends EventfulType<MapUpdateType>
 
 
 
-	public List<Integer> getBadPoints()
-	{
+	public List<Integer> getBadPoints() {
 		return new ArrayList<>(mapModel.badPoints);
 	}
 
 
-	public String getDatasetTitle()
-	{
+	public String getDatasetTitle() {
 		return mapModel.datasetTitle;
 	}
 
 
-	public void setDatasetTitle(String name)
-	{
+	public void setDatasetTitle(String name) {
 		mapModel.datasetTitle = name;
 	}
 
 
-	public Coord<Bounds<Number>> getRealDimensions()
-	{
+	public Coord<Bounds<Number>> getRealDimensions() {
 		return mapModel.realDimensions;
 	}
 	
 	
-	public SISize getRealDimensionUnits()
-	{
+	public SISize getRealDimensionUnits() {
 		return mapModel.realDimensionsUnits;
 	}
 	
 
-	public RawMapSet getMapResultSet()
-	{
+	public RawMapSet getMapResultSet() {
 		return mapModel.mapResults;
 	}
 
 	public CalibrationProfile getCalibrationProfile() {
 		return mapModel.calibrationProfile;
+	}
+
+
+	/**
+	 * Indicates if the data points in this map can be reliably mapped back to the correct spectra
+	 */
+	public boolean isReplottable() {
+		return mapModel.mapResults.isReplottable();
 	}
 		
 }

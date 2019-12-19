@@ -39,13 +39,7 @@ public class ExecutorView extends JPanel{
 		
 		this.setBorder(Spacing.bSmall());
 		
-		task.addListener(new EventfulListener() {
-		
-			public void change() {
-				// TODO Auto-generated method stub
-				setState();
-			}
-		});
+		task.addListener(this::setState);
 				
 	}
 	

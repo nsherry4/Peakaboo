@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import org.peakaboo.framework.eventful.Eventful;
 
-public class AbstractEventfulCache<T> extends Eventful implements EventfulCache<T> {
+public abstract class AbstractEventfulCache<T> extends Eventful implements EventfulCache<T> {
 
 	private Supplier<T> supplier;
 	
@@ -16,21 +16,9 @@ public class AbstractEventfulCache<T> extends Eventful implements EventfulCache<
 		 * downstream caches when some other event accesses them. Instead, we run the
 		 * invalidation events eagerly
 		 */ 
-		setUIThreadRunnerOverride(runnable -> runnable.run());
+		setUIThreadRunnerOverride(Runnable::run);
 	}
-	
-	@Override
-	public void invalidate() {
-		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public T getValue() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	protected T regenerate() {
 		return supplier.get();
 	}

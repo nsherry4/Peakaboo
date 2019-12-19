@@ -2,12 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.peakaboo.framework</groupId>
+	<parent>
+		<groupId>org.peakaboo.framework</groupId>
+		<artifactId>cyclops</artifactId>
+		<version>5.4-SNAPSHOT</version>
+	</parent>
 	<artifactId>cyclops-swing</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>CyclopsSwing</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -23,23 +25,23 @@
 		</dependency>
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
-			<artifactId>cyclops</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<artifactId>cyclops-core</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-svggen</artifactId>
-			<version>1.9.1</version>
+			<version>1.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>fop</artifactId>
-			<version>2.2</version>
+			<artifactId>fop-core</artifactId>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>swidget</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

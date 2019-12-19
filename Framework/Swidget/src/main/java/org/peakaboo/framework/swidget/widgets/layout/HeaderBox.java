@@ -6,17 +6,17 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.LayoutManager2;
 import java.awt.LinearGradientPaint;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,17 +29,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import org.peakaboo.framework.stratus.Stratus;
+import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.PaintedPanel;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 
-public class HeaderBox extends PaintedPanel {
-
-	private Color base;
+public class HeaderBox extends JPanel {
+	
+	
 	
 	private Component left, centre, right;
 	private Component close;
@@ -47,12 +48,14 @@ public class HeaderBox extends PaintedPanel {
 	private Runnable onClose;
 	boolean showClose;
 	
+	private Theme theme = null;
+	
 	//dragging
 	private Point initialClick;
+	private boolean dragable = true;
 	
 	
 	public HeaderBox(Component left, String title, Component right) {
-		super(true);
 		this.left = left;
 		this.right = right;
 		this.centre = makeHeaderTitle(title);
@@ -62,7 +65,6 @@ public class HeaderBox extends PaintedPanel {
 	}
 	
 	public HeaderBox(Component left, Component centre, Component right) {
-		super(true);
 		this.left = left;
 		this.centre = centre;
 		this.right = right;
@@ -74,12 +76,16 @@ public class HeaderBox extends PaintedPanel {
 	public HeaderBox() {
 		this(null, "", null);
 	}
-
-	private void init() {
+	
+	private void init() {	
 		rightWrap = new ClearPanel(new BorderLayout(Spacing.medium, Spacing.medium));
 		close = HeaderBox.closeButton().withAction(() -> onClose.run());
 		closePanel = new ClearPanel(new BorderLayout());
 		closePanel.add(close, BorderLayout.CENTER);
+		
+		if (Swidget.isStratusLaF()) {
+			theme = Stratus.getTheme();
+		}
 		
 		addMouseListener(new MouseAdapter() {
 			
@@ -103,7 +109,7 @@ public class HeaderBox extends PaintedPanel {
 					return;
 				}
 				
-				if (initialClick == null) {
+				if (initialClick == null || !dragable) {
 					return;
 				}
 								
@@ -137,10 +143,59 @@ public class HeaderBox extends PaintedPanel {
 		
 	}
 	
+	
+	private Paint getBackgroundPaint() {
+		Color base = getBackground();
+		float curve = 0.05f;
+		
+		if (theme != null) {
+			if (Stratus.focusedWindow(this)) {
+				base = theme.getNegative();
+				curve = theme.widgetCurve();
+			} else {
+				base = theme.getControl();
+				curve = 0f;
+			}
+		}
+		
+		return new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
+				lighten(base, curve/2f),
+				darken(base, curve/2f)
+			});
+	}
+	
+
+	@Override
+	public void paintComponent(Graphics g)
+	{
+		
+		super.paintComponent(g);
+		
+		g = g.create();
+		Graphics2D g2 = (Graphics2D) g;
+		
+		Paint paint = getBackgroundPaint();
+		if (paint != null) {
+			g2.setPaint(paint);
+		} else {
+			g2.setColor(UIManager.getColor("control"));
+
+		}
+		g2.fillRect(0, 0, getWidth(), getHeight());
+
+	}
+	
+	private float getCurve() {
+		if (theme != null) {
+			return theme.widgetCurve();
+		} else {
+			return 0.05f;
+		}
+	}
+	
 	private void make() {
 		
-		removeAll();
-		base = getBackground();
+		removeAll();	
 		
 		setBorder(Spacing.bMedium());
 		setLayout(new BorderLayout());
@@ -153,6 +208,7 @@ public class HeaderBox extends PaintedPanel {
 			closePanel.setBorder(new CompoundBorder(
 					new MatteBorder(0, 1, 0, 0, Swidget.dividerColor()), 
 					new EmptyBorder(0, Spacing.medium, 0, 0)));
+
 			
 		} else {
 			closePanel.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -169,14 +225,12 @@ public class HeaderBox extends PaintedPanel {
 			inner.add(rightWrap);
 		}
 		
-		setBackgroundPaint(new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
-			lighten(base, 0.05f),
-			base
-		}));
-		
 		Border b = Spacing.bMedium();
-		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x20000000, true)), b);
-		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, new Color(0x60000000, true)), b);
+		Color borderColour = new Color(0x20000000, true);
+		if (Swidget.isStratusLaF()) {
+			borderColour = Stratus.getTheme().getWidgetBorderAlpha();
+		}
+		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, borderColour), b);
 		setBorder(b);
 		
 	}
@@ -236,12 +290,18 @@ public class HeaderBox extends PaintedPanel {
 	public boolean getShowClose() {
 		return showClose;
 	}
+
 	
 	
 	
-	
-	
-	
+	public boolean isDragable() {
+		return dragable;
+	}
+
+	public void setDragable(boolean dragable) {
+		this.dragable = dragable;
+	}
+
 	public static JLabel makeHeaderTitle(String title) {
 		JLabel label = new JLabel(title);
 		Font font = label.getFont();
@@ -256,8 +316,8 @@ public class HeaderBox extends PaintedPanel {
 
 	
 	public static HeaderBox createYesNo(String title, String yesString, Runnable yesAction, String noString, Runnable noAction) {
-		ImageButton yes = new ImageButton(yesString).withStateDefault().withAction(yesAction);
-		ImageButton no = new ImageButton(noString).withAction(noAction);
+		FluentButton yes = new FluentButton(yesString).withStateDefault().withAction(yesAction);
+		FluentButton no = new FluentButton(noString).withAction(noAction);
 		return new HeaderBox(no, title, yes);
 	}
 	
@@ -269,12 +329,19 @@ public class HeaderBox extends PaintedPanel {
     	hsb[2] = Math.min(1f, hsb[2] + amount);
     	return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
     }
+	
+	private static Color darken(Color src, float amount) {
+    	float[] hsb = new float[3];
+    	Color.RGBtoHSB(src.getRed(), src.getGreen(), src.getBlue(), hsb);
+    	hsb[2] = Math.max(0f, hsb[2] - amount);
+    	return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
+    }
 
-	public static ImageButton closeButton() {
-		ImageButton close = new ImageButton()
+	public static FluentButton closeButton() {
+		FluentButton close = new FluentButton()
 				.withTooltip("Close")
 				.withIcon(StockIcon.WINDOW_CLOSE)
-				.withButtonSize(ImageButtonSize.LARGE)
+				.withButtonSize(FluentButtonSize.LARGE)
 				.withBordered(false);
 		return close;
 	}
@@ -385,7 +452,7 @@ public class HeaderBox extends PaintedPanel {
 		frame.pack();
 		frame.getContentPane().setLayout(new BorderLayout());
 		
-		HeaderBox box = new HeaderBox(null, "Title Text", new ImageButton("Right Side of the Window"));
+		HeaderBox box = new HeaderBox(null, "Title Text", new FluentButton("Right Side of the Window"));
 		frame.add(box, BorderLayout.NORTH);
 		
 		frame.setVisible(true);

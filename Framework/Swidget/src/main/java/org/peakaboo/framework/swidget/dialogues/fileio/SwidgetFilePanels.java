@@ -11,74 +11,51 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.plaf.basic.BasicFileChooserUI;
 
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
-import org.peakaboo.framework.swidget.widgets.filechooser.places.PlacesWidget;
-import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 
 public class SwidgetFilePanels {
-
+	
 	private static void showChooser(Component parent, SwidgetFileChooser chooser, Runnable onAccept, Runnable onCancel, String title) {
 		if (LayerPanel.parentOf(parent)) {
 			LayerPanel tabPanel = LayerPanel.parentFor(parent);
-			chooser.setControlButtonsAreShown(false);
-			ImageButton affirmative = new ImageButton(chooser.getApproveButtonText()).withStateDefault();
-			ImageButton negative = new ImageButton("Cancel");
 			
-			HeaderLayer layer = new HeaderLayer(tabPanel, false);
 			JPanel chooserPanel = new JPanel(new BorderLayout());
 			chooserPanel.add(chooser, BorderLayout.CENTER);
-			JPanel breadcrumb = null;
+			chooserPanel.setPreferredSize(new Dimension(800, 350));
+			ModalLayer layer = new ModalLayer(tabPanel, chooserPanel, false);
+			//layer.setBody(chooserPanel);
 			
-			Places places = Places.forPlatform();
-			if (places != null) {
-				PlacesWidget placesWidget = new PlacesWidget(chooser, places);
-				chooserPanel.add(placesWidget, BorderLayout.WEST);
-				breadcrumb = chooser.getHeader(places);
-			}
-
-			chooserPanel.setPreferredSize(new Dimension(800, 300));
-			layer.getHeader().setComponents(negative, breadcrumb, affirmative);
-			layer.setBody(chooserPanel);
 			
 			chooser.addActionListener(action -> {
 				String command = action.getActionCommand();
 				//something like double-clicking a file may trigger this
-				if (command.equals(SwidgetFileChooser.APPROVE_SELECTION)) {
-					layer.remove();
+				if (command.equals(JFileChooser.APPROVE_SELECTION)) {
+					tabPanel.removeLayer(layer);
 					onAccept.run();
 				}
-				if (command.equals(SwidgetFileChooser.CANCEL_SELECTION)) {
-					layer.remove();
+				if (command.equals(JFileChooser.CANCEL_SELECTION)) {
+					tabPanel.removeLayer(layer);
 					onCancel.run();
 				}
 			});
-			
-			/*
-			 * Can this really be the only way to get the file chooser to perform the same action as 
-			 * the standard control buttons? Calling chooser.approveSelection() just returns the files
-			 * selected in the list control without considering text typed into the filename box.
-			 */
-			BasicFileChooserUI ui = (BasicFileChooserUI) chooser.getUI();
-			affirmative.addActionListener(ui.getApproveSelectionAction());
-			negative.addActionListener(ui.getCancelSelectionAction());
-			
+
 			tabPanel.pushLayer(layer);
 			chooser.requestFocus();
 
 		} else {
 			int result = chooser.showSaveDialog(parent);
-			if (result == SwidgetFileChooser.APPROVE_OPTION) {
+			if (result == JFileChooser.APPROVE_OPTION) {
 				onAccept.run();
-			} else if (result == SwidgetFileChooser.ERROR_OPTION || result == SwidgetFileChooser.CANCEL_OPTION) {
+			} else if (result == JFileChooser.ERROR_OPTION || result == JFileChooser.CANCEL_OPTION) {
 				onCancel.run();
 			}
 		}	
@@ -220,8 +197,8 @@ public class SwidgetFilePanels {
 						title, 
 						body, 
 						MessageType.QUESTION)
-					.addLeft(new ImageButton("Cancel").withAction(() -> onResult.accept(false)))
-					.addRight(new ImageButton("Replace").withAction(() -> onResult.accept(true)))
+					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
+					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
 					.showIn((LayerPanel) parent);
 				
 			} else if (parent instanceof Window) {
@@ -230,8 +207,8 @@ public class SwidgetFilePanels {
 						title, 
 						body, 
 						MessageType.QUESTION)
-					.addLeft(new ImageButton("Cancel").withAction(() -> onResult.accept(false)))
-					.addRight(new ImageButton("Replace").withAction(() -> onResult.accept(true)))
+					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
+					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
 					.showInWindow((Window)parent);
 			} else {
 				

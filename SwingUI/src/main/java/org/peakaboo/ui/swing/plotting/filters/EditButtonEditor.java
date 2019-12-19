@@ -19,15 +19,14 @@ import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 
 
-class EditButtonEditor extends DefaultCellEditor
-{
+class EditButtonEditor extends DefaultCellEditor {
 
-	private ImageButton				button;
+	private FluentButton				button;
 	private JPanel 					container;
 	
 	private Window					owner;
@@ -41,34 +40,30 @@ class EditButtonEditor extends DefaultCellEditor
 	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
 
-	public EditButtonEditor(FilteringController controller, Window owner)
-	{
+	public EditButtonEditor(FilteringController controller, Window owner) {
 		super(new JCheckBox());
 
 		this.controller = controller;
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
-		button.addActionListener(e -> fireEditingStopped());
-		button.setOpaque(false);
-		
+		button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL)
+				.withTooltip("Edit Filter")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withBordered(false)
+				.withAction(this::fireEditingStopped);
 		container = new JPanel();
 		container.setBorder(Spacing.bNone());
-		
-		
-
 	}
 
 
 	@Override
-	public Component getTableCellEditorComponent(JTable table, Object _filter, boolean isSelected, int row, int column)
-	{
+	public Component getTableCellEditorComponent(JTable table, Object filterObject, boolean isSelected, int row, int column) {
 
-		filter = (Filter) _filter;
-		int numParameters = (_filter == null) ? 0 : filter.getParameters().size();
+		filter = (Filter) filterObject;
+		int numParameters = (filter == null) ? 0 : filter.getParameters().size();
 		
-		label = (_filter == null) ? "" : _filter.toString();
+		label = (filter == null) ? "" : filter.toString();
 		isPushed = true;
 		
 		
@@ -87,10 +82,10 @@ class EditButtonEditor extends DefaultCellEditor
 
 
 	@Override
-	public Object getCellEditorValue()
-	{
-		if (isPushed)
-		{
+	public Object getCellEditorValue() {
+		
+		if (isPushed) {
+			
 			FilterDialog dialog;
 
 			if (!settingsDialogs.containsKey(filter)) {
@@ -111,16 +106,14 @@ class EditButtonEditor extends DefaultCellEditor
 
 
 	@Override
-	public boolean stopCellEditing()
-	{
+	public boolean stopCellEditing() {
 		isPushed = false;
 		return super.stopCellEditing();
 	}
 
 
 	@Override
-	protected void fireEditingStopped()
-	{
+	protected void fireEditingStopped() {
 		super.fireEditingStopped();
 	}
 }

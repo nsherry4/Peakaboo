@@ -10,21 +10,20 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
-import org.peakaboo.curvefit.peak.search.scoring.FastSignalMatchScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
-import org.peakaboo.framework.plural.Plural;
-import org.peakaboo.framework.plural.executor.AbstractExecutor;
-import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 
 public class AutoEnergyCalibration {
 
+	private AutoEnergyCalibration() {
+		// Not Constructable
+	}
 
 	/**
 	 * Generates a list of all possible energy calibration candidates

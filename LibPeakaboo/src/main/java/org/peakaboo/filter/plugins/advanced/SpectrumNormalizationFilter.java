@@ -1,6 +1,7 @@
 package org.peakaboo.filter.plugins.advanced;
 
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
@@ -12,17 +13,16 @@ import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
-public class SpectrumNormalizationFilter extends AbstractSimpleFilter
-{
+public class SpectrumNormalizationFilter extends AbstractFilter {
 	
 	private Parameter<Integer> pStartChannel;
 	private Parameter<Integer> pEndChannel;
 	private Parameter<Float> pHeight;
 	private SelectionParameter<String> pMode;
 	
-	private final String MODE_RANGE = "Channel Range";
-	private final String MODE_MAX = "Strongest Channel";
-	private final String MODE_SUM = "All Channels";
+	private static final String MODE_RANGE = "Channel Range";
+	private static final String MODE_MAX = "Strongest Channel";
+	private static final String MODE_SUM = "All Channels";
 
 	@Override
 	public String pluginVersion() {
@@ -32,7 +32,7 @@ public class SpectrumNormalizationFilter extends AbstractSimpleFilter
 	@Override
 	public void initialize()
 	{
-		pMode = new SelectionParameter<String>("Mode", new ListStyle<String>(), MODE_RANGE, this::validate);
+		pMode = new SelectionParameter<>("Mode", new ListStyle<String>(), MODE_RANGE, this::validate);
 		pMode.setPossibleValues(MODE_RANGE, MODE_MAX, MODE_SUM);
 		addParameter(pMode);
 		
@@ -53,7 +53,7 @@ public class SpectrumNormalizationFilter extends AbstractSimpleFilter
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
 	{
 
 		String mode = pMode.getValue();
@@ -88,13 +88,13 @@ public class SpectrumNormalizationFilter extends AbstractSimpleFilter
 	@Override
 	public String getFilterDescription()
 	{
-		return "The " + getFilterName() + " scales each spectrum's intensity based on the options selected";
+		return "The " + getFilterName() + " scales each spectrum's intensity against itself based on the options selected";
 	}
 
 	@Override
 	public String getFilterName()
 	{
-		return "Normalizer";
+		return "Spectrum Normalizer";
 	}
 
 	@Override
@@ -117,8 +117,8 @@ public class SpectrumNormalizationFilter extends AbstractSimpleFilter
 		int endChannel = pEndChannel.getValue();
 		float height = pHeight.getValue().floatValue();
 				
-		pStartChannel.setEnabled(mode == MODE_RANGE);
-		pEndChannel.setEnabled(mode == MODE_RANGE);
+		pStartChannel.setEnabled(MODE_RANGE.equals(mode));
+		pEndChannel.setEnabled(MODE_RANGE.equals(mode));
 		
 		
 		if (startChannel < 1) return false;

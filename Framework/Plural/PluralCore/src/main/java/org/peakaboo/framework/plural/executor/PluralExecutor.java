@@ -1,8 +1,7 @@
 package org.peakaboo.framework.plural.executor;
 
-import org.peakaboo.framework.plural.executor.map.implementations.PluralMapExecutor;
-
 import org.peakaboo.framework.eventful.IEventful;
+import org.peakaboo.framework.plural.executor.map.implementations.PluralMapExecutor;
 
 public interface PluralExecutor extends IEventful{
 

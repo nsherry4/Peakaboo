@@ -33,11 +33,6 @@ public class PlainText extends AbstractDataSource
 	private SimpleScanData scandata;
 	
 	
-	public PlainText()
-	{
-	}
-	
-	
 	//==============================================
 	// PLUGIN METHODS
 	//==============================================	
@@ -92,12 +87,16 @@ public class PlainText extends AbstractDataSource
 		
 		
 		CsvParserSettings settings = new CsvParserSettings();
-		settings.setDelimiterDetectionEnabled(true, ' ', '\t', ',');
-		settings.setNullValue("0");
-		settings.setEmptyValue("0");
+		//Note: the order of the delimiters here matters (!) because it will 
+		//determine the delimiter chosen in the event of a tie. I believe that
+		//delimiter detection is based on frequency analysis. In the case where 
+		//the *real* delimiter is ", " the comma and space will appear the same
+		//number of times. It is important that the comma appear before the 
+		//space in this list so that it is chosen in those cases.
+		settings.setDelimiterDetectionEnabled(true, ',', '\t', ' ');
 		settings.setLineSeparatorDetectionEnabled(true);
-		settings.setMaxColumns(16384);
-		settings.setMaxCharsPerColumn(20);
+		settings.setMaxColumns(65536);
+		settings.setMaxCharsPerColumn(24);
 		CsvParser parser = new CsvParser(settings);
 		
 		int readcount = 0;
@@ -108,16 +107,13 @@ public class PlainText extends AbstractDataSource
 				getInteraction().notifyScanCount(lineEstimate);
 			}
 			
-			if (getInteraction().checkReadAborted()) break;
+			if (getInteraction().checkReadAborted()) { break; }
 			
-			Spectrum scan = parseLine(row);
+			Spectrum scan = parseLine(row, parser.getDetectedFormat().getDelimiter());
 			
-			if (size > 0 && scan.size() != scanSize) 
-			{
+			if (size > 0 && scan.size() != scanSize)  {
 				throw new Exception("Spectra sizes are not equal");
-			}
-			else if (size == 0)
-			{
+			} else if (size == 0) {
 				scanSize = scan.size();
 			}
 			
@@ -139,10 +135,30 @@ public class PlainText extends AbstractDataSource
 	}
 
 
-	private Spectrum parseLine(String[] entries) {
-		Spectrum scan = new ISpectrum(entries.length);
+	private Spectrum parseLine(String[] entries, char delimiter) {
+		int length = entries.length;
+
+		//remove null values from length count if the delimiter is a space
+		if (delimiter == ' ') {
+			for (String entry : entries) {
+				if (entry == null) length--;
+			}
+		}
+		
+		Spectrum scan = new ISpectrum(length);
 		for (String entry : entries) {
 			try {
+				
+				//null entry means duplicate delimiter (eg "0,,0" or "0  0")
+				//we need different behaviour for spaces than for *actual* 
+				//delimiters
+				if (entry == null) {
+					if (delimiter == ' ') {
+						continue;
+					} else {
+						entry = "0";
+					}
+				}
 				scan.add(Float.parseFloat(entry));
 			} catch (Exception e) {
 				//some kind of error

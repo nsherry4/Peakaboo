@@ -145,7 +145,7 @@ public class FittingParameters {
 		return fittingFunction;
 	}
 
-	public Boolean getShowEscapePeaks() {
+	public boolean getShowEscapePeaks() {
 		return showEscapePeaks;
 	}
 

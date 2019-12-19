@@ -1,9 +1,10 @@
 package org.peakaboo.controller.plotter.data;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -19,7 +20,7 @@ import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
-import org.peakaboo.datasource.model.internal.CroppedDataSource;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.FilterSet;
@@ -44,13 +45,12 @@ public class DataController extends Eventful
 	private DataSet 			dataModel;
 	private PlotController		plot;
 	private Discards			discards;
-	private List<Path>			dataPaths;
+	private List<DataFile>		dataPaths;
 	protected String			title;
 	private String				dataSourcePluginUUID;
 	private List<Object>		dataSourceParameters;
 	
-	public DataController(PlotController plotController)
-	{
+	public DataController(PlotController plotController) {
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();
 		discards = new DiscardsList(plot);
@@ -70,12 +70,13 @@ public class DataController extends Eventful
 	// =============================================
 	
 
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, DataSourcePlugin dsp, Consumer<DatasetReadResult> onResult)
-	{
+	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset (
+			List<DataFile> paths, 
+			DataSourcePlugin dsp, 
+			Consumer<DatasetReadResult> onResult) {
 
-		//final LocalDataSetProvider dataset = new LocalDataSetProvider();
 		final StandardDataSet dataset = new StandardDataSet();
-		final ExecutorSet<DatasetReadResult> readTasks = dataset.TASK_readFileListAsDataset(paths, dsp);
+		final ExecutorSet<DatasetReadResult> readTasks = dataset.asyncReadFileListAsDataset(paths, dsp);
 
 
 		
@@ -102,12 +103,9 @@ public class DataController extends Eventful
 					return;
 					
 				case FAILED:
+				case CANCELLED:
 					//Error reporting is handled at the UI level in this case. 
 					//Just don't try to read the result.
-					onResult.accept(result);
-					return;
-					
-				case CANCELLED:
 					onResult.accept(result);
 					return;
 				}
@@ -124,27 +122,16 @@ public class DataController extends Eventful
 
 	}
 
-
-
-	public CroppedDataSource getDataSourceForSubset(int x, int y, Coord<Integer> cstart, Coord<Integer> cend)
-	{
-		return new CroppedDataSource(dataModel.getDataSource(), x, y, cstart, cend);
+	public SelectionDataSource getDataSourceForSubset(List<Integer> points, Coord<Integer> dimensions) {
+		return new SelectionDataSource(dataModel.getDataSource(), dimensions, points);
 	}
 
-	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
-	{
-		return new SelectionDataSource(dataModel.getDataSource(), points);
-	}
-	
-
-	public boolean hasDataSet()
-	{
+	public boolean hasDataSet() {
 		return dataModel.hasGenuineScanData();
 	}
 
 
-	public void setDataSetProvider(DataSet dsp)
-	{
+	public void setDataSetProvider(DataSet dsp) {
 	
 		if (dsp == null) return;
 		
@@ -176,10 +163,9 @@ public class DataController extends Eventful
 	}
 	
 	
-	public void setDataSource(DataSource ds, AbstractExecutor progress, Supplier<Boolean> isAborted)
-	{
+	public void setDataSource(DataSource ds, AbstractExecutor<Void> progress, BooleanSupplier isAborted) {
 		StandardDataSet dataset = new StandardDataSet(ds, progress, isAborted);
-		if (!isAborted.get()) {
+		if (!isAborted.getAsBoolean()) {
 			setDataSetProvider(dataset);
 		}
 	}
@@ -195,8 +181,7 @@ public class DataController extends Eventful
 	
 
 	
-	public StreamExecutor<RawMapSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver)
-	{
+	public StreamExecutor<RawMapSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver) {
 		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver);
 	}
 	
@@ -204,8 +189,7 @@ public class DataController extends Eventful
 
 	
 	
-	public Iterator<ReadOnlySpectrum> getScanIterator()
-	{
+	public Iterator<ReadOnlySpectrum> getScanIterator() {
 		
 		return new Iterator<ReadOnlySpectrum>() {
 
@@ -213,13 +197,14 @@ public class DataController extends Eventful
 			ReadOnlySpectrum next = dataModel.getScanData().get(nextIndex);
 			
 			
-			public boolean hasNext()
-			{
+			public boolean hasNext() {
 				return next != null;
 			}
 
-			public ReadOnlySpectrum next()
-			{
+			public ReadOnlySpectrum next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
 				ReadOnlySpectrum current = next;
 				nextIndex = dataModel.getScanData().firstNonNullScanIndex(nextIndex+1);
 				if (nextIndex == -1) {
@@ -230,20 +215,20 @@ public class DataController extends Eventful
 				return current;
 			}
 
-			public void remove()
-			{
+			@Override
+			public void remove() {
 				throw new UnsupportedOperationException();
 			}};
 		
 	}
 
 
-	public List<Path> getDataPaths() {
+	public List<DataFile> getDataPaths() {
 		return dataPaths;
 	}
 
 
-	public void setDataPaths(List<Path> dataPaths) {
+	public void setDataPaths(List<DataFile> dataPaths) {
 		this.dataPaths = dataPaths;
 	}
 

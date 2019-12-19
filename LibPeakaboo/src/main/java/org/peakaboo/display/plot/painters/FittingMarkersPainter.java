@@ -52,75 +52,67 @@ public class FittingMarkersPainter extends PlotPainter
 		if (parameters.getCalibration().isZero()) {
 			return;
 		}
-		
-		DrawingRequest dr = p.dr;
-		float channel, markerHeight;
-		Spectrum markerHeights = new ISpectrum(dr.dataWidth);
 
 		p.context.save();
 		p.context.setLineWidth(1.0f);
 		
-		
-		for (FittingLabel label : labels) {
-
-			p.context.setSource(label.palette.markings);	
-			for (int i = 0; i < p.dr.dataWidth; i++) {
-				markerHeights.set(i, 0.0f);
-			}
-
-			ITransitionSeries ts = label.fit.getTransitionSeries();
-			for (Transition t : ts) {
-
-				channel = parameters.getCalibration().fractionalChannelFromEnergy(t.energyValue);
-				if (channel >= p.dr.dataWidth || channel < 0) continue;
-				
-				FittingFunction fitFn = parameters.forTransition(t, ts.getShell());
-
-				
-				//get a height value from the fitting function, then apply the same transformation as the fitting did
-				markerHeight = fitFn.forEnergy(t.energyValue) * label.fit.getTotalScale();
-							
-				//markerHeights.set((int) channel, markerHeight);
-				
-				float positionX = getXForChannel(p, channel);
-				
-				markerHeight = transformValueForPlot(p.dr, markerHeight);
-				
-				p.context.moveTo(positionX, p.plotSize.y);
-				p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
-				
-				DetectorMaterial detectorMaterial = parameters.getDetectorMaterial().get();
-				if (detectorMaterial.hasOffset() && parameters.getShowEscapePeaks())
-				{
-					for (Transition esc : detectorMaterial.offset()) {
-					
-						float escEnergy = t.energyValue - esc.energyValue; 
-						channel = parameters.getCalibration().fractionalChannelFromEnergy(escEnergy);
-						if (channel < 0) continue;
-						
-						positionX = getXForChannel(p, channel);
-						
-						FittingFunction escFn = parameters.forEscape(t, esc, ts.getElement(), ts.getShell());
-						markerHeight = escFn.forEnergy(escEnergy) * label.fit.getTotalScale();
-						markerHeight = transformValueForPlot(p.dr, markerHeight);
-						
-					
-						p.context.moveTo(positionX, p.plotSize.y);
-						p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
-						
-					}
-				}
-
-
-			}
-
-			p.context.stroke();
-
+		for (FittingLabel label : labels) {		
+			drawTS(p, label);		
 		}
-		
 		
 		p.context.restore();
 		
+	}
+	
+	private void drawTS(PainterData p, FittingLabel label) {
+		
+		p.context.setSource(label.palette.markings);
+		
+		float channel, markerHeight;
+		ITransitionSeries ts = label.fit.getTransitionSeries();
+		
+		for (Transition t : ts) {
+
+			channel = parameters.getCalibration().fractionalChannelFromEnergy(t.energyValue);
+			if (channel >= p.dr.dataWidth || channel < 0) continue;
+			
+			FittingFunction fitFn = parameters.forTransition(t, ts.getShell());
+
+			
+			//get a height value from the fitting function, then apply the same transformation as the fitting did
+			markerHeight = fitFn.forEnergy(t.energyValue) * label.fit.getTotalScale();
+						
+			float positionX = getXForChannel(p, channel);
+			
+			markerHeight = transformValueForPlot(p.dr, markerHeight);
+			
+			p.context.moveTo(positionX, p.plotSize.y);
+			p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
+			
+			DetectorMaterial detectorMaterial = parameters.getDetectorMaterial().get();
+			if (detectorMaterial.hasOffset() && parameters.getShowEscapePeaks())
+			{
+				for (Transition esc : detectorMaterial.offset()) {
+				
+					float escEnergy = t.energyValue - esc.energyValue; 
+					channel = parameters.getCalibration().fractionalChannelFromEnergy(escEnergy);
+					if (channel < 0) continue;
+					
+					positionX = getXForChannel(p, channel);
+					
+					FittingFunction escFn = parameters.forEscape(t, esc, ts.getElement(), ts.getShell());
+					markerHeight = escFn.forEnergy(escEnergy) * label.fit.getTotalScale();
+					markerHeight = transformValueForPlot(p.dr, markerHeight);
+					
+				
+					p.context.moveTo(positionX, p.plotSize.y);
+					p.context.lineTo(positionX, p.plotSize.y * (1.0f - markerHeight) );
+					
+				}
+			}
+		}
+		
+		p.context.stroke();
 	}
 
 	public float getXForChannel(PainterData p, float channel)

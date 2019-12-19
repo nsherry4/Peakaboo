@@ -15,9 +15,7 @@ import com.github.tschoonj.xraylib.XraylibException;
 public class XrayLibPeakTable implements PeakTable {
 
 	private List<PrimaryTransitionSeries> series;
-	
-	public XrayLibPeakTable() {}
-	
+
 	private void add(PrimaryTransitionSeries ts) {
 		if (ts.getTransitionCount() == 0) return;
 		series.add(ts);
@@ -80,8 +78,7 @@ public class XrayLibPeakTable implements PeakTable {
 		float maxRel = 0f;
 		for (int line : lines) {
 			if (!hasLine(elem, line)) continue;
-			maxRel = (float) Math.max(maxRel, lineRelativeIntensity(elem, line));	
-			
+			maxRel = Math.max(maxRel, lineRelativeIntensity(elem, line));	
 		}
 		for (int line : lines) {
 			if (!hasLine(elem, line)) continue;

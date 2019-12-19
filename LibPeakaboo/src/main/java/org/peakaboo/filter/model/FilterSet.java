@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
@@ -23,77 +24,64 @@ import org.peakaboo.framework.cyclops.SpectrumCalculations;
  * @author Nathaniel Sherry, 2009
  */
 
-public class FilterSet implements Iterable<Filter>
-{
+public class FilterSet implements Iterable<Filter> {
 
-	private List<Filter>	filters;
+	private List<Filter> filters;
 
 
-	public FilterSet()
-	{
-
+	public FilterSet() {
 		filters = new ArrayList<>();
 	}
 
 
-	public synchronized void add(Filter filter)
-	{
+	public synchronized void add(Filter filter) {
 		filters.add(filter);
 	}
 
 
-	public synchronized void add(Filter filter, int index)
-	{
+	public synchronized void add(Filter filter, int index) {
 		filters.add(index, filter);
 	}
 
 
-	public synchronized Filter get(int index)
-	{
+	public synchronized Filter get(int index) {
 		return filters.get(index);
 	}
 
 
-	public synchronized void remove(int index)
-	{
+	public synchronized void remove(int index) {
 		if (index >= filters.size()) return;
 		if (index < 0) return;
 		filters.remove(index);
 	}
 
 
-	public synchronized void remove(Filter filter)
-	{
+	public synchronized void remove(Filter filter) {
 		filters.remove(filter);
 	}
 
 
-	public synchronized void clear()
-	{
+	public synchronized void clear() {
 		filters.clear();
 	}
 
 
-	public synchronized int size()
-	{
+	public synchronized int size() {
 		return filters.size();
 	}
 
 
-	public synchronized boolean contains(Filter f)
-	{
+	public synchronized boolean contains(Filter f) {
 		return filters.contains(f);
 	}
 
 
-	public synchronized int indexOf(Filter f)
-	{
+	public synchronized int indexOf(Filter f) {
 		return filters.indexOf(f);
 	}
 
 
-	public synchronized void moveFilterUp(int index)
-	{
+	public synchronized void moveFilterUp(int index) {
 
 		Filter filter = filters.get(index);
 		index -= 1;
@@ -106,8 +94,7 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized void moveFilterDown(int index)
-	{
+	public synchronized void moveFilterDown(int index) {
 
 		Filter filter = filters.get(index);
 		index += 1;
@@ -119,19 +106,17 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data)
-	{
-
-		return applyFiltersUnsynchronized(data);
+	
+	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data, DataSet dataset) {
+		return applyFiltersUnsynchronized(data, dataset);
 	}
 
 	
-	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data)
-	{
+	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, DataSet dataset) {
 
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled() && !f.isPreviewOnly()) {
-				data = f.filter(data);
+				data = f.filter(data, dataset);
 			}
 		}
 		
@@ -162,9 +147,7 @@ public class FilterSet implements Iterable<Filter>
 		return data;
 	}
 
-	public Iterator<Filter> iterator()
-	{
-		// TODO Auto-generated method stub
+	public Iterator<Filter> iterator() {
 		return filters.iterator();
 	}
 
@@ -175,7 +158,7 @@ public class FilterSet implements Iterable<Filter>
 	}
 
 
-	public Map<Filter, ReadOnlySpectrum> calculateDeltas(ReadOnlySpectrum data) {
+	public Map<Filter, ReadOnlySpectrum> calculateDeltas(ReadOnlySpectrum data, DataSet dataset) {
 		
 		Map<Filter, ReadOnlySpectrum> deltas = new LinkedHashMap<>();
 		
@@ -185,7 +168,7 @@ public class FilterSet implements Iterable<Filter>
 		
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled()) {
-				current = f.filter(last);
+				current = f.filter(last, dataset);
 				current = correctNonFinite(current);
 				delta = SpectrumCalculations.subtractLists(last, current, 0f);
 				deltas.put(f, delta);

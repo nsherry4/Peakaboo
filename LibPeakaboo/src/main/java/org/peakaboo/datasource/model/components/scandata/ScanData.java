@@ -2,6 +2,7 @@ package org.peakaboo.datasource.model.components.scandata;
 
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
@@ -32,6 +33,9 @@ public interface ScanData extends Iterable<ReadOnlySpectrum>
 
 			@Override
 			public ReadOnlySpectrum next() {
+				if (!hasNext()) {
+					throw new NoSuchElementException();
+				}
 				return get(next++);
 			}
 		};
@@ -42,6 +46,11 @@ public interface ScanData extends Iterable<ReadOnlySpectrum>
 	 * Returns the number of scans in this data set.
 	 */
 	int scanCount();
+	
+	
+	default boolean isEmpty() {
+		return scanCount() == 0;
+	}
 
 	
 

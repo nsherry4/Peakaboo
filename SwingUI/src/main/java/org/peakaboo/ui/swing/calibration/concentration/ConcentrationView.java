@@ -20,8 +20,8 @@ import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
@@ -40,22 +40,22 @@ public class ConcentrationView extends HeaderLayer {
 		getContentRoot().setPreferredSize(new Dimension(700, 350));
 		
 		
-		ImageButton save = new ImageButton(StockIcon.DOCUMENT_SAVE_AS)
-				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Save concentrations as text")
+		FluentButton save = new FluentButton(StockIcon.DOCUMENT_SAVE_AS)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Save as CSV")
 				.withAction(this::saveData);
 		
-		ImageButton copy = new ImageButton(StockIcon.EDIT_COPY)
-				.withButtonSize(ImageButtonSize.LARGE)
-				.withTooltip("Copy concentrations to clipboard")
+		FluentButton copy = new FluentButton(StockIcon.EDIT_COPY)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Copy to clipboard")
 				.withAction(this::copyData);
 		
 		ButtonLinker linker = new ButtonLinker(save, copy);
 		
 		
 		HeaderTabBuilder tabs = new HeaderTabBuilder();
-		tabs.addTab("Chart", buildChart());
-		tabs.addTab("Table", buildTable());
+		tabs.addTab("Chart", new ConcentrationPlotPanel(conc));
+		tabs.addTab("Table", new ConcentrationTablePanel(conc));
 		
 		setBody(tabs.getBody());
 		getHeader().setLeft(linker);
@@ -63,28 +63,17 @@ public class ConcentrationView extends HeaderLayer {
 		
 	}
 
-	private JPanel buildChart() {
-		JPanel chart = new ConcentrationPlotPanel(conc);
-		return chart;
-	}
-	
-	private JPanel buildTable( ) {
-		JPanel table = new ConcentrationTablePanel(conc);
-		return table;
-	}
-
-
-	private String textData() {
+	private String textData(String delimiter) {
 		List<Element> es = conc.elementsByConcentration();
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Element: Ratio to ");
+		sb.append("Element" + delimiter + "Ratio to ");
 		sb.append(conc.getProfile().getReference().getAnchor().getElement().toString());
 		sb.append("\n");
 		
 		for (Element e : es) {
 			sb.append(e.name());
-			sb.append(": ");
+			sb.append(delimiter);
 			sb.append(conc.getRatioFormatted(e));
 			
 			
@@ -109,7 +98,7 @@ public class ConcentrationView extends HeaderLayer {
 	
 	private void copyData() {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		StringSelection sel = new StringSelection(textData());
+		StringSelection sel = new StringSelection(textData(": "));
 		clipboard.setContents(sel, null);
 		
 		ToastLayer toast = new ToastLayer(parent, "Data copied to clipboard");
@@ -120,7 +109,7 @@ public class ConcentrationView extends HeaderLayer {
 	private void saveData() {
 		
 		//TODO: starting folder
-		SwidgetFilePanels.saveFile(parent, "Save Concentration Data", null, new SimpleFileExtension("Text File", "txt"), result -> {
+		SwidgetFilePanels.saveFile(parent, "Save Concentration Data", null, new SimpleFileExtension("Comma Separated Value file", "csv"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}
@@ -128,7 +117,7 @@ public class ConcentrationView extends HeaderLayer {
 			try {
 				File f = result.get();
 				FileWriter writer = new FileWriter(f);
-				writer.write(textData());
+				writer.write(textData(", "));
 				writer.close();
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to save concentration data", e);

@@ -121,11 +121,10 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
-
-import org.peakaboo.framework.stratus.theme.LightTheme;
-
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
+
+import org.peakaboo.framework.stratus.theme.LightTheme;
 
 
 //import com.sun.java.swing.Painter;
@@ -410,15 +409,13 @@ public class StratusThemeCreator
 	private void createDesktop() {
 		final JDesktopPane desktop = new JDesktopPane();
 		JPopupMenu popup = new JPopupMenu();
-		ActionListener al = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JInternalFrame frame = new JInternalFrame(JInternalFrame.class.getSimpleName(), true, true, true, true);
-				frame.setVisible(true);
-				frame.setBounds(50, 100, 600, 500);
-				desktop.add(frame);
-				desktop.moveToFront(frame);
-				desktop.setSelectedFrame(frame);
-			}
+		ActionListener al = e -> {
+			JInternalFrame frame = new JInternalFrame(JInternalFrame.class.getSimpleName(), true, true, true, true);
+			frame.setVisible(true);
+			frame.setBounds(50, 100, 600, 500);
+			desktop.add(frame);
+			desktop.moveToFront(frame);
+			desktop.setSelectedFrame(frame);
 		};
 		al.actionPerformed(null);
 		popup.add("New Internal Frame").addActionListener(al);
@@ -538,11 +535,7 @@ public class StratusThemeCreator
 		indeterminate.setIndeterminate(true);
 		JCheckBox hide = new JCheckBox("Hide Indeterminate Progress Bar:", false);
 		hide.setHorizontalAlignment(SwingConstants.RIGHT);
-		hide.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent evt) {
-				indeterminate.setVisible(evt.getStateChange() != ItemEvent.SELECTED);
-			}
-		});
+		hide.addItemListener(evt -> indeterminate.setVisible(evt.getStateChange() != ItemEvent.SELECTED));
 		JPanel other = new JPanel(null);
 		GroupLayout layout = new GroupLayout(other);
 		other.setLayout(layout);

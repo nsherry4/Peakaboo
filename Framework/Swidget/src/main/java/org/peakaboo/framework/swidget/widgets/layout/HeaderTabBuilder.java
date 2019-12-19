@@ -7,7 +7,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 
 public class HeaderTabBuilder {
 
@@ -25,9 +25,8 @@ public class HeaderTabBuilder {
 	
 	public void addTab(String title, Component component) {
 		body.add(component, title);
-		ToggleImageButton button = new ToggleImageButton(title).withAction(() -> {
-			layout.show(body, title);
-		});
+		FluentToggleButton button = new FluentToggleButton(title)
+				.withAction(() -> layout.show(body, title));
 		group.add(button);
 		linker.addButton(button);
 		

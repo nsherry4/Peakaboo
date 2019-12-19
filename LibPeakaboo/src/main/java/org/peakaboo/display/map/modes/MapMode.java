@@ -1,5 +1,6 @@
 package org.peakaboo.display.map.modes;
 
+import java.lang.ref.SoftReference;
 import java.util.List;
 
 import org.peakaboo.display.map.MapRenderData;
@@ -9,15 +10,19 @@ import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
+import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SelectionMaskPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 public abstract class MapMode {
 
 	protected DrawingRequest dr;
 	protected MapDrawing map;
+	
+	private SoftReference<SelectionMaskPainter> selectionPainterRef = new SoftReference<>(null);
 	
 	public MapMode() {
 		this.dr = new DrawingRequest();
@@ -60,7 +65,7 @@ public abstract class MapMode {
 			height = map.calcTotalSize().y;
 		}
 		
-		size = new Coord<Integer>((int)Math.round(width), (int)Math.round(height));
+		size = new Coord<>((int)Math.round(width), (int)Math.round(height));
 		dr.imageWidth = (float)size.x;
 		dr.imageHeight = (float)size.y;
 		
@@ -80,7 +85,18 @@ public abstract class MapMode {
 		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, title);
 	}
 	
-	protected SpectrumCoordsAxisPainter getSpectrumPainter(MapRenderSettings settings, int spectrumSteps, List<AbstractPalette> paletteList) {
+	protected SelectionMaskPainter getSelectionPainter(PaletteColour colour, List<Integer> points, int width, int height) {
+		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
+		if (selectionPainter == null) {
+			selectionPainter = new SelectionMaskPainter(colour, points, width, height);
+			selectionPainterRef = new SoftReference<>(selectionPainter);
+		} else {
+			selectionPainter.configure(width, height, points);
+		}
+		return selectionPainter;
+	}
+	
+	protected static SpectrumCoordsAxisPainter getSpectrumPainter(MapRenderSettings settings, int spectrumSteps, List<AbstractPalette> paletteList) {
 		return new SpectrumCoordsAxisPainter (
 
 				settings.drawCoord,

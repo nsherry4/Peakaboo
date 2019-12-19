@@ -14,7 +14,7 @@ import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.swidget.icons.IconFactory;
-import org.peakaboo.framework.swidget.widgets.LiveFrame;
+import org.peakaboo.framework.swidget.live.LiveFrame;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 
@@ -50,7 +50,7 @@ public class MapperFrame extends LiveFrame
 		this.previousMapSession = lastMapSession;
 		this.mapData = mapData;
 		
-		init();
+		initFrame();
 
 		this.addWindowListener(new WindowAdapter() {
 
@@ -76,8 +76,7 @@ public class MapperFrame extends LiveFrame
 
 
 
-	private void init()
-	{
+	private void initFrame() {
 		setPreferredSize(new Dimension(900, 700));
 
 
@@ -93,11 +92,13 @@ public class MapperFrame extends LiveFrame
 			}
 
 			@Override
-			protected void destroyComponent(TabbedLayerPanel component) {}
+			protected void destroyComponent(TabbedLayerPanel component) {
+				// NOOP
+			}
 
 			@Override
 			protected void titleChanged(String title) {
-				//setTitle(title);
+				// NOOP
 			}
 
 			@Override
@@ -116,8 +117,7 @@ public class MapperFrame extends LiveFrame
 
 	}
 
-	private MapperPanel createMapperPanel()
-	{
+	private MapperPanel createMapperPanel() {
 		SavedMapSession mapSession = previousMapSession.get();
 		if (tabs.getActiveTab() != null) {
 			TabbedLayerPanel lastTab = tabs.getActiveTab();
@@ -131,12 +131,7 @@ public class MapperFrame extends LiveFrame
 			mapSession.loadInto(newController);
 		}
 		
-		final MapperPanel viewer = new MapperPanel(newController, parentPlotter, tabs);
-		return viewer;					
+		return new MapperPanel(newController, parentPlotter, tabs);				
 	}
 
-	
-
-	
-	
 }

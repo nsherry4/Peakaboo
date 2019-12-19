@@ -4,42 +4,38 @@ package org.peakaboo.framework.autodialog.view.swing;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
-
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
+import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 
 
-public class SwingAutoDialog extends JDialog
+public class SwingAutoDialog extends LiveDialog
 {
 
-	//private IADController controller;
-	private Container parent;
+	private Container parentContainer;
 
 	private String helpTitle;
 	private String helpMessage;
 	
 	private Group group;
 	private AutoDialogButtons buttons;
-	private boolean selected_ok = false;
+	private boolean selectedOk = false;
 	
 	
-	private ImageButton info;
+	private FluentButton info;
 
 	
 	public SwingAutoDialog(Window owner, Group group) {
@@ -81,7 +77,7 @@ public class SwingAutoDialog extends JDialog
 		
 				
 		pack();
-		setLocationRelativeTo(parent);
+		setLocationRelativeTo(parentContainer);
 		setTitle(group.getName());
 		setVisible(true);
 	}
@@ -98,48 +94,42 @@ public class SwingAutoDialog extends JDialog
 		
 		if (buttons == AutoDialogButtons.OK_CANCEL) {
 			
-			ImageButton ok = new ImageButton("OK", StockIcon.CHOOSE_OK);
-			ok.addActionListener(e -> {
-				this.selected_ok = true;
-				System.err.println("Set OK");
-				SwingAutoDialog.this.setVisible(false);
-			});
+			FluentButton ok = new FluentButton("OK")
+					.withStateDefault()
+					.withAction(() -> {
+						this.selectedOk = true;
+						SwingAutoDialog.this.setVisible(false);
+					});
 			
-			ImageButton cancel = new ImageButton("Cancel", StockIcon.CHOOSE_CANCEL);
-			cancel.addActionListener(e -> {
-				SwingAutoDialog.this.setVisible(false);
-			});
+			FluentButton cancel = new FluentButton("Cancel")
+					.withAction(() -> SwingAutoDialog.this.setVisible(false));
 			
-			bbox.addRight(0, cancel);
 			bbox.addRight(0, ok);
+			bbox.addRight(0, cancel);
 			
 		} else if (buttons == AutoDialogButtons.CLOSE) {
 			
-			ImageButton close = new ImageButton("Close", StockIcon.WINDOW_CLOSE);
-			close.addActionListener(e -> {
-				SwingAutoDialog.this.setVisible(false);
-			});
+			FluentButton close = new FluentButton("Close")
+					.withAction(() -> SwingAutoDialog.this.setVisible(false));
 			
 			bbox.addRight(0, close);
 			
 		}
 		
 		
-		info = new ImageButton(StockIcon.BADGE_HELP).withTooltip("More Information").withLayout(ImageButtonLayout.IMAGE).withBordered(true);
-		info.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e)
-			{	
-				JOptionPane.showMessageDialog(
+		info = new FluentButton(StockIcon.BADGE_HELP)
+				.withTooltip("More Information")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withBordered(true)
+				.withAction(() -> 
+					JOptionPane.showMessageDialog(
 						SwingAutoDialog.this, 
 						Swidget.lineWrapHTML(SwingAutoDialog.this, helpMessage),
 						helpTitle, 
 						JOptionPane.INFORMATION_MESSAGE, 
 						StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON)
-					);
-
-			}
-		});
+					)
+				);
 		info.setFocusable(false);
 		if (helpMessage == null) info.setVisible(false);
 		
@@ -175,17 +165,17 @@ public class SwingAutoDialog extends JDialog
 	}
 	
 	
-	
+	@Override
 	public Container getParent() {
-		return parent;
+		return parentContainer;
 	}
 
 	public void setParent(Container parent) {
-		this.parent = parent;
+		this.parentContainer = parent;
 	}
 
 	public boolean okSelected() {
-		return selected_ok;
+		return selectedOk;
 	}
 
 	public Group getGroup() {

@@ -1,6 +1,7 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.map;
 
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 

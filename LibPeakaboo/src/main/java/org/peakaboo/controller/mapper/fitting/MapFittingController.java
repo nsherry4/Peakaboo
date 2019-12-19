@@ -71,8 +71,7 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 				return;
 			}
 			switch (t) {
-				case AREA_SELECTION:
-				case POINT_SELECTION:
+				case SELECTION:
 					break;
 				
 				case DATA:

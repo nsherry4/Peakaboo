@@ -124,7 +124,7 @@ public class SimpleScanData implements ScanData {
 			) {
 			return new CompressedLoaderQueue(this, analysis, capacity);
 		} else {
-			return new SimpleLoaderQueue(this, analysis, capacity);			
+			return new SimpleLoaderQueue(this, capacity);			
 		}
 	}
 

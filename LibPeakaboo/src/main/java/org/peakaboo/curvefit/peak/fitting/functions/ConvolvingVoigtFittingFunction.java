@@ -21,6 +21,7 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 			 * the order of 10ev wide. The Gaussian represents peak broadening from the
 			 * detector and is on the order of 160 ev.
 			 */
+			@Override
 			public float getFWHM() {
 				return 0.010f;
 			}
@@ -37,7 +38,6 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 	public float forEnergyAbsolute(float energy) {
 		if(signal.forEnergyAbsolute(energy) < 0.0001) {
 			return 0;
-		} else {
 		}
 		//Create a kernel transition+fittingfunction centered around the current energy
 		Transition fake = new Transition(energy, 1f, "Fake Transition for Voigt Fitting Function");
@@ -72,7 +72,11 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 			deltaEnergy += 0.002;
 		}
 		
-		sum /= normalizer;
+		if (normalizer == 0) {
+			sum = 0;
+		} else {
+			sum /= normalizer;
+		}
 		
 		return sum;
 	}

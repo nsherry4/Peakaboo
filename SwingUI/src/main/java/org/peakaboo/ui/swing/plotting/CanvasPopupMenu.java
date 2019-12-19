@@ -6,31 +6,26 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentMenuItem;
 
 public class CanvasPopupMenu extends JPopupMenu {
 
-	private JMenuItem quickmap;
+	private FluentMenuItem quickmap;
 		
-	public CanvasPopupMenu(PlotCanvas canvas, PlotPanel plot, PlotController controller, int channel) {
+	public CanvasPopupMenu(PlotPanel plot, PlotController controller, int channel) {
 		
-		quickmap = new JMenuItem("Quick Map Channel " + channel);
-		quickmap.addActionListener(e -> {
-			SwingUtilities.invokeLater(() -> {
-				plot.actionQuickMap(channel);
-			});
-		});
+		quickmap = new FluentMenuItem("Quick Map Channel " + channel)
+				.withAction(() -> SwingUtilities.invokeLater(() -> plot.actionQuickMap(channel)));
 		this.add(quickmap);
 		
 		ITransitionSeries ts = controller.fitting().selectTransitionSeriesAtChannel(channel);
 		if (ts != null) {
-			JMenuItem annotate = new JMenuItem("Annotate " + ts.toString());
-			annotate.addActionListener(e -> plot.actionAddAnnotation(ts));
+			FluentMenuItem annotate = new FluentMenuItem("Annotate " + ts.toString())
+					.withAction(() -> plot.actionAddAnnotation(ts));
 			this.add(annotate);
 		}
 		
-		
 	}
-	
-	
+
 	
 }

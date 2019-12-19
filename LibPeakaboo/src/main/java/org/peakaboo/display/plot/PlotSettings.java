@@ -9,6 +9,7 @@ public class PlotSettings {
 	
 	public boolean				backgroundShowOriginal = false;
 	public boolean				logTransform = true;
+	public String				title = null;
 	
 	
 }

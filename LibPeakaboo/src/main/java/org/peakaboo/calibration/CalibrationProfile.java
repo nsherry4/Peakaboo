@@ -17,7 +17,6 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
@@ -79,11 +78,12 @@ public class CalibrationProfile {
 		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
 		CalibrationProcessor normalizer = new CalibrationNormalizer();
 		
-		/*
-		 * interpolate and smooth a copy of this profile, then copy the smooed
-		 * interpolated values back to this one. We do this so that interpolated values
-		 * aren't influenced too much by one outlier neighbour.
-		 */
+		
+		
+		// interpolate and smooth a copy of this profile, then copy the smooed
+		// interpolated values back to this one. We do this so that interpolated values
+		// aren't influenced too much by one outlier neighbour.
+		
 		CalibrationProfile smoothed = new CalibrationProfile(this);
 		interpolator.process(smoothed);
 		interpolationSmoother.process(smoothed);
@@ -97,7 +97,7 @@ public class CalibrationProfile {
 		
 		//normalize values against anchor element
 		normalizer.process(this);
-				
+		
 	}
 	
 	public CalibrationProfile(CalibrationProfile copy) {
@@ -214,7 +214,7 @@ public class CalibrationProfile {
 			profile.interpolated.add(ts);
 		}
 		
-		profile.reference = CalibrationPluginManager.SYSTEM.getByUUID(serialized.referenceUUID).create();
+		profile.reference = CalibrationPluginManager.system().getByUUID(serialized.referenceUUID).create();
 		if (profile.reference == null) {
 			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
 		}

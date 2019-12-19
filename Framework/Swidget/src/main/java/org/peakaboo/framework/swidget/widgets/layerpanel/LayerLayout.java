@@ -62,7 +62,7 @@ import java.util.Vector;
  * @since JDK1.0
  */
 
-public class LayerLayout implements LayoutManager2, Serializable {
+class LayerLayout implements LayoutManager2, Serializable {
 
 	private static final long serialVersionUID = -4328196481005934313L;
 

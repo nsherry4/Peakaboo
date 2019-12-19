@@ -5,7 +5,7 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 
 
 public class IconFactory {
@@ -16,20 +16,7 @@ public class IconFactory {
 	public static ImageIcon getImageIcon(String imageName){
 		return getImageIcon(imageName, null);
 	}
-	
-
-	public static ImageIcon getMenuIcon(String imageName)
-	{
-		return getImageIcon(imageName, IconSize.BUTTON);
-	}
-	
-	public static ImageIcon getMenuIcon(StockIcon stock)
-	{
-		return stock.toImageIcon(IconSize.BUTTON);
-	}
-	
-	
-	
+		
 	public static ImageIcon getImageIcon(String imageName, IconSize size){
 		return getImageIcon(imageName, size, path);
 	}
@@ -65,7 +52,7 @@ public class IconFactory {
 
 		if (size != null) iconDir = size.size() + "/";
 						
-		return ImageButton.class.getResource(path + iconDir + imageName + ".png");
+		return FluentButton.class.getResource(path + iconDir + imageName + ".png");
 		
 	}
 	

@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.swidget.widgets.Spacing;

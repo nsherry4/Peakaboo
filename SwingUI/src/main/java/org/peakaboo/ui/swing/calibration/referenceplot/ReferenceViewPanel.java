@@ -13,7 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
@@ -156,7 +155,8 @@ public class ReferenceViewPanel extends HeaderLayer {
 		column.setCellRenderer(new ListWidgetTableCellRenderer<>(new ListWidget<ITransitionSeries>() {
 
 			private JLabel label;
-			{
+			
+			/* Constructor */ {
 				setLayout(new BorderLayout());
 				setBorder(Spacing.bSmall());
 				label = new JLabel();

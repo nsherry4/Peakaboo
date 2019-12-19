@@ -62,7 +62,7 @@ public class BinningMapFilter extends AbstractMapFilter {
 		ReadOnlySpectrum originalData = map.getData();
 		
 		GridPerspective<Float> binnedGrid = new GridPerspective<Float>(map.getSize().x/2, map.getSize().y/2, 0f);
-		Spectrum binnedData = new ISpectrum(binnedGrid.width * binnedGrid.height);
+		Spectrum binnedData = new ISpectrum(binnedGrid.size());
 		
 		for (int y = 0; y < binnedGrid.height; y++) {
 			for (int x = 0; x < binnedGrid.width; x++) {

@@ -8,8 +8,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentMenuItem;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
-import org.peakaboo.ui.swing.plotting.toolbar.PlotMenuUtils;
 
 public class MapMenuExport extends JPopupMenu {
 
@@ -22,26 +22,26 @@ public class MapMenuExport extends JPopupMenu {
 	public MapMenuExport(MapperPanel plot) {
 				
 		
-		snapshotMenuItem = PlotMenuUtils.createMenuItem(plot,
-				"Export as Image\u2026", StockIcon.DEVICE_CAMERA.toMenuIcon(), "Exports the current plot as an image",
-				e -> plot.actionSavePicture(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), KeyEvent.VK_P
-		);
+		snapshotMenuItem = new FluentMenuItem()
+				.withText("Export as Image\u2026")
+				.withTooltip("Exports the current plot as an image")
+				.withIcon(StockIcon.DEVICE_CAMERA)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_P)
+				.withAction(plot::actionSavePicture);
 		this.add(snapshotMenuItem);
 
-		exportCSV = PlotMenuUtils.createMenuItem(plot,
-				"Export as CSV", null, "Export the current map as a comma separated value file",
-				e -> plot.actionSaveCSV(),
-				null, null
-		);
+		exportCSV = new FluentMenuItem()
+				.withText("Export as CSV")
+				.withTooltip("Export the current map as a comma separated value file")
+				.withAction(plot::actionSaveCSV);
 		this.add(exportCSV);
 		
 
-		exportArchive = PlotMenuUtils.createMenuItem(plot,
-				"All-In-One Zip Archive", null, "Export all selected maps as images and comma separated value files in a zip archive",
-				e -> plot.actionSaveArchive(),
-				null, null
-		);
+		exportArchive = new FluentMenuItem()
+				.withText("All-In-One Zip Archive")
+				.withTooltip("Export all selected maps as images and comma separated value files in a zip archive")
+				.withAction(plot::actionSaveArchive);
 		this.add(exportArchive);
 		
 

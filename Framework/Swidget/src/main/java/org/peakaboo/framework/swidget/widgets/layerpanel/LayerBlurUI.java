@@ -14,7 +14,7 @@ import javax.swing.plaf.LayerUI;
 import org.jdesktop.swingx.image.FastBlurFilter;
 import org.peakaboo.framework.swidget.graphics.ManagedImageBuffer;
 
-public class LayerBlurUI<T extends Component> extends LayerUI<T> {
+class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	private BufferedImageOp mOperation;
 	private ManagedImageBuffer bufferer;
 

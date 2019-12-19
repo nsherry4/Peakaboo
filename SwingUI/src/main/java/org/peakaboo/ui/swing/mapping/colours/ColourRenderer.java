@@ -9,7 +9,6 @@ package org.peakaboo.ui.swing.mapping.colours;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Polygon;
 
 import javax.swing.Icon;
 
@@ -20,7 +19,6 @@ class ColourRenderer implements Icon
 	private Color				color;
 	private int					width;
 	private int					height;
-	private Polygon				poly;
 	private static final int	DEFAULT_WIDTH	= 20;
 	private static final int	DEFAULT_HEIGHT	= 20;
 
@@ -36,19 +34,7 @@ class ColourRenderer implements Icon
 		this.color = color;
 		this.width = width;
 		this.height = height;
-		initPolygon();
 	}
-
-
-	private void initPolygon()
-	{
-		poly = new Polygon();
-		poly.addPoint(0, 0);
-		poly.addPoint(width, 0);
-		poly.addPoint(width, height);
-		poly.addPoint(0, height);
-	}
-
 
 	public int getIconHeight()
 	{

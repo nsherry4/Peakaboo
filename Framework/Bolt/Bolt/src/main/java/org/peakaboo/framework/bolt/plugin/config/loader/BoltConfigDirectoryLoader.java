@@ -3,6 +3,7 @@ package org.peakaboo.framework.bolt.plugin.config.loader;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,9 +29,9 @@ public class BoltConfigDirectoryLoader<T extends BoltConfigPlugin> extends BoltD
 	public List<BoltContainer<T>> getContainers() {
 		List<File> files = super.scanFiles(p -> p.toString().toLowerCase().endsWith(ext));
 		return files.stream()
-			.map(f -> build(f))
-			.filter(c -> c != null)
-			.filter(c -> unmanagedNotEmpty(c))
+			.map(this::build)
+			.filter(Objects::nonNull)
+			.filter(this::unmanagedNotEmpty)
 			.collect(Collectors.toList());
 
 	}

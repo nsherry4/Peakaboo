@@ -1,43 +1,50 @@
 package org.peakaboo.datasource.model.components.interaction;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
+import java.util.function.IntConsumer;
 
 public class CallbackInteraction implements Interaction {
 
-	private Supplier<Boolean>	fn_isAborted;
-	private Consumer<Integer>	fn_readScanCallback;
-	private Consumer<Integer>	fn_getScanCountCallback;
+	private IntConsumer	fnOpenedScanCallback;
+	private BooleanSupplier	fnIsAborted;
+	private IntConsumer	fnReadScanCallback;
+	private IntConsumer	fnGetScanCountCallback;
 	
-
 	public CallbackInteraction(
-			Consumer<Integer> getScanCountCallback, 
-			Consumer<Integer> readScanCallback,
-			Supplier<Boolean> isAborted
+			IntConsumer openedScanCallback,
+			IntConsumer getScanCountCallback, 
+			IntConsumer readScanCallback,
+			BooleanSupplier isAborted
 		)
 	{
-		this.fn_readScanCallback = readScanCallback;
-		this.fn_isAborted = isAborted;
-		this.fn_getScanCountCallback = getScanCountCallback;
+		this.fnOpenedScanCallback = openedScanCallback;
+		this.fnReadScanCallback = readScanCallback;
+		this.fnIsAborted = isAborted;
+		this.fnGetScanCountCallback = getScanCountCallback;
 	}
 	
 	
 	@Override
 	public boolean checkReadAborted()
 	{
-		return fn_isAborted.get();
+		return fnIsAborted.getAsBoolean();
 	}
 	
 	@Override
 	public void notifyScanRead(int numRead)
 	{
-		fn_readScanCallback.accept(numRead);
+		fnReadScanCallback.accept(numRead);
 	}
 	
 	@Override
 	public void notifyScanCount(int scanCount)
 	{
-		fn_getScanCountCallback.accept(scanCount);
+		fnGetScanCountCallback.accept(scanCount);
+	}
+	
+	@Override
+	public void notifyScanOpened(int scanCount) {
+		fnOpenedScanCallback.accept(scanCount);
 	}
 
 	

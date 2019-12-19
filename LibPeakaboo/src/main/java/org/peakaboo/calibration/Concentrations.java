@@ -16,7 +16,7 @@ public class Concentrations {
 
 	private Map<Element, Float> concentrations;
 	private Map<Element, ITransitionSeries> sources;
-	private NumberFormat format = new DecimalFormat("0.0000");
+	private NumberFormat format = new DecimalFormat("0.000000");
 	private CalibrationProfile profile;
 	
 	public Concentrations(Map<Element, Float> concentrations, Map<Element, ITransitionSeries> sources, CalibrationProfile profile) {
@@ -27,7 +27,7 @@ public class Concentrations {
 	
 	public List<Element> elementsByZ() {
 		List<Element> sorted = new ArrayList<>(concentrations.keySet());
-		sorted.sort((e1, e2) -> Integer.compare(e1.atomicNumber(), e2.atomicNumber()));
+		sorted.sort(Element::compare);
 		return sorted;
 	}
 	
@@ -61,7 +61,7 @@ public class Concentrations {
 	
 	public String getRatioFormatted(Element e) {
 		float ratio = getRatio(e);
-		return format.format(ratio) + "x";
+		return format.format(ratio);
 	}
 	
 
@@ -125,7 +125,7 @@ public class Concentrations {
 		//TODO: How to handle uncalibrated elements?
 		Map<Element, Float> ppm = new LinkedHashMap<>();
 		List<Element> sorted = new ArrayList<>(intensities.keySet());
-		sorted.sort((e1, e2) -> Integer.compare(e1.atomicNumber(), e2.atomicNumber()));
+		sorted.sort(Element::compare);
 		
 		for (Element element : sorted) {
 			ppm.put(element, intensities.get(element) / sum * 1e6f);

@@ -2,7 +2,6 @@ package org.peakaboo.framework.cyclops.visualization.backend.awt;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -34,7 +33,6 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableColumn;
 
@@ -47,9 +45,10 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.models.ListTableModel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
@@ -244,9 +243,9 @@ public class SavePicture extends JPanel
 	private void showDialog() {
 		
 		if (owner instanceof Window) {
-			dialog = new JDialog((Window)owner);
+			dialog = new LiveDialog((Window)owner);
 		} else {
-			dialog = new JDialog();
+			dialog = new LiveDialog();
 		}
 
 		dialog.setTitle("Save as Image");
@@ -278,24 +277,20 @@ public class SavePicture extends JPanel
 
 
 	
-	private ImageButton saveButton() {
-		ImageButton ok = new ImageButton("Save");
-		ok.addActionListener(e -> {
+	private FluentButton saveButton() {
+		return new FluentButton("Save").withAction(() -> {
 			Cursor oldCursor = getCursor();
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			saveSurfaceType(formatPicker.getSelectedSurfaceType());
 			setCursor(oldCursor);
 		});
-		return ok;
 	}
 
-	private ImageButton cancelButton() {
-		ImageButton cancel = new ImageButton("Cancel");
-		cancel.addActionListener(e -> {
+	private FluentButton cancelButton() {
+		return new FluentButton("Cancel").withAction(() -> {
 			onComplete.accept(Optional.empty());
 			hide();
 		});
-		return cancel;
 	}
 	
 

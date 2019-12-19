@@ -20,26 +20,21 @@ public class BooleanEditor extends AbstractSwingEditor<Boolean>
 	}
 	
 	@Override
-	public void initialize(Parameter<Boolean> param)
-	{
+	public void initialize(Parameter<Boolean> param) {
 		
 		this.param = param;
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> setFromParameter());
-		param.getEnabledHook().addListener(e -> setEnabled(e));
+		param.getEnabledHook().addListener(this::setEnabled);
 		
 		control.setAlignmentX(Component.LEFT_ALIGNMENT);
 		control.setOpaque(false);
 		
-		control.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue(getEditorValue())) {
-					validateFailed();
-				}
+		control.addChangeListener(e -> {
+			getEditorValueHook().updateListeners(getEditorValue());
+			if (!param.setValue(getEditorValue())) {
+				validateFailed();
 			}
 		});
 	}

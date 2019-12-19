@@ -16,11 +16,12 @@ import org.peakaboo.framework.stratus.theme.Theme;
 
 public class TitledBorderBorder extends AbstractBorder implements Themed {
 
-	private float radius = Stratus.borderRadius*1.5f;
+	private float radius = 0f;
 	private Theme theme;
 	
 	public TitledBorderBorder(Theme theme) {
 		this.theme = theme;
+		this.radius = theme.borderRadius() * 1.5f;
 	}
 	
 	@Override

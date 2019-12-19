@@ -1,14 +1,15 @@
 package org.peakaboo.filter.plugins.mathematical;
 
 
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
-public class IntegralMathFilter extends AbstractSimpleFilter
+public class IntegralMathFilter extends AbstractFilter
 {
 
 	@Override
@@ -17,39 +18,31 @@ public class IntegralMathFilter extends AbstractSimpleFilter
 	}
 
 	@Override
-	public void initialize()
-	{
-
+	public void initialize() {
+		//NOOP
 	}
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
-	{
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
 		return integ(data);
 	}
 	
 
 	@Override
-	public String getFilterDescription()
-	{
-		// TODO Auto-generated method stub
+	public String getFilterDescription() {
 		return "The " + getFilterName() + " transforms the data such that each channel represents the sum of itself and all channels prior to it.";
 	}
 
 
 	@Override
-	public String getFilterName()
-	{
-		// TODO Auto-generated method stub
+	public String getFilterName() {
 		return "Integral";
 	}
 
 
 	@Override
-	public FilterType getFilterType()
-	{
-		// TODO Auto-generated method stub
+	public FilterType getFilterType() {
 		return FilterType.MATHEMATICAL;
 	}
 
@@ -62,8 +55,7 @@ public class IntegralMathFilter extends AbstractSimpleFilter
 	
 	
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return true;
 	}
 	
@@ -74,11 +66,8 @@ public class IntegralMathFilter extends AbstractSimpleFilter
 	 * @param list the data to find the integral for
 	 * @return a list of sums
 	 */
-	public static Spectrum integ(ReadOnlySpectrum list)
-	{
-		
+	public static Spectrum integ(ReadOnlySpectrum list) {
 		return SpectrumCalculations.integral(list); 
-		
 	}
 
 

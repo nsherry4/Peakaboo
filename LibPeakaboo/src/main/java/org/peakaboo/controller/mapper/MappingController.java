@@ -23,7 +23,6 @@ import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datasource.model.internal.CroppedDataSource;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
@@ -122,14 +121,8 @@ public class MappingController extends EventfulType<MapUpdateType>
 		return fittingController;
 	}
 	
-	public CroppedDataSource getDataSourceForSubset(Coord<Integer> cstart, Coord<Integer> cend)
-	{
-		return plotcontroller.data().getDataSourceForSubset(getUserDimensions().getUserDataWidth(), getUserDimensions().getUserDataHeight(), cstart, cend);
-	}
-
-	public SelectionDataSource getDataSourceForSubset(List<Integer> points)
-	{
-		return plotcontroller.data().getDataSourceForSubset(points);
+	public SelectionDataSource getDataSourceForSubset(List<Integer> points) {
+		return plotcontroller.data().getDataSourceForSubset(points, getUserDimensions().getDimensions());
 	}
 	
 	
@@ -163,14 +156,14 @@ public class MappingController extends EventfulType<MapUpdateType>
 		settings.coordHiXLoY = this.getSettings().getHiXLoYCoord();
 		settings.coordLoXHiY = this.getSettings().getLoXHiYCoord();
 		settings.coordHiXHiY = this.getSettings().getHiXHiYCoord();
-		settings.physicalUnits = this.rawDataController.getRealDimensionUnits();
-		settings.physicalCoord = this.rawDataController.getRealDimensions() != null;
+		settings.physicalUnits = this.getFiltering().getRealDimensions() != null ? this.rawDataController.getRealDimensionUnits() : null;
+		settings.physicalCoord = this.getFiltering().getRealDimensions() != null;
 		
 		settings.showSpectrum = this.getSettings().getShowSpectrum();
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
 		
 		settings.calibrationProfile = this.getFitting().getCalibrationProfile();
-		settings.selectedPoints = this.getSelection().getPoints();
+		settings.selectedPoints = this.getSelection().getPoints(false);
 			
 		
 		

@@ -19,6 +19,10 @@ import org.peakaboo.framework.cyclops.Spectrum;
 
 public class Interpolation {
 
+	private Interpolation() {
+		//Not Constructable
+	}
+	
 	/**
 	 * Linear interpolation of a grid of values by averaging neighbouring values. Grid size expands from x,y to x*2-1, y*2-1
 	 * @param grid the {@link GridPerspective} defining the dimensions for the data
@@ -27,7 +31,7 @@ public class Interpolation {
 	 */
 	public static Pair<GridPerspective<Float>, Spectrum> interpolateGridLinear(GridPerspective<Float> grid, Spectrum list){
 		
-		GridPerspective<Float> upGrid = new GridPerspective<Float>(grid.width * 2 - 1, grid.height * 2 - 1, 0.0f);
+		GridPerspective<Float> upGrid = new GridPerspective<>(grid.width * 2 - 1, grid.height * 2 - 1, 0.0f);
 		Spectrum upList = new ISpectrum(upGrid.width * upGrid.height, 0.0f);
 		
 		
@@ -70,7 +74,7 @@ public class Interpolation {
 			}
 		}
 		
-		return new Pair<GridPerspective<Float>, Spectrum>(upGrid, upList);
+		return new Pair<>(upGrid, upList);
 		
 	}
 	
@@ -88,7 +92,7 @@ public class Interpolation {
 		IntPair coords;
 		int x, y;
 		float newval;
-		List<Integer> newBadPoints = new ArrayList<Integer>();
+		List<Integer> newBadPoints = new ArrayList<>();
 		boolean repeat = false;
 		
 		for (int i : badPoints){

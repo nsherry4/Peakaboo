@@ -27,15 +27,15 @@ public class TabPainter extends StatefulPainter{
 		super(theme, buttonState);
 		
 		if (isSelected()) {
-			fillNL = Stratus.darken(getTheme().getControl(), 0.02f);
+			fillNL = getTheme().getNegative();
 			bottomNL = getTheme().getHighlight();
-			fillTL = getTheme().getControl();
+			fillTL = getTheme().getNegative();
 			bottomTL = getTheme().getHighlight();
 		} else {
-			fillNL = Stratus.darken(getTheme().getControl(), 0.08f);
-			bottomNL = Stratus.darken(getTheme().getWidgetBorder(), 0.1f);
-			fillTL = Stratus.darken(getTheme().getControl(), 0.04f);;
-			bottomTL = getTheme().getWidgetBorder();
+			fillNL = getTheme().getNegative();
+			bottomNL = Stratus.darken(getTheme().getWidgetBorder());
+			fillTL = getTheme().getNegative();
+			bottomTL = Stratus.darken(getTheme().getWidgetBorder());
 		}
 
 		

@@ -34,13 +34,7 @@ public class DoubleDerivativePeakSearcher implements PeakSearcher {
 		Spectrum d2 = SpectrumCalculations.derivative(d1);
 		float dataMax = data.max();
 		float d2Max = SpectrumCalculations.abs(d2).max();
-		
-		//Any detected peak for which the second derivative doesn't 
-		//exceed 0.1% of the max-abs of the second derivative spectrum
-		//will be discarted
-		float d2threshold = SpectrumCalculations.abs(d2).max() * 0.001f;
-		
-				
+						
 		//First derivative crossing from positive to negative indicates a peak top
 		List<Integer> channels = new ArrayList<>();
 		int nonnegative = 0;
@@ -91,17 +85,12 @@ public class DoubleDerivativePeakSearcher implements PeakSearcher {
 			}
 			
 		}
-		
-		//System.exit(0);
-		
 
-		channels.sort((a, b) -> {
-			return Float.compare(
-					score(b, data, dataMax, d2, d2Max),
-					score(a, data, dataMax, d2, d2Max)
-				);
-		});
-		
+		channels.sort((a, b) -> Float.compare(
+			score(b, data, dataMax, d2, d2Max),
+			score(a, data, dataMax, d2, d2Max)
+		));
+	
 		return channels;
 		
 	}

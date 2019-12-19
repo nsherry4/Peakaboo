@@ -2,12 +2,10 @@ package org.peakaboo.framework.swidget.widgets;
 
 import java.awt.Insets;
 
-import javax.swing.JComponent;
 import javax.swing.border.EmptyBorder;
 
 
-public class Spacing
-{
+public class Spacing {
 
 	public final static int none 	= 0;
 	public final static int tiny 	= 1;
@@ -51,10 +49,6 @@ public class Spacing
 		return new Insets(tiny, tiny, tiny, tiny);
 	}
 	
-	public static Insets iButton(){
-		return new Insets(button, button, button, button);
-	}
-	
 	public static Insets iSmall(){
 		return new Insets(small, small, small, small);
 	}
@@ -69,26 +63,6 @@ public class Spacing
 	
 	public static Insets iHuge(){
 		return new Insets(huge, huge, huge, huge);
-	}
-	
-	
-	public static EmptyBorder menuPadding(){
-		return new EmptyBorder(none, small, none, small);	
-	}
-
-	public static void setNormal(JComponent c)
-	{
-		c.putClientProperty("JComponent.sizeVariant", "normal");
-	}
-	
-	public static void setSmall(JComponent c)
-	{
-		c.putClientProperty("JComponent.sizeVariant", "small");
-	}
-	
-	public static void setMini(JComponent c)
-	{
-		c.putClientProperty("JComponent.sizeVariant", "mini");
 	}
 	
 }

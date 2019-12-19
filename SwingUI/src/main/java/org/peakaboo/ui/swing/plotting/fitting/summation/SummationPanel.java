@@ -9,26 +9,22 @@ import javax.swing.JScrollPane;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
 import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 
 
-public class SummationPanel extends JPanel
-{
+public class SummationPanel extends JPanel {
 
 	private SummationWidget	summationWidget;
 	boolean active = true;
 
-	public SummationPanel(final FittingController controller, final CurveFittingView owner)
-	{
+	public SummationPanel(final FittingController controller, final CurveFittingView owner) {
 		
-		SelectionListControls selControls = new SelectionListControls("Summation") {
+		SelectionListControls selControls = new SelectionListControls("Summation", "Add Summation") {
 
 			@Override
-			protected void cancel()
-			{
+			protected void cancel() {
 				SummationPanel.this.active = false;
 				summationWidget.resetSelectors(active);
 
@@ -36,13 +32,11 @@ public class SummationPanel extends JPanel
 				controller.fittingProposalsInvalidated();
 
 				owner.dialogClose();
-
 			}
 
 
 			@Override
-			protected void approve()
-			{
+			protected void approve() {
 				//add all of the transition series that come back from the summation widget
 				summationWidget.getTransitionSeries().forEach(controller::addTransitionSeries);
 
@@ -51,7 +45,6 @@ public class SummationPanel extends JPanel
 				controller.fittingProposalsInvalidated();
 
 				owner.dialogClose();
-
 			}
 		};
 		selControls.setOpaque(false);
@@ -69,20 +62,18 @@ public class SummationPanel extends JPanel
 		this.add(scroll, BorderLayout.CENTER);
 
 
-		this.add(new TitlePaintedPanel("Add Summation Fitting", false, selControls), BorderLayout.NORTH);
+		this.add(selControls, BorderLayout.NORTH);
 
 
 
 	}
 
-	public void setActive(boolean active)
-	{
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 	
 
-	public void resetSelectors()
-	{
+	public void resetSelectors() {
 		summationWidget.resetSelectors(active);
 	}
 

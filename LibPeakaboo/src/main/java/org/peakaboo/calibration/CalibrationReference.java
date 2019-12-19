@@ -248,7 +248,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 	public static void main(String[] args) throws IOException {
 
 		CalibrationPluginManager.init(new File("."));
-		CalibrationReference nist = CalibrationPluginManager.SYSTEM.getPlugins().get(0).create();
+		CalibrationReference nist = CalibrationPluginManager.system().getPlugins().get(0).create();
 		String yaml = CalibrationReference.save(nist);
 		System.out.println(yaml);
 		

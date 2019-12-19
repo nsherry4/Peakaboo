@@ -1,10 +1,7 @@
 package org.peakaboo.display.map;
 
 
-import java.lang.ref.SoftReference;
-
-import org.peakaboo.common.PeakabooConfiguration;
-import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.display.Display;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.framework.cyclops.Coord;
@@ -20,9 +17,7 @@ public class Mapper {
 	private MapMode mapmode;
 	
 	private boolean invalidated;
-	//private SoftReference<Buffer> bufferRef = new SoftReference<>(null);
-	private static final float OVERSIZE = 1.2f;
-	private ManagedBuffer bufferer = new ManagedBuffer(OVERSIZE);
+	private ManagedBuffer bufferer = new ManagedBuffer(Display.OVERSIZE);
 	private Coord<Integer> lastSize;
 	
 	public Mapper() {
@@ -46,26 +41,7 @@ public class Mapper {
 		 * Determine if we want to buffer the drawing or not. When memory is tight, we
 		 * take the performance hit to save space
 		 */
-		boolean doBuffer = true;
-		//buffer space in MB
-		int bufferSpace = (int)((size.x * 1.2f * size.y * 1.2f * 4) / 1024f / 1024f);
-		if (bufferSpace > 10 && PeakabooConfiguration.memorySize == MemorySize.TINY) {
-			doBuffer = false;
-		}
-		if (bufferSpace > 20 && PeakabooConfiguration.memorySize == MemorySize.SMALL) {
-			doBuffer = false;
-		}
-		if (bufferSpace > 40 && PeakabooConfiguration.memorySize == MemorySize.MEDIUM) {
-			doBuffer = false;
-		}
-		if (bufferSpace > 250 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
-			doBuffer = false;
-		}
-		Runtime rt = Runtime.getRuntime();
-		int freemem = (int) (rt.freeMemory() / 1024f / 1024f);
-		if (bufferSpace * 1.2f > freemem) {
-			doBuffer = false;
-		}
+		boolean doBuffer = Display.useBuffer(size);
 		
 		
 		if (context.getSurfaceType() != SurfaceType.RASTER) {
@@ -93,10 +69,6 @@ public class Mapper {
 			lastSize = null;
 			mapmode.draw(size, data, settings, context, spectrumSteps);
 		}
-		
-		
-	
-		//mapmode.draw(size, data, settings, context, spectrumSteps);
 
 	}
 

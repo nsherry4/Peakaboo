@@ -1,10 +1,10 @@
 package org.peakaboo.datasink.plugin.plugins;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 import org.peakaboo.datasink.plugin.AbstractDataSink;
@@ -29,9 +29,10 @@ public class CSV extends AbstractDataSink {
 	}
 	
 	@Override
-	public void write(DataSource source, Path destination) throws IOException {
-		Writer writer = new OutputStreamWriter(Files.newOutputStream(destination));
+	public void write(DataSource source, OutputStream output) throws IOException {
 		
+		Writer writer = new OutputStreamWriter(output);
+				
 		int counter = 0;
 		for (ReadOnlySpectrum s : source.getScanData()) {
 			String spectrum = s.stream().map(f -> Float.toString(f)).collect(Collectors.joining(", "));
@@ -46,7 +47,7 @@ public class CSV extends AbstractDataSink {
 				}
 			}
 		}
-		writer.close();		
+
 	}
 
 	@Override

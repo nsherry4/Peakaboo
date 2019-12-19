@@ -1,7 +1,9 @@
 package org.peakaboo.mapping.filter.model;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
@@ -10,6 +12,7 @@ import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalCapMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrectionMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.WeakSignalRemovalMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.enhancing.SharpenMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.AdditionMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.LogMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.MultiplyMapFilter;
@@ -20,6 +23,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.sizing.EnlargeMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.DenoiseMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.FastAverageMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.WeightedAverageMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.transforming.DeskewMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.HFlipMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate180MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate270MapFilter;
@@ -28,20 +32,25 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
 
 public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 
-	public static MapFilterPluginManager SYSTEM;
+	private static MapFilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
-		if (SYSTEM == null) {
-			SYSTEM = new MapFilterPluginManager(filterDir);
-			SYSTEM.load();
+		try {
+			if (SYSTEM == null) {
+				SYSTEM = new MapFilterPluginManager(filterDir);
+				SYSTEM.load();
+			}
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load map filter plugins", e);
 		}
 	}
-	
+	public static MapFilterPluginManager system() {
+		return SYSTEM;
+	}
 	
 	
 	private BoltJavaBuiltinLoader<JavaMapFilterPlugin> builtins;
 	
 	private MapFilterPluginManager(File directories) {
-		super(MapFilterPlugin.class);
 		
 		addLoader(new BoltJarDirectoryLoader<>(JavaMapFilterPlugin.class, directories));
 		addLoader(new BoltJarDirectoryLoader<>(JavaMapFilterPlugin.class));
@@ -49,7 +58,6 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		builtins = new BoltJavaBuiltinLoader<>(JavaMapFilterPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
-		//TODO: Add script loader
 	}
 
 	private void registerCustomPlugins() {
@@ -59,6 +67,8 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		builtins.load(FastAverageMapFilter.class);
 		builtins.load(WeightedAverageMapFilter.class);
 		builtins.load(DenoiseMapFilter.class);
+		
+		builtins.load(SharpenMapFilter.class);
 		
 		builtins.load(WeakSignalRemovalMapFilter.class);
 		builtins.load(SignalOutlierCorrectionMapFilter.class);
@@ -75,6 +85,8 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		builtins.load(Rotate90MapFilter.class);
 		builtins.load(Rotate180MapFilter.class);
 		builtins.load(Rotate270MapFilter.class);
+		
+		builtins.load(DeskewMapFilter.class);
 	}
 
 	

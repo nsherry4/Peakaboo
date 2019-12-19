@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
-import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
@@ -39,11 +38,7 @@ public class DerivativePeakSearcher implements PeakSearcher {
 			float prev = delta.get(i-1);
 			float next = delta.get(i);
 			
-			if (prev > 0 && next <= 0 && prev-next > threshold) {
-				
-				//System.out.println("index = " + i);
-				//System.out.println("delta = " + (prev-next));
-				
+			if (prev > 0 && next <= 0 && prev-next > threshold) {				
 				inflections.add(i);
 			}
 		}
@@ -53,7 +48,6 @@ public class DerivativePeakSearcher implements PeakSearcher {
 		List<Integer> refined = new ArrayList<>();
 		for (int i : inflections) {
 			while (true) {
-				//System.out.println(i);
 				if (i > 0 && filtered.get(i-1) > filtered.get(i)) {
 					i--;
 					continue;

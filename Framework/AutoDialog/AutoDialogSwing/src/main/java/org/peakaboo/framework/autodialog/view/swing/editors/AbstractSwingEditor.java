@@ -1,8 +1,8 @@
 package org.peakaboo.framework.autodialog.view.swing.editors;
 
-import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
+import org.peakaboo.framework.eventful.EventfulType;
 
 public abstract class AbstractSwingEditor<T> implements SwingEditor<T> {
 
@@ -23,8 +23,7 @@ public abstract class AbstractSwingEditor<T> implements SwingEditor<T> {
 	}
 	
 	@Override
-	public final void setFromParameter()
-	{
+	public final void setFromParameter() {
 		boolean equiv = false;
 		if (param.getValue() == null && getEditorValue() == null) {
 			equiv = true;

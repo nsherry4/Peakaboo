@@ -2,8 +2,11 @@ package org.peakaboo.filter.plugins.noise;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
@@ -15,7 +18,7 @@ import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 
 //From Handbook of X-Ray Spectrometry
-public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
+public class SavitskyGolayNoiseFilter extends AbstractFilter {
 
 	private Parameter<Integer> reach;
 	private Parameter<Integer> order;
@@ -44,8 +47,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 	
 	@Override
-	public void initialize()
-	{
+	public void initialize() {
 		
 		reach = new Parameter<>("Half-Window Size", new IntegerStyle(), 4, this::validate);
 		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 3, this::validate);
@@ -53,9 +55,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false, this::validate);
 		max = new Parameter<>("Smoothing Cutoff: (counts)", new RealStyle(), 4.0f, this::validate);
 		max.setEnabled(false);
-		ignore.getValueHook().addListener(b -> {
-			max.setEnabled(b);
-		});
+		ignore.getValueHook().addListener(max::setEnabled);
 		
 		addParameter(reach, order, sep, ignore, max);
 				
@@ -76,8 +76,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 		}
 	}
 
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 	
 		//don't validate any combo we don't have fittings for
 		if (getCoeffs() == null) {
@@ -117,8 +116,8 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data) {
-		return FastSavitskyGolayFilter(data, order.getValue(), reach.getValue(), 0f, ignore.getValue() ? max.getValue() : Float.MAX_VALUE);
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+		return fastSavitskyGolayFilter(data, reach.getValue(), ignore.getValue() ? max.getValue() : Float.MAX_VALUE);
 	}
 
 	@Override
@@ -127,8 +126,7 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 
 	@Override
-	public String getFilterDescription()
-	{
+	public String getFilterDescription() {
 		return "The "
 				+ getFilterName()
 				+ " filter attempts to remove noise by fitting a polynomial to each point p0 and its surrounding points p0-n..p0+n, and then taking the value of the polynomial at point p0. For performance reasons, this filter's parameters are somewhat constrained.";
@@ -146,33 +144,36 @@ public class SavitskyGolayNoiseFilter extends AbstractSimpleFilter {
 	}
 	
 
-	public Spectrum FastSavitskyGolayFilter(ReadOnlySpectrum data, int order, int reach, float min, float max) {
+	public Spectrum fastSavitskyGolayFilter(ReadOnlySpectrum data, int reach, float max) {
 
 		float[] coefs = getCoeffs();
+		if (coefs == null) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to load Savitsky Golay coefficients");
+			return new ISpectrum(data);
+		}
 		
 		Spectrum out = new ISpectrum(data.size());
 		
 		for (int i = 0; i < data.size(); i++) {
-			
-			
-			if (data.get(i) < min || data.get(i) > max)
-			{
+
+			//skip signal stronger than max
+			if (data.get(i) > max) {
 				out.set(i, data.get(i));
+				continue;
+			} 
+			
+			float sum = 0;
+			float normalize = 0;
+			for (int j = -reach; j <= reach; j++) {
+				float coef = coefs[Math.abs(j)];
+				int di = i+j;
+				if (di < 0 || di >= data.size()) continue;
+				sum += coef * data.get(di);
+				normalize += coef;
 			}
-			else
-			{
-				float sum = 0;
-				float normalize = 0;
-				for (int j = -reach; j <= reach; j++) {
-					float coef = coefs[Math.abs(j)];
-					int di = i+j;
-					if (di < 0 || di >= data.size()) continue;
-					sum += coef * data.get(di);
-					normalize += coef;
-				}
-				
-				out.set(i, sum / normalize);
-			}
+			
+			out.set(i, normalize == 0 ? 0f : sum / normalize);
+		
 		}
 		
 		return out;

@@ -1,5 +1,6 @@
 package org.peakaboo.filter.model;
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -10,8 +11,7 @@ import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 
 
-public abstract class AbstractBackgroundFilter extends AbstractFilter
-{
+public abstract class AbstractBackgroundFilter extends AbstractFilter {
 
 	private Parameter<Integer> percent;
 	private Parameter<Boolean> preview;
@@ -20,8 +20,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	private Parameter<Boolean> partial;
 
 	
-	public AbstractBackgroundFilter()
-	{
+	public AbstractBackgroundFilter() {
 		
 		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90, this::validate);
 		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE, this::validate);
@@ -48,13 +47,11 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	@Override
-	public FilterType getFilterType()
-	{
+	public FilterType getFilterType() {
 		return FilterType.BACKGROUND;
 	}
 	
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data
@@ -68,10 +65,9 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 	}
 	
 	
-	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent);
+	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent);
 	
-	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data)
-	{
+	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset) {
 		if (data == null) {
 			return null;
 		}
@@ -87,7 +83,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 			
 			ReadOnlySpectrum partial = data.subSpectrum(start, stop);
 			Spectrum result = new ISpectrum(data.size(), 0f);
-			partial = getBackground(partial, percent.getValue());
+			partial = getBackground(partial, dataset, percent.getValue());
 			
 			for (int i = 0; i < partial.size(); i++)
 			{
@@ -97,18 +93,18 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter
 			return result;
 			
 		} else {
-			return getBackground(data, percent.getValue());
+			return getBackground(data, dataset, percent.getValue());
 		}
 		
 	}
 	
 	@Override
-	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
-	{
-		ReadOnlySpectrum background = getBackground(data);
+	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+		ReadOnlySpectrum background = getBackground(data, dataset);
 		return SpectrumCalculations.subtractLists(data, background);
 	}
-		
+	
+	@Override
 	public boolean isPreviewOnly() {
 		return preview.getValue();
 	}

@@ -8,24 +8,20 @@ import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 
-public class OverlayPalette extends AbstractPalette
-{
+public class OverlayPalette extends AbstractPalette {
 	
 	private List<PaletteColour> spectrum;
 	private double lowCutoff = 0;
 
-	public OverlayPalette()
-	{
+	public OverlayPalette() {
 		this.spectrum = Spectrums.MonochromeScale();
 	}
 	
-	public OverlayPalette(PaletteColour c)
-	{
+	public OverlayPalette(PaletteColour c) {
 		this.spectrum = Spectrums.MonochromeScale(c);
 	}
 	
-	public OverlayPalette(int steps, PaletteColour c)
-	{
+	public OverlayPalette(int steps, PaletteColour c) {
 		this.spectrum = Spectrums.MonochromeScale(steps, c);
 	}
 
@@ -40,8 +36,7 @@ public class OverlayPalette extends AbstractPalette
 	}
 
 	@Override
-	public PaletteColour getFillColour(double intensity, double maximum)
-	{
+	public PaletteColour getFillColour(double intensity, double maximum) {
 		if (intensity < lowCutoff * maximum) {
 			intensity = 0;
 		}

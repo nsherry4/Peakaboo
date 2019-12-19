@@ -22,7 +22,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 		this.url = url;
 		
 		plugins = new BoltPluginSet<>();
-		BoltConfigPluginPrototype<T> plugin = new BoltConfigPluginPrototype<T>(builder, pluginClass, this);
+		BoltConfigPluginPrototype<T> plugin = new BoltConfigPluginPrototype<>(builder, pluginClass, this);
 		plugins.addPlugin(plugin);
 	}
 	

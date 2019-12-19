@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.function.Function;
 
 import org.peakaboo.framework.swidget.widgets.breadcrumb.BreadCrumbEntry;
-import org.peakaboo.framework.swidget.widgets.buttons.ToggleImageButton;
 import org.peakaboo.framework.swidget.widgets.filechooser.places.Place;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 
 public class FileBreadCrumbEntry extends BreadCrumbEntry<File> {
 
@@ -14,10 +14,10 @@ public class FileBreadCrumbEntry extends BreadCrumbEntry<File> {
 	}
 
 	@Override
-	protected ToggleImageButton make() {
+	protected FluentToggleButton make() {
 		FileBreadCrumb parent = (FileBreadCrumb) super.parent;
 		Place dir = parent.getPlaces().get(getItem());
-		ToggleImageButton button = super.make();
+		FluentToggleButton button = super.make();
 		if (dir != null && dir.isRoot()) {
 			//not a good idea -- the ImageButton may regenerate it's UI based on internal state 
 			button.setIcon(dir.getIcon());

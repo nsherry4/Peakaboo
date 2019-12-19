@@ -20,7 +20,6 @@ import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.datasource.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.ISpectrum;
-import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SparsedList;
 import org.peakaboo.framework.cyclops.Spectrum;
 
@@ -64,7 +63,7 @@ public class SingleColumn extends AbstractDataSource {
 			
 			@Override
 			public List<String> getFileExtensions() {
-				return Arrays.asList(new String[] {"txt", "dat"});
+				return Arrays.asList("txt", "dat");
 			}
 			
 			@Override
@@ -163,10 +162,6 @@ public class SingleColumn extends AbstractDataSource {
 			if (!isFloat(parts[1].trim())) return false;
 		}
 		return true;
-//		return lines.stream()
-//			.map(l -> l.split("\\s+"))
-//			.map(l -> l.length == 2 && isInteger(l[0].trim()) && isFloat(l[1].trim()))
-//			.reduce(true, (a, b) -> a && b);
 	}
 
 	private static boolean isInteger(String str) {

@@ -1,6 +1,7 @@
 package org.peakaboo.curvefit.peak.table;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -46,7 +47,7 @@ public interface PeakTable {
 				.stream()
 				.filter(ts -> (ts.getElement() == e) && (ts.getShell() == tst))
 				.collect(Collectors.toList());
-		if (tss.size() == 0) return null;
+		if (tss.isEmpty()) return null;
 		if (tss.size() > 1) {
 			throw new RuntimeException("Found more than one TransitionSeries for the given Element and TransitionSeriesType");
 		}
@@ -59,7 +60,10 @@ public interface PeakTable {
 	 */
 	default ITransitionSeries get(ITransitionSeries other) {
 		if (other.getShell() == TransitionShell.COMPOSITE) {
-			List<ITransitionSeries> members = other.getPrimaryTransitionSeries().stream().map(ts -> get(ts.getElement(), ts.getShell())).filter(ts -> ts != null).collect(Collectors.toList());
+			List<ITransitionSeries> members = other.getPrimaryTransitionSeries().stream()
+					.map(ts -> get(ts.getElement(), ts.getShell()))
+					.filter(Objects::nonNull)
+					.collect(Collectors.toList());
 			return ITransitionSeries.pileup(members);
 		} else {
 			return get(other.getElement(), other.getShell());

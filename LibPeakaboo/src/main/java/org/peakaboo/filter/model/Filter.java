@@ -2,10 +2,11 @@ package org.peakaboo.filter.model;
 
 import java.util.List;
 
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
-import org.peakaboo.framework.cyclops.Spectrum;
 
 public interface Filter {
 
@@ -57,26 +58,29 @@ public interface Filter {
 	}
 	
 
-//	/**
-//	 * Forces a check to ensure the Fitler's Parameters are valid.
-//	 * @return true if the new values are valid, false otherwise
-//	 */
-//	boolean validateParameters();
-
 	/**
 	 * Returns true if this filter can filter an arbitrarily-sized subset of the current data, false otherwise
 	 */
 	boolean canFilterSubset();
 
 	/**
-	 * Call's the subclass's {@link AbstractFilter#filterApplyTo(Spectrum, boolean)} method,
-	 * catching exceptions that occur so as to prevent a filter from crashing the program.
-	 * @param data the data to process
-	 * @param cache whether or not this data should be cached for the purposes of drawing on the spectrum
+	 * Applies the filter to the given spectrum.
+	 * 
+	 * @param data    the data to process
+	 * @param dataset the DataSet to which this spectrum belongs
 	 * @return the result of applying the filter to data
 	 */
-	ReadOnlySpectrum filter(ReadOnlySpectrum data);
+	ReadOnlySpectrum filter(ReadOnlySpectrum data, DataSet dataset);
 	
+	/**
+	 * Applies the filter to the given spectrum, supplying an empty {@link DataSet}
+	 * @param data the data to process
+	 * @return the result of applying the filter to data
+	 */
+	@Deprecated(forRemoval=true, since="5.4")
+	default ReadOnlySpectrum filter(ReadOnlySpectrum data) {
+		return filter(data, new EmptyDataSet());
+	}
 	
 
 }

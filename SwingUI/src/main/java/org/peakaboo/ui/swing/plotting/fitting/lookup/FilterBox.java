@@ -17,6 +17,9 @@ import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
+/**
+ * A JTextField dressed up to look like a filter/search box
+ */
 public class FilterBox extends JTextField {
 
 	private ImageIcon icon = IconFactory.getImageIcon("filter", IconSize.BUTTON);
@@ -26,14 +29,9 @@ public class FilterBox extends JTextField {
 		
 		
 		UIDefaults dialogTheme = new UIDefaults();
-		Painter<FilterBox> painter = new Painter<FilterBox>() {
-
-			@Override
-			public void paint(Graphics2D g, FilterBox object, int width, int height) {
-				g.setColor(Color.WHITE);
-				g.fillRect(0, 0, getWidth(), getHeight());
-				
-			}
+		Painter<FilterBox> painter = (Graphics2D g, FilterBox object, int width, int height) -> {
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, getWidth(), getHeight());
 		};
 		dialogTheme.put("TextField[Enabled].backgroundPainter", painter);
 		dialogTheme.put("TextField[Focused].backgroundPainter", painter);

@@ -14,8 +14,6 @@ import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
-import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
-import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.framework.autodialog.model.Group;
 
 /**
@@ -77,7 +75,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 	@Override
 	public void setInteraction(Interaction interaction) {
-		
+		//NOOP
 	}
 	
 	@Override

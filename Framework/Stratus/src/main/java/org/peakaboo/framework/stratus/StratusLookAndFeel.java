@@ -23,10 +23,13 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.components.StratusComboBoxUI;
+import org.peakaboo.framework.stratus.components.StratusSpinnerUI;
 import org.peakaboo.framework.stratus.painters.BorderPainter;
 import org.peakaboo.framework.stratus.painters.ButtonPainter;
+import org.peakaboo.framework.stratus.painters.AbstractButtonPainter;
 import org.peakaboo.framework.stratus.painters.ComboBoxArrowPainter;
 import org.peakaboo.framework.stratus.painters.CompositePainter;
+import org.peakaboo.framework.stratus.painters.EmptyPainter;
 import org.peakaboo.framework.stratus.painters.FillPainter;
 import org.peakaboo.framework.stratus.painters.RadioButtonPainter;
 import org.peakaboo.framework.stratus.painters.SplitPaneDividerPainter;
@@ -44,8 +47,6 @@ import org.peakaboo.framework.stratus.painters.scrollbar.ScrollBarThumbPainter;
 import org.peakaboo.framework.stratus.painters.scrollbar.ScrollBarTrackPainter;
 import org.peakaboo.framework.stratus.painters.slider.SliderThumbPainter;
 import org.peakaboo.framework.stratus.painters.slider.SliderTrackPainter;
-import org.peakaboo.framework.stratus.painters.spinner.NextButtonPainter;
-import org.peakaboo.framework.stratus.painters.spinner.PreviousButtonPainter;
 import org.peakaboo.framework.stratus.painters.spinner.SpinnerArrowPainter;
 import org.peakaboo.framework.stratus.painters.tabs.TabPainter;
 import org.peakaboo.framework.stratus.painters.tabs.TabbedAreaPainter;
@@ -93,6 +94,8 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 
 	}
 	
+
+	
 	@Override
 	public UIDefaults getDefaults() {
 		UIDefaults ret = super.getDefaults();
@@ -100,6 +103,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		
 
 		// UI/Theme Overrides
+		reg(ret, "stratus-theme", theme);
 		reg(ret, "nimbusSelection", theme.getHighlight());
 		reg(ret, "nimbusSelectionBackground", theme.getHighlight());
 		reg(ret, "nimbusFocus", theme.getHighlight());
@@ -116,6 +120,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		reg(ret, "text", theme.getControlText());
 		reg(ret, "menu", theme.getMenu());
 		reg(ret, "control", theme.getControl());
+		reg(ret, "negative", theme.getNegative());
 		
 		
 		//Stratus specific values
@@ -249,8 +254,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Button[Focused].backgroundPainter", 					new LinkedButtonPainter(theme, ButtonState.FOCUSED));
 			reg(ret, "Button[MouseOver].backgroundPainter", 					new LinkedButtonPainter(theme, ButtonState.MOUSEOVER));
 			reg(ret, "Button[Pressed].backgroundPainter", 					new LinkedButtonPainter(theme, ButtonState.PRESSED));
-					
-	
+
 			//BUTTON on TOOLBAR
 			reg(ret, "ToolBar:Button.foreground", 						theme.getControlText());
 			reg(ret, "ToolBar:Button.textForeground",					theme.getControlText());
@@ -388,21 +392,22 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			
 			//CHECKBOX
+			int checkVOffset = -1;
 			reg(ret, "CheckBox[Disabled].iconPainter", new CheckButtonPainter(theme, ButtonState.DISABLED));
-			reg(ret, "CheckBox[Disabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.DISABLED), new CheckPainter(theme, 5, -1, false)));
+			reg(ret, "CheckBox[Disabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.DISABLED), new CheckPainter(theme, 5, checkVOffset, false)));
 			reg(ret, "CheckBox[Enabled].iconPainter", new CheckButtonPainter(theme, ButtonState.ENABLED));
-			reg(ret, "CheckBox[Enabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Enabled+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Focused+MouseOver].iconPainter", new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
-			reg(ret, "CheckBox[Focused+MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Focused+MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Focused+Pressed].iconPainter", new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
-			reg(ret, "CheckBox[Focused+Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Focused+Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Focused].iconPainter", new CheckButtonPainter(theme, ButtonState.FOCUSED));
-			reg(ret, "CheckBox[Focused+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Focused+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.FOCUSED), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[MouseOver].iconPainter", new CheckButtonPainter(theme, ButtonState.MOUSEOVER));
-			reg(ret, "CheckBox[MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[MouseOver+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.MOUSEOVER), new CheckPainter(theme, 5, checkVOffset)));
 			reg(ret, "CheckBox[Pressed].iconPainter", new CheckButtonPainter(theme, ButtonState.PRESSED));
-			reg(ret, "CheckBox[Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.PRESSED), new CheckPainter(theme, 5, -1)));
-			reg(ret, "CheckBox[Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, -1)));
+			reg(ret, "CheckBox[Pressed+Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.PRESSED), new CheckPainter(theme, 5, checkVOffset)));
+			reg(ret, "CheckBox[Selected].iconPainter", new CompositePainter(new CheckButtonPainter(theme, ButtonState.ENABLED), new CheckPainter(theme, 5, checkVOffset)));
 			
 			reg(ret, "CheckBox[Enabled].textForeground", theme.getControlText());
 			
@@ -428,48 +433,58 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "RadioButton[Enabled].textForeground", theme.getControlText());
 			
 			
+			//SPINNER
 			
-			//SPINNERS TODO: Merged buttons? 
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Disabled].backgroundPainter", new NextButtonPainter(theme, ButtonState.DISABLED));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Enabled].backgroundPainter", new NextButtonPainter(theme, ButtonState.ENABLED));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+MouseOver].backgroundPainter", new NextButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+Pressed].backgroundPainter", new NextButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused].backgroundPainter", new NextButtonPainter(theme, ButtonState.FOCUSED));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[MouseOver].backgroundPainter", new NextButtonPainter(theme, ButtonState.MOUSEOVER));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Pressed].backgroundPainter", new NextButtonPainter(theme, ButtonState.PRESSED));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Disabled].backgroundPainter", new PreviousButtonPainter(theme, ButtonState.DISABLED));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Enabled].backgroundPainter", new PreviousButtonPainter(theme, ButtonState.ENABLED));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+MouseOver].backgroundPainter", new PreviousButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+Pressed].backgroundPainter", new PreviousButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused].backgroundPainter", new PreviousButtonPainter(theme, ButtonState.FOCUSED));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[MouseOver].backgroundPainter", new PreviousButtonPainter(theme, ButtonState.MOUSEOVER));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Pressed].backgroundPainter", new PreviousButtonPainter(theme, ButtonState.PRESSED));
+			//Draw the arrows or +/- symbols
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Disabled].foregroundPainter", new SpinnerArrowPainter(theme, true, ButtonState.DISABLED));
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Enabled].foregroundPainter", new SpinnerArrowPainter(theme, true, ButtonState.ENABLED));
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+MouseOver].foregroundPainter", new SpinnerArrowPainter(theme, true, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+Pressed].foregroundPainter", new SpinnerArrowPainter(theme, true, ButtonState.FOCUSED, ButtonState.PRESSED));
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused].foregroundPainter", new SpinnerArrowPainter(theme, true, ButtonState.FOCUSED));
+			reg(ret, "Spinner:\"Spinner.nextButton\"[MouseOver].foregroundPainter", new SpinnerArrowPainter(theme, true, ButtonState.MOUSEOVER));
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Pressed].foregroundPainter", new SpinnerArrowPainter(theme, true, ButtonState.PRESSED));
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Disabled].foregroundPainter", new SpinnerArrowPainter(theme, false, ButtonState.DISABLED));
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Enabled].foregroundPainter", new SpinnerArrowPainter(theme, false, ButtonState.ENABLED));
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+MouseOver].foregroundPainter", new SpinnerArrowPainter(theme, false, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+Pressed].foregroundPainter", new SpinnerArrowPainter(theme, false, ButtonState.FOCUSED, ButtonState.PRESSED));
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused].foregroundPainter", new SpinnerArrowPainter(theme, false, ButtonState.FOCUSED));
+			reg(ret, "Spinner:\"Spinner.previousButton\"[MouseOver].foregroundPainter", new SpinnerArrowPainter(theme, false, ButtonState.MOUSEOVER));
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Pressed].foregroundPainter", new SpinnerArrowPainter(theme, false, ButtonState.PRESSED));
 			
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Disabled].foregroundPainter", new SpinnerArrowPainter(theme.getControlTextDisabled(), true));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Enabled].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), true));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+MouseOver].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), true));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+Pressed].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), true));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), true));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[MouseOver].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), true));
-			reg(ret, "Spinner:\"Spinner.nextButton\"[Pressed].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), true));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Disabled].foregroundPainter", new SpinnerArrowPainter(theme.getControlTextDisabled(), false));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Enabled].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), false));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+MouseOver].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), false));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+Pressed].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), false));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), false));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[MouseOver].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), false));
-			reg(ret, "Spinner:\"Spinner.previousButton\"[Pressed].foregroundPainter", new SpinnerArrowPainter(theme.getControlText(), false));
+			//Draw a unified text field as the background/border
+			reg(ret, "Spinner[Disabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.DISABLED));
+			reg(ret, "Spinner[Enabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
+			reg(ret, "Spinner[Focused].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.FOCUSED));
+			reg(ret, "Spinner[Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.SELECTED));
 			
-	
-			
-			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Disabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.DISABLED));
-			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
-			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Focused+Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.FOCUSED, ButtonState.SELECTED));
-			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.FOCUSED));
-			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.SELECTED));
-			
+			//don't draw the specific editor component distinct from the whole spinner
+			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Disabled].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Focused+Selected].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter", new EmptyPainter());
+					
+			//don't draw the up/down buttons distinct from the whole spinner
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Disabled].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Enabled].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+MouseOver].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused+Pressed].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Focused].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.nextButton\"[MouseOver].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.nextButton\"[Pressed].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Disabled].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Enabled].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+MouseOver].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused+Pressed].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Focused].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.previousButton\"[MouseOver].backgroundPainter", new EmptyPainter());
+			reg(ret, "Spinner:\"Spinner.previousButton\"[Pressed].backgroundPainter", new EmptyPainter());
+
+			//spinner text colour
 			reg(ret, "Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].textForeground", theme.getRecessedText());
-			
+
+			//Override the SpinnerUI class
+			reg(ret, "SpinnerUI", StratusSpinnerUI.class.getName());
 			
 			
 	
@@ -762,12 +777,10 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
     public static ComponentUI createUI(JComponent c) {
         String key = c.getUIClassID().intern();
 
+        System.out.println(key);
         
-        
-		if (key == "ComboBoxUI") {
+		if ("ComboBoxUI".equals(key)) {
 			return StratusComboBoxUI.createUI(c);
-		} else {
-			NimbusLookAndFeel.createUI(c);
 		}
         
 //        if (key == "ButtonUI") {
@@ -857,9 +870,10 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 //        else if (key == "SliderUI") {
 //            return SynthSliderUI.createUI(c);
 //        }
-//        else if (key == "SpinnerUI") {
-//            return SynthSpinnerUI.createUI(c);
-//        }
+        else if ("SpinnerUI".equals(key)) {
+        	System.out.println("ASDF");
+            return StratusSpinnerUI.createUI(c);
+        }
 //        else if (key == "SplitPaneUI") {
 //            return SynthSplitPaneUI.createUI(c);
 //        }
@@ -899,6 +913,9 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 //        else if (key == "ViewportUI") {
 //            return SynthViewportUI.createUI(c);
 //        }
+        else {
+			NimbusLookAndFeel.createUI(c);
+		}
 		return null;
     }
 

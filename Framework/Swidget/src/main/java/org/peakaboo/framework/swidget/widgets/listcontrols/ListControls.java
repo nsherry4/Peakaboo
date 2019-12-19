@@ -3,18 +3,15 @@ package org.peakaboo.framework.swidget.widgets.listcontrols;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.swing.JButton;
 
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 
 
@@ -30,7 +27,7 @@ public class ListControls extends ClearPanel {
 		NONE, ONE, MANY
 	}
 	
-	public ListControls(ImageButton add, ImageButton remove, ImageButton clear) {
+	public ListControls(FluentButton add, FluentButton remove, FluentButton clear) {
 		this.add = add;
 		this.remove = remove;
 		this.clear = clear;
@@ -52,7 +49,7 @@ public class ListControls extends ClearPanel {
 		
 	}
 	
-	private void configureButton(ImageButton b) {
+	private void configureButton(FluentButton b) {
 		b.withBordered(false);
 	}
 	
@@ -106,7 +103,7 @@ public class ListControls extends ClearPanel {
 	}
 	public void addLeft(Component button, Function<ElementCount, Boolean> ec) {
 		customButtons.put(button, ec);
-		if (button instanceof ImageButton) configureButton((ImageButton) button);
+		if (button instanceof FluentButton) configureButton((FluentButton) button);
 		box.addLeft(button);
 	}
 	
@@ -116,7 +113,7 @@ public class ListControls extends ClearPanel {
 	}
 	public void addRight(Component button, Function<ElementCount, Boolean> ec) {
 		customButtons.put(button, ec);
-		if (button instanceof ImageButton) configureButton((ImageButton) button);
+		if (button instanceof FluentButton) configureButton((FluentButton) button);
 		box.addRight(button);
 	}
 	

@@ -1,8 +1,5 @@
 package org.peakaboo.framework.cyclops.visualization.palette;
 
-import java.util.List;
-
-
 public enum Palette
 {
 
@@ -200,10 +197,11 @@ public enum Palette
 		
 		private final static int[] georgia = {
 				0xffFFFFFF, 0,
-				0xffE6B350, 64,
-				0xffF27C55, 64,
-				0xffD94C58, 64,
-				0xff993D6B, 63
+				0xffE6B350, 51,
+				0xffF27C55, 51,
+				0xffD94C58, 51,
+				0xff993D6B, 51,
+				0xff521C5E, 51
 		};
 		
 //		public static void main(String[] args) {

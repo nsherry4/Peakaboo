@@ -1,18 +1,20 @@
 package org.peakaboo.dataset;
 
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.DataSource.DataSourceReadException;
 import org.peakaboo.datasource.model.components.datasize.DataSize;
 import org.peakaboo.datasource.model.components.datasize.DummyDataSize;
 import org.peakaboo.datasource.model.components.interaction.CallbackInteraction;
@@ -21,11 +23,10 @@ import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.DummyScanData;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
-import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
 import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -64,8 +65,7 @@ public class StandardDataSet implements DataSet
 		this(ds, null, null);
 	}
 	
-	public StandardDataSet(DataSource ds, AbstractExecutor progress, Supplier<Boolean> isAborted)
-	{
+	public StandardDataSet(DataSource ds, AbstractExecutor<Void> progress, BooleanSupplier isAborted) {
 		super();
 		
 		readDataSource(ds, progress, isAborted);
@@ -80,7 +80,7 @@ public class StandardDataSet implements DataSet
 	 * @param paths the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> TASK_readFileListAsDataset(final List<Path> paths, final DataSource dataSource)
+	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset(final List<DataFile> paths, final DataSource dataSource)
 	{
 
 		// sort the filenames alphanumerically. Files like "point2" should appear before "point10"
@@ -91,15 +91,9 @@ public class StandardDataSet implements DataSet
 		// Create the tasklist for reading the files
 		final ExecutorSet<DatasetReadResult> tasklist;
 		
-		/*
-		final EmptyMap opening = new EmptyMap("Opening Data Set");
-		final EmptyProgressingMap reading = new EmptyProgressingMap("Reading Scans");
-		final EmptyProgressingMap applying = new EmptyProgressingMap("Calculating Values");
-		*/
-		
-		final DummyExecutor opening = new DummyExecutor(true);//"Opening Data Set");
-		final DummyExecutor reading = new DummyExecutor();//"Reading Scans");
-		final DummyExecutor applying = new DummyExecutor();//"Calculating Values");
+		final DummyExecutor opening = new DummyExecutor(true);
+		final DummyExecutor reading = new DummyExecutor();
+		final DummyExecutor applying = new DummyExecutor();
 		
 		
 		tasklist = new ExecutorSet<DatasetReadResult>("Opening Data Set") {
@@ -116,33 +110,31 @@ public class StandardDataSet implements DataSet
 					final int scanCount;
 					
 					opening.advanceState();
+					opening.setWorkUnits(paths.size());
+					
+					// anon function to call when a scan is 'opened'. This is usually nothing, but
+					// when a scan is 'remote' or otherwise needs to be copied before being opened,
+					// there's work to be done here.
+					IntConsumer openedScans = opening::workUnitCompleted;
 					
 					//anon function to call when we get the number of scans
-					Consumer<Integer> gotScanCount = (Integer count) ->	{
+					IntConsumer gotScanCount = count ->	{
 						reading.setWorkUnits(count);
 						opening.advanceState();
 						reading.advanceState();
 					};
 					
 					//anon function to call to check if the user has requested the operation be aborted
-					Supplier<Boolean> isAborted = () -> isAborted() || isAbortRequested();
+					BooleanSupplier isAborted = () -> isAborted() || isAbortRequested();
 					
 					//anon function to call when the loader reads a scan from the input data
-					Consumer<Integer> readScans = (Integer count) -> {
-						reading.workUnitCompleted(count);
-					};
+					IntConsumer readScans = reading::workUnitCompleted;
 					
+					dataSource.setInteraction(new CallbackInteraction(openedScans, gotScanCount, readScans, isAborted));
+					dataSource.readDataFiles(paths);
 	
 
-					dataSource.setInteraction(new CallbackInteraction(gotScanCount, readScans, isAborted));
-					dataSource.read(paths);	
-	
-					
-					
-	
-					
-					if (isAborted.get())
-					{
+					if (isAborted.getAsBoolean()) {
 						aborted();
 						return new DatasetReadResult(ReadStatus.CANCELLED);
 					}
@@ -158,8 +150,7 @@ public class StandardDataSet implements DataSet
 					readDataSource(dataSource, applying, isAborted);
 					
 					
-					if (isAborted.get())
-					{
+					if (isAborted.getAsBoolean()) {
 						aborted();
 						return new DatasetReadResult(ReadStatus.CANCELLED);
 					}
@@ -175,8 +166,7 @@ public class StandardDataSet implements DataSet
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
 					
-				} catch (InterruptedException e) {
-					Thread.currentThread().interrupt();
+				} catch (DataSourceReadException e) {
 					return new DatasetReadResult(e);
 				} catch (Throwable e) {
 					return new DatasetReadResult(e);
@@ -199,8 +189,7 @@ public class StandardDataSet implements DataSet
 
 	
 	
-	private void readDataSource(DataSource ds, AbstractExecutor applying, Supplier<Boolean> isAborted)
-	{
+	private void readDataSource(DataSource ds, AbstractExecutor<Void> applying, BooleanSupplier isAborted) {
 		
 		if (ds == null || ds.getScanData().scanCount() == 0) return;
 
@@ -210,10 +199,12 @@ public class StandardDataSet implements DataSet
 		//go over each scan, calculating the average, max10th and max value
 		int updateInterval = Math.min(Math.max(ds.getScanData().scanCount()/100, 20), 1000);
 		int gcInterval = 5000;
-		applying.setWorkUnits(ds.getScanData().scanCount());
+		if (applying != null) {
+			applying.setWorkUnits(ds.getScanData().scanCount());
+		}
 		
 		if (hasRealSize) {
-			realCoords = new ArrayList<Coord<Number>>();
+			realCoords = new ArrayList<>();
 		}
 		
 		if (hasRealSize || isSubset) {
@@ -221,10 +212,8 @@ public class StandardDataSet implements DataSet
 				
 				if (isSubset) {
 					//subset data sources need to re-perform their analysis on the subset
-					if (ds instanceof SubsetDataSource) {
-						SubsetDataSource sds = (SubsetDataSource) ds;
-						sds.reanalyze(i);
-					}
+					SubsetDataSource sds = (SubsetDataSource) ds;
+					sds.reanalyze(i);
 				}
 				
 				if (hasRealSize) {
@@ -234,7 +223,7 @@ public class StandardDataSet implements DataSet
 	
 				if (i % updateInterval == 0) {
 					if (applying != null) applying.workUnitCompleted(updateInterval);
-					if (isAborted != null && isAborted.get()) return;
+					if (isAborted != null && isAborted.getAsBoolean()) return;
 				}
 				if (i % gcInterval == 0) {
 					System.gc();

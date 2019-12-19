@@ -3,11 +3,9 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.Surface;
-import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 
 
 public class AxisMarkGenerator
@@ -18,22 +16,21 @@ public class AxisMarkGenerator
 		
 	
 		float valueRange = valueRangeEnd - valueRangeStart;
-		List<Pair<Float, Integer>> ticks = new ArrayList<Pair<Float, Integer>>();
+		List<Pair<Float, Integer>> ticks = new ArrayList<>();
 
 		//bouhnds/sanity check
 		if (maxTicks <= 0) return ticks;
 		if (axisHeight <= 0) return ticks;
 		
-		// Calculate the increment size;
+		// Calculate the increment size
 		int increment = getIncrement(valueRange, maxTicks, incrementSigDigits);
-				
-		//calculate the starting value;
+
+		//calculate the starting value
 		int startingValue = (int)(valueRangeStart + (Math.abs(valueRangeStart) % increment)); 
 		int currentValue = startingValue;
 	
 		float percentAlongAxis;
 		while (currentValue < valueRangeEnd){
-			
 			percentAlongAxis = 1-0 - (currentValue - valueRangeStart)  / valueRange;
 			ticks.add(new Pair<Float, Integer>(percentAlongAxis, currentValue));
 			currentValue += increment;

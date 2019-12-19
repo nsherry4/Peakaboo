@@ -20,21 +20,18 @@ import org.peakaboo.framework.cyclops.Spectrum;
  * 
  */
 
-public class RawMap implements Cloneable
-{
+public class RawMap implements Cloneable {
 
 	private Spectrum data;
 	public ITransitionSeries	transitionSeries;
 
 
-	public RawMap(ITransitionSeries ts, int mapSize)
-	{
+	public RawMap(ITransitionSeries ts, int mapSize) {
 		this.data = new ISpectrum(mapSize, 0.0f);
 		transitionSeries = ts;
 	}
 	
-	public RawMap(ITransitionSeries ts, Spectrum data)
-	{
+	public RawMap(ITransitionSeries ts, Spectrum data) {
 		this.transitionSeries = ts;
 		this.data = data;
 	}
@@ -46,15 +43,13 @@ public class RawMap implements Cloneable
 	
 
 	@Override
-	public RawMap clone()
-	{
+	public RawMap clone() {
 		return new RawMap(transitionSeries, data);
 	}
 	
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return transitionSeries.getElement().name() + " (" + transitionSeries.getShell() + ")";
 	}
 

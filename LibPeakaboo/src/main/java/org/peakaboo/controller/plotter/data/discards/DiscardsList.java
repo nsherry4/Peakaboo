@@ -8,7 +8,7 @@ import org.peakaboo.controller.plotter.PlotController;
 
 public class DiscardsList implements Discards {
 
-	private List<Integer> discards = new ArrayList<Integer>();
+	private List<Integer> discards = new ArrayList<>();
 	private PlotController plot;
 	
 	public DiscardsList(PlotController plot) {

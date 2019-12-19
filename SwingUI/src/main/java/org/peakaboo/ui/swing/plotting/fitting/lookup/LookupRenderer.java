@@ -15,25 +15,18 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 
-class LookupRenderer extends DefaultTreeCellRenderer
-{
+class LookupRenderer extends DefaultTreeCellRenderer {
 
 	private LookupWidget			tswidget;
 	private FittingController	controller;
 	private JLabel				tstLabel;
 
-	public LookupRenderer(FittingController controller)
-	{
-
+	public LookupRenderer(FittingController controller)	{
 		this.controller = controller;
-
 		tswidget = new LookupWidget();
-		
 		tstLabel = new JLabel();
 		tstLabel.setOpaque(true);
 		tstLabel.setBorder(Spacing.bTiny());
-		//tstLabel.setFont(tstLabel.getFont().deriveFont(Font.BOLD).deriveFont(tstLabel.getFont().getSize() * 1.25f));
-
 	}
 
 
@@ -46,11 +39,9 @@ class LookupRenderer extends DefaultTreeCellRenderer
 		
 		
 		if (selected) {
-
 			tswidget.setBackground(getBackgroundSelectionColor());
 			tswidget.setForeground(getTextSelectionColor());
 			tswidget.setOpaque(true);
-
 		} else {
 			tswidget.setBackground(getBackgroundNonSelectionColor());
 			tswidget.setForeground(getTextNonSelectionColor());
@@ -58,27 +49,18 @@ class LookupRenderer extends DefaultTreeCellRenderer
 		}
 
 
-		if (value instanceof ITransitionSeries)
-		{
+		if (value instanceof ITransitionSeries) {
 			ITransitionSeries ts = (ITransitionSeries) value;
 			tswidget.setName(ts.getShell().toString());
-
 			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
-			// element.setPreferredSize(new Dimension(0, element.getPreferredSize().height));
-
 			tswidget.setBorder(Spacing.bTiny());
-			
 			return tswidget;
-		}
-		else if (value instanceof Element)
-		{
+		} else if (value instanceof Element) {
 			Element element = (Element) value;
 			tstLabel.setText(element.atomicNumber() + " " + element.toString() + " (" + element.name() + ")");
-			
 			tstLabel.setBackground(getBackgroundSelectionColor());
 			
-			if (selected)
-			{
+			if (selected) {
 				tstLabel.setForeground(getTextSelectionColor());
 				tstLabel.setOpaque(true);
 			} else {

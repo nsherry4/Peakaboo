@@ -10,18 +10,12 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
-import org.peakaboo.framework.stratus.Stratus;
-
 
 public class BorderPainter implements Painter<JComponent> {
 
-	protected Color colour, bevel;
+	protected Color colour;
 	protected float size;
 	protected float radius;
-	
-	public BorderPainter(Color colour) {
-		this(colour, 1, Stratus.borderRadius);
-	}
 	
 	public BorderPainter(Color colour, float size, float radius) {
 		this.colour = colour;

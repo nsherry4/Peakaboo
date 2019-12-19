@@ -2,12 +2,11 @@ package org.peakaboo.framework.autodialog.model;
 
 
 import java.io.Serializable;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
 import org.peakaboo.framework.autodialog.model.classinfo.ClassInfoDefaults;
 import org.peakaboo.framework.autodialog.model.style.Style;
-
 import org.peakaboo.framework.eventful.EventfulType;
 
 /**
@@ -25,7 +24,7 @@ public class Parameter<T> implements Serializable, Value<T>
 	private boolean			enabled;
 
 	private T				value;
-	private Function<Parameter<T>, Boolean> validator;
+	private Predicate<Parameter<T>> validator;
 	
 	private EventfulType<T>	valueHook = new EventfulType<>();
 	private EventfulType<Boolean> enabledHook = new EventfulType<>();
@@ -41,12 +40,12 @@ public class Parameter<T> implements Serializable, Value<T>
 		this(name, style, value, classInfo, p -> true);
 	}
 	
-	public Parameter(String name, Style<T> style, T value, Function<Parameter<T>, Boolean> validator)
+	public Parameter(String name, Style<T> style, T value, Predicate<Parameter<T>> validator)
 	{
 		this(name, style, value, null, validator);
 	}
 	
-	public Parameter(String name, Style<T> style, T value, ClassInfo<T> classInfo, Function<Parameter<T>, Boolean> validator)
+	public Parameter(String name, Style<T> style, T value, ClassInfo<T> classInfo, Predicate<Parameter<T>> validator)
 	{
 		this.style = style;
 		this.name = name;
@@ -84,7 +83,7 @@ public class Parameter<T> implements Serializable, Value<T>
 		boolean success = true;
 		T oldValue = getValue();
 		assignValue(value);
-		if (!validator.apply(this)) {
+		if (!validator.test(this)) {
 			//revert
 			assignValue(oldValue);
 			success = false;
@@ -137,7 +136,7 @@ public class Parameter<T> implements Serializable, Value<T>
 		return enabledHook;
 	}
 
-	public Function<Parameter<T>, Boolean> getValidator() {
+	public Predicate<Parameter<T>> getValidator() {
 		return validator;
 	}
 	

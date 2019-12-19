@@ -8,7 +8,6 @@ import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter.TraceType;
 
 
 public abstract class SpectrumPainter extends PlotPainter

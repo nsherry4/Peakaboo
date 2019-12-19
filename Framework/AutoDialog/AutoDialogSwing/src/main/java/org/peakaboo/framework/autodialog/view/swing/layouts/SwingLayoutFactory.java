@@ -13,7 +13,6 @@ public class SwingLayoutFactory {
 	private static Map<String, Supplier<SwingLayout>> styleProviders = new HashMap<>();
 	
 	static {
-		//registerStyleProvider("file-name", FilenameEditor::new);
 		registerStyleProvider("layout-tabs", TabbedSwingLayout::new);
 		registerStyleProvider("layout-column", SimpleSwingLayout::new);
 		registerStyleProvider("layout-frames", FramesSwingLayout::new);
@@ -34,7 +33,7 @@ public class SwingLayoutFactory {
 		
 		for (String key : styleProviders.keySet()) {
 			if (key.equals(group.getStyle().getStyle())) {
-				editor = (SwingLayout) styleProviders.get(key).get();
+				editor = styleProviders.get(key).get();
 				break;
 			}
 		}

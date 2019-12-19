@@ -10,18 +10,18 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 
 
-public class PropertyDialogue extends JDialog
+public class PropertyDialogue extends LiveDialog
 {
 
 	public PropertyDialogue(String title, Window owner, TitledPanel... panels)
@@ -55,14 +55,8 @@ public class PropertyDialogue extends JDialog
 		
 		//Button Box
 		ButtonBox bbox = new ButtonBox();
-		ImageButton close = new ImageButton("Close", StockIcon.WINDOW_CLOSE);
-		close.addActionListener(new ActionListener() {
-		
-			public void actionPerformed(ActionEvent e)
-			{
-				PropertyDialogue.this.setVisible(false);
-			}
-		});
+		FluentButton close = new FluentButton("Close", StockIcon.WINDOW_CLOSE)
+				.withAction(() -> PropertyDialogue.this.setVisible(false));
 		bbox.addRight(0, close);
 		containerPanel.add(bbox, BorderLayout.SOUTH);
 		

@@ -19,12 +19,12 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 {
 
 	private FittedWidget tswidget;
-	private Predicate<ITransitionSeries> enabled;
+	private Predicate<ITransitionSeries> tsEnabled;
 	
 	
 	public MapFittingRenderer(Predicate<ITransitionSeries> enabled){
 		tswidget = new FittedWidget();	
-		this.enabled = enabled;
+		this.tsEnabled = enabled;
 	}
 
 	@Override
@@ -59,14 +59,17 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 		if (value instanceof ITransitionSeries){
 			ITransitionSeries ts = (ITransitionSeries)value;
 			tswidget.setName(ts.toString());
-			tswidget.setEnabled(enabled.test(ts));
+			tswidget.setEnabled(tsEnabled.test(ts));
 			
 			String tooltip = "";
 			if (ts.getMode() != TransitionSeriesMode.SUMMATION){
 				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(t -> t.getElement()).collect(Collectors.toList());
-				tooltip = elements.stream().map(e -> e.toString()).reduce((a, b) -> a + ", " + b).get();
+				List<Element> elements = ts.getPrimaryTransitionSeries()
+						.stream()
+						.map(ITransitionSeries::getElement)
+						.collect(Collectors.toList());
+				tooltip = elements.stream().map(Element::toString).reduce((a, b) -> a + ", " + b).orElse("");
 			}
 			tswidget.setToolTipText(tooltip);
 			

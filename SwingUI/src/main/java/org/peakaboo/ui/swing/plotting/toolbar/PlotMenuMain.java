@@ -10,11 +10,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.common.Version;
-import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuMain extends JPopupMenu {
@@ -26,124 +25,114 @@ public class PlotMenuMain extends JPopupMenu {
 		this.controller = controller;
 		
 		
-		this.add(PlotMenuUtils.createMenuItem(plot,
-				"Open Data\u2026", StockIcon.DOCUMENT_OPEN.toMenuIcon(), "Opens new data sets.",
-				e -> plot.actionOpenData(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), KeyEvent.VK_O
-		));
-		
-		
-		save = PlotMenuUtils.createMenuItem(plot,
-				"Save Session", StockIcon.DOCUMENT_SAVE.toMenuIcon(), null, 
-				e -> plot.actionSaveSession(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK), null
-		);
+		FluentMenuItem mOpen = new FluentMenuItem()
+				.withText("Open Data\u2026")
+				.withTooltip("Opens new data sets.")
+				.withIcon(StockIcon.DOCUMENT_OPEN)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_O)
+				.withAction(plot::actionOpenData);
+		this.add(mOpen);
+
+		save = new FluentMenuItem()
+				.withText("Save Session")
+				.withIcon(StockIcon.DOCUMENT_SAVE)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK), plot)
+				.withAction(plot::actionSaveSession);
 		this.add(save);
 
-		saveAs = PlotMenuUtils.createMenuItem(plot,
-				"Save Session As\u2026", StockIcon.DOCUMENT_SAVE_AS.toMenuIcon(), null, 
-				e -> plot.actionSaveSessionAs(),
-				null, null
-		);
+		saveAs = new FluentMenuItem()
+				.withText("Save Session As\u2026")
+				.withIcon(StockIcon.DOCUMENT_SAVE_AS)
+				.withAction(plot::actionSaveSessionAs);
 		this.add(saveAs);
 		
-		this.add(PlotMenuUtils.createMenuItem(plot,
-				"Load Session", null, null,
-				e -> plot.actionLoadSession(),
-				null, null
-		));
+		FluentMenuItem mLoad = new FluentMenuItem()
+				.withText("Load Session")
+				.withAction(plot::actionLoadSession);
+		this.add(mLoad);
 		
-
-		
-
-		
-
 
 		this.addSeparator();
 
 		
-		undo = PlotMenuUtils.createMenuItem(plot,
-				"Undo", StockIcon.EDIT_UNDO.toMenuIcon(), "Undoes a previous action",
-				e -> controller.history().undo(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK), KeyEvent.VK_U
-		);
+		undo = new FluentMenuItem()
+				.withText("Undo")
+				.withTooltip("Undoes a previous action")
+				.withIcon(StockIcon.EDIT_UNDO)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_U)
+				.withAction(() -> controller.history().undo());
 		this.add(undo);
 
-		redo = PlotMenuUtils.createMenuItem(plot,
-				"Redo", StockIcon.EDIT_REDO.toMenuIcon(), "Redoes a previously undone action",
-				e -> controller.history().redo(),
-				KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), KeyEvent.VK_R
-		);
+		redo = new FluentMenuItem()
+				.withText("Redo")
+				.withTooltip("Redoes a previously undone action")
+				.withIcon(StockIcon.EDIT_REDO)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), plot)
+				.withMnemonic(KeyEvent.VK_R)
+				.withAction(() -> controller.history().redo());
 		this.add(redo);
 
+		
 		this.addSeparator();
 
-		//HELP Menu
 		
-		JMenuItem plugins = PlotMenuUtils.createMenuItem(plot,
-				"Plugins", null, "Shows information about Peakaboo's plugins",
-				e -> plot.actionShowPlugins(),
-				null, null
-			);
+		//HELP Menu
+		JMenuItem plugins = new FluentMenuItem()
+				.withText("Plugins")
+				.withTooltip("Manage Peakaboo's plugins")
+				.withAction(plot::actionShowPlugins);
 		this.add(plugins);
 		
 		
 		JMenu debug = new JMenu("Logs & Bugs");
 		
 		
-		JMenuItem logs = PlotMenuUtils.createMenuItem(plot,
-				"Show Logs", null, null,
-				e -> plot.actionShowLogs(),
-				null, null
-			);
+		JMenuItem logs = new FluentMenuItem()
+				.withText("Show Logs")
+				.withAction(plot::actionShowLogs);
 		debug.add(logs);
 
 		Mutable<Boolean> isDebug = new Mutable<>(false);
-		JMenuItem debugLog = PlotMenuUtils.createMenuCheckItem(plot,
-				"Verbose Logging", null, "Generates extra logging information for troubleshooting purposes",
-				b -> {
+		JMenuItem debugLog = new FluentMenuItem()
+				.withText("Verbose Logging")
+				.withTooltip("Generates extra logging information for troubleshooting purposes")
+				.withAction(() -> {
 					isDebug.set(!isDebug.get());
 					if (isDebug.get()) {
 						PeakabooLog.getRoot().setLevel(Level.FINE);
 					} else {
 						PeakabooLog.getRoot().setLevel(Level.INFO);
 					}
-				},
-				null, null
-		);
+				});
 		debug.add(debugLog);
 		
-		JMenuItem bugreport = PlotMenuUtils.createMenuItem(plot,
-				"Report a Bug", null, null,
-				e -> plot.actionReportBug(),
-				null, null
-			);
+		JMenuItem bugreport = new FluentMenuItem()
+				.withText("Report a Bug")
+				.withAction(plot::actionReportBug);
 		debug.add(bugreport);
 		
-		JMenuItem console = PlotMenuUtils.createMenuItem(plot,
-				"Debug Console", null, null,
-				e -> plot.actionDebugConsole(),
-				null, null
-			);
+		JMenuItem console = new FluentMenuItem()
+				.withText("Debug Console")
+				.withAction(plot::actionDebugConsole);
 		debug.add(console);
 
-		
 		
 		this.add(debug);
 		
 		
-		JMenuItem help = PlotMenuUtils.createMenuItem(plot,
-			"Help", StockIcon.BADGE_HELP.toMenuIcon(), null,
-			e -> plot.actionHelp(),
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), null
-		);
+		JMenuItem help = new FluentMenuItem()
+				.withText("Help")
+				.withIcon(StockIcon.BADGE_HELP)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), plot)
+				.withAction(plot::actionHelp);
 		this.add(help);
 		
-		JMenuItem about = PlotMenuUtils.createMenuItem(plot,
-			"About", StockIcon.MISC_ABOUT.toMenuIcon(), null,
-			e -> plot.actionAbout(),
-			null, null
-		);
+		JMenuItem about = new FluentMenuItem()
+				.withText("About")
+				.withIcon(StockIcon.MISC_ABOUT)
+				.withAction(plot::actionAbout);
 		this.add(about);
 	}
 	

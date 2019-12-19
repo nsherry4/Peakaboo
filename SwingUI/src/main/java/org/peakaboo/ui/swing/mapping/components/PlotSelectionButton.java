@@ -7,12 +7,12 @@ import javax.swing.JFrame;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
-import org.peakaboo.framework.swidget.widgets.buttons.ToolbarImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
-public class PlotSelectionButton extends ToolbarImageButton {
+public class PlotSelectionButton extends FluentToolbarButton {
 
 	private MappingController controller;
 	private TabbedInterface<TabbedLayerPanel> plotter;
@@ -23,16 +23,16 @@ public class PlotSelectionButton extends ToolbarImageButton {
 		this.plotter = plotter;
 		this.withSignificance(true).withTooltip("Plot the selection as a new data set");
 
-		this.setEnabled(controller.getSelection().isReplotable());
+		this.setEnabled(controller.getSelection().isReplottable());
 		controller.addListener(t -> {
-			this.setEnabled(controller.getSelection().isReplotable());
+			this.setEnabled(controller.getSelection().isReplottable());
 		});
 		
 		this.withAction(this::action);
 	}
 	
 	private void action() {
-		if (!controller.getSelection().isReplotable()) {
+		if (!controller.getSelection().isReplottable()) {
 			return;
 		}
 		
@@ -42,7 +42,7 @@ public class PlotSelectionButton extends ToolbarImageButton {
 		//update the bad scan indexes to match the new data source's indexing scheme
 		//TODO: Is there a better way to do this?
 		settings.data.discards = settings.data.discards.stream()
-				.map(index -> sds.getUpdatedIndex(index))
+				.map(sds::getUpdatedIndex)
 				.filter(index -> index > 0)
 				.collect(Collectors.toList()
 			);

@@ -14,7 +14,7 @@ import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.theme.Theme;
 
-public class RadioButtonPainter extends ButtonPainter {
+public class RadioButtonPainter extends AbstractButtonPainter {
 
 	private boolean selected;
 	private ButtonPalette palette;
@@ -87,12 +87,12 @@ public class RadioButtonPainter extends ButtonPainter {
     }
     
 	@Override
-    protected Paint shadowPaint(float width, float height, float pad, ButtonPalette palette) {
+    protected Paint shadowPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
     	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.5f, 0.9f}, new Color[] {new Color(0x0000000, true), palette.shadow});
     }
 
 	@Override
-    protected Paint bevelPaint(float width, float height, float pad, ButtonPalette palette) {
+    protected Paint bevelPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
     	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.075f, 0.5f}, new Color[] {palette.bevel, new Color(0x0000000, true)});
     }
     

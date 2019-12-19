@@ -1,15 +1,16 @@
 package org.peakaboo.framework.plural.swing;
 
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JDialog;
 import javax.swing.WindowConstants;
 
 import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 
-public class ExecutorSetViewDialog extends JDialog {
+public class ExecutorSetViewDialog extends LiveDialog {
 
 	ExecutorSet<?> executors;
 	ExecutorSetView panel;
@@ -44,17 +45,9 @@ public class ExecutorSetViewDialog extends JDialog {
 		executors.addListener(() -> {
 			javax.swing.SwingUtilities.invokeLater(() -> {
 
-				if (executors.isAborted()){
-					//executors.finished();
+				if (executors.isAborted() || executors.getCompleted()){
 					setVisible(false);
 					dispose();
-				}
-				else if (executors.getCompleted()){
-					//executors.finished();
-					setVisible(false);
-					dispose();
-				} else {
-					//updateProgressBar();
 				}
 				
 			});
@@ -63,44 +56,21 @@ public class ExecutorSetViewDialog extends JDialog {
 		pack();
 		setLocationRelativeTo(owner);
 		
-		addWindowListener(new WindowListener() {
+		addWindowListener(new WindowAdapter() {
 			
-			public void windowOpened(WindowEvent e)
-			{
+			@Override
+			public void windowOpened(WindowEvent e) {
 				executors.startWorking();
 			}
-		
-			public void windowIconified(WindowEvent e){}
-		
-			public void windowDeiconified(WindowEvent e){}
-		
-			public void windowDeactivated(WindowEvent e){}
-		
-			public void windowClosing(WindowEvent e){}
-			
-			public void windowClosed(WindowEvent e){}
 
-			public void windowActivated(WindowEvent e){}
 		});
 		setVisible(true);
         
         
 	}
-	
-	
-	@Override
-	public synchronized void setVisible(boolean b)
-	{
-		super.setVisible(b);
-	}
-	
+		
 	protected void updateProgressBar(){
 		panel.updateProgressBar();
-	}
-	
-	public static void main(String[] args)
-	{
-		
 	}
 		
 }

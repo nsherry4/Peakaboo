@@ -120,5 +120,10 @@ public class LightTheme implements Theme {
 	}
 
 	
+	@Override
+	public float widgetCurve() {
+		return 0.03f;
+	}
+	
 	
 }

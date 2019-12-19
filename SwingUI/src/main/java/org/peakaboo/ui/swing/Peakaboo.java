@@ -15,9 +15,9 @@ import org.peakaboo.calibration.CalibrationPluginManager;
 import org.peakaboo.common.Env;
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.common.PeakabooConfiguration.MemorySize;
-import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
+import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
@@ -30,27 +30,25 @@ import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanelConfig;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
+import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanelConfig;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 
 
-public class Peakaboo
-{
+public class Peakaboo {
 	private static Timer gcTimer;
-	public static PlotFrame plotWindow;
 	
-	public static final boolean SHOW_QUANTITATIVE = false;
+	public static final boolean SHOW_QUANTITATIVE = true;
 
 	private static void showError(Throwable throwable, String message) {
 		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
 		errorDialog.setVisible(true);
 	}
 
-	private static void warnDevRelease() {
+	private static void checkDevRelease() {
 		if (Version.releaseType != ReleaseType.RELEASE){
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
@@ -63,7 +61,7 @@ public class Peakaboo
 		}
 	}
 	
-	private static void warnLowMemory() {
+	private static void checkLowMemory() {
 		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
 		
 		if (PeakabooConfiguration.memorySize == MemorySize.TINY){
@@ -72,9 +70,6 @@ public class Peakaboo
 			String title = "Low Memory";
 						
 			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
-			
-			//dialog.setAlwaysOnTop(true);
-			//dialog.setVisible(true);
 		}
 	}
 	
@@ -84,7 +79,7 @@ public class Peakaboo
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
 		try {
-			plotWindow = new PlotFrame();
+			new PlotFrame();
 		} catch (Throwable e) {
 			PeakabooLog.get().log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
 			System.exit(1);
@@ -115,38 +110,20 @@ public class Peakaboo
 			
 			@Override
 			public void flush() {
-				// TODO Auto-generated method stub
+				// NOOP
 				
 			}
 			
 			@Override
 			public void close() throws SecurityException {
-				// TODO Auto-generated method stub
+				// NOOP
 				
 			}
 		});
 	}
-	
-	private static void setAppTitle(String title) {
-		//This was broken with Java 8/9
-//		try
-//		{
-//		    Toolkit toolkit = Toolkit.getDefaultToolkit();
-//		    Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
-//		    awtAppClassNameField.setAccessible(true);
-//		    awtAppClassNameField.set(toolkit, title);
-//		}
-//		catch (NoSuchFieldException | IllegalAccessException e)
-//		{
-//		    e.printStackTrace();
-//		}
 		
-	}
-	
 	private static void startGCTimer() {
-		gcTimer = new Timer(1000*60, e -> {  
-			System.gc(); 
-		});
+		gcTimer = new Timer(1000*60, e -> System.gc());
 		
 		gcTimer.setRepeats(true);
 		gcTimer.start();
@@ -180,7 +157,6 @@ public class Peakaboo
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/org/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
-		setAppTitle("Peakaboo 5");
 		
 		
 		//warm up the peak table, which is lazy
@@ -209,26 +185,22 @@ public class Peakaboo
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();
 			startGCTimer();
-			warnLowMemory();
-			warnDevRelease();
+			checkLowMemory();
+			checkDevRelease();
 			uiPerformanceTune();
 
 			//Init plugins
-			//TODO: This try-catch should be more granular, maybe in the managers themselves?
-			try {
-				FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
-				MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
-				DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
-				DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
-				CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
-			} catch (Throwable e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load plugins", e);
-			}
-			
+			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+			MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
+			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
+			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
+			CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
+
 			try {
 				peakLoader.join();
 			} catch (InterruptedException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load peak table", e);
+				PeakabooLog.get().log(Level.SEVERE, "Failed to start up properly, Peakaboo must now exit.", e);
+				System.exit(2);
 			}
 			runPeakaboo();
 		});

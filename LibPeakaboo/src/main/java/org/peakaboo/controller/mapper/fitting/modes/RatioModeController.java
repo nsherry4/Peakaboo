@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
@@ -81,7 +80,7 @@ public class RatioModeController extends ModeController {
 		}
 		
 		
-		GridPerspective<Float>	grid	= new GridPerspective<Float>(
+		GridPerspective<Float>	grid	= new GridPerspective<>(
 				getMap().getUserDimensions().getUserDataWidth(),
 				getMap().getUserDimensions().getUserDataHeight(),
 				0.0f);
@@ -103,14 +102,11 @@ public class RatioModeController extends ModeController {
 		
 		int w = getMap().getFiltering().getFilteredDataWidth();
 		int h = getMap().getFiltering().getFilteredDataHeight();
-		Coord<Integer> size = new Coord<Integer>(w, h);
-		Pair<Spectrum, Spectrum> data = new Pair<Spectrum, Spectrum>(ratioData, invalidPoints);
+		Coord<Integer> size = new Coord<>(w, h);
+		Pair<Spectrum, Spectrum> data = new Pair<>(ratioData, invalidPoints);
 		boolean relative = getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE;
-		RatioModeData modedata = new RatioModeData(data, size, relative);
-		
-		return modedata;
-
-		
+		return new RatioModeData(data, size, relative);
+				
 	}
 	
 
@@ -142,15 +138,13 @@ public class RatioModeController extends ModeController {
 		updateListeners();
 	}
 	
-
 	@Override
-	public boolean isSelectable() {
+	public boolean isTranslatable() {
 		return true;
 	}
-
-
+	
 	@Override
-	public boolean isReplottable() {
+	public boolean isComparable() {
 		return true;
 	}
 	

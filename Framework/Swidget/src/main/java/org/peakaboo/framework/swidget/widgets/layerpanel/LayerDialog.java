@@ -12,13 +12,13 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.live.LiveDialog;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
@@ -35,7 +35,7 @@ public class LayerDialog {
 	private List<JButton> leftButtons = new ArrayList<>(), rightButtons = new ArrayList<>();
 	private Runnable hider = () -> {};
 	private boolean header = false;
-	private ImageButton defaultButton;
+	private FluentButton defaultButton;
 	
 	public LayerDialog(String title, String body, MessageType messageType) {
 		this(title, buildBodyComponent(body), messageType);
@@ -73,7 +73,7 @@ public class LayerDialog {
 	}
 	
 	public void showInWindow(Window frame, boolean alwaysOnTop) {
-		JDialog dialog = new JDialog(frame);
+		JDialog dialog = new LiveDialog(frame);
 		hider = () -> dialog.setVisible(false);
 		dialog.setTitle(this.title);
 		dialog.setModal(true);
@@ -142,7 +142,7 @@ public class LayerDialog {
 		}
 		
 		if (leftButtons.size() == 0 && rightButtons.size() == 0) {
-			defaultButton = new ImageButton("OK").withAction(() -> hide());
+			defaultButton = new FluentButton("OK").withAction(() -> hide());
 			box.addRight(defaultButton);
 		}
 		
@@ -177,7 +177,7 @@ public class LayerDialog {
 		}
 		
 		if (left == null && right == null) {
-			defaultButton = new ImageButton("OK").withAction(() -> hide());
+			defaultButton = new FluentButton("OK").withAction(() -> hide());
 			right = defaultButton;
 		}
 		

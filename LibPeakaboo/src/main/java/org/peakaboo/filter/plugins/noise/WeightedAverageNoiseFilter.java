@@ -1,6 +1,7 @@
 package org.peakaboo.filter.plugins.noise;
 
-import org.peakaboo.filter.model.AbstractSimpleFilter;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -8,43 +9,36 @@ import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 
-public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
+public class WeightedAverageNoiseFilter extends AbstractFilter {
 
 	private Parameter<Integer> reach;
 
 
-	public WeightedAverageNoiseFilter()
-	{
+	public WeightedAverageNoiseFilter() {
 		super();
-
 	}
 	
 
 	@Override
-	public void initialize()
-	{
+	public void initialize() {
 		reach = new Parameter<>("Averaging Reach (2n+1)", new IntegerStyle(), 4, this::validate);
 		addParameter(reach);
 	}
 	
 	@Override
-	public String getFilterName()
-	{
+	public String getFilterName() {
 		return "Weighted Averaging";
 	}
 
 
 
 	@Override
-	public FilterType getFilterType()
-	{
-
+	public FilterType getFilterType() {
 		return FilterType.NOISE;
 	}
 
 
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 		// has to at least have a 3-point, but cannot exceed a 10*2+1=21-point moving average
 		if (reach.getValue() > 10 || reach.getValue() < 1) return false;
 
@@ -53,9 +47,7 @@ public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 
 
 	@Override
-	public String getFilterDescription()
-	{
-		// TODO Auto-generated method stub
+	public String getFilterDescription() {
 		return "The "
 				+ getFilterName()
 				+ " filter refines the values of each point in a scan by sampling it and the points around it, and replacing it with an exponentially weighted average of the sampled points. While not as sophisticated as the Savitsky-Golay filter, it does provide more flexibility.";
@@ -63,16 +55,14 @@ public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data)
-	{
-		data = WeightedMovingAverage(data, reach.getValue());
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+		data = weightedMovingAverage(data, reach.getValue());
 		return data;
 	}
 
 	
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return true;
 	}
 
@@ -103,8 +93,7 @@ public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 	 *            the distance from the centrepoint to an edge of the set of numbers being averaged
 	 * @return a moving-average smoothed data set
 	 */
-	public static Spectrum WeightedMovingAverage(ReadOnlySpectrum data, int windowSpan)
-	{
+	public static Spectrum weightedMovingAverage(ReadOnlySpectrum data, int windowSpan) {
 
 		/*
 		 * for a windowSpan n, the center-point's weight will be 2^n. 
@@ -143,7 +132,11 @@ public class WeightedAverageNoiseFilter extends AbstractSimpleFilter {
 				pos++;
 			}
 
-			smoothed.set(i, sum / totalWeight);
+			if (totalWeight == 0) {
+				smoothed.set(i, 0);
+			} else {
+				smoothed.set(i, sum / totalWeight);
+			}
 
 		}
 

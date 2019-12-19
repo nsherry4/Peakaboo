@@ -1,6 +1,7 @@
 package org.peakaboo.framework.scratch.encoders;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.peakaboo.framework.scratch.ScratchEncoder;
@@ -11,6 +12,10 @@ public class CompoundEncoder<T> implements ScratchEncoder<T> {
 	ScratchEncoder<T> first;
 	List<ScratchEncoder<byte[]>> encoders;
 	
+	public CompoundEncoder(ScratchEncoder<T> first) {
+		this.first = first;
+		this.encoders = Collections.emptyList();
+	}
 	
 	public CompoundEncoder(ScratchEncoder<T> first, List<ScratchEncoder<byte[]>> encoders) {
 		this.first = first;

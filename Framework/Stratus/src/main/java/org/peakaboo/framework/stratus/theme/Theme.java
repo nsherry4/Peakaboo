@@ -33,6 +33,46 @@ public interface Theme {
 	Color getWidgetDashAlpha();
 	Color getShadow();
 	
+	/**
+	 * Colour for control components representing negative space around widgets (eg
+	 * toolbars, headers, etc). This is not the same as large blank spaces to
+	 * indicate a lack of data/contents
+	 */
+	default Color getNegative() {
+		return getControl();
+	}
+	
+	/**
+	 * Strength of gradient on widget surfaces, generally the stronger the gradient,
+	 * the stronger the curve appearance
+	 */
+	default float widgetCurve() {
+		return 0.06f;
+	}
+	
+	/**
+	 * Strength of the bevel highlight
+	 */
+	default float bevelStrength() {
+		return 0.1f;
+	}
+	
+	/**
+	 * Strength of the border outline in circumstances where the border is being
+	 * applied to a non-standard colour
+	 */
+	default float borderStrength() {
+		return 0.1f;
+	}
+	
+	
+	/**
+	 * Radius of various rounded corners for widgets
+	 */
+	default float borderRadius() {
+		return 5f;
+	}
+	 
 	
 	
 	

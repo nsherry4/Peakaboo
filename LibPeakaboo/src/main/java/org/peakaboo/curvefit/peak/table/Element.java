@@ -1,7 +1,5 @@
 package org.peakaboo.curvefit.peak.table;
 
-
-
 /**
  * 
  * An enumeration of the elements of the periodic table of elements. Each element implements a toString()
@@ -825,5 +823,12 @@ public enum Element
 	{
 		return this.ordinal()+1;
 	}
-			
+	
+	public static Element fromZ(int z) {
+		return Element.values()[z-1];
+	}
+		
+	public static int compare(Element e1, Element e2) {
+		return Integer.compare(e1.atomicNumber(), e2.atomicNumber());
+	}
 }

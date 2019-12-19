@@ -1,13 +1,11 @@
 package org.peakaboo.ui.swing.mapping.components;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
@@ -16,8 +14,8 @@ import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.ZoomSlider;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapStatusBar extends JPanel {
@@ -25,7 +23,7 @@ public class MapStatusBar extends JPanel {
 	private JLabel status;
 	private MappingController controller;
 	
-	public MapStatusBar(MapperPanel tabPanel, MappingController controller) {
+	public MapStatusBar(MappingController controller) {
 		
 		this.controller = controller;
 		
@@ -45,18 +43,21 @@ public class MapStatusBar extends JPanel {
 		
 		
 		//zoom controls
-		ZoomSlider zoom = new ZoomSlider(10, 100, 1, value -> {
-			controller.getSettings().setZoom(value / 10f);
-		});
+		ZoomSlider zoom = new ZoomSlider(10, 100, 1, value -> controller.getSettings().setZoom(value / 10f));
 		zoom.setOpaque(false);
 		zoom.setBorder(Spacing.bMedium());
 		
 		JPopupMenu zoomMenu = new JPopupMenu();
 		zoomMenu.setBorder(Spacing.bNone());
 		zoomMenu.add(zoom);
-		ImageButton zoomButton = new ImageButton(StockIcon.FIND).withTooltip("Zoom").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
-		zoomButton.addActionListener(e -> {
-			zoomMenu.show(zoomButton, (int)((-zoomMenu.getPreferredSize().getWidth()+zoomButton.getSize().getWidth())/2f), (int)-zoomMenu.getPreferredSize().getHeight());
+		FluentButton zoomButton = new FluentButton(StockIcon.FIND)
+				.withTooltip("Zoom")
+				.withLayout(FluentButtonLayout.IMAGE)
+				.withBordered(false);
+		zoomButton.withAction(() -> {
+			int x = (int)((-zoomMenu.getPreferredSize().getWidth() + zoomButton.getSize().getWidth()) / 2f);
+			int y = (int)-zoomMenu.getPreferredSize().getHeight();
+			zoomMenu.show(zoomButton, x, y);
 		});
 		
 		add(zoomButton, BorderLayout.EAST);

@@ -17,6 +17,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import org.peakaboo.framework.stratus.Stratus;
+import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.swidget.dialogues.SplashScreen;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 
@@ -78,18 +80,20 @@ public class Swidget
 		
 	}
 
-	public static boolean isNumbusDerivedLaF()
-	{
-		
-		try
-		{
+	public static boolean isNumbusDerivedLaF() {
+		try {
 			return NimbusLookAndFeel.class.isAssignableFrom(UIManager.getLookAndFeel().getClass());
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			return false;
 		}
-		
+	}
+
+	public static boolean isStratusLaF() {
+		try {
+			return StratusLookAndFeel.class.isAssignableFrom(UIManager.getLookAndFeel().getClass()) && Stratus.hasTheme();
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public static String lineWrap(Component c, String text) {
@@ -159,10 +163,11 @@ public class Swidget
 		return logger;
 	}
 
-	public static final int DEFAULT_TEXTWRAP_WIDTH = 300;
-
 	public static Color dividerColor() {
-		Color dividerColour = UIManager.getColor("stratus-widget-border");
+		Color dividerColour = null;
+		if (Swidget.isStratusLaF()) {
+			dividerColour = Stratus.getTheme().getWidgetBorder();
+		}
 		if (dividerColour == null) {
 			dividerColour = Color.LIGHT_GRAY;
 		}

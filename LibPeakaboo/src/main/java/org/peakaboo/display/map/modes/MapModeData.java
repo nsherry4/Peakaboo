@@ -10,7 +10,7 @@ public interface MapModeData {
 	default String getInfoAtCoord(Coord<Integer> coord) {
 		String noValue = "Index: -, X: -, Y: -, Value: -";
 		if (isValidPoint(coord)) {
-			int index = getSize().x * coord.y + coord.x;
+			int index = getIndex(coord);
 			return "Index: " + (index+1) + ", X: " + (coord.x+1) + ", Y: " + (coord.y+1) + ", Value: " + getValueAtCoord(coord);
 		} else {
 			return noValue;

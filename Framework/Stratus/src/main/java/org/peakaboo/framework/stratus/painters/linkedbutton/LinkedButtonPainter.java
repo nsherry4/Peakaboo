@@ -3,17 +3,15 @@ package org.peakaboo.framework.stratus.painters.linkedbutton;
 import java.awt.Container;
 import java.awt.Shape;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.geom.RoundRectangle2D.Float;
 
-import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 
 import org.peakaboo.framework.stratus.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
+import org.peakaboo.framework.stratus.painters.AbstractButtonPainter;
 import org.peakaboo.framework.stratus.painters.ButtonPainter;
 import org.peakaboo.framework.stratus.theme.Theme;
 

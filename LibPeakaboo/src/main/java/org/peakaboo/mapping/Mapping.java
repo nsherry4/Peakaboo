@@ -11,14 +11,12 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import org.peakaboo.curvefit.peak.table.Element;
-import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
-import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
@@ -29,7 +27,6 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.executor.eachindex.EachIndexExecutor;
 import org.peakaboo.framework.plural.executor.eachindex.implementations.PluralEachIndexExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
@@ -39,8 +36,11 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
  *
  */
 
-public class Mapping
-{
+public class Mapping {
+	
+	private Mapping() {
+		//Not Constructable
+	}
 
 	/**
 	 * Generates a map based on the given inputs. Returns a {@link StreamExecutor} which can execute this task asynchronously and return the result
@@ -59,9 +59,18 @@ public class Mapping
 		) {
 		
 		List<ITransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
-		RawMapSet maps = new RawMapSet(transitionSeries, dataset.getScanData().scanCount());
+
+		int mapsize = dataset.getScanData().scanCount();
+		//Handle non-contiguous datasets
+		boolean noncontiguous = !dataset.getDataSource().isRectangular() && dataset.getDataSource().getDataSize().isPresent();
+		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
+		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
+		if (noncontiguous) {
+			//the dataset is non-contiguous, but provides dimensions and a way to get a coord per index
+			mapsize = dimensions.x * dimensions.y;
+		}
+		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
-		//Math.max(1, dataset.getScanData().scanCount())
 		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
 		streamer.setTask(new Range(0, dataset.getScanData().scanCount()-1), stream -> {
 			
@@ -72,12 +81,17 @@ public class Mapping
 				ReadOnlySpectrum data = dataset.getScanData().get(index);
 				if (data == null) return;
 				
-				data = filters.applyFiltersUnsynchronized(data);
+				data = filters.applyFiltersUnsynchronized(data, dataset);
 				
 				FittingResultSet frs = solver.solve(data, fittings, fitter);
 				
 				for (FittingResult result : frs.getFits()) {
-					maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), index);
+					if (noncontiguous) {
+						int translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
+						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), translated);	
+					} else {
+						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), index);
+					}
 				}
 				
 			});
@@ -95,13 +109,30 @@ public class Mapping
 	
 
 	public static ExecutorSet<RawMapSet> quickMapTask(DataController data, int channel) {
-				
+		
+
+		
 		//worker task
 		DataSet ds = data.getDataSet();
-		int scancount = ds.getScanData().scanCount();
-		Spectrum map = new ISpectrum(scancount);
-		EachIndexExecutor maptask = new PluralEachIndexExecutor(scancount, index -> {
-			map.set(index, ds.getScanData().get(index).get(channel));
+		
+		DataSet dataset = data.getDataSet();
+		int mapsize = dataset.getScanData().scanCount();
+		boolean noncontiguous = !dataset.getDataSource().isRectangular() && dataset.getDataSource().getDataSize().isPresent();
+		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
+		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
+		if (noncontiguous) {
+			//the dataset is non-contiguous, but provides dimensions and a way to get a coord per index
+			mapsize = dimensions.x * dimensions.y;
+		}
+		int finalMapsize = mapsize;
+		
+		Spectrum map = new ISpectrum(finalMapsize);
+		EachIndexExecutor maptask = new PluralEachIndexExecutor(dataset.getScanData().scanCount(), index -> {
+			int translated = index;
+			if (noncontiguous) {
+				translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
+			}
+			map.set(translated, ds.getScanData().get(index).get(channel));
 		});
 		maptask.setName("Examining Spectra");
 		
@@ -109,11 +140,8 @@ public class Mapping
 		//timer
 		Mutable<Long> t1 = new Mutable<>();
 		Mutable<Long> t2 = new Mutable<>();
-		Runnable timer_pre = () -> {
-			//pre-task
-			t1.set(System.currentTimeMillis());
-		};
-		Runnable timer_post = () -> {
+		Runnable timerPre = () -> t1.set(System.currentTimeMillis());
+		Runnable timerPost = () -> {
 			t2.set(System.currentTimeMillis());
 			long seconds = (t2.get() - t1.get()) / 1000;
 			PeakabooLog.get().log(Level.INFO, "Generated a QuickMap in " + seconds + " seconds");
@@ -121,13 +149,17 @@ public class Mapping
 		
 		
 		//executor
-		return Plural.build("Generating Quick Map", maptask, timer_pre, (v) -> {
-			timer_post.run();
+		return Plural.build("Generating Quick Map", maptask, timerPre, v -> {
+			timerPost.run();
 			
 			//build the RawMapSet now that the map Spectrum has been populated
 			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), map);
-			RawMapSet rawmaps = new RawMapSet(Collections.singletonList(rawmap), ds.getScanData().scanCount(), true);
-			return rawmaps;
+			return new RawMapSet(
+					Collections.singletonList(rawmap), 
+					finalMapsize, 
+					data.getDataSet().getDataSource().isRectangular(), 
+					true
+				);
 		});
 
 		

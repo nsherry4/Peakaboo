@@ -1,18 +1,15 @@
 package org.peakaboo.framework.swidget.widgets.layerpanel;
 
-import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.Frame;
-import java.awt.event.InputEvent;
 import java.util.Stack;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.peakaboo.framework.swidget.widgets.LiveFrame;
+import org.peakaboo.framework.swidget.live.LiveFrame;
 
 
 public class LayerPanel extends JLayeredPane {

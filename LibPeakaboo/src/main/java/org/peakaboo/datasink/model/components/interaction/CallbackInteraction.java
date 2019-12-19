@@ -5,11 +5,10 @@ import java.util.function.Supplier;
 
 public class CallbackInteraction implements Interaction {
 
+	//TODO: Peakaboo 6 - replace with IntConsumer, BooleanSupplier, etc
 	Consumer<Integer> callbackScansWritten = i -> {};
 	Supplier<Boolean> callbackAbortRequested = () -> false;
 
-	public CallbackInteraction() {
-	}
 
 	public void setCallbackScansWritten(Consumer<Integer> callbackScansWritten) {
 		this.callbackScansWritten = callbackScansWritten;

@@ -48,22 +48,6 @@ public class MapFilterSet implements Iterable<MapFilter> {
 	public synchronized int indexOf(MapFilter o) {
 		return filters.indexOf(o);
 	}
-
-	public synchronized void moveMapFilterUp(int index) {
-		MapFilter filter = get(index);
-		index -= 1;
-		if(index < 0) index = 0;
-		remove(filter);
-		add(index, filter);
-	}
-
-	public synchronized void moveMapFilterDown(int index) {
-		MapFilter filter = get(index);
-		index -= 1;
-		if(index >= size()) index = size()-1;
-		remove(filter);
-		add(index, filter);
-	}
 	
 	public synchronized boolean isReplottable() {
 		boolean replottable = true;
@@ -86,14 +70,10 @@ public class MapFilterSet implements Iterable<MapFilter> {
 	}
 	
 	public List<MapFilter> getAllEnabled() {
-		return filters.stream().filter(f -> f.isEnabled()).collect(Collectors.toList());
-	}
-		
-	public synchronized AreaMap apply(AreaMap map) {
-		return applyUnsynchronized(map);
+		return filters.stream().filter(MapFilter::isEnabled).collect(Collectors.toList());
 	}
 	
-	public AreaMap applyUnsynchronized(AreaMap map) {
+	public AreaMap apply(AreaMap map) {
 		
 		for (MapFilter filter : filters) {
 			if (filter.isEnabled()) {

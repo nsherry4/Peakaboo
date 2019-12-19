@@ -2,6 +2,7 @@ package org.peakaboo.filter.plugins.background;
 
 
 
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -38,8 +39,8 @@ public final class LinearTrimBackgroundFilter extends AbstractBackgroundFilter
 	@Override
 	public void initialize()
 	{
-		iterations = new Parameter<>("Iterations", new IntegerStyle(), 2, this::validate);
-		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100, this::validate);
+		iterations = new Parameter<>("Iterations", new IntegerStyle(), 2, this::validateTrim);
+		width = new Parameter<>("Width of Fitting", new IntegerStyle(), 100, this::validateTrim);
 		
 		addParameter(iterations, width);
 	}
@@ -52,7 +53,7 @@ public final class LinearTrimBackgroundFilter extends AbstractBackgroundFilter
 
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, int percent)
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent)
 	{
 
 		return SpectrumCalculations.multiplyBy(
@@ -61,7 +62,7 @@ public final class LinearTrimBackgroundFilter extends AbstractBackgroundFilter
 	}
 	
 
-	private boolean validate(Parameter<?> p)
+	private boolean validateTrim(Parameter<?> p)
 	{
 		// parabolas which are too wide are useless, but ones that are too
 		// narrow remove good data

@@ -49,7 +49,7 @@ public class SavedFittingSession {
 		//Save fitting selections
 		fittings = controller.fittingModel.selections.getFittedTransitionSeries()
 				.stream()
-				.map(ts -> new SerializedTransitionSeries(ts))
+				.map(SerializedTransitionSeries::new)
 				.collect(toList());
 		
 		annotations = new HashMap<>();
@@ -88,7 +88,7 @@ public class SavedFittingSession {
 		//we now convert them back to TransitionSeries
 		controller.fittingModel.selections.clear();
 		for (SerializedTransitionSeries sts : this.fittings) {
-			Optional<ITransitionSeries> newTs = sts.toTS();
+			Optional<ITransitionSeries> newTs = sts.deserialize();
 			if (! newTs.isPresent()) { continue; }
 			controller.fittingModel.selections.addTransitionSeries(newTs.get());
 		}
@@ -96,7 +96,7 @@ public class SavedFittingSession {
 		controller.clearAnnotations();
 		if (annotations != null) {
 			for (SerializedTransitionSeries sts : annotations.keySet()) {
-				Optional<ITransitionSeries> newTs = sts.toTS();
+				Optional<ITransitionSeries> newTs = sts.deserialize();
 				if (! newTs.isPresent()) { continue; }
 				controller.setAnnotation(newTs.get(), annotations.get(sts));
 			}

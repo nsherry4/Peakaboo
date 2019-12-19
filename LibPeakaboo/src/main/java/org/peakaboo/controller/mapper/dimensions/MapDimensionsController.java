@@ -18,7 +18,7 @@ import org.peakaboo.framework.plural.streams.StreamExecutor;
 public class MapDimensionsController extends EventfulType<MapUpdateType>{
 
 	private MappingController mappingController;
-	private Coord<Integer> viewDimensions = new Coord<Integer>(1, 1);
+	private Coord<Integer> viewDimensions = new Coord<>(1, 1);
 	
 	public MapDimensionsController(MappingController mappingController) {
 		this.mappingController = mappingController;
@@ -26,7 +26,7 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 		if (mappingController.rawDataController.getOriginalDataDimensions() != null) {
 			viewDimensions = new Coord<>(mappingController.rawDataController.getOriginalDataWidth(), mappingController.rawDataController.getOriginalDataHeight());
 		} else {
-			viewDimensions = new Coord<Integer>(mappingController.rawDataController.getMapResultSet().getMap(0).size(), 1);
+			viewDimensions = new Coord<>(mappingController.rawDataController.getMapResultSet().getMap(0).size(), 1);
 		}
 		
 	}
@@ -40,8 +40,10 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 	// data height and width
 	public void setUserDataHeight(int height)
 	{
-
-		if (getUserDataWidth() * height > mappingController.rawDataController.getMapSize()) height = mappingController.rawDataController.getMapSize() / getUserDataWidth();
+		
+		if (getUserDataWidth() * height > mappingController.rawDataController.getMapSize()) {
+			height = mappingController.rawDataController.getMapSize() / getUserDataWidth();
+		}
 		if (height < 1) height = 1;
 
 		viewDimensions.y = height;
@@ -62,7 +64,9 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 	public void setUserDataWidth(int width)
 	{
 
-		if (getUserDataHeight() * width > mappingController.rawDataController.getMapSize()) width = mappingController.rawDataController.getMapSize() / getUserDataHeight();
+		if (getUserDataHeight() * width > mappingController.rawDataController.getMapSize()) {
+			width = mappingController.rawDataController.getMapSize() / getUserDataHeight();
+		}
 		if (width < 1) width = 1;
 
 		viewDimensions.x = width;
@@ -162,6 +166,7 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 			}
 		}
 		
+		if (count == 0) { return 0; }
 		return delta/count;
 		
 	}

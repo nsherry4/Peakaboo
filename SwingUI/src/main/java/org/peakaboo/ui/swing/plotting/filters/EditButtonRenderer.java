@@ -11,21 +11,19 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButtonLayout;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 
 
-class EditButtonRenderer implements TableCellRenderer
-{
+class EditButtonRenderer implements TableCellRenderer {
 
-	private ImageButton	edit;
+	private FluentButton	edit;
 	private JPanel container;
 
 
-	public EditButtonRenderer()
-	{
+	public EditButtonRenderer() {
 
-		edit = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(ImageButtonLayout.IMAGE).withBordered(false);
+		edit = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
 		edit.setOpaque(false);
 				
 		container = new JPanel();
@@ -34,11 +32,15 @@ class EditButtonRenderer implements TableCellRenderer
 	}
 
 
-	public Component getTableCellRendererComponent(JTable table, Object _filter, boolean isSelected, boolean hasFocus,
-			int row, int column)
-	{
+	public Component getTableCellRendererComponent(
+			JTable table, 
+			Object filterObject, 
+			boolean isSelected, 
+			boolean hasFocus,
+			int row, 
+			int column) {
 		
-		Filter filter = (Filter)_filter;
+		Filter filter = (Filter)filterObject;
 		
 		int numParameters = filter.getParameters().size();
 

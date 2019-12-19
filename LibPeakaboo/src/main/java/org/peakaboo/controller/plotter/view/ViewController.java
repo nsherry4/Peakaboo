@@ -203,9 +203,9 @@ public class ViewController extends Eventful
 		if (channel >= plot.data().getDataSet().getAnalysis().channelsPerScan()) return null;
 
 		PlotSpectra scans = plot.getDataForPlot();
-		if (scans == null) return new Pair<Float, Float>(0.0f, 0.0f);
+		if (scans == null) return new Pair<>(0.0f, 0.0f);
 
-		return new Pair<Float, Float>(scans.filtered.get(channel), scans.raw.get(channel));
+		return new Pair<>(scans.filtered.get(channel), scans.raw.get(channel));
 	}
 
 	
@@ -217,6 +217,15 @@ public class ViewController extends Eventful
 		updateListeners();
 	}
 	
+	
+	public boolean getShowTitle() {
+		return viewModel.session.showTitle;
+	}
+	
+	public void setShowTitle(boolean showTitle) {
+		viewModel.session.showTitle = showTitle;
+		updateListeners();
+	}
 	
 
 	
@@ -271,6 +280,7 @@ public class ViewController extends Eventful
 		settings.showElementFitMarkers = getShowElementMarkers();
 		settings.showIndividualFittings = getShowIndividualSelections();
 		settings.logTransform = getViewLog();
+		settings.title = getShowTitle()? plot.data().getTitle() : null;
 		
 		return settings;
 	}

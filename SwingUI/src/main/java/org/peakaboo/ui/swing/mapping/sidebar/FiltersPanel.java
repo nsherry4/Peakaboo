@@ -21,8 +21,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
@@ -32,13 +30,11 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.models.GroupedListTreeModel;
-import org.peakaboo.framework.swidget.models.ListTableModel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.buttons.ImageButton;
-import org.peakaboo.framework.swidget.widgets.gradientpanel.TitlePaintedPanel;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ListControls;
 import org.peakaboo.framework.swidget.widgets.listcontrols.ReorderTransferHandler;
+import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetCellEditor;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
@@ -51,12 +47,11 @@ public class FiltersPanel extends JPanel {
 	private Window window;
 	private CardLayout layout;
 	
-	private String PANEL_FILTERS = "PANEL_FILTERS";
-	private String PANEL_ADD = "PANEL_ADD";
+	private static final String PANEL_FILTERS = "PANEL_FILTERS";
+	private static final String PANEL_ADD = "PANEL_ADD";
 	
 	private MapFilteringController controller;
 	
-	private JTable filterTable;
 	private ListControls filterControls;
 	
 	public FiltersPanel(MapFilteringController controller, Window window) {
@@ -81,7 +76,7 @@ public class FiltersPanel extends JPanel {
 	}
 
 	private JPanel buildFiltersPanel() {
-		filterTable = new JTable(new TableModel() {
+		JTable filterTable = new JTable(new TableModel() {
 
 			@Override
 			public int getRowCount() {
@@ -137,13 +132,12 @@ public class FiltersPanel extends JPanel {
 
 			@Override
 			public void addTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
-				
+				// NOOP
 			}
 
 			@Override
 			public void removeTableModelListener(TableModelListener l) {
-				// TODO Auto-generated method stub
+				// NOOP
 				
 			}});
 		filterTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -177,25 +171,19 @@ public class FiltersPanel extends JPanel {
 		
 		
 		
-		ImageButton add = new ImageButton(StockIcon.EDIT_ADD)
+		FluentButton add = new FluentButton(StockIcon.EDIT_ADD)
 			.withTooltip("Add Filter")
-			.withAction(() -> {
-				layout.show(this, PANEL_ADD);
-				//TODO: Remove Me
-				//controller.add(new AverageMapFilter());
-		});
-		ImageButton remove = new ImageButton(StockIcon.EDIT_REMOVE)
+			.withAction(() -> layout.show(this, PANEL_ADD));
+		FluentButton remove = new FluentButton(StockIcon.EDIT_REMOVE)
 			.withTooltip("Remove Filter")
 			.withAction(() -> {
 				int index = filterTable.getSelectionModel().getAnchorSelectionIndex();
 				if (index < 0 || index >= controller.size()) { return; }
 				controller.remove(index);
 		});
-		ImageButton clear = new ImageButton(StockIcon.EDIT_CLEAR)
+		FluentButton clear = new FluentButton(StockIcon.EDIT_CLEAR)
 			.withTooltip("Clear Filters")
-			.withAction(() -> {
-				controller.clear();
-		});
+			.withAction(controller::clear);
 		
 		filterControls = new ListControls(add, remove, clear);
 		
@@ -208,7 +196,7 @@ public class FiltersPanel extends JPanel {
 	private JPanel buildAddPanel() {
 		
 		//model and tree
-		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.SYSTEM.getPlugins();
+		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.system().getPlugins();
 		GroupedListTreeModel<BoltPluginPrototype<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
 				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);
@@ -217,34 +205,34 @@ public class FiltersPanel extends JPanel {
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
 		tree.setCellRenderer(renderer);
 		
-		//buttons
-		ImageButton ok = new ImageButton(StockIcon.CHOOSE_OK).withText("OK").withBordered(false).withAction(() -> {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-			BoltPluginPrototype<? extends MapFilterPlugin> proto = null;
-			try {
-				proto = (BoltPluginPrototype<? extends MapFilterPlugin>) node.getUserObject();	
-			} catch (ClassCastException e) {}
-			
-			if (proto != null) { 
-				MapFilterPlugin plugin = proto.create();
-				plugin.initialize();
-				controller.add(plugin);
-			}
-			layout.show(this, PANEL_FILTERS);
-		});
-		ImageButton cancel = new ImageButton(StockIcon.CHOOSE_CANCEL).withText("Cancel").withBordered(false).withAction(() -> {
-			layout.show(this, PANEL_FILTERS);
-		});
 		
-		//setting
-		ButtonBox buttons = new ButtonBox(Spacing.small, false);
-		buttons.addCentre(ok);
-		buttons.addCentre(cancel);
-		JPanel header = new TitlePaintedPanel("Add Map Filter", false, buttons);
+		SelectionListControls controls = new SelectionListControls("Map Filter", "Add Map Filter") {
+			
+			@Override
+			protected void cancel() {
+				layout.show(FiltersPanel.this, PANEL_FILTERS);
+			}
+			
+			@Override
+			protected void approve() {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+				BoltPluginPrototype<? extends MapFilterPlugin> proto = null;
+				try {
+					proto = (BoltPluginPrototype<? extends MapFilterPlugin>) node.getUserObject();	
+				} catch (ClassCastException e) {}
+				
+				if (proto != null) { 
+					MapFilterPlugin plugin = proto.create();
+					plugin.initialize();
+					controller.add(plugin);
+				}
+				layout.show(FiltersPanel.this, PANEL_FILTERS);
+			}
+		};
 		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(tree, BorderLayout.CENTER);
-		panel.add(header, BorderLayout.NORTH);
+		panel.add(controls, BorderLayout.NORTH);
 		
 		return panel;
 	}
@@ -278,7 +266,7 @@ class MapFilterWidget extends ListWidget<MapFilter> {
 
 class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	
-	private ImageButton button = new ImageButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL);
+	private FluentButton button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL);
 	private MapFilter filter;
 	
 	private static Map<MapFilter, MapFilterDialog> dialogs = new HashMap<>();
@@ -311,34 +299,8 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	@Override
 	protected void onSetValue(MapFilter filter) {
 		this.filter = filter;
-		button.setVisible(filter.getParameters().size() > 0);
+		button.setVisible(!filter.getParameters().isEmpty());
 	}
-	
-}
-
-class MapFilterPluginWidget extends ListWidget<BoltPluginPrototype<? extends MapFilterPlugin>> {
-
-	private JLabel label = new JLabel();
-	
-	public MapFilterPluginWidget() {
-		label.setIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
-		label.setBorder(Spacing.bMedium());
-		setLayout(new BorderLayout());
-		add(label, BorderLayout.CENTER);
-	}
-	
-	@Override
-	public void setForeground(Color c) {
-		super.setForeground(c);
-		if (label == null) { return; }
-		label.setForeground(c);
-	}
-	
-	@Override
-	protected void onSetValue(BoltPluginPrototype<? extends MapFilterPlugin> value) {
-		label.setText(value.getName());
-	}
-	
 	
 }
 
@@ -347,9 +309,7 @@ class MapFilterDialog extends SwingAutoDialog {
 	MapFilterDialog(MapFilteringController controller, MapFilter filter, AutoDialogButtons buttons, Window window) {
 		super(window, filter.getParameterGroup(), buttons);
 		
-		getGroup().getValueHook().addListener(o -> {
-			controller.filteredDataInvalidated();
-		});
+		getGroup().getValueHook().addListener(o -> controller.filteredDataInvalidated());
 		
 	}
 }

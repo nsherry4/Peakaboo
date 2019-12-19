@@ -11,14 +11,12 @@ import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
-public class LookupWidget extends ClearPanel
-{
+public class LookupWidget extends ClearPanel {
 	private JPanel elementContents;
 	private JLabel elementName;
 	private JCheckBox elementCheck;
 	
-	public LookupWidget()
-	{
+	public LookupWidget() {
 		super();
 		
 		setLayout(new BorderLayout(Spacing.small, Spacing.small));
@@ -38,30 +36,26 @@ public class LookupWidget extends ClearPanel
 		
 	}
 	
-	public boolean isSelected()
-	{
+	public boolean isSelected() {
 		return elementCheck.isSelected();
 	}
-	public void setSelected(boolean selected)
-	{
+	
+	public void setSelected(boolean selected) {
 		elementCheck.setSelected(selected);
 	}
 
 	@Override
-	public void setName(String title)
-	{
+	public void setName(String title) {
 		elementName.setText(title);
 	}
 		
 	@Override
-	public void setForeground(Color c)
-	{
+	public void setForeground(Color c) {
 		super.setForeground(c);
 		if (elementName != null) elementName.setForeground(c);
 	}
 	
-	public JCheckBox getCheckBox()
-	{
+	public JCheckBox getCheckBox() {
 		return elementCheck;
 	}
 		

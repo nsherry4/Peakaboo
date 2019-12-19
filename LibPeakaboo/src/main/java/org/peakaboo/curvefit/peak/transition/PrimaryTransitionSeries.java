@@ -46,12 +46,9 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	
 	@Override
 	public int compareTo(ITransitionSeries o) {
-		if (o.getElement() == getElement())
-		{
+		if (o.getElement() == getElement()) {
 			return -getShell().compareTo(o.getShell());
-		}
-		else
-		{
+		} else {
 			return -getElement().compareTo(o.getElement());
 		}
 	}
@@ -64,7 +61,7 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	 */
 	@Override
 	public boolean hasTransitions() {
-		return transitions.size() != 0;
+		return !transitions.isEmpty();
 	}
 
 	/**

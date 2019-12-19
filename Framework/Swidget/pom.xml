@@ -2,12 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.peakaboo</groupId>
+		<artifactId>framework</artifactId>
+		<version>5.4-SNAPSHOT</version>
+	</parent>
 	<groupId>org.peakaboo.framework</groupId>
 	<artifactId>swidget</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Swidget</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -21,11 +24,6 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency><!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.swinglabs.swingx</groupId>
@@ -36,7 +34,7 @@
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>stratus</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
