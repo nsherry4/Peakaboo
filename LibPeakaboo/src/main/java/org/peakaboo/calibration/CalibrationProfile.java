@@ -78,11 +78,12 @@ public class CalibrationProfile {
 		CalibrationProcessor interpolator = new LinearCalibrationInterpolator();
 		CalibrationProcessor normalizer = new CalibrationNormalizer();
 		
-		/*
-		 * interpolate and smooth a copy of this profile, then copy the smooed
-		 * interpolated values back to this one. We do this so that interpolated values
-		 * aren't influenced too much by one outlier neighbour.
-		 */
+		
+		
+		// interpolate and smooth a copy of this profile, then copy the smooed
+		// interpolated values back to this one. We do this so that interpolated values
+		// aren't influenced too much by one outlier neighbour.
+		
 		CalibrationProfile smoothed = new CalibrationProfile(this);
 		interpolator.process(smoothed);
 		interpolationSmoother.process(smoothed);
@@ -96,7 +97,7 @@ public class CalibrationProfile {
 		
 		//normalize values against anchor element
 		normalizer.process(this);
-				
+		
 	}
 	
 	public CalibrationProfile(CalibrationProfile copy) {
