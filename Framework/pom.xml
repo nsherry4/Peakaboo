@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.peakaboo</groupId>
 		<artifactId>peakaboo</artifactId>
-		<version>5.4-SNAPSHOT</version>
+		<version>5.5-SNAPSHOT</version>
 	</parent>
 	<artifactId>framework</artifactId>
 	<packaging>pom</packaging>
