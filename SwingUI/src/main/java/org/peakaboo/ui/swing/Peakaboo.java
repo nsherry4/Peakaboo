@@ -41,7 +41,7 @@ import org.peakaboo.ui.swing.plotting.PlotFrame;
 public class Peakaboo {
 	private static Timer gcTimer;
 	
-	public static final boolean SHOW_QUANTITATIVE = true;
+	public static final boolean SHOW_QUANTITATIVE = Version.releaseType == ReleaseType.DEVELOPMENT;
 
 	private static void showError(Throwable throwable, String message) {
 		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
