@@ -1046,7 +1046,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		Mutable<Boolean> done = new Mutable<>(false);
 		execset.addListener(() -> {
-			if (execset.getCompleted() && execset.getResult() != null && done.get()) {
+			if (execset.getCompleted() && execset.getResult() != null && !done.get()) {
 				done.set(true);
 				QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, execset.getResult(), mapSession, controller);
 				this.pushLayer(maplayer);
