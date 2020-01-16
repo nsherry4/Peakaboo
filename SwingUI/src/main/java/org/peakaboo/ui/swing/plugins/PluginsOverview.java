@@ -47,6 +47,7 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
+import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
@@ -77,7 +78,7 @@ public class PluginsOverview extends HeaderLayer {
 		JPanel body = new JPanel(new BorderLayout());
 		body.add(pluginTree(), BorderLayout.WEST);
 		details = new JPanel(new BorderLayout());
-		details.add(new PluginMessageView("No Selection"), BorderLayout.CENTER);
+		details.add(new BlankMessagePanel("No Selection"), BorderLayout.CENTER);
 		body.add(details, BorderLayout.CENTER);
 		new FileDrop(body, new FileDrop.Listener() {
 			
@@ -350,13 +351,13 @@ public class PluginsOverview extends HeaderLayer {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			details.removeAll();
 			if (node == null) { 
-				details.add(new PluginMessageView("No Selection"), BorderLayout.CENTER);
+				details.add(new BlankMessagePanel("No Selection"), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else if (!node.isLeaf()) {
 				
 				BoltPluginManager<? extends BoltPlugin> manager = (BoltPluginManager<? extends BoltPlugin>) node.getUserObject();
 				String interfaceDesc = manager.getInterfaceDescription();
-				details.add(new PluginMessageView(interfaceDesc), BorderLayout.CENTER);
+				details.add(new BlankMessagePanel(interfaceDesc), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else {
 				Object o = node.getUserObject();

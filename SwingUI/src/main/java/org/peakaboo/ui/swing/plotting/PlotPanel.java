@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -89,6 +90,7 @@ import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener.Buttons;
@@ -126,7 +128,10 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	//Non-UI
 	private PlotController				controller;
+	
 	private PlotCanvas					canvas;
+	private JPanel 						canvasPanel;
+	private BlankMessagePanel			blankCanvas;
 
 	//===TOOLBAR WIDGETS===
 	private PlotToolbar                 toolBar;
@@ -195,23 +200,13 @@ public class PlotPanel extends TabbedLayerPanel {
 		setNeedsRedraw();
 
 	}
-
-
+	
 	private void initGUI() {
 
 		canvas = new PlotCanvas(controller, this);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		
-		canvas.addMouseMotionListener(new MouseMotionAdapter() {
-
-			@Override
-			public void mouseMoved(MouseEvent e)
-			{
-				mouseMoveCanvasEvent(e.getX());
-			}
-
-		});
-
+		canvas.setMouseMoveCallback((channel, coords) -> mouseMoveCanvasEvent(coords.x));
 		
 		canvas.setRightClickCallback((channel, coords) -> {
 			//if the click is in the bounds of the data/plot
@@ -255,7 +250,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		statusBar = new PlotStatusBar(controller);
 		
-		JPanel canvasPanel = new JPanel(new BorderLayout());
+		canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);
 		canvasPanel.add(statusBar, BorderLayout.SOUTH);
 		canvasPanel.setPreferredSize(new Dimension(600, 300));
@@ -269,6 +264,8 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 
 		});
+		
+		blankCanvas = new BlankMessagePanel("No Data Loaded", "You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.");
 		
 		JTabbedPane sidebarTabs = new JTabbedPane();
 		sidebarTabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
@@ -286,11 +283,18 @@ public class PlotPanel extends TabbedLayerPanel {
 		ClearPanel split = new ClearPanel(new BorderLayout());
 		sidebarTabs.setPreferredSize(new Dimension(225, sidebarTabs.getPreferredSize().height));
 		split.add(sidebarTabs, BorderLayout.WEST);
-		split.add(canvasPanel, BorderLayout.CENTER);
+		split.add(blankCanvas, BorderLayout.CENTER);
 				
 		split.setBorder(Spacing.bNone());
 		pane.add(split, c);
 
+		
+		controller.addListener(e -> {
+			if (controller.data().hasDataSet() && Arrays.asList(split.getComponents()).contains(blankCanvas)) {
+				split.remove(blankCanvas);
+				split.add(canvasPanel, BorderLayout.CENTER);
+			}
+		});		
 
 	}
 

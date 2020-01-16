@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
@@ -43,10 +44,11 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 public class PlotCanvas extends GraphicsPanel implements Scrollable {
 
 	private PlotController controller;
-	private BiConsumer<Integer, Coord<Integer>>	onSingleClickCallback, onDoubleClickCallback, onRightClickCallback;
+	private BiConsumer<Integer, Coord<Integer>>	onSingleClickCallback, onDoubleClickCallback, onRightClickCallback, onMouseMoveCallback;
 	private Plotter plotter;
 	
 	private PlotPanel plotPanel;
+	
 
 	PlotCanvas(final PlotController controller, final PlotPanel parent) {
 
@@ -60,16 +62,26 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 
 		addControllerListener();
 		addFileDropListener();
-		addMouseListener();
+		addMouseListeners();
 		
 	}
 	
-	private void addMouseListener() {
+	private void addMouseListeners() {
 		addMouseListener(new MouseAdapter() {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				onMouseClicked(e);
+			}	
+
+		});
+		
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				Coord<Integer> mouseCoords = new Coord<>(e.getX(), e.getY());
+				int channel = plotter.getChannel(e.getX());
+				onMouseMove(channel, mouseCoords);
 			}
 		});
 	}
@@ -130,6 +142,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	private void onRightClick(int channel, Coord<Integer> mouseCoords) {
 		if (controller.data().hasDataSet() && onRightClickCallback != null) {
 			onRightClickCallback.accept(channel, mouseCoords);
+		}
+	}
+	
+	private void onMouseMove(int channel, Coord<Integer> mouseCoords) {
+		if (controller.data().hasDataSet() && onMouseMoveCallback != null) {
+			onMouseMoveCallback.accept(channel, mouseCoords);
 		}
 	}
 	
@@ -194,6 +212,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		this.onRightClickCallback = onRightClickCallback;
 	}
 
+	public void setMouseMoveCallback(BiConsumer<Integer, Coord<Integer>> onMouseMoveCallback) {
+		this.onMouseMoveCallback = onMouseMoveCallback;
+	}
+	
 
 	
 	
