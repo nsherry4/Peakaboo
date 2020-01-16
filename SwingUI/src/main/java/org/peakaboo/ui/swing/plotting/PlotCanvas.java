@@ -167,29 +167,41 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	}
 	
 	private void addFileDropListener() {
-		new FileDrop(this, new FileDrop.Listener() {
+		new FileDrop(this, getFileDropListener());
+	}
+	
+	public FileDrop.Listener getFileDropListener() {
+		return new FileDrop.Listener() {
 			
 			@Override
 			public void urlsDropped(URL[] urls) {
-				try {
-					
-					TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
-						if (!optfiles.isPresent()) { return; }
-						plotPanel.load(optfiles.get().stream().map(PathDataFile::new).collect(Collectors.toList()));
-					});
-
-					TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
-
-				} catch (Exception e) {
-					PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
-				}
+				PlotCanvas.this.urlsDropped(urls);
 			}
 			
 			@Override
 			public void filesDropped(File[] files) {
-				plotPanel.load(Arrays.asList(files).stream().map(PathDataFile::new).collect(Collectors.toList()));
+				PlotCanvas.this.filesDropped(files);
 			}
-		});
+		};
+	}
+	
+	void filesDropped(File[] files) {
+		plotPanel.load(Arrays.asList(files).stream().map(PathDataFile::new).collect(Collectors.toList()));
+	}
+	
+	void urlsDropped(URL[] urls) {
+		try {
+			
+			TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
+				if (!optfiles.isPresent()) { return; }
+				plotPanel.load(optfiles.get().stream().map(PathDataFile::new).collect(Collectors.toList()));
+			});
+
+			TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
+
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
+		}
 	}
 	
 

@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -266,6 +267,8 @@ public class PlotPanel extends TabbedLayerPanel {
 		});
 		
 		blankCanvas = new BlankMessagePanel("No Data Loaded", "You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.");
+		new FileDrop(blankCanvas, canvas.getFileDropListener());
+		
 		
 		JTabbedPane sidebarTabs = new JTabbedPane();
 		sidebarTabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
