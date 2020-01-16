@@ -69,6 +69,8 @@ public class PluginsOverview extends HeaderLayer {
 	
 	JButton add, remove, reload, browse, download;
 	
+	private static String noSelectionDescription = "Select a plugin or category from the sidebar to see information about available plugins.\n\nYou can add new plugins by dragging them into this window, or by using the 'Add' button in the toolbar";
+	
 	public PluginsOverview(LayerPanel parent) {
 		super(parent, true);
 		this.parent = parent;
@@ -78,7 +80,7 @@ public class PluginsOverview extends HeaderLayer {
 		JPanel body = new JPanel(new BorderLayout());
 		body.add(pluginTree(), BorderLayout.WEST);
 		details = new JPanel(new BorderLayout());
-		details.add(new BlankMessagePanel("No Selection"), BorderLayout.CENTER);
+		details.add(new BlankMessagePanel("No Selection", noSelectionDescription), BorderLayout.CENTER);
 		body.add(details, BorderLayout.CENTER);
 		new FileDrop(body, new FileDrop.Listener() {
 			
@@ -351,13 +353,13 @@ public class PluginsOverview extends HeaderLayer {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			details.removeAll();
 			if (node == null) { 
-				details.add(new BlankMessagePanel("No Selection"), BorderLayout.CENTER);
+				details.add(new BlankMessagePanel("No Selection", noSelectionDescription), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else if (!node.isLeaf()) {
 				
 				BoltPluginManager<? extends BoltPlugin> manager = (BoltPluginManager<? extends BoltPlugin>) node.getUserObject();
 				String interfaceDesc = manager.getInterfaceDescription();
-				details.add(new BlankMessagePanel(interfaceDesc), BorderLayout.CENTER);
+				details.add(new BlankMessagePanel(manager.getInterfaceName(), interfaceDesc), BorderLayout.CENTER);
 				remove.setEnabled(false);
 			} else {
 				Object o = node.getUserObject();
