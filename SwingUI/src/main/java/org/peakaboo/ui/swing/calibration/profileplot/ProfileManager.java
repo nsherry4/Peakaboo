@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,6 +32,7 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
@@ -110,7 +112,30 @@ public class ProfileManager extends HeaderLayer {
 		ButtonLinker buttons = new ButtonLinker(create, open, save, clear);
 		makeNamePanel();
 
-		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), buttons, null);
+		//View controls
+		FluentToggleButton viewLinear = new FluentToggleButton()
+				.withIcon("linear")
+				.withTooltip("Linear Scaling")
+				.withAction(selected -> {
+					for (ProfilePlot plot : profileplots) {
+						plot.setLogView(!selected);
+					}
+				});
+		viewLinear.setSelected(true);
+		FluentToggleButton viewLog = new FluentToggleButton()
+				.withIcon("log")
+				.withTooltip("Logarithmic Scaling")
+				.withAction(selected -> {
+					for (ProfilePlot plot : profileplots) {
+						plot.setLogView(selected);
+					}
+				});
+		ButtonLinker viewLinker = new ButtonLinker(viewLinear, viewLog);
+		ButtonGroup group = new ButtonGroup();
+		group.add(viewLog);
+		group.add(viewLinear);
+		
+		init(controller.calibration().getCalibrationProfile(), controller.calibration().getCalibrationProfileFile(), buttons, viewLinker);
 		
 	}
 	

@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,16 +23,19 @@ import javax.swing.table.TableModel;
 import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderTabBuilder;
 import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
+import org.peakaboo.ui.swing.calibration.profileplot.ProfilePlot;
 
 public class ReferenceViewPanel extends HeaderLayer {
 
@@ -65,6 +70,36 @@ public class ReferenceViewPanel extends HeaderLayer {
 
 		setBody(tabBuilder.getBody());
 		getHeader().setCentre(tabBuilder.getTabStrip());
+		
+		
+		
+
+		//View controls
+		List<ReferencePlot> refplots = Arrays.asList(kplot, lplot, mplot);
+		FluentToggleButton viewLinear = new FluentToggleButton()
+				.withIcon("linear")
+				.withTooltip("Linear Scaling")
+				.withAction(selected -> {
+					for (ReferencePlot plot : refplots) {
+						plot.setLogView(!selected);
+					}
+				});
+		viewLinear.setSelected(true);
+		FluentToggleButton viewLog = new FluentToggleButton()
+				.withIcon("log")
+				.withTooltip("Logarithmic Scaling")
+				.withAction(selected -> {
+					for (ReferencePlot plot : refplots) {
+						plot.setLogView(selected);
+					}
+				});
+		ButtonLinker viewLinker = new ButtonLinker(viewLinear, viewLog);
+		ButtonGroup group = new ButtonGroup();
+		group.add(viewLog);
+		group.add(viewLinear);
+		
+		getHeader().setRight(viewLinker);
+		
 		
 	}
 

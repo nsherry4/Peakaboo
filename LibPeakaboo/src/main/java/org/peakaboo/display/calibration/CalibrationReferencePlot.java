@@ -55,7 +55,7 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 
 	@Override
 	protected String getHighlightText(ITransitionSeries ts) {
-		String title = ts.getElement().toString();
+		String title = ts.getElement().toString() + " " + Math.round(ref.getConcentration(ts)*100f) + "%";
 		String annotation = ref.getAnnotation(ts);
 		if (annotation.trim().length() > 0) {
 			title += ": " + annotation;
@@ -76,4 +76,5 @@ public class CalibrationReferencePlot extends ZCalibrationPlot {
 	protected Map<ITransitionSeries, Float> getFadedData() {
 		return new HashMap<>();
 	}
+
 }

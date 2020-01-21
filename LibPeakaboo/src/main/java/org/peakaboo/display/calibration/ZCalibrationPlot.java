@@ -39,7 +39,7 @@ public abstract class ZCalibrationPlot {
 	private DrawingRequest dr = new DrawingRequest();
 	private List<PlotPainter> plotPainters;
 	private List<AxisPainter> axisPainters;
-	
+	private boolean logView;
 	private Element highlighted;
 	
 	public ZCalibrationPlot(TransitionShell type) {
@@ -52,7 +52,7 @@ public abstract class ZCalibrationPlot {
 		int highest = 0;
 				
 		List<ITransitionSeries> tss = getKeys(type);
-		if (tss.size() >= 1) {
+		if (!tss.isEmpty()) {
 			lowest = tss.get(0).getElement().ordinal();
 			highest = tss.get(tss.size() - 1).getElement().ordinal();
 		}
@@ -65,12 +65,16 @@ public abstract class ZCalibrationPlot {
 		dr.drawToVectorSurface = false;
 		dr.maxYIntensity = Math.max(data.max(), fadedData.max());
 		dr.unitSize = 1f;
-		dr.viewTransform = ViewTransform.LINEAR;
+		dr.viewTransform = logView? ViewTransform.LOG : ViewTransform.LINEAR;
 		
 		//tick formatters for ticks/gridlines
 		Function<Integer, String> sensitivityFormatter = getYAxisFormatter();
-		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter).withRotate(true);
-		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter).withRotate(true);
+		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter)
+				.withRotate(true)
+				.withLog(logView);
+		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter)
+				.withRotate(true)
+				.withLog(logView);
 		TickFormatter tickTop = null;
 		TickFormatter tickBottom = new TickFormatter((float)lowest-0.5f, (float)highest-0.5f+0.999f, i -> {  
 			Element element = Element.values()[i];
@@ -137,6 +141,17 @@ public abstract class ZCalibrationPlot {
 	
 	
 	
+	
+	public boolean isLogView() {
+		return logView;
+	}
+
+	public void setLogView(boolean logView) {
+		boolean needsConfig = logView != this.logView;
+		this.logView = logView;
+		if (needsConfig) { configure(); }
+	}
+
 	public Element getHighlighted() {
 		return highlighted;
 	}
@@ -152,7 +167,7 @@ public abstract class ZCalibrationPlot {
 		
 	public Element getElement(int index) {
 		List<ITransitionSeries> keys = getKeys(type);
-		if (keys.size() == 0) {
+		if (keys.isEmpty()) {
 			return null;
 		}
 		int lowest = keys.get(0).getElement().ordinal();
@@ -199,6 +214,7 @@ public abstract class ZCalibrationPlot {
 	protected abstract Function<Integer, String> getYAxisFormatter();
 	protected abstract String getHighlightText(ITransitionSeries ts);
 	protected abstract List<DataLabel> getLabels(int lowest, int highest);
+	 
 	
 	
 }

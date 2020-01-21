@@ -93,10 +93,11 @@ public class CalibrationProfilePlot extends ZCalibrationPlot {
 	
 	@Override
 	protected String getHighlightText(ITransitionSeries ts) {
+		String title = ts.getElement().toString() + " " + Math.round(profile.getCalibration(ts)*100f) + "%";
 		if (profile.getInterpolated().contains(ts)) {
-			return ts.getElement().toString() + " (Interpolated)";
+			return title + " (Interpolated)";
 		}
-		return ts.getElement().toString();
+		return title;
 	}
 	
 	@Override

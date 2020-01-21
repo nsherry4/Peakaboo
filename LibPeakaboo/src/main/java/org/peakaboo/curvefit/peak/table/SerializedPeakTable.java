@@ -8,7 +8,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.framework.scratch.ScratchEncoder;
@@ -26,7 +28,9 @@ public class SerializedPeakTable implements PeakTable {
 		if (Files.exists(path)) {
 			try {
 				series = Arrays.asList(load(path));
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				PeakabooLog.get().log(Level.WARNING, "Failed to read serialized peak table", e);
+			}
 		}
 		
 		//if it didn't load for whatever reason, create it

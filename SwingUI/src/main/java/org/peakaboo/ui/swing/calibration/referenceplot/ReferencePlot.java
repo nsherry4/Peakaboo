@@ -35,6 +35,20 @@ public class ReferencePlot extends GraphicsPanel {
 		
 	}
 	
+	
+	
+	public boolean isLogView() {
+		return plot.isLogView();
+	}
+	
+	public void setLogView(boolean logView) {
+		boolean needsRepaint = logView != plot.isLogView();
+		plot.setLogView(logView);
+		if (needsRepaint) { repaint(); }
+	}
+
+
+
 	@Override
 	protected void drawGraphics(Surface backend, Coord<Integer> size) {
 		plot.draw(backend, size);
