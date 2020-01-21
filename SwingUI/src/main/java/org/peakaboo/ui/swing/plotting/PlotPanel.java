@@ -129,10 +129,8 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	//Non-UI
 	private PlotController				controller;
-	
+
 	private PlotCanvas					canvas;
-	private JPanel 						canvasPanel;
-	private BlankMessagePanel			blankCanvas;
 
 	//===TOOLBAR WIDGETS===
 	private PlotToolbar                 toolBar;
@@ -251,7 +249,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		statusBar = new PlotStatusBar(controller);
 		
-		canvasPanel = new JPanel(new BorderLayout());
+		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);
 		canvasPanel.add(statusBar, BorderLayout.SOUTH);
 		canvasPanel.setPreferredSize(new Dimension(600, 300));
@@ -266,7 +264,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		});
 		
-		blankCanvas = new BlankMessagePanel("No Data Loaded", "You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.");
+		BlankMessagePanel blankCanvas = new BlankMessagePanel("No Data", "You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.");
 		new FileDrop(blankCanvas, canvas.getFileDropListener());
 		
 		
