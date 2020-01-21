@@ -97,11 +97,6 @@ public abstract class GraphicsPanel extends JPanel
 	}
 
 
-	public void writePDF(OutputStream out, Coord<Integer> size) throws IOException
-	{
-		write(SurfaceType.PDF, out, size);
-	}
-
 
 	private void write(SurfaceType type, OutputStream out, Coord<Integer> size) throws IOException
 	{		

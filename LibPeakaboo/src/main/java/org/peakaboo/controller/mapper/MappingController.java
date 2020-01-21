@@ -242,9 +242,6 @@ public class MappingController extends EventfulType<MapUpdateType>
 			//image extension
 			String ext = "";
 			switch (format) {
-			case PDF: 
-				ext = "pdf";
-				break;
 			case RASTER:
 				ext = "png";
 				break;

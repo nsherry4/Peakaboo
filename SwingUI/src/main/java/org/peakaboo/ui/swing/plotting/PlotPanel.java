@@ -750,9 +750,6 @@ public class PlotPanel extends TabbedLayerPanel {
 			//Save Plot
 			String ext = "";
 			switch (format) {
-			case PDF: 
-				ext = "pdf";
-				break;
 			case RASTER:
 				ext = "png";
 				break;
@@ -765,9 +762,6 @@ public class PlotPanel extends TabbedLayerPanel {
 			zos.putNextEntry(e);
 
 			switch (format) {
-			case PDF:
-				canvas.writePDF(zos, new Coord<Integer>(width, height));
-				break;
 			case RASTER:
 				canvas.writePNG(zos, new Coord<Integer>(width, height));
 				break;

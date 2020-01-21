@@ -66,19 +66,11 @@ public class AwtSurfaceFactory
 	{
 
 		switch (type) {
-
 			case RASTER:
-
 				return new ImageSurface(new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB));
-				
 
 			case VECTOR:
 				return new SVGSurface(getScalarSurface(width, height));
-
-			case PDF:
-				return new PDFSurface(getScalarSurface(width, height));
-
-
 		}
 
 		return null;

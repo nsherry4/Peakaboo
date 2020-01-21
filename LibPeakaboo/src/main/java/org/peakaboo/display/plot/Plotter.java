@@ -73,7 +73,7 @@ public class Plotter {
 		boolean doBuffer = Display.useBuffer(size);
 		 
 		if (context.getSurfaceType() != SurfaceType.RASTER) {
-			//We can't do raster-based buffering if the drawing target is vector/pdf
+			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
 			drawToBuffer(data, settings, context, size);
 		} else if (doBuffer) {

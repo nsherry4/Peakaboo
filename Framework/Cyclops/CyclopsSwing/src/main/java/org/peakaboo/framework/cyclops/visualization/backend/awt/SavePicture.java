@@ -101,7 +101,6 @@ public class SavePicture extends JPanel
 
 		private static Icon getIcon(SurfaceType format) {
 			switch (format) {
-			case PDF: return StockIcon.MIME_PDF.toImageIcon(IconSize.ICON);
 			case RASTER: return StockIcon.MIME_RASTER.toImageIcon(IconSize.ICON);
 			case VECTOR: return StockIcon.MIME_SVG.toImageIcon(IconSize.ICON);
 			default: return null;
@@ -110,7 +109,6 @@ public class SavePicture extends JPanel
 		
 		private static String getName(SurfaceType format) {
 			switch (format) {
-			case PDF: return "PDF File";
 			case RASTER: return "Pixel Image (PNG)";
 			case VECTOR: return "Vector Image (SVG)";
 			default: return null;
@@ -121,7 +119,6 @@ public class SavePicture extends JPanel
 			switch (format) {
 			case RASTER: return "Pixel based images are a grid of coloured dots. They have a fixed size and level of detail.";
 			case VECTOR: return "Vector images use points, lines, and curves to define an image. They can be scaled to any size.";
-			case PDF: return "PDF files are a more print-oriented vector image format.";
 			default: return null;
 			}
 		}
@@ -316,9 +313,6 @@ public class SavePicture extends JPanel
 	
 	private void saveSurfaceType(SurfaceType format) {
 		switch (format) {
-		case PDF: 
-			savePDF();
-			return;	
 		case RASTER: 
 			savePNG();
 			return;
@@ -403,40 +397,6 @@ public class SavePicture extends JPanel
 
 	}
 
-
-	private void savePDF()
-	{
-
-		setEnabled(false);
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		
-		SimpleFileExtension pdf = new SimpleFileExtension("Portable Document Format", "pdf");
-		SwidgetFilePanels.saveFile(owner, "Save Picture As...", startingFolder, pdf, result -> {
-			if (!result.isPresent() ) {
-				return;
-			}
-			try {
-				OutputStream os = new FileOutputStream(result.get());				
-				controller.writePDF(os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
-				os.close();
-
-				startingFolder = result.get().getParentFile();
-				hide();
-				
-				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				setEnabled(true);
-				onComplete.accept(result);
-				
-			}
-			catch (IOException e)
-			{
-				CyclopsLog.get().log(Level.SEVERE, "Failed to save PDF", e);
-			}
-		});
-
-	}
-
-	
 	public File getStartingFolder()
 	{
 		return startingFolder;

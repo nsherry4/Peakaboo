@@ -283,7 +283,6 @@ public class MapperPanel extends TabbedLayerPanel {
 		
 		Supplier<SaveableSurface> surfaceFactory = () -> {
 			switch (format) {
-			case PDF: return AwtSurfaceFactory.createSaveableSurface(SurfaceType.PDF, width, height);
 			case RASTER: return AwtSurfaceFactory.createSaveableSurface(SurfaceType.RASTER, width, height);
 			case VECTOR:return AwtSurfaceFactory.createSaveableSurface(SurfaceType.VECTOR, width, height);
 			}

@@ -34,19 +34,8 @@ public class AreaPainter extends SpectrumPainter
 	{
 
 		traceData(p, traceType);
-
-		if (p.dr.drawToVectorSurface) {
-			// fill with flat green - this is due to a bug with pdf rendering in
-			// Poppler when showing gradients
-			p.context.setSource(bottomColour);
-			p.context.fillPreserve();
-
-		} else {
-
-			p.context.setSourceGradient(0, 0, topColour, 0, p.plotSize.y, bottomColour);
-			p.context.fillPreserve();
-
-		}
+		p.context.setSourceGradient(0, 0, topColour, 0, p.plotSize.y, bottomColour);
+		p.context.fillPreserve();
 
 		// stroke darker
 		p.context.setSource(strokeColour);

@@ -13,5 +13,4 @@ public enum SurfaceType
 {
 	RASTER,
 	VECTOR,
-	PDF
 }

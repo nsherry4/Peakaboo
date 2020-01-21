@@ -45,7 +45,7 @@ public class Mapper {
 		
 		
 		if (context.getSurfaceType() != SurfaceType.RASTER) {
-			//We can't do raster-based buffering if the drawing target is vector/pdf
+			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
 			mapmode.draw(size, data, settings, context, spectrumSteps);
 		} else if (doBuffer) {
