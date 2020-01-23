@@ -20,18 +20,17 @@ import org.peakaboo.framework.cyclops.Range;
 class DragSelection extends AbstractSelection {
 
 	private Coord<Integer> start, end;
-		
+	private List<Integer> points = new ArrayList<>();
+	
 	public DragSelection(MappingController map) {
 		super(map);
 	}
-		
-	public Coord<Integer> getStart()
-	{
+	
+	public Coord<Integer> getStart() {
 		return start;
 	}
 	
-	public void setStart(Coord<Integer> dragStart)
-	{
+	public void setStart(Coord<Integer> dragStart) {
 		if (dragStart != null) 
 		{
 			if (dragStart.x < 0) dragStart.x = 0;
@@ -52,21 +51,17 @@ class DragSelection extends AbstractSelection {
 
 	
 	
-	public Coord<Integer> getEnd()
-	{
+	public Coord<Integer> getEnd() {
 		return end;
 	}
 
-	public void setEnd(Coord<Integer> dragEnd)
-	{
-		if (dragEnd != null)
-		{
+	public void setEnd(Coord<Integer> dragEnd) {
+		if (dragEnd != null) {
 			if (dragEnd.x < 0) dragEnd.x = 0;
 			if (dragEnd.y < 0) dragEnd.y = 0;
 			if (dragEnd.x >= size().x) dragEnd.x = size().x-1;
 			if (dragEnd.y >= size().y) dragEnd.y = size().y-1;
 		}
-		
 		this.end = dragEnd;
 	}
 
@@ -76,10 +71,10 @@ class DragSelection extends AbstractSelection {
 	 */
 	private List<Integer> getPoints() {
 		trimSelectionToBounds();
-		List<Integer> indexes = new ArrayList<>();
+		points.clear();
 		
 		if (getStart() == null || getEnd() == null || getStart().equals(getEnd())) {
-			return indexes;
+			return points;
 		}
 		
 		final GridPerspective<Float> grid = new GridPerspective<>(size().x, size().y, 0f);
@@ -99,7 +94,7 @@ class DragSelection extends AbstractSelection {
 	}
 	
 	private List<Integer> getPointsRectangle(GridPerspective<Float> grid) {
-		List<Integer> indexes = new ArrayList<>();
+		points.clear();
 		
 		final int xstart = getStart().x;
 		final int ystart = getStart().y;
@@ -109,16 +104,16 @@ class DragSelection extends AbstractSelection {
 		
 		for (int y : new Range(ystart, yend)) {
 			for (int x : new Range(xstart, xend)) {
-				indexes.add( grid.getIndexFromXY(x, y) );
+				points.add( grid.getIndexFromXY(x, y) );
 			}
 		}
 		
-		return indexes;
+		return points;
 		
 	}
 	
 	private List<Integer> getPointsEllipse(GridPerspective<Float> grid) {
-		List<Integer> indexes = new ArrayList<>();
+		points.clear();
 		
 		final int xstart = Math.min(getStart().x, getEnd().x);
 		final int ystart = Math.min(getStart().y, getEnd().y);
@@ -136,12 +131,12 @@ class DragSelection extends AbstractSelection {
 				float y0 = (y - ystart) - b + 0.5f;	
 				float dist = (x0*x0) / (a*a) + (y0*y0) / (b*b);
 				if (dist <= 1f) {
-					indexes.add( grid.getIndexFromXY(x, y) );
+					points.add( grid.getIndexFromXY(x, y) );
 				}
 			}
 		}
 		
-		return indexes;
+		return points;
 	}
 		
 	@Override
