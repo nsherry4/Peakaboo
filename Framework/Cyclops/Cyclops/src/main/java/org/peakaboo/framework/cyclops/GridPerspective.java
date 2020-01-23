@@ -206,8 +206,8 @@ public class GridPerspective<T> implements Cloneable
 	public int north(int index) {
 		
 		IntPair coord = getXYFromIndex(index);
-		int x = coord.first - 1;
-		int y = coord.second;
+		int x = coord.first;
+		int y = coord.second - 1;
 		
 		if (!boundsCheck(x, y)) return -1;
 		return getIndexFromXY(x, y);
@@ -215,6 +215,17 @@ public class GridPerspective<T> implements Cloneable
 	}
 	
 	public int south(int index) {
+		
+		IntPair coord = getXYFromIndex(index);
+		int x = coord.first;
+		int y = coord.second + 1;
+		
+		if (!boundsCheck(x, y)) return -1;
+		return getIndexFromXY(x, y);
+				
+	}
+	
+	public int east(int index) {
 		
 		IntPair coord = getXYFromIndex(index);
 		int x = coord.first + 1;
@@ -225,22 +236,11 @@ public class GridPerspective<T> implements Cloneable
 				
 	}
 	
-	public int east(int index) {
-		
-		IntPair coord = getXYFromIndex(index);
-		int x = coord.first;
-		int y = coord.second+1;
-		
-		if (!boundsCheck(x, y)) return -1;
-		return getIndexFromXY(x, y);
-				
-	}
-	
 	public int west(int index) {
 		
 		IntPair coord = getXYFromIndex(index);
-		int x = coord.first;
-		int y = coord.second-1;
+		int x = coord.first - 1;
+		int y = coord.second;
 		
 		if (!boundsCheck(x, y)) return -1;
 		return getIndexFromXY(x, y);

@@ -78,15 +78,31 @@ class ShapeSelection extends AbstractSelection {
 		Set<Integer> outside = new HashSet<>();
 		Set<Integer> inside = new HashSet<>();
 		inside.addAll(points);
-		
+
 		//we start by adding all edge pixels which are not included in the trace
+		//X - top & bottom
 		for (int x = 0; x < grid.width; x++) {
 			int index = grid.getIndexFromXY(x, 0);
 			if (!inside.contains(index)) {
 				outside.add(index);
 			}
+			index = grid.getIndexFromXY(x, grid.height-1);
+			if (!inside.contains(index)) {
+				outside.add(index);
+			}
 		}
-		
+		//Y - left and right
+		for (int y = 0; y < grid.height; y++) {
+			int index = grid.getIndexFromXY(0, y);
+			if (!inside.contains(index)) {
+				outside.add(index);
+			}
+			index = grid.getIndexFromXY(grid.width-1, y);
+			if (!inside.contains(index)) {
+				outside.add(index);
+			}
+		}
+
 		//if there *are* no outside edge points, then the entire area is selected
 		if (outside.isEmpty()) {
 			points.clear();
@@ -113,6 +129,7 @@ class ShapeSelection extends AbstractSelection {
 		for (int i : outside) {
 			values.set(i, OUTSIDE);
 		}
+		
 		//then floodfill the values matrix from each original outside point
 		Deque<Integer> stack = new ArrayDeque<>();
 		stack.addAll(outside);
@@ -128,29 +145,34 @@ class ShapeSelection extends AbstractSelection {
 	}
 	
 	private void floodFill(List<Integer> values, Deque<Integer> stack, GridPerspective<Float> grid) {	
+		
+		/*
+		 * We track all pixels we've visited to or are going to visit. This ensures we
+		 * only visit each pixel once and provides a fast 'contains' check so that we
+		 * don't put the same pixel in the stack more than once.
+		 */
+		Set<Integer> visiting = new HashSet<>(stack);
+		
 		while (!stack.isEmpty()) {
 			int index = stack.pop();
 			values.set(index, OUTSIDE);
 
 			//recurse
-			int i;
+
+			int[] neighbours = new int[] { 
+					grid.north(index), 
+					grid.south(index), 
+					grid.east(index), 
+					grid.west(index) 
+				};
 			
-			//north
-			i = grid.north(index);
-			if (i >= 0 && values.get(i) == EMPTY) { stack.add(i); }
-			
-			//south
-			i = grid.south(index);
-			if (i >= 0 && values.get(i) == EMPTY) { stack.add(i); }
-			
-			//east
-			i = grid.east(index);
-			if (i >= 0 && values.get(i) == EMPTY) { stack.add(i); }
-			
-			//west
-			i = grid.west(index);
-			if (i >= 0 && values.get(i) == EMPTY) { stack.add(i); }
-			
+			for (int i : neighbours) {
+				if (i >= 0 && values.get(i) == EMPTY && !visiting.contains(i)) { 
+					stack.add(i);
+					visiting.add(i);
+				}
+			}
+						
 		}
 		
 	
