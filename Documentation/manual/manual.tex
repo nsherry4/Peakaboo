@@ -235,9 +235,30 @@ In addition to Peakaboo's normal mapping functionality (see the sections on Peak
 
 When viewing a Quick Map of a data set without dimensional information, the dimensions can be set or auto-detected from the \button{menu-settings}{Settings} menu.
 
-\tocsection{Saving, Exporting, and Loading Data}
+\tocsection{Saving and Loading Work Sessions}
 
-From the toolbar, you can \button{document-save-as}{Save} your session information so that next time you want to look at this XRF dataset, you can load this information (session) and not have to start from the beginning. As the scan data can be quite large, the saved session does not store the data itself. When reopening a session, the data must still be available in the same location for it to be automatically reloaded.
+If fitting of the spectrum has been has been done, it may be useful to save your work, so that it can be continued at a later time. Alternatively, the same fittings and parameters can be applied to a different spectrum. In either case, this can be done through the use of sessions. 
+
+From the toolbar, you can \button{document-save-as}{Save} your session to a file. Reloading a session can be done using the \button{document-open}{Open} button -- the same as if you were loading a data set. As the scan data can be quite large, the saved session does not store the data itself. When reopening a session, the data must still be available in the same location it was previously for it to be automatically reloaded.
+
+\tocsection{Saving and Exporting Spectral Data}
+
+Spectra that are collected in Peakaboo can be saved and/or exported in several different ways. These are all accessed through the \button{document-export}{Export} menu in the toolbar.
+
+
+\begin{description}
+
+\item [Images] This will save the current plot -- as you see it -- as an image in one of several formats. The most common of these is the \command{PNG} file format that stores images as a raster image (coloured dots of fixed size on a grid). It provides an image that is acceptable for everyday use, but is no longer acceptable in most journals. The \command{SVG} (Scalable Vector Graphics) format is a file type that uses lines and points to define an image, and therefore can be scaled to arbitrary size with image quality suitable for publishing. \command{SVG} images are not always compatible with older versions of other software.
+
+\item [Filtered Spectrum] This will save the current plot -- including any filtering -- as a \command{CSV} (Comma Separated Value) file. \command{CSV} files are a human-readable matrix of values separated by commas and line-breaks. They are readable by a broad set of other applications including spreadsheeting programs.
+
+\item [Filtered Data Set] Similar to the previous option. This will save {\em the entire data set}, including any filtering, as a \command{CSV} (Comma Separated Value) file.
+
+\item [Fittings] This option exports a listing of the fitted elements along with the relative heights and areas of the fitting curves for the current spectrum.
+
+\item [All-in-one Zip Archive] This will export an image of the plot, the session file, and information on the fittings to a single zip archive.
+
+\end{description}
 
 Your spectrum, as it appears in the window, can also be saved by selecting 
 \button{document-export}{Export Data} \menu\ \button{device-camera}{Plot as Image} from the toolbar or \shortcut{Control}{P}. Image format options include \command{PNG}, \command{SVG} or \command{PDF}. You can also save the fitting results as a text file by selecting \button{document-export}{Export Data} \menu\ \command{Fittings as Text}.
@@ -256,6 +277,7 @@ To view a full listing of built-in filters and their descriptions, see the appen
 
 The use of filters will obviously alter the spectrum. If you wish to see the original spectrum in addition to the filtered data, select \command{\button{view-menu}{View} \menu\ Raw Data Outline}.
 
+For a more detailed example of using a filter, as well as further descriptions of the filters available, see the appendix.
 
 \tocsection{Noise Removal}
 
@@ -266,9 +288,12 @@ Where applicable, noise removal filter parameters can be adjusted to suit the da
 
 \tocsection{Background Removal}
 
-When using background filters, it is usually best to leave 10\%-15\% of the background in place (default is 10\%) in order to prevent the background filter from removing all signal under the edges of the peak. When too much signal around the edges of a peak is removed, it can prevent peaks from being fitted to the proper intensity, or being fitted at all.
+When using background filters, it is usually best to leave 10\%-15\% of the background in place (default is 10\%) in order to prevent the background filter from removing all signal under the edges of the peak. When too much signal around the edges of a peak is removed, it can prevent peaks from being fitted to the proper intensity, or being fitted at all. The degree of application of each filter on the spectrum can be changed in the filter's settings.
 
-For a more detailed example of using a filter, see the appendix.
+Four mathematical filters: Brukner, Polynomial, Linear Trim and Square Snip have been provided. To most users, the effects of each filter will appear similar: the spectral background is reduced, thus making the peaks more pronounced. Background filters are most useful at the beginning of a study where the user may be unfamiliar with the identity of minor spectral peaks, or for enhancing graphical displays on posters. 
+
+However, the so-called background in XR Spectroscopy also contains contributions from characteristic peaks that are hidden beneath their envelopes. As such, background reduction may distort the shape and intensity of peaks and should generally be avoided if a detailed peak fitting is to be carried out. Background removal should also generally be avoided before mapping. There are often less destructive ways of obtaining good mapping results, such as using map filters or different fitting algorithms (see those sections for more details).
+
 
 
 
