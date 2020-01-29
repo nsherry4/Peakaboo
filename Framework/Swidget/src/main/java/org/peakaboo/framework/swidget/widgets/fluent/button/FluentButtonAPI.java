@@ -1,8 +1,10 @@
 package org.peakaboo.framework.swidget.widgets.fluent.button;
 
 import java.awt.Color;
+import java.awt.PopupMenu;
 
 import javax.swing.JComponent;
+import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 
 import org.peakaboo.framework.swidget.widgets.fluent.FluentAPI;
@@ -74,6 +76,29 @@ interface FluentButtonAPI<
 		return getSelf();
 	}
 
+	/**
+	 * Sets the Action to display the given popup menu
+	 * @param menu the menu to display
+	 */
+	default B withPopupMenuAction(JPopupMenu menu) {
+		return this.withPopupMenuAction(menu, false);
+	}
+	
+	/**
+	 * Sets the Action to display the given popup menu
+	 * @param menu the menu to display
+	 */
+	default B withPopupMenuAction(JPopupMenu menu, boolean rightAligned) {
+		B self = getSelf();
+		this.withAction(() -> {
+			int x = 0;
+			if (rightAligned) { 
+				x = (int)(self.getWidth() - menu.getPreferredSize().getWidth()); 
+			}
+			menu.show(self, x, self.getHeight());
+		});
+		return self;
+	}
 	
 	
 	

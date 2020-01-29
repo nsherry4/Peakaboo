@@ -143,31 +143,35 @@ public class PlotToolbar extends JToolBar {
 	}
 	
 	private FluentToolbarButton createExportMenuButton() {
-		exportMenuButton = new FluentToolbarButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Data");
 		exportMenu = new PlotMenuExport(plot);
-		exportMenuButton.withAction(() -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
+		exportMenuButton = new FluentToolbarButton()
+				.withIcon(StockIcon.DOCUMENT_EXPORT)
+				.withTooltip("Export Data")
+				.withPopupMenuAction(exportMenu);
 		return exportMenuButton;
 	}
 
 	private FluentToolbarButton createEnergyMenuButton() {
-		FluentToolbarButton menuButton = new FluentToolbarButton().withIcon("menu-energy").withTooltip("Energy & Peak Calibration");
 		energyMenu = new PlotMenuEnergy(plot, controller);
-		menuButton.withAction(() -> energyMenu.show(menuButton, (int)(menuButton.getWidth() - energyMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
-		return menuButton;
+		return new FluentToolbarButton()
+				.withIcon("menu-energy")
+				.withTooltip("Energy & Peak Calibration")
+				.withPopupMenuAction(energyMenu, true);
 	}
 	
 	private FluentToolbarButton createMainMenuButton() {
-		FluentToolbarButton menuButton = new FluentToolbarButton(StockIcon.MENU_MAIN).withTooltip("Main Menu");
 		mainMenu = new PlotMenuMain(plot, controller);
-		menuButton.withAction(() -> mainMenu.show(menuButton, (int)(menuButton.getWidth() - mainMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
-		return menuButton;
+		return new FluentToolbarButton(StockIcon.MENU_MAIN)
+				.withTooltip("Main Menu")
+				.withPopupMenuAction(mainMenu, true);
 	}
 
 	private FluentToolbarButton createViewMenuButton() {
-		FluentToolbarButton menuButton = new FluentToolbarButton().withIcon("menu-view").withTooltip("Plot Settings Menu");
 		viewMenu = new PlotMenuView(plot, controller);
-		menuButton.withAction(() -> viewMenu.show(menuButton, (int)(menuButton.getWidth() - viewMenu.getPreferredSize().getWidth()), menuButton.getHeight()));
-		return menuButton;
+		return new FluentToolbarButton()
+				.withIcon("menu-view")
+				.withTooltip("Plot Settings Menu")
+				.withPopupMenuAction(viewMenu, true);
 	}
 	
 	
