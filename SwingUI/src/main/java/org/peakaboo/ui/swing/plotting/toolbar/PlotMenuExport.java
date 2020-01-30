@@ -43,7 +43,7 @@ public class PlotMenuExport extends JPopupMenu {
 		snapshotMenuItem = new FluentMenuItem()
 				.withText("Plot as Image\u2026")
 				.withTooltip("Saves the current plot as an image")
-				.withIcon(StockIcon.DEVICE_CAMERA)
+				.withIcon(StockIcon.MIME_RASTER)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_P)
 				.withAction(plot::actionSavePicture);
