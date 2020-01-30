@@ -23,7 +23,7 @@ public class HeaderTabBuilder {
 		linker = new ButtonLinker();
 	}
 	
-	public void addTab(String title, Component component) {
+	public FluentToggleButton addTab(String title, Component component) {
 		body.add(component, title);
 		FluentToggleButton button = new FluentToggleButton(title)
 				.withAction(() -> layout.show(body, title));
@@ -35,6 +35,8 @@ public class HeaderTabBuilder {
 			button.setSelected(true);
 			layout.show(body, title);
 		}
+		
+		return button;
 		
 	}
 	

@@ -15,6 +15,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 import org.peakaboo.calibration.CalibrationProfile;
@@ -22,7 +23,9 @@ import org.peakaboo.common.ConfigurationLoadException;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.PlotUpdateType;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.Swidget;
@@ -33,6 +36,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
+import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentMenuItem;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
@@ -48,14 +52,15 @@ public class ProfileManager extends HeaderLayer {
 	
 	protected JPanel body;
 	protected List<ProfilePlot> profileplots = new ArrayList<>();
-
+	private FluentToggleButton ktab, ltab, mtab;
+	private ProfilePlot kplot, lplot, mplot;
 	
 	private JPanel namePanel;
 	private JTextField nameField;
 	private boolean nameShown = false;
 
 	
-	private FluentButton create, open, clear, save;
+	private FluentButton create, open, clear, save, export;
 	
 	public ProfileManager(PlotPanel parent, PlotController controller) {
 		super(parent, true);
@@ -74,8 +79,8 @@ public class ProfileManager extends HeaderLayer {
 			}
 			
 			updateNamePanel();
-			
 			save.setEnabled(controller.calibration().hasCalibrationReference());
+			export.setEnabled(controller.calibration().hasCalibrationProfile());
 			
 		};
 		controller.addListener(listener);
@@ -89,7 +94,7 @@ public class ProfileManager extends HeaderLayer {
 		
 		
 		create = new FluentButton(StockIcon.DOCUMENT_NEW)
-				.withTooltip("Create Z-Calibration Profile")
+				.withTooltip("Create New Z-Calibration Profile")
 				.withButtonSize(FluentButtonSize.LARGE)
 				.withAction(() -> promptCreateProfile(this::actionLoadCalibrationReference));
 		
@@ -107,9 +112,26 @@ public class ProfileManager extends HeaderLayer {
 				.withTooltip("Save New Z-Calibration Profile")
 				.withButtonSize(FluentButtonSize.LARGE)
 				.withAction(this::actionSaveCalibrationProfile);
-		
 		save.setEnabled(controller.calibration().hasCalibrationReference());
-		ButtonLinker buttons = new ButtonLinker(create, open, save, clear);
+		
+		JPopupMenu exportMenu = new JPopupMenu();
+		FluentMenuItem exportImage = new FluentMenuItem("Profile to Image")
+				.withIcon(StockIcon.MIME_RASTER)
+				.withAction(this::actionExportProfileImage);
+		FluentMenuItem exportCSV = new FluentMenuItem("Profile to CSV")
+				.withIcon(StockIcon.DOCUMENT_EXPORT)
+				.withAction(this::actionExportProfileCSV);
+		exportMenu.add(exportImage);
+		exportMenu.add(exportCSV);
+		
+		export = new FluentButton(StockIcon.DOCUMENT_EXPORT)
+				.withTooltip("Export Z-Calibration Profile")
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withPopupMenuAction(exportMenu);
+		export.setEnabled(controller.calibration().hasCalibrationProfile());
+		
+		
+		ButtonLinker buttons = new ButtonLinker(create, open, save, clear, export);
 		makeNamePanel();
 
 		//View controls
@@ -163,18 +185,15 @@ public class ProfileManager extends HeaderLayer {
 		//plot views
 		HeaderTabBuilder tabBuilder = new HeaderTabBuilder();
 		
-		ProfilePlot kplot = new ProfilePlot(profile, source, TransitionShell.K);
-		ProfilePlot lplot = new ProfilePlot(profile, source, TransitionShell.L);
-		ProfilePlot mplot = new ProfilePlot(profile, source, TransitionShell.M);
+		kplot = new ProfilePlot(profile, source, TransitionShell.K);
+		lplot = new ProfilePlot(profile, source, TransitionShell.L);
+		mplot = new ProfilePlot(profile, source, TransitionShell.M);
 		profileplots.add(kplot);
 		profileplots.add(lplot);
 		profileplots.add(mplot);
-
-		
-		
-		tabBuilder.addTab("K Series", kplot);
-		tabBuilder.addTab("L Series", lplot);
-		tabBuilder.addTab("M Series", mplot);
+		ktab = tabBuilder.addTab("K Series", kplot);
+		ltab = tabBuilder.addTab("L Series", lplot);
+		mtab = tabBuilder.addTab("M Series", mplot);
 		
 		body.add(tabBuilder.getBody(), BorderLayout.CENTER);
 		getHeader().setComponents(left, tabBuilder.getTabStrip(), right);
@@ -183,6 +202,60 @@ public class ProfileManager extends HeaderLayer {
 	}
 
 	
+	//TODO
+	public void actionExportProfileImage() {
+		
+		ProfilePlot plot = kplot;
+		if (ltab.isSelected()) { plot = lplot; }
+		if (mtab.isSelected()) { plot = mplot; }
+		
+		SavePicture sp = new SavePicture(parent, plot, controller.io().getLastFolder(), file -> {
+			if (file.isPresent()) {
+				controller.io().setLastFolder(file.get().getParentFile());
+			}
+		});
+		sp.show();
+	}
+	
+	//TODO
+	public void actionExportProfileCSV() {
+		SimpleFileExtension ext = new SimpleFileExtension("Comma Separated Values", "csv");
+		SwidgetFilePanels.saveFile(parent, "Export Z-Calibration Profile", controller.io().getLastFolder(), ext, file -> {
+			if (!file.isPresent()) {
+				return;
+			}
+			controller.io().setLastFolder(file.get().getParentFile());
+			actionExportProfileCSV(file.get());
+			
+		});
+	}
+	
+	public void actionExportProfileCSV(File target) {
+		try (FileWriter writer = new FileWriter(target)) {
+			CalibrationProfile profile = controller.calibration().getCalibrationProfile();
+			if (profile == null) {
+				return;
+			}
+			
+			writer.write("Element Name, Element Symbol, Element Number, Shell, Value\n");
+			
+			for (TransitionShell shell : TransitionShell.values()) {
+				for (ITransitionSeries ts : profile.getTransitionSeries(shell)) {
+					writer.write(
+							ts.getElement() + ", " +
+							ts.getElement().name() + ", " +
+							ts.getElement().atomicNumber() + ", " + 
+							ts.getShell().name() + ", " + 
+							profile.getCalibration(ts) + "\n"
+						);
+				}
+			}
+			
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to save Z-Calibration Profile", e);
+		}
+
+	}
 	
 	public void actionSaveCalibrationProfile() {
 		
@@ -206,9 +279,9 @@ public class ProfileManager extends HeaderLayer {
 		
 		//save the profile
 		saveCalibrationProfile(profile);
-		
 	
 	}
+		
 	
 	private void makeNamePanel() {
 		namePanel = new JPanel(new BorderLayout(Spacing.small, Spacing.small));
