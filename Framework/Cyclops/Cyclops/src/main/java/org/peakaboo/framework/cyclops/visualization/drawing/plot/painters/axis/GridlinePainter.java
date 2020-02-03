@@ -27,7 +27,10 @@ public class GridlinePainter extends PlotPainter
 	{
 		
 		float valueRangeStart = tick.start;
-		float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
+		float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log);	
+		if (tick.log) {
+			valueRangeEnd = (float) Math.exp(valueRangeEnd);						
+		}
 		float maxTicks = tick.calcMaxTicks(p, p.plotSize.y);
 	
 		List<Pair<Float, Integer>> tickData = AxisMarkGenerator.getAxisMarkList(maxTicks, p.plotSize.y, 1, valueRangeStart, valueRangeEnd);
@@ -37,9 +40,9 @@ public class GridlinePainter extends PlotPainter
 		
 		float tickPercent;
 		float yPos;
-		for (Pair<Float, Integer> tick : tickData)
+		for (Pair<Float, Integer> aTick : tickData)
 		{
-			tickPercent = tick.first;
+			tickPercent = aTick.first;
 			yPos = tickPercent * p.plotSize.y;
 			AxisMarkGenerator.drawLine(p.context, 0, yPos, p.plotSize.x, yPos);
 			

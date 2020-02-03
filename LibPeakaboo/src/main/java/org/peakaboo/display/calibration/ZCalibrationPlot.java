@@ -69,10 +69,10 @@ public abstract class ZCalibrationPlot {
 		
 		//tick formatters for ticks/gridlines
 		Function<Integer, String> sensitivityFormatter = getYAxisFormatter();
-		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter)
+		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter)
 				.withRotate(true)
 				.withLog(logView);
-		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity*100f, sensitivityFormatter)
+		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter)
 				.withRotate(true)
 				.withLog(logView);
 		TickFormatter tickTop = null;
@@ -121,14 +121,17 @@ public abstract class ZCalibrationPlot {
 		return plotDrawing;
 	}
 	
+	/**
+	 * Converts a profile into a spectrum, multiplying everything by 100 to make it into a human-readable percentage value
+	 */
 	private static Spectrum profileToSpectrum(Map<ITransitionSeries, Float> values, TransitionShell tst, int startOrdinal, int stopOrdinal) {	
 		
 		Spectrum spectrum = new ISpectrum(stopOrdinal - startOrdinal + 1);
 		float value = 0;
 		for (int ordinal = startOrdinal; ordinal <= stopOrdinal; ordinal++) {
 			ITransitionSeries ts = new PrimaryTransitionSeries(Element.values()[ordinal], tst);
-			if (ts != null && values.containsKey(ts)) {
-				value = values.get(ts);
+			if (values.containsKey(ts)) {
+				value = values.get(ts) * 100f;
 			} else {
 				value = 0f;
 			}

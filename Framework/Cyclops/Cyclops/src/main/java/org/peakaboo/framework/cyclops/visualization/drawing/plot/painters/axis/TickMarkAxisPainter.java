@@ -39,10 +39,16 @@ public class TickMarkAxisPainter extends AxisPainter
 	@Override
 	public void drawElement(PainterData p)
 	{
+		try {
+		
 		drawTopXAxis(p, xTopValueBounds);
 		drawBottomXAxis(p, xBottomValueBounds);
 		drawLeftYAxis(p, yLeftValueBounds);
 		drawRightYAxis(p, yRightValueBounds);
+		
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 		
 	}
 	
@@ -224,7 +230,10 @@ public class TickMarkAxisPainter extends AxisPainter
 			float maxTicks = calcMaxTicksInternal(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
 			float valueRangeStart = tick.start;
-			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
+			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log);	
+			if (tick.log) {
+				valueRangeEnd = (float) Math.exp(valueRangeEnd);						
+			}
 			float valueRange = valueRangeEnd - valueRangeStart;
 			
 			
@@ -243,8 +252,8 @@ public class TickMarkAxisPainter extends AxisPainter
 				position = axesData.yPositionBounds.start + otherAxisSize.first + axisHeight * percentAlongAxis;
 				
 				if (tick.log) {
-					tickValue = (float)Math.exp(  (1.0 - percentAlongAxis) * (Math.log(valueRange) + 1.0)  ) - 1.0f;
-					roundedTickValue = SigDigits.toIntSigDigit(tickValue, 2);
+					tickValue = (float)Math.exp(  (1.0 - percentAlongAxis) * Math.log1p(valueRange)  ) - 1.0f;
+					roundedTickValue = SigDigits.toIntSigDigit(tickValue, 2);					
 				} else {
 					roundedTickValue = currentValue;
 				}
@@ -273,7 +282,7 @@ public class TickMarkAxisPainter extends AxisPainter
 					}
 							
 				}
-				
+
 			}
 			
 		p.context.restore();
@@ -303,7 +312,10 @@ public class TickMarkAxisPainter extends AxisPainter
 			float maxTicks = calcMaxTicksInternal(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
 			float valueRangeStart = tick.start;
-			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, false);
+			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log);	
+			if (tick.log) {
+				valueRangeEnd = (float) Math.exp(valueRangeEnd);						
+			}
 			float valueRange = valueRangeEnd - valueRangeStart;
 			
 			List<Pair<Float, Integer>> tickLocations = AxisMarkGenerator.getAxisMarkList(maxTicks, axisHeight, 1, valueRangeStart, valueRangeEnd);
@@ -321,8 +333,8 @@ public class TickMarkAxisPainter extends AxisPainter
 				position = axesData.yPositionBounds.start + otherAxisSize.first + axisHeight * percentAlongAxis;
 				
 				if (tick.log) {
-					tickValue = (float)Math.exp(  (1.0 - percentAlongAxis) * (Math.log(valueRange) + 1.0)  ) - 1.0f;
-					roundedTickValue = SigDigits.toIntSigDigit(tickValue, 2);
+					tickValue = (float)Math.exp(  (1.0 - percentAlongAxis) * Math.log1p(valueRange)  ) - 1.0f;
+					roundedTickValue = SigDigits.toIntSigDigit(tickValue, 2);	
 				} else {
 					roundedTickValue = currentValue;
 				}
