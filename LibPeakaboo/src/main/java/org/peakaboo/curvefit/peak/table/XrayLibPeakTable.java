@@ -10,7 +10,6 @@ import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.RangeSet;
 
 import com.github.tschoonj.xraylib.Xraylib;
-import com.github.tschoonj.xraylib.XraylibException;
 
 public class XrayLibPeakTable implements PeakTable {
 
@@ -103,7 +102,7 @@ public class XrayLibPeakTable implements PeakTable {
 			lineEnergy(elem, line);
 			lineRelativeIntensity(elem, line);
 			return true;
-		} catch (XraylibException ex) {
+		} catch (IllegalArgumentException ex) {
 			return false;
 		}
 	}
