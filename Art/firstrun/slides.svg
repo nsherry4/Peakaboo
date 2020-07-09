@@ -223,9 +223,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="svg1922"
      inkscape:document-units="mm"
-     inkscape:cy="175.26746"
-     inkscape:cx="291.38055"
-     inkscape:zoom="1"
+     inkscape:cy="178.8847"
+     inkscape:cx="262.14447"
+     inkscape:zoom="1.4142136"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -283,6 +283,40 @@
        x="0"
        y="-66.145836"
        transform="scale(1,-1)" />
+  </g>
+  <g
+     style="display:inline"
+     inkscape:label="Progress"
+     id="layer13"
+     inkscape:groupmode="layer">
+    <g
+       transform="translate(3.6414032)"
+       id="g3945">
+      <circle
+         style="opacity:1;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         id="path3925"
+         cx="71.233597"
+         cy="5.3095508"
+         r="0.93482566" />
+      <circle
+         r="0.93482566"
+         cy="5.3095508"
+         cx="74.233597"
+         id="circle3933"
+         style="opacity:1;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+      <circle
+         style="opacity:1;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         id="circle3935"
+         cx="77.233597"
+         cy="5.3095508"
+         r="0.93482566" />
+      <circle
+         r="0.93482566"
+         cy="5.3095508"
+         cx="80.233597"
+         id="circle3937"
+         style="opacity:1;fill:#ffffff;fill-opacity:0;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+    </g>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -355,6 +389,13 @@
          d="m 135.16916,0.93275958 c -1.15258,1.92481262 -3.34415,4.21305412 -4.4483,5.13353662 0.70463,-0.2880077 2.0859,-0.8160152 3.12487,-0.9322427 -1.41008,4.0914052 -6.57061,4.4582564 -10.73113,5.0730755 6.70796,0.548473 12.44729,-1.006426 13.48858,-5.0606731 1.02439,0.139841 2.3343,0.6421149 3.01377,0.9198403 -1.10416,-0.9204825 -3.2952,-3.208724 -4.44779,-5.13353662 z"
          style="display:inline;fill:#ffc107;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="path2786" />
+      <circle
+         transform="translate(3.6414033)"
+         r="0.93482566"
+         cy="5.3095508"
+         cx="71.233597"
+         id="circle3956"
+         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:0.5;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
     </g>
   </g>
   <g
@@ -435,6 +476,12 @@
            id="path2919"
            sodipodi:nodetypes="ccssssccc" />
       </g>
+      <circle
+         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:0.5;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         id="circle3962"
+         cx="77.875"
+         cy="5.3095508"
+         r="0.93482566" />
     </g>
   </g>
   <g
@@ -527,6 +574,12 @@
            x="76.419281"
            id="tspan3920"
            sodipodi:role="line">Fe</tspan></text>
+      <circle
+         r="0.93482566"
+         cy="5.3095508"
+         cx="80.875"
+         id="circle3969"
+         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:0.5;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
     </g>
   </g>
   <g
@@ -786,6 +839,12 @@
              style="font-size:2.5508px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.478276;stroke-opacity:1"
              id="tspan3709">10</tspan></text>
       </g>
+      <circle
+         style="display:inline;opacity:1;fill:#ffffff;fill-opacity:0.5;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+         id="circle3974"
+         cx="83.875"
+         cy="5.3095508"
+         r="0.93482566" />
     </g>
   </g>
 </svg>
