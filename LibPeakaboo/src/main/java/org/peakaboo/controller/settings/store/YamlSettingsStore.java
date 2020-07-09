@@ -24,7 +24,8 @@ public class YamlSettingsStore implements SettingsStore {
 		if (!Files.exists(filepath)) {
 			write();
 		}
-		String yaml = Files.readString(filepath);
+		//TODO: replace with Files.readString in Java11+
+		String yaml = new String(Files.readAllBytes(filepath));
 		values = YamlSerializer.deserialize(yaml);
 	}
 	
@@ -42,7 +43,8 @@ public class YamlSettingsStore implements SettingsStore {
 	private void write() {
 		String yaml = YamlSerializer.serialize(values);
 		try {
-			Files.writeString(filepath, yaml, 
+			//TODO: replace with Files.writeString in Java11+
+			Files.write(filepath, yaml.getBytes(), 
 					StandardOpenOption.CREATE, 
 					StandardOpenOption.DSYNC, 
 					StandardOpenOption.WRITE, 
