@@ -54,6 +54,7 @@ import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
+import org.peakaboo.controller.settings.store.Settings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -119,6 +120,7 @@ import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import org.peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
+import org.peakaboo.ui.swing.plotting.guides.FirstRun;
 import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
 import org.peakaboo.ui.swing.plugins.PluginsOverview;
@@ -156,6 +158,8 @@ public class PlotPanel extends TabbedLayerPanel {
 		setWidgetsState();
 		
 		doVersionCheck();
+		
+		doFirstRun();
 
 	}
 	
@@ -176,6 +180,15 @@ public class PlotPanel extends TabbedLayerPanel {
 			}); //thread
 			versionCheck.setDaemon(true);
 			versionCheck.start();
+		}
+	}
+	
+	private void doFirstRun() {
+		String key = "peakaboo.firstrun";
+		if (!Settings.provider().getBoolean(key, false)) {
+			Settings.provider().setBoolean(key, true);
+			FirstRun fr = new FirstRun(this);
+			this.pushLayer(fr);
 		}
 	}
 	

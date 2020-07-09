@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -18,6 +19,8 @@ import org.peakaboo.common.PeakabooConfiguration.MemorySize;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.common.Version.ReleaseType;
+import org.peakaboo.controller.settings.store.Settings;
+import org.peakaboo.controller.settings.store.YamlSettingsStore;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
@@ -181,6 +184,14 @@ public class Peakaboo {
 		peakLoader.start();
 		
 		Swidget.initialize(Version.splash, Version.logo, "Peakaboo", () -> {
+			//Init settings store
+			try {
+				Settings.init(new YamlSettingsStore(DesktopApp.appDir("Settings")));
+			} catch (IOException e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to load persistent settings, Peakaboo must now exit.", e);
+				System.exit(2);
+			}
+			
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();
