@@ -1,4 +1,5 @@
-# Peakaboo [![Build Status](https://travis-ci.org/nsherry4/Peakaboo.svg?branch=master)](https://travis-ci.org/nsherry4/Peakaboo)
+# Peakaboo [![Actions Status](https://github.com/nsherry4/Peakaboo/workflows/Java%20CI/badge.svg)](https://github.com/nsherry4/Peakaboo/actions)
+
 XRF Visualization Software
 
 Peakaboo allows users to identify the spectral origins of the XRF spectrum using a technique that fits all components of the K, L, or M spectrum including escape peaks and pileup peaks, and then plots their spatial intensity distributions as maps.
