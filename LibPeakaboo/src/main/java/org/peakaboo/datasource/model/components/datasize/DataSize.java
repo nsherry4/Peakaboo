@@ -13,6 +13,13 @@ public interface DataSize
 	 */
 	Coord<Integer> getDataDimensions();
 	
+	/**
+	 * Returns the size in terms of the total number of data points (ie x*y) 
+	 */
+	default int size() {
+		Coord<Integer> dims = getDataDimensions();
+		return dims.x * dims.y;
+	}
 	
 	/**
 	 * Get the x, y coordinates in the 2D raster map from the index

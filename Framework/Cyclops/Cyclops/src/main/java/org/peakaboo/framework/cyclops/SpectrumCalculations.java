@@ -262,6 +262,7 @@ public class SpectrumCalculations
 		return subtractFromList(data, target, value, Float.NaN);
 	}
 
+
 	/**
 	 * Subtracts value from each element in data
 	 * 
@@ -284,7 +285,7 @@ public class SpectrumCalculations
 	 * @param minimum
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static Spectrum subtractFromList(Spectrum source, final float value, final float minimum)
+	public static Spectrum subtractFromList(ReadOnlySpectrum source, final float value, final float minimum)
 	{
 
 		Spectrum result = new ISpectrum(source.size());
@@ -299,6 +300,18 @@ public class SpectrumCalculations
 		return result;
 	}
 
+	
+	public static Spectrum subtractFromList_inplace(Spectrum source, final float value) {
+		return subtractFromList_inplace(source, value, Float.NaN);
+	}
+	
+	public static Spectrum subtractFromList_inplace(Spectrum source, final float value, final float minimum) {
+		return subtractFromList(source, source, value, minimum);
+	}
+	
+	public static Spectrum subtractFromList(ReadOnlySpectrum source, Spectrum target, final float value) {
+		return subtractFromList(source, target, value, Float.NaN);
+	}
 	
 	/**
 	 * Subtracts value from each element in data, while keeping all values no lower than minimum
@@ -322,6 +335,41 @@ public class SpectrumCalculations
 		return target;
 	}
 
+	
+	public static Spectrum subtractListFrom_inplace(Spectrum source, final float value) {
+		return subtractListFrom_inplace(source, value, Float.NaN);
+	}
+	
+	public static Spectrum subtractListFrom_inplace(Spectrum source, final float value, final float minimum) {
+		return subtractListFrom(source, source, value, minimum);
+	}
+	
+	public static Spectrum subtractListFrom(ReadOnlySpectrum source, Spectrum target, final float value) {
+		return subtractListFrom(source, target, value, Float.NaN);
+	}
+	
+	/**
+	 * Subtracts each element in data from value, while keeping all values no lower than minimum
+	 * 
+	 * @param data
+	 * @param value
+	 * @param minimum
+	 * @return a copy of data, with value subtracted from each element
+	 */
+	public static Spectrum subtractListFrom(ReadOnlySpectrum source, Spectrum target, final float value, final float minimum)
+	{
+
+		float newvalue;
+		for (int i = 0; i < source.size(); i++)
+		{
+			newvalue = value - source.get(i);
+			if (!Float.isNaN(minimum) && value < minimum) newvalue = minimum;
+			target.set(i, newvalue);
+		}
+
+		return target;
+	}
+	
 	
 	public static Spectrum addToList(ReadOnlySpectrum data, float value) {
 		Spectrum copy = new ISpectrum(data.size());
