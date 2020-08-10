@@ -74,7 +74,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     	   	
     	
     	if (isMouseOver()) {
-    		base = Stratus.lighten(base);
+    		base = Stratus.lighten(base, getTheme().selectionLighten());
     	}
     	
     	//ENABLED is default

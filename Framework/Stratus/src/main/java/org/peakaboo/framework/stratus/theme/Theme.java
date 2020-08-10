@@ -72,6 +72,10 @@ public interface Theme {
 	default float borderRadius() {
 		return 5f;
 	}
+	
+	default float selectionLighten() {
+		return 0.05f;
+	}
 	 
 	
 	
