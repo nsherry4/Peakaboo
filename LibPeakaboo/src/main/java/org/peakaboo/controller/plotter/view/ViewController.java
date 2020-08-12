@@ -1,15 +1,8 @@
 package org.peakaboo.controller.plotter.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.logging.Level;
-
-import org.peakaboo.common.ConfigurationLoadException;
-import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.PlotController.PlotSpectra;
-import org.peakaboo.controller.settings.SavedPersistence;
+import org.peakaboo.controller.settings.Settings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.framework.cyclops.Pair;
@@ -20,17 +13,22 @@ public class ViewController extends Eventful
 {
 
 	
-	private ViewModel viewModel;
+	private SessionViewModel viewModel;
 	private PlotController plot;
+	
+	private static final String SETTING_MONOCHROME = "org.peakaboo.controller.plotter.view.monochrome";
+	private static final String SETTING_CONSTSCALE = "org.peakaboo.controller.plotter.view.constantscale";
+	private static final String SETTING_FITINTENSITY = "org.peakaboo.controller.plotter.view.fit.intensity";
+	private static final String SETTING_FITMARKERS = "org.peakaboo.controller.plotter.view.fit.markers";
+	private static final String SETTING_FITINDIVIDUAL = "org.peakaboo.controller.plotter.view.fit.individual";
 	
 	public ViewController(PlotController plotController)
 	{
 		this.plot = plotController;
-		viewModel = new ViewModel();
+		viewModel = new SessionViewModel();
 	}
 
-	public ViewModel getViewModel()
-	{
+	public SessionViewModel getViewModel() {
 		return viewModel;
 	}
 
@@ -42,44 +40,41 @@ public class ViewController extends Eventful
 
 	public float getZoom()
 	{
-		return viewModel.session.zoom;
+		return viewModel.zoom;
 	}
 
 	public void setZoom(float zoom)
 	{
-		viewModel.session.zoom = zoom;
+		viewModel.zoom = zoom;
 		updateListeners();
 	}
 
-	public void setShowIndividualSelections(boolean showIndividualSelections)
-	{
-		viewModel.persistent.showIndividualFittings = showIndividualSelections;
-		savePersistentSettings();
+	public void setShowIndividualSelections(boolean show) {
+		Settings.provider().setBoolean(SETTING_FITINDIVIDUAL, show);
 		setUndoPoint("Individual Fittings");
 		updateListeners();
 	}
 
-	public boolean getShowIndividualSelections()
-	{
-		return viewModel.persistent.showIndividualFittings;
+	public boolean getShowIndividualSelections() {
+		return Settings.provider().getBoolean(SETTING_FITINDIVIDUAL, false);
 	}
 
 	
 	public void setViewLog(boolean log)
 	{
-		viewModel.session.logTransform = log;
+		viewModel.logTransform = log;
 		setUndoPoint("Log View");
 		updateListeners();
 	}
 
 	public boolean getViewLog()
 	{
-		return viewModel.session.logTransform;
+		return viewModel.logTransform;
 	}
 
 	public void setChannelCompositeMode(ChannelCompositeMode mode)
 	{
-		viewModel.session.channelComposite = mode;
+		viewModel.channelComposite = mode;
 		setUndoPoint(mode.show());
 		plot.filtering().filteredDataInvalidated();
 	}
@@ -87,13 +82,13 @@ public class ViewController extends Eventful
 
 	public ChannelCompositeMode getChannelCompositeMode()
 	{
-		return viewModel.session.channelComposite;
+		return viewModel.channelComposite;
 	}
 
 	public void setScanNumber(int number)
 	{
 		//negative is downwards, positive is upwards
-		int direction = number - viewModel.session.scanNumber;
+		int direction = number - viewModel.scanNumber;
 
 		if (direction > 0)
 		{
@@ -115,75 +110,65 @@ public class ViewController extends Eventful
 			number = plot.data().getDataSet().getScanData().scanCount() - 1;
 		}
 		if (number < 0) number = 0;
-		viewModel.session.scanNumber = number;
+		viewModel.scanNumber = number;
 		plot.filtering().filteredDataInvalidated();
 	}
 
 	public int getScanNumber()
 	{
-		return viewModel.session.scanNumber;
+		return viewModel.scanNumber;
 	}
 
-	public void setMonochrome(boolean mono)
-	{
-		viewModel.persistent.monochrome = mono;
-		savePersistentSettings();
+	public void setMonochrome(boolean mono) {
+		Settings.provider().setBoolean(SETTING_MONOCHROME, mono);
 		setUndoPoint("Monochrome");
 		updateListeners();
 	}
 
-	public boolean getMonochrome()
-	{
-		return viewModel.persistent.monochrome;
+	public boolean getMonochrome() 	{
+		return Settings.provider().getBoolean(SETTING_MONOCHROME, false);
 	}
 	
 	public void setConsistentScale(Boolean consistent) {
-		viewModel.persistent.consistentScale = consistent;
-		savePersistentSettings();
+		Settings.provider().setBoolean(SETTING_CONSTSCALE, consistent);
 		setUndoPoint("Consistent Scale");
 		updateListeners();
 	}
 	
 	public boolean getConsistentScale() {
-		return viewModel.persistent.consistentScale;
+		return Settings.provider().getBoolean(SETTING_CONSTSCALE, true);
 	}
 
-	public void setShowElementMarkers(boolean show)
-	{
-		viewModel.persistent.showElementFitMarkers = show;
-		savePersistentSettings();
+	public void setShowElementMarkers(boolean show) {
+		Settings.provider().setBoolean(SETTING_FITMARKERS, show);
 		setUndoPoint("Fitting Markers");
 		updateListeners();
 	}
 
-	public void setShowElementIntensities(boolean show)
-	{
-		viewModel.persistent.showElementFitIntensities = show;
-		savePersistentSettings();
+	public void setShowElementIntensities(boolean show) {
+		Settings.provider().setBoolean(SETTING_FITINTENSITY, show);
 		setUndoPoint("Fitting Heights");
 		updateListeners();
 	}
 
-	public boolean getShowElementMarkers()
-	{
-		return viewModel.persistent.showElementFitMarkers;
+	public boolean getShowElementMarkers() {
+		return Settings.provider().getBoolean(SETTING_FITMARKERS, true);
 	}
 
-	public boolean getShowElementIntensities()
-	{
-		return viewModel.persistent.showElementFitIntensities;
+	public boolean getShowElementIntensities() {
+		return Settings.provider().getBoolean(SETTING_FITINTENSITY, false);
 	}
 
 	public void setShowRawData(boolean show)
 	{
-		viewModel.session.backgroundShowOriginal = show;
+		viewModel.backgroundShowOriginal = show;
 		setUndoPoint("Raw Data Outline");
 		updateListeners();
 	}
 
 	public boolean getShowRawData()
 	{
-		return viewModel.session.backgroundShowOriginal;
+		return viewModel.backgroundShowOriginal;
 	}
 	
 	public float getEnergyForChannel(int channel)
@@ -210,65 +195,23 @@ public class ViewController extends Eventful
 
 	
 	public boolean getLockPlotHeight() {
-		return viewModel.session.lockPlotHeight;
+		return viewModel.lockPlotHeight;
 	}
 	public void setLockPlotHeight(boolean lock) {
-		viewModel.session.lockPlotHeight = lock;
+		viewModel.lockPlotHeight = lock;
 		updateListeners();
 	}
 	
 	
 	public boolean getShowTitle() {
-		return viewModel.session.showTitle;
+		return viewModel.showTitle;
 	}
 	
 	public void setShowTitle(boolean showTitle) {
-		viewModel.session.showTitle = showTitle;
+		viewModel.showTitle = showTitle;
 		updateListeners();
 	}
 	
-
-	
-	/**
-	 * This should really only be called at creation time, since it loads settings 
-	 * from disk and does not create an undo point.
-	 */
-	public void loadPersistentSettings() {
-		File file = new File(plot.getConfigDir() + "/settings.yaml");
-		if (!file.exists()) {
-			savePersistentSettings();
-		}
-		try {
-			
-			byte[] bytes = Files.readAllBytes(file.toPath());
-			String yaml = new String(bytes);
-			SavedPersistence saved = SavedPersistence.deserialize(yaml);
-			saved.loadInto(plot);
-					
-		} catch (IOException | ConfigurationLoadException e) {
-			PeakabooLog.get().log(Level.WARNING, "Could not load persistent settings", e);
-		}
-		
-		plot.filtering().filteredDataInvalidated();
-		plot.fitting().fittingDataInvalidated();
-		updateListeners();
-		
-	}
-	
-	
-	private void savePersistentSettings() {
-		File file = new File(plot.getConfigDir() + "/settings.yaml");
-		try {
-			
-			SavedPersistence saved = SavedPersistence.storeFrom(plot);
-			String yaml = saved.serialize();
-			byte[] bytes = yaml.getBytes();
-			Files.write(file.toPath(), bytes);
-			
-		} catch (IOException e) {
-			PeakabooLog.get().log(Level.WARNING, "Could not save persistent settings", e);
-		}
-	}
 
 	public PlotSettings getPlotSettings() {
 		

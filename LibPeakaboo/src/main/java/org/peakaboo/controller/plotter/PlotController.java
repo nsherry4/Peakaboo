@@ -72,7 +72,6 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		fittingController = new FittingController(this);
 		calibrationController = new CalibrationController(this);
 		viewController = new ViewController(this);
-		viewController.loadPersistentSettings();
 		ioController = new IOController();
 		
 		undoController.addListener(() -> updateListeners(PlotUpdateType.UNDO));

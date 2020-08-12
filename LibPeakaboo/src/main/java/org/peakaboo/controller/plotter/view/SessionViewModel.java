@@ -35,5 +35,16 @@ public class SessionViewModel {
 	{
 		this.channelComposite = ChannelCompositeMode.valueOf(channelComposite);
 	}
+
+
+	public void copy(SessionViewModel view) {
+		this.scanNumber = view.scanNumber;
+		this.channelComposite = view.channelComposite;
+		this.backgroundShowOriginal = view.backgroundShowOriginal;
+		this.zoom = view.zoom;
+		this.lockPlotHeight = view.lockPlotHeight;
+		this.logTransform = view.logTransform;
+		this.showTitle = view.showTitle;
+	}
 	
 }

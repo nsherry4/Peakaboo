@@ -1,4 +1,4 @@
-package org.peakaboo.controller.settings.store;
+package org.peakaboo.controller.settings;
 
 public class Settings {
 

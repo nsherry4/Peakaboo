@@ -62,7 +62,7 @@ public class SavedSession {
 		saved.calibration = new SavedCalibrationSession().storeFrom(plotController.calibration());
 		
 		//store view settings -- this is done differently, since view's session settings is itself serializable
-		saved.view = plotController.view().getViewModel().session;
+		saved.view = plotController.view().getViewModel();
 		
 		
 
@@ -91,7 +91,7 @@ public class SavedSession {
 		
 		
 		//restore view settings directly, since it's model is serializable
-		plotController.view().getViewModel().session = this.view;
+		plotController.view().getViewModel().copy(this.view);
 
 	}
 	

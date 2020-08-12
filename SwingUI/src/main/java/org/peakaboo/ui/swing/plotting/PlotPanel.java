@@ -54,7 +54,7 @@ import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
-import org.peakaboo.controller.settings.store.Settings;
+import org.peakaboo.controller.settings.Settings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -184,7 +184,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 	
 	private void doFirstRun() {
-		String key = "peakaboo.firstrun";
+		String key = "org.peakaboo.ui.swing.firstrun";
 		if (!Settings.provider().getBoolean(key, false)) {
 			Settings.provider().setBoolean(key, true);
 			FirstRun fr = new FirstRun(this);

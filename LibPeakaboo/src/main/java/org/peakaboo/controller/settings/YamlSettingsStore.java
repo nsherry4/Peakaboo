@@ -1,4 +1,4 @@
-package org.peakaboo.controller.settings.store;
+package org.peakaboo.controller.settings;
 
 import java.io.File;
 import java.io.IOException;
