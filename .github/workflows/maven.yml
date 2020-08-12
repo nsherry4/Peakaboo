@@ -15,8 +15,11 @@ jobs:
         java-version: 9
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Create Datestamped Artifact
+      run: mv /home/runner/work/Peakaboo/Peakaboo/Peakaboo-*-SNAPSHOT.jar /home/runner/work/Peakaboo/Peakaboo/Peakaboo-SNAPSHOT-$(date +%Y%m%d).jar
+      shell: bash
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with: 
         name: Peakaboo Nightly
-        path: /home/runner/work/Peakaboo/Peakaboo/Peakaboo-*-SNAPSHOT.jar
+        path: /home/runner/work/Peakaboo/Peakaboo/Peakaboo-SNAPSHOT-$(date +%Y%m%d).jar
