@@ -39,31 +39,33 @@ public class XrayLibPeakTable implements PeakTable {
 	
 	public void readPeakTableXraylib() {
 		series = new ArrayList<>();
+
+		/*
+		 * NB: These constants are all defined as negative nubmers, so
+		 * they must be passed to the range in 'reverse' order
+		 */
 		
 		RangeSet kLines = new RangeSet();
-		kLines.addRange(new Range(-29, -1));
+		kLines.addRange(new Range(Xraylib.KP5_LINE, Xraylib.KL1_LINE));
 		
 		RangeSet lLines = new RangeSet();
-		lLines.addRange(new Range(-110, -30));
+		lLines.addRange(new Range(Xraylib.L3P4_LINE, Xraylib.L1L2_LINE));
 		//L1L*
-		lLines.removeRange(new Range(-30, -31));
+		lLines.removeRange(new Range(Xraylib.L1L2_LINE, Xraylib.L1L3_LINE));
 		//L2L*
-		lLines.removeRange(new Range(-59, -59));
+		lLines.removeRange(new Range(Xraylib.L2L3_LINE, Xraylib.L2L3_LINE));
 		
 		RangeSet mLines = new RangeSet();
-		mLines.addRange(new Range(-219, -114));
-		mLines.removeRange(new Range(-114, -117));
-		mLines.removeRange(new Range(-137, -139));
-		mLines.removeRange(new Range(-159, -160));
-		mLines.removeRange(new Range(-181, -181));
+		mLines.addRange(new Range(Xraylib.M5P5_LINE, Xraylib.M1M2_LINE));
+		//Remove lines from one m to another
+		mLines.removeRange(new Range(Xraylib.M1M2_LINE, Xraylib.M1M5_LINE));
+		mLines.removeRange(new Range(Xraylib.M2M3_LINE, Xraylib.M2M5_LINE));
+		mLines.removeRange(new Range(Xraylib.M3M4_LINE, Xraylib.M3M5_LINE));
+		mLines.removeRange(new Range(Xraylib.M4M5_LINE, Xraylib.M4M5_LINE));
 		
 		
 		for (Element e : Element.values()) {
 			readElementShell(kLines, e, TransitionShell.K);
-			
-			//Don't read the L1L2,L1L3 lines -- they're at a way lower energy value and can 
-			//mess up fitting on data where low energy ranges are poorly behaved
-			//readElementShell(-30,  -110, e, TransitionSeriesType.L);
 			readElementShell(lLines, e, TransitionShell.L);
 			readElementShell(mLines, e, TransitionShell.M);			
 		}
@@ -72,7 +74,6 @@ public class XrayLibPeakTable implements PeakTable {
 	
 	private void readElementShell(RangeSet lines, Element elem, TransitionShell tstype) {
 		PrimaryTransitionSeries ts = new PrimaryTransitionSeries(elem, tstype);
-		
 		//find the strongest transition line, so we can skip anything significantly weaker than it
 		float maxRel = 0f;
 		for (int line : lines) {
@@ -90,11 +91,11 @@ public class XrayLibPeakTable implements PeakTable {
 			
 			Transition t = new Transition(value, rel, elem.name() + " " + tstype.name() + " #" + line + " @" + value + " keV x " + rel*100 + "%");
 			ts.addTransition(t);
-
 		}
 		if (ts.hasTransitions()) {
 			add(ts);
 		}
+
 	}
 	
 	private static boolean hasLine(Element elem, int line) {
@@ -115,4 +116,5 @@ public class XrayLibPeakTable implements PeakTable {
 		return (float) Xraylib.CS_FluorLine_Kissel(elem.atomicNumber(), line, 20);
 	}
 	
+
 }

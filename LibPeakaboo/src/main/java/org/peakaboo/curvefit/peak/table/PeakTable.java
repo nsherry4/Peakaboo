@@ -28,7 +28,6 @@ public interface PeakTable {
 			.filter(Element.At)
 			.filter(Element.Rn)
 			.filter(Element.Fr)
-			.filter(Element.Ra)
 			.filter(Element.Pa)
 			.filter(Element.Np)
 			.filter(Element.Pu)
