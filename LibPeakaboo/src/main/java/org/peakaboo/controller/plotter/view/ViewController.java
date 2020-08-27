@@ -9,10 +9,8 @@ import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.eventful.Eventful;
 
 
-public class ViewController extends Eventful
-{
+public class ViewController extends Eventful {
 
-	
 	private SessionViewModel viewModel;
 	private PlotController plot;
 	
@@ -22,8 +20,7 @@ public class ViewController extends Eventful
 	private static final String SETTING_FITMARKERS = "org.peakaboo.controller.plotter.view.fit.markers";
 	private static final String SETTING_FITINDIVIDUAL = "org.peakaboo.controller.plotter.view.fit.individual";
 	
-	public ViewController(PlotController plotController)
-	{
+	public ViewController(PlotController plotController) {
 		this.plot = plotController;
 		viewModel = new SessionViewModel();
 	}
@@ -32,19 +29,16 @@ public class ViewController extends Eventful
 		return viewModel;
 	}
 
-	private void setUndoPoint(String change)
-	{
+	private void setUndoPoint(String change) {
 		plot.history().setUndoPoint(change);
 	}
 	
 
-	public float getZoom()
-	{
+	public float getZoom() {
 		return viewModel.zoom;
 	}
 
-	public void setZoom(float zoom)
-	{
+	public void setZoom(float zoom) {
 		viewModel.zoom = zoom;
 		updateListeners();
 	}
@@ -60,33 +54,28 @@ public class ViewController extends Eventful
 	}
 
 	
-	public void setViewLog(boolean log)
-	{
+	public void setViewLog(boolean log) {
 		viewModel.logTransform = log;
 		setUndoPoint("Log View");
 		updateListeners();
 	}
 
-	public boolean getViewLog()
-	{
+	public boolean getViewLog() {
 		return viewModel.logTransform;
 	}
 
-	public void setChannelCompositeMode(ChannelCompositeMode mode)
-	{
+	public void setChannelCompositeMode(ChannelCompositeMode mode) {
 		viewModel.channelComposite = mode;
 		setUndoPoint(mode.show());
 		plot.filtering().filteredDataInvalidated();
 	}
 	
 
-	public ChannelCompositeMode getChannelCompositeMode()
-	{
+	public ChannelCompositeMode getChannelCompositeMode() {
 		return viewModel.channelComposite;
 	}
 
-	public void setScanNumber(int number)
-	{
+	public void setScanNumber(int number) {
 		//negative is downwards, positive is upwards
 		int direction = number - viewModel.scanNumber;
 
@@ -114,8 +103,7 @@ public class ViewController extends Eventful
 		plot.filtering().filteredDataInvalidated();
 	}
 
-	public int getScanNumber()
-	{
+	public int getScanNumber() {
 		return viewModel.scanNumber;
 	}
 
@@ -159,20 +147,17 @@ public class ViewController extends Eventful
 		return Settings.provider().getBoolean(SETTING_FITINTENSITY, false);
 	}
 
-	public void setShowRawData(boolean show)
-	{
+	public void setShowRawData(boolean show) {
 		viewModel.backgroundShowOriginal = show;
 		setUndoPoint("Raw Data Outline");
 		updateListeners();
 	}
 
-	public boolean getShowRawData()
-	{
+	public boolean getShowRawData() {
 		return viewModel.backgroundShowOriginal;
 	}
 	
-	public float getEnergyForChannel(int channel)
-	{
+	public float getEnergyForChannel(int channel) {
 		if (!plot.data().hasDataSet()) return 0.0f;
 		EnergyCalibration calibration = new EnergyCalibration(
 				plot.fitting().getMinEnergy(), 
@@ -182,8 +167,7 @@ public class ViewController extends Eventful
 		return calibration.energyFromChannel(channel);
 	}
 
-	public Pair<Float, Float> getValueForChannel(int channel)
-	{
+	public Pair<Float, Float> getValueForChannel(int channel) {
 		if (channel == -1) return null;
 		if (channel >= plot.data().getDataSet().getAnalysis().channelsPerScan()) return null;
 
