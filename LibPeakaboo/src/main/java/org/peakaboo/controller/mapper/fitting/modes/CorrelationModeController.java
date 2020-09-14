@@ -149,6 +149,10 @@ public class CorrelationModeController extends ModeController {
 			if (ybin >= bins) { ybin = bins-1; }
 			
 			int bindex = grid.getIndexFromXY(xbin, ybin);
+			if (bindex == -1 || bindex > bins*bins) {
+				//index was out of bounds
+				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bins*bins);
+			}
 			translation.get(bindex).add(i);
 			correlation.set(bindex, correlation.get(bindex)+1);
 			
