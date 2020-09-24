@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.peakaboo.datasource.model.components.datasize.DataSize;
@@ -25,6 +27,8 @@ import org.peakaboo.framework.cyclops.Spectrum;
 
 public class SingleColumn extends AbstractDataSource {
 
+	private static final String splitPattern = "[,\\s]+";
+	
 	SimpleScanData scandata;
 	SimpleDataSize datasize;
 	@Override
@@ -122,11 +126,27 @@ public class SingleColumn extends AbstractDataSource {
 		
 		List<Float> floats = new SparsedList<>(new ArrayList<>());
 		
-		for (String line : lines) {
-			String[] parts = line.split("\\s+");
-			int index = Integer.parseInt(parts[0].trim());
-			float value = Float.parseFloat(parts[1].trim());
-			floats.set(index, value);
+		
+		String[] parts = lines.get(0).split(splitPattern);
+		if (parts.length == 2) {
+			SortedMap<Float, Float> entries = new TreeMap<>(Float::compare);
+			for (String line : lines) {
+				parts = line.split(splitPattern);
+				float order = toNumber(parts[0]);
+				float value = toNumber(parts[1]);
+				entries.put(order, value);
+			}
+			for (Float value : entries.values()) {
+				floats.add(value);
+			}
+		} else if (parts.length == 1) {
+			int index = 0;
+			for (String line : lines) {
+				float value = toNumber(line);
+				floats.set(index++, value);
+			}
+		} else {
+			throw new Exception("Invalid file format, expected 1 or 2 entries per line, found " + parts.length);
 		}
 		
 		Spectrum s = new ISpectrum(floats);
@@ -136,7 +156,7 @@ public class SingleColumn extends AbstractDataSource {
 
 	@Override
 	public String pluginVersion() {
-		return "0.1";
+		return "0.2";
 	}
 
 	@Override
@@ -149,38 +169,51 @@ public class SingleColumn extends AbstractDataSource {
 				.filter(l -> ! l.startsWith("#"))
 				.filter(l -> ! l.startsWith("%"))
 				.filter(l -> ! l.startsWith("$"))
+				.filter(l -> testLine(l))
 				.map(String::trim)
 				.filter(l -> l.length() > 0)
 				.collect(Collectors.toList());
 	}
 	
 	private static boolean test(List<String> lines) {
-		for (String line : lines) {
-			String[] parts = line.split("\\s+");
-			if (parts.length != 2) return false;
-			if (!isInteger(parts[0].trim())) return false;
-			if (!isFloat(parts[1].trim())) return false;
-		}
-		return true;
-	}
-
-	private static boolean isInteger(String str) {
-		try {
-			Integer.parseInt(str);
-		} catch (NumberFormatException e) {
+		if (lines.size() == 0) { return false; }
+		String[] parts = lines.get(0).split(splitPattern);
+		if (parts.length == 2) {			
+			for (String line : lines) {
+				parts = line.split(splitPattern);
+				if (!isNumeric(parts[0])) return false;
+				if (!isNumeric(parts[1])) return false;
+			}
+		} else if (parts.length == 1) {
+			for (String line : lines) {
+				if (!isNumeric(line)) return false;
+			}
+		} else {
 			return false;
 		}
 		return true;
 	}
-
 	
-	private static boolean isFloat(String str) {
+	/** Tests an individual line to see if it is one or two numbers **/
+	private static boolean testLine(String line) {
+		String[] parts = line.split(splitPattern);
+		if (parts.length < 1 || parts.length > 2) { return false; }
+		for (String part : parts) {
+			if (!isNumeric(part)) { return false; }
+		}
+		return true;
+	}
+	
+	private static boolean isNumeric(String str) {
 		try {
-			Float.parseFloat(str);
+			toNumber(str);
 		} catch (NumberFormatException e) {
 			return false;
 		}
 		return true;
 	}
-
+	
+	private static float toNumber(String str) {
+		return Float.parseFloat(str.trim());
+	}
 }
