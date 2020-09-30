@@ -3,6 +3,7 @@ package org.peakaboo.framework.druthers.serialize;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
@@ -51,7 +52,7 @@ public class YamlSerializer {
 	 * Strip out the custom class markers and load as a generic data structure
 	 */
 	public static <T> T deserializeGeneric(String yaml) {
-		String generic = yaml.lines().filter(l -> !l.startsWith("!!")).collect(Collectors.joining("\n"));
+		String generic = Arrays.stream(yaml.split("\n")).filter(l -> !l.startsWith("!!")).collect(Collectors.joining("\n"));
 		System.out.println(generic);
 		return deserialize(generic);
 	}
