@@ -1,4 +1,9 @@
-package org.peakaboo.common;
+package org.peakaboo.framework.druthers.serialize;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
@@ -13,7 +18,6 @@ public class YamlSerializer {
 	 */
 	public static <T> T deserialize(String yaml) {
 
-		
 		/*
 		 * Between 5.2 and 5.3 package names were changed to use the peakaboo.org domain
 		 * name. This results in problems when loading older serialized files which
@@ -35,10 +39,26 @@ public class YamlSerializer {
 		try {
 			return (T)y.load(yaml);
 		} catch (YAMLException e) {
-			throw new ConfigurationLoadException(e);
+			throw new DruthersLoadException(e);
 		}
 		
 	}
+	public static <T> T deserialize(File file) throws IOException {
+		return deserialize(new String(Files.readAllBytes(file.toPath())));
+	}
+	
+	/**
+	 * Strip out the custom class markers and load as a generic data structure
+	 */
+	public static <T> T deserializeGeneric(String yaml) {
+		String generic = yaml.lines().filter(l -> !l.startsWith("!!")).collect(Collectors.joining("\n"));
+		System.out.println(generic);
+		return deserialize(generic);
+	}
+	public static <T> T deserializeGeneric(File file) throws IOException {
+		return deserializeGeneric(new String(Files.readAllBytes(file.toPath())));
+	}
+	
 	
 	
 	/**

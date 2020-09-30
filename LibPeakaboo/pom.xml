@@ -79,6 +79,11 @@
 			<version>2.8.3</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.peakaboo.framework</groupId>
+			<artifactId>druthers</artifactId>
+			<version>5.5-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

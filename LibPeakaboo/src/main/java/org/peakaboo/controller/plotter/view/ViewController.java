@@ -1,8 +1,8 @@
 package org.peakaboo.controller.plotter.view;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.Settings;
 import org.peakaboo.controller.plotter.PlotController.PlotSpectra;
-import org.peakaboo.controller.settings.Settings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.framework.cyclops.Pair;

@@ -1,31 +1,17 @@
 package org.peakaboo.controller.mapper;
 
-import org.peakaboo.common.YamlSerializer;
 import org.peakaboo.controller.mapper.dimensions.SavedMapDimensionsSession;
 import org.peakaboo.controller.mapper.filtering.SavedMapFilteringSession;
 import org.peakaboo.controller.mapper.fitting.SavedMapFittingSession;
 import org.peakaboo.controller.mapper.settings.SavedMapSettingsController;
+import org.peakaboo.framework.druthers.DruthersStorable;
 
-public class SavedMapSession {
+public class SavedMapSession extends DruthersStorable {
 
 	public SavedMapDimensionsSession dimensions;
 	public SavedMapSettingsController settings;
 	public SavedMapFilteringSession filters;
 	public SavedMapFittingSession fittings;
-	
-	
-	/**
-	 * Decodes a serialized data object from yaml
-	 */
-	public static SavedMapSession deserialize(String yaml) {
-		return YamlSerializer.deserialize(yaml);
-	}
-	/**
-	 * Encodes the serialized data as yaml
-	 */
-	public String serialize() {
-		return YamlSerializer.serialize(this);
-	}
 	
 	
 	public void loadInto(MappingController map) {

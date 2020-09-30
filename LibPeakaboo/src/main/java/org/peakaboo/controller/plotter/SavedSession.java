@@ -1,44 +1,26 @@
 package org.peakaboo.controller.plotter;
 
 import org.peakaboo.common.Version;
-import org.peakaboo.common.YamlSerializer;
 import org.peakaboo.controller.plotter.calibration.SavedCalibrationSession;
 import org.peakaboo.controller.plotter.data.SavedDataSession;
 import org.peakaboo.controller.plotter.filtering.SavedFilteringSession;
 import org.peakaboo.controller.plotter.fitting.SavedFittingSession;
 import org.peakaboo.controller.plotter.view.SessionViewModel;
+import org.peakaboo.framework.druthers.DruthersStorable;
 
 /**
  * Stores session settings which are saved/loaded when the user chooses to
  * @author NAS
  *
  */
-public class SavedSession {
+public class SavedSession extends DruthersStorable {
 
-	
-	
-	
 	public SavedDataSession data;
 	public SavedFilteringSession filtering;
 	public SavedFittingSession fitting;
 	public SessionViewModel view;
 	public SavedCalibrationSession calibration;
 	public String version = Version.longVersionNo;
-	
-	
-	/**
-	 * Decodes a serialized data object from yaml
-	 */
-	public static SavedSession deserialize(String yaml) {
-		return YamlSerializer.deserialize(yaml);
-	}
-	/**
-	 * Encodes the serialized data as yaml
-	 */
-	public String serialize() {
-		return YamlSerializer.serialize(this);
-	}
-
 	
 	
 	/**

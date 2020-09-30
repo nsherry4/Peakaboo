@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.peakaboo.common.YamlSerializer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
+import org.peakaboo.framework.druthers.DruthersStorable;
 
 /*
  * NOTE: Calibration does not use PeakTable TransitionSeries, 
@@ -168,32 +168,32 @@ public class CalibrationReference implements BoltConfigPlugin {
 		
 	
 	public static String save(CalibrationReference reference) {
-		SerializedCalibrationReference serialized = new SerializedCalibrationReference();
-		serialized.name = reference.name;
-		serialized.uuid = reference.uuid;
-		serialized.desc = reference.desc;
-		serialized.rev = reference.rev;
-		serialized.notes = reference.notes;
-		serialized.citations = reference.citations;
-		serialized.anchor = reference.anchor.toIdentifierString();
+		SerializedCalibrationReference saving = new SerializedCalibrationReference();
+		saving.name = reference.name;
+		saving.uuid = reference.uuid;
+		saving.desc = reference.desc;
+		saving.rev = reference.rev;
+		saving.notes = reference.notes;
+		saving.citations = reference.citations;
+		saving.anchor = reference.anchor.toIdentifierString();
 		
 		List<ITransitionSeries> tss = new ArrayList<>(reference.concentrations.keySet());
 		tss.sort((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()));
 		for (ITransitionSeries ts : tss) {
-			serialized.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
+			saving.concentrations.put(ts.toIdentifierString(), reference.concentrations.get(ts));
 		}
 		
 		tss = new ArrayList<>(reference.extraFittings.keySet());
 		tss.sort((a, b) -> Integer.compare(a.getElement().ordinal(), b.getElement().ordinal()));
 		for (ITransitionSeries ts : tss) {
-			serialized.fitted.put(ts.toIdentifierString(), reference.extraFittings.get(ts));
+			saving.fitted.put(ts.toIdentifierString(), reference.extraFittings.get(ts));
 		}
 		
-		return YamlSerializer.serialize(serialized);
+		return saving.serialize();
 	}
 	
 	public static CalibrationReference load(String yaml) {
-		SerializedCalibrationReference serialized = YamlSerializer.deserialize(yaml);
+		SerializedCalibrationReference serialized = SerializedCalibrationReference.deserialize(yaml);
 		CalibrationReference reference = new CalibrationReference();
 		reference.name = serialized.name;
 		reference.uuid = serialized.uuid;
@@ -334,7 +334,7 @@ public class CalibrationReference implements BoltConfigPlugin {
 	
 }
 
-class SerializedCalibrationReference {
+class SerializedCalibrationReference extends DruthersStorable {
 	public String name;
 	public String uuid;
 	public String desc;

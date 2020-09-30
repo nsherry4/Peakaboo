@@ -1,4 +1,4 @@
-package org.peakaboo.controller.settings;
+package org.peakaboo.framework.druthers.settings;
 
 public interface SettingsStore {
 	

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.peakaboo.common.YamlSerializer;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.peak.table.Element;
@@ -19,6 +18,7 @@ import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
+import org.peakaboo.framework.druthers.DruthersStorable;
 
 /*
  * NOTE: Calibration does not use PeakTable TransitionSeries, 
@@ -184,17 +184,17 @@ public class CalibrationProfile {
 	
 	
 	public static String save(CalibrationProfile profile) {
-		SerializedCalibrationProfile serialized = new SerializedCalibrationProfile();
-		serialized.referenceUUID = profile.reference.getUuid();
-		serialized.referenceName = profile.reference.getName();
-		serialized.name = profile.name;
+		SerializedCalibrationProfile saving = new SerializedCalibrationProfile();
+		saving.referenceUUID = profile.reference.getUuid();
+		saving.referenceName = profile.reference.getName();
+		saving.name = profile.name;
 		for (ITransitionSeries ts : profile.calibrations.keySet()) {
-			serialized.calibrations.put(ts.toIdentifierString(), profile.calibrations.get(ts));
+			saving.calibrations.put(ts.toIdentifierString(), profile.calibrations.get(ts));
 		}
 		for (ITransitionSeries ts : profile.interpolated) {
-			serialized.interpolated.add(ts.toIdentifierString());
+			saving.interpolated.add(ts.toIdentifierString());
 		}
-		return YamlSerializer.serialize(serialized);
+		return saving.serialize();
 	}
 	
 	
@@ -204,22 +204,22 @@ public class CalibrationProfile {
 	
 	public static CalibrationProfile load(String yaml) {
 		CalibrationProfile profile = new CalibrationProfile();
-		SerializedCalibrationProfile serialized = YamlSerializer.deserialize(yaml);
-		for (String tsidentifier : serialized.calibrations.keySet()) {
+		SerializedCalibrationProfile loaded = SerializedCalibrationProfile.deserialize(yaml);
+		for (String tsidentifier : loaded.calibrations.keySet()) {
 			ITransitionSeries ts = ITransitionSeries.get(tsidentifier);
-			profile.calibrations.put(ts, serialized.calibrations.get(tsidentifier));
+			profile.calibrations.put(ts, loaded.calibrations.get(tsidentifier));
 		}
-		for (String tsidentifier : serialized.interpolated) {
+		for (String tsidentifier : loaded.interpolated) {
 			ITransitionSeries ts = ITransitionSeries.get(tsidentifier);
 			profile.interpolated.add(ts);
 		}
 		
-		profile.reference = CalibrationPluginManager.system().getByUUID(serialized.referenceUUID).create();
+		profile.reference = CalibrationPluginManager.system().getByUUID(loaded.referenceUUID).create();
 		if (profile.reference == null) {
-			throw new RuntimeException("Cannot find Calibration Reference '" + serialized.referenceName + "' (" + serialized.referenceUUID + ")");
+			throw new RuntimeException("Cannot find Calibration Reference '" + loaded.referenceName + "' (" + loaded.referenceUUID + ")");
 		}
 		
-		profile.name = serialized.name;
+		profile.name = loaded.name;
 		if (profile.name == null) {
 			profile.name = profile.reference.getName();
 		}
@@ -249,7 +249,7 @@ public class CalibrationProfile {
 }
 
 
-class SerializedCalibrationProfile {
+class SerializedCalibrationProfile extends DruthersStorable {
 	public String referenceUUID = null;
 	public String referenceName = null;
 	public String name = null;

@@ -2,6 +2,7 @@ package org.peakaboo.ui.swing;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -19,13 +20,13 @@ import org.peakaboo.common.PeakabooConfiguration.MemorySize;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.common.Version.ReleaseType;
-import org.peakaboo.controller.settings.Settings;
-import org.peakaboo.controller.settings.YamlSettingsStore;
+import org.peakaboo.controller.plotter.Settings;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.framework.druthers.serialize.YamlSerializer;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.theme.LightTheme;
@@ -186,7 +187,15 @@ public class Peakaboo {
 		Swidget.initialize(Version.splash, Version.logo, "Peakaboo", () -> {
 			//Init settings store
 			try {
-				Settings.init(new YamlSettingsStore(DesktopApp.appDir("Settings")));
+				File settingsDir = DesktopApp.appDir("Settings");
+				boolean firstSettings = !settingsDir.exists();
+				Settings.init(settingsDir);
+				if (firstSettings) {
+					//This is the first time running a version of Peakaboo that uses the new
+					//Druthers settings store. We'll try to load existing settings into it
+					transferSettings();
+				}
+				
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load persistent settings, Peakaboo must now exit.", e);
 				System.exit(2);
@@ -219,6 +228,26 @@ public class Peakaboo {
 		
 	}
 	
+	//TODO: Remove this in Peakaboo 6
+	/**
+	 * This method exists to transfer settings from the old
+	 * method of storing them to the new one
+	 */
+	private static void transferSettings() {
+		File oldFile = new File(DesktopApp.appDir() + "/settings.yaml");
+		try {
+			Map<String, Map<String, Boolean>> oldSettings = YamlSerializer.deserializeGeneric(oldFile);
+			Map<String, Boolean> oldPersistent = oldSettings.get("persistent");
+			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.constantscale", 	oldPersistent.get("consistentScale"));
+			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.monochrome", 		oldPersistent.get("monochrome"));
+			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.fit.intensity", 	oldPersistent.get("showElementFitIntensities"));
+			Settings.provider().setBoolean("org.peakaboo.controller.plotter.view.fit.markers", 	oldPersistent.get("showElementFitMarkers"));
+			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.fit.individual", 	oldPersistent.get("showIndividualFittings"));
+		} catch (IOException e) {
+			PeakabooLog.get().warning("Failed to transfer old settings");
+		}
+	}
+
 	public static void main(String[] args)
 	{	
 		run();

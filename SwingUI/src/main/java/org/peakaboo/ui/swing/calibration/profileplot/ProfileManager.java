@@ -19,13 +19,13 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 
 import org.peakaboo.calibration.CalibrationProfile;
-import org.peakaboo.common.ConfigurationLoadException;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.PlotUpdateType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
+import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.Swidget;
@@ -355,7 +355,7 @@ public class ProfileManager extends HeaderLayer {
 			controller.calibration().clearCalibrationReference();
 			controller.calibration().setCalibrationProfile(profile, file);
 			
-		} catch (IOException | ConfigurationLoadException e1) {
+		} catch (IOException | DruthersLoadException e1) {
 			PeakabooLog.get().log(Level.SEVERE, "Could not load calibration profile", e1);
 		}
 	}

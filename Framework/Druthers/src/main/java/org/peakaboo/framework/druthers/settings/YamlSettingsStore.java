@@ -1,4 +1,4 @@
-package org.peakaboo.controller.settings;
+package org.peakaboo.framework.druthers.settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.common.YamlSerializer;
+import org.peakaboo.framework.druthers.Druthers;
+import org.peakaboo.framework.druthers.serialize.YamlSerializer;
 
 public class YamlSettingsStore implements SettingsStore {
 
@@ -19,8 +19,12 @@ public class YamlSettingsStore implements SettingsStore {
 	private Map<String, String> values = new HashMap<>();
 	
 	public YamlSettingsStore(File directory) throws IOException {
+		this(directory, "store");
+	}
+	
+	public YamlSettingsStore(File directory, String storename) throws IOException {
 		directory.mkdirs();
-		filepath = Paths.get(directory.getAbsolutePath(), "/store.yaml");
+		filepath = Paths.get(directory.getAbsolutePath(), "/" + storename + ".yaml");
 		if (!Files.exists(filepath)) {
 			write();
 		}
@@ -50,7 +54,7 @@ public class YamlSettingsStore implements SettingsStore {
 					StandardOpenOption.WRITE, 
 					StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.WARNING, "Failed to write persistent settings to disk", e);
+			Druthers.logger().log(Level.WARNING, "Failed to write persistent settings to disk", e);
 		}
 	}
 
