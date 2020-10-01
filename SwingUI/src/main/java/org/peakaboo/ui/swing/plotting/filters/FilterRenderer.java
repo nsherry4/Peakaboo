@@ -67,7 +67,7 @@ class FilterRenderer extends JPanel implements TableCellRenderer
 		}
 
 		name.setText(f.getFilterName());
-		detail.setText(f.getFilterType().toString());
+		detail.setText(f.getFilterDescriptor().getType().toString());
 
 		if (table.getRowHeight() < this.getPreferredSize().height) {
 			table.setRowHeight(this.getPreferredSize().height);

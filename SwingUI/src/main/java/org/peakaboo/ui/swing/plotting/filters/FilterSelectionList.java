@@ -155,7 +155,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			int typeCount = 0;
 
 			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
-				if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
+				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 			}
 			return typeCount;
 
@@ -176,7 +176,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			int typeCount = 0;
 
 			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
-				if (plugin.getReferenceInstance().getFilterType() == ft) typeCount++;
+				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 				if (typeCount == index) return plugin;
 			}
 

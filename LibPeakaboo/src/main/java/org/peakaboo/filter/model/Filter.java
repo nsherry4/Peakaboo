@@ -23,11 +23,36 @@ public interface Filter {
 	 */
 	String getFilterDescription();
 
+	//TODO: Remove for Peakaboo 6
 	/**
-	 * Returns the type of the filter.
+	 * Returns the type of the filter. This will be removed in Peakaboo 6
 	 */
+	@Deprecated(forRemoval = true, since = "5.5")
 	FilterType getFilterType();
 
+	/**
+	 * Returns a FilterDescriptor detailing 
+	 * the category and action of this filter
+	 * @return
+	 */
+	default FilterDescriptor getFilterDescriptor() {
+		switch (getFilterType()) {
+		case ADVANCED:
+			return FilterDescriptor.ADVANCED;
+		case BACKGROUND:
+			return FilterDescriptor.BACKGROUND;
+		case MATHEMATICAL:
+			return FilterDescriptor.MATHEMATICAL;
+		case NOISE:
+			return FilterDescriptor.SMOOTHING;
+		case PROGRAMMING:
+			return FilterDescriptor.PROGRAMMING;
+		case OTHER:
+		default:
+			return FilterDescriptor.OTHER;		
+		}
+	}
+	
 	/**
 	 * Returns the parameters
 	 */
