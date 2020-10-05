@@ -24,7 +24,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 
 	private PlotController controller;
 	
-	private JSpinner minEnergy, maxEnergy;
+	private JSpinner minEnergy, maxEnergy, noiseEnergy;
 	private FluentButton energyGuess;
 	
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
@@ -88,7 +88,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		SettingsPanel energy = new SettingsPanel(Spacing.iTiny());
 		energy.setOpaque(false);
 		energy.setBorder(Spacing.bMedium());
-		JLabel energyTitle = new JLabel("Energy Calibration (keV)");
+		JLabel energyTitle = new JLabel("Energy Calibration");
 		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
 		energyTitle.setBorder(new EmptyBorder(0, 0, Spacing.small, 0));
@@ -108,7 +108,8 @@ public class PlotMenuEnergy extends JPopupMenu {
 			} 
 			controller.fitting().setMinEnergy(min);
 		});
-		energy.addSetting(minEnergy, "Minimum");
+		minEnergy.setToolTipText("Energy value of lowest channel in spectrum");
+		energy.addSetting(minEnergy, "Min (keV)");
 		
 		
 		maxEnergy = new JSpinner();
@@ -123,8 +124,23 @@ public class PlotMenuEnergy extends JPopupMenu {
 			} 
 			controller.fitting().setMaxEnergy(max);
 		});
-		energy.addSetting(maxEnergy, "Maximum");
+		maxEnergy.setToolTipText("Energy value of highest channel in spectrum");
+		energy.addSetting(maxEnergy, "Max (keV)");
 
+		
+		noiseEnergy = new JSpinner();
+		noiseEnergy.setModel(new SpinnerNumberModel(controller.fitting().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
+		noiseEnergy.getEditor().setPreferredSize(new Dimension(72, (int)noiseEnergy.getPreferredSize().getHeight()));
+		noiseEnergy.getEditor().setOpaque(false);
+		noiseEnergy.addChangeListener(e -> {
+			
+			float base = ((Number) noiseEnergy.getValue()).floatValue()/1000;
+			controller.fitting().setFWHMBase(base);
+			
+		});
+		noiseEnergy.setToolTipText("FWHM of gaussian detector noise peak contribution");
+		energy.addSetting(noiseEnergy, "Noise (eV)");
+		
 		energyGuess = new FluentButton("Guess Calibration")
 				.withIcon("auto", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Try to detect the correct max energy value by matching fittings to strong signal. Use with care.")

@@ -96,21 +96,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		SettingsPanel panel = new SettingsPanel(new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.medium));
 		panel.setOpaque(false);
 		panel.setBorder(Spacing.bMedium());
-		
-		JSpinner fwhmBase = new JSpinner();
-		fwhmBase.setModel(new SpinnerNumberModel(controller.fitting().getFWHMBase()*1000, 0.0, 1000.0, 0.1));
-		fwhmBase.getEditor().setPreferredSize(new Dimension(72, (int)fwhmBase.getPreferredSize().getHeight()));
-		fwhmBase.getEditor().setOpaque(false);
-		fwhmBase.addChangeListener(e -> {
-			
-			float base = ((Number) fwhmBase.getValue()).floatValue()/1000;
-			controller.fitting().setFWHMBase(base);
-			
-		});
-		
-		build(panel, fwhmBase, "FWHM Noise (eV)", "FWHM of Gaussian detector-based component of a peak.", false);
-		
-	
+
 
 		
 		JComboBox<?> detectorMaterialBox = makeCombo(
