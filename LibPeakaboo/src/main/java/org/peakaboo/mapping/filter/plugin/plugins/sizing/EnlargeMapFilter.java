@@ -33,10 +33,10 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 	}
 
 	@Override
-	public AreaMap filter(AreaMap map) {
+	public AreaMap filter(AreaMap source) {
 		
-		GridPerspective<Float> interpGrid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
-		Spectrum mapdata = new ISpectrum(map.getData());
+		GridPerspective<Float> interpGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
+		Spectrum mapdata = new ISpectrum(source.getData());
 		
 		Pair<GridPerspective<Float>, Spectrum> interpolationResult;
 		int count = 0;
@@ -48,7 +48,11 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 			count++;
 		}
 		
-		return new AreaMap(mapdata, new Coord<>(interpGrid.width, interpGrid.height), map.getRealDimensions());
+		return new AreaMap(mapdata, 
+				source.getElements(),
+				new Coord<>(interpGrid.width, interpGrid.height), 
+				source.getRealDimensions()
+			);
 	}
 
 	@Override

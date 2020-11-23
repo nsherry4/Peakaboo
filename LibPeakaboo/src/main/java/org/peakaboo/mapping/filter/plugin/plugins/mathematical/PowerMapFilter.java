@@ -39,15 +39,15 @@ public class PowerMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap map) {
-		ReadOnlySpectrum data = map.getData();
+	public AreaMap filter(AreaMap source) {
+		ReadOnlySpectrum data = source.getData();
 		Spectrum exped = new ISpectrum(data.size());
 		float exponent = power.getValue();
 		
 		for (int i = 0; i < data.size(); i++) {
 			exped.set(i, (float) Math.pow(data.get(i), exponent));
 		}
-		return new AreaMap(exped, map.getSize(), map.getRealDimensions());
+		return new AreaMap(exped, source);
 	}
 
 	@Override

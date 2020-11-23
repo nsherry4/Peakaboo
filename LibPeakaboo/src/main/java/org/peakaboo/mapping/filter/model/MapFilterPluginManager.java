@@ -14,6 +14,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrecti
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.WeakSignalRemovalMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.enhancing.SharpenMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.AdditionMapFilter;
+import org.peakaboo.mapping.filter.plugin.plugins.mathematical.ElementMultiplyFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.LogMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.MultiplyMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.NormalizationMapFilter;
@@ -79,6 +80,7 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 		builtins.load(NormalizationMapFilter.class);
 		builtins.load(LogMapFilter.class);
 		builtins.load(PowerMapFilter.class);
+		builtins.load(ElementMultiplyFilter.class);
 		
 		builtins.load(VFlipMapFilter.class);
 		builtins.load(HFlipMapFilter.class);

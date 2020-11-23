@@ -37,18 +37,18 @@ public class DeskewMapFilter extends AbstractMapFilter {
 	}
 
 	@Override
-	public AreaMap filter(AreaMap map) {
-		float skewWidth = (float) (Math.tan(angle.getValue()/57.29578f) * map.getSize().y);
-		int newWidth = (int) Math.ceil(Math.abs(skewWidth) + map.getSize().x); 
+	public AreaMap filter(AreaMap source) {
+		float skewWidth = (float) (Math.tan(angle.getValue()/57.29578f) * source.getSize().y);
+		int newWidth = (int) Math.ceil(Math.abs(skewWidth) + source.getSize().x); 
 
-		GridPerspective<Float> ingrid  = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
-		GridPerspective<Float> outgrid = new GridPerspective<Float>(newWidth, map.getSize().y, 0f);
-		ReadOnlySpectrum input = map.getData();
-		Spectrum output = new ISpectrum(map.getSize().y * newWidth);
+		GridPerspective<Float> ingrid  = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
+		GridPerspective<Float> outgrid = new GridPerspective<Float>(newWidth, source.getSize().y, 0f);
+		ReadOnlySpectrum input = source.getData();
+		Spectrum output = new ISpectrum(source.getSize().y * newWidth);
 		
 		outgrid.visit(output, (pi, px, py, value) -> {
 			//how far along is this row
-			float ypercent = ((float)py)/((float)map.getSize().y);
+			float ypercent = ((float)py)/((float)source.getSize().y);
 			float skewOffset = skewWidth * ypercent;
 			float skewX = px-skewOffset;
 			if (skewWidth < 0) {
@@ -66,7 +66,7 @@ public class DeskewMapFilter extends AbstractMapFilter {
 			outgrid.set(output, px, py, value);
 		});
 		
-		return new AreaMap(output, new Coord<Integer>(newWidth, map.getSize().y), null);		
+		return new AreaMap(output, source.getElements(), new Coord<Integer>(newWidth, source.getSize().y), null);		
 		
 	}
 

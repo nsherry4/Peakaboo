@@ -38,9 +38,9 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap map) {
+	public AreaMap filter(AreaMap source) {
 		
-		ReadOnlySpectrum oldmap = map.getData();
+		ReadOnlySpectrum oldmap = source.getData();
 		float max = oldmap.max();
 		float cutoff = max * percent.getValue() / 100f;
 		Spectrum newmap = new ISpectrum(oldmap.size());
@@ -49,7 +49,7 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 			if (value < cutoff) { continue; }
 			newmap.set(i, value);
 		}
-		return new AreaMap(newmap, map.getSize(), map.getRealDimensions());
+		return new AreaMap(newmap, source);
 	}
 
 	@Override

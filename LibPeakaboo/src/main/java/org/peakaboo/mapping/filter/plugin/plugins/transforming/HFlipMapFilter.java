@@ -31,28 +31,28 @@ public class HFlipMapFilter extends AbstractMapFilter {
 	public void initialize() {}
 
 	@Override
-	public AreaMap filter(AreaMap map) {
+	public AreaMap filter(AreaMap source) {
 		
-		ReadOnlySpectrum source = map.getData();
-		Spectrum target = new ISpectrum(source.size());
-		GridPerspective<Float> grid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
+		ReadOnlySpectrum sourceData = source.getData();
+		Spectrum target = new ISpectrum(sourceData.size());
+		GridPerspective<Float> grid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		
-		int maxx = map.getSize().x-1;
+		int maxx = source.getSize().x-1;
 		
 		for (int y = 0; y < grid.height; y++) {
 			for (int x = 0; x < grid.width; x++) {
-				float value = grid.get(source, maxx - x, y);
+				float value = grid.get(sourceData, maxx - x, y);
 				grid.set(target, x, y, value);
 			}
 		}
 		
-		Coord<Bounds<Number>> origDim = map.getRealDimensions();
+		Coord<Bounds<Number>> origDim = source.getRealDimensions();
 		Coord<Bounds<Number>> newDim = null;
 		if (origDim != null) {
 			newDim = new Coord<>(new Bounds<>(origDim.x.end, origDim.x.start), origDim.y);
 		}
 		
-		return new AreaMap(target, map.getSize(), newDim);
+		return new AreaMap(target, source.getElements(), source.getSize(), newDim);
 		
 	}
 

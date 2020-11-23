@@ -38,9 +38,9 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap map) {
+	public AreaMap filter(AreaMap source) {
 		
-		float[] sorted = map.getData().backingArrayCopy();
+		float[] sorted = source.getData().backingArrayCopy();
 		Arrays.sort(sorted);
 		int index = Math.round((sorted.length-1) * (100f-percent.getValue()) / 100f );
 		//bounds check the index, and we have to trim at least 1 pixel
@@ -49,13 +49,13 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 		
 		float cap = sorted[index];
 		
-		ReadOnlySpectrum olddata = map.getData();
+		ReadOnlySpectrum olddata = source.getData();
 		Spectrum newdata = new ISpectrum(olddata.size());
 		for (int i = 0; i < olddata.size(); i++) {
 			newdata.set(i, Math.min(cap, olddata.get(i)));
 		}
 		
-		return new AreaMap(newdata, map.getSize(), map.getRealDimensions());
+		return new AreaMap(newdata, source);
 		
 	}
 

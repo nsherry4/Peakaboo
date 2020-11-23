@@ -37,8 +37,8 @@ public class AdditionMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap map) {
-		return new AreaMap(SpectrumCalculations.addToList(map.getData(), added.getValue()), map.getSize(), map.getRealDimensions());
+	public AreaMap filter(AreaMap source) {
+		return new AreaMap(SpectrumCalculations.addToList(source.getData(), added.getValue()), source);
 	}
 
 	@Override

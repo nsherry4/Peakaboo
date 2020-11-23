@@ -32,32 +32,32 @@ public class Rotate180MapFilter extends AbstractMapFilter {
 	public void initialize() {}
 
 	@Override
-	public AreaMap filter(AreaMap map) {
+	public AreaMap filter(AreaMap source) {
 		
-		ReadOnlySpectrum source = map.getData();
-		GridPerspective<Float> sourceGrid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
+		ReadOnlySpectrum sourceData = source.getData();
+		GridPerspective<Float> sourceGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		
-		Spectrum target = new ISpectrum(source.size());
-		GridPerspective<Float> targetGrid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
+		Spectrum target = new ISpectrum(sourceData.size());
+		GridPerspective<Float> targetGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		
-		int maxy = map.getSize().y-1;
-		int maxx = map.getSize().x-1;
+		int maxy = source.getSize().y-1;
+		int maxx = source.getSize().x-1;
 		
 		for (int y = 0; y < sourceGrid.height; y++) {
 			for (int x = 0; x < sourceGrid.width; x++) {
-				float value = sourceGrid.get(source, x, y);
+				float value = sourceGrid.get(sourceData, x, y);
 				targetGrid.set(target, maxx-x, maxy-y, value);
 			}
 		}
 		
-		Coord<Bounds<Number>> origDim = map.getRealDimensions();
+		Coord<Bounds<Number>> origDim = source.getRealDimensions();
 		Coord<Bounds<Number>> newDim = null;
 		if (origDim != null) {
 			newDim = new Coord<>(new Bounds<>(origDim.x.end, origDim.x.start), new Bounds<>(origDim.y.end, origDim.y.start));
 		}
 		
-		Coord<Integer> oldsize = map.getSize();
-		return new AreaMap(target, new Coord<>(oldsize.x, oldsize.y), newDim);
+		Coord<Integer> oldsize = source.getSize();
+		return new AreaMap(target, source.getElements(), new Coord<>(oldsize.x, oldsize.y), newDim);
 	}
 
 	@Override

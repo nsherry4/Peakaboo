@@ -1,13 +1,18 @@
 package org.peakaboo.controller.mapper.filtering;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
@@ -208,8 +213,9 @@ class CachedMaps {
 		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
 			EventfulSoftCache<AreaMap> mapcache = new EventfulSoftCache<>(() -> {
+				//turn a rawmap into an AreaMap
 				ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
-				AreaMap areamap = new AreaMap(calibrated, size, controller.rawDataController.getRealDimensions());
+				AreaMap areamap = new AreaMap(calibrated, ts.getElement(), size, controller.rawDataController.getRealDimensions());
 				areamap = filters.apply(areamap);
 				return areamap;
 			});
@@ -222,15 +228,17 @@ class CachedMaps {
 		if (maps.size() > 0) {
 			Spectrum total = new ISpectrum(size.x * size.y);
 			AreaMap map = null;
+			Set<Element> elements = new LinkedHashSet<>();
 			//we do it this way so that we only have to hold one in memory at a time
 			//that way the soft references can collect it when we're done adding it in
 			for (ITransitionSeries key : maps.keySet()) {
 				map = maps.get(key).getValue();
 				SpectrumCalculations.addLists_inplace(total, map.getData());
+				elements.addAll(map.getElements());
 			}
-			sum = new AreaMap(total, map.getSize(), map.getRealDimensions());
+			sum = new AreaMap(total, new ArrayList<>(elements), map.getSize(), map.getRealDimensions());
 		} else {
-			sum = new AreaMap(new ISpectrum(size.x * size.y), size, null);
+			sum = new AreaMap(new ISpectrum(size.x * size.y), Collections.emptyList(), size, null);
 			sum = filters.apply(sum);
 		}
 		

@@ -3,10 +3,12 @@ package org.peakaboo.controller.mapper.fitting.modes;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -151,7 +153,9 @@ public class CorrelationModeController extends ModeController {
 			int bindex = grid.getIndexFromXY(xbin, ybin);
 			if (bindex == -1 || bindex > bins*bins) {
 				//index was out of bounds
-				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bins*bins);
+				Map<String, Number> valueMap = Map.of("xMax", xMax, "yMax", yMax, "xpct", xpct, "ypct", ypct, "xbin", xbin, "ybin", ybin);
+				String values = valueMap.entrySet().stream().map(e -> "\t" + e.getKey() + ": " + e.getValue().toString()).reduce((a, b) -> a + "\n" + b).get();
+				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bins*bins + "\n" + values);
 			}
 			translation.get(bindex).add(i);
 			correlation.set(bindex, correlation.get(bindex)+1);
@@ -162,7 +166,7 @@ public class CorrelationModeController extends ModeController {
 		if (clip) {
 			SignalOutlierCorrectionMapFilter filter = new SignalOutlierCorrectionMapFilter();
 			filter.initialize();
-			AreaMap filterContainer = new AreaMap(correlation, new Coord<>(100, 100), null);
+			AreaMap filterContainer = new AreaMap(correlation, Collections.emptyList(), new Coord<>(100, 100), null);
 			filterContainer = filter.filter(filterContainer);
 			correlation = (Spectrum) filterContainer.getData();
 		}

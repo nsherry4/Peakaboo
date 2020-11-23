@@ -35,17 +35,17 @@ public class SignalCapMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap map) {
+	public AreaMap filter(AreaMap source) {
 		
 		float cap = limit.getValue();
 		
-		ReadOnlySpectrum olddata = map.getData();
+		ReadOnlySpectrum olddata = source.getData();
 		Spectrum newdata = new ISpectrum(olddata.size());
 		for (int i = 0; i < olddata.size(); i++) {
 			newdata.set(i, Math.min(cap, olddata.get(i)));
 		}
 		
-		return new AreaMap(newdata, map.getSize(), map.getRealDimensions());
+		return new AreaMap(newdata, source);
 	}
 
 	@Override

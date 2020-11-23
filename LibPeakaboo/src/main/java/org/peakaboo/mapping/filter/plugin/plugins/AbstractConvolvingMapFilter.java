@@ -47,18 +47,18 @@ public abstract class AbstractConvolvingMapFilter extends AbstractMapFilter {
 	protected abstract float[][] getKernel(float intensity);
 	
 	@Override
-	public AreaMap filter(AreaMap map) {
-		ReadOnlySpectrum data = map.getData();
+	public AreaMap filter(AreaMap source) {
+		ReadOnlySpectrum data = source.getData();
 		Spectrum filtered = new ISpectrum(data.size());
-		GridPerspective<Float> grid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
+		GridPerspective<Float> grid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 
 		//apply the intenisty value to 
 		float[][] kernel = getKernel(intensity.getValue());
 				
 		for (int rep = 0; rep < reps.getValue(); rep++) {
 		
-			for (int y = 0; y < map.getSize().y; y++) {
-				for (int x = 0; x < map.getSize().x; x++) {
+			for (int y = 0; y < source.getSize().y; y++) {
+				for (int x = 0; x < source.getSize().x; x++) {
 	
 					float sum = 0f;
 					float count = 0;
@@ -89,7 +89,7 @@ public abstract class AbstractConvolvingMapFilter extends AbstractMapFilter {
 			
 		}
 		
-		return new AreaMap(filtered, map.getSize(), map.getRealDimensions());
+		return new AreaMap(filtered, source);
 	}
 
 	@Override

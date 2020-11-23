@@ -1,7 +1,12 @@
 package org.peakaboo.mapping.filter.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
+import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
@@ -13,20 +18,36 @@ public class AreaMap {
 
 	private ReadOnlySpectrum data;
 	private Coord<Integer> size;
+	//list is immutable
+	private List<Element> elements;
 	
 	private Coord<Bounds<Number>> realDimensions;
 	
 	
-	public AreaMap(ReadOnlySpectrum data, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
+	public AreaMap(ReadOnlySpectrum data, Element e, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
+		this(data, Collections.singletonList(e), size, realDims);
+	}
+	
+	public AreaMap(ReadOnlySpectrum data, List<Element> elements, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
 		this.data = data;
 		this.size = size;
 		this.realDimensions = realDims;
+		this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
 	}
 
+	/**
+	 * Copy constructor which keeps the metadata but replaces the actual map data
+	 */
+	public AreaMap(ReadOnlySpectrum data, AreaMap other) {
+		this(other);
+		this.data = new ISpectrum(data);
+	}
+	
 	public AreaMap(AreaMap other) {
 		this.data = new ISpectrum(other.data);
 		this.size = other.size;
 		this.realDimensions = other.realDimensions;
+		this.elements = other.elements;
 	}
 	
 	public ReadOnlySpectrum getData() {
@@ -39,6 +60,13 @@ public class AreaMap {
 	
 	public Coord<Bounds<Number>> getRealDimensions() {
 		return realDimensions;
+	}
+	
+	/**
+	 * Returns an immutable list of elemental maps present in this area map. The list may be empty.
+	 */
+	public List<Element> getElements() {
+		return elements;
 	}
 	
 	public void add(AreaMap other) {
@@ -57,9 +85,8 @@ public class AreaMap {
 	
 	public static AreaMap sum(Iterable<AreaMap> maps) {
 		if (!maps.iterator().hasNext()) { return null; }
-		Coord<Integer> size = maps.iterator().next().getSize();
-		Coord<Bounds<Number>> realDimensions = maps.iterator().next().getRealDimensions();
-		return new AreaMap(sumSpectrum(maps), size, realDimensions);
+		AreaMap firstSource = maps.iterator().next();
+		return new AreaMap(sumSpectrum(maps), firstSource);
 	}	
 	
 	public static Spectrum sumSpectrum(Iterable<AreaMap> maps) {

@@ -28,13 +28,13 @@ public class LogMapFilter extends AbstractMapFilter {
 	public void initialize() {}
 
 	@Override
-	public AreaMap filter(AreaMap map) {
-		ReadOnlySpectrum data = map.getData();
+	public AreaMap filter(AreaMap source) {
+		ReadOnlySpectrum data = source.getData();
 		Spectrum logged = new ISpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			logged.set(i, (float) Math.log1p(data.get(i)));
 		}
-		return new AreaMap(logged, map.getSize(), map.getRealDimensions());
+		return new AreaMap(logged, source);
 	}
 
 	@Override

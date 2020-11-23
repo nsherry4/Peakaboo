@@ -56,12 +56,12 @@ public class BinningMapFilter extends AbstractMapFilter {
 		return map;
 	}
 
-	private AreaMap bin(AreaMap map) {
+	private AreaMap bin(AreaMap source) {
 		
-		GridPerspective<Float> originalGrid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
-		ReadOnlySpectrum originalData = map.getData();
+		GridPerspective<Float> originalGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
+		ReadOnlySpectrum originalData = source.getData();
 		
-		GridPerspective<Float> binnedGrid = new GridPerspective<Float>(map.getSize().x/2, map.getSize().y/2, 0f);
+		GridPerspective<Float> binnedGrid = new GridPerspective<Float>(source.getSize().x/2, source.getSize().y/2, 0f);
 		Spectrum binnedData = new ISpectrum(binnedGrid.size());
 		
 		for (int y = 0; y < binnedGrid.height; y++) {
@@ -79,7 +79,11 @@ public class BinningMapFilter extends AbstractMapFilter {
 			}
 		}
 		
-		return new AreaMap(binnedData, new Coord<>(binnedGrid.width, binnedGrid.height), map.getRealDimensions());
+		return new AreaMap(binnedData, 
+				source.getElements(), 
+				new Coord<>(binnedGrid.width, binnedGrid.height), 
+				source.getRealDimensions()
+			);
 	}
 	
 	@Override
