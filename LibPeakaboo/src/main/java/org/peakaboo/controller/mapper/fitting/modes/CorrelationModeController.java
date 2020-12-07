@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -153,7 +154,13 @@ public class CorrelationModeController extends ModeController {
 			int bindex = grid.getIndexFromXY(xbin, ybin);
 			if (bindex == -1 || bindex > bins*bins) {
 				//index was out of bounds
-				Map<String, Number> valueMap = Map.of("xMax", xMax, "yMax", yMax, "xpct", xpct, "ypct", ypct, "xbin", xbin, "ybin", ybin);
+				Map<String, Number> valueMap = new HashMap<>();
+				valueMap.put("xMax", xMax);
+				valueMap.put("yMax", yMax);
+				valueMap.put("xpct", xpct);
+				valueMap.put("ypct", ypct);
+				valueMap.put("xbin", xbin);
+				valueMap.put("ybin", ybin);
 				String values = valueMap.entrySet().stream().map(e -> "\t" + e.getKey() + ": " + e.getValue().toString()).reduce((a, b) -> a + "\n" + b).get();
 				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bins*bins + "\n" + values);
 			}
