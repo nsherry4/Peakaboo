@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.peakaboo</groupId>
 		<artifactId>peakaboo</artifactId>
-		<version>5.5-SNAPSHOT</version>
+		<version>5.5.0</version>
 	</parent>
 	<artifactId>libpeakaboo</artifactId>
 	<packaging>jar</packaging>
@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>druthers</artifactId>
-			<version>5.5-SNAPSHOT</version>
+			<version>5.5.0</version>
 		</dependency>
 	</dependencies>
 

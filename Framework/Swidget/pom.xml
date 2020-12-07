@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.peakaboo</groupId>
 		<artifactId>framework</artifactId>
-		<version>5.5-SNAPSHOT</version>
+		<version>5.5.0</version>
 	</parent>
 	<groupId>org.peakaboo.framework</groupId>
 	<artifactId>swidget</artifactId>
