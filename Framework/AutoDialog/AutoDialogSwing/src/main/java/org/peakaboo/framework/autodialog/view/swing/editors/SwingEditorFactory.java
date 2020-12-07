@@ -65,6 +65,7 @@ public class SwingEditorFactory {
 			case FLOAT: return (SwingEditor<T>) new FloatEditor();
 			case LIST: return new ListEditor<>();
 			case SPACING: return (SwingEditor<T>) new SeparatorEditor();
+			case LABEL_VALUE: return (SwingEditor<T>) new LabelEditor();
 			default: return null;
 		}
 	}

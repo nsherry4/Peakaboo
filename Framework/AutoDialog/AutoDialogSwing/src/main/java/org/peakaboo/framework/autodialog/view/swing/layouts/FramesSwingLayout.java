@@ -12,15 +12,15 @@ public class FramesSwingLayout extends SimpleSwingLayout {
 
 	@Override
 	protected JComponent component(SwingView view) {
-		if (view instanceof SwingLayout) {
-			//this is a layout (of a group). Put it in a frame
-			JPanel panel = new JPanel(new BorderLayout());
-			panel.add(view.getComponent(), BorderLayout.CENTER);
-			panel.setBorder(new TitledBorder(view.getTitle()));
-			return panel;			
-		} else {
-			return view.getComponent();
-		}
+		return view.getComponent();
+	}
+	
+	@Override
+	public JComponent getComponent() {
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(root, BorderLayout.CENTER);
+		panel.setBorder(new TitledBorder(group.getName()));
+		return panel;
 	}
 
 }

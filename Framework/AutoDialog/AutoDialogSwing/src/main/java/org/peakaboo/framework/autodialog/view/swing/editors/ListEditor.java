@@ -28,7 +28,7 @@ public class ListEditor<T> extends AbstractSwingEditor<T> {
 
 		control.setModel(new ListComboBoxModel<>(selparam.getPossibleValues()));
 		control.setAlignmentX(Component.LEFT_ALIGNMENT);
-		control.setPreferredSize(new Dimension(150, control.getPreferredSize().height));
+		//control.setPreferredSize(new Dimension(150, control.getPreferredSize().height));
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());

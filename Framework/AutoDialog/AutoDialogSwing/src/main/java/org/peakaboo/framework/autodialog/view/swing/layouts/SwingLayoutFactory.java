@@ -30,7 +30,6 @@ public class SwingLayoutFactory {
 	public static SwingLayout forGroup(Group group) {
 
 		SwingLayout editor = null;
-		
 		for (String key : styleProviders.keySet()) {
 			if (key.equals(group.getStyle().getStyle())) {
 				editor = styleProviders.get(key).get();

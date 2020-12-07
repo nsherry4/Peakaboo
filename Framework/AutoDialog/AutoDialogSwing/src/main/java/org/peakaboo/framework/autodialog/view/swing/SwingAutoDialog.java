@@ -62,7 +62,6 @@ public class SwingAutoDialog extends LiveDialog
 		
 		Container c = this.getContentPane();
 		c.setLayout(new BorderLayout());
-
 			
 		JScrollPane scroller = new JScrollPane(SwingLayoutFactory.forGroup(group).getComponent());
 		scroller.setBorder(Spacing.bNone());

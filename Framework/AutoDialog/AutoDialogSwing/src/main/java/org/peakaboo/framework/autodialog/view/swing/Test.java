@@ -24,13 +24,14 @@ import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.TabbedLayoutStyle;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
+import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.swidget.Swidget;
 
 public class Test {
 
 	public static void main(String[] args) throws UnsupportedLookAndFeelException
 	{
-		UIManager.setLookAndFeel(new NimbusLookAndFeel());
+		UIManager.setLookAndFeel(new StratusLookAndFeel());
 		Swidget.initialize(Test::gui, "Test");
 	}
 			

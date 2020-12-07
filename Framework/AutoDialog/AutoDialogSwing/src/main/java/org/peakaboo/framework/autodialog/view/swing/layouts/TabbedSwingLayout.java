@@ -12,8 +12,6 @@ import org.peakaboo.framework.autodialog.model.Value;
 
 public class TabbedSwingLayout extends AbstractSwingLayout {
 
-	
-	
 	public void layout() {
 		root.removeAll();
 		JTabbedPane tabs = new JTabbedPane();
@@ -40,12 +38,6 @@ public class TabbedSwingLayout extends AbstractSwingLayout {
 		root.add(tabs, BorderLayout.CENTER);
 		
 	}
-
-
-
-
-
-
 
 	
 }
