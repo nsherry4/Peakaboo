@@ -605,7 +605,8 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
 
-		try (OutputStream os = new FileOutputStream(file)) {
+		try {
+			OutputStream os = new FileOutputStream(file);
 			ExecutorSet<Void> writer = DataSink.write(source, sink, os);
 			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
 			pushLayer(layer);

@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>druthers</artifactId>
-			<version>5.5.0</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

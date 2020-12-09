@@ -124,7 +124,9 @@ public class PlotToolbar extends JToolBar {
 	public void setWidgetState(boolean hasData) {
 		
 		toolbarInfo.setEnabled(hasData);
-		if (Peakaboo.SHOW_QUANTITATIVE) toolbarConcentrations.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
+		if (Peakaboo.SHOW_QUANTITATIVE) {
+			toolbarConcentrations.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
+		}
 		
 		if (hasData) {
 			toolbarMap.setEnabled(controller.fitting().canMap());
