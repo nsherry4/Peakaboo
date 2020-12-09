@@ -51,7 +51,7 @@ public interface DataSink {
 	static ExecutorSet<Void> write(DataSource source, DataSink sink, OutputStream output) {
 		
 		CallbackInteraction interaction = new CallbackInteraction();
-		
+
 		return Plural.build("Writing Data Set", "Writing Scans", (execset, exec) -> {
 			interaction.setCallbackAbortRequested(() -> execset.isAborted() || execset.isAbortRequested());
 			interaction.setCallbackScansWritten(exec::workUnitCompleted);
@@ -63,6 +63,8 @@ public interface DataSink {
 				if (interaction.isAbortedRequested()) {
 					execset.aborted();
 				}
+				output.flush();
+				output.close();
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
 			}

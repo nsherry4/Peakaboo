@@ -47,6 +47,7 @@ public class CSV extends AbstractDataSink {
 				}
 			}
 		}
+		writer.flush();
 
 	}
 
