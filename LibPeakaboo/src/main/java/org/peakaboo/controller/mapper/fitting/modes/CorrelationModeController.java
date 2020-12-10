@@ -110,9 +110,11 @@ public class CorrelationModeController extends ModeController {
 		int index999 = (int)(xSorted.size() * 0.999f);
 		
 
-		//mnax value is 99.9th percentile in histogram
+		//max value is 99.9th percentile in histogram
 		float xMax = xSorted.get(index999);
 		float yMax = ySorted.get(index999);
+		if (xMax == 0) { xMax = 1; }
+		if (yMax == 0) { yMax = 1; }
 		
 		//if it's absolute, we use the larger max to scale both histograms
 		if (map.getFitting().getMapScaleMode() != MapScaleMode.RELATIVE) {
@@ -134,9 +136,11 @@ public class CorrelationModeController extends ModeController {
 		
 		for (int i = 0; i < xData.size(); i++) {
 
-			float xpct = xData.get(i) / xMax;
-			float ypct = yData.get(i) / yMax;
-						
+			float xpct = Math.max(0, xData.get(i)) / xMax;
+			if (xMax == 0) { xpct = 0f; }
+			float ypct = Math.max(0, yData.get(i)) / yMax;
+			if (yMax == 0) { ypct = 0f; }
+			
 			if (xpct <= 0.01f && ypct <= 0.01f) {
 				/*
 				 * Don't measure areas where neither element exists, this just creates a large
