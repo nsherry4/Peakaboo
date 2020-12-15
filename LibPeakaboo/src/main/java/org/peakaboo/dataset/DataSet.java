@@ -53,7 +53,16 @@ public interface DataSet {
 	 */
 	DataSize getDataSize();
 	boolean hasGenuineDataSize();
-	
+	/**
+	 * Returns a data size if a genuine one exists, or if <tt>orDummy</tt> is set. Returns null otherwise
+	 */
+	default DataSize getDataSize(boolean orDummy) {
+		if (hasGenuineDataSize() || orDummy) {
+			return getDataSize();
+		} else {
+			return null;
+		}
+	}
 	
 	
 	/**

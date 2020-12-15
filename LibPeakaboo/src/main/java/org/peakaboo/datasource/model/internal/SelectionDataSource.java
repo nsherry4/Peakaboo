@@ -194,6 +194,24 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		return new Coord<>(x, y);
 	}
 	
+	/**
+	 * indicates if this point is valid, meaning that it has a real 
+	 * source value in the underlying source dataset
+	 */
+	public boolean isValidPoint(int x, int y) {
+		if (x < 0 || x >= dimensions.x || y < 0 || y >= dimensions.y) {
+			return false;
+		}
+		Coord<Integer> coord = new Coord<>(x, y);
+		//TODO: slow -- cache this as a map
+		for (int i : selectedIndexes) {
+			if (getDataCoordinatesAtIndex(i).equals(coord)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 
 	@Override
 	public boolean isRectangular() {

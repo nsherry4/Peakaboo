@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
@@ -33,6 +34,7 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	 */
 	public void setMapData(
 			RawMapSet data,
+			DataSet sourceDataset,
 			String datasetName,
 			List<Integer> badPoints,
 			Coord<Integer> dataDimensions,
@@ -43,6 +45,7 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	
 		
 		mapModel.mapResults = data;
+		mapModel.sourceDataset = sourceDataset;
 		mapModel.datasetTitle = datasetName;
 		mapModel.badPoints = badPoints;
 		

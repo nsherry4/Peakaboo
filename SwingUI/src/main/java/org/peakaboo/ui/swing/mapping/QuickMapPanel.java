@@ -12,6 +12,7 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.datasource.model.components.datasize.DataSize;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
@@ -39,12 +40,13 @@ public class QuickMapPanel extends HeaderLayer {
 		super(plotTab, true, true);
 		
 		RawDataController rawDataController = new RawDataController();
-		DataSize sizeinfo = plotcontroller.data().getDataSet().getDataSource().getDataSize().orElse(null);
+		DataSet sourceDataset = plotcontroller.data().getDataSet();
+		DataSize sizeinfo = sourceDataset.getDataSize(false);
 		Coord<Integer> mapsize = null;
 		if (sizeinfo != null) {
 			mapsize = sizeinfo.getDataDimensions();
 		}
-		rawDataController.setMapData(maps, "", Collections.emptyList(), mapsize, null, null, new CalibrationProfile());
+		rawDataController.setMapData(maps, sourceDataset, "", Collections.emptyList(), mapsize, null, null, new CalibrationProfile());
 		this.controller = new MappingController(rawDataController, plotcontroller);
 		
 		// load saved dimensions, and when the window closes, save them

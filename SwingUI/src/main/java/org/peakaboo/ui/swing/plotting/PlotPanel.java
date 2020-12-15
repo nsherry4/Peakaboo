@@ -665,6 +665,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			
 			mapData.setMapData(
 					results,
+					controller.data().getDataSet(),
 					controller.data().getTitle(),
 					controller.data().getDiscards().list(),
 					dataDimensions,

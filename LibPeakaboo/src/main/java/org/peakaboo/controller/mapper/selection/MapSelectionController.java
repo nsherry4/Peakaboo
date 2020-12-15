@@ -255,6 +255,11 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		return trimmed;
 	}
 	
+	/**
+	 * Given a list of selected points (for the current map mode), translate the points back
+	 * to the spectra that generated those points. If there is no translation, the points will
+	 * simply be returned.
+	 */
 	private List<Integer> translate(List<Integer> points) {
 		return map.getFitting().getActiveMode().translateSelection(points);
 	}
