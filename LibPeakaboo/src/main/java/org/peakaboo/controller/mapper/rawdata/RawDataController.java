@@ -2,10 +2,12 @@ package org.peakaboo.controller.mapper.rawdata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.dataset.DataSet;
+import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
@@ -27,9 +29,10 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	}
 	
 
+	
 
 	/**
-	 * Sets the map's data model. dataDimensions, realDimensions, realDimensionsUnits may be null
+	 * Sets the map's data model.
 	 * @param calibrationProfile 
 	 */
 	public void setMapData(
@@ -37,9 +40,6 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 			DataSet sourceDataset,
 			String datasetName,
 			List<Integer> badPoints,
-			Coord<Integer> dataDimensions,
-			Coord<Bounds<Number>> realDimensions,
-			SISize realDimensionsUnits, 
 			CalibrationProfile calibrationProfile		
 	) {
 	
@@ -49,10 +49,23 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 		mapModel.datasetTitle = datasetName;
 		mapModel.badPoints = badPoints;
 		
-		mapModel.originalDimensions = dataDimensions;
-		mapModel.originalDimensionsProvided = dataDimensions != null;
-		mapModel.realDimensions = realDimensions;
-		mapModel.realDimensionsUnits = realDimensionsUnits;
+		if (sourceDataset.hasGenuineDataSize()) {
+			mapModel.originalDimensionsProvided = true;
+			mapModel.originalDimensions = sourceDataset.getDataSize().getDataDimensions();
+		} else {
+			mapModel.originalDimensionsProvided = false;
+			mapModel.originalDimensions = null;
+		}
+		
+		Optional<PhysicalSize> physical = sourceDataset.getPhysicalSize();
+		if (physical.isPresent()) {
+			mapModel.realDimensions = physical.get().getPhysicalDimensions();
+			mapModel.realDimensionsUnits = physical.get().getPhysicalUnit();
+		} else {
+			mapModel.realDimensions = null;
+			mapModel.realDimensionsUnits = null;
+		}
+		
 		mapModel.calibrationProfile = calibrationProfile;
 
 		updateListeners(MapUpdateType.DATA);

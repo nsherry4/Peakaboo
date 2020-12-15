@@ -54,6 +54,7 @@ import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.datasink.model.DataSink;
 import org.peakaboo.datasource.model.DataSource;
@@ -648,35 +649,18 @@ public class PlotPanel extends TabbedLayerPanel {
 			RawMapSet results = mapTask.getResult().get();
 			RawDataController mapData = new RawDataController();
 			
+			DataSet sourceDataset = controller.data().getDataSet();
 
-			Coord<Integer> dataDimensions = null;
-			Coord<Bounds<Number>> physicalDimensions = null;
-			SISize physicalUnit = null;
-			
-			Optional<PhysicalSize> physical = controller.data().getDataSet().getPhysicalSize();
-			if (physical.isPresent()) {
-				physicalDimensions = physical.get().getPhysicalDimensions();
-				physicalUnit = physical.get().getPhysicalUnit();
-			}
-			
-			if (controller.data().getDataSet().hasGenuineDataSize()) {
-				dataDimensions = controller.data().getDataSet().getDataSize().getDataDimensions();
-			}
-			
 			mapData.setMapData(
 					results,
-					controller.data().getDataSet(),
+					sourceDataset,
 					controller.data().getTitle(),
 					controller.data().getDiscards().list(),
-					dataDimensions,
-					physicalDimensions,
-					physicalUnit,
 					controller.calibration().getCalibrationProfile()
 				);
 			
 			
 			mapperWindow = new MapperFrame(getTabbedInterface(), mapData, mapSession, controller);
-
 			mapperWindow.setVisible(true);
 
 		});
