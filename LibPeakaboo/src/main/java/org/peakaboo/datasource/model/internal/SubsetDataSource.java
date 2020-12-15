@@ -14,7 +14,7 @@ public interface SubsetDataSource extends DataSource {
 	/**
 	 * Given an index in the subset data source, return the index of the same point in the original data source.
 	 */
-	int getOriginalIndex(int index);
+	int getBackingIndex(int index);
 	
 	
 	/**

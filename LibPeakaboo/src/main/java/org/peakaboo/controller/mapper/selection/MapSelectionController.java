@@ -126,9 +126,22 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 	public boolean isSelectable() {
+		ModeController mode = map.getFitting().getActiveMode();
+		boolean spatial = mode.isSpatial();
+		boolean translatable = mode.isTranslatableToSpatial();
+		boolean allvalid = map.rawDataController.areAllPointsValid();
+		boolean filtercompat = map.getFiltering().isReplottable();
+		
+		if (!filtercompat) { return false; }
+		if (!spatial && !allvalid) { return false; }
+		if (!translatable) { return false; }
+		return true;
+		
+		/*
 		return map.getFitting().getActiveMode().isTranslatableToSpatial() //The current mapping mode can map it back to source spectra 
 				&& map.rawDataController.areAllPointsValid() //The original data source supports replotting
-				&& map.getFiltering().isReplottable(); //The filters applied don't prohibit replotting
+				&& map.getFiltering().isReplottable(); //The filters applied don't prohibit replotting\
+			*/
 	}
 
 	public void clearSelection() {

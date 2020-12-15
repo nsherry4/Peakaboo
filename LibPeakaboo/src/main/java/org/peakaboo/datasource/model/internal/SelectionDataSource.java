@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.datasize.DataSize;
@@ -28,19 +29,19 @@ import org.peakaboo.framework.cyclops.util.Mutable;
  */
 public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize {
 
-	private DataSource source;
-	private Coord<Integer> sourceDimensions;
-	private List<Integer> selectedIndexes;
+	private DataSource backer;
+	private Coord<Integer> backingDimensions;
+	private List<Integer> backingIndexes, mapIndexes;
+	private GridPerspective<Integer> backerGrid;
 	private DataSourceAnalysis analysis;
 	
 	private Coord<Integer> derivedDimensions;
 	private Coord<Integer> offset;
-	private GridPerspective<Integer> sourceGrid, derivedGrid;
-	
+	private GridPerspective<Integer> derivedGrid;
 	// 1d list the size of the derived dimensions, each entry stores the offset into
-	// selectedIndexes this entry maps to, ot -1 if this entry has no source value
+	// backingIndexes this entry maps to, or -1 if this entry has no backing value
 	// (and is thus invalid)
-	private List<Integer> derivedIndexes;
+	private List<Integer> derivedIndexLookup;
 	private Mutable<Boolean> rectangular = new Mutable<>(null);
 	
 	/**
@@ -50,21 +51,38 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	 * @param selectedIndexes The points in the original datasource to select
 	 */
 	public SelectionDataSource(DataSource source, Coord<Integer> dimensions, List<Integer> selectedIndexes) {
-		this.source = source;
-		this.selectedIndexes = new ArrayList<>(selectedIndexes);
-		this.sourceDimensions = dimensions;
+		this.backer = source;
+		this.mapIndexes = new ArrayList<>(selectedIndexes);
+		this.mapIndexes.sort(Integer::compare);
+		this.backingDimensions = dimensions;
+		
+		// if the backer is another SubsetDataSource controller, we need to translate
+		// the points from map indexes (which may contain invalid points that shouldn't
+		// be counded) to subset indexes
+		if (backer instanceof SelectionDataSource) {
+			SelectionDataSource selbacker = (SelectionDataSource) backer;
+			this.backingIndexes = this.mapIndexes.stream().map(i -> selbacker.getBackingIndexForDerivedPoint(i)).collect(Collectors.toList());
+		} else {
+			this.backingIndexes = new ArrayList<>(mapIndexes);
+		}
 		
 		//we don't reanalyze in the constructor for performance reasons
 		this.analysis = new DataSourceAnalysis();
-		this.analysis.init(source.getScanData().getAnalysis().channelsPerScan());
+		this.analysis.init(backer.getScanData().getAnalysis().channelsPerScan());
 		
-		sourceGrid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
-		int minx = dimensions.x;
-		int miny = dimensions.y;
+		
+		backerGrid = new GridPerspective<>(backingDimensions.x, backingDimensions.y, 0);
+		int minx = backingDimensions.x;
+		int miny = backingDimensions.y;
 		int maxx = 0;
 		int maxy = 0;
-		for (int i : selectedIndexes) {
-			IntPair coord = sourceGrid.getXYFromIndex(i);
+		/*
+		 * we use mapIndexes here because we don't want indexes shifted due to missing
+		 * (invalid) points, we want to calculate the offset against the real backing
+		 * map
+		 */
+		for (int i : this.mapIndexes) {
+			IntPair coord = backerGrid.getXYFromIndex(i);
 			if (coord.first < minx) { minx = coord.first; }
 			if (coord.second < miny) { miny = coord.second; }
 			if (coord.first > maxx) { maxx = coord.first; }
@@ -75,14 +93,14 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		offset = new Coord<>(minx, miny);
 		this.derivedGrid = new GridPerspective<>(this.derivedDimensions.x, this.derivedDimensions.y, 0);
 		
-		derivedIndexes = new ArrayList<>();
+		derivedIndexLookup = new ArrayList<>();
 		for (int i = 0; i < derivedGrid.size(); i++) {
-			derivedIndexes.add(-1);
+			derivedIndexLookup.add(-1);
 		}
-		for (int i = 0; i < selectedIndexes.size(); i++) {
+		for (int i = 0; i < this.scanCount(); i++) {
 			Coord<Integer> derivedCoord = getDataCoordinatesAtIndex(i);
 			int derivedIndex = derivedGrid.getIndexFromXY(derivedCoord);
-			derivedIndexes.set(derivedIndex, i);
+			derivedIndexLookup.set(derivedIndex, i);
 		}
 		
 	}
@@ -90,38 +108,38 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	
 	@Override
 	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
-		return source.getScanData().get(getOriginalIndex(index));
+		return backer.getScanData().get(getBackingIndex(index));
 	}
 
 	@Override
 	public int scanCount() {
-		return selectedIndexes.size();
+		return backingIndexes.size();
 	}
 
 	@Override
 	public String scanName(int index) {
-		return source.getScanData().scanName(getOriginalIndex(index));
+		return backer.getScanData().scanName(getBackingIndex(index));
 	}
 
 	@Override
 	public float maxEnergy() {
-		return source.getScanData().maxEnergy();
+		return backer.getScanData().maxEnergy();
 	}
 	
 	@Override
 	public float minEnergy() {
-		return source.getScanData().minEnergy();
+		return backer.getScanData().minEnergy();
 	}
 	
 
 	@Override
 	public String datasetName() {
-		return "Subset of " + source.getScanData().datasetName();
+		return "Subset of " + backer.getScanData().datasetName();
 	}
 
 	@Override
 	public Optional<Metadata> getMetadata() {
-		return source.getMetadata();
+		return backer.getMetadata();
 	}
 
 	@Override
@@ -136,7 +154,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 
 	@Override
 	public FileFormat getFileFormat() {
-		return source.getFileFormat();
+		return backer.getFileFormat();
 	}
 
 	@Override
@@ -146,7 +164,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 
 	@Override
 	public Interaction getInteraction() {
-		return source.getInteraction();
+		return backer.getInteraction();
 	}
 
 	@Override
@@ -161,14 +179,22 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	}
 
 	
+	/**
+	 * Given an index into this DataSource's data, return the index from the backer
+	 * data
+	 */
 	@Override
-	public int getOriginalIndex(int index) {
-		return selectedIndexes.get(index);
+	public int getBackingIndex(int index) {
+		return backingIndexes.get(index);
 	}
 
+	/**
+	 * Given an index into the backing data, return the comparable index into this
+	 * DataSource's data
+	 */
 	@Override
 	public int getUpdatedIndex(int originalIndex) {
-		return selectedIndexes.indexOf(originalIndex);
+		return backingIndexes.indexOf(originalIndex);
 	}
 
 	@Override
@@ -198,14 +224,26 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		return derivedDimensions;
 	}
 
-	//Index here refers to position in the selectedIndices list
+	//Index here refers to position in this data source
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
-		int sourceIndex = getOriginalIndex(index);
-		IntPair sourceCoord = sourceGrid.getXYFromIndex(sourceIndex);
+		//index in backing datasource
+		int backingIndex = getBackingIndex(index);
+		int x, y;
+		//TODO: should this check the backer's DataSize availability instead?
+		if (backer instanceof SelectionDataSource) {
+			SelectionDataSource selbacker = (SelectionDataSource) backer;
+			Coord<Integer> backingCoord = selbacker.getDataCoordinatesAtIndex(backingIndex);
+			x = backingCoord.x;
+			y = backingCoord.y;
+		} else {
+			IntPair backingCoord = backerGrid.getXYFromIndex(backingIndex);
+			x = backingCoord.first;
+			y = backingCoord.second;
+		}
 		
-		int x = sourceCoord.first - offset.x;
-		int y = sourceCoord.second - offset.y;
+		x = x - offset.x;
+		y = y - offset.y;
 		if (x < 0 || x >= derivedDimensions.x || y < 0 || y >= derivedDimensions.y) {
 			throw new IndexOutOfBoundsException("Index " + index + " is out of bounds in a dataset of dimension " + derivedDimensions);
 		}
@@ -213,48 +251,49 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	}
 	
 	/**
-	 * Returns an Optional Integer representing the index for the given x,y values
+	 * Returns an int (representing the backing index) for the given x,y values
 	 * representing the derived dimensions specified by this DataSource. If the x,y
 	 * values do not translate back to a valid index (eg because the original
 	 * selection was not rectangular), it returns Empty
 	 */
-	private int getSourceIndexForDerivedPoint(int x, int y) {
+	private int getBackingIndexForDerivedPoint(int x, int y) {
 		if (!derivedGrid.boundsCheck(x, y)) {
 			return -1;
 		}
 		Coord<Integer> coord = new Coord<>(x, y);
 		int derivedIndex = derivedGrid.getIndexFromXY(coord);
-		return derivedIndexes.get(derivedIndex);
+		return getBackingIndexForDerivedPoint(derivedIndex);
 	}
 	
 	
-	private int getSourceIndexForDerivedPoint(int derivedIndex) {
-		IntPair xy = derivedGrid.getXYFromIndex(derivedIndex);
-		int x = xy.first;
-		int y = xy.second;
-		return getSourceIndexForDerivedPoint(x, y);
+	/**
+	 * translates a map index based on the dimensions of this datasource into an
+	 * index into the backingIndexes array
+	 */
+	private int getBackingIndexForDerivedPoint(int derivedIndex) {
+		return derivedIndexLookup.get(derivedIndex);
 	}
 	
 	
 
 	
 	/**
-	 * Indicates if this point is valid, meaning that it has a real source value in
-	 * the underlying source dataset. The x and y parameters refer to the
-	 * coordinates of a point in the derived dimensions (not the source dimensions)
-	 * specified by this DataSource
+	 * Indicates if this point is valid, meaning that it has a real value in the
+	 * backing dataset. The x and y parameters refer to the coordinates of a point
+	 * in the derived dimensions (not the backing dimensions) specified by this
+	 * DataSource
 	 */
 	public boolean isValidPoint(int x, int y) {
-		return getSourceIndexForDerivedPoint(x, y) != -1;
+		return getBackingIndexForDerivedPoint(x, y) != -1;
 	}
 	
 	/**
-	 * Indicates if the point is valid, meaning that it has a real source value in
-	 * the underlying source dataset. The index given here is in reference to the
-	 * derived dimensions (not the source dimensions) specified by this DataSource
+	 * Indicates if the point is valid, meaning that it has a real value in the
+	 * backing dataset. The index given here is in reference to the derived
+	 * dimensions (not the backing dimensions) specified by this DataSource
 	 */
 	public boolean isValidPoint(int derivedIndex) {
-		return getSourceIndexForDerivedPoint(derivedIndex) != -1;
+		return getBackingIndexForDerivedPoint(derivedIndex) != -1;
 	}
 	
 
@@ -271,15 +310,15 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		//map modes will have to translate back to actual map points
 		//before we can deal with it as a rectangular area of spectra
 		GridPerspective<Float> grid = new GridPerspective<>(
-				sourceDimensions.x, 
-				sourceDimensions.y, 
+				backingDimensions.x, 
+				backingDimensions.y, 
 				0f);
 		int minx = grid.width;
 		int miny = grid.height;
 		int maxx = 0;
 		int maxy = 0;
 		boolean[] selected = new boolean[grid.size()];
-		for (int i : selectedIndexes) {
+		for (int i : backingIndexes) {
 			selected[i] = true;
 			IntPair coord = grid.getXYFromIndex(i);
 			minx = Math.min(minx, coord.first);
