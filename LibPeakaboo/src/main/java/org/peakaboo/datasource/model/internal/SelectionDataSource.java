@@ -36,6 +36,11 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	private Coord<Integer> derivedDimensions;
 	private Coord<Integer> offset;
 	private GridPerspective<Integer> sourceGrid, derivedGrid;
+	
+	// 1d list the size of the derived dimensions, each entry stores the offset into
+	// selectedIndexes this entry maps to, ot -1 if this entry has no source value
+	// (and is thus invalid)
+	private List<Integer> derivedIndexes;
 	private Mutable<Boolean> rectangular = new Mutable<>(null);
 	
 	/**
@@ -69,6 +74,17 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		this.derivedDimensions = new Coord<>(maxx-minx+1, maxy-miny+1);
 		offset = new Coord<>(minx, miny);
 		this.derivedGrid = new GridPerspective<>(this.derivedDimensions.x, this.derivedDimensions.y, 0);
+		
+		derivedIndexes = new ArrayList<>();
+		for (int i = 0; i < derivedGrid.size(); i++) {
+			derivedIndexes.add(-1);
+		}
+		for (int i = 0; i < selectedIndexes.size(); i++) {
+			Coord<Integer> derivedCoord = getDataCoordinatesAtIndex(i);
+			int derivedIndex = derivedGrid.getIndexFromXY(derivedCoord);
+			derivedIndexes.set(derivedIndex, i);
+		}
+		
 	}
 
 	
@@ -202,19 +218,25 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	 * values do not translate back to a valid index (eg because the original
 	 * selection was not rectangular), it returns Empty
 	 */
-	public Optional<Integer> getIndexForDataCoordinates(int x, int y) {
+	private int getSourceIndexForDerivedPoint(int x, int y) {
 		if (!derivedGrid.boundsCheck(x, y)) {
-			return Optional.empty();
+			return -1;
 		}
 		Coord<Integer> coord = new Coord<>(x, y);
-		//TODO: slow -- cache this as a map
-		for (int i = 0; i < selectedIndexes.size(); i++) {
-			if (getDataCoordinatesAtIndex(i).equals(coord)) {
-				return Optional.of(i);
-			}
-		}
-		return Optional.empty();
+		int derivedIndex = derivedGrid.getIndexFromXY(coord);
+		return derivedIndexes.get(derivedIndex);
 	}
+	
+	
+	private int getSourceIndexForDerivedPoint(int derivedIndex) {
+		IntPair xy = derivedGrid.getXYFromIndex(derivedIndex);
+		int x = xy.first;
+		int y = xy.second;
+		return getSourceIndexForDerivedPoint(x, y);
+	}
+	
+	
+
 	
 	/**
 	 * Indicates if this point is valid, meaning that it has a real source value in
@@ -223,7 +245,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	 * specified by this DataSource
 	 */
 	public boolean isValidPoint(int x, int y) {
-		return getIndexForDataCoordinates(x, y).isPresent();
+		return getSourceIndexForDerivedPoint(x, y) != -1;
 	}
 	
 	/**
@@ -232,8 +254,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	 * derived dimensions (not the source dimensions) specified by this DataSource
 	 */
 	public boolean isValidPoint(int derivedIndex) {
-		IntPair xy = derivedGrid.getXYFromIndex(derivedIndex);
-		return getIndexForDataCoordinates(xy.first, xy.second).isPresent();
+		return getSourceIndexForDerivedPoint(derivedIndex) != -1;
 	}
 	
 

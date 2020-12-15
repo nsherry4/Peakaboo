@@ -155,7 +155,7 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	/**
 	 * Indicates if the data points in this map can be reliably mapped back to the correct spectra
 	 */
-	public boolean isReplottable() {
+	public boolean areAllPointsValid() {
 		return mapModel.mapResults.areAllPointsValid();
 	}
 		

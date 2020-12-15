@@ -127,7 +127,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 	public boolean isSelectable() {
 		return map.getFitting().getActiveMode().isTranslatableToSpatial() //The current mapping mode can map it back to source spectra 
-				//&& map.rawDataController.isReplottable() //The original data source supports replotting
+				&& map.rawDataController.areAllPointsValid() //The original data source supports replotting
 				&& map.getFiltering().isReplottable(); //The filters applied don't prohibit replotting
 	}
 
