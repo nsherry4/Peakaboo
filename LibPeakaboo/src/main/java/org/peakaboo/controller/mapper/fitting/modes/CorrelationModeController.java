@@ -205,7 +205,7 @@ public class CorrelationModeController extends ModeController {
 	
 
 	@Override
-	public boolean isTranslatable() {
+	public boolean isTranslatableToSpatial() {
 		return true;
 	}
 
@@ -215,7 +215,7 @@ public class CorrelationModeController extends ModeController {
 	}
 
 	@Override
-	public List<Integer> translateSelection(List<Integer> points) {
+	public List<Integer> translateSelectionToSpatial(List<Integer> points) {
 		if (invalidated) {
 			getData();
 		}

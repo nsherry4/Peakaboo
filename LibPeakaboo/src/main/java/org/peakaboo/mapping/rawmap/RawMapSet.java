@@ -176,7 +176,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap> {
 		return s;
 	}
 	
-	public boolean isReplottable() {
+	public boolean areAllPointsValid() {
 		return allPointsValid;
 	}
 	

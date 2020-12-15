@@ -69,7 +69,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 			} else if (!oldMode.isSpatial()) {
 				//the old mode is not spatial, so we have to translate the points back to 
 				//spatial points before keeping them
-				currentSelection = oldMode.translateSelection(currentSelection);
+				currentSelection = oldMode.translateSelectionToSpatial(currentSelection);
 			}
 
 		});
@@ -98,10 +98,19 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	public List<Integer> getPoints(boolean translated) {
 		List<Integer> points = mergeSelections(dragFocalPoint, modify);
 		if (translated) {
-			return trimSelectionToBounds(translate(points), true);
+			points = trimSelectionToBounds(translateToSpatial(points), true);
 		} else {
-			return trimSelectionToBounds(points, false);
+			points = trimSelectionToBounds(points, false);
 		}
+		/*
+		 * Now we should have points which are spatial (map back to real points in the
+		 * underlying data source). We can proceed to filtering out any spatial index
+		 * that doesn't have a real data point backing it
+		 */
+		List<Integer> invalidPoints = map.rawDataController.getInvalidPoints();
+		points.removeAll(invalidPoints);
+		
+		return points;
 	}
 	
 	/**
@@ -117,8 +126,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 	public boolean isSelectable() {
-		return map.getFitting().getActiveMode().isTranslatable() //The current mapping mode can map it back to source spectra 
-				&& map.rawDataController.isReplottable() //The original data source supports replotting
+		return map.getFitting().getActiveMode().isTranslatableToSpatial() //The current mapping mode can map it back to source spectra 
+				//&& map.rawDataController.isReplottable() //The original data source supports replotting
 				&& map.getFiltering().isReplottable(); //The filters applied don't prohibit replotting
 	}
 
@@ -260,8 +269,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 * to the spectra that generated those points. If there is no translation, the points will
 	 * simply be returned.
 	 */
-	private List<Integer> translate(List<Integer> points) {
-		return map.getFitting().getActiveMode().translateSelection(points);
+	private List<Integer> translateToSpatial(List<Integer> points) {
+		return map.getFitting().getActiveMode().translateSelectionToSpatial(points);
 	}
 	
 }

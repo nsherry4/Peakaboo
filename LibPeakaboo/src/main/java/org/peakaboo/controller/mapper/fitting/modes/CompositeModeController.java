@@ -59,7 +59,7 @@ public class CompositeModeController extends ModeController {
 
 
 	@Override
-	public boolean isTranslatable() {
+	public boolean isTranslatableToSpatial() {
 		return true;
 	}
 

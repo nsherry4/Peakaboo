@@ -33,9 +33,9 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	private List<Integer> selectedIndexes;
 	private DataSourceAnalysis analysis;
 	
-	private Coord<Integer> dimensions;
+	private Coord<Integer> derivedDimensions;
 	private Coord<Integer> offset;
-	private GridPerspective<Integer> sourceGrid;
+	private GridPerspective<Integer> sourceGrid, derivedGrid;
 	private Mutable<Boolean> rectangular = new Mutable<>(null);
 	
 	/**
@@ -66,8 +66,9 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 			if (coord.second > maxy) { maxy = coord.second; }
 		}
 		
-		this.dimensions = new Coord<>(maxx-minx+1, maxy-miny+1);
+		this.derivedDimensions = new Coord<>(maxx-minx+1, maxy-miny+1);
 		offset = new Coord<>(minx, miny);
+		this.derivedGrid = new GridPerspective<>(this.derivedDimensions.x, this.derivedDimensions.y, 0);
 	}
 
 	
@@ -178,9 +179,10 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 
 	@Override
 	public Coord<Integer> getDataDimensions() {
-		return dimensions;
+		return derivedDimensions;
 	}
 
+	//Index here refers to position in the selectedIndices list
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
 		int sourceIndex = getOriginalIndex(index);
@@ -188,28 +190,50 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		
 		int x = sourceCoord.first - offset.x;
 		int y = sourceCoord.second - offset.y;
-		if (x < 0 || x >= dimensions.x || y < 0 || y >= dimensions.y) {
-			throw new IndexOutOfBoundsException("Index " + index + " is out of bounds in a dataset of dimension " + dimensions);
+		if (x < 0 || x >= derivedDimensions.x || y < 0 || y >= derivedDimensions.y) {
+			throw new IndexOutOfBoundsException("Index " + index + " is out of bounds in a dataset of dimension " + derivedDimensions);
 		}
 		return new Coord<>(x, y);
 	}
 	
 	/**
-	 * indicates if this point is valid, meaning that it has a real 
-	 * source value in the underlying source dataset
+	 * Returns an Optional Integer representing the index for the given x,y values
+	 * representing the derived dimensions specified by this DataSource. If the x,y
+	 * values do not translate back to a valid index (eg because the original
+	 * selection was not rectangular), it returns Empty
 	 */
-	public boolean isValidPoint(int x, int y) {
-		if (x < 0 || x >= dimensions.x || y < 0 || y >= dimensions.y) {
-			return false;
+	public Optional<Integer> getIndexForDataCoordinates(int x, int y) {
+		if (!derivedGrid.boundsCheck(x, y)) {
+			return Optional.empty();
 		}
 		Coord<Integer> coord = new Coord<>(x, y);
 		//TODO: slow -- cache this as a map
-		for (int i : selectedIndexes) {
+		for (int i = 0; i < selectedIndexes.size(); i++) {
 			if (getDataCoordinatesAtIndex(i).equals(coord)) {
-				return true;
+				return Optional.of(i);
 			}
 		}
-		return false;
+		return Optional.empty();
+	}
+	
+	/**
+	 * Indicates if this point is valid, meaning that it has a real source value in
+	 * the underlying source dataset. The x and y parameters refer to the
+	 * coordinates of a point in the derived dimensions (not the source dimensions)
+	 * specified by this DataSource
+	 */
+	public boolean isValidPoint(int x, int y) {
+		return getIndexForDataCoordinates(x, y).isPresent();
+	}
+	
+	/**
+	 * Indicates if the point is valid, meaning that it has a real source value in
+	 * the underlying source dataset. The index given here is in reference to the
+	 * derived dimensions (not the source dimensions) specified by this DataSource
+	 */
+	public boolean isValidPoint(int derivedIndex) {
+		IntPair xy = derivedGrid.getXYFromIndex(derivedIndex);
+		return getIndexForDataCoordinates(xy.first, xy.second).isPresent();
 	}
 	
 

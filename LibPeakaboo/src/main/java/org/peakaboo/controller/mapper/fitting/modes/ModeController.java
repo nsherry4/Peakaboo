@@ -135,7 +135,7 @@ public abstract class ModeController extends Eventful {
 	/**
 	 * Indicates if the current mode is able to be translated back to the original spectra and replotted
 	 */
-	public abstract boolean isTranslatable();
+	public abstract boolean isTranslatableToSpatial();
 	
 	/**
 	 * Indicates if the current mode is a spatial mode that maps individual pixels to points on a map
@@ -146,10 +146,10 @@ public abstract class ModeController extends Eventful {
 	
 	/**
 	 * Given a list of selected points on this map mode, translate the points back
-	 * to the spectra that generated those points. This should only ever be called
-	 * for map modes where isTranslatable is true
+	 * to spacial indices representing the spectra that generated those points. This
+	 * should only ever be called for map modes where isTranslatable is true
 	 */
-	public List<Integer> translateSelection(List<Integer> points) {
+	public List<Integer> translateSelectionToSpatial(List<Integer> points) {
 		return points;
 	}
 

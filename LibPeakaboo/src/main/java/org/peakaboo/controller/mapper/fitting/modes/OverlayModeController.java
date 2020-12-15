@@ -100,7 +100,7 @@ public class OverlayModeController extends ModeController {
 	}
 
 	@Override
-	public boolean isTranslatable() {
+	public boolean isTranslatableToSpatial() {
 		return true;
 	}
 	
