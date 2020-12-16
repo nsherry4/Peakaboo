@@ -95,20 +95,41 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		return ! (currentSelection.isEmpty() && newSelection.isEmpty());
 	}
 
-	public List<Integer> getPoints(boolean translated) {
+	/**
+	 * Gets selected points as they should be displayed to the user, representing
+	 * the shape of their selection mask. This is different than
+	 * {@link #getLogicalPoints()} which will translate selections of non-spatial
+	 * display modes (eg correlation) back to the data's underlying indexes and
+	 * remove selection points with no backing data (ie invalid points)
+	 */
+	public List<Integer> getDisplayPoints() {
 		List<Integer> points = mergeSelections(dragFocalPoint, modify);
-		if (translated) {
-			points = trimSelectionToBounds(translateToSpatial(points), true);
-		} else {
-			points = trimSelectionToBounds(points, false);
-		}
+		points = trimSelectionToBounds(points, false);
+		return points;
+	}
+	
+	/**
+	 * Gets selected points as they map back to the underlying data. This is
+	 * different than {@link #getDisplayPoints()} which will return points depicting
+	 * the selection mask rather than the indexes of the backing data. This method
+	 * will translate selections made in non-spatial map modes (eg correlation) and
+	 * remove any points for which no backing data exists.
+	 */
+	public List<Integer> getLogicalPoints() {
+		boolean spatial = map.getFitting().getActiveMode().isSpatial();
+		List<Integer> points = mergeSelections(dragFocalPoint, modify);
+		points = trimSelectionToBounds(translateToSpatial(points), true);
+		
 		/*
 		 * Now we should have points which are spatial (map back to real points in the
 		 * underlying data source). We can proceed to filtering out any spatial index
 		 * that doesn't have a real data point backing it
 		 */
-		List<Integer> invalidPoints = map.rawDataController.getInvalidPoints();
-		points.removeAll(invalidPoints);
+		if (spatial) {
+			List<Integer> invalidPoints = map.rawDataController.getInvalidPoints();
+			points.removeAll(invalidPoints);
+		}
+
 		
 		return points;
 	}
@@ -133,7 +154,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		boolean filtercompat = map.getFiltering().isReplottable();
 		
 		if (!filtercompat) { return false; }
-		if (!spatial && !allvalid) { return false; }
+		//if (!spatial && !allvalid) { return false; }
 		if (!translatable) { return false; }
 		return true;
 		
@@ -231,7 +252,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 
 	public SubsetDataSource getSubsetDataSource() {
-		return map.getDataSourceForSubset(getPoints(true));
+		return map.getDataSourceForSubset(getLogicalPoints());
 	}
 	
 	
