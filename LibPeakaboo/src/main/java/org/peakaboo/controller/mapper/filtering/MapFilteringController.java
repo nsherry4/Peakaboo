@@ -2,6 +2,7 @@ package org.peakaboo.controller.mapper.filtering;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,6 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	private MapFilterSet filters = new MapFilterSet();
 	private EventfulCache<CachedMaps> cachedMaps;
 	
-	
 	public MapFilteringController(MappingController controller) {
 		this.controller = controller;
 		cachedMaps = new EventfulNullableCache<>(() -> new CachedMaps(controller, filters));
@@ -51,7 +51,6 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 		
 	}
 	
-	
 	public int getFilteredDataWidth() {
 		return getSummedMap().getSize().x;
 	}
@@ -60,7 +59,7 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 		return getSummedMap().getSize().y;
 	}
 	
-	public boolean isValidPoint(Coord<Integer> mapCoord)
+	public boolean isPointInBounds(Coord<Integer> mapCoord)
 	{
 		return (mapCoord.x >= 0 && mapCoord.x < getFilteredDataWidth() && mapCoord.y >= 0 && mapCoord.y < getFilteredDataHeight());
 	}
@@ -94,6 +93,10 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	
 	public Iterable<AreaMap> getAreaMaps(List<ITransitionSeries> tss) {
 		return new CacheIterable<>(tss.stream().map(this::getAreaMap).collect(Collectors.toList()));
+	}
+	
+	public List<Integer> getInvalidPoints() {
+		return cachedMaps.getValue().getInvalidPoints();
 	}
 	
 	/**
@@ -197,18 +200,19 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 class CachedMaps {
 	
 	private Map<ITransitionSeries, EventfulSoftCache<AreaMap>> maps;
+	private List<Integer> invalidPoints;
 	private AreaMap sum;
 	private boolean replottable;
 	
 	public CachedMaps(MappingController controller, MapFilterSet filters) {
 
-		maps = new ConcurrentHashMap<>();
+		this.maps = new ConcurrentHashMap<>();
+		this.replottable = filters.isReplottable();
 		
 		Coord<Integer> size = controller.getUserDimensions().getDimensions();
 
 		//get calibrated map data and generate AreaMaps
 		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
-		
 		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
 		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
@@ -223,8 +227,14 @@ class CachedMaps {
 			maps.put(ts, mapcache);
 		});
 
-		this.replottable = filters.isReplottable();
+		//Apply the same filters to a map of invalid data points
+		Spectrum invalidMask = Spectrum.fromPoints(controller.rawDataController.getInvalidPoints(), rawmaps.getMaps().get(0).size());
+		AreaMap invalidMap = new AreaMap(invalidMask, Collections.emptyList(), size, controller.rawDataController.getRealDimensions());
+		invalidMap = filters.apply(invalidMap);
+		invalidPoints = Spectrum.toPoints(invalidMap.getData());
+				
 		
+		//calculate the sum total map, replacing it with an empty map if there's nothing to sum
 		if (maps.size() > 0) {
 			Spectrum total = new ISpectrum(size.x * size.y);
 			AreaMap map = null;
@@ -258,6 +268,10 @@ class CachedMaps {
 	
 	public AreaMap getSum() {
 		return sum;
+	}
+	
+	public List<Integer> getInvalidPoints() {
+		return Collections.unmodifiableList(invalidPoints);
 	}
 	
 	

@@ -1,5 +1,6 @@
 package org.peakaboo.framework.cyclops;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -56,5 +57,40 @@ public interface Spectrum extends ReadOnlySpectrum {
 	 * This will not impact the add cursor's location
 	 */
 	void zero();
+	
+	
+	/**
+	 * Converts a list of integers (points) to a spectrum with matching indices set to 1
+	 */
+	static Spectrum fromPoints(List<Integer> points, int size) {
+		return fromPoints(points, size, 1f);
+	}
+	/**
+	 * Converts a list of integers (points) to a spectrum with matching indices set to a given value
+	 */
+	static Spectrum fromPoints(List<Integer> points, int size, float value) {
+		Spectrum mask = new ISpectrum(size);
+		for (int i = 0; i < size; i++) {
+			if (points.contains(i)) {
+				mask.add(value);
+			} else {
+				mask.add(0f);
+			}
+		}
+		return mask;
+	}
+	
+	/**
+	 * Converts a spectrum to a list of integers (points) with entries for each non-zero element
+	 */
+	static List<Integer> toPoints(ReadOnlySpectrum spectrum) {
+		List<Integer> points = new ArrayList<>();
+		for (int i = 0; i < spectrum.size(); i++) {
+			if (spectrum.get(i) != 0) {
+				points.add(i);
+			}
+		}
+		return points;
+	}
 
 }

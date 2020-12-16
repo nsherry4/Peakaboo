@@ -38,8 +38,10 @@ public class CompositeModeController extends ModeController {
 		
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, data, getMap().rawDataController.getBadPoints());
-		List<Integer> invalidPoints = getMap().rawDataController.getInvalidPoints(); 
+		List<Integer> invalidPoints = getMap().getFiltering().getInvalidPoints();
 
+		
+		
 		int w = getMap().getFiltering().getFilteredDataWidth();
 		int h = getMap().getFiltering().getFilteredDataHeight();
 		Coord<Integer> size = new Coord<>(w, h);

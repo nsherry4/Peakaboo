@@ -21,10 +21,7 @@ public class CompositeModeData implements MapModeData {
 		this.size = size;	
 		this.invalidPoints = invalidPoints;
 		//build invalid point mask from list of invalid points
-		invalidMask = new ISpectrum(data.size(), 0f);
-		for (int i : this.invalidPoints) {
-			invalidMask.set(i, 1f);
-		}
+		invalidMask = Spectrum.fromPoints(invalidPoints, data.size());
 	}
 	
 	@Override

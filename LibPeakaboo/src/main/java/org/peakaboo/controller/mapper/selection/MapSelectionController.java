@@ -99,12 +99,17 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 * Gets selected points as they should be displayed to the user, representing
 	 * the shape of their selection mask. This is different than
 	 * {@link #getLogicalPoints()} which will translate selections of non-spatial
-	 * display modes (eg correlation) back to the data's underlying indexes and
-	 * remove selection points with no backing data (ie invalid points)
+	 * display modes (eg correlation) back to the data's underlying indexes before
+	 * removing selection points with no backing data (ie invalid points)
 	 */
 	public List<Integer> getDisplayPoints() {
+		boolean spatial = map.getFitting().getActiveMode().isSpatial();
 		List<Integer> points = mergeSelections(dragFocalPoint, modify);
 		points = trimSelectionToBounds(points, false);
+		if (spatial) {
+			List<Integer> invalidPoints = map.getFiltering().getInvalidPoints();
+			points.removeAll(invalidPoints);
+		}
 		return points;
 	}
 	
@@ -126,7 +131,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		 * that doesn't have a real data point backing it
 		 */
 		if (spatial) {
-			List<Integer> invalidPoints = map.rawDataController.getInvalidPoints();
+			List<Integer> invalidPoints =  map.getFiltering().getInvalidPoints();
 			points.removeAll(invalidPoints);
 		}
 
