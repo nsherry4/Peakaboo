@@ -35,8 +35,8 @@ class DragSelection extends AbstractSelection {
 		{
 			if (dragStart.x < 0) dragStart.x = 0;
 			if (dragStart.y < 0) dragStart.y = 0;
-			if (dragStart.x >= size().x) dragStart.x = size().x-1;
-			if (dragStart.y >= size().y) dragStart.y = size().y-1;
+			if (dragStart.x >= mapSize().x) dragStart.x = mapSize().x-1;
+			if (dragStart.y >= mapSize().y) dragStart.y = mapSize().y-1;
 		}
 		
 		this.start = dragStart;
@@ -56,11 +56,12 @@ class DragSelection extends AbstractSelection {
 	}
 
 	public void setEnd(Coord<Integer> dragEnd) {
+		Coord<Integer> size = mapSize();
 		if (dragEnd != null) {
 			if (dragEnd.x < 0) dragEnd.x = 0;
 			if (dragEnd.y < 0) dragEnd.y = 0;
-			if (dragEnd.x >= size().x) dragEnd.x = size().x-1;
-			if (dragEnd.y >= size().y) dragEnd.y = size().y-1;
+			if (dragEnd.x >= size.x) dragEnd.x = size.x-1;
+			if (dragEnd.y >= size.y) dragEnd.y = size.y-1;
 		}
 		this.end = dragEnd;
 	}
@@ -77,7 +78,8 @@ class DragSelection extends AbstractSelection {
 			return points;
 		}
 		
-		final GridPerspective<Float> grid = new GridPerspective<>(size().x, size().y, 0f);
+		Coord<Integer> size = mapSize();
+		final GridPerspective<Float> grid = new GridPerspective<>(size.x, size.y, 0f);
 		
 		switch (map.getSelection().getSelectionType()) {
 		case ELLIPSE:
@@ -146,7 +148,7 @@ class DragSelection extends AbstractSelection {
 	
 	public void trimSelectionToBounds() {
 		
-		Coord<Integer> size = size();
+		Coord<Integer> size = mapSize();
 		int x = size.x;
 		int y = size.y;
 		

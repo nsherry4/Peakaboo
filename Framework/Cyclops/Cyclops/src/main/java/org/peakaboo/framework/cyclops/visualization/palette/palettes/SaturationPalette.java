@@ -17,7 +17,7 @@ public class SaturationPalette extends AbstractPalette
 	@Override
 	public PaletteColour getFillColour(double intensity, double maximum)
 	{
-		if (intensity == maximum){
+		if (intensity != 0f){
 			return saturated;
 		}
 		return unsaturated;

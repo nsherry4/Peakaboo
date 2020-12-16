@@ -25,7 +25,7 @@ public class RatioModeData implements MapModeData {
 
 	@Override
 	public String getValueAtCoord(Coord<Integer> coord) {
-		if (!isValidPoint(coord)) {
+		if (!isPointInBounds(coord)) {
 			return "-";
 		}
 		if (relative) return "--";

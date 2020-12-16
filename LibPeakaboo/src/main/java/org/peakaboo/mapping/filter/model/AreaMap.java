@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.framework.cyclops.Bounds;
@@ -27,13 +26,13 @@ public class AreaMap {
 	public AreaMap(ReadOnlySpectrum data, Element e, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
 		this(data, Collections.singletonList(e), size, realDims);
 	}
-	
 	public AreaMap(ReadOnlySpectrum data, List<Element> elements, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
 		this.data = data;
 		this.size = size;
 		this.realDimensions = realDims;
 		this.elements = Collections.unmodifiableList(new ArrayList<>(elements));
 	}
+
 
 	/**
 	 * Copy constructor which keeps the metadata but replaces the actual map data
@@ -43,6 +42,9 @@ public class AreaMap {
 		this.data = new ISpectrum(data);
 	}
 	
+	/**
+	 * Complate copy constructor
+	 */
 	public AreaMap(AreaMap other) {
 		this.data = new ISpectrum(other.data);
 		this.size = other.size;
@@ -66,7 +68,7 @@ public class AreaMap {
 	 * Returns an immutable list of elemental maps present in this area map. The list may be empty.
 	 */
 	public List<Element> getElements() {
-		return elements;
+		return Collections.unmodifiableList(elements);
 	}
 	
 	public void add(AreaMap other) {

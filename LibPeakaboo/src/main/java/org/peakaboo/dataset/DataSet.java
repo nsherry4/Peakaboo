@@ -55,7 +55,6 @@ public interface DataSet {
 	boolean hasGenuineDataSize();
 	
 	
-	
 	/**
 	 * This appears to be a workaround to a garbage collection issue where <i>something</i> is 
 	 * maintaining a reference to the DataSet. By discarding the underlying DataSource, we can

@@ -2,9 +2,14 @@ package org.peakaboo.controller.mapper.rawdata;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
+import org.peakaboo.dataset.DataSet;
+import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
@@ -26,30 +31,43 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	}
 	
 
+	
 
 	/**
-	 * Sets the map's data model. dataDimensions, realDimensions, realDimensionsUnits may be null
+	 * Sets the map's data model.
 	 * @param calibrationProfile 
 	 */
 	public void setMapData(
 			RawMapSet data,
+			DataSet sourceDataset,
 			String datasetName,
 			List<Integer> badPoints,
-			Coord<Integer> dataDimensions,
-			Coord<Bounds<Number>> realDimensions,
-			SISize realDimensionsUnits, 
 			CalibrationProfile calibrationProfile		
 	) {
 	
 		
 		mapModel.mapResults = data;
+		mapModel.sourceDataset = sourceDataset;
 		mapModel.datasetTitle = datasetName;
 		mapModel.badPoints = badPoints;
 		
-		mapModel.originalDimensions = dataDimensions;
-		mapModel.originalDimensionsProvided = dataDimensions != null;
-		mapModel.realDimensions = realDimensions;
-		mapModel.realDimensionsUnits = realDimensionsUnits;
+		if (sourceDataset.hasGenuineDataSize()) {
+			mapModel.originalDimensionsProvided = true;
+			mapModel.originalDimensions = sourceDataset.getDataSize().getDataDimensions();
+		} else {
+			mapModel.originalDimensionsProvided = false;
+			mapModel.originalDimensions = null;
+		}
+		
+		Optional<PhysicalSize> physical = sourceDataset.getPhysicalSize();
+		if (physical.isPresent()) {
+			mapModel.realDimensions = physical.get().getPhysicalDimensions();
+			mapModel.realDimensionsUnits = physical.get().getPhysicalUnit();
+		} else {
+			mapModel.realDimensions = null;
+			mapModel.realDimensionsUnits = null;
+		}
+		
 		mapModel.calibrationProfile = calibrationProfile;
 
 		updateListeners(MapUpdateType.DATA);
@@ -60,14 +78,9 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 		return mapModel.mapSize();
 	}
 
-	
-	
-
 
 	
-
 	
-
 	
 	public Coord<Integer> getOriginalDataDimensions() {
 		return mapModel.originalDimensions;
@@ -86,8 +99,24 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	
 	
 	
-
-
+	/**
+	 * Returns a list of indexes (referring to points in this map) which are invalid
+	 * in the underlying source dataset
+	 */
+	public List<Integer> getInvalidPoints() {
+		List<Integer> invalidPoints = new ArrayList<>();
+		//TODO: Hack
+		DataSource ds = mapModel.sourceDataset.getDataSource();
+		if (ds instanceof SelectionDataSource) {
+			SelectionDataSource sds = (SelectionDataSource) ds;
+			Coord<Integer> dims = sds.getDataDimensions();
+			int max = dims.x * dims.y;
+			for (int i = 0; i < max; i++) {
+				if (!sds.isValidPoint(i)) { invalidPoints.add(i); }
+			}
+		}
+		return invalidPoints;
+	}
 
 	public List<Integer> getBadPoints() {
 		return new ArrayList<>(mapModel.badPoints);
@@ -126,8 +155,8 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	/**
 	 * Indicates if the data points in this map can be reliably mapped back to the correct spectra
 	 */
-	public boolean isReplottable() {
-		return mapModel.mapResults.isReplottable();
+	public boolean areAllPointsValid() {
+		return mapModel.mapResults.areAllPointsValid();
 	}
 		
 }

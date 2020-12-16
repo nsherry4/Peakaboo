@@ -71,14 +71,17 @@ public class OverlayModeController extends ModeController {
 			
 		}
 
-		int w = getMap().getFiltering().getFilteredDataWidth();
-		int h = getMap().getFiltering().getFilteredDataHeight();
-		Coord<Integer> size = new Coord<>(w, h);
 		boolean relative = getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE;
-		return new OverlayModeData(colourChannels, size, relative);
+		return new OverlayModeData(colourChannels, getSize(), relative);
 		
 	}
 	
+	public Coord<Integer> getSize() {
+		int w = getMap().getFiltering().getFilteredDataWidth();
+		int h = getMap().getFiltering().getFilteredDataHeight();
+		Coord<Integer> size = new Coord<>(w, h);
+		return size;
+	}
 	
 	
 	@Override
@@ -100,7 +103,7 @@ public class OverlayModeController extends ModeController {
 	}
 
 	@Override
-	public boolean isTranslatable() {
+	public boolean isTranslatableToSpatial() {
 		return true;
 	}
 	

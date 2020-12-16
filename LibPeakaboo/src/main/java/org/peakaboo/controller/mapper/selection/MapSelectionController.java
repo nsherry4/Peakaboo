@@ -13,7 +13,10 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.eventful.EventfulType;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 public class MapSelectionController extends EventfulType<MapUpdateType> {
 
@@ -37,6 +40,9 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	private List<Integer> newSelection = new ArrayList<>();
 	private boolean modify = false;
 	private Coord<Integer> dragFocalPoint;
+	
+	//cache values for the selected points, one suitable for display and the other for accessing datasets
+	private EventfulCache<List<Integer>> displayPointCache, logicalPointCache;
 	
 	public MapSelectionController(MappingController mappingController) {
 		this.map = mappingController;
@@ -69,9 +75,44 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 			} else if (!oldMode.isSpatial()) {
 				//the old mode is not spatial, so we have to translate the points back to 
 				//spatial points before keeping them
-				currentSelection = oldMode.translateSelection(currentSelection);
+				currentSelection = oldMode.translateSelectionToSpatial(currentSelection);
 			}
 
+		});
+		
+		displayPointCache = new EventfulNullableCache<>(() -> {
+			boolean spatial = map.getFitting().getActiveMode().isSpatial();
+			List<Integer> points = mergeSelections(dragFocalPoint, modify);
+			points = trimSelectionToBounds(points, false);
+			if (spatial) {
+				List<Integer> invalidPoints = map.getFiltering().getInvalidPoints();
+				points.removeAll(invalidPoints);
+			}
+			return points;
+		});
+		
+		logicalPointCache = new EventfulNullableCache<>(() -> {
+			boolean spatial = map.getFitting().getActiveMode().isSpatial();
+			List<Integer> points = mergeSelections(dragFocalPoint, modify);
+			points = trimSelectionToBounds(translateToSpatial(points), true);
+			
+			/*
+			 * Now we should have points which are spatial (map back to real points in the
+			 * underlying data source). We can proceed to filtering out any spatial index
+			 * that doesn't have a real data point backing it
+			 */
+			if (spatial) {
+				List<Integer> invalidPoints =  map.getFiltering().getInvalidPoints();
+				points.removeAll(invalidPoints);
+			}
+
+			return points;
+		});
+		
+		this.addListener(type -> {
+			if (type != MapUpdateType.SELECTION) { return; }
+			displayPointCache.invalidate();
+			logicalPointCache.invalidate();
 		});
 		
 		
@@ -95,13 +136,26 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		return ! (currentSelection.isEmpty() && newSelection.isEmpty());
 	}
 
-	public List<Integer> getPoints(boolean translated) {
-		List<Integer> points = mergeSelections(dragFocalPoint, modify);
-		if (translated) {
-			return trimSelectionToBounds(translate(points), true);
-		} else {
-			return trimSelectionToBounds(points, false);
-		}
+	/**
+	 * Gets selected points as they should be displayed to the user, representing
+	 * the shape of their selection mask. This is different than
+	 * {@link #getLogicalPoints()} which will translate selections of non-spatial
+	 * display modes (eg correlation) back to the data's underlying indexes before
+	 * removing selection points with no backing data (ie invalid points)
+	 */
+	public List<Integer> getDisplayPoints() {
+		return displayPointCache.getValue();
+	}
+	
+	/**
+	 * Gets selected points as they map back to the underlying data. This is
+	 * different than {@link #getDisplayPoints()} which will return points depicting
+	 * the selection mask rather than the indexes of the backing data. This method
+	 * will translate selections made in non-spatial map modes (eg correlation) and
+	 * remove any points for which no backing data exists.
+	 */
+	public List<Integer> getLogicalPoints() {
+		return logicalPointCache.getValue();
 	}
 	
 	/**
@@ -113,13 +167,26 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 *         otherwise
 	 */
 	public boolean isReplottable() {
-		return hasSelection() && isSelectable();
+		return hasSelection() && isSelectable() && getLogicalPoints().size() > 0;
 	}
 	
 	public boolean isSelectable() {
-		return map.getFitting().getActiveMode().isTranslatable() //The current mapping mode can map it back to source spectra 
-				&& map.rawDataController.isReplottable() //The original data source supports replotting
-				&& map.getFiltering().isReplottable(); //The filters applied don't prohibit replotting
+		ModeController mode = map.getFitting().getActiveMode();
+		boolean spatial = mode.isSpatial();
+		boolean translatable = mode.isTranslatableToSpatial();
+		boolean allvalid = map.rawDataController.areAllPointsValid();
+		boolean filtercompat = map.getFiltering().isReplottable();
+		
+		if (!filtercompat) { return false; }
+		//if (!spatial && !allvalid) { return false; }
+		if (!translatable) { return false; }
+		return true;
+		
+		/*
+		return map.getFitting().getActiveMode().isTranslatableToSpatial() //The current mapping mode can map it back to source spectra 
+				&& map.rawDataController.areAllPointsValid() //The original data source supports replotting
+				&& map.getFiltering().isReplottable(); //The filters applied don't prohibit replotting\
+			*/
 	}
 
 	public void clearSelection() {
@@ -209,7 +276,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 
 	public SubsetDataSource getSubsetDataSource() {
-		return map.getDataSourceForSubset(getPoints(true));
+		return map.getDataSourceForSubset(getLogicalPoints());
 	}
 	
 	
@@ -255,8 +322,13 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		return trimmed;
 	}
 	
-	private List<Integer> translate(List<Integer> points) {
-		return map.getFitting().getActiveMode().translateSelection(points);
+	/**
+	 * Given a list of selected points (for the current map mode), translate the points back
+	 * to the spectra that generated those points. If there is no translation, the points will
+	 * simply be returned.
+	 */
+	private List<Integer> translateToSpatial(List<Integer> points) {
+		return map.getFitting().getActiveMode().translateSelectionToSpatial(points);
 	}
 	
 }

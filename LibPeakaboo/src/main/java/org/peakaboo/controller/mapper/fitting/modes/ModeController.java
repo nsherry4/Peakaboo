@@ -12,6 +12,7 @@ import java.util.Map;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.MapModeData;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.eventful.Eventful;
@@ -130,12 +131,19 @@ public abstract class ModeController extends Eventful {
 	
 	public abstract String longTitle();
 	public abstract MapModeData getData();
+	/**
+	 * Convenience method for {@link #getData()}.{@link MapModeData#getSize()
+	 * getSize()}. Implementations may wish to calculate this separately if getting
+	 * the data will take significantly longer than calculating the size, and they
+	 * are able to reliably determine the size without calculating the data first.
+	 */
+	public abstract Coord<Integer> getSize();
 	
 	
 	/**
 	 * Indicates if the current mode is able to be translated back to the original spectra and replotted
 	 */
-	public abstract boolean isTranslatable();
+	public abstract boolean isTranslatableToSpatial();
 	
 	/**
 	 * Indicates if the current mode is a spatial mode that maps individual pixels to points on a map
@@ -146,10 +154,10 @@ public abstract class ModeController extends Eventful {
 	
 	/**
 	 * Given a list of selected points on this map mode, translate the points back
-	 * to the spectra that generated those points. This should only ever be called
-	 * for map modes where isTranslatable is true
+	 * to spacial indices representing the spectra that generated those points. This
+	 * should only ever be called for map modes where isTranslatable is true
 	 */
-	public List<Integer> translateSelection(List<Integer> points) {
+	public List<Integer> translateSelectionToSpatial(List<Integer> points) {
 		return points;
 	}
 

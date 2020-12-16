@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
@@ -29,6 +30,7 @@ public class RawDataModel
 	
 	public List<Integer>			badPoints			= new ArrayList<>();
 	public CalibrationProfile 		calibrationProfile	= new CalibrationProfile();
+	public DataSet 					sourceDataset		= null;
 	
 
 	public int mapSize()

@@ -19,6 +19,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPa
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScalePalette;
 
 public class CompositeMapMode extends MapMode{
@@ -77,6 +78,12 @@ public class CompositeMapMode extends MapMode{
 		}
 		mapPainters.add(contourMapPainter);
 		
+		
+		//Invalid points with no backing data
+		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(
+				new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), 
+				compositedata.getInvalidPoints(), 0);
+		mapPainters.add(invalidPainter);
 		
 		//Selection Painter
 		SelectionMaskPainter selectionPainter = super.getSelectionPainter(

@@ -113,20 +113,9 @@ public class RatioMapMode extends MapMode {
 		}
 		mapPainters.add(ratioMapPainter);
 		
-		
 
-				
-		
-		Spectrum invalidPoints = new ISpectrum(ratiodata.second);
-		final float datamax = dr.maxYIntensity;
-		
-		invalidPoints.map_i((Float value) -> {
-			if (value == 1f) return datamax;
-			return 0f;
-		});
-		
 
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), invalidPoints, 0);
+		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), ratiodata.second, 0);
 		mapPainters.add(invalidPainter);
 		
 		
