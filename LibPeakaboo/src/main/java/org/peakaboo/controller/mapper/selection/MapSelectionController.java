@@ -148,7 +148,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 *         otherwise
 	 */
 	public boolean isReplottable() {
-		return hasSelection() && isSelectable();
+		return hasSelection() && isSelectable() && getLogicalPoints().size() > 0;
 	}
 	
 	public boolean isSelectable() {
