@@ -12,6 +12,7 @@ import java.util.Map;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.MapModeData;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.eventful.Eventful;
@@ -130,6 +131,13 @@ public abstract class ModeController extends Eventful {
 	
 	public abstract String longTitle();
 	public abstract MapModeData getData();
+	/**
+	 * Convenience method for {@link #getData()}.{@link MapModeData#getSize()
+	 * getSize()}. Implementations may wish to calculate this separately if getting
+	 * the data will take significantly longer than calculating the size, and they
+	 * are able to reliably determine the size without calculating the data first.
+	 */
+	public abstract Coord<Integer> getSize();
 	
 	
 	/**

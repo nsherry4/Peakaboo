@@ -239,13 +239,14 @@ class ShapeSelection extends AbstractSelection {
 	}
 	
 	private GridPerspective<Float> grid() {
-		return new GridPerspective<>(size().x, size().y, 0f);
+		Coord<Integer> mapSize = mapSize();
+		return new GridPerspective<>(mapSize.x, mapSize.y, 0f);
 	}
 	
 	private Coord<Integer> bounded(Coord<Integer> point) {
 		Coord<Integer> trimmed = new Coord<>(point);
 		
-		Coord<Integer> size = size();
+		Coord<Integer> size = mapSize();
 		int width = size.x;
 		int height = size.y;
 

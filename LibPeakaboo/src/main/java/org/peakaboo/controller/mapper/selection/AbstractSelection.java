@@ -11,8 +11,8 @@ public abstract class AbstractSelection implements Selection {
 		this.map = map;
 	}
 	
-	protected Coord<Integer> size() {
-		return map.getFitting().getActiveMode().getData().getSize();
+	protected Coord<Integer> mapSize() {
+		return map.getFitting().getActiveMode().getSize();
 	}
 	
 }

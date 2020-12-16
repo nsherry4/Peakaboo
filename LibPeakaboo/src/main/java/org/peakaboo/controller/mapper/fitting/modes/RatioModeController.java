@@ -98,17 +98,20 @@ public class RatioModeController extends ModeController {
 				ratioData.set(i, 0f);
 			}
 		}
-		
-		
-		int w = getMap().getFiltering().getFilteredDataWidth();
-		int h = getMap().getFiltering().getFilteredDataHeight();
-		Coord<Integer> size = new Coord<>(w, h);
+
 		Pair<Spectrum, Spectrum> data = new Pair<>(ratioData, invalidPoints);
 		boolean relative = getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE;
-		return new RatioModeData(data, size, relative);
+		return new RatioModeData(data, getSize(), relative);
 				
 	}
 	
+	
+	public Coord<Integer> getSize() {
+		int w = getMap().getFiltering().getFilteredDataWidth();
+		int h = getMap().getFiltering().getFilteredDataHeight();
+		Coord<Integer> size = new Coord<>(w, h);
+		return size;
+	}
 
 	public List<ITransitionSeries> forSide(final int side)
 	{

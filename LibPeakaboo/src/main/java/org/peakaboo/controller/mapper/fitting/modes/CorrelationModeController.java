@@ -193,6 +193,10 @@ public class CorrelationModeController extends ModeController {
 		return data;
 	}
 
+	public Coord<Integer> getSize() {
+		Coord<Integer> size = new Coord<>(bins, bins);
+		return size;
+	}
 
 
 

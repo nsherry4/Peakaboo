@@ -13,7 +13,10 @@ import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.eventful.EventfulType;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 public class MapSelectionController extends EventfulType<MapUpdateType> {
 
@@ -37,6 +40,9 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	private List<Integer> newSelection = new ArrayList<>();
 	private boolean modify = false;
 	private Coord<Integer> dragFocalPoint;
+	
+	//cache values for the selected points, one suitable for display and the other for accessing datasets
+	private EventfulCache<List<Integer>> displayPointCache, logicalPointCache;
 	
 	public MapSelectionController(MappingController mappingController) {
 		this.map = mappingController;
@@ -74,6 +80,41 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 
 		});
 		
+		displayPointCache = new EventfulNullableCache<>(() -> {
+			boolean spatial = map.getFitting().getActiveMode().isSpatial();
+			List<Integer> points = mergeSelections(dragFocalPoint, modify);
+			points = trimSelectionToBounds(points, false);
+			if (spatial) {
+				List<Integer> invalidPoints = map.getFiltering().getInvalidPoints();
+				points.removeAll(invalidPoints);
+			}
+			return points;
+		});
+		
+		logicalPointCache = new EventfulNullableCache<>(() -> {
+			boolean spatial = map.getFitting().getActiveMode().isSpatial();
+			List<Integer> points = mergeSelections(dragFocalPoint, modify);
+			points = trimSelectionToBounds(translateToSpatial(points), true);
+			
+			/*
+			 * Now we should have points which are spatial (map back to real points in the
+			 * underlying data source). We can proceed to filtering out any spatial index
+			 * that doesn't have a real data point backing it
+			 */
+			if (spatial) {
+				List<Integer> invalidPoints =  map.getFiltering().getInvalidPoints();
+				points.removeAll(invalidPoints);
+			}
+
+			return points;
+		});
+		
+		this.addListener(type -> {
+			if (type != MapUpdateType.SELECTION) { return; }
+			displayPointCache.invalidate();
+			logicalPointCache.invalidate();
+		});
+		
 		
 	}
 
@@ -103,14 +144,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 * removing selection points with no backing data (ie invalid points)
 	 */
 	public List<Integer> getDisplayPoints() {
-		boolean spatial = map.getFitting().getActiveMode().isSpatial();
-		List<Integer> points = mergeSelections(dragFocalPoint, modify);
-		points = trimSelectionToBounds(points, false);
-		if (spatial) {
-			List<Integer> invalidPoints = map.getFiltering().getInvalidPoints();
-			points.removeAll(invalidPoints);
-		}
-		return points;
+		return displayPointCache.getValue();
 	}
 	
 	/**
@@ -121,22 +155,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 * remove any points for which no backing data exists.
 	 */
 	public List<Integer> getLogicalPoints() {
-		boolean spatial = map.getFitting().getActiveMode().isSpatial();
-		List<Integer> points = mergeSelections(dragFocalPoint, modify);
-		points = trimSelectionToBounds(translateToSpatial(points), true);
-		
-		/*
-		 * Now we should have points which are spatial (map back to real points in the
-		 * underlying data source). We can proceed to filtering out any spatial index
-		 * that doesn't have a real data point backing it
-		 */
-		if (spatial) {
-			List<Integer> invalidPoints =  map.getFiltering().getInvalidPoints();
-			points.removeAll(invalidPoints);
-		}
-
-		
-		return points;
+		return logicalPointCache.getValue();
 	}
 	
 	/**

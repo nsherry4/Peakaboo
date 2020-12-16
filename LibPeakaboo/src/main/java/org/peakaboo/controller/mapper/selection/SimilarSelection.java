@@ -82,8 +82,9 @@ class SimilarSelection extends AbstractSelection {
 		}
 
 		
-		int w = size().x;
-		int h = size().y;
+		Coord<Integer> mapSize = mapSize();
+		int w = mapSize.x;
+		int h = mapSize.y;
 		GridPerspective<Float> grid = new GridPerspective<>(w, h, null);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		
@@ -181,8 +182,9 @@ class SimilarSelection extends AbstractSelection {
 		Set<Integer> pointSet = new HashSet<>();
 		pointSet.addAll(points);
 	
-		int w = size().x;
-		int h = size().y;
+		Coord<Integer> mapSize = mapSize();
+		int w = mapSize.x;
+		int h = mapSize.y;
 		GridPerspective<Float> grid = new GridPerspective<>(w, h, null);
 		
 		//visit all existing points
