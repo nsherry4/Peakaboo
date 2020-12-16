@@ -22,7 +22,7 @@ public class CorrelationModeData implements MapModeData {
 	@Override
 	public String getValueAtCoord(Coord<Integer> coord) {
 		
-		if (isValidPoint(coord)) {
+		if (isPointInBounds(coord)) {
 			int index = getIndex(coord);
 			float frequency = data.get(index);
 			return "" + SigDigits.roundFloatTo(  frequency, 2  );
@@ -35,7 +35,7 @@ public class CorrelationModeData implements MapModeData {
 	public String getInfoAtCoord(Coord<Integer> coord) {
 		String noValue = "X: -, Y: -, Value: -";
 		
-		if (isValidPoint(coord)) {
+		if (isPointInBounds(coord)) {
 			return "X: " + (coord.x+1) + ", Y: " + (coord.y+1) + ", Value: " + getValueAtCoord(coord);
 		} else {
 			return noValue;

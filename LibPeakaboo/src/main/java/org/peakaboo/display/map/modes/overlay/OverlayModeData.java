@@ -28,7 +28,7 @@ public class OverlayModeData implements MapModeData {
 
 	@Override
 	public String getValueAtCoord(Coord<Integer> coord) {
-		if (!isValidPoint(coord)) {
+		if (!isPointInBounds(coord)) {
 			return "-";
 		}
 		

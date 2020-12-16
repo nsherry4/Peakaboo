@@ -1,5 +1,6 @@
 package org.peakaboo.controller.mapper.fitting.modes;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.controller.mapper.MappingController;
@@ -37,12 +38,12 @@ public class CompositeModeController extends ModeController {
 		
 		// fix bad points on the map
 		Interpolation.interpolateBadPoints(grid, data, getMap().rawDataController.getBadPoints());
-		
+		List<Integer> invalidPoints = getMap().rawDataController.getInvalidPoints(); 
 
 		int w = getMap().getFiltering().getFilteredDataWidth();
 		int h = getMap().getFiltering().getFilteredDataHeight();
 		Coord<Integer> size = new Coord<>(w, h);
-		return new CompositeModeData(data, size);
+		return new CompositeModeData(data, size, invalidPoints);
 		
 	}
 
