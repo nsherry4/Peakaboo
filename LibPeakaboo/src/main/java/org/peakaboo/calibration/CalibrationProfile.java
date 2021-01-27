@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,9 +28,12 @@ import org.peakaboo.framework.druthers.DruthersStorable;
  */
 public class CalibrationProfile {
 
+	private static final String CREATION_DATE_UNKNOWN = "-";
+	
 	private CalibrationReference reference;
 	Map<ITransitionSeries, Float> calibrations;
 	private String name = "";
+	private String creationDate = "";
 	List<ITransitionSeries> interpolated;
 	
 	/**
@@ -40,12 +44,13 @@ public class CalibrationProfile {
 		calibrations = new LinkedHashMap<>();
 		interpolated = new ArrayList<>();
 		name = "Empty Z-Calibration Profile";
+		creationDate = LocalDate.now().toString();
 	}
 	
 	public CalibrationProfile(CalibrationReference reference, FittingResultSet sample) {
+		this();
 		this.reference = reference;
-		calibrations = new LinkedHashMap<>();
-		interpolated = new ArrayList<>();
+		this.name = "Unknown " + reference.getName() + " Z-Calibration Profile";
 				
 		if (!sample.getParameters().getCalibration().isZero()) {
 		
@@ -101,6 +106,7 @@ public class CalibrationProfile {
 	}
 	
 	public CalibrationProfile(CalibrationProfile copy) {
+		this();
 		this.reference = copy.reference;
 		this.calibrations = new LinkedHashMap<>(copy.calibrations);
 		this.name = copy.name;
@@ -188,6 +194,7 @@ public class CalibrationProfile {
 		saving.referenceUUID = profile.reference.getUuid();
 		saving.referenceName = profile.reference.getName();
 		saving.name = profile.name;
+		saving.creationDate = profile.creationDate;
 		for (ITransitionSeries ts : profile.calibrations.keySet()) {
 			saving.calibrations.put(ts.toIdentifierString(), profile.calibrations.get(ts));
 		}
@@ -217,6 +224,11 @@ public class CalibrationProfile {
 		profile.reference = CalibrationPluginManager.system().getByUUID(loaded.referenceUUID).create();
 		if (profile.reference == null) {
 			throw new RuntimeException("Cannot find Calibration Reference '" + loaded.referenceName + "' (" + loaded.referenceUUID + ")");
+		}
+		
+		profile.creationDate = loaded.creationDate;
+		if (profile.creationDate != null) {
+			profile.creationDate = CREATION_DATE_UNKNOWN;
 		}
 		
 		profile.name = loaded.name;
@@ -253,6 +265,7 @@ class SerializedCalibrationProfile extends DruthersStorable {
 	public String referenceUUID = null;
 	public String referenceName = null;
 	public String name = null;
+	public String creationDate = null;
 	public Map<String, Float> calibrations = new LinkedHashMap<>();
 	public List<String> interpolated = new ArrayList<>();
 }
