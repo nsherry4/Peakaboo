@@ -12,5 +12,6 @@ call "%JAVA_HOME%\bin\java.exe" ^
     --main-jar "Peakaboo.jar" ^
     --version "%1" ^
     --jvm-args "--illegal-access=permit ^
+    --java-options "Xms1g" ^
     --icon "icon-1024.png" ^
     --class "peakaboo.ui.swing.Peakaboo"
