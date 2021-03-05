@@ -11,8 +11,7 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.mapping.filter.Interpolation;
 
-public class CompositeModeController extends ModeController {
-
+public class CompositeModeController extends SimpleModeController {
 	
 	public CompositeModeController(MappingController map) {
 		super(map);
@@ -21,8 +20,8 @@ public class CompositeModeController extends ModeController {
 	public CompositeModeData getData() {
 		return getData(Optional.empty());
 	}
-	public CompositeModeData getData(Optional<ITransitionSeries> fitting)
-	{
+	
+	public CompositeModeData getData(Optional<ITransitionSeries> fitting) {
 		
 		Spectrum data;
 		if (fitting.isPresent()) {
@@ -61,18 +60,5 @@ public class CompositeModeController extends ModeController {
 			return "Map of " + getDatasetTitle(super.getVisible());
 		}
 	}
-
-
-	@Override
-	public boolean isTranslatableToSpatial() {
-		return true;
-	}
-
-	@Override
-	public boolean isComparable() {
-		return true;
-	}
-
-
 	
 }

@@ -9,11 +9,12 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.fitting.modes.components.BinState;
+import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
@@ -24,12 +25,12 @@ import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrectionMapFilter;
 
-public class CorrelationModeController extends ModeController {
+public class CorrelationModeController extends SimpleModeController {
 
 	private MappingController map;
-	private Map<ITransitionSeries, Integer> sides = new LinkedHashMap<>();
+	private GroupState groups;
+	private BinState bins;
 	private boolean clip = false;
-	private int bins = 100;
 	
 	private Map<Integer, List<Integer>> translation = new LinkedHashMap<>();
 	private boolean invalidated = true;
@@ -37,35 +38,30 @@ public class CorrelationModeController extends ModeController {
 	public CorrelationModeController(MappingController map) {
 		super(map);
 		this.map = map;
-		
-		for (ITransitionSeries ts : map.rawDataController.getMapResultSet().getAllTransitionSeries()) {
-			sides.put(ts, 1);
-		}
-		
+		this.bins = new BinState(this);
+		this.groups = new GroupState(this);		
 	}
 
 
-
-
-	public List<ITransitionSeries> forSide(final int side)
-	{
-		return super.getVisible().stream().filter(e -> {
-			Integer thisSide = this.sides.get(e);
-			return thisSide == side;
-		}).collect(toList());
-	}
+	///// Grouping delegators /////
 	
-	public int getSide(ITransitionSeries ts)
-	{
-		return this.sides.get(ts);
-	}
-	public void setSide(ITransitionSeries ts, int side)
-	{
-		this.sides.put(ts, side);
+	public List<ITransitionSeries> forSide(final int side) { return groups.getVisibleMembers(side); }
+	
+	public int getSide(ITransitionSeries ts) { return this.groups.getGroup(ts); }
+	
+	public void setSide(ITransitionSeries ts, int side) {
+		this.groups.setGroup(ts, side);
 		updateListeners();
 	}
 
 
+	///// Binning delegators /////
+	public int getBins() { return bins.getCount(); }
+
+	public void setBins(int bins) { this.bins.setCount(bins); }
+
+
+	///// Cliping /////
 	public boolean isClip() {
 		return clip;
 	}
@@ -74,20 +70,7 @@ public class CorrelationModeController extends ModeController {
 		this.clip = clip;
 		updateListeners();
 	}
-
-
-	public int getBins() {
-		return bins;
-	}
-
-	public void setBins(int bins) {
-		if (bins != this.bins) {
-			this.bins = bins;
-			updateListeners();
-		}
-	}
-
-
+	
 
 
 	public CorrelationModeData getData() {
@@ -122,14 +105,14 @@ public class CorrelationModeController extends ModeController {
 			yMax = Math.max(xMax, yMax);
 		}
 		
-		
-		GridPerspective<Float> grid = new GridPerspective<>(bins, bins, 0f);
-		Spectrum correlation = new ISpectrum(bins*bins);
+		int bincount = bins.getCount();
+		GridPerspective<Float> grid = new GridPerspective<>(bincount, bincount, 0f);
+		Spectrum correlation = new ISpectrum(bincount*bincount);
 		
 		//we track which points on the original (spatial) maps each bin in the correlation map
 		//comes from so that selections can be mapped back to them
 		translation.clear();
-		for (int i = 0; i < bins*bins; i++) {
+		for (int i = 0; i < bincount*bincount; i++) {
 			translation.put(i, new ArrayList<>());
 		}
 		invalidated = false;
@@ -150,13 +133,13 @@ public class CorrelationModeController extends ModeController {
 			}
 			
 			
-			int xbin = (int)(xpct*bins);
-			int ybin = (int)(ypct*bins);
-			if (xbin >= bins) { xbin = bins-1; }
-			if (ybin >= bins) { ybin = bins-1; }
+			int xbin = (int)(xpct*bincount);
+			int ybin = (int)(ypct*bincount);
+			if (xbin >= bincount) { xbin = bincount-1; }
+			if (ybin >= bincount) { ybin = bincount-1; }
 			
 			int bindex = grid.getIndexFromXY(xbin, ybin);
-			if (bindex == -1 || bindex > bins*bins) {
+			if (bindex == -1 || bindex > bincount*bincount) {
 				//index was out of bounds
 				Map<String, Number> valueMap = new HashMap<>();
 				valueMap.put("xMax", xMax);
@@ -166,7 +149,7 @@ public class CorrelationModeController extends ModeController {
 				valueMap.put("xbin", xbin);
 				valueMap.put("ybin", ybin);
 				String values = valueMap.entrySet().stream().map(e -> "\t" + e.getKey() + ": " + e.getValue().toString()).reduce((a, b) -> a + "\n" + b).get();
-				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bins*bins + "\n" + values);
+				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bincount*bincount + "\n" + values);
 			}
 			translation.get(bindex).add(i);
 			correlation.set(bindex, correlation.get(bindex)+1);
@@ -183,7 +166,7 @@ public class CorrelationModeController extends ModeController {
 		}
 
 		
-		CorrelationModeData data = new CorrelationModeData(bins);
+		CorrelationModeData data = new CorrelationModeData(bincount);
 		data.data = correlation;
 		data.xAxisTitle = getDatasetTitle(xTS) + " (Intensity)";
 		data.yAxisTitle = getDatasetTitle(yTS) + " (Intensity)";
@@ -193,9 +176,10 @@ public class CorrelationModeController extends ModeController {
 		return data;
 	}
 
+	@Override
 	public Coord<Integer> getSize() {
-		Coord<Integer> size = new Coord<>(bins, bins);
-		return size;
+		int bincount = bins.getCount();
+		return new Coord<>(bincount, bincount);
 	}
 
 
@@ -208,16 +192,18 @@ public class CorrelationModeController extends ModeController {
 	}
 	
 
-	@Override
-	public boolean isTranslatableToSpatial() {
-		return true;
-	}
+
 
 	@Override
 	public boolean isSpatial() {
 		return false;
 	}
 
+	@Override
+	public boolean isTranslatableToSpatial() {
+		return true;
+	}
+	
 	@Override
 	public List<Integer> translateSelectionToSpatial(List<Integer> points) {
 		if (invalidated) {
@@ -228,17 +214,6 @@ public class CorrelationModeController extends ModeController {
 			translated.addAll(translation.get(i));
 		}
 		return new ArrayList<>(translated);
-	}
-	
-	public Coord<Integer> getDimensions() {
-		return new Coord<>(bins, bins);
-	}
-	
-	@Override
-	public boolean isComparable() {
-		return true;
-	}
-	
-	
+	}	
 	
 }

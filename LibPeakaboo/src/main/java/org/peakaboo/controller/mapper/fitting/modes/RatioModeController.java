@@ -2,11 +2,10 @@ package org.peakaboo.controller.mapper.fitting.modes;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
@@ -19,19 +18,16 @@ import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.mapping.filter.Interpolation;
 
-public class RatioModeController extends ModeController {
+public class RatioModeController extends SimpleModeController {
 
-	private Map<ITransitionSeries, Integer> ratioSide = new LinkedHashMap<>();
+	private GroupState groups;
 	
 	public RatioModeController(MappingController map) {
 		super(map);
-		
-		for (ITransitionSeries ts : map.rawDataController.getMapResultSet().getAllTransitionSeries()) {
-			ratioSide.put(ts, 1);
-		}
+		groups = new GroupState(this);
 	}
 
-
+	@Override
 	public RatioModeData getData()
 	{
 
@@ -44,8 +40,7 @@ public class RatioModeController extends ModeController {
 		Spectrum side1Data = sumGivenMaps(side1);
 		Spectrum side2Data = sumGivenMaps(side2);
 		
-		if (getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE)
-		{
+		if (getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE) {
 			SpectrumCalculations.normalize_inplace(side1Data);
 			SpectrumCalculations.normalize_inplace(side2Data);
 		}
@@ -53,8 +48,7 @@ public class RatioModeController extends ModeController {
 		Spectrum ratioData = new ISpectrum(side1Data.size());
 		
 		
-		for (int i = 0; i < ratioData.size(); i++)
-		{
+		for (int i = 0; i < ratioData.size(); i++) {
 			Float side1Value = side1Data.get(i);
 			Float side2Value = side2Data.get(i);
 			
@@ -65,14 +59,11 @@ public class RatioModeController extends ModeController {
 
 			float value = side1Value / side2Value;
 
-			if (value < 1.0)
-			{
+			if (value < 1.0) {
 				value = (1.0f / value);
 				value = (float) (Math.log(value) / Math.log(Ratios.logValue));
 				value = -value;
-			}
-			else
-			{
+			} else {
 				value = (float) (Math.log(value) / Math.log(Ratios.logValue));
 			}
 
@@ -80,7 +71,7 @@ public class RatioModeController extends ModeController {
 		}
 		
 		
-		GridPerspective<Float>	grid	= new GridPerspective<>(
+		GridPerspective<Float> grid = new GridPerspective<>(
 				getMap().getUserDimensions().getUserDataWidth(),
 				getMap().getUserDimensions().getUserDataHeight(),
 				0.0f);
@@ -90,10 +81,8 @@ public class RatioModeController extends ModeController {
 		
 
 		Spectrum invalidPoints = new ISpectrum(ratioData.size(), 0f);
-		for (int i = 0; i < ratioData.size(); i++)
-		{
-			if (  Float.isNaN(ratioData.get(i))  )
-			{
+		for (int i = 0; i < ratioData.size(); i++) {
+			if (  Float.isNaN(ratioData.get(i))  ) {
 				invalidPoints.set(i, 1f);
 				ratioData.set(i, 0f);
 			}
@@ -106,21 +95,13 @@ public class RatioModeController extends ModeController {
 	}
 	
 	
+	@Override
 	public Coord<Integer> getSize() {
 		int w = getMap().getFiltering().getFilteredDataWidth();
 		int h = getMap().getFiltering().getFilteredDataHeight();
 		Coord<Integer> size = new Coord<>(w, h);
 		return size;
 	}
-
-	public List<ITransitionSeries> forSide(final int side)
-	{
-		return getVisible().stream().filter(e -> {
-			Integer thisSide = this.ratioSide.get(e);
-			return thisSide == side;
-		}).collect(toList());
-	}
-
 
 	@Override
 	public String longTitle() {
@@ -130,25 +111,12 @@ public class RatioModeController extends ModeController {
 		return "Map of " + side1Title + " : " + side2Title;
 	}
 	
+	
+	///// Grouping delegators /////
+	public List<ITransitionSeries> forSide(int side) { return groups.getVisibleMembers(side); }
 
-	public int getSide(ITransitionSeries ts)
-	{
-		return this.ratioSide.get(ts);
-	}
-	public void setSide(ITransitionSeries ts, int side)
-	{
-		this.ratioSide.put(ts, side);
-		updateListeners();
-	}
+	public int getSide(ITransitionSeries ts) { return groups.getGroup(ts); }
 	
-	@Override
-	public boolean isTranslatableToSpatial() {
-		return true;
-	}
-	
-	@Override
-	public boolean isComparable() {
-		return true;
-	}
+	public void setSide(ITransitionSeries ts, int side) { groups.setGroup(ts, side); }
 	
 }
