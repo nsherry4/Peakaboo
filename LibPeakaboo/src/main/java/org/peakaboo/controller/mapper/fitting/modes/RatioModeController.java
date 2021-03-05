@@ -114,9 +114,7 @@ public class RatioModeController extends SimpleModeController {
 	
 	///// Grouping delegators /////
 	public List<ITransitionSeries> forSide(int side) { return groups.getVisibleMembers(side); }
-
 	public int getSide(ITransitionSeries ts) { return groups.getGroup(ts); }
-	
 	public void setSide(ITransitionSeries ts, int side) { groups.setGroup(ts, side); }
 	
 }
