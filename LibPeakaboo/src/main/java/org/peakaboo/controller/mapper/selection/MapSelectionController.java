@@ -75,6 +75,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 				//the old mode is not spatial, so we have to translate the points back to 
 				//spatial points before keeping them
 				currentSelection = oldMode.translateSelectionToSpatial(currentSelection);
+				invalidatePointCaches();
 			}
 
 		});
@@ -110,12 +111,17 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		
 		this.addListener(type -> {
 			if (type != MapUpdateType.SELECTION) { return; }
-			displayPointCache.invalidate();
-			logicalPointCache.invalidate();
+			invalidatePointCaches();
 		});
-		
+				
 		
 	}
+	
+	private void invalidatePointCaches() {
+		displayPointCache.invalidate();
+		logicalPointCache.invalidate();
+	}
+	
 
 	public SelectionType getSelectionType() {
 		return selectionType;

@@ -24,6 +24,13 @@ class DragSelection extends AbstractSelection {
 	
 	public DragSelection(MappingController map) {
 		super(map);
+		
+		map.addListener(type -> {
+			if (type == MapUpdateType.DATA_SIZE) {
+				trimSelectionToBounds();
+			}
+		});
+		
 	}
 	
 	public Coord<Integer> getStart() {
@@ -31,8 +38,7 @@ class DragSelection extends AbstractSelection {
 	}
 	
 	public void setStart(Coord<Integer> dragStart) {
-		if (dragStart != null) 
-		{
+		if (dragStart != null) {
 			if (dragStart.x < 0) dragStart.x = 0;
 			if (dragStart.y < 0) dragStart.y = 0;
 			if (dragStart.x >= mapSize().x) dragStart.x = mapSize().x-1;
@@ -41,12 +47,6 @@ class DragSelection extends AbstractSelection {
 		
 		this.start = dragStart;
 		
-		//TODO: move up
-		map.addListener(type -> {
-			if (type == MapUpdateType.DATA_SIZE) {
-				trimSelectionToBounds();
-			}
-		});
 	}
 
 	
@@ -187,6 +187,5 @@ class DragSelection extends AbstractSelection {
 	public List<Integer> releaseDragSelection(Coord<Integer> point) {
 		return addDragSelection(point);
 	}
-	
 	
 }
