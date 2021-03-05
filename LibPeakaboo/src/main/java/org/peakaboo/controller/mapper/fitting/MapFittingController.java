@@ -10,6 +10,7 @@ import org.peakaboo.controller.mapper.fitting.modes.CorrelationModeController;
 import org.peakaboo.controller.mapper.fitting.modes.ModeController;
 import org.peakaboo.controller.mapper.fitting.modes.OverlayModeController;
 import org.peakaboo.controller.mapper.fitting.modes.RatioModeController;
+import org.peakaboo.controller.mapper.fitting.modes.TernaryModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModeData;
@@ -36,6 +37,7 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	private OverlayModeController overlay;
 	private CompositeModeController composite;
 	private CorrelationModeController correlation;
+	private TernaryModeController ternary;
 	
 	
 	private MapModes displayMode;
@@ -64,6 +66,9 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 		
 		correlation = new CorrelationModeController(map);
 		correlation.addListener(modeListener);
+		
+		ternary = new TernaryModeController(map);
+		ternary.addListener(modeListener);
 		
 		mapModeData = new EventfulNullableCache<>(this::calcMapModeData);
 		map.addListener(t -> {
@@ -129,6 +134,8 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 			return this.ratio;
 		case CORRELATION:
 			return this.correlation;
+		case TERNARYPLOT:
+			return this.ternary;
 		}
 		return null;
 	}
@@ -263,6 +270,10 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 		return ratio;
 	}
 
+	public TernaryModeController ternaryMode() {
+		return ternary;
+	}
+	
 	public List<ITransitionSeries> getAllTransitionSeries() {
 		return getActiveMode().getAll();
 	}

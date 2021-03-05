@@ -181,6 +181,8 @@ public class MappingController extends EventfulType<MapUpdateType>
 		case CORRELATION:
 			settings.spectrumTitle = "Correlation (Frequency)";
 			break;
+		case TERNARYPLOT:
+			settings.spectrumTitle = "Ternary Plot (Contribution)";
 		}
 		
 		String filterActions = filteringController.getActionDescription();

@@ -25,6 +25,7 @@ import org.peakaboo.ui.swing.mapping.sidebar.modes.Composite;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Correlation;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Overlay;
 import org.peakaboo.ui.swing.mapping.sidebar.modes.Ratio;
+import org.peakaboo.ui.swing.mapping.sidebar.modes.Ternary;
 
 
 public class MapFittingPanel extends ClearPanel
@@ -34,7 +35,7 @@ public class MapFittingPanel extends ClearPanel
 
 	private JPanel		cardPanel;
 	
-	private JPanel		compPanel, overPanel, ratioPanel, correlationPanel;
+	private JPanel		compPanel, overPanel, ratioPanel, correlationPanel, ternaryPanel;
 	
 	
 	
@@ -50,12 +51,14 @@ public class MapFittingPanel extends ClearPanel
 		overPanel = new Overlay(controller);
 		ratioPanel = new Ratio(controller);
 		correlationPanel = new Correlation(controller);
+		ternaryPanel = new Ternary(controller);
 		
 		//add each of the panels
 		cardPanel.add(compPanel, MapModes.COMPOSITE.toString());
 		cardPanel.add(overPanel, MapModes.OVERLAY.toString());
 		cardPanel.add(ratioPanel, MapModes.RATIO.toString());
 		cardPanel.add(correlationPanel, MapModes.CORRELATION.toString());
+		cardPanel.add(ternaryPanel, MapModes.TERNARYPLOT.toString());
 		
 		
 		//create combobox

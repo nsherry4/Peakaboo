@@ -4,6 +4,7 @@ import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.display.map.modes.correlation.CorrelationMapMode;
 import org.peakaboo.display.map.modes.overlay.OverlayMapMode;
 import org.peakaboo.display.map.modes.ratio.RatioMapMode;
+import org.peakaboo.display.map.modes.ternary.TernaryMapMode;
 
 public enum MapModes {
 	COMPOSITE
@@ -39,6 +40,14 @@ public enum MapModes {
 		
 		@Override 
 		public MapMode getMapper() { return new CorrelationMapMode(); }
+	},
+	TERNARYPLOT
+	{
+		@Override
+		public String toString() { return "Ternary"; }
+		
+		@Override 
+		public MapMode getMapper() { return new TernaryMapMode(); }
 	}
 	
 	;

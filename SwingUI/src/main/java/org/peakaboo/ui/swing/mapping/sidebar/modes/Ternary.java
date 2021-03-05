@@ -30,13 +30,11 @@ import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRend
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
-
-public class Correlation extends JPanel {
+public class Ternary extends JPanel {
 
 	private MapFittingController viewController;
-
 	
-	public Correlation(MapFittingController viewController) {
+	public Ternary(MapFittingController viewController) {
 
 		this.viewController = viewController;
 
@@ -64,13 +62,13 @@ public class Correlation extends JPanel {
 		
 		JCheckBox clip = new JCheckBox();
 		clip.setBorder(Spacing.bMedium());
-		clip.addActionListener(e -> viewController.correlationMode().setClip(clip.isSelected()));
+		clip.addActionListener(e -> viewController.ternaryMode().setClip(clip.isSelected()));
 		
 		JSpinner bins = new JSpinner(new SpinnerNumberModel(100, 25, 250, 1));
-		bins.addChangeListener(change -> viewController.correlationMode().setBins((Integer)bins.getValue()));
-		viewController.correlationMode().addListener(() -> {
+		bins.addChangeListener(change -> viewController.ternaryMode().setBins((Integer)bins.getValue()));
+		viewController.ternaryMode().addListener(() -> {
 			int oldValue = (Integer)bins.getValue();
-			int newValue = viewController.correlationMode().getBins();
+			int newValue = viewController.ternaryMode().getBins();
 			if (oldValue != newValue) {
 				bins.setValue(newValue);
 			}
@@ -116,7 +114,7 @@ public class Correlation extends JPanel {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					viewController.correlationMode().setVisibility(ts, bvalue);
+					viewController.ternaryMode().setVisibility(ts, bvalue);
 				} 
 
 			}
@@ -144,7 +142,7 @@ public class Correlation extends JPanel {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
-					case 0: return viewController.correlationMode().getVisibility(ts);
+					case 0: return viewController.ternaryMode().getVisibility(ts);
 					case 1: return ts;
 					case 2: return ts;
 				}
@@ -211,8 +209,8 @@ public class Correlation extends JPanel {
 		column.setCellRenderer(renderer);
 		column.setCellEditor(editor);
 		column.setResizable(false);
-		column.setPreferredWidth(60);
-		column.setMaxWidth(60);
+		column.setPreferredWidth(90);
+		column.setMaxWidth(90);
 
 		
 		JScrollPane scroll = new JScrollPane(table);
@@ -222,11 +220,11 @@ public class Correlation extends JPanel {
 		return scroll;
 
 	}
-		
 	
+
 	class AxisWidget extends ListWidget<ITransitionSeries> {
 	
-		FluentToggleButton group1, group2;
+		FluentToggleButton groupX, groupY, groupNone;
 		ButtonGroup group;
 		ButtonLinker linker;
 		MapFittingController controller;
@@ -236,21 +234,25 @@ public class Correlation extends JPanel {
 		public AxisWidget(MapFittingController controller) {
 			this.controller = controller;
 			
-			group1 = new FluentToggleButton("X").withButtonSize(FluentButtonSize.COMPACT);
-			group2 = new FluentToggleButton("Y").withButtonSize(FluentButtonSize.COMPACT);
-			group1.setPreferredSize(new Dimension(26, 26));
-			group2.setPreferredSize(new Dimension(26, 26));
+			groupX = new FluentToggleButton("X").withButtonSize(FluentButtonSize.COMPACT);
+			groupY = new FluentToggleButton("Y").withButtonSize(FluentButtonSize.COMPACT);
+			groupNone = new FluentToggleButton("?").withButtonSize(FluentButtonSize.COMPACT);
+			groupX.setPreferredSize(new Dimension(26, 26));
+			groupY.setPreferredSize(new Dimension(26, 26));
+			groupNone.setPreferredSize(new Dimension(26, 26));
 			group = new ButtonGroup();
-			group.add(group1);
-			group.add(group2);
-			linker = new ButtonLinker(group1, group2);
+			group.add(groupNone);
+			group.add(groupX);
+			group.add(groupY);
+			linker = new ButtonLinker(groupNone, groupX, groupY);
 			
 			Runnable onSelect = () -> {
 				setFonts();
-				controller.correlationMode().setSide(ts, getSide());
+				controller.ternaryMode().setSide(ts, getSide());
 			};
-			group1.withAction(onSelect);
-			group2.withAction(onSelect);
+			groupNone.withAction(onSelect);
+			groupX.withAction(onSelect);
+			groupY.withAction(onSelect);
 			
 			this.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1f, 1f, GridBagConstraints.CENTER, GridBagConstraints.NONE, Spacing.iNone(), 0, 0);
@@ -258,33 +260,43 @@ public class Correlation extends JPanel {
 		}
 		
 		private int getSide() {
-			return group1.isSelected() ? 1 : 2;
+			if (groupX.isSelected()) { return 1; }
+			if (groupY.isSelected()) { return 2; }
+			return 3;
 		}
 		
 		private void setFonts() {
-			if (getSide() == 1) {
-				group1.setFont(group1.getFont().deriveFont(Font.BOLD));
-				group2.setFont(group2.getFont().deriveFont(Font.PLAIN));
-			} else {
-				group2.setFont(group2.getFont().deriveFont(Font.BOLD));
-				group1.setFont(group1.getFont().deriveFont(Font.PLAIN));
-			}
+			groupX.setFont(groupX.getFont().deriveFont(Font.PLAIN));
+			groupY.setFont(groupY.getFont().deriveFont(Font.PLAIN));
+			groupNone.setFont(groupNone.getFont().deriveFont(Font.PLAIN));
+			
+			int side = getSide();
+			FluentToggleButton selected = buttonForSide(side);
+			selected.setFont(selected.getFont().deriveFont(Font.BOLD));
+
 		}
 		
 		@Override
 		protected void onSetValue(ITransitionSeries ts) {
 			this.ts = ts;
-			linker.setVisible(controller.correlationMode().getVisibility(ts));
-				
-			if (controller.correlationMode().getSide(ts) == 1) {
-				group1.setSelected(true);
-			} else {
-				group2.setSelected(true);
-			}
+			linker.setVisible(controller.ternaryMode().getVisibility(ts));
+			
+			int side = controller.ternaryMode().getSide(ts);
+			buttonForSide(side).setSelected(true);
 			setFonts();		
+		}
+
+		private FluentToggleButton buttonForSide(int side) {
+			switch (side) {
+			case 1: return groupX;
+			case 2: return groupY;
+			case 3: return groupNone;
+			default: throw new RuntimeException("Unknown ternary plot group");
+			}
 		}
 		
 	}
+
 	
 	class AxisRenderer extends ListWidgetTableCellRenderer<ITransitionSeries> {
 	
@@ -301,5 +313,4 @@ public class Correlation extends JPanel {
 		}
 		
 	}
-
 }
