@@ -19,6 +19,7 @@ public class CorrelationModeData implements MapModeData {
 	public Coord<Integer> getSize() {
 		return size;
 	}
+	
 	@Override
 	public String getValueAtCoord(Coord<Integer> coord) {
 		
@@ -31,6 +32,7 @@ public class CorrelationModeData implements MapModeData {
 		}
 
 	}
+	
 	@Override
 	public String getInfoAtCoord(Coord<Integer> coord) {
 		String noValue = "X: -, Y: -, Value: -";
@@ -42,6 +44,7 @@ public class CorrelationModeData implements MapModeData {
 		}
 		
 	}
+	
 	public Spectrum getData() {
 		return data;
 	}

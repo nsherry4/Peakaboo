@@ -28,7 +28,6 @@ import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrecti
 
 public class CorrelationModeController extends SimpleModeController {
 
-	private MappingController map;
 	private GroupState groups;
 	private BinState bins;
 	private TranslationState translation;
@@ -37,7 +36,6 @@ public class CorrelationModeController extends SimpleModeController {
 		
 	public CorrelationModeController(MappingController map) {
 		super(map);
-		this.map = map;
 		this.bins = new BinState(this);
 		this.groups = new GroupState(this);
 		this.translation = new TranslationState(this);
@@ -58,11 +56,10 @@ public class CorrelationModeController extends SimpleModeController {
 
 	///// Binning delegators /////
 	public int getBins() { return bins.getCount(); }
-
 	public void setBins(int bins) { this.bins.setCount(bins); }
 
 
-	///// Cliping /////
+	///// Cliping Outliers /////
 	public boolean isClip() {
 		return clip;
 	}
@@ -86,25 +83,23 @@ public class CorrelationModeController extends SimpleModeController {
 		Spectrum xData = super.sumGivenMaps(xTS);
 		Spectrum yData = super.sumGivenMaps(yTS);
 		
-		//Generate histograms
+		//Generate histograms and calculate the x/y max values
 		List<Float> xSorted = xData.stream().collect(Collectors.toList());
 		List<Float> ySorted = yData.stream().collect(Collectors.toList());
 		xSorted.sort(Float::compare);
 		ySorted.sort(Float::compare);
 		int index999 = (int)(xSorted.size() * 0.999f);
-		
-
 		//max value is 99.9th percentile in histogram
 		float xMax = xSorted.get(index999);
 		float yMax = ySorted.get(index999);
 		if (xMax == 0) { xMax = 1; }
 		if (yMax == 0) { yMax = 1; }
-		
 		//if it's absolute, we use the larger max to scale both histograms
-		if (map.getFitting().getMapScaleMode() != MapScaleMode.RELATIVE) {
+		if (getMap().getFitting().getMapScaleMode() != MapScaleMode.RELATIVE) {
 			xMax = Math.max(xMax, yMax);
 			yMax = Math.max(xMax, yMax);
 		}
+		
 		
 		int bincount = bins.getCount();
 		GridPerspective<Float> grid = new GridPerspective<>(bincount, bincount, 0f);

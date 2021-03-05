@@ -21,23 +21,17 @@ public class Composite extends JPanel {
 	private MapFittingController viewController;
 
 	public Composite(MapFittingController viewController) {
-		
 		this.viewController = viewController;
-		
 		createElementsList();
-		
 	}
 	
 	
-	private void createElementsList()
-	{
-				
+	private void createElementsList() {
 		setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
 				
 		//elements list
 		add(createTransitionSeriesList(), BorderLayout.CENTER);
 		add(createScaleOptions(), BorderLayout.SOUTH);
-		
 	}
 	
 	
@@ -48,17 +42,14 @@ public class Composite extends JPanel {
 	}
 	
 
-	private JScrollPane createTransitionSeriesList()
-	{
+	private JScrollPane createTransitionSeriesList() {
 		TableModel m = new TableModel() {
 
 			public void setValueAt(Object value, int rowIndex, int columnIndex) {
 				if (columnIndex == 0) {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-
 					viewController.compositeMode().setVisibility(ts, bvalue);
-
 				}
 			}
 
@@ -78,15 +69,12 @@ public class Composite extends JPanel {
 
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-				
 				if (columnIndex == 0) {
 					return viewController.compositeMode().getVisibility(ts);
 				} else {
 					return ts;
 				}
-
 			}
 
 
