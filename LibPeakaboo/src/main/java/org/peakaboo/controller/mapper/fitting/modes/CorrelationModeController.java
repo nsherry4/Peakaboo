@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.components.BinState;
 import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
+import org.peakaboo.controller.mapper.fitting.modes.components.TranslationState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
@@ -30,16 +31,16 @@ public class CorrelationModeController extends SimpleModeController {
 	private MappingController map;
 	private GroupState groups;
 	private BinState bins;
+	private TranslationState translation;
 	private boolean clip = false;
 	
-	private Map<Integer, List<Integer>> translation = new LinkedHashMap<>();
-	private boolean invalidated = true;
-	
+		
 	public CorrelationModeController(MappingController map) {
 		super(map);
 		this.map = map;
 		this.bins = new BinState(this);
-		this.groups = new GroupState(this);		
+		this.groups = new GroupState(this);
+		this.translation = new TranslationState(this);
 	}
 
 
@@ -111,11 +112,7 @@ public class CorrelationModeController extends SimpleModeController {
 		
 		//we track which points on the original (spatial) maps each bin in the correlation map
 		//comes from so that selections can be mapped back to them
-		translation.clear();
-		for (int i = 0; i < bincount*bincount; i++) {
-			translation.put(i, new ArrayList<>());
-		}
-		invalidated = false;
+		translation.initialize(bincount*bincount);
 		
 		for (int i = 0; i < xData.size(); i++) {
 
@@ -151,7 +148,7 @@ public class CorrelationModeController extends SimpleModeController {
 				String values = valueMap.entrySet().stream().map(e -> "\t" + e.getKey() + ": " + e.getValue().toString()).reduce((a, b) -> a + "\n" + b).get();
 				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bincount*bincount + "\n" + values);
 			}
-			translation.get(bindex).add(i);
+			translation.add(bindex, i);
 			correlation.set(bindex, correlation.get(bindex)+1);
 			
 		}
@@ -192,8 +189,6 @@ public class CorrelationModeController extends SimpleModeController {
 	}
 	
 
-
-
 	@Override
 	public boolean isSpatial() {
 		return false;
@@ -206,14 +201,7 @@ public class CorrelationModeController extends SimpleModeController {
 	
 	@Override
 	public List<Integer> translateSelectionToSpatial(List<Integer> points) {
-		if (invalidated) {
-			getData();
-		}
-		Set<Integer> translated = new HashSet<>();
-		for (int i : points) {
-			translated.addAll(translation.get(i));
-		}
-		return new ArrayList<>(translated);
+		return translation.toSpatial(points);
 	}	
 	
 }
