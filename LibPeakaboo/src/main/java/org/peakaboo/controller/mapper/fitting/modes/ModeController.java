@@ -73,6 +73,13 @@ public interface ModeController extends IEventful {
 	public List<Integer> translateSelectionToSpatial(List<Integer> points);
 
 	/**
+	 * Given a list of points that the user has tried to select, return only those
+	 * points which are actually selectable. This allows map modes to include
+	 * non-rectangular areas without having to worry about invalid selections
+	 */
+	public List<Integer> filterSelection(List<Integer> points);
+	
+	/**
 	 * Indicates if the current mode's values can be compared to one another to
 	 * guage how closely related they are. This is used for things like selection by
 	 * similarity and is basically the same thing as in comparison-based sorting

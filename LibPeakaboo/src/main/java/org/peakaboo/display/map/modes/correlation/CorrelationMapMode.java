@@ -98,7 +98,7 @@ public class CorrelationMapMode extends MapMode {
 		
 		//Selection Painter
 		SelectionMaskPainter selectionPainter = super.getSelectionPainter(
-				new PaletteColour(0xff000000), 
+				new PaletteColour(0xff498ed7), 
 				settings.selectedPoints, 
 				correlationData.getSize().x, 
 				correlationData.getSize().y);

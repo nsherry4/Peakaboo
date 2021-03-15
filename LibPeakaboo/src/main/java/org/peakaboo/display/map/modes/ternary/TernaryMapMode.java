@@ -8,6 +8,9 @@ import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.ISpectrum;
+import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPainter;
@@ -25,10 +28,11 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationPalette;
 
 public class TernaryMapMode extends MapMode {
 
-	private SpectrumMapPainter ternaryMapPainter;
+	private SpectrumMapPainter ternaryMapPainter, blackoutMapPainter;
 
 
 	@Override
@@ -97,9 +101,23 @@ public class TernaryMapMode extends MapMode {
 		}
 		mapPainters.add(ternaryMapPainter);
 		
+		//blackout painter to cover the area that is invalid
+		Spectrum blackoutMask = new ISpectrum(ternaryData.data.size(), 0);
+		for (int i : ternaryData.unselectables) {
+			blackoutMask.set(i, 1);
+		}
+		AbstractPalette blackoutPalette = new SaturationPalette(new PaletteColour(255, 127, 127, 127), new PaletteColour(0, 0, 0, 0));
+		if (blackoutMapPainter == null) {
+			blackoutMapPainter = MapTechniqueFactory.getTechnique(blackoutPalette, blackoutMask, spectrumSteps); 
+		} else {
+			blackoutMapPainter.setData(blackoutMask);
+			blackoutMapPainter.setPalette(blackoutPalette);
+		}
+		mapPainters.add(blackoutMapPainter);
+		
 		//Selection Painter
 		SelectionMaskPainter selectionPainter = super.getSelectionPainter(
-				new PaletteColour(0xff000000), 
+				new PaletteColour(0xff498ed7), 
 				settings.selectedPoints, 
 				ternaryData.getSize().x, 
 				ternaryData.getSize().y);

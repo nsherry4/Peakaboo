@@ -3,6 +3,7 @@ package org.peakaboo.controller.mapper.fitting.modes;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.controller.mapper.MappingController;
@@ -73,6 +74,12 @@ public abstract class SimpleModeController extends Eventful implements ModeContr
 	@Override
 	public boolean isComparable() {
 		return true;
+	}
+	
+
+	@Override
+	public List<Integer> filterSelection(List<Integer> points) {
+		return new ArrayList<>(points);
 	}
 		
 }

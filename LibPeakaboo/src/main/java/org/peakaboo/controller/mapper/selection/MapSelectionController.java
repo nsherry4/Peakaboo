@@ -75,6 +75,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 				//the old mode is not spatial, so we have to translate the points back to 
 				//spatial points before keeping them
 				currentSelection = oldMode.translateSelectionToSpatial(currentSelection);
+				//filter selected points through the new mode to filter out anything that can't be selected
+				currentSelection = newMode.filterSelection(currentSelection);
 				invalidatePointCaches();
 			}
 
@@ -271,7 +273,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 			merged.addAll(set);
 
 		}
-		return merged;
+		return map.getFitting().getActiveMode().filterSelection(merged);
 
 	}
 	

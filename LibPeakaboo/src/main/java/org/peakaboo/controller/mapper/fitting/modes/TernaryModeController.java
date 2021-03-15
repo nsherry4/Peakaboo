@@ -1,5 +1,6 @@
 package org.peakaboo.controller.mapper.fitting.modes;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.components.BinState;
 import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
+import org.peakaboo.controller.mapper.fitting.modes.components.SelectabilityState;
 import org.peakaboo.controller.mapper.fitting.modes.components.TranslationState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
@@ -29,6 +31,7 @@ public class TernaryModeController extends SimpleModeController {
 	private TranslationState translation;
 	private BinState bins;
 	private GroupState groups;
+	private SelectabilityState selectability;
 	private boolean clip;
 	
 	public TernaryModeController(MappingController map) {
@@ -37,6 +40,7 @@ public class TernaryModeController extends SimpleModeController {
 		this.bins = new BinState(this);
 		this.translation = new TranslationState(this);
 		this.groups = new GroupState(this);
+		this.selectability = new SelectabilityState(this);
 	}
 	
 	@Override
@@ -110,6 +114,17 @@ public class TernaryModeController extends SimpleModeController {
 			
 		}
 		
+		//generate list of unselectable points
+		selectability.clear();
+		Coord<Integer> dataSize = getSize();
+		for (int x = 0; x < dataSize.x; x++) {
+			for (int y = 0; y < dataSize.y; y++) {
+				if (dataSize.x - x <= y) {
+					selectability.set(x, y, false);
+				}
+			}
+		}
+		
 		//clip outlying intense points if selected
 		if (clip) {
 			SignalOutlierCorrectionMapFilter filter = new SignalOutlierCorrectionMapFilter();
@@ -121,10 +136,11 @@ public class TernaryModeController extends SimpleModeController {
 		
 		TernaryModeData data = new TernaryModeData(bincount);
 		data.data = ternaryplot;
-		data.xAxisTitle = getDatasetTitle(xTS) + " (Intensity)";
-		data.yAxisTitle = getDatasetTitle(yTS) + " (Intensity)";
+		data.xAxisTitle = getDatasetTitle(xTS) + " (% Signal)";
+		data.yAxisTitle = getDatasetTitle(yTS) + " (% Signal)";
 		data.xMaxCounts = 100;
 		data.yMaxCounts = 100;
+		data.unselectables = selectability.unselectables();
 		
 		return data;
 		
@@ -163,6 +179,11 @@ public class TernaryModeController extends SimpleModeController {
 		return translation.toSpatial(points);
 	}
 	
+	@Override
+	public List<Integer> filterSelection(List<Integer> points) {
+		return selectability.filter(points);
+	}
+	
 
 	///// Cliping Outliers /////
 	public boolean isClip() {
@@ -182,7 +203,5 @@ public class TernaryModeController extends SimpleModeController {
 	///// Binning delegators /////
 	public int getBins() { return bins.getCount(); }
 	public void setBins(int bins) { this.bins.setCount(bins); }
-	
-	
 	
 }

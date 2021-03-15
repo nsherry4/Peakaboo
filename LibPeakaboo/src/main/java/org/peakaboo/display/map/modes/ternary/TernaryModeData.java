@@ -1,5 +1,7 @@
 package org.peakaboo.display.map.modes.ternary;
 
+import java.util.List;
+
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;
@@ -10,7 +12,9 @@ public class TernaryModeData implements MapModeData {
 	public Spectrum data;
 	public String xAxisTitle, yAxisTitle;
 	public float xMaxCounts, yMaxCounts;
+	public List<Integer> unselectables;
 	private Coord<Integer> size;
+	
 	
 	public TernaryModeData(int bins) {
 		this.size = new Coord<>(bins, bins);
