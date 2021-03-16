@@ -2,11 +2,9 @@ package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;

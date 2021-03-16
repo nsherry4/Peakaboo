@@ -18,6 +18,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
+import org.peakaboo.controller.mapper.fitting.modes.TernaryModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -73,15 +74,11 @@ public class Ternary extends JPanel {
 				bins.setValue(newValue);
 			}
 		});
-		
-		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Axis", "All", false);
-		
-		
+
 		SettingsPanel settings = new SettingsPanel();
 		settings.setBorder(Spacing.bMedium());
 		settings.addSetting(bins, "Granularity");
 		settings.addSetting(clip, "Clip Outliers");		
-		options.add(scaleMode, BorderLayout.CENTER);
 		options.add(settings, BorderLayout.NORTH);
 		
 		
@@ -224,7 +221,7 @@ public class Ternary extends JPanel {
 
 	class AxisWidget extends ListWidget<ITransitionSeries> {
 	
-		FluentToggleButton groupX, groupY, groupNone;
+		FluentToggleButton groupX, groupY, groupO;
 		ButtonGroup group;
 		ButtonLinker linker;
 		MapFittingController controller;
@@ -234,23 +231,23 @@ public class Ternary extends JPanel {
 		public AxisWidget(MapFittingController controller) {
 			this.controller = controller;
 			
-			groupX = new FluentToggleButton("→").withButtonSize(FluentButtonSize.COMPACT);
-			groupY = new FluentToggleButton("↑").withButtonSize(FluentButtonSize.COMPACT);
-			groupNone = new FluentToggleButton("↙").withButtonSize(FluentButtonSize.COMPACT);
+			groupX = new FluentToggleButton(TernaryModeController.X_AXIS_LABEL).withButtonSize(FluentButtonSize.COMPACT);
+			groupY = new FluentToggleButton(TernaryModeController.Y_AXIS_LABEL).withButtonSize(FluentButtonSize.COMPACT);
+			groupO = new FluentToggleButton(TernaryModeController.O_AXIS_LABEL).withButtonSize(FluentButtonSize.COMPACT);
 			groupX.setPreferredSize(new Dimension(26, 26));
 			groupY.setPreferredSize(new Dimension(26, 26));
-			groupNone.setPreferredSize(new Dimension(26, 26));
+			groupO.setPreferredSize(new Dimension(26, 26));
 			group = new ButtonGroup();
 			group.add(groupX);
 			group.add(groupY);
-			group.add(groupNone);
-			linker = new ButtonLinker(groupX, groupY, groupNone);
+			group.add(groupO);
+			linker = new ButtonLinker(groupX, groupY, groupO);
 			
 			Runnable onSelect = () -> {
 				setFonts();
 				controller.ternaryMode().setSide(ts, getSide());
 			};
-			groupNone.withAction(onSelect);
+			groupO.withAction(onSelect);
 			groupX.withAction(onSelect);
 			groupY.withAction(onSelect);
 			
@@ -268,7 +265,7 @@ public class Ternary extends JPanel {
 		private void setFonts() {
 			groupX.setFont(groupX.getFont().deriveFont(Font.PLAIN));
 			groupY.setFont(groupY.getFont().deriveFont(Font.PLAIN));
-			groupNone.setFont(groupNone.getFont().deriveFont(Font.PLAIN));
+			groupO.setFont(groupO.getFont().deriveFont(Font.PLAIN));
 			
 			int side = getSide();
 			FluentToggleButton selected = buttonForSide(side);
@@ -290,7 +287,7 @@ public class Ternary extends JPanel {
 			switch (side) {
 			case 1: return groupX;
 			case 2: return groupY;
-			case 3: return groupNone;
+			case 3: return groupO;
 			default: throw new RuntimeException("Unknown ternary plot group");
 			}
 		}

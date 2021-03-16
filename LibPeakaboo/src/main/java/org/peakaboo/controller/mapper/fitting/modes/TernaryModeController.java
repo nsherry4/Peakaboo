@@ -1,6 +1,5 @@
 package org.peakaboo.controller.mapper.fitting.modes;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
 import org.peakaboo.controller.mapper.fitting.modes.components.SelectabilityState;
 import org.peakaboo.controller.mapper.fitting.modes.components.TranslationState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.display.map.modes.ternary.TernaryModeData;
 import org.peakaboo.framework.cyclops.Coord;
@@ -34,6 +32,10 @@ public class TernaryModeController extends SimpleModeController {
 	private SelectabilityState selectability;
 	private boolean clip;
 	
+	public static final String X_AXIS_LABEL = "→";
+	public static final String Y_AXIS_LABEL = "↑";
+	public static final String O_AXIS_LABEL = "↙";
+	
 	public TernaryModeController(MappingController map) {
 		super(map);
 		
@@ -53,7 +55,11 @@ public class TernaryModeController extends SimpleModeController {
 	public String longTitle() {
 		String axis1Title = getDatasetTitle(forSide(1));
 		String axis2Title = getDatasetTitle(forSide(2));
-		return "Ternary Plot of " + axis1Title + " & " + axis2Title;
+		String axis3Title = getDatasetTitle(forSide(3));
+		return "Ternary Plot of " + 
+				X_AXIS_LABEL + " (" + axis1Title + "), " +
+				Y_AXIS_LABEL + " (" + axis2Title + ") & " +
+				O_AXIS_LABEL + " (" + axis3Title + ")";
 	}
 
 	@Override
