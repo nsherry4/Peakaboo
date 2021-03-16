@@ -57,6 +57,7 @@ public class TickFormatter {
 			int maxValue = (int) (this.end.floatValue());
 			String text = this.formatter.apply(maxValue);
 			float maxWidth = p.context.getTextWidth(text);
+			if (maxWidth < 1) { maxWidth = 1; }
 			maxTicks = freeSpace / (maxWidth * 3.0f);
 		}
 		return maxTicks;

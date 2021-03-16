@@ -10,7 +10,7 @@ import org.peakaboo.framework.cyclops.Spectrum;
 public class TernaryModeData implements MapModeData {
 
 	public Spectrum data;
-	public String xAxisTitle, yAxisTitle;
+	public String xCornerTitle, yCornerTitle, oCornerTitle;
 	public float xMaxCounts, yMaxCounts;
 	public List<Integer> unselectables;
 	private Coord<Integer> size;

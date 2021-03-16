@@ -74,6 +74,7 @@ public class TernaryModeController extends SimpleModeController {
 		// get transition series for our axes
 		List<ITransitionSeries> xTS = forSide(1);
 		List<ITransitionSeries> yTS = forSide(2);
+		List<ITransitionSeries> oTS = forSide(3);
 		
 		// sum all of the maps for the given transition series for each side
 		Spectrum xData = super.sumGivenMaps(xTS);
@@ -136,8 +137,9 @@ public class TernaryModeController extends SimpleModeController {
 		
 		TernaryModeData data = new TernaryModeData(bincount);
 		data.data = ternaryplot;
-		data.xAxisTitle = getDatasetTitle(xTS) + " (% Signal)";
-		data.yAxisTitle = getDatasetTitle(yTS) + " (% Signal)";
+		data.xCornerTitle = getDatasetTitle(xTS);
+		data.yCornerTitle = getDatasetTitle(yTS);
+		data.oCornerTitle = getDatasetTitle(oTS);
 		data.xMaxCounts = 100;
 		data.yMaxCounts = 100;
 		data.unselectables = selectability.unselectables();

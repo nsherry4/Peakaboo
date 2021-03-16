@@ -234,17 +234,17 @@ public class Ternary extends JPanel {
 		public AxisWidget(MapFittingController controller) {
 			this.controller = controller;
 			
-			groupX = new FluentToggleButton("X").withButtonSize(FluentButtonSize.COMPACT);
-			groupY = new FluentToggleButton("Y").withButtonSize(FluentButtonSize.COMPACT);
-			groupNone = new FluentToggleButton("?").withButtonSize(FluentButtonSize.COMPACT);
+			groupX = new FluentToggleButton("→").withButtonSize(FluentButtonSize.COMPACT);
+			groupY = new FluentToggleButton("↑").withButtonSize(FluentButtonSize.COMPACT);
+			groupNone = new FluentToggleButton("↙").withButtonSize(FluentButtonSize.COMPACT);
 			groupX.setPreferredSize(new Dimension(26, 26));
 			groupY.setPreferredSize(new Dimension(26, 26));
 			groupNone.setPreferredSize(new Dimension(26, 26));
 			group = new ButtonGroup();
-			group.add(groupNone);
 			group.add(groupX);
 			group.add(groupY);
-			linker = new ButtonLinker(groupNone, groupX, groupY);
+			group.add(groupNone);
+			linker = new ButtonLinker(groupX, groupY, groupNone);
 			
 			Runnable onSelect = () -> {
 				setFonts();

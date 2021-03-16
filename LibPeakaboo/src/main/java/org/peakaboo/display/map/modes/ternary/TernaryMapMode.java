@@ -17,6 +17,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPain
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapTechniqueFactory;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SelectionMaskPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.CornersAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.LineAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
@@ -81,7 +82,7 @@ public class TernaryMapMode extends MapMode {
 		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, paletteList));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 0));
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, ternaryData.yAxisTitle, "", "", ternaryData.xAxisTitle));
+		axisPainters.add(new CornersAxisPainter(ternaryData.oCornerTitle, ternaryData.xCornerTitle, ternaryData.yCornerTitle, ""));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 2));
 		
 		TickFormatter xTick = new TickFormatter(0, ternaryData.xMaxCounts).withTick(0.5f);

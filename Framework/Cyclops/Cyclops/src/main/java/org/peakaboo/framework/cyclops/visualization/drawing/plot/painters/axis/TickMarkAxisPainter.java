@@ -5,6 +5,7 @@ import java.util.List;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
+import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
@@ -47,6 +48,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		drawRightYAxis(p, yRightValueBounds);
 		
 		} catch (Exception e) {
+			CyclopsLog.get().warning(e.getMessage());
 			System.out.println(e);
 		}
 		

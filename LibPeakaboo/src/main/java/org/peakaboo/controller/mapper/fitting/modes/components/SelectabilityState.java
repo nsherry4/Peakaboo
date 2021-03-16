@@ -8,7 +8,7 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 
 /**
- * Manages state for map modes that want some points to be unselectable
+ * Manages state for map modes that want some points to be unselectable. This state component never emits mode update messages. 
  */
 public class SelectabilityState extends AbstractState {
 
@@ -19,7 +19,7 @@ public class SelectabilityState extends AbstractState {
 		super(mode);
 		clear();
 	}
-
+	
 	public void clear() {
 		Coord<Integer> size = mode.getSize();
 		selectable = new boolean[size.x*size.y];
@@ -27,7 +27,6 @@ public class SelectabilityState extends AbstractState {
 			selectable[i] = true;
 		}
 		grid = new GridPerspective<Boolean>(size.x, size.y, false);
-		mode.updateListeners();
 	}
 	
 	public boolean get(int index) {
