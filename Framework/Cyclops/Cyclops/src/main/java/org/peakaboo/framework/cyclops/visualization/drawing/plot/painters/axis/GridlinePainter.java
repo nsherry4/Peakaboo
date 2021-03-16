@@ -27,7 +27,7 @@ public class GridlinePainter extends PlotPainter
 	{
 		
 		float valueRangeStart = tick.start;
-		float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log);	
+		float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log, tick.pad);	
 		if (tick.log) {
 			valueRangeEnd = (float) Math.exp(valueRangeEnd);						
 		}

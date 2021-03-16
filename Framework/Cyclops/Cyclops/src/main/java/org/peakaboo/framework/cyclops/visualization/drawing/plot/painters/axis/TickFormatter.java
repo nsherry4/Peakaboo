@@ -8,6 +8,7 @@ public class TickFormatter {
 	public Float start, end;
 	Function<Integer, String> formatter;
 	public boolean log = false;
+	public boolean pad = false;
 	
 	/**
 	 * Rotates text 90 degrees so that it is running perpendicular to the axis instead of parallel
@@ -42,6 +43,11 @@ public class TickFormatter {
 	
 	public TickFormatter withRotate(boolean rotate) {
 		this.textRotate = rotate;
+		return this;
+	}
+	
+	public TickFormatter withPad(boolean pad) {
+		this.pad = pad;
 		return this;
 	}
 	

@@ -9,6 +9,7 @@ import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxesData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 
@@ -232,7 +233,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			float maxTicks = calcMaxTicksInternal(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
 			float valueRangeStart = tick.start;
-			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log);	
+			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log, tick.pad);	
 			if (tick.log) {
 				valueRangeEnd = (float) Math.exp(valueRangeEnd);						
 			}
@@ -240,7 +241,6 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			
 			List<Pair<Float, Integer>> tickLocations = AxisMarkGenerator.getAxisMarkList(maxTicks, axisHeight, 1, valueRangeStart, valueRangeEnd);
-			
 		
 			float position, percentAlongAxis, textWidth, tickValue;
 			int currentValue, roundedTickValue;
@@ -314,7 +314,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			float maxTicks = calcMaxTicksInternal(p, tick, axesData.yPositionBounds, otherAxisSize);
 			
 			float valueRangeStart = tick.start;
-			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log);	
+			float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log, tick.pad);	
 			if (tick.log) {
 				valueRangeEnd = (float) Math.exp(valueRangeEnd);						
 			}
@@ -389,7 +389,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				textWidth = getTickLength(p.dr, tick) + textHeight;
 			} else {
 				float startTextWidth = p.context.getTextWidth(tick.formatter.apply(  SigDigits.toIntSigDigit(tick.start, 2)  ));			
-				float endTextWidth = p.context.getTextWidth(tick.formatter.apply(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(tick.end, false), 2)  ));
+				float endTextWidth = p.context.getTextWidth(tick.formatter.apply(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(tick.end, false, tick.pad), 2)  ));
 				textWidth = Math.max(startTextWidth, endTextWidth);
 				
 				textWidth += getTickLength(p.dr, tick) * 2.5;

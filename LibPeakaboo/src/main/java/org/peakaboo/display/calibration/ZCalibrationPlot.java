@@ -71,10 +71,12 @@ public abstract class ZCalibrationPlot {
 		Function<Integer, String> sensitivityFormatter = getYAxisFormatter();
 		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter)
 				.withRotate(true)
-				.withLog(logView);
+				.withLog(logView)
+				.withPad(true);
 		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter)
 				.withRotate(true)
-				.withLog(logView);
+				.withLog(logView)
+				.withPad(true);
 		TickFormatter tickTop = null;
 		TickFormatter tickBottom = new TickFormatter((float)lowest-0.5f, (float)highest-0.5f+0.999f, i -> {  
 			Element element = Element.values()[i];

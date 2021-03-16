@@ -412,14 +412,11 @@ public class PlotDrawing extends Drawing
 		return datascale;
 	}	
 	
-	public static float getDataScale(float maxValue, boolean log)
-	{
-		
+	public static float getDataScale(float maxValue, boolean log, boolean pad) {
 		float datascale = maxValue;
 		if (log) datascale = (float)Math.log(datascale);
-		datascale *= 1.15;
+		if (pad) datascale *= 1.15;
 		return datascale;
-		
 	}	
 	
 	public static float getDataScale(DrawingRequest dr, ReadOnlySpectrum data)

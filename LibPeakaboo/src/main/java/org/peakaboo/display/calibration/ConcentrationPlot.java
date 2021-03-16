@@ -57,8 +57,8 @@ public class ConcentrationPlot {
 		Function<Integer, String> sensitivityFormatter = i -> format.format(  ((float)i/10000f)  ) + "%";
 		TickFormatter tickTop = null;
 		TickFormatter tickBottom = new TickFormatter(-0.5f, calibratedData.size()-1-0.5f+0.999f, i -> elements.get(i).name());
-		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter).withRotate(true);
-		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter).withRotate(true);
+		TickFormatter tickLeft = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter).withRotate(true).withPad(true);
+		TickFormatter tickRight = new TickFormatter(0f, dr.maxYIntensity, sensitivityFormatter).withRotate(true).withPad(true);
 		
 		
 		

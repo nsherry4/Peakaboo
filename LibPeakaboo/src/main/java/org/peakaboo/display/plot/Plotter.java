@@ -118,10 +118,16 @@ public class Plotter {
 		// Common Values Setup
 		////////////////////////////////////////////////////////////////////
 		float maxIntensity = getMaxIntensity(data);
-		TickFormatter tickRight = new TickFormatter(0.0f, maxIntensity).withLog(settings.logTransform).withRotate(true);
+		TickFormatter tickRight = new TickFormatter(0.0f, maxIntensity)
+				.withLog(settings.logTransform)
+				.withRotate(true)
+				.withPad(true);
 		TickFormatter tickBottom = new TickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()).withRotate(false);
 		TickFormatter tickTop = null;
-		TickFormatter tickLeft = new TickFormatter(0.0f, maxIntensity).withLog(settings.logTransform).withRotate(true);
+		TickFormatter tickLeft = new TickFormatter(0.0f, maxIntensity)
+				.withLog(settings.logTransform)
+				.withRotate(true)
+				.withPad(true);
 		
 		
 		
