@@ -2,8 +2,8 @@ package cyclops;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.peakaboo.framework.cyclops.ISpectrum;
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class ISpectrumTests {
 

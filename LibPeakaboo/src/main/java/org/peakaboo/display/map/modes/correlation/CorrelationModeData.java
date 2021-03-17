@@ -3,7 +3,7 @@ package org.peakaboo.display.map.modes.correlation;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class CorrelationModeData implements MapModeData {
 	public Spectrum data;

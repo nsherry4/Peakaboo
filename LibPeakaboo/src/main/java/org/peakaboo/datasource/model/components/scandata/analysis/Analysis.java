@@ -1,6 +1,6 @@
 package org.peakaboo.datasource.model.components.scandata.analysis;
 
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 /**
  * Peakaboo derives a number of measurements from a Data Set which are not

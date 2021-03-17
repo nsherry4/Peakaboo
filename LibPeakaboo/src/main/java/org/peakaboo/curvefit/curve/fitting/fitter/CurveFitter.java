@@ -3,8 +3,8 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 /**
  * Defines a method by which a single {@link Curve} is fitted against a

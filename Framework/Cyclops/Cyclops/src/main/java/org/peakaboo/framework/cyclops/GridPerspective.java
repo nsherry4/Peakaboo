@@ -3,6 +3,9 @@ package org.peakaboo.framework.cyclops;
 
 import java.util.List;
 
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+
 
 
 

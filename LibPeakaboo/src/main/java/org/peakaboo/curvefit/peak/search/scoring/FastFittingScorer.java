@@ -6,7 +6,7 @@ import java.util.List;
 import org.peakaboo.curvefit.curve.fitting.FittingParameters;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 /**
  * Scores a TransitionSeries based on how well a rough, 

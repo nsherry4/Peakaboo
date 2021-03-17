@@ -3,7 +3,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScalePalette;
 

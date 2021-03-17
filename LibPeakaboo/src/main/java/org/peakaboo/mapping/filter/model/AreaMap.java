@@ -8,10 +8,10 @@ import java.util.List;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.ISpectrum;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
-import org.peakaboo.framework.cyclops.Spectrum;
-import org.peakaboo.framework.cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class AreaMap {
 

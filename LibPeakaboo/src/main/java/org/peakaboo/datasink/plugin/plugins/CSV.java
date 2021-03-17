@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.datasink.plugin.AbstractDataSink;
 import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class CSV extends AbstractDataSink {
 

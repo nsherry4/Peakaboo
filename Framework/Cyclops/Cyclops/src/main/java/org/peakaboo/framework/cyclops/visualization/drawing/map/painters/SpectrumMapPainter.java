@@ -2,7 +2,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 public abstract class SpectrumMapPainter extends MapPainter

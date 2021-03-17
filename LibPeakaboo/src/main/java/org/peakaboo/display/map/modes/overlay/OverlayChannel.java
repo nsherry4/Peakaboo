@@ -3,7 +3,7 @@ package org.peakaboo.display.map.modes.overlay;
 import java.util.List;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class OverlayChannel {
 	public Spectrum data;

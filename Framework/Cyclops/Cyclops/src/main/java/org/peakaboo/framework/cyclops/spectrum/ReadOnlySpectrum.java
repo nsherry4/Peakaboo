@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops;
+package org.peakaboo.framework.cyclops.spectrum;
 
 import java.io.Serializable;
 import java.util.Iterator;

@@ -4,9 +4,9 @@ package org.peakaboo.filter.plugins.mathematical;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
-import org.peakaboo.framework.cyclops.Spectrum;
-import org.peakaboo.framework.cyclops.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 
 public class DerivativeMathFilter extends AbstractFilter {

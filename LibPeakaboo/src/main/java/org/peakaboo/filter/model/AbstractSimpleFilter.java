@@ -1,8 +1,8 @@
 package org.peakaboo.filter.model;
 
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 @Deprecated(forRemoval = true, since = "5.4")
 public abstract class AbstractSimpleFilter extends AbstractFilter

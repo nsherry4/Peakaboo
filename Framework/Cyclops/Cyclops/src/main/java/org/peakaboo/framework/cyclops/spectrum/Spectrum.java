@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops;
+package org.peakaboo.framework.cyclops.spectrum;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,7 +3,7 @@ package org.peakaboo.filter.plugins.advanced;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.framework.cyclops.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class IdentityFilter extends AbstractFilter
 {

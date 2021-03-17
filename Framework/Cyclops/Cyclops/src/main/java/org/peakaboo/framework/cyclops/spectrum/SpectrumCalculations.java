@@ -1,10 +1,12 @@
-package org.peakaboo.framework.cyclops;
+package org.peakaboo.framework.cyclops.spectrum;
 
 
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.peakaboo.framework.cyclops.GridPerspective;
 
 
 /**

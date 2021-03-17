@@ -1,7 +1,7 @@
 package org.peakaboo.common;
 
-import org.peakaboo.framework.cyclops.ISpectrum;
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.encoders.CompoundEncoder;
 import org.peakaboo.framework.scratch.encoders.compressors.Compressors;

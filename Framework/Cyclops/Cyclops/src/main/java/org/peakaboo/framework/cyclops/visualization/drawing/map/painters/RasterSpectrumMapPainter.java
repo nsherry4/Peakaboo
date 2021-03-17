@@ -4,7 +4,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;

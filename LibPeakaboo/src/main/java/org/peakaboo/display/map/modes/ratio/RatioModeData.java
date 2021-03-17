@@ -4,7 +4,7 @@ import org.peakaboo.controller.mapper.fitting.modes.RatioModeController.Ratios;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class RatioModeData implements MapModeData {
 
