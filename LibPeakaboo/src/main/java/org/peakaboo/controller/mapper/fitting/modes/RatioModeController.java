@@ -1,7 +1,5 @@
 package org.peakaboo.controller.mapper.fitting.modes;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.List;
 
 import org.peakaboo.controller.mapper.MappingController;
@@ -13,7 +11,7 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.Ratios;
+import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.mapping.filter.Interpolation;
@@ -116,5 +114,34 @@ public class RatioModeController extends SimpleModeController {
 	public List<ITransitionSeries> forSide(int side) { return groups.getVisibleMembers(side); }
 	public int getSide(ITransitionSeries ts) { return groups.getGroup(ts); }
 	public void setSide(ITransitionSeries ts, int side) { groups.setGroup(ts, side); }
+
+	public static class Ratios {
+
+		public static final int logValue = 2;
+		
+		public static String fromFloat(float value) {
+			return fromFloat(value, false);
+		}
+		
+		public static String fromFloat(float value, boolean integersOnly) {
+			float ratioValue = (float)Math.pow(logValue, Math.abs(value));
+			int decimals = 0;
+			if (ratioValue < logValue && !integersOnly) decimals = 1;
+					
+			String ratioString; 
+			ratioString = SigDigits.roundFloatTo(ratioValue, decimals);
+			
+			String ratio = "";
+			if (value < 0) ratio = "1:" + ratioString;
+			if (value > 0) ratio = ratioString + ":1";
+			if (value == 0) ratio = "1:1";
+			
+			return ratio;
+		}
+		
+	}
 	
 }
+
+
+

@@ -3,14 +3,13 @@ package org.peakaboo.display.map.modes.ratio;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.controller.mapper.fitting.modes.RatioModeController.Ratios;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.ISpectrum;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.Ratios;
 import org.peakaboo.framework.cyclops.Spectrum;
 import org.peakaboo.framework.cyclops.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.visualization.Surface;
