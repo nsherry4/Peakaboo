@@ -28,14 +28,7 @@ public class CompositeModeController extends SimpleModeController {
 		} else {
 			data = sumVisibleMaps();
 		}
-		
-		GridPerspective<Float>	grid	= new GridPerspective<>(
-				getMap().getUserDimensions().getUserDataWidth(),
-				getMap().getUserDimensions().getUserDataHeight(),
-				0.0f);
-		
-		// fix bad points on the map
-		Interpolation.interpolateBadPoints(grid, data, getMap().rawDataController.getBadPoints());
+
 		List<Integer> invalidPoints = getMap().getFiltering().getInvalidPoints();
 
 		return new CompositeModeData(data, getSize(), invalidPoints);

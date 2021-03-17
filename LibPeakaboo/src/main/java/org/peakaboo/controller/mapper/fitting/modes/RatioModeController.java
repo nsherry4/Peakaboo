@@ -66,16 +66,6 @@ public class RatioModeController extends SimpleModeController {
 			ratioData.set(i, value);
 		}
 		
-		
-		GridPerspective<Float> grid = new GridPerspective<>(
-				getMap().getUserDimensions().getUserDataWidth(),
-				getMap().getUserDimensions().getUserDataHeight(),
-				0.0f);
-		
-		// fix bad points on the map
-		Interpolation.interpolateBadPoints(grid, ratioData, getMap().rawDataController.getBadPoints());
-		
-
 		Spectrum invalidPoints = new ISpectrum(ratioData.size(), 0f);
 		for (int i = 0; i < ratioData.size(); i++) {
 			if (  Float.isNaN(ratioData.get(i))  ) {

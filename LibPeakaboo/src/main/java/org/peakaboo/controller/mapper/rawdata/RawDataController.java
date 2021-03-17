@@ -101,7 +101,7 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	
 	/**
 	 * Returns a list of indexes (referring to points in this map) which are invalid
-	 * in the underlying source dataset
+	 * in the underlying source dataset (eg: the corners in a replotted circular selection)
 	 */
 	public List<Integer> getInvalidPoints() {
 		List<Integer> invalidPoints = new ArrayList<>();
@@ -118,6 +118,10 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 		return invalidPoints;
 	}
 
+	/**
+	 * Returns a list of indexes (referring to points in this map) which the user has
+	 * marked as bad
+	 */
 	public List<Integer> getBadPoints() {
 		return new ArrayList<>(mapModel.badPoints);
 	}

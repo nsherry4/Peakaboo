@@ -27,6 +27,7 @@ import org.peakaboo.framework.eventful.cache.CacheIterable;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 import org.peakaboo.framework.eventful.cache.EventfulSoftCache;
+import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterSet;
@@ -217,22 +218,37 @@ class CachedMaps {
 		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
 			EventfulSoftCache<AreaMap> mapcache = new EventfulSoftCache<>(() -> {
-				//turn a rawmap into an AreaMap
+				//turn a rawmap into an AreaMap with the z-calibration profile applied
 				ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
 				AreaMap areamap = new AreaMap(calibrated, ts.getElement(), size, controller.rawDataController.getRealDimensions());
+				//interpolate points marked by the user as bad. We do this 
+				//before filtering so that we don't need to worry about filters
+				//"smearing" bad points, causing them to taint other points
+				// TODO: This doesn't work properly on non-rectangular maps with invalid points.
+				// The badpoints data is an index into the list of *valid* points, not
+				// dimensional data
+				areamap = Interpolation.interpolateBadPoints(areamap, controller.rawDataController.getBadPoints());
+				//Then we actually apply the filters and return the result
 				areamap = filters.apply(areamap);
 				return areamap;
 			});
 			
 			maps.put(ts, mapcache);
 		});
-
-		//Apply the same filters to a map of invalid data points
+		
+		/*
+		 * Apply the same filters to a map of invalid data points. When we apply filters
+		 * to maps which have invalid points (such as a non-rectangular map) the invalid
+		 * points tend to 'smear' and we need to track which other points have been
+		 * influenced by these invalid points.
+		 * 
+		 * TODO: Filters should be aware of invalid points, both when reading the data
+		 * and when generating new maps (eg deskew)
+		 */
 		Spectrum invalidMask = Spectrum.fromPoints(controller.rawDataController.getInvalidPoints(), rawmaps.getMaps().get(0).size());
 		AreaMap invalidMap = new AreaMap(invalidMask, Collections.emptyList(), size, controller.rawDataController.getRealDimensions());
 		invalidMap = filters.apply(invalidMap);
 		invalidPoints = Spectrum.toPoints(invalidMap.getData());
-				
 		
 		//calculate the sum total map, replacing it with an empty map if there's nothing to sum
 		if (maps.size() > 0) {

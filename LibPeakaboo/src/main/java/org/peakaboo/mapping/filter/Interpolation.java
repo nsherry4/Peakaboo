@@ -7,7 +7,9 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.mapping.filter.model.AreaMap;
 
 /**
  * 
@@ -80,30 +82,41 @@ public class Interpolation {
 	
 	
 	/**
-	 * Given a set of data, a definition of its 2D dimensions, and a list of bad indices, interpolate the data
-	 * to replace the bad indices with approximations based off of neighbouring values. In place.
-	 * @param grid the {@link GridPerspective} defining the dimensions for the data
-	 * @param list the {@link Spectrum} of data
+	 * Given an AreaMap and a list of bad indices, interpolate the data to replace
+	 * the bad indices with approximations based off of neighbouring values. In
+	 * place.
+	 * 
+	 * @param map      the {@link AreaMap} containing the data and dimensions
 	 * @param badPoints the list of indices of bad points
 	 */
-	public static void interpolateBadPoints(GridPerspective<Float> grid, Spectrum list, List<Integer> badPoints)
-	{
+	public static AreaMap interpolateBadPoints(AreaMap map, List<Integer> badPoints) {
+
+		GridPerspective<Float> grid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
+		ReadOnlySpectrum input = map.getData();
+		Spectrum output = new ISpectrum(input);
 		
+		interpolateBadPoints(grid, output, badPoints);
+		
+		return new AreaMap(output, map);
+		
+	}
+	
+	
+	private static void interpolateBadPoints(GridPerspective<Float> grid, Spectrum list, List<Integer> badPoints) {
 		IntPair coords;
 		int x, y;
 		float newval;
 		List<Integer> newBadPoints = new ArrayList<>();
 		boolean repeat = false;
-		
-		for (int i : badPoints){
+
+		for (int i : badPoints) {
 		
 			coords = grid.getXYFromIndex(i);
 			x = coords.first;
 			y = coords.second;
 			
 			newval = interpolateBadPoint(grid, list, badPoints, x, y);
-			if (newval == -1) 
-			{
+			if (newval == -1) {
 				repeat = true;
 				newBadPoints.add(i);
 			}
