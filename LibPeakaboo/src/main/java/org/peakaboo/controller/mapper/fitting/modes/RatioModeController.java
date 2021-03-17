@@ -7,7 +7,6 @@ import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
-import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
@@ -26,8 +25,7 @@ public class RatioModeController extends SimpleModeController {
 	}
 
 	@Override
-	public RatioModeData getData()
-	{
+	public RatioModeData getData() {
 
 		// get transition series on ratio side 1
 		List<ITransitionSeries> side1 = forSide(1);
@@ -93,14 +91,6 @@ public class RatioModeController extends SimpleModeController {
 	}
 	
 	
-	@Override
-	public Coord<Integer> getSize() {
-		int w = getMap().getFiltering().getFilteredDataWidth();
-		int h = getMap().getFiltering().getFilteredDataHeight();
-		Coord<Integer> size = new Coord<>(w, h);
-		return size;
-	}
-
 	@Override
 	public String longTitle() {
 		String side1Title = getDatasetTitle(forSide(1));

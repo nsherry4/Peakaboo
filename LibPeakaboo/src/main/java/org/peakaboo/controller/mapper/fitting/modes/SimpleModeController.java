@@ -9,6 +9,7 @@ import java.util.List;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.components.VisibilityState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.eventful.Eventful;
 
 public abstract class SimpleModeController extends Eventful implements ModeController {
@@ -25,6 +26,12 @@ public abstract class SimpleModeController extends Eventful implements ModeContr
 		return map;
 	}
 
+	public Coord<Integer> getSize() {
+		int w = getMap().getFiltering().getFilteredDataWidth();
+		int h = getMap().getFiltering().getFilteredDataHeight();
+		Coord<Integer> size = new Coord<>(w, h);
+		return size;
+	}
 
 
 	///// Visibility delegators ///// 
