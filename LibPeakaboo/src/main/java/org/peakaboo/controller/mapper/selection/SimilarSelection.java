@@ -12,12 +12,14 @@ import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.display.map.modes.composite.CompositeModeData;
 import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
+import org.peakaboo.display.map.modes.ternary.TernaryModeData;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -49,38 +51,10 @@ class SimilarSelection extends AbstractSelection {
 		indexes.clear();
 		
 		MapModes displayMode = map.getFitting().getMapDisplayMode();
-		Spectrum data = null;
-		List<Integer> invalid = new ArrayList<>();
+		Pair<Spectrum, List<Integer>> displayModeData = getDisplayModeData();
+		Spectrum data = displayModeData.first;
+		List<Integer> invalid = displayModeData.second;
 		
-
-		switch(displayMode) {
-		case COMPOSITE:
-			CompositeModeData compositeData = (CompositeModeData) map.getFitting().getMapModeData();
-			data = compositeData.getData();
-			break;
-		
-		case CORRELATION:
-			CorrelationModeData correlationData = (CorrelationModeData) map.getFitting().getMapModeData();
-			data = correlationData.data;
-			break;
-
-		case RATIO:
-			RatioModeData ratiodata = (RatioModeData) map.getFitting().getMapModeData();
-			//we modity ratio data, so we make it a copy
-			data = new ISpectrum(ratiodata.getData().first);
-			Spectrum invalidMap = ratiodata.getData().second;
-			for (int i = 0; i < invalidMap.size(); i++) {
-				if (invalidMap.get(i) > 0f) {
-					invalid.add(i);
-				}
-			}
-			break;
-			
-		case OVERLAY:
-		default:
-			throw new UnsupportedOperationException("Cannot perform similarity-based selection on this map mode");
-		}
-
 		
 		Coord<Integer> mapSize = mapSize();
 		int w = mapSize.x;
@@ -100,9 +74,9 @@ class SimilarSelection extends AbstractSelection {
 		
 		List<Integer> points;
 		if (! contiguous) {
-			points = selectNonContiguous(data, value, grid);
+			points = selectNonContiguous(data, invalid, value, grid);
 		} else {
-			points = selectContiguous(data, clickedAt, grid);
+			points = selectContiguous(data, invalid, clickedAt, grid);
 		}
 		
 		int paddingValue = padding.getValue();
@@ -117,13 +91,64 @@ class SimilarSelection extends AbstractSelection {
 		
 	}
 	
+
+	/**
+	 * Returns a Spectrum representing scalar data for the map based on the current map display mode. Also returns a list of unselectable points
+	 * @return
+	 */
+	private Pair<Spectrum, List<Integer>> getDisplayModeData() {
+		MapModes displayMode = map.getFitting().getMapDisplayMode();
+		Spectrum data = null;
+		List<Integer> unselectable = new ArrayList<>();
+		
+		switch(displayMode) {
+		case COMPOSITE:
+			CompositeModeData compositeData = (CompositeModeData) map.getFitting().getMapModeData();
+			data = compositeData.getData();
+			break;
+		
+		case CORRELATION:
+			CorrelationModeData correlationData = (CorrelationModeData) map.getFitting().getMapModeData();
+			data = correlationData.data;
+			break;
+
+		case RATIO:
+			RatioModeData ratiodata = (RatioModeData) map.getFitting().getMapModeData();
+			//we modity ratio data, so we make it a copy
+			data = new ISpectrum(ratiodata.getData().first);
+			Spectrum invalidMap = ratiodata.getData().second;
+			for (int i = 0; i < invalidMap.size(); i++) {
+				if (invalidMap.get(i) > 0f) {
+					unselectable.add(i);
+				}
+			}
+			break;
+			
+		case TERNARYPLOT:
+			TernaryModeData ternaryData = (TernaryModeData) map.getFitting().getMapModeData();
+			data = ternaryData.data;
+			unselectable = ternaryData.unselectables;
+			break;
+			
+		case OVERLAY:
+		default:
+			throw new UnsupportedOperationException("Cannot perform similarity-based selection on this map mode");
+		}
+		
+		return new Pair<Spectrum, List<Integer>>(data, unselectable);
+	}
+	
 	private List<Integer> selectContiguous(Spectrum data, 
+			List<Integer> invalid,
 			Coord<Integer> clickedAt,
 			GridPerspective<Float> grid
 		) {
 		
+
 		List<Integer> points = new ArrayList<>();
+		//hashsets are faster for `contains` operations, which is what these will be heavily used for
 		Set<Integer> pointSet = new HashSet<>();
+		Set<Integer> invalidPoints = new HashSet<>(invalid);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 		float thresholdValue = threshold.getValue();
 		int point = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
@@ -136,9 +161,10 @@ class SimilarSelection extends AbstractSelection {
 			
 			int[] neighbours = new int[] {grid.north(point), grid.south(point), grid.east(point), grid.west(point)};
 			for (int neighbour : neighbours) {
-				//out-of-bounds, re-tread checks
-				if (neighbour == -1) continue;
-				if (pointSet.contains(neighbour)) continue;
+				//out-of-bounds, re-tread, invalid point checks
+				if (neighbour == -1) { continue; }
+				if (pointSet.contains(neighbour)) { continue; }
+				if (invalidPoints.contains(neighbour)) { continue; }
 				
 				x = grid.getXYFromIndex(neighbour).first;
 				y = grid.getXYFromIndex(neighbour).second;
@@ -160,7 +186,7 @@ class SimilarSelection extends AbstractSelection {
 	}
 
 
-	private List<Integer> selectNonContiguous(Spectrum data, float value, GridPerspective<Float> grid) {
+	private List<Integer> selectNonContiguous(Spectrum data, List<Integer> invalid, float value, GridPerspective<Float> grid) {
 		//All points, even those not touching
 		List<Integer> points = new ArrayList<>();
 		float thresholdValue = threshold.getValue();
@@ -175,6 +201,7 @@ class SimilarSelection extends AbstractSelection {
 				}
 			}
 		}
+		points.removeAll(invalid);
 		return points;
 	}
 	
