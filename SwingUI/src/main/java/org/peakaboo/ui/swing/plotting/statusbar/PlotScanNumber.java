@@ -1,16 +1,11 @@
 package org.peakaboo.ui.swing.plotting.statusbar;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
-import javax.swing.JToggleButton;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
@@ -72,6 +67,12 @@ public class PlotScanNumber extends ClearPanel {
 				scanNo.setValue(controller.view().getScanNumber() + 1);
 				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.view().getScanNumber()));
 				this.setEnabled(true);
+				/*
+				 * currently bad scans are tracked by their order in a list of good scans, but
+				 * this makes it difficult to link a scan index to the right point in a map when
+				 * it comes time for interpolation.
+				 */
+				scanBlock.setEnabled(controller.data().getDataSet().getDataSource().isRectangular());
 			} else {
 				this.setEnabled(false);
 			}
