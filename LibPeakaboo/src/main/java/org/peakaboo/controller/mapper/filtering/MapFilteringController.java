@@ -227,7 +227,7 @@ class CachedMaps {
 				// TODO: This doesn't work properly on non-rectangular maps with invalid points.
 				// The badpoints data is an index into the list of *valid* points, not
 				// dimensional data
-				areamap = Interpolation.interpolateBadPoints(areamap, controller.rawDataController.getBadPoints());
+				areamap = Interpolation.interpolateBadPoints(areamap, controller.rawDataController.getBadIndices());
 				//Then we actually apply the filters and return the result
 				areamap = filters.apply(areamap);
 				return areamap;

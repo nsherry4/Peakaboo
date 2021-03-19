@@ -119,10 +119,12 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	}
 
 	/**
-	 * Returns a list of indexes (referring to points in this map) which the user has
-	 * marked as bad
+	 * Returns a list of indexes (referring not to points in this map but rather to
+	 * <i>valid</i> points in this map) which the user has marked as bad. Note that
+	 * these will not be usable as coordinates just by knowing a map's dimensions,
+	 * since the map may be non-rectangular
 	 */
-	public List<Integer> getBadPoints() {
+	public List<Integer> getBadIndices() {
 		return new ArrayList<>(mapModel.badPoints);
 	}
 
