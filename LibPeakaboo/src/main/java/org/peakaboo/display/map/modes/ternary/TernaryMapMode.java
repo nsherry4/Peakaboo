@@ -116,7 +116,7 @@ public class TernaryMapMode extends MapMode {
 		
 		//Selection Painter
 		SelectionMaskPainter selectionPainter = super.getSelectionPainter(
-				new PaletteColour(0xff498ed7), 
+				new PaletteColour(0x80498ed7), 
 				settings.selectedPoints, 
 				ternaryData.getSize().x, 
 				ternaryData.getSize().y);

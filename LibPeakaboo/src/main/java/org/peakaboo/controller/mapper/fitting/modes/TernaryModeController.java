@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.components.BinState;
@@ -86,8 +85,7 @@ public class TernaryModeController extends SimpleModeController {
 		Spectrum xData = super.sumGivenMaps(xTS);
 		Spectrum yData = super.sumGivenMaps(yTS);
 		Spectrum allData = super.sumVisibleMaps();
-		
-		
+
 		//initialize translation lookup data
 		translation.initialize(bincount*bincount);
 		
@@ -153,17 +151,7 @@ public class TernaryModeController extends SimpleModeController {
 		return data;
 		
 	}
-	
-	private float calculateMax(Spectrum data) {
-		List<Float> sorted = data.stream().collect(Collectors.toList());
-		sorted.sort(Float::compare);
-		int index999 = (int)(sorted.size() * 0.999f);
-		//max value is 99.9th percentile in histogram
-		float max = sorted.get(index999);
-		if (max == 0) { max = 1; }
-		return max;
-	}
-	
+
 	private int calculateBin(float signal, float max, int bincount) {
 		float percent = signal / max;
 		if (percent > 1f) { percent = 1f; }

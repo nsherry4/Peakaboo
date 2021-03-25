@@ -87,7 +87,7 @@ public class CompositeMapMode extends MapMode{
 		
 		//Selection Painter
 		SelectionMaskPainter selectionPainter = super.getSelectionPainter(
-				new PaletteColour(0xffffffff), 
+				new PaletteColour(0x80ffffff), 
 				settings.selectedPoints, 
 				settings.userDataWidth, 
 				settings.userDataHeight);

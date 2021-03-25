@@ -14,7 +14,7 @@ public class SelectionMaskPainter extends RasterColorMapPainter {
 	
 	public SelectionMaskPainter(PaletteColour c, List<Integer> points, int sizeX, int sizeY) {
 		super();
-		this.selectionColour = new PaletteColour(96, c.getRed(), c.getGreen(), c.getBlue());
+		this.selectionColour = c;
 		configure(sizeX, sizeY, points);	
 	}
 
