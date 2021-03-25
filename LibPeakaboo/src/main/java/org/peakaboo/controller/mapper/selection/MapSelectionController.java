@@ -278,7 +278,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 	private Coord<Integer> size() {
-		return map.getFitting().getActiveMode().getData().getSize();
+		return map.getFitting().getActiveMode().getSize();
 	}
 	
 
@@ -314,7 +314,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		if (spatial) {
 			dimensions = map.getUserDimensions().getDimensions();
 		} else {
-			dimensions = map.getFitting().getActiveMode().getData().getSize();
+			dimensions = map.getFitting().getActiveMode().getSize();
 		}
 		int x = dimensions.x;
 		int y = dimensions.y;

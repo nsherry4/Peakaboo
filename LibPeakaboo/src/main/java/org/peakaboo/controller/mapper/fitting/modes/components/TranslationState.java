@@ -39,7 +39,8 @@ public class TranslationState extends AbstractState {
 	}
 	
 	public List<Integer> toSpatial(List<Integer> points) {
-		if (isValid()) {
+		if (!isValid()) {
+			//regenerate data, including translation map
 			mode.getData();
 		}
 		Set<Integer> translated = new HashSet<>();

@@ -7,13 +7,11 @@ import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
-import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
-import org.peakaboo.mapping.filter.Interpolation;
 
 public class RatioModeController extends SimpleModeController {
 

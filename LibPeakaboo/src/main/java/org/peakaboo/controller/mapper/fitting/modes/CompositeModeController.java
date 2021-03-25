@@ -6,9 +6,7 @@ import java.util.Optional;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.composite.CompositeModeData;
-import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.peakaboo.mapping.filter.Interpolation;
 
 public class CompositeModeController extends SimpleModeController {
 	
