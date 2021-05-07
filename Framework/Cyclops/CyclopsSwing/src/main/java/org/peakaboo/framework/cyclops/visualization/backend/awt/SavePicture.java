@@ -137,8 +137,20 @@ public class SavePicture extends JPanel
 			this.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
 
-			spnWidth = new JSpinner(new SpinnerNumberModel(startWidth, 100, 10000, 1));
-			spnHeight = new JSpinner(new SpinnerNumberModel(startHeight, 100, 10000, 1));
+			final int SIZE_MIN = 100;
+			final int SIZE_MAX = 10000;
+			
+			//if one (or both) of the dimensions are larger than the max 
+			//size, we have to calculate the correct scaling factor to keep
+			//the aspect ratio
+			if (startWidth > SIZE_MAX || startHeight > SIZE_MAX) {
+				float scaleRatio = Math.max(((float)startWidth)/SIZE_MAX, ((float)startHeight)/SIZE_MAX);
+				startWidth /= scaleRatio;
+				startHeight /= scaleRatio;
+			}
+			
+			spnWidth = new JSpinner(new SpinnerNumberModel(Math.min(startWidth, SIZE_MAX), SIZE_MIN, SIZE_MAX, 1));
+			spnHeight = new JSpinner(new SpinnerNumberModel(Math.min(startHeight, SIZE_MAX), SIZE_MIN, SIZE_MAX, 1));
 			
 			c.weightx = 0.0;
 			c.fill = GridBagConstraints.NONE;
