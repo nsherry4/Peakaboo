@@ -54,30 +54,31 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
-	{
+	{	
 
+	
 		String mode = pMode.getValue();
 		int startChannel = pStartChannel.getValue()-1;
 		int endChannel = pEndChannel.getValue()-1;
-		float height = pHeight.getValue().floatValue();
+		float desiredIntensity = pHeight.getValue().floatValue();
 		
-		float value=0f;
+		float currentIntensity=0f;
 		switch (mode) {
 		case MODE_RANGE:
 			if (startChannel >= data.size()) return data;
 			if (endChannel <= 0) return data;
 			int range = (endChannel - startChannel) + 1;
-			value = data.subSpectrum(startChannel, endChannel).sum() / range;
+			currentIntensity = data.subSpectrum(startChannel, endChannel).sum() / range;
 			break;
 		case MODE_MAX:
-			value = data.max();
+			currentIntensity = data.max();
 			break;
 		case MODE_SUM:
-			value = data.sum();
+			currentIntensity = data.sum();
 			break;
 		}
 
-		float ratio = value / height;
+		float ratio = currentIntensity / desiredIntensity;
 		if (ratio == 0f) return new ISpectrum(data.size());
 		return SpectrumCalculations.divideBy(data, ratio);
 		
@@ -88,7 +89,7 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	@Override
 	public String getFilterDescription()
 	{
-		return "The " + getFilterName() + " scales each spectrum's intensity against itself based on the options selected";
+		return "The " + getFilterName() + "filter scales each spectrum so that the intensity of the selected channel(s) matches the given noramlized intensity. Channel selection is one of max intensity, average intensity, or region of interest.";
 	}
 
 	@Override
