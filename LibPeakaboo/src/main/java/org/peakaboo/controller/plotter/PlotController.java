@@ -21,10 +21,12 @@ import org.peakaboo.controller.plotter.io.IOController;
 import org.peakaboo.controller.plotter.undo.UndoController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
+import org.peakaboo.curvefit.curve.fitting.DelegatingROFittingSet;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -32,6 +34,7 @@ import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
+import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
 
@@ -199,6 +202,12 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 	
 
+	public FilterContext getFilterContext() {
+		FilterContext ctx = new FilterContext();
+		ctx.dataset = data().getDataSet();
+		ctx.fittings = new DelegatingROFittingSet(fitting().getFittingSelections());
+		return ctx;
+	}
 	
 	/**
 	 * Returns an {@link StreamExecutor} which will generate a map based on the user's current 
@@ -207,11 +216,11 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 * @return
 	 */
 	public StreamExecutor<RawMapSet> getMapTask() {
-		return dataController.getMapTask(
+		return Mapping.mapTask(
 				filteringController.getActiveFilters(), 
-				fittingController.getFittingSelections(), 
 				fittingController.getCurveFitter(), 
-				fittingController.getFittingSolver()
+				fittingController.getFittingSolver(),
+				getFilterContext()
 			);
 	}
 	
@@ -219,7 +228,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	public void writeFitleredSpectrumToCSV(File saveFile) {
 		ReadOnlySpectrum spectrum = currentScan();
 		FilterSet filters = filtering().getActiveFilters();
-		spectrum = filters.applyFiltersUnsynchronized(spectrum, data().getDataSet());
+		spectrum = filters.applyFiltersUnsynchronized(spectrum, getFilterContext());
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
 			writer.write(spectrum.toString(", ") + "\n");
 		} catch (IOException e) {
@@ -238,7 +247,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 			try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
 				int count = 0;
 				for (ReadOnlySpectrum spectrum : data) {
-					spectrum = filters.applyFiltersUnsynchronized(spectrum, data().getDataSet());
+					spectrum = filters.applyFiltersUnsynchronized(spectrum, getFilterContext());
 					writer.write(spectrum.toString(", ") + "\n");
 
 					//abort test

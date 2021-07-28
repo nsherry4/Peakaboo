@@ -3,6 +3,7 @@ package org.peakaboo.filter.plugins.background;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
@@ -13,6 +14,7 @@ import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.datafile.PathDataFile;
 import org.peakaboo.datasource.plugin.plugins.PlainText;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -63,7 +65,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent) {
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
 		//load it lazily on first use
 		loadBackground(data);
 		return SpectrumCalculations.multiplyBy(spectrum, percent/100.0f);

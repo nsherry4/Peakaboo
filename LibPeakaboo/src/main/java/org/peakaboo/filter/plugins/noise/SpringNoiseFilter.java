@@ -1,8 +1,10 @@
 package org.peakaboo.filter.plugins.noise;
 
 
-import org.peakaboo.dataset.DataSet;
+import java.util.Optional;
+
 import org.peakaboo.filter.model.AbstractFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.mathematical.DerivativeMathFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -89,7 +91,7 @@ public final class SpringNoiseFilter extends AbstractFilter {
 
 
 	@Override
-	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+	public ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		data = springFilter(
 				data, 
 				multiplier.getValue().floatValue(), 

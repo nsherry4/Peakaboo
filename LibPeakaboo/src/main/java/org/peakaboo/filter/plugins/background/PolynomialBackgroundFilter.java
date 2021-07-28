@@ -1,8 +1,10 @@
 package org.peakaboo.filter.plugins.background;
 
 
-import org.peakaboo.dataset.DataSet;
+import java.util.Optional;
+
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -49,7 +51,7 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent) {
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
 		return calcBackgroundParabolic(data, width.getValue(), power.getValue(), percent / 100.0f);
 	}
 

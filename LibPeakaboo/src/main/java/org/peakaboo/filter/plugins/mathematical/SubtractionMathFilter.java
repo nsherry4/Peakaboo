@@ -1,8 +1,10 @@
 package org.peakaboo.filter.plugins.mathematical;
 
 
-import org.peakaboo.dataset.DataSet;
+import java.util.Optional;
+
 import org.peakaboo.filter.model.AbstractFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
@@ -27,7 +29,7 @@ public class SubtractionMathFilter extends AbstractFilter
 	}
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		return SpectrumCalculations.subtractFromList(data, amount.getValue().floatValue());
 	}
 

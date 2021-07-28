@@ -1,6 +1,7 @@
 package org.peakaboo.filter.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.EmptyDataSet;
@@ -88,24 +89,31 @@ public interface Filter {
 	 */
 	boolean canFilterSubset();
 
-	/**
-	 * Applies the filter to the given spectrum.
-	 * 
-	 * @param data    the data to process
-	 * @param dataset the DataSet to which this spectrum belongs
-	 * @return the result of applying the filter to data
-	 */
-	ReadOnlySpectrum filter(ReadOnlySpectrum data, DataSet dataset);
 	
-	/**
-	 * Applies the filter to the given spectrum, supplying an empty {@link DataSet}
-	 * @param data the data to process
-	 * @return the result of applying the filter to data
-	 */
-	@Deprecated(forRemoval=true, since="5.4")
-	default ReadOnlySpectrum filter(ReadOnlySpectrum data) {
-		return filter(data, new EmptyDataSet());
+	default FilterContext requireContext(Optional<FilterContext> ctx) {
+		if (!ctx.isPresent()) {
+			throw new IllegalArgumentException("This filter requires a FilterContext");
+		}
+		return ctx.get();
 	}
 	
+	ReadOnlySpectrum filter(ReadOnlySpectrum data, Optional<FilterContext> ctx);
+	
+	/**
+	 * Convenience method to wrap the {@link FilterContext} in an {@link Optional}
+	 */
+	default ReadOnlySpectrum filter(ReadOnlySpectrum data, FilterContext ctx) {
+		return filter(data, Optional.of(ctx));
+	}
+	
+	/**
+	 * Filter a spectrum without a filter context. If a plugin needs a filter
+	 * context, it should throw an exception here. Unpacking the context or throwing
+	 * an exception can be done with the convenience method
+	 * {@link Filter#requireContext(Optional)}
+	 */
+	default ReadOnlySpectrum filter(ReadOnlySpectrum data) {
+		return filter(data, Optional.empty());
+	}
 
 }

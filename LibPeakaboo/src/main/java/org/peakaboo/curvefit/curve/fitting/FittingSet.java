@@ -16,8 +16,7 @@ import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
  *
  */
 
-public class FittingSet
-{
+public class FittingSet implements ROFittingSet {
 
 	private EventfulCache<List<Curve>>		curves;
 	private List<ITransitionSeries>			fitTransitionSeries;
@@ -31,17 +30,13 @@ public class FittingSet
 		this.parameters = new FittingParameters(this);
 	}
 
-	public FittingSet(FittingSet copy) {
+	/**
+	 * Create a new FittingSet by copying a {@link ROFittingParameters}
+	 * object.
+	 */
+	public FittingSet(ROFittingParameters parameters) {
 		this();
-		for (ITransitionSeries ts : copy.getFittedTransitionSeries()) {
-			addTransitionSeries(ts);
-		}
-		this.parameters = copy.parameters.copy();
-	}
-	
-	public FittingSet(FittingParameters parameters) {
-		this();
-		this.parameters = parameters.copy();
+		this.parameters = new FittingParameters(parameters, this);
 	}
 	
 	
@@ -50,30 +45,26 @@ public class FittingSet
 	}
 
 
+	@Override
 	public List<Curve> getCurves() {
 		return curves.getValue();
 	}
 	
+	@Override
 	public List<Curve> getVisibleCurves() {
 		return getCurves().stream().filter(c -> c.getTransitionSeries().isVisible()).collect(Collectors.toList());
 	}
 	
-	public synchronized void addTransitionSeries(ITransitionSeries ts)
-	{
-
+	public synchronized void addTransitionSeries(ITransitionSeries ts) {
 		if (fitTransitionSeries.contains(ts)) return;
 		fitTransitionSeries.add(ts);
 		invalidateCurves();
-
 	}
 	
-	public synchronized void insertTransitionSeries(int index, ITransitionSeries ts)
-	{
-
+	public synchronized void insertTransitionSeries(int index, ITransitionSeries ts) {
 		if (fitTransitionSeries.contains(ts)) return;
 		fitTransitionSeries.add(index, ts);
 		invalidateCurves();
-
 	}
 
 	
@@ -86,37 +77,31 @@ public class FittingSet
 	}
 
 
-	public synchronized void remove(ITransitionSeries ts)
-	{
+	public synchronized void remove(ITransitionSeries ts) {
 		fitTransitionSeries.remove(ts);
 		invalidateCurves();
 	}
 	
 	//if this has been set to false, and it is a primary TS, we may see it again, so we don't want this
 	//setting hanging around
-	public synchronized void clear()
-	{
+	public synchronized void clear() {
 		fitTransitionSeries.clear();
 		invalidateCurves();
 	}
 
 
-	public synchronized boolean isEmpty()
-	{
+	public synchronized boolean isEmpty() {
 		return fitTransitionSeries.isEmpty();
 	}
 
 	
-	public synchronized boolean moveTransitionSeriesUp(ITransitionSeries e)
-	{
+	public synchronized boolean moveTransitionSeriesUp(ITransitionSeries e) {
 		int insertionPoint;
 		boolean movedTS = false;
 		ITransitionSeries ts;
 
-		for (int i = 0; i < fitTransitionSeries.size(); i++)
-		{
-			if (fitTransitionSeries.get(i).equals(e))
-			{
+		for (int i = 0; i < fitTransitionSeries.size(); i++) {
+			if (fitTransitionSeries.get(i).equals(e)) {
 				ts = fitTransitionSeries.get(i);
 				fitTransitionSeries.remove(ts);
 				insertionPoint = i - 1;
@@ -133,10 +118,8 @@ public class FittingSet
 		return movedTS;
 		
 	}
-	public synchronized void moveTransitionSeriesUp(List<ITransitionSeries> tss)
-	{
-		for (int i = 0; i < tss.size(); i++)
-		{
+	public synchronized void moveTransitionSeriesUp(List<ITransitionSeries> tss) {
+		for (int i = 0; i < tss.size(); i++) {
 			//method returns true if it was able to move the TS.
 			//if we weren't able to move it, we don't try to move any of them
 			if (  ! moveTransitionSeriesUp(tss.get(i))  ) break;
@@ -144,17 +127,14 @@ public class FittingSet
 	}
 
 
-	public synchronized boolean moveTransitionSeriesDown(ITransitionSeries e)
-	{
+	public synchronized boolean moveTransitionSeriesDown(ITransitionSeries e) {
 		int insertionPoint;
 		boolean movedTS = false;
 		ITransitionSeries ts;
 
-		for (int i = 0; i < fitTransitionSeries.size(); i++)
-		{
+		for (int i = 0; i < fitTransitionSeries.size(); i++) {
 			
-			if (fitTransitionSeries.get(i).equals(e))
-			{
+			if (fitTransitionSeries.get(i).equals(e)) {
 								
 				ts = fitTransitionSeries.get(i);
 				fitTransitionSeries.remove(ts);
@@ -171,33 +151,26 @@ public class FittingSet
 		
 	}
 
-	public synchronized void moveTransitionSeriesDown(List<ITransitionSeries> tss)
-	{
-		for (int i = tss.size()-1; i >= 0; i--)
-		{
+	public synchronized void moveTransitionSeriesDown(List<ITransitionSeries> tss) {
+		for (int i = tss.size()-1; i >= 0; i--) {
 			//method returns true if it was able to move the TS.
 			//if we weren't able to move it, we don't try to move any of them
 			if (  ! moveTransitionSeriesDown(tss.get(i))  ) break;
 		}
 	}
 
-	public synchronized boolean hasTransitionSeries(ITransitionSeries ts)
-	{
+	public synchronized boolean hasTransitionSeries(ITransitionSeries ts) {
 		if (fitTransitionSeries.contains(ts)) return true;
 		return false;
 	}
 
 
-	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean show)
-	{
-		for (ITransitionSeries e : fitTransitionSeries)
-		{
-			if (ts.equals(e))
-			{
+	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean show) {
+		for (ITransitionSeries e : fitTransitionSeries) {
+			if (ts.equals(e)) {
 				e.setVisible(show);
 			}
 		}
-
 		invalidateCurves();
 	}
 
@@ -209,26 +182,20 @@ public class FittingSet
 	}
 	
 
-	public synchronized List<ITransitionSeries> getFittedTransitionSeries()
-	{
+	public synchronized List<ITransitionSeries> getFittedTransitionSeries() {
 		return new ArrayList<>(fitTransitionSeries);
 	}
 
 
-	public synchronized List<ITransitionSeries> getVisibleTransitionSeries()
-	{
-
+	public synchronized List<ITransitionSeries> getVisibleTransitionSeries() {
 		List<ITransitionSeries> fittedElements = new ArrayList<>();
-
-		for (ITransitionSeries e : fitTransitionSeries)
-		{
+		for (ITransitionSeries e : fitTransitionSeries) {
 			if (e.isVisible()) fittedElements.add(e);
 		}
-
 		return fittedElements;
-
 	}
 
+	@Override
 	public FittingParameters getFittingParameters() {
 		return parameters;
 	}

@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -107,16 +107,16 @@ public class FilterSet implements Iterable<Filter> {
 
 
 	
-	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data, DataSet dataset) {
-		return applyFiltersUnsynchronized(data, dataset);
+	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data, FilterContext ctx) {
+		return applyFiltersUnsynchronized(data, ctx);
 	}
 
 	
-	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, DataSet dataset) {
-
+	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, FilterContext ctx) {
+		
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled() && !f.isPreviewOnly()) {
-				data = f.filter(data, dataset);
+				data = f.filter(data, ctx);
 			}
 		}
 		
@@ -158,7 +158,7 @@ public class FilterSet implements Iterable<Filter> {
 	}
 
 
-	public Map<Filter, ReadOnlySpectrum> calculateDeltas(ReadOnlySpectrum data, DataSet dataset) {
+	public Map<Filter, ReadOnlySpectrum> calculateDeltas(ReadOnlySpectrum data, FilterContext ctx) {
 		
 		Map<Filter, ReadOnlySpectrum> deltas = new LinkedHashMap<>();
 		
@@ -168,7 +168,7 @@ public class FilterSet implements Iterable<Filter> {
 		
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled()) {
-				current = f.filter(last, dataset);
+				current = f.filter(last, ctx);
 				current = correctNonFinite(current);
 				delta = SpectrumCalculations.subtractLists(last, current, 0f);
 				deltas.put(f, delta);

@@ -2,11 +2,12 @@ package org.peakaboo.filter.plugins.noise;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
@@ -116,7 +117,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		return fastSavitskyGolayFilter(data, reach.getValue(), ignore.getValue() ? max.getValue() : Float.MAX_VALUE);
 	}
 

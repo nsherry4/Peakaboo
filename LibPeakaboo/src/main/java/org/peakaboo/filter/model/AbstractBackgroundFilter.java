@@ -1,6 +1,7 @@
 package org.peakaboo.filter.model;
 
-import org.peakaboo.dataset.DataSet;
+import java.util.Optional;
+
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -65,9 +66,9 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 	}
 	
 	
-	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent);
+	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent);
 	
-	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset) {
+	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		if (data == null) {
 			return null;
 		}
@@ -83,7 +84,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 			
 			ReadOnlySpectrum partial = data.subSpectrum(start, stop);
 			Spectrum result = new ISpectrum(data.size(), 0f);
-			partial = getBackground(partial, dataset, percent.getValue());
+			partial = getBackground(partial, ctx, percent.getValue());
 			
 			for (int i = 0; i < partial.size(); i++)
 			{
@@ -93,14 +94,14 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 			return result;
 			
 		} else {
-			return getBackground(data, dataset, percent.getValue());
+			return getBackground(data, ctx, percent.getValue());
 		}
 		
 	}
 	
 	@Override
-	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
-		ReadOnlySpectrum background = getBackground(data, dataset);
+	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+		ReadOnlySpectrum background = getBackground(data, ctx);
 		return SpectrumCalculations.subtractLists(data, background);
 	}
 	

@@ -23,6 +23,7 @@ import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePlugin;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -177,16 +178,6 @@ public class DataController extends Eventful
 	public Discards getDiscards() {
 		return discards;
 	}
-	
-	
-
-	
-	public StreamExecutor<RawMapSet> getMapTask(FilterSet filters, FittingSet fittings, CurveFitter fitter, FittingSolver solver) {
-		return Mapping.mapTask(dataModel, filters, fittings, fitter, solver);
-	}
-	
-	
-
 	
 	
 	public Iterator<ReadOnlySpectrum> getScanIterator() {

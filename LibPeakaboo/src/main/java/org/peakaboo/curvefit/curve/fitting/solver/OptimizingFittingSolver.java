@@ -19,7 +19,7 @@ import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingParameters;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
@@ -41,7 +41,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	}
 
 	@Override
-	public FittingResultSet solve(ReadOnlySpectrum data, FittingSet fittings, CurveFitter fitter) {
+	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitter fitter) {
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
 			return getEmptyResult(data, fittings);
@@ -64,12 +64,12 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected FittingResultSet getEmptyResult(ReadOnlySpectrum data, FittingSet fittings) {
+	protected FittingResultSet getEmptyResult(ReadOnlySpectrum data, ROFittingSet fittings) {
 		return new FittingResultSet(
 				new ISpectrum(data.size()), 
 				new ISpectrum(data), 
 				Collections.emptyList(), 
-				FittingParameters.copy(fittings.getFittingParameters().copy())
+				fittings.getFittingParameters().copy()
 			);
 	}
 	
@@ -224,12 +224,12 @@ public class OptimizingFittingSolver implements FittingSolver {
 	
 	protected class EvaluationContext {
 		public ReadOnlySpectrum data;
-		public FittingSet fittings;
+		public ROFittingSet fittings;
 		public List<Curve> curves;
 		public Spectrum scratch;
 		public Spectrum total;
 		public Spectrum residual;
-		public EvaluationContext(ReadOnlySpectrum data, FittingSet fittings, List<Curve> curves) {
+		public EvaluationContext(ReadOnlySpectrum data, ROFittingSet fittings, List<Curve> curves) {
 			this.data = data;
 			this.fittings = fittings;
 			this.curves = curves;

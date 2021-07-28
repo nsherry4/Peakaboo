@@ -26,7 +26,7 @@ public class FittingResultSet implements Iterable<FittingResult>
 	Spectrum			totalFit;
 	ReadOnlySpectrum	residual;
 	List<FittingResult>	fits;
-	FittingParameters	parameters;
+	ROFittingParameters	parameters;
 	
 	public FittingResultSet(int size)
 	{
@@ -39,7 +39,7 @@ public class FittingResultSet implements Iterable<FittingResult>
 			Spectrum totalFit, 
 			ReadOnlySpectrum residual, 
 			List<FittingResult> fits, 
-			FittingParameters parameters) {
+			ROFittingParameters parameters) {
 		this.totalFit = totalFit;
 		this.residual = residual;
 		this.fits = fits;
@@ -59,7 +59,7 @@ public class FittingResultSet implements Iterable<FittingResult>
 		return fits;
 	}
 
-	public FittingParameters getParameters() {
+	public ROFittingParameters getParameters() {
 		return parameters;
 	}
 	

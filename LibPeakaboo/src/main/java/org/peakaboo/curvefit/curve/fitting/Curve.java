@@ -35,7 +35,7 @@ public class Curve implements Comparable<Curve>
 	private ITransitionSeries		transitionSeries;
 		
 	//The details of how we generate our fitting curve
-	private FittingParameters 		parameters;
+	private ROFittingParameters 		parameters;
 	
 	
 	
@@ -69,7 +69,7 @@ public class Curve implements Comparable<Curve>
 	 * @param ts the TransitionSeries to fit
 	 * @param parameters the fitting parameters to use to model this curve
 	 */
-	public Curve(ITransitionSeries ts, FittingParameters parameters)
+	public Curve(ITransitionSeries ts, ROFittingParameters parameters)
 	{
 
 		this.parameters = parameters;

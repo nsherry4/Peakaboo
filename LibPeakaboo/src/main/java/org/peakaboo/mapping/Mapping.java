@@ -2,6 +2,7 @@ package org.peakaboo.mapping;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
@@ -9,11 +10,13 @@ import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
@@ -51,19 +54,20 @@ public class Mapping {
 	 * @return a {@link StreamExecutor} which will return a {@link RawMapSet}
 	 */
 	public static StreamExecutor<RawMapSet> mapTask(
-			DataSet dataset, 
 			FilterSet filters, 
-			FittingSet fittings, 
 			CurveFitter fitter, 
-			FittingSolver solver
+			FittingSolver solver,
+			FilterContext ctx
 		) {
 		
-		List<ITransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
+		List<ITransitionSeries> transitionSeries = ctx.fittings.getVisibleTransitionSeries();
 
-		int mapsize = dataset.getScanData().scanCount();
+		
+		int mapsize = ctx.dataset.getScanData().scanCount();
 		//Handle non-contiguous datasets
-		boolean noncontiguous = !dataset.getDataSource().isRectangular() && dataset.getDataSource().getDataSize().isPresent();
-		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
+		boolean noncontiguous = !ctx.dataset.getDataSource().isRectangular() && ctx.dataset.getDataSource().getDataSize().isPresent();
+		Coord<Integer> dimensions = ctx.dataset.getDataSize().getDataDimensions();
+		
 		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
 		if (noncontiguous) {
 			//the dataset is non-contiguous, but provides dimensions and a way to get a coord per index
@@ -72,22 +76,22 @@ public class Mapping {
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
 		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
-		streamer.setTask(new Range(0, dataset.getScanData().scanCount()-1), stream -> {
+		streamer.setTask(new Range(0, ctx.dataset.getScanData().scanCount()-1), stream -> {
 			
 			long t1 = System.currentTimeMillis();
 			
 			stream.forEach(index -> {
 				
-				ReadOnlySpectrum data = dataset.getScanData().get(index);
+				ReadOnlySpectrum data = ctx.dataset.getScanData().get(index);
 				if (data == null) return;
 				
-				data = filters.applyFiltersUnsynchronized(data, dataset);
+				data = filters.applyFiltersUnsynchronized(data, ctx);
 				
-				FittingResultSet frs = solver.solve(data, fittings, fitter);
+				FittingResultSet frs = solver.solve(data, ctx.fittings, fitter);
 				
 				for (FittingResult result : frs.getFits()) {
 					if (noncontiguous) {
-						int translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
+						int translated = grid.getIndexFromXY(ctx.dataset.getDataSize().getDataCoordinatesAtIndex(index));
 						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), translated);	
 					} else {
 						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), index);

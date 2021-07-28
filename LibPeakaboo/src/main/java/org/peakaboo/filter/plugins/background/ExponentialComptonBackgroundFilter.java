@@ -1,7 +1,9 @@
 package org.peakaboo.filter.plugins.background;
 
-import org.peakaboo.dataset.DataSet;
+import java.util.Optional;
+
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
@@ -68,7 +70,7 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 	}
 	
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, DataSet dataset, int percent) {
+	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
 		int attackStart = pAttackStart.getValue();
 		int attackEnd = pAttackEnd.getValue();
 		int decayStart = pDecayStart.getValue();

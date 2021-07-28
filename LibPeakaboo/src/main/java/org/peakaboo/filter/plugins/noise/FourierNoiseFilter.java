@@ -3,9 +3,10 @@ package org.peakaboo.filter.plugins.noise;
 
 
 import java.util.Arrays;
+import java.util.Optional;
 
-import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
@@ -108,7 +109,7 @@ public final class FourierNoiseFilter extends AbstractFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset)
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx)
 	{
 		
 		data = FFT.lowPassFilter(

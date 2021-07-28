@@ -12,6 +12,8 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingParameters;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
@@ -44,7 +46,7 @@ public class PeakProposal {
 	public static ExecutorSet<List<ITransitionSeries>> search(
 			final ReadOnlySpectrum data,
 			PeakSearcher searcher,
-			FittingSet fits,
+			ROFittingSet fits,
 			CurveFitter fitter,
 			FittingSolver solver
 		) {
@@ -168,7 +170,7 @@ public class PeakProposal {
 
 	//given the energy level of a peak and a list of existing new fits, check to 
 	//see if the given peak can be explained by an existing fit
-	private static boolean peakOverlap(List<ITransitionSeries> newfits, int channel, FittingParameters parameters) {
+	private static boolean peakOverlap(List<ITransitionSeries> newfits, int channel, ROFittingParameters parameters) {
 		float energy = parameters.getCalibration().energyFromChannel(channel);
 		for (ITransitionSeries ts : newfits) {
 			for (Transition t : ts) {
@@ -180,7 +182,7 @@ public class PeakProposal {
 		}
 		return false;
 	}
-	private static boolean transitionOverlap(Transition t, float energy, float cutoff, FittingParameters parameters) {
+	private static boolean transitionOverlap(Transition t, float energy, float cutoff, ROFittingParameters parameters) {
 		if (t.relativeIntensity < cutoff) return false; 
 		float hwhm = parameters.getFWHM(t)/2f;
 		float min = t.energyValue - hwhm;
@@ -198,7 +200,7 @@ public class PeakProposal {
 	 */
 	public static List<Pair<ITransitionSeries, Float>> fromChannel(
 			final ReadOnlySpectrum data, 
-			FittingSet fits,
+			ROFittingSet fits,
 			FittingSet proposed,
 			CurveFitter fitter,
 			FittingSolver solver,

@@ -3,6 +3,7 @@ package org.peakaboo.filter.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
@@ -74,15 +75,15 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin {
 	 * Filter the given {@link Spectrum} and return the modified result
 	 * @param data the Spectrum to filter
 	 */
-	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset);
+	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx);
 		
 	
 
 	@Override
-	public ReadOnlySpectrum filter(ReadOnlySpectrum data, DataSet dataset) {
+	public ReadOnlySpectrum filter(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		
 		try{
-			ReadOnlySpectrum newdata = filterApplyTo(data, dataset);
+			ReadOnlySpectrum newdata = filterApplyTo(data, ctx);
 			if (newdata != null) return newdata;
 			return data;
 		}

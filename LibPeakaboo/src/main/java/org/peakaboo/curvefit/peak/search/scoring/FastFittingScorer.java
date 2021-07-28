@@ -3,7 +3,7 @@ package org.peakaboo.curvefit.peak.search.scoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.curvefit.curve.fitting.FittingParameters;
+import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -18,11 +18,11 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 public class FastFittingScorer implements FittingScorer {
 
 	private ReadOnlySpectrum data;
-	private FittingParameters parameters;
+	private ROFittingParameters parameters;
 	private float energy;
 	
 	
-	public FastFittingScorer(float energy, ReadOnlySpectrum data, FittingParameters parameters) {
+	public FastFittingScorer(float energy, ReadOnlySpectrum data, ROFittingParameters parameters) {
 		this.data = data;
 		this.parameters = parameters;
 		this.energy = energy;

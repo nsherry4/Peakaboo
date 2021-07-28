@@ -1,7 +1,9 @@
 package org.peakaboo.filter.plugins.noise;
 
-import org.peakaboo.dataset.DataSet;
+import java.util.Optional;
+
 import org.peakaboo.filter.model.AbstractFilter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -33,7 +35,7 @@ public class LowStatisticsNoiseFilter extends AbstractFilter {
 	@Override
 	// TODO: Technically, the window size should be a multiple of the FWHM here,
 	// but we don't have access to that information. Maybe..?
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		Spectrum out = new ISpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			out.set(i, filterChannel(i, data));

@@ -11,7 +11,7 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
-public class FittingParameters {
+public class FittingParameters implements ROFittingParameters {
 
 	private FittingSet fits;
 	
@@ -20,29 +20,43 @@ public class FittingParameters {
 	private DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
 	private Class<? extends FittingFunction> fittingFunction = PseudoVoigtFittingFunction.class;
 	private boolean showEscapePeaks = true;
-	
-	private FittingParameters() {}
-	
+
 	FittingParameters(FittingSet fits) {
 		this.fits = fits;
 	}
+
+	/**
+	 * Constructs a new FittingParameters object from the readonly parameters, but
+	 * with a new {@link FittingSet} to work with
+	 */
+	public FittingParameters(ROFittingParameters params, FittingSet fits) {
+		this(params);
+		this.fits = fits;
+	}
 	
-	//Copy is used to give a "dead" copy of the parameters to a FittingResultSet. 
-	//As such, it should not be given a copy of the FittingSet.
-	public static FittingParameters copy(FittingParameters copyFrom) {
-		FittingParameters param = new FittingParameters();
-		param.fwhmBase = copyFrom.fwhmBase;
-		param.fits = null;
-		param.detectorMaterial = copyFrom.detectorMaterial;
-		param.fittingFunction = copyFrom.fittingFunction;
-		//immutable
-		param.calibration = copyFrom.calibration;
-		param.showEscapePeaks = copyFrom.showEscapePeaks;
-		return param;
+	/**
+	 * Constructs a new "dead" or "unwired" FittingParameters object without a
+	 * reference to a parent {@link FittingSet} since a readonly params does not
+	 * provide access to that.
+	 */
+	public FittingParameters(ROFittingParameters params) {
+		fwhmBase = params.getFWHMBase();
+		calibration = params.getCalibration();
+		detectorMaterial = params.getDetectorMaterial();
+		fittingFunction = params.getFittingFunction();
+		showEscapePeaks = params.getShowEscapePeaks();	
+	}
+	
+	/**
+	 * Complete copy of the given FittingParameters object
+	 */
+	public FittingParameters(FittingParameters params) {
+		this((ROFittingParameters)params);
+		this.fits = params.fits;
 	}
 	
 	public FittingParameters copy() {
-		return FittingParameters.copy(this);
+		return new FittingParameters(this);
 	}
 	
 	

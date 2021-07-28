@@ -1,11 +1,12 @@
 package org.peakaboo.filter.plugins.advanced;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.model.SerializedFilter;
@@ -63,7 +64,7 @@ public class SubFilter extends AbstractFilter {
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, DataSet dataset) {
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		
 		int start = begin.getValue();
 		int stop = end.getValue();
@@ -74,7 +75,7 @@ public class SubFilter extends AbstractFilter {
 		Spectrum result = new ISpectrum(data);
 		ReadOnlySpectrum subspectrum = data.subSpectrum(start, stop);
 		
-		subspectrum = filter.getValue().filter(subspectrum, dataset);
+		subspectrum = filter.getValue().filter(subspectrum, ctx);
 		
 		for (int i = start; i <= stop; i++)
 		{
