@@ -29,6 +29,10 @@ public class Group implements Value<List<Value<?>>> {
 		this(name, new ArrayList<>(), style);
 	}
 
+	public Group(String name, Style<List<Value<?>>> style, Value<?>... values) {
+		this(name, Arrays.asList(values), style);
+	}
+
 	public Group(String name, Value<?>... values) {
 		this(name, Arrays.asList(values));
 	}

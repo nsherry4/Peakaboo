@@ -25,9 +25,13 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	/**
 	 * Create a new RangeSet containing no {@link Range}s
 	 */
-	public RangeSet()
-	{
+	public RangeSet() {
 		ranges = new ArrayList<>();
+	}
+	
+	public RangeSet(RangeSet copy) {
+		this();
+		ranges.addAll(copy.ranges);
 	}
 	
 
@@ -35,8 +39,7 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * Add the given {@link Range}
 	 * @param range the Range to add to this RangeSet
 	 */
-	public void addRange(Range range)
-	{
+	public void addRange(Range range) {
 		Iterator<Range> i;
 		Range r;
 		
@@ -64,10 +67,8 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * Add all of the {@link Range}s from the given RangeSet to this RangeSet
 	 * @param rangeset the RangeSet to add the elements from
 	 */
-	public void addRangeSet(RangeSet rangeset)
-	{
-		for (Range r : rangeset.getRanges())
-		{
+	public void addRangeSet(RangeSet rangeset) {
+		for (Range r : rangeset.getRanges()) {
 			addRange(r);
 		}
 	}
@@ -78,25 +79,19 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * RangeSet anymore. Eg: [1..20:2,6..30:2].removeRange(2..29:1).toSink() => [1, 30] 
 	 * @param range the Range the elements of which should be removed from this RangeSet
 	 */
-	public void removeRange(Range range)
-	{
+	public void removeRange(Range range) {
 		Iterator<Range> i;
 		RangeSet difference = new RangeSet();
 		Range r;
 		
 		if (range == null) return;
 		
-		
 		i = ranges.iterator();
-		
-		while (i.hasNext())
-		{
+		while (i.hasNext()) {
 			r = i.next();
-			if (r.isCoincident(range))
-			{			
+			if (r.isCoincident(range)) {			
 				i.remove();
 				difference.addRangeSet( r.difference(range) );
-				
 			}
 		}
 		
@@ -107,8 +102,7 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	/**
 	 * Remove all {@link Range}s from this RangeSet
 	 */
-	public void clear()
-	{
+	public void clear() {
 		ranges.clear();
 	}
 	
@@ -117,37 +111,30 @@ public class RangeSet implements Serializable, Iterable<Integer>
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator(), Spliterator.ORDERED + Spliterator.IMMUTABLE + Spliterator.NONNULL), false);
 	}
 	
-	public Iterator<Integer> iterator()
-	{
-		return new Iterator<Integer>(){
+	public Iterator<Integer> iterator() {
+		return new Iterator<Integer>() {
 
 			Iterator<Range> rangeIterator = ranges.iterator();
 			Iterator<Integer> numIterator;
 			
 			
-			public boolean hasNext()
-			{
+			public boolean hasNext() {
 				while (numIterator == null || !numIterator.hasNext()){
 					if (! rangeIterator.hasNext()) return false;
 					numIterator = rangeIterator.next().iterator();
 				}
-				
 				return numIterator.hasNext();
 			}
 
-			public Integer next()
-			{
+			public Integer next() {
 				while (numIterator == null || !numIterator.hasNext()){
 					if (! rangeIterator.hasNext()) throw new IndexOutOfBoundsException();
 					numIterator = rangeIterator.next().iterator();
 				}
-				
-				return numIterator.next();
-				
+				return numIterator.next();				
 			}
 
-			public void remove()
-			{
+			public void remove() {
 				throw new UnsupportedOperationException();
 			}
 		};
@@ -214,11 +201,9 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * @param other the Range to compare
 	 * @return true if the given Range is overlapping this RangeSet, false otherwise
 	 */
-	public boolean isCoincident(Range other)
-	{
+	public boolean isCoincident(Range other) {
 		
-		for (Range r : ranges)
-		{		
+		for (Range r : ranges) {		
 			if (r.isCoincident(other)) return true;
 		}
 		
@@ -231,11 +216,9 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * @param other the RangeSet to compare
 	 * @return true if the given other RangeSet is overlapping this RangeSet, false otherwise
 	 */
-	public boolean isCoincident(RangeSet other)
-	{
+	public boolean isCoincident(RangeSet other) {
 		
-		for (Range r : other.ranges)
-		{
+		for (Range r : other.ranges) {
 			if (isCoincident(r)) return true;
 		}
 		
@@ -244,8 +227,7 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	
 	
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return ranges.toString();
 	}
 
@@ -255,8 +237,7 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * Get a list of the {@link Range}s included in this RangeSet
 	 * @return a list of {@link Range}s making up this RangeSet
 	 */
-	public List<Range> getRanges()
-	{
+	public List<Range> getRanges() {
 		return new ArrayList<>(ranges);
 	}
 	
