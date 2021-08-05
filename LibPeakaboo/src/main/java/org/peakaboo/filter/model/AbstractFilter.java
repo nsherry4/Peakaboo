@@ -58,16 +58,16 @@ public abstract class AbstractFilter implements Serializable, JavaFilterPlugin {
 	}
 	
 	@Override
-	public final void setParameters(List<Value<?>> params) {
-		parameters = params;
+	public final void setParameters(List<Value<?>> values) {
+		parameters = values;
 	}
 	
-	protected void addParameter(Parameter<?> param) {
-		parameters.add(param);
+	protected void addParameter(Value<?> value) {
+		parameters.add(value);
 	}
 	
-	protected void addParameter(Parameter<?>... params) {
-		for (Parameter<?> param : params) { addParameter(param); }
+	protected void addParameter(Value<?>... values) {
+		for (Value<?> value : values) { addParameter(value); }
 	}
 	
 	

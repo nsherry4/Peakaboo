@@ -70,7 +70,11 @@ public class SerializedFilter {
 			) {
 				filter = plugin.create();
 				filter.initialize();
-				filter.getParameterGroup().deserialize(settings);
+				try {
+					filter.getParameterGroup().deserialize(settings);
+				} catch (IllegalArgumentException e) {
+					throw new RuntimeException("Cannot build plugin: " + plugin.getName(), e);
+				}
 				return filter;
 			}
 		}

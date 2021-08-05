@@ -4,6 +4,7 @@ package org.peakaboo.curvefit.curve.fitting;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -117,6 +118,14 @@ public class FittingResultSet implements Iterable<FittingResult>
 		return fits.iterator();
 	}
 	
+	public Optional<FittingResult> getFitForTransitionSeries(ITransitionSeries ts) {
+		for (FittingResult fit : fits) {
+			if (fit.getTransitionSeries().equals(ts)) {
+				return Optional.of(fit);
+			}
+		}
+		return Optional.empty();
+	}
 	
 	
 	

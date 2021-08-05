@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -391,14 +392,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public FittingResult getFittingResultForTransitionSeries(ITransitionSeries ts) {
 		if (getFittingSelectionResults() == null) return null;
-
-		for (FittingResult result : getFittingSelectionResults().getFits())
-		{
-			if (result.getTransitionSeries() == ts) {
-				return result;
-			}
-		}
-		return null;
+		return getFittingSelectionResults().getFitForTransitionSeries(ts).orElse(null);
 	}
 	
 	public List<ITransitionSeries> getHighlightedTransitionSeries() {

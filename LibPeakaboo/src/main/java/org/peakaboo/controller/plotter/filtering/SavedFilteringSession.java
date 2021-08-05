@@ -2,7 +2,9 @@ package org.peakaboo.controller.plotter.filtering;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.filter.model.SerializedFilter;
@@ -24,7 +26,11 @@ public class SavedFilteringSession {
 		FilterSet filterset = controller.getFilteringModel().filters;
 		filterset.clear();
 		for (SerializedFilter f : this.filters) {
-			filterset.add(f.getFilter());
+			try {
+				filterset.add(f.getFilter());
+			} catch (Exception e) {
+				PeakabooLog.get().log(Level.SEVERE, "Failed to restore filter", e);
+			}
 		}
 	}
 	
