@@ -3,10 +3,9 @@ package org.peakaboo.curvefit.curve.fitting.solver;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.curvefit.curve.fitting.Curve;
-import org.peakaboo.curvefit.curve.fitting.FittingParameters;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
@@ -42,7 +41,7 @@ public class GreedyFittingSolver implements FittingSolver {
 		Spectrum scaled = new ISpectrum(data.size());
 		
 		// calculate the curves
-		for (Curve curve : fittings.getCurves()) {
+		for (ROCurve curve : fittings.getCurves()) {
 			if (!curve.getTransitionSeries().isVisible()) { continue; }
 			
 			FittingResult result = fitter.fit(remainder, curve);

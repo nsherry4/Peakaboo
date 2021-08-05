@@ -17,14 +17,14 @@ public class FittingResult
 {
 
 	private ReadOnlySpectrum		fit = null;
-	private Curve	curve;
+	private ROCurve	curve;
 
 	private float					curveScale;
 	private float					normalizationScale;
 	
 	private ITransitionSeries		transitionSeries;
 
-	public FittingResult(Curve curve, float curveScale)	{
+	public FittingResult(ROCurve curve, float curveScale)	{
 		this.curve = curve;
 		this.curveScale = curveScale;
 		this.normalizationScale = curve.getNormalizationScale();
@@ -51,7 +51,7 @@ public class FittingResult
 		return curve.get().size();
 	}
 	
-	public Curve getCurve() {
+	public ROCurve getCurve() {
 		return curve;
 	}
 

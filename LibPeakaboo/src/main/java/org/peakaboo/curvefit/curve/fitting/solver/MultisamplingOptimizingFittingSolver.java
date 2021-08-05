@@ -8,8 +8,8 @@ import java.util.Set;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.PointValuePair;
-import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -35,13 +35,11 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			return getEmptyResult(data, fittings);
 		}
 		
-		List<Curve> curves = new ArrayList<>(fittings.getVisibleCurves());
+		List<ROCurve> curves = fittings.getVisibleCurves();
 		sortCurves(curves);
-		
-		
 		Set<Integer> intenseChannels = getIntenseChannels(curves);
 		
-		List<Curve> perm = new ArrayList<>(curves);
+		List<ROCurve> perm = new ArrayList<>(curves);
 		int counter = 0;
 		double[] scalings = new double[size];
 		while (counter <= 10) {
@@ -60,7 +58,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			//guess = permScalings;
 			
 			for (int i = 0; i < scalings.length; i++) {
-				Curve c = perm.get(i);
+				ROCurve c = perm.get(i);
 				int j = curves.indexOf(c);
 				scalings[j] += permScalings[i];
 			}
@@ -77,19 +75,6 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		return evaluate(scalings, context);
 		
 		
-	}
-	
-	private String a2s(double[] scalings) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		for (int i = 0; i < scalings.length; i++) {
-			sb.append(scalings[i]);
-			if (i != scalings.length-1) {
-				sb.append(", ");
-			}
-		}
-		sb.append("]");
-		return sb.toString();
 	}
 	
 }

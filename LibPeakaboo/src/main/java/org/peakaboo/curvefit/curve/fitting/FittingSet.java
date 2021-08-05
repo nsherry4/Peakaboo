@@ -4,6 +4,7 @@ package org.peakaboo.curvefit.curve.fitting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -46,12 +47,12 @@ public class FittingSet implements ROFittingSet {
 
 
 	@Override
-	public List<Curve> getCurves() {
-		return curves.getValue();
+	public List<ROCurve> getCurves() {
+		return new ArrayList<>(curves.getValue());
 	}
 	
 	@Override
-	public List<Curve> getVisibleCurves() {
+	public List<ROCurve> getVisibleCurves() {
 		return getCurves().stream().filter(c -> c.getTransitionSeries().isVisible()).collect(Collectors.toList());
 	}
 	
@@ -200,7 +201,14 @@ public class FittingSet implements ROFittingSet {
 		return parameters;
 	}
 
-
+	public Optional<ROCurve> getCurveForTransitionSeries(ITransitionSeries ts) {
+		for (Curve curve: curves.getValue()) {
+			if (ts.equals(curve.getTransitionSeries())) {
+				return Optional.of(curve);
+			}
+		}
+		return Optional.empty();
+	}
 	
 
 }

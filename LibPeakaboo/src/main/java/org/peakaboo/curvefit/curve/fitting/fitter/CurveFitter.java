@@ -2,6 +2,7 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -19,7 +20,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  */
 public interface CurveFitter {
 
-	FittingResult fit(ReadOnlySpectrum data, Curve curve);
+	FittingResult fit(ReadOnlySpectrum data, ROCurve curve);
 	
 	String name(); 
 		

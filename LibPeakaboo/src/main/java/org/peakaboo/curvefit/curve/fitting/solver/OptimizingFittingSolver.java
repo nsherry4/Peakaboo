@@ -15,10 +15,9 @@ import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizer;
-import org.peakaboo.curvefit.curve.fitting.Curve;
-import org.peakaboo.curvefit.curve.fitting.FittingParameters;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.peak.table.Element;
@@ -47,7 +46,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 			return getEmptyResult(data, fittings);
 		}
 		
-		List<Curve> curves = new ArrayList<>(fittings.getVisibleCurves());
+		List<ROCurve> curves = new ArrayList<>(fittings.getVisibleCurves());
 		sortCurves(curves);
 		Set<Integer> intenseChannels = getIntenseChannels(curves);
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
@@ -104,10 +103,10 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected double[] getInitialGuess(int size, List<Curve> curves, CurveFitter fitter, ReadOnlySpectrum data) {
+	protected double[] getInitialGuess(int size, List<ROCurve> curves, CurveFitter fitter, ReadOnlySpectrum data) {
 		double[] guess = new double[size];
 		for (int i = 0; i < size; i++) {
-			Curve curve = curves.get(i);
+			ROCurve curve = curves.get(i);
 			FittingResult guessFittingResult = fitter.fit(data, curve);
 			
 			//there will usually be some overlap between elements, so
@@ -122,9 +121,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return guess;
 	}
 	
-	protected Set<Integer> getIntenseChannels(List<Curve> curves) {
+	protected Set<Integer> getIntenseChannels(List<ROCurve> curves) {
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
-		for (Curve curve : curves) {
+		for (ROCurve curve : curves) {
 			intenseChannels.addAll(curve.getIntenseChannels());
 		}
 		return intenseChannels;
@@ -155,7 +154,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		};
 	}
 	
-	protected void sortCurves(List<Curve> curves) {
+	protected void sortCurves(List<ROCurve> curves) {
 		curves.sort((a, b) -> {
 			TransitionShell as, bs;
 			as = a.getTransitionSeries().getShell();
@@ -175,7 +174,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		int index = 0;
 		context.scratch.zero();
 		context.total.zero();
-		for (Curve curve : context.curves) {
+		for (ROCurve curve : context.curves) {
 			float scale = (float) point[index++];
 			curve.scaleInto(scale, context.scratch);
 			SpectrumCalculations.addLists_inplace(context.total, context.scratch);
@@ -211,7 +210,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		List<FittingResult> fits = new ArrayList<>();
 		Spectrum total = new ISpectrum(context.data.size());
 		Spectrum scaled = new ISpectrum(context.data.size());
-		for (Curve curve : context.curves) {
+		for (ROCurve curve : context.curves) {
 			float scale = (float) point[index++];
 			curve.scaleInto(scale, scaled);
 			fits.add(new FittingResult(curve, scale));
@@ -225,11 +224,11 @@ public class OptimizingFittingSolver implements FittingSolver {
 	protected class EvaluationContext {
 		public ReadOnlySpectrum data;
 		public ROFittingSet fittings;
-		public List<Curve> curves;
+		public List<ROCurve> curves;
 		public Spectrum scratch;
 		public Spectrum total;
 		public Spectrum residual;
-		public EvaluationContext(ReadOnlySpectrum data, ROFittingSet fittings, List<Curve> curves) {
+		public EvaluationContext(ReadOnlySpectrum data, ROFittingSet fittings, List<ROCurve> curves) {
 			this.data = data;
 			this.fittings = fittings;
 			this.curves = curves;

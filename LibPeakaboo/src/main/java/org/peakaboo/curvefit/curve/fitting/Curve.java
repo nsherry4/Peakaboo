@@ -28,7 +28,7 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
  * @author NAS
  */
 
-public class Curve implements Comparable<Curve>
+public class Curve implements Comparable<ROCurve>, ROCurve
 {
 
 	//The {@link TransitionSeries} that this fitting is based on
@@ -69,8 +69,7 @@ public class Curve implements Comparable<Curve>
 	 * @param ts the TransitionSeries to fit
 	 * @param parameters the fitting parameters to use to model this curve
 	 */
-	public Curve(ITransitionSeries ts, ROFittingParameters parameters)
-	{
+	public Curve(ITransitionSeries ts, ROFittingParameters parameters) {
 
 		this.parameters = parameters;
 		rangeMultiplier = DEFAULT_RANGE_MULT;
@@ -83,18 +82,19 @@ public class Curve implements Comparable<Curve>
 		
 	}
 	
-	public void setTransitionSeries(ITransitionSeries ts)
-	{
+	public void setTransitionSeries(ITransitionSeries ts) {
 		this.transitionSeries = ts;
 		calculateConstraintMask();
 		calcUnscaledFit(ts.getShell() != TransitionShell.COMPOSITE);
 		
 	}
 	
+	@Override
 	public ITransitionSeries getTransitionSeries() {
 		return transitionSeries;
 	}
 	
+	@Override
 	public ReadOnlySpectrum get() {
 		return normalizedCurve;
 	}
@@ -106,8 +106,8 @@ public class Curve implements Comparable<Curve>
 	 *            amount to scale the fitting by
 	 * @return a scaled fit
 	 */
-	public Spectrum scale(float scale)
-	{
+	@Override
+	public Spectrum scale(float scale) {
 		return SpectrumCalculations.multiplyBy(normalizedCurve, scale);
 	}
 	
@@ -115,6 +115,7 @@ public class Curve implements Comparable<Curve>
 	 * Returns the sum of the scaled curve. This is generally faster than calling
 	 * scale() and calculating the sum
 	 */
+	@Override
 	public float scaleSum(float scale) {
 		return normalizedSum * scale;
 	}
@@ -123,6 +124,7 @@ public class Curve implements Comparable<Curve>
 	 * Returns the max of the scaled curve. This is generally faster than calling
 	 * scale() and calculating the sum
 	 */
+	@Override
 	public float scaleMax(float scale) {
 		return normalizedMax * scale;
 	}
@@ -136,6 +138,7 @@ public class Curve implements Comparable<Curve>
 	 *            target Spectrum to store results
 	 * @return a scaled fit
 	 */
+	@Override
 	public Spectrum scaleInto(float scale, Spectrum target) {
 		return SpectrumCalculations.multiplyBy_target(normalizedCurve, target, scale);
 	}
@@ -150,8 +153,8 @@ public class Curve implements Comparable<Curve>
 	 * 
 	 * @return the normalization scale value
 	 */
-	public float getNormalizationScale()
-	{
+	@Override
+	public float getNormalizationScale() {
 		return normalizationScale;
 	}
 	
@@ -161,14 +164,14 @@ public class Curve implements Comparable<Curve>
 	 * series
 	 * @return
 	 */
-	public int getSizeOfBase()
-	{
+	@Override
+	public int getSizeOfBase() {
 		return baseSize;
 	}
 	
 	
-	public boolean isOverlapping(Curve other)
-	{
+	@Override
+	public boolean isOverlapping(Curve other) {
 		return intenseRanges.isTouching(other.intenseRanges);
 		
 	}
@@ -177,25 +180,35 @@ public class Curve implements Comparable<Curve>
 	 * Returns a RangeSet containing the channels for which this Curve is intense or
 	 * significant.
 	 */
+	@Override
 	public RangeSet getIntenseRanges() {
-		return intenseRanges;
+		return new RangeSet(intenseRanges);
 	}
 	
 	/**
 	 * Returns a Set of Integers containing the channels for which this Curve is intense or
 	 * significant.
 	 */
+	@Override
 	public Set<Integer> getIntenseChannels() {
 		return Collections.unmodifiableSet(intenseChannels);
 	}
 	
+	@Override
+	public String toString() {
+		return "[" + transitionSeries + "] x " + normalizationScale;
+	}
+
+	@Override
+	public int compareTo(ROCurve o) {
+		return this.transitionSeries.compareTo(o.getTransitionSeries());
+	}
 	
 
 	/**
 	 * Given a TransitionSeries, calculate the range of channels which are important
 	 */
-	private void calculateConstraintMask()
-	{
+	private void calculateConstraintMask() {
 
 		
 		intenseRanges.clear();
@@ -242,8 +255,7 @@ public class Curve implements Comparable<Curve>
 	
 
 	// generates an initial unscaled curvefit from which later curves are scaled as needed
-	private void calcUnscaledFit(boolean fitEscape)
-	{
+	private void calcUnscaledFit(boolean fitEscape) {
 
 		fitEscape &= parameters.getShowEscapePeaks();
 		
@@ -303,15 +315,7 @@ public class Curve implements Comparable<Curve>
 	}
 
 	
-	public String toString()
-	{
-		return "[" + transitionSeries + "] x " + normalizationScale;
-	}
 
-	@Override
-	public int compareTo(Curve o) {
-		return this.transitionSeries.compareTo(o.transitionSeries);
-	}
 
 	
 	

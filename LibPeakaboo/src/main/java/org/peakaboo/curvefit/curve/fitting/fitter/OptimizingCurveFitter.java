@@ -9,8 +9,8 @@ import org.apache.commons.math3.optim.univariate.SearchInterval;
 import org.apache.commons.math3.optim.univariate.UnivariateObjectiveFunction;
 import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
 import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
-import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -21,7 +21,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 	protected float overfitPenalty = 5f;
 	
 	@Override
-	public FittingResult fit(ReadOnlySpectrum data, Curve curve) {
+	public FittingResult fit(ReadOnlySpectrum data, ROCurve curve) {
 		float scale = this.findScale(data, curve);
 		FittingResult result = new FittingResult(curve, scale);
 		return result;
@@ -29,7 +29,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 	
 	
 	
-	private float findScale(ReadOnlySpectrum data, Curve curve) {
+	private float findScale(ReadOnlySpectrum data, ROCurve curve) {
 
 		UnivariateFunction score = scoringFunction(data, curve);
 		
@@ -55,7 +55,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 		
 	}
 	
-	protected UnivariateFunction scoringFunction(ReadOnlySpectrum data, Curve curve) {
+	protected UnivariateFunction scoringFunction(ReadOnlySpectrum data, ROCurve curve) {
 		return new UnivariateFunction() {
 			
 			Spectrum scaled = new ISpectrum(data.size());

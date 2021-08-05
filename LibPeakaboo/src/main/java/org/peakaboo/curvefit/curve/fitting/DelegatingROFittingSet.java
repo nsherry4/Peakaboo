@@ -1,6 +1,7 @@
 package org.peakaboo.curvefit.curve.fitting;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
@@ -38,18 +39,22 @@ public class DelegatingROFittingSet implements ROFittingSet {
 	}
 
 	@Override
-	public List<Curve> getVisibleCurves() {
+	public List<ROCurve> getVisibleCurves() {
 		return backer.getVisibleCurves();
 	}
 
 	@Override
-	public List<Curve> getCurves() {
+	public List<ROCurve> getCurves() {
 		return backer.getCurves();
 	}
 	
 	
 	public String toString() {
 		return backer.toString();
+	}
+
+	public Optional<ROCurve> getCurveForTransitionSeries(ITransitionSeries ts) {
+		return backer.getCurveForTransitionSeries(ts);
 	}
 
 
