@@ -1,0 +1,16 @@
+*/.project
+*/*/.project
+*/*/*/.project
+
+
+*/.settings
+*/*/.settings
+*/*/*/.settings
+
+*/.classpath
+*/*/.classpath
+*/*/*/.classpath
+
+*/.gitignore
+*/*/.gitignore
+*/*/*/.gitignore
