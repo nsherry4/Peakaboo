@@ -9,8 +9,11 @@ package org.peakaboo.ui.swing.mapping.colours;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import javax.swing.Icon;
+
+import org.peakaboo.framework.swidget.widgets.Spacing;
 
 
 class ColourRenderer implements Icon
@@ -48,9 +51,20 @@ class ColourRenderer implements Icon
 	}
 
 
-	public void paintIcon(Component c, Graphics g, int x, int y)
+	public void paintIcon(Component c, Graphics g_, int x, int y)
 	{
+		Graphics2D g = (Graphics2D) g_;
+		
+		//Renderer uses 3px padding, so we draw inside of that
+		int pad = Spacing.small;
+		int rw = c.getWidth()-1-pad*2;
+		int rh = c.getHeight()-1-pad*2;
+		int rx = pad;
+		int ry = pad;
+		
 		g.setColor(color);
-		g.fillRect(0, 0, 1000, 1000);
+		g.fillRect(rx, ry, rw, rh);
+		g.setColor(new Color(0x333333));
+		g.drawRect(rx, ry, rw, rh);
 	}
 }

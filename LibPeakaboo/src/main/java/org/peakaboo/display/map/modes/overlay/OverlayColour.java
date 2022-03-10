@@ -45,6 +45,12 @@ public enum OverlayColour {
 		public int toARGB(){return 0xffFF0090;}
 		@Override
 		public String toString(){return "Pink";}
+	},
+	WHITE {
+		@Override
+		public int toARGB(){return 0xffFFFFFF;}
+		@Override
+		public String toString(){return "White";}
 	};
 	
 	
