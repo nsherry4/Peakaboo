@@ -7,7 +7,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
@@ -79,11 +78,8 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
 			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON);
 		}
 		
-		if (pluginBaseClass == CalibrationReference.class) {
-			return IconFactory.getImageIcon("calibration", IconSize.BUTTON);
-		}
+		return IconFactory.getImageIcon(plugin.getManager().getName(), IconSize.BUTTON);
 		
-		return null;
 	}
 
 }

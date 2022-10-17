@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 import org.peakaboo.framework.bolt.plugin.config.container.BoltConfigContainer;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltDirectoryLoader;
 
@@ -17,12 +18,14 @@ public class BoltConfigDirectoryLoader<T extends BoltConfigPlugin> extends BoltD
 	private String ext;
 	private Function<String, T> builder;
 	private Class<T> targetClass;
+	private BoltPluginManager<T> manager;
 	
-	public BoltConfigDirectoryLoader(Class<T> targetClass, File directory, String ext, Function<String, T> builder) {
+	public BoltConfigDirectoryLoader(BoltPluginManager<T> manager, Class<T> targetClass, File directory, String ext, Function<String, T> builder) {
 		super(directory, true);
 		this.ext = ext;
 		this.targetClass = targetClass;
 		this.builder = builder;
+		this.manager = manager;
 	}
 
 	@Override
@@ -40,7 +43,7 @@ public class BoltConfigDirectoryLoader<T extends BoltConfigPlugin> extends BoltD
 	public BoltConfigContainer<T> build(File file) {
 		URL url = fileToURL(file);
 		if (url == null) { return null; }
-		return new BoltConfigContainer<>(url, targetClass, builder);
+		return new BoltConfigContainer<>(this.manager, url, targetClass, builder);
 	}
 	
 }

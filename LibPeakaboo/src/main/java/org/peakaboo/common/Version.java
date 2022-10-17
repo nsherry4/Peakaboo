@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
+import org.peakaboo.tier.Tier;
 
 public class Version {
 
@@ -37,6 +38,7 @@ public class Version {
 	public final static int versionNoMajor = 5;
 	public final static int versionNoMinor = 5;
 	public final static int versionNoPoint = 1;
+	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
 	public final static String program_name = "Peakaboo";
 	
 	public final static ReleaseType releaseType = ReleaseType.DEVELOPMENT;
@@ -56,28 +58,28 @@ public class Version {
 		
 		default:
 		case DEVELOPMENT:
-			releaseDescription = "Development Version - " + buildDate;
+			releaseDescription = Tier.provider().tierName() + " Development Version - " + buildDate;
 			titleReleaseDescription = "[" + releaseDescription + "]";
 			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "dev";
 			logo = "devicon";
 			splash = "devsplash";
-			title = program_name + longVersionNo + titleReleaseDescription;
+			title = Tier.provider().appName() + longVersionNo + titleReleaseDescription;
 			break;
 			
 		case CANDIDATE:
-			releaseDescription = "Release Candidate";
+			releaseDescription = Tier.provider().tierName() + " Release Candidate";
 			titleReleaseDescription = "[" + releaseDescription + "]";
 			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "rc";
 			logo = "rcicon";
 			splash = "rcsplash";
-			title = program_name + versionNoMajor + "." + versionNoMinor + titleReleaseDescription;
+			title = Tier.provider().appName() + versionNoMajor + "." + versionNoMinor + titleReleaseDescription;
 			break;
 
 		case RELEASE:
-			releaseDescription = "";
+			releaseDescription = Tier.provider().tierName();
 			titleReleaseDescription = "";
 			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint;
-			title = program_name + versionNoMajor + titleReleaseDescription;
+			title = Tier.provider().appName() + versionNoMajor + titleReleaseDescription;
 			logo = "icon";
 			splash = "splash";
 			break;

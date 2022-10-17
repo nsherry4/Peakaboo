@@ -50,6 +50,8 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 
 	BoltContainer<T> getContainer();
 
+	BoltPluginManager<T> getManager();
+	
 	/**
 	 * Returns true if (and only if) the UUID of the other plugin matches 
 	 * this one, and the version of this plugin is the same or greater than the other one 

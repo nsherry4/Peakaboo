@@ -10,7 +10,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin> {
+public class DataSourcePluginManager extends BoltPluginManager<JavaDataSourcePlugin> {
 
 	private static DataSourcePluginManager SYSTEM;
 	public static synchronized void init(File dataSourceDir) {
@@ -31,11 +31,12 @@ public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin>
 	private BoltJavaBuiltinLoader<JavaDataSourcePlugin> builtins;
 	
 	public DataSourcePluginManager(File dataSourceDir) {
-	
-		addLoader(new BoltJarDirectoryLoader<>(JavaDataSourcePlugin.class, dataSourceDir));
-		addLoader(new BoltJarDirectoryLoader<>(JavaDataSourcePlugin.class));
+		super("datasource");
 		
-		builtins = new BoltJavaBuiltinLoader<>(JavaDataSourcePlugin.class);
+		addLoader(new BoltJarDirectoryLoader<>(this, JavaDataSourcePlugin.class, dataSourceDir));
+		addLoader(new BoltJarDirectoryLoader<>(this, JavaDataSourcePlugin.class));
+		
+		builtins = new BoltJavaBuiltinLoader<>(this, JavaDataSourcePlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
 	}

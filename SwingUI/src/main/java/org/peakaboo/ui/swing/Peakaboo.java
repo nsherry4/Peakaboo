@@ -13,7 +13,6 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.peakaboo.calibration.CalibrationPluginManager;
 import org.peakaboo.common.Env;
 import org.peakaboo.common.PeakabooConfiguration;
 import org.peakaboo.common.PeakabooConfiguration.MemorySize;
@@ -30,6 +29,7 @@ import org.peakaboo.framework.druthers.serialize.YamlSerializer;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.theme.LightTheme;
+import org.peakaboo.framework.stratus.theme.TestTheme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
 import org.peakaboo.framework.swidget.icons.IconFactory;
@@ -37,6 +37,7 @@ import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanelConfig;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
@@ -45,8 +46,6 @@ import org.peakaboo.ui.swing.plotting.PlotFrame;
 public class Peakaboo {
 	private static Timer gcTimer;
 	
-	public static final boolean SHOW_QUANTITATIVE = Version.releaseType == ReleaseType.DEVELOPMENT;
-
 	private static void showError(Throwable throwable, String message) {
 		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
 		errorDialog.setVisible(true);
@@ -160,7 +159,7 @@ public class Peakaboo {
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/org/peakaboo/ui/swing/icons/";
-		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
+		StratusLookAndFeel laf = new StratusLookAndFeel(new TestTheme());
 		
 		
 		//warm up the peak table, which is lazy
@@ -214,7 +213,10 @@ public class Peakaboo {
 			MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
 			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
-			CalibrationPluginManager.init(DesktopApp.appDir("Plugins/CalibrationReference"));
+			
+			//Any additional plugin types provided per-tier
+			Tier.provider().initializePlugins();
+			
 
 			try {
 				peakLoader.join();

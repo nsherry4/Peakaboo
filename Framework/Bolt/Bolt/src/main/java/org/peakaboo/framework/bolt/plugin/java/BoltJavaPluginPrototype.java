@@ -3,6 +3,7 @@ package org.peakaboo.framework.bolt.plugin.java;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
@@ -12,11 +13,13 @@ public class BoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPl
 	private Class<? extends T> implClass;
 	private BoltContainer<T> container;
 	private T instance;
+	private BoltPluginManager<T> manager;
 	
-	public BoltJavaPluginPrototype(Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container) {
+	public BoltJavaPluginPrototype(BoltPluginManager<T> manager, Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container) {
 		this.pluginClass = pluginClass;
 		this.implClass = implClass;
 		this.container = container;
+		this.manager = manager;
 		instance = create();
 	}
 	
@@ -104,6 +107,11 @@ public class BoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPl
 	@Override
 	public BoltContainer<T> getContainer() {
 		return container;
+	}
+
+	@Override
+	public BoltPluginManager<T> getManager() {
+		return manager;
 	}
 	
 	

@@ -1,7 +1,8 @@
 package org.peakaboo.mapping.filter.plugin;
 
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
+import org.peakaboo.mapping.filter.model.MapFilter;
 
-public interface JavaMapFilterPlugin extends MapFilterPlugin, BoltJavaPlugin {
+public interface JavaMapFilterPlugin extends MapFilter, BoltJavaPlugin {
 
 }

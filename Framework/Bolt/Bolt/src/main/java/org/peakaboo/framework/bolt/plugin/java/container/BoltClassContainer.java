@@ -1,13 +1,15 @@
 package org.peakaboo.framework.bolt.plugin.java.container;
 
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 
 public class BoltClassContainer<T extends BoltJavaPlugin> extends BoltJavaContainer<T> {
 		
 	protected Class<? extends T> implClass;
+	private BoltPluginManager<T> manager;
 	
-	public BoltClassContainer(Class<T> targetClass, Class<? extends T> implClass) {
-		super(targetClass);
+	public BoltClassContainer(BoltPluginManager<T> manager, Class<T> targetClass, Class<? extends T> implClass) {
+		super(manager, targetClass);
 		this.implClass = implClass;
 		add(implClass);
 	}
@@ -30,6 +32,11 @@ public class BoltClassContainer<T extends BoltJavaPlugin> extends BoltJavaContai
 	@Override
 	public boolean isDeletable() {
 		return false;
+	}
+
+	@Override
+	public BoltPluginManager<T> getManager() {
+		return this.manager;
 	}
 	
 }

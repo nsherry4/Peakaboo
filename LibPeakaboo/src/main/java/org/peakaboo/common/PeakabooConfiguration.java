@@ -13,7 +13,7 @@ public class PeakabooConfiguration {
 	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(Serializers.fstUnsafe(ISpectrum.class), Compressors.lz4fast());
 
 	
-	public static MemorySize memorySize = calcMemoryFootprint();
+	public static final MemorySize memorySize = calcMemoryFootprint();
 
 	public enum MemorySize {
 		TINY, SMALL, MEDIUM, LARGE;

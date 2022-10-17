@@ -9,7 +9,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
+public class DataSinkPluginManager extends BoltPluginManager<JavaDataSinkPlugin> {
 
 	private static DataSinkPluginManager SYSTEM;
 	public static void init(File dataSinkDir) {
@@ -30,11 +30,12 @@ public class DataSinkPluginManager extends BoltPluginManager<DataSinkPlugin> {
 	private BoltJavaBuiltinLoader<JavaDataSinkPlugin> builtins;
 	
 	public DataSinkPluginManager(File dataSinkDir) {
+		super("datasink");
 		
-		addLoader(new BoltJarDirectoryLoader<>(JavaDataSinkPlugin.class, dataSinkDir));
-		addLoader(new BoltJarDirectoryLoader<>(JavaDataSinkPlugin.class));
+		addLoader(new BoltJarDirectoryLoader<>(this, JavaDataSinkPlugin.class, dataSinkDir));
+		addLoader(new BoltJarDirectoryLoader<>(this, JavaDataSinkPlugin.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(JavaDataSinkPlugin.class);
+		builtins = new BoltJavaBuiltinLoader<>(this, JavaDataSinkPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
 	}

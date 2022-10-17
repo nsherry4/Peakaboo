@@ -7,7 +7,6 @@ import java.util.Collections;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
@@ -23,6 +22,7 @@ import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.mapping.rawmap.RawMapSet;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
 import org.peakaboo.ui.swing.mapping.components.PlotSelectionButton;
@@ -39,7 +39,7 @@ public class QuickMapPanel extends HeaderLayer {
 		
 		RawDataController rawDataController = new RawDataController();
 		DataSet sourceDataset = plotcontroller.data().getDataSet();
-		rawDataController.setMapData(maps, sourceDataset, "", Collections.emptyList(), new CalibrationProfile());
+		rawDataController.setMapData(maps, sourceDataset, "", Collections.emptyList(), Tier.provider().createCalibrationProfile());
 		this.controller = new MappingController(rawDataController, plotcontroller);
 		
 		// load saved dimensions, and when the window closes, save them

@@ -10,15 +10,15 @@ import org.peakaboo.datasource.model.datafile.DataFile;
 
 public class DataSourceLookup {
 
-	public static List<DataSourcePlugin> findDataSourcesForFiles(List<DataFile> datafiles, List<DataSourcePlugin> dsps) {	
+	public static List<JavaDataSourcePlugin> findDataSourcesForFiles(List<DataFile> datafiles, List<JavaDataSourcePlugin> dsps) {	
 		
-		List<DataSourcePlugin> maybeByFilename = new ArrayList<>();
-		List<DataSourcePlugin> maybeByContents = new ArrayList<>();
-		List<DataSourcePlugin> yesByContents = new ArrayList<>();
+		List<JavaDataSourcePlugin> maybeByFilename = new ArrayList<>();
+		List<JavaDataSourcePlugin> maybeByContents = new ArrayList<>();
+		List<JavaDataSourcePlugin> yesByContents = new ArrayList<>();
 		
 		PeakabooLog.get().log(Level.INFO, "Discovering compatible DataSource plugins");
 
-		for (DataSourcePlugin datasource : dsps) {
+		for (JavaDataSourcePlugin datasource : dsps) {
 			try {
 				FileFormatCompatibility compat = datasource.getFileFormat().compatibilityWithDataFile(new ArrayList<>(datafiles));
 				

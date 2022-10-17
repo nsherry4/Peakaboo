@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import org.apache.batik.ext.swing.GridBagConstants;
-import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
 import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
@@ -90,12 +89,9 @@ public class PluginView extends JPanel {
 		if (pluginBaseClass == JavaMapFilterPlugin.class) {
 			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.ICON);
 		}
-				
-		if (pluginBaseClass == CalibrationReference.class) {
-			return IconFactory.getImageIcon("calibration", IconSize.ICON);
-		}
 		
-		return null;
+		return IconFactory.getImageIcon(plugin.getManager().getName(), IconSize.ICON);
+
 	}
 	
 }

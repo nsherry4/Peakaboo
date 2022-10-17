@@ -42,7 +42,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.calibration.CalibrationProfile;
-import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
@@ -64,8 +63,8 @@ import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.datafile.PathDataFile;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
-import org.peakaboo.datasource.plugin.DataSourcePlugin;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
+import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.cyclops.Bounds;
@@ -108,8 +107,7 @@ import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
-import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
-import org.peakaboo.ui.swing.calibration.profileplot.ProfileManager;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
@@ -393,7 +391,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 
 			@Override
-			public void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected) {
+			public void onSelection(List<JavaDataSourcePlugin> datasources, Consumer<JavaDataSourcePlugin> selected) {
 				DataSourceSelection selection = new DataSourceSelection(PlotPanel.this, datasources, selected);
 				PlotPanel.this.pushLayer(selection);
 			}
@@ -513,7 +511,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		
 		AboutLayer.Contents contents = new AboutLayer.Contents();
-		contents.name = Version.program_name;
+		contents.name = Tier.provider().appName();
 		contents.description = "XRF Analysis Software";
 		contents.linkAction = () -> DesktopApp.browser("http://peakaboo.org");
 		contents.linktext = "Website";
@@ -537,7 +535,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionOpenData() {	
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		for (DataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
+		for (JavaDataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);
@@ -776,7 +774,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (controller.calibration().hasCalibrationProfile()) {
 				e = new ZipEntry("z-calibration-profile.pbcp");
 				zos.putNextEntry(e);
-				String profileYaml = CalibrationProfile.save(controller.calibration().getCalibrationProfile());
+				String profileYaml = controller.calibration().getCalibrationProfile().save();
 				zos.write(profileYaml.getBytes());
 				zos.closeEntry();
 			}
@@ -1010,29 +1008,6 @@ public class PlotPanel extends TabbedLayerPanel {
 		textfield.grabFocus();
 	}
 
-	public void actionShowConcentrations() {
-		CalibrationProfile p = controller.calibration().getCalibrationProfile();
-		List<ITransitionSeries> tss = controller.fitting().getVisibleTransitionSeries();
-		Concentrations ppm = Concentrations.calculate(tss, p, ts -> {
-			FittingResult result = controller.fitting().getFittingResultForTransitionSeries(ts);
-			float intensity = 0;
-			if (result == null) { return 0f; }
-			intensity = p.calibrate(result.getFitSum(), ts);
-			if (Float.isNaN(intensity)) {
-				return 0f;
-			}
-			return intensity;
-		});
-		
-		
-		ConcentrationView concentrations = new ConcentrationView(ppm, this);
-		this.pushLayer(concentrations);
-
-	}
-
-	public void actionShowCalibrationProfileManager() {
-		this.pushLayer(new ProfileManager(this, controller));
-	}
 
 	public void actionQuickMap(int channel) {
 		ExecutorSet<RawMapSet> execset = Mapping.quickMapTask(controller.data(), channel);

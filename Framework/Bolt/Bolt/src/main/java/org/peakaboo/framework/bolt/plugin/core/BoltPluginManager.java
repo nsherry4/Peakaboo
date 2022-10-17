@@ -24,10 +24,14 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 
 	private boolean loaded = false;
 	private List<BoltContainer<P>> containers = new ArrayList<>();
-	private BoltPluginSet<P> plugins = new BoltPluginSet<>();
+	private BoltPluginSet<P> plugins = new BoltPluginSet<>(this);
 	private List<BoltLoader<P>> loaders = new ArrayList<>();
-	
+	private String name;
 
+	public BoltPluginManager(String name) {
+		this.name = name;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void addLoader(BoltLoader<? extends P> loader) {
 		loaders.add((BoltLoader<P>) loader);
@@ -39,7 +43,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 	}
 	
 	public final synchronized void clear() {
-		plugins = new BoltPluginSet<>();
+		plugins = new BoltPluginSet<>(this);
 		loaded = false;
 	}
 	
@@ -53,7 +57,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 				containers.addAll(loaderContainers);
 			}
 			
-			plugins = new BoltPluginSet<>();
+			plugins = new BoltPluginSet<>(this);
 			for (BoltContainer<P> container : containers) {
 				plugins.loadFrom(container);
 			}
@@ -61,6 +65,14 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 		}
 	}
 	
+	
+	public BoltPluginManager<P> getManager() {
+		return this;
+	}
+	
+	public String getName() {
+		return name;
+	}
 	
 	public final synchronized List<BoltPluginPrototype<? extends P>> getPlugins() {
 		load();

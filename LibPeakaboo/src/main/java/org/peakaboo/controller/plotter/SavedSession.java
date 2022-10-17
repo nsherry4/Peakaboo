@@ -1,7 +1,7 @@
 package org.peakaboo.controller.plotter;
 
+import org.peakaboo.calibration.SavedCalibrationSession;
 import org.peakaboo.common.Version;
-import org.peakaboo.controller.plotter.calibration.SavedCalibrationSession;
 import org.peakaboo.controller.plotter.data.SavedDataSession;
 import org.peakaboo.controller.plotter.filtering.SavedFilteringSession;
 import org.peakaboo.controller.plotter.fitting.SavedFittingSession;
@@ -41,7 +41,7 @@ public class SavedSession extends DruthersStorable {
 		saved.fitting = new SavedFittingSession().storeFrom(plotController.fitting());
 		
 		//store calibration
-		saved.calibration = new SavedCalibrationSession().storeFrom(plotController.calibration());
+		saved.calibration = plotController.calibration().toSaved();
 		
 		//store view settings -- this is done differently, since view's session settings is itself serializable
 		saved.view = plotController.view().getViewModel();
@@ -69,7 +69,7 @@ public class SavedSession extends DruthersStorable {
 		if (this.calibration == null) {
 			this.calibration = new SavedCalibrationSession();
 		}
-		this.calibration.loadInto(plotController.calibration());
+		plotController.calibration().loadSaved(this.calibration);
 		
 		
 		//restore view settings directly, since it's model is serializable

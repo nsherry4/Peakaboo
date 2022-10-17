@@ -24,8 +24,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import org.peakaboo.calibration.CalibrationPluginManager;
-import org.peakaboo.calibration.CalibrationReference;
 import org.peakaboo.common.Env;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
@@ -57,7 +55,7 @@ import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
-import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.plotting.FileDrop;
 
@@ -223,7 +221,11 @@ public class PluginsOverview extends HeaderLayer {
 			handled |= addFileToManager(file, DataSinkPluginManager.system());
 			handled |= addFileToManager(file, FilterPluginManager.system());
 			handled |= addFileToManager(file, MapFilterPluginManager.system());
-			if (Peakaboo.SHOW_QUANTITATIVE) handled |= addFileToManager(file, CalibrationPluginManager.system());
+			
+			for (BoltPluginManager<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+				handled |= addFileToManager(file, manager);
+			}
+			
 		} catch (BoltImportException e) {
 		
 			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
@@ -273,7 +275,11 @@ public class PluginsOverview extends HeaderLayer {
 		DataSinkPluginManager.system().reload();
 		FilterPluginManager.system().reload();
 		MapFilterPluginManager.system().reload();
-		if (Peakaboo.SHOW_QUANTITATIVE) CalibrationPluginManager.system().reload();
+		
+		for (BoltPluginManager<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+			manager.reload();
+		}
+		
 		tree.setModel(buildTreeModel());
 	}
 	
@@ -322,16 +328,17 @@ public class PluginsOverview extends HeaderLayer {
 		plugins.add(mapFiltersNode);
 
 		
-		
-		if (Peakaboo.SHOW_QUANTITATIVE) {
-			DefaultMutableTreeNode calibrationsNode = new DefaultMutableTreeNode(CalibrationPluginManager.system());
-			plugins.add(calibrationsNode);
-			for (BoltPluginPrototype<? extends CalibrationReference> source :  CalibrationPluginManager.system().getPlugins()) {
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
-				calibrationsNode.add(node);
+		for (BoltPluginManager<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(manager);
+			plugins.add(node);
+			
+			for (BoltPluginPrototype<?> source :  manager.getPlugins()) {
+				DefaultMutableTreeNode subnode = new DefaultMutableTreeNode(source);
+				node.add(subnode);
 			}
+			
 		}
-		
+				
 		
 		return new DefaultTreeModel(plugins);
 		
