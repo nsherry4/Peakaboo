@@ -51,9 +51,56 @@ public class HeaderBox extends JPanel {
 	private Theme theme = null;
 	
 	//dragging
-	private Point initialClick;
 	private boolean dragable = true;
 	
+	
+	public class DragListener extends MouseAdapter {
+		private Point initialClick, initialPos;
+
+		public void mousePressed(MouseEvent e) {
+			initialClick = e.getLocationOnScreen();
+			JFrame window = (JFrame) SwingUtilities.getWindowAncestor(HeaderBox.this);
+			initialPos = window.getLocation();
+		}
+		
+		public void mouseDragged(MouseEvent e) {
+			JFrame window = (JFrame) SwingUtilities.getWindowAncestor(HeaderBox.this);
+			
+			//Only drag on left mouse button
+			if(!SwingUtilities.isLeftMouseButton(e)) {
+				return;
+			}
+			
+			//only drag if we're mouse-down on a draggable component
+			if (initialClick == null || !dragable) {
+				return;
+			}
+			
+			//dont' move parent window if it's maximized
+			JFrame parentJFrame = (JFrame) window;
+			if ((parentJFrame.getExtendedState() & JFrame.MAXIMIZED_HORIZ) == JFrame.MAXIMIZED_HORIZ ||
+				(parentJFrame.getExtendedState() & JFrame.MAXIMIZED_VERT) == JFrame.MAXIMIZED_VERT) {
+				return;
+			}
+
+			//Calculate new x,y for window
+			Point currentClick = e.getLocationOnScreen();
+			int dx = currentClick.x - initialClick.x;
+			int dy = currentClick.y - initialClick.y;
+			int x = initialPos.x + dx;
+			int y = initialPos.y + dy;
+			window.setLocation(x, y);
+			
+		}
+		
+		public void mouseReleased(MouseEvent e) {
+			initialClick = null;
+			initialPos = null;
+		}
+		
+		
+		
+	}
 	
 	public HeaderBox(Component left, String title, Component right) {
 		this.left = left;
@@ -87,59 +134,10 @@ public class HeaderBox extends JPanel {
 			theme = Stratus.getTheme();
 		}
 		
-		addMouseListener(new MouseAdapter() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				initialClick = null;
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				initialClick = e.getPoint();
-			}
-
-		});
 		
-		addMouseMotionListener(new MouseMotionAdapter() {
-			
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				if(!SwingUtilities.isLeftMouseButton(e)) {
-					return;
-				}
-				
-				if (initialClick == null || !dragable) {
-					return;
-				}
-								
-				Window parent = SwingUtilities.getWindowAncestor(HeaderBox.this);
-				
-				//dont' move parent window if it's maximized
-				if (parent instanceof JFrame) {
-					JFrame parentJFrame = (JFrame) parent;
-					if ((parentJFrame.getExtendedState() & JFrame.MAXIMIZED_HORIZ) == JFrame.MAXIMIZED_HORIZ ||
-						(parentJFrame.getExtendedState() & JFrame.MAXIMIZED_VERT) == JFrame.MAXIMIZED_VERT) {
-						return;
-					}
-				}
-				
-				//Thanks https://stackoverflow.com/questions/9650874/java-swing-obtain-window-jframe-from-inside-a-jpanel
-	            // get location of Window
-	            int thisX = parent.getX();
-	            int thisY = parent.getY();
-	            
-	            // Determine how much the mouse moved since the initial click
-	            int xMoved = e.getX() - initialClick.x;
-	            int yMoved = e.getY() - initialClick.y;
-
-	            // Move window to this position
-	            int X = thisX + xMoved;
-	            int Y = thisY + yMoved;
-	            parent.setLocation(X, Y);
-			}
-		});
-		
+		DragListener dragger = new DragListener();
+		addMouseMotionListener(dragger);
+		addMouseListener(dragger);	
 		
 	}
 	
