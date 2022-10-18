@@ -3,10 +3,12 @@ package org.peakaboo.display.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.calibration.BasicCalibrationProfile;
 import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
+
 
 public class MapRenderSettings {
 
@@ -40,7 +42,7 @@ public class MapRenderSettings {
 		
 	public List<Integer> selectedPoints = new ArrayList<>();
 	
-	public CalibrationProfile calibrationProfile = new CalibrationProfile();
+	public CalibrationProfile calibrationProfile = new BasicCalibrationProfile();
 
 	
 	

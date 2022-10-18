@@ -16,7 +16,7 @@ import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.filter.plugins.FilterPlugin;
+import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
@@ -94,7 +94,7 @@ class FilterSelectionList extends ClearPanel
 
 				if (leaf instanceof BoltPluginPrototype<?>) {
 					@SuppressWarnings("unchecked")
-					BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) leaf;
+					BoltPluginPrototype<? extends JavaFilterPlugin> plugin = (BoltPluginPrototype<? extends JavaFilterPlugin>) leaf;
 					Filter filter = plugin.create();
 					filter.initialize();
 					controller.addFilter(filter);
@@ -137,7 +137,7 @@ class FilterSelectionTreeModel implements TreeModel {
 
 		if (parent instanceof FilterType) {
 			@SuppressWarnings("unchecked")
-			BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
+			BoltPluginPrototype<? extends JavaFilterPlugin> plugin = (BoltPluginPrototype<? extends JavaFilterPlugin>) child;
 			return FilterPluginManager.system().getPlugins().indexOf(plugin);
 		} else if (parent instanceof String) {
 			FilterType ft = (FilterType) child;
@@ -154,7 +154,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			FilterType ft = (FilterType) parent;
 			int typeCount = 0;
 
-			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
+			for (BoltPluginPrototype<? extends JavaFilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 			}
 			return typeCount;
@@ -175,7 +175,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			FilterType ft = (FilterType) parent;
 			int typeCount = 0;
 
-			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
+			for (BoltPluginPrototype<? extends JavaFilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 				if (typeCount == index) return plugin;
 			}

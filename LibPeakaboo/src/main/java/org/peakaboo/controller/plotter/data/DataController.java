@@ -22,7 +22,7 @@ import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.internal.SelectionDataSource;
-import org.peakaboo.datasource.plugin.DataSourcePlugin;
+import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
@@ -73,7 +73,7 @@ public class DataController extends Eventful
 
 	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset (
 			List<DataFile> paths, 
-			DataSourcePlugin dsp, 
+			JavaDataSourcePlugin dsp, 
 			Consumer<DatasetReadResult> onResult) {
 
 		final StandardDataSet dataset = new StandardDataSet();

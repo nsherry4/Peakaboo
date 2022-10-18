@@ -142,7 +142,7 @@ public class LayerDialog {
 		}
 		
 		if (leftButtons.size() == 0 && rightButtons.size() == 0) {
-			defaultButton = new FluentButton("OK").withAction(() -> hide());
+			defaultButton = new FluentButton("OK").withStateDefault().withAction(() -> hide());
 			box.addRight(defaultButton);
 		}
 		

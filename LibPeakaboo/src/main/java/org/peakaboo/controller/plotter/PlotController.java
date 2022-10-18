@@ -36,6 +36,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
+import org.peakaboo.tier.Tier;
 
 
 
@@ -73,7 +74,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		dataController = new DataController(this);
 		filteringController = new FilteringController(this);
 		fittingController = new FittingController(this);
-		calibrationController = new CalibrationController(this);
+		calibrationController = Tier.provider().createPlotCalibrationController(this);
 		viewController = new ViewController(this);
 		ioController = new IOController();
 		

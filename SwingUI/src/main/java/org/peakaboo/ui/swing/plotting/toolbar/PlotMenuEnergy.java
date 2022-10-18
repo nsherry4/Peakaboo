@@ -2,6 +2,7 @@ package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,7 +18,8 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
-import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.tier.Tier;
+import org.peakaboo.tier.TierUIItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuEnergy extends JPopupMenu {
@@ -27,6 +29,9 @@ public class PlotMenuEnergy extends JPopupMenu {
 	private JSpinner minEnergy, maxEnergy, noiseEnergy;
 	private FluentButton energyGuess;
 	
+	public static final String TIER_LOCATION = "plot.energymenu";
+	private final List<TierUIItem> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
 		
@@ -34,36 +39,35 @@ public class PlotMenuEnergy extends JPopupMenu {
 		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
 
 		outer.addSetting(energyCalibration(plot));
-		if (Peakaboo.SHOW_QUANTITATIVE) {
-			outer.addSetting(zcalibration(plot));
+		
+		
+		SettingsPanel tierui = new SettingsPanel();
+		tierui.setOpaque(false);
+		tierui.setBorder(Spacing.bMedium());
+		for (TierUIItem item : tierItems) {
+			JButton button = new FluentButton(item.text)
+					.withButtonSize(FluentButtonSize.COMPACT)
+					.withAction(() -> {
+						this.setVisible(false);
+						item.action.accept(plot, controller);	
+					});
+			button.setHorizontalAlignment(SwingConstants.CENTER);
+			button.setFont(button.getFont().deriveFont(Font.BOLD));
+			
+			tierui.addSetting(button);
+			item.component = button;
 		}
+		
+		outer.addSetting(tierui);
+		
+		
 		outer.addSetting(advanced(plot));
 		outer.setOpaque(false);
 		this.add(outer);
 		
 		
 	}
-	
-	private SettingsPanel zcalibration(PlotPanel plot) {
-		
-		SettingsPanel zcal = new SettingsPanel();
-		zcal.setOpaque(false);
-		zcal.setBorder(Spacing.bMedium());
 
-		JButton button = new FluentButton("Z-Calibration")
-				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(() -> {
-					this.setVisible(false);
-					plot.actionShowCalibrationProfileManager();		
-				});
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setFont(button.getFont().deriveFont(Font.BOLD));
-		
-		zcal.addSetting(button);
-		
-		return zcal;
-		
-	}
 	
 	private SettingsPanel advanced(PlotPanel plot) {
 		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());

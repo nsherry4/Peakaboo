@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltURLContainer;
@@ -16,13 +17,15 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLContainer<T>{
 
 	private BoltPluginSet<T> plugins;
+	private BoltPluginManager<T> manager;
 	
-	public BoltConfigContainer(URL url, Class<T> pluginClass, Function<String, T> builder) {
+	public BoltConfigContainer(BoltPluginManager<T> manager, URL url, Class<T> pluginClass, Function<String, T> builder) {
 		super(url);
 		this.url = url;
+		this.manager = manager;
 		
-		plugins = new BoltPluginSet<>();
-		BoltConfigPluginPrototype<T> plugin = new BoltConfigPluginPrototype<>(builder, pluginClass, this);
+		plugins = new BoltPluginSet<>(manager);
+		BoltConfigPluginPrototype<T> plugin = new BoltConfigPluginPrototype<>(this.manager, builder, pluginClass, this);
 		plugins.addPlugin(plugin);
 	}
 	
@@ -38,6 +41,11 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	@Override
 	public List<BoltIssue<? extends T>> getIssues() {
 		return plugins.getIssues();
+	}
+
+	@Override
+	public BoltPluginManager<T> getManager() {
+		return this.manager;
 	}
 	
 }

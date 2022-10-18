@@ -1,32 +1,29 @@
 package org.peakaboo.ui.swing.mapping.components;
 
-import static java.util.stream.Collectors.toList;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
-import java.util.function.Function;
 
 import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
-import org.peakaboo.calibration.CalibrationProfile;
-import org.peakaboo.calibration.Concentrations;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.ui.swing.Peakaboo;
-import org.peakaboo.ui.swing.calibration.concentration.ConcentrationView;
+import org.peakaboo.tier.Tier;
+import org.peakaboo.tier.TierUIItem;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapperToolbar extends JToolBar {
 
+	public static final String TIER_LOCATION = "map.toolbar";
+	private final List<TierUIItem> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	
 	private FluentToolbarButton	showConcentrations, examineSubset;
 
 	public MapperToolbar(MapperPanel panel, MappingController controller) {
@@ -51,43 +48,22 @@ public class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		if (Peakaboo.SHOW_QUANTITATIVE)  {
-			showConcentrations = new FluentToolbarButton("Concentration")
-					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-					.withTooltip("Get fitting concentration for the selection")
+		for (TierUIItem item : tierItems) {
+			FluentToolbarButton component = new FluentToolbarButton(item.text)
+					.withIcon(item.iconname, IconSize.TOOLBAR_SMALL)
+					.withTooltip(item.tooltip)
 					.withSignificance(true)
-					.withAction(() -> {
-				
-						List<Integer> indexes = controller.getSelection().getLogicalPoints();
-		
-						List<ITransitionSeries> tss = controller.rawDataController.getMapResultSet().stream().map(r -> r.transitionSeries).collect(toList());
-						Function<ITransitionSeries, Float> intensityFunction = ts -> {
-							CalibrationProfile profile = controller.getFitting().getCalibrationProfile();
-							ReadOnlySpectrum data = controller.rawDataController.getMapResultSet().getMap(ts).getData(profile);
-							float sum = 0;
-							for (int index : indexes) {
-								sum += data.get(index);
-							}
-							sum /= indexes.size();
-							return sum;
-						};
-						Concentrations ppm = Concentrations.calculate(tss, controller.getFitting().getCalibrationProfile(), intensityFunction);
-						
-						ConcentrationView concentrations = new ConcentrationView(ppm, panel);
-						panel.pushLayer(concentrations);
-										
-					});
-			this.add(showConcentrations, c);
+					.withAction(() -> item.action.accept(panel, controller));
+			this.add(component, c);
 			c.gridx++;
+			component.setEnabled(item.enabled.apply(controller));
+			item.component = component;
 		}
 		
 		
 		examineSubset = new PlotSelectionButton(controller, panel.getParentPlotter());
 		this.add(examineSubset, c);
 		c.gridx++;
-		
-		
-		if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
 		examineSubset.setEnabled(false);
 		
 		c.weightx = 1.0;
@@ -103,15 +79,13 @@ public class MapperToolbar extends JToolBar {
 		
 		
 		controller.addListener(t -> {
-			
 			examineSubset.setEnabled(controller.getSelection().isReplottable());
-			if (controller.getSelection().isReplottable())
-			{
-				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(!controller.getFitting().getCalibrationProfile().isEmpty());
-			} else {
-				if (Peakaboo.SHOW_QUANTITATIVE) showConcentrations.setEnabled(false);
+			
+			for (TierUIItem item : tierItems) {
+				JComponent component = (JComponent) item.component;
+				component.setEnabled(item.enabled.apply(controller));
 			}
-
+			
 		});
 		
 		

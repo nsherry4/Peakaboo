@@ -63,4 +63,16 @@ public class IconFactory {
 		
 	}
 	
+	public static boolean hasImage(String imageName, IconSize size) {
+		
+		URL url = getImageIconURL(imageName, size, path);
+
+		//if we can't find the image, look for it elsewhere
+		if (url == null) { url = getImageIconURL(imageName, size, path); }
+		if (url == null && customPath != null) { url = getImageIconURL(imageName, size, customPath); }
+		
+		return url != null;
+		
+	}
+	
 }

@@ -8,7 +8,6 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
-import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalCapMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrectionMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.WeakSignalRemovalMapFilter;
@@ -31,7 +30,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate270MapFilte
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate90MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
 
-public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
+public class MapFilterPluginManager extends BoltPluginManager<JavaMapFilterPlugin> {
 
 	private static MapFilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
@@ -52,11 +51,12 @@ public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 	private BoltJavaBuiltinLoader<JavaMapFilterPlugin> builtins;
 	
 	private MapFilterPluginManager(File directories) {
+		super("mapfilter");
 		
-		addLoader(new BoltJarDirectoryLoader<>(JavaMapFilterPlugin.class, directories));
-		addLoader(new BoltJarDirectoryLoader<>(JavaMapFilterPlugin.class));
+		addLoader(new BoltJarDirectoryLoader<>(this, JavaMapFilterPlugin.class, directories));
+		addLoader(new BoltJarDirectoryLoader<>(this, JavaMapFilterPlugin.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(JavaMapFilterPlugin.class);
+		builtins = new BoltJavaBuiltinLoader<>(this, JavaMapFilterPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
 	}

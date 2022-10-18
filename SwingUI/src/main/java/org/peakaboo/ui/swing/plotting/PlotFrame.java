@@ -21,6 +21,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.tier.Tier;
 
 
 public class PlotFrame extends LiveFrame
@@ -38,7 +39,7 @@ public class PlotFrame extends LiveFrame
 		
 		setPreferredSize(new Dimension(1000, 473));
 		setIconImage(IconFactory.getImage(Version.logo));
-		setTitle("Peakaboo");
+		setTitle(Tier.provider().appName());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		tabControl.init();
 		

@@ -3,15 +3,18 @@ package org.peakaboo.ui.swing.plotting.toolbar;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 
 import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
-import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.tier.Tier;
+import org.peakaboo.tier.TierUIItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotToolbar extends JToolBar {
@@ -22,7 +25,6 @@ public class PlotToolbar extends JToolBar {
 	private FluentToolbarButton exportMenuButton;
 	private FluentToolbarButton saveButton;
 	private FluentToolbarButton toolbarMap;
-	private FluentToolbarButton toolbarConcentrations;
 	private FluentToolbarButton toolbarInfo;
 
 	
@@ -31,7 +33,8 @@ public class PlotToolbar extends JToolBar {
 	private PlotMenuMain mainMenu;
 	private PlotMenuExport exportMenu;
 	
-	 
+	public static final String TIER_LOCATION = "plot.toolbar";
+	private final List<TierUIItem> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
 	
 	//===MAIN MENU WIDGETS===
 	
@@ -81,23 +84,26 @@ public class PlotToolbar extends JToolBar {
 		c.gridx += 1;
 		toolbarInfo.setEnabled(false);
 		this.add(toolbarInfo, c);
-	
-		if (Peakaboo.SHOW_QUANTITATIVE) {
-			toolbarConcentrations = new FluentToolbarButton("Concentration")
-					.withIcon("calibration", IconSize.TOOLBAR_SMALL)
-					.withTooltip("Display concentration estimates for the fitted elements. Requires a Z-Calibration Profile.")
-					.withSignificance(false)
-					.withAction(plot::actionShowConcentrations);
-			
-			c.gridx += 1;
-			toolbarConcentrations.setEnabled(false);
-			this.add(toolbarConcentrations, c);
-		}
 		
 		toolbarMap = new FluentToolbarButton("Map Fittings")
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
 				.withSignificance(true).withAction(plot::actionMap);
+		
+		
+		for (TierUIItem item : tierItems) {
+			FluentToolbarButton tierButton = new FluentToolbarButton(item.text)
+					.withIcon(item.iconname, IconSize.TOOLBAR_SMALL)
+					.withTooltip(item.tooltip)
+					.withSignificance(false)
+					.withAction(() -> item.action.accept(plot, controller));
+			item.component = tierButton;
+			c.gridx += 1;
+			this.add(tierButton, c);
+			tierButton.setEnabled(false);
+			
+		}
+		
 		
 		c.gridx += 1;
 		toolbarMap.setEnabled(false);
@@ -124,10 +130,13 @@ public class PlotToolbar extends JToolBar {
 	public void setWidgetState(boolean hasData) {
 		
 		toolbarInfo.setEnabled(hasData);
-		if (Peakaboo.SHOW_QUANTITATIVE) {
-			toolbarConcentrations.setEnabled(hasData && controller.calibration().hasCalibrationProfile() && controller.fitting().canMap()); 
-		}
 		
+		for (TierUIItem item : tierItems) {
+			JComponent component = (JComponent) item.component;
+			boolean enabled = item.enabled.apply(controller);
+			component.setEnabled(enabled);
+		}
+
 		if (hasData) {
 			toolbarMap.setEnabled(controller.fitting().canMap());
 		}
