@@ -21,14 +21,7 @@ public class SliderThumbPainter extends AbstractButtonPainter {
 	
 	public SliderThumbPainter(Theme theme, ButtonState... buttonStates) {
 		super(theme, buttonStates);
-		
 		palette = super.makePalette(null);
-
-		palette.shadow = Stratus.lessTransparent(palette.shadow, 0.15f);
-		palette.border = Stratus.lessTransparent(palette.border);
-		palette.fillArray = new Color[] {Stratus.lighten(palette.fillArray[0]), palette.fillArray[0], palette.fillArray[1]};
-		palette.fillPoints = new float[] {0, 0.2f, 1f};
-
 	}
 	
 	@Override
@@ -39,8 +32,16 @@ public class SliderThumbPainter extends AbstractButtonPainter {
 	
 	@Override
 	protected ButtonPalette makePalette(JComponent object) {
+		super.makePalette(object);
+		palette.fill = getTheme().getControl();
+		palette.border = Stratus.lessTransparent(getTheme().getWidgetBorderAlpha());
 		return palette;
 	}
+	
+    protected boolean hasBorder() {
+    	return true;
+    }
+    
 	
 	@Override
     protected Shape fillShape(JComponent object, float width, float height, float pad) {
@@ -53,26 +54,7 @@ public class SliderThumbPainter extends AbstractButtonPainter {
     	return new Ellipse2D.Float(pad, pad, width-pad*2, height-pad*2);
     }
     
-	@Override
-    protected Shape shadowShape(JComponent object, float width, float height, float pad) {
-    	return new Arc2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, 180, 180, Arc2D.OPEN);
-    }
-    
-	@Override
-    protected Shape bevelShape(JComponent object, float width, float height, float pad) {
-    	pad++;
-    	return new Arc2D.Float(pad, pad, width-pad*2-1, height-pad*2-1, 0, 180, Arc2D.OPEN);
-    }
-    
-	@Override
-    protected Paint shadowPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-    	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.5f, 0.9f}, new Color[] {new Color(0x0000000, true), palette.shadow});
-    }
 
-	@Override
-    protected Paint bevelPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-    	return new LinearGradientPaint(0, pad, 0, height-pad, new float[] {0.075f, 0.5f}, new Color[] {palette.bevel, new Color(0x0000000, true)});
-    }
-    
+
 	
 }

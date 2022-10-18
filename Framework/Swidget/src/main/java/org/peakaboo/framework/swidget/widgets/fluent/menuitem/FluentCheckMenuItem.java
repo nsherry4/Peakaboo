@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 
@@ -57,7 +58,13 @@ public class FluentCheckMenuItem extends JCheckBoxMenuItem implements FluentMenu
 		if (config.imagename == null) {
 			this.setIcon(null);
 		} else {
-			this.setIcon(IconFactory.getImageIcon(config.imagename, IconSize.BUTTON));
+			ImageIcon icon;
+			if (config.symbolic) {
+				icon = IconFactory.getSymbolicIcon(config.imagename, IconSize.BUTTON);
+			} else {
+				icon = IconFactory.getImageIcon(config.imagename, IconSize.BUTTON);
+			}
+			this.setIcon(icon);
 		}
 		this.setMnemonic(config.mnemonic == null ? 0 : config.mnemonic);
 

@@ -20,15 +20,13 @@ public class CheckButtonPainter extends AbstractButtonPainter {
 	
 	public CheckButtonPainter(Theme theme, ButtonState... buttonStates) {
 		super(theme, buttonStates);
+		this.radius /= 1.5f;
 		palette = super.makePalette(null);
 		palette.border = Stratus.lessTransparent(theme.getWidgetBorderAlpha());
-		palette.fillArray = new Color[] {Stratus.lighten(palette.fillArray[0]), palette.fillArray[0], palette.fillArray[1]};
-		palette.fillPoints = new float[] {0, 0.2f, 1f};
-		
+
 		live = super.makePalette(null);
 		live.border = Stratus.darken(getTheme().getHighlight(), getTheme().borderStrength());
-		live.dash = getTheme().getHighlightText();
-		live.bevel = Stratus.lighten(getTheme().getHighlight(), 0.1f);
+		live.selection = getTheme().getHighlightText();
 	}
 	
 	@Override
@@ -43,29 +41,22 @@ public class CheckButtonPainter extends AbstractButtonPainter {
 		Theme theme = getTheme();
 		
 		if (!Stratus.focusedWindow(object)) {
-			custom.fillTop = theme.getControl();
-			custom.fillBottom = theme.getControl();
-    		custom.fillArray = new Color[] {custom.fillTop, custom.fillBottom};
-    		custom.fillPoints = new float[] {0, 1f};
+			custom.fill = theme.getControl();
 		} else if (isLive(object)) {
-			custom.fillTop = Stratus.lighten(theme.getHighlight(), getTheme().widgetCurve());
-			custom.fillBottom = Stratus.darken(theme.getHighlight(), getTheme().widgetCurve());
-    		custom.fillArray = new Color[] {custom.fillTop, custom.fillBottom};
-    		custom.fillPoints = new float[] {0, 1f};
+			custom.fill = theme.getHighlight();
 		}
 		
 		return custom;
     }
 	
-	
-	@Override
-    protected Paint bevelPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-		return isLive(object) ? live.bevel : palette.bevel;
+    protected boolean hasBorder() {
+    	return true;
     }
     
+	    
 	@Override
     protected Paint mainPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-    	return new LinearGradientPaint(0, pad, 0, height-pad, palette.fillPoints, palette.fillArray);
+    	return palette.fill;
     }
     
 	@Override
@@ -74,8 +65,8 @@ public class CheckButtonPainter extends AbstractButtonPainter {
     }
     
 	@Override
-    protected Paint dashPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-		return isLive(object) ? live.dash : palette.dash;
+    protected Paint selectionPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
+		return isLive(object) ? live.selection : palette.selection;
     }
     
 	private boolean isChecked(JComponent object) {

@@ -2,6 +2,7 @@ package org.peakaboo.framework.autodialog.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -42,8 +43,8 @@ public class SelectionParameter<T> extends Parameter<T> {
 		setPossibleValues(new ArrayList<>(Arrays.asList(possibleValues)));
 	}
 	
-	public void setPossibleValues(List<T> possibleValues) {
-		this.possibleValues = possibleValues;
+	public void setPossibleValues(Collection<T> possibleValues) {
+		this.possibleValues = new ArrayList<>(possibleValues);
 	}
 	
 	

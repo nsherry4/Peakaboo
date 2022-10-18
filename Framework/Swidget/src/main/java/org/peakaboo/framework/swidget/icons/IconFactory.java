@@ -10,15 +10,24 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 
 public class IconFactory {
 
-	public static final String path = "/swidget/icons/";
+	public static final String PATH_IMAGE = "/swidget/icons/";
+	public static final String PATH_SYMBOLIC = "/swidget/icons/symbolic/";
 	public static String customPath = null;
 	
 	public static ImageIcon getImageIcon(String imageName){
 		return getImageIcon(imageName, null);
 	}
-		
+
+	public static ImageIcon getSymbolicIcon(String imageName){
+		return getImageIcon(imageName, null);
+	}
+	
 	public static ImageIcon getImageIcon(String imageName, IconSize size){
-		return getImageIcon(imageName, size, path);
+		return getImageIcon(imageName, size, PATH_IMAGE);
+	}
+	
+	public static ImageIcon getSymbolicIcon(String imageName, IconSize size){
+		return getImageIcon(imageName, size, PATH_SYMBOLIC);
 	}
 	
 	public static ImageIcon getImageIcon(String imageName, IconSize size, String path){
@@ -65,10 +74,10 @@ public class IconFactory {
 	
 	public static boolean hasImage(String imageName, IconSize size) {
 		
-		URL url = getImageIconURL(imageName, size, path);
+		URL url = getImageIconURL(imageName, size, PATH_IMAGE);
 
 		//if we can't find the image, look for it elsewhere
-		if (url == null) { url = getImageIconURL(imageName, size, path); }
+		if (url == null) { url = getImageIconURL(imageName, size, PATH_IMAGE); }
 		if (url == null && customPath != null) { url = getImageIconURL(imageName, size, customPath); }
 		
 		return url != null;

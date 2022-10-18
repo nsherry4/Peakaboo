@@ -145,23 +145,7 @@ public class HeaderBox extends JPanel {
 	
 	
 	private Paint getBackgroundPaint() {
-		Color base = getBackground();
-		float curve = 0.05f;
-		
-		if (theme != null) {
-			if (Stratus.focusedWindow(this)) {
-				base = theme.getNegative();
-				curve = theme.widgetCurve();
-			} else {
-				base = theme.getControl();
-				curve = 0f;
-			}
-		}
-		
-		return new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
-				lighten(base, curve/2f),
-				darken(base, curve/2f)
-			});
+		return theme.getNegative();
 	}
 	
 
@@ -226,11 +210,7 @@ public class HeaderBox extends JPanel {
 		}
 		
 		Border b = Spacing.bMedium();
-		Color borderColour = new Color(0x20000000, true);
-		if (Swidget.isStratusLaF()) {
-			borderColour = Stratus.getTheme().getWidgetBorderAlpha();
-		}
-		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, borderColour), b);
+		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, Swidget.dividerColor()), b);
 		setBorder(b);
 		
 	}
@@ -340,7 +320,7 @@ public class HeaderBox extends JPanel {
 	public static FluentButton closeButton() {
 		FluentButton close = new FluentButton()
 				.withTooltip("Close")
-				.withIcon(StockIcon.WINDOW_CLOSE)
+				.withIcon(StockIcon.WINDOW_CLOSE, true)
 				.withButtonSize(FluentButtonSize.LARGE)
 				.withBordered(false);
 		return close;

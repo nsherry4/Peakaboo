@@ -5,6 +5,14 @@ mkdir ./24/
 mkdir ./32/
 mkdir ./48/
 
+mkdir ./symbolic/
+mkdir ./symbolic/16/
+mkdir ./symbolic/24/
+mkdir ./symbolic/32/
+mkdir ./symbolic/48/
+
+
+
 #ok/cancel
 ./harvest.rb elementary-xfce/actions dialog-apply choose-ok
 ./harvest.rb elementary/actions process-stop choose-cancel
@@ -93,7 +101,8 @@ mkdir ./48/
 ./harvest.rb elementary/status dialog-warning badge-warning
 ./harvest.rb elementary/actions help-contents badge-help
 ./harvest.rb elementary/status dialog-error badge-error
-
+./harvest.rb elementary/status process-completed process-completed
+./harvest.rb elementary/status process-error process-error
 
 #find/replace
 ./harvest.rb elementary/actions edit-find find

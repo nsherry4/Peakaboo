@@ -110,13 +110,13 @@ public class PluginsOverview extends HeaderLayer {
 		
 		
 		//header controls
-		add = new FluentButton(StockIcon.EDIT_ADD).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
-		remove = new FluentButton(StockIcon.EDIT_REMOVE).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
-		reload = new FluentButton(StockIcon.ACTION_REFRESH).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		add = new FluentButton(StockIcon.EDIT_ADD, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
+		remove = new FluentButton(StockIcon.EDIT_REMOVE, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		reload = new FluentButton(StockIcon.ACTION_REFRESH, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
 		remove.setEnabled(false);
 		
-		browse = new FluentButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new FluentButton(StockIcon.GO_DOWN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
+		browse = new FluentButton(StockIcon.DOCUMENT_OPEN, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new FluentButton(StockIcon.GO_DOWN, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonLinker edits = new ButtonLinker(add, remove, reload);
 		ButtonLinker tools = new ButtonLinker(browse, download);

@@ -30,7 +30,7 @@ public class SliderTrackPainter extends SimpleThemed implements Painter<JCompone
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 
-		Shape area = new RoundRectangle2D.Float(0, height/2-1.5f, width-1, 3, radius, radius);
+		Shape area = new RoundRectangle2D.Float(0, height/2-1f, width-1, 3, radius, radius);
 		
 		//Fill
 		if (enabled) {
@@ -40,9 +40,9 @@ public class SliderTrackPainter extends SimpleThemed implements Painter<JCompone
 		
     	//Border
     	if (enabled) {
-    		g.setPaint(Stratus.darken(getTheme().getWidgetBorder(), 0.1f));
-    	} else {
     		g.setPaint(getTheme().getWidgetBorder());
+    	} else {
+    		g.setPaint(Stratus.lighten(getTheme().getWidgetBorder(), 0.1f));
     	}
     	g.draw(area);
     	

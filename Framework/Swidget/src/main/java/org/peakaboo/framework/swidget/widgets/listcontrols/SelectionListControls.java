@@ -1,5 +1,8 @@
 package org.peakaboo.framework.swidget.widgets.listcontrols;
 
+import java.awt.Color;
+import java.awt.Paint;
+
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
@@ -33,5 +36,9 @@ public abstract class SelectionListControls extends HeaderBox
 	
 	protected abstract void approve();
 	protected abstract void cancel();
+	
+	private Paint getBackgroundPaint() {
+		return new Color(0x00000000, true);
+	}
 	
 }

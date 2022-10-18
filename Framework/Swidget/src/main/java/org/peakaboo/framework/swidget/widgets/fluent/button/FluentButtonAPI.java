@@ -65,13 +65,13 @@ interface FluentButtonAPI<
 	}
 	
 	default B withStateDefault() {
-		this.setBackground(new Color(0xff1f89d1, true));
+		this.setBackground(new Color(0xff3584e4, true));
 		this.setForeground(Color.WHITE);
 		return getSelf();
 	}
 	
 	default B withStateCritical() {
-		this.setBackground(new Color(0xffF60A24, true));
+		this.setBackground(new Color(0xffe01b24, true));
 		this.setForeground(Color.WHITE);
 		return getSelf();
 	}

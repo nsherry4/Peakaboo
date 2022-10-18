@@ -56,9 +56,9 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
     	   
   
     	//Bevel under area
-    	g.setPaint(getTheme().getWidgetBevel());
-    	Shape bevel = new RoundRectangle2D.Float(pad, pad+1, width-pad*2, height-pad*2+1, radius, radius);     
-    	g.fill(bevel);
+    	//g.setPaint(getTheme().getWidgetBevel());
+    	//Shape bevel = new RoundRectangle2D.Float(pad, pad+1, width-pad*2, height-pad*2+1, radius, radius);     
+    	//g.fill(bevel);
     	
     	
 
@@ -83,7 +83,8 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
     	pad = margin + 1;
     	Shape fillArea = new RoundRectangle2D.Float(pad, pad, width-pad*2+1, height-pad*2+1, radius, radius);
     	try {
-    		g.setPaint(new LinearGradientPaint(0, pad, 0, height-pad, points, new Color[] {c1, c2}));
+    		//g.setPaint(new LinearGradientPaint(0, pad, 0, height-pad, points, new Color[] {c1, c2}));
+    		g.setPaint(getTheme().getRecessedControl());
     	} catch (IllegalArgumentException e) {
     		g.setPaint(getTheme().getRecessedControl());
     	}

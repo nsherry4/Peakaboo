@@ -46,7 +46,7 @@ public class MapFittingPanel extends ClearPanel
 		card = new CardLayout();
 		cardPanel.setLayout(card);
 		
-		//create each of the three panels
+		//create each of the view mode panels
 		compPanel = new Composite(controller);
 		overPanel = new Overlay(controller);
 		ratioPanel = new Ratio(controller);
