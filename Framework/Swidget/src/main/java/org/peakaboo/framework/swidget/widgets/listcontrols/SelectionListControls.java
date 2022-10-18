@@ -37,7 +37,7 @@ public abstract class SelectionListControls extends HeaderBox
 	protected abstract void approve();
 	protected abstract void cancel();
 	
-	private Paint getBackgroundPaint() {
+	protected Paint getBackgroundPaint() {
 		return new Color(0x00000000, true);
 	}
 	

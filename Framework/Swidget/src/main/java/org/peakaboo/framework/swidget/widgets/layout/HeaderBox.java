@@ -11,10 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.LayoutManager2;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
-import java.awt.Point;
-import java.awt.Window;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JFrame;
@@ -32,6 +28,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.hookins.WindowDragger;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -49,58 +46,8 @@ public class HeaderBox extends JPanel {
 	boolean showClose;
 	
 	private Theme theme = null;
+	private WindowDragger dragger;
 	
-	//dragging
-	private boolean dragable = true;
-	
-	
-	public class DragListener extends MouseAdapter {
-		private Point initialClick, initialPos;
-
-		public void mousePressed(MouseEvent e) {
-			initialClick = e.getLocationOnScreen();
-			JFrame window = (JFrame) SwingUtilities.getWindowAncestor(HeaderBox.this);
-			initialPos = window.getLocation();
-		}
-		
-		public void mouseDragged(MouseEvent e) {
-			JFrame window = (JFrame) SwingUtilities.getWindowAncestor(HeaderBox.this);
-			
-			//Only drag on left mouse button
-			if(!SwingUtilities.isLeftMouseButton(e)) {
-				return;
-			}
-			
-			//only drag if we're mouse-down on a draggable component
-			if (initialClick == null || !dragable) {
-				return;
-			}
-			
-			//dont' move parent window if it's maximized
-			JFrame parentJFrame = (JFrame) window;
-			if ((parentJFrame.getExtendedState() & JFrame.MAXIMIZED_HORIZ) == JFrame.MAXIMIZED_HORIZ ||
-				(parentJFrame.getExtendedState() & JFrame.MAXIMIZED_VERT) == JFrame.MAXIMIZED_VERT) {
-				return;
-			}
-
-			//Calculate new x,y for window
-			Point currentClick = e.getLocationOnScreen();
-			int dx = currentClick.x - initialClick.x;
-			int dy = currentClick.y - initialClick.y;
-			int x = initialPos.x + dx;
-			int y = initialPos.y + dy;
-			window.setLocation(x, y);
-			
-		}
-		
-		public void mouseReleased(MouseEvent e) {
-			initialClick = null;
-			initialPos = null;
-		}
-		
-		
-		
-	}
 	
 	public HeaderBox(Component left, String title, Component right) {
 		this.left = left;
@@ -135,14 +82,12 @@ public class HeaderBox extends JPanel {
 		}
 		
 		
-		DragListener dragger = new DragListener();
-		addMouseMotionListener(dragger);
-		addMouseListener(dragger);	
+		dragger = new WindowDragger(HeaderBox.this);
 		
 	}
 	
 	
-	private Paint getBackgroundPaint() {
+	protected Paint getBackgroundPaint() {
 		return theme.getNegative();
 	}
 	
@@ -272,12 +217,12 @@ public class HeaderBox extends JPanel {
 	
 	
 	
-	public boolean isDragable() {
-		return dragable;
+	public boolean isDraggable() {
+		return dragger.isDraggable();
 	}
 
-	public void setDragable(boolean dragable) {
-		this.dragable = dragable;
+	public void setDragable(boolean draggable) {
+		this.dragger.setDraggable(draggable);
 	}
 
 	public static JLabel makeHeaderTitle(String title) {

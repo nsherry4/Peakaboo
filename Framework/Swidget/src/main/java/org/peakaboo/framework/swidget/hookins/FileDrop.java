@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.plotting;
+package org.peakaboo.framework.swidget.hookins;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -22,21 +22,14 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
-import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.framework.cyclops.util.Mutable;
-import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
-import org.peakaboo.framework.plural.monitor.TaskMonitor;
-import org.peakaboo.ui.swing.plotting.FileDrop.TransferableObject;
+import org.peakaboo.framework.swidget.Swidget;
 
 /**
  * This class makes it easy to drag and drop files from the operating system to
@@ -95,8 +88,8 @@ public class FileDrop {
 	private static Boolean supportsDnD;
 
 	// Default border color
-	private static Color defaultBorderColor = new Color(0x81C784);
-	private static Color rejectBorderColor = new Color(0xE57373);
+	private static Color defaultBorderColor = new Color(0x7f3584e4, true);
+	private static Color rejectBorderColor = new Color(0x7fe01b24, true);
 
 	private enum DropType {
 		DROP_FILELIST,
@@ -724,36 +717,8 @@ public class FileDrop {
 		return contentLength;
 	}
 	
-	public static TaskMonitor<List<File>> getUrlsAsync(List<URL> urls, Consumer<Optional<List<File>>> callback) {
-		
-		Mutable<SimpleTaskMonitor<List<File>>> monitor = new Mutable<>();
-		
-		Supplier<List<File>> supplier = () -> {
-			Mutable<Float> count = new Mutable<>(0f);
-			List<File> files = new ArrayList<>();
-			Consumer<Float> urlProgress = (Float percent) -> {
-				float total = (count.get() + percent) / ((float)urls.size());
-				monitor.get().setPercent(total);
-			};
-			for (URL url : urls) {
-				try {
-					File f = getUrlAsFile(url, urlProgress);
-					files.add(f);
-				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString());
-					return null;
-				}
-				count.set(count.get()+1);
-			}
-			return files;
-		};
-		monitor.set(new SimpleTaskMonitor<>("Downloading Files", supplier, callback));
-		return monitor.get();
-		
-	}
-	
 	private static void log(String message) {
-		PeakabooLog.get().log(Level.FINEST, message);
+		Swidget.logger().log(Level.FINEST, message);
 	}
 
 	/**

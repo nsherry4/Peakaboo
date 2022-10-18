@@ -87,6 +87,7 @@ import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.hookins.FileDrop;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;

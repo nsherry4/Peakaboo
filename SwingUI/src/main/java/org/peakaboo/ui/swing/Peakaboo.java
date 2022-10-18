@@ -2,7 +2,13 @@ package org.peakaboo.ui.swing;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -25,13 +31,17 @@ import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.druthers.serialize.YamlSerializer;
 import org.peakaboo.framework.eventful.EventfulConfig;
+import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
+import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.theme.LightTheme;
 import org.peakaboo.framework.stratus.theme.TestTheme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
+import org.peakaboo.framework.swidget.hookins.FileDrop;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
@@ -253,6 +263,34 @@ public class Peakaboo {
 	public static void main(String[] args)
 	{	
 		run();
+	}
+
+	//TODO: is there a better place for this code to live?
+	public static TaskMonitor<List<File>> getUrlsAsync(List<URL> urls, Consumer<Optional<List<File>>> callback) {
+		
+		Mutable<SimpleTaskMonitor<List<File>>> monitor = new Mutable<>();
+		
+		Supplier<List<File>> supplier = () -> {
+			Mutable<Float> count = new Mutable<>(0f);
+			List<File> files = new ArrayList<>();
+			Consumer<Float> urlProgress = (Float percent) -> {
+				float total = (count.get() + percent) / ((float)urls.size());
+				monitor.get().setPercent(total);
+			};
+			for (URL url : urls) {
+				try {
+					File f = FileDrop.getUrlAsFile(url, urlProgress);
+					files.add(f);
+				} catch (IOException e) {
+					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString());
+					return null;
+				}
+				count.set(count.get()+1);
+			}
+			return files;
+		};
+		monitor.set(new SimpleTaskMonitor<>("Downloading Files", supplier, callback));
+		return monitor.get();
 	}
 
 

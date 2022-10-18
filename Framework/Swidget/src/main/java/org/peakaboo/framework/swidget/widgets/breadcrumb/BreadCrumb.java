@@ -2,10 +2,18 @@ package org.peakaboo.framework.swidget.widgets.breadcrumb;
 
 import static java.util.stream.Collectors.toList;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -15,8 +23,12 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
+import org.peakaboo.framework.stratus.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.controls.ButtonLinker;
+import org.peakaboo.framework.stratus.theme.Theme;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 
@@ -72,7 +84,7 @@ public class BreadCrumb<T> extends JPanel {
 		});
 
 		
-		setOpaque(false);
+		setOpaque(Swidget.isStratusLaF());
 		
 	}
 	
@@ -377,7 +389,7 @@ public class BreadCrumb<T> extends JPanel {
 	 * Calculates the required width of the given entries
 	 */
 	private int entriesWidth(List<BreadCrumbEntry<T>> entries) {
-		int fixed = goLeft.getPreferredSize().width + goRight.getPreferredSize().width;
+		int fixed = goLeft.getPreferredSize().width + goRight.getPreferredSize().width + 10; //+10 for good measure
 		return entries.stream().map(b -> b.width()).reduce(fixed, (a, b) -> a+b);
 	}
 
@@ -415,4 +427,46 @@ public class BreadCrumb<T> extends JPanel {
 		return entries.get(entries.size()-1).getItem();
 	}
 
+	
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		if (!Swidget.isStratusLaF()) { 
+			super.paintComponent(g);
+			return;
+		}
+		
+		//TODO: Put this in the theme properly?
+		StratusLookAndFeel laf = (StratusLookAndFeel) UIManager.getLookAndFeel();
+		Theme theme = laf.getTheme();
+		
+		g = g.create();
+		Graphics2D g2 = (Graphics2D) g;
+		
+    	
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		
+		
+		Color bg, fg;
+		float radius;
+			
+		bg = theme.getControl();
+		fg = theme.getWidgetBorder();
+		radius = theme.borderRadius();
+
+		
+		//Fill b/ bg colour
+		g2.setPaint(bg);
+		g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius));
+		
+		//Draw border
+		g2.setPaint(fg);
+		g2.setStroke(new BasicStroke(1f));
+		g2.draw(new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius));		
+		
+		g2.dispose();
+
+	}
+	
 }

@@ -8,8 +8,10 @@ import java.util.List;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.swidget.hookins.WindowDragger;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
