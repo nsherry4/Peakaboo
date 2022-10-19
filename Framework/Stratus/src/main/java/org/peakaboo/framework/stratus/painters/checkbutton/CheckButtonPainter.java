@@ -42,8 +42,12 @@ public class CheckButtonPainter extends AbstractButtonPainter {
 		
 		if (!Stratus.focusedWindow(object)) {
 			custom.fill = theme.getControl();
-		} else if (isLive(object)) {
+		} else if (!isDisabled() && isChecked(object)) {
 			custom.fill = theme.getHighlight();
+		} else if (isDisabled() && isChecked(object)) {
+			custom.fill = theme.getControl();
+		} else {
+			custom.fill = theme.getRecessedControl();
 		}
 		
 		return custom;
@@ -52,23 +56,7 @@ public class CheckButtonPainter extends AbstractButtonPainter {
     protected boolean hasBorder() {
     	return true;
     }
-    
-	    
-	@Override
-    protected Paint mainPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-    	return palette.fill;
-    }
-    
-	@Override
-    protected Paint borderPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-		return isLive(object) ? live.border : palette.border;
-    }
-    
-	@Override
-    protected Paint selectionPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-		return isLive(object) ? live.selection : palette.selection;
-    }
-    
+        
 	private boolean isChecked(JComponent object) {
 		try {
 			return ((JCheckBox)object).isSelected();
@@ -76,9 +64,6 @@ public class CheckButtonPainter extends AbstractButtonPainter {
 			return false;
 		}
 	}
-	
-	private boolean isLive(JComponent object) {
-		return (!isDisabled() && Stratus.focusedWindow(object) && isChecked(object));
-	}
+
 	
 }
