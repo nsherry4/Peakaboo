@@ -2,6 +2,7 @@ package org.peakaboo.ui.swing.plotting;
 
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -9,6 +10,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -27,31 +31,47 @@ import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFuncti
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel.LabelPosition;
+import org.peakaboo.framework.swidget.widgets.settings.OptionBlock;
+import org.peakaboo.framework.swidget.widgets.settings.OptionBox;
+import org.peakaboo.framework.swidget.widgets.settings.OptionLabel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
+	
+	private List<OptionBlock> blocks = new ArrayList<>();
 	
 	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
 		super(parent, true);
 		getHeader().setCentre("Advanced Options");
 		
-		SettingsPanel master = new SettingsPanel();
-		master.addSetting(peakFitting(controller));
-		master.setBorder(Spacing.bLarge());
-		setBody(master);
+		makeUI(controller);
+		
+		ClearPanel main = new ClearPanel();
+		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
+		main.setBorder(Spacing.bHuge());
+		boolean first = true;
+		for (OptionBlock block : blocks) {
+			if (!first) {
+				main.add(Box.createVerticalStrut(Spacing.huge));
+			}
+			main.add(block);
+			first = false;
+		}
+		setBody(main);
 		
 	}
 
 
-	private class Box<T> {
+	private class ValueBox<T> {
 
 		public T value;
 		public String name;
 		
-		public Box(T value, Function<T, String> pretty) {
+		public ValueBox(T value, Function<T, String> pretty) {
 			this.value = value;
 			if (pretty != null) {
 				this.name = pretty.apply(value);
@@ -68,22 +88,24 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private <T> JComboBox<?> makeCombo(Predicate<T> matchesCurrent, Consumer<T> onSelect, Function<T, String> pretty, T... items) {
 		
-		List<Box<T>> boxes = Arrays.asList(items).stream().map(t -> new Box<>(t, pretty)).collect(Collectors.toList());
+		List<ValueBox<T>> boxes = Arrays.asList(items).stream().map(t -> new ValueBox<>(t, pretty)).collect(Collectors.toList());
 		
-		JComboBox<Box<T>> comboBox = new JComboBox<>();
-		Consumer<Box<T>> addItem = fitter -> {
+		JComboBox<ValueBox<T>> comboBox = new JComboBox<>();
+		Consumer<ValueBox<T>> addItem = fitter -> {
 			comboBox.addItem(fitter);
 			if (matchesCurrent.test(fitter.value)) {
 				comboBox.setSelectedItem(fitter);
 			}
 		};
-		for (Box<T> item : boxes) {
+		for (ValueBox<T> item : boxes) {
 			addItem.accept(item);
 		}
 		comboBox.addActionListener(e -> {
-			Box<T> box = (Box<T>) comboBox.getSelectedItem();
+			ValueBox<T> box = (ValueBox<T>) comboBox.getSelectedItem();
 			onSelect.accept(box.value);
 		});
+		
+		((JLabel)comboBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		
 		return comboBox;
 	}
@@ -91,22 +113,11 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 
 
 	
-	private JComponent peakFitting(PlotController controller) {
+	private void makeUI(PlotController controller) {
 		
-		SettingsPanel panel = new SettingsPanel(new Insets(Spacing.tiny, Spacing.medium, Spacing.tiny, Spacing.medium));
-		panel.setOpaque(false);
-		panel.setBorder(Spacing.bMedium());
-
-
 		
-		JComboBox<?> detectorMaterialBox = makeCombo(
-				e -> e.type() == controller.fitting().getDetectorMaterial(),
-				e -> controller.fitting().setDetectorMaterial(e.type()),
-				null,
-				DetectorMaterialType.SILICON.get(),
-				DetectorMaterialType.GERMANIUM.get()
-			);
-		build(panel, detectorMaterialBox, "Detector Material", "Detector material is used to determine some of the properties of the peak model used to fit signal.", true);
+		OptionBlock detector = new OptionBlock();
+		blocks.add(detector);
 		
 		
 		JComboBox<?> escapePeakBox = makeCombo(
@@ -116,8 +127,27 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				true,
 				false
 			);
-		build(panel, escapePeakBox, "Escape Peaks", "Escape peaks result when some of the energy absorbed by a detector is re-emitted.", true);
+		JCheckBox escapePeakToggle = new JCheckBox();
+		escapePeakToggle.setSelected(controller.fitting().getShowEscapePeaks());
+		escapePeakToggle.addActionListener(e -> controller.fitting().setShowEscapePeaks(escapePeakToggle.isSelected()));
 		
+		build(detector, escapePeakToggle, "Escape Peaks", "Models energy absorbed by a detector being re-emitted", true);
+		
+		
+		JComboBox<?> detectorMaterialBox = makeCombo(
+				e -> e.type() == controller.fitting().getDetectorMaterial(),
+				e -> controller.fitting().setDetectorMaterial(e.type()),
+				null,
+				DetectorMaterialType.SILICON.get(),
+				DetectorMaterialType.GERMANIUM.get()
+			);
+		build(detector, detectorMaterialBox, "Detector Material", "Changes some properties of the peak model", true);
+		
+
+		
+		
+		OptionBlock fitting = new OptionBlock();
+		blocks.add(fitting);
 		
 		JComboBox<?> peakModelBox = makeCombo(
 				f -> f.getClass() == controller.fitting().getFittingFunction(),
@@ -128,7 +158,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				new GaussianFittingFunction(),
 				new LorentzFittingFunction()
 			);
-		build(panel, peakModelBox, "Peak Model", "The mathematical function used to model an individual peak.", true);
+		build(fitting, peakModelBox, "Peak Model", "Function used to model individual peaks", true);
 		
 		
 		
@@ -142,7 +172,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				new LeastSquaresCurveFitter()
 				
 			);
-		build(panel, fittersBox, "Single-Curve Fitting", "The strategy used to fit a single element's emission curve to data.", true);
+		build(fitting, fittersBox, "Single-Curve Fitting", "Technique used to fit a single curve to signal", true);
 
 		
 		
@@ -156,20 +186,29 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				new OptimizingFittingSolver(),
 				new MultisamplingOptimizingFittingSolver()
 			);
-		build(panel, solversBox, "Multi-Curve Solver", "The strategy used to determine how overlapping element emission curves coexist.", true);
+		build(fitting, solversBox, "Multi-Curve Solver", "Technique to fit overlapping curves to signal", true);
 		
 		
-		return panel;
 		
 	}
 
-	public void build(SettingsPanel panel, JComponent component, String title, String tooltip, boolean fill) {
-		JLabel label = new JLabel(title);
+//	public void build(SettingsPanel panel, JComponent component, String title, String tooltip, boolean fill) {
+//		JLabel label = new JLabel(title);
+//		
+//		component.setToolTipText(tooltip);
+//		label.setToolTipText(tooltip);
+//		
+//		panel.addSetting(component, label, LabelPosition.BESIDE, false, fill);
+//	}
+
+	public void build(OptionBlock block, JComponent component, String title, String tooltip, boolean fill) {
+		OptionBox box = new OptionBox(block);
+		OptionLabel lbl = new OptionLabel(title, tooltip);		
+		box.add(lbl);
+		box.addSpacer();
+		box.add(component);
+		block.add(box);
 		
-		component.setToolTipText(tooltip);
-		label.setToolTipText(tooltip);
-		
-		panel.addSetting(component, label, LabelPosition.BESIDE, false, fill);
 	}
 	
 }
