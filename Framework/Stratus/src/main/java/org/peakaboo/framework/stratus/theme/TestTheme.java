@@ -15,10 +15,10 @@ public class TestTheme implements Theme {
 	private Color border = new Color(0xdadada);
 	
 	private Color widget = new Color(0xe6e6e6);
-	private Color widgetAlpha = new Color(0x12000000, true);
+	private Color widgetAlpha = new Color(0x13000000, true);
 	private Color widgetBevel = new Color(0xe6e6e6);
 	
-	private Color selectionAlpha = new Color(0x7f498ed8, true);
+	private Color selectionAlpha = new Color(0x3f498ed8, true);
 	private Color borderAlpha = new Color(0x40000000, true);
 	private Color shadowAlpha = new Color(0x27000000, true);
 	

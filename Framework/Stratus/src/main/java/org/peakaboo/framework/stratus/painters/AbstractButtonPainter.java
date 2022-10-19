@@ -101,7 +101,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     		BiFunction<Color, Float, Color> darken;
         	if (isCustomColour(object)) {
         		palette.fill = object.getBackground();
-        		palette.selection = new Color(0x3fffffff, true);
+        		palette.selection = new Color(0x2fffffff, true);
         		darken = Stratus::darken;
         	} else {
         		palette.fill = theme.getWidgetAlpha();
@@ -215,13 +215,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
 
     
     protected Paint mainPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {
-    	//return new LinearGradientPaint(0, pad, 0, height-pad, palette.fillPoints, palette.fillArray);
     	return palette.fill;
-//    	if (isCustomColour(object)) {
-//    		return palette.fill;
-//    	} else {
-//    		return getTheme().getWidgetAlpha();
-//    	}
     }
     
     protected Paint borderPaint(JComponent object, float width, float height, float pad, ButtonPalette palette) {

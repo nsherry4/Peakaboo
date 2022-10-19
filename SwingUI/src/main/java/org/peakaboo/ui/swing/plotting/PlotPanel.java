@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -875,23 +876,30 @@ public class PlotPanel extends TabbedLayerPanel {
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().getAnalysis().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().getAnalysis().maximumIntensity());
 
+		//Only load those attributes which have values
+		BiConsumer<String, String> populator = (k, v) -> {
+			if (v != null && !"".equals(v)) {
+				properties.put(k, v);
+			}
+		};
+		
 		//Extended attributes
 		if (controller.data().getDataSet().getMetadata().isPresent()) {
 			Metadata metadata = controller.data().getDataSet().getMetadata().get();
 			
-			properties.put("Date of Creation", metadata.getCreationTime());
-			properties.put("Created By", metadata.getCreator());
+			populator.accept("Date of Creation", metadata.getCreationTime());
+			populator.accept("Created By", metadata.getCreator());
 			
-			properties.put("Project Name", metadata.getProjectName());
-			properties.put("Session Name", metadata.getSessionName());
-			properties.put("Experiment Name", metadata.getExperimentName());
-			properties.put("Sample Name", metadata.getSampleName());
-			properties.put("Scan Name", metadata.getScanName());
+			populator.accept("Project Name", metadata.getProjectName());
+			populator.accept("Session Name", metadata.getSessionName());
+			populator.accept("Experiment Name", metadata.getExperimentName());
+			populator.accept("Sample Name", metadata.getSampleName());
+			populator.accept("Scan Name", metadata.getScanName());
 			
-			properties.put("Facility", metadata.getFacilityName());
-			properties.put("Laboratory", metadata.getLaboratoryName());
-			properties.put("Instrument", metadata.getInstrumentName());
-			properties.put("Technique", metadata.getTechniqueName());
+			populator.accept("Facility", metadata.getFacilityName());
+			populator.accept("Laboratory", metadata.getLaboratoryName());
+			populator.accept("Instrument", metadata.getInstrumentName());
+			populator.accept("Technique", metadata.getTechniqueName());
 			
 		}
 		
