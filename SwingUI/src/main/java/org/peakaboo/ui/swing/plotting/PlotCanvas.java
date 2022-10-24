@@ -32,6 +32,8 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
+import org.peakaboo.framework.swidget.hookins.FileDrop;
+import org.peakaboo.ui.swing.Peakaboo;
 
 
 
@@ -192,7 +194,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	void urlsDropped(URL[] urls) {
 		try {
 			
-			TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
+			TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
 				if (!optfiles.isPresent()) { return; }
 				plotPanel.load(optfiles.get().stream().map(PathDataFile::new).collect(Collectors.toList()));
 			});

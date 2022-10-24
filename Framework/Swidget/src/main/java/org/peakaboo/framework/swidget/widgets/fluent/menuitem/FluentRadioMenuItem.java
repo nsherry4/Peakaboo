@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JRadioButtonMenuItem;
 
@@ -37,7 +38,13 @@ public class FluentRadioMenuItem extends JRadioButtonMenuItem implements FluentM
 		if (config.imagename == null) {
 			this.setIcon(null);
 		} else {
-			this.setIcon(IconFactory.getImageIcon(config.imagename, IconSize.BUTTON));
+			ImageIcon icon;
+			if (config.symbolic) {
+				icon = IconFactory.getSymbolicIcon(config.imagename, IconSize.BUTTON);
+			} else {
+				icon = IconFactory.getImageIcon(config.imagename, IconSize.BUTTON);
+			}
+			this.setIcon(icon);
 		}
 		this.setMnemonic(config.mnemonic == null ? 0 : config.mnemonic);
 

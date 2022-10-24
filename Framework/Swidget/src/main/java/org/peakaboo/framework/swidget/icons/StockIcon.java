@@ -93,7 +93,8 @@ public enum StockIcon {
 	ZOOM_ORIGINAL,
 	ZOOM_OUT, 
 	
-	
+	PROCESS_COMPLETED,
+	PROCESS_ERROR,
 
 	
 	
@@ -113,6 +114,11 @@ public enum StockIcon {
 	public ImageIcon toImageIcon(IconSize size)
 	{
 		return IconFactory.getImageIcon(toString(), size);
+	}
+	
+	public ImageIcon toSymbolicIcon(IconSize size)
+	{
+		return IconFactory.getSymbolicIcon(toString(), size);
 	}
 		
 }

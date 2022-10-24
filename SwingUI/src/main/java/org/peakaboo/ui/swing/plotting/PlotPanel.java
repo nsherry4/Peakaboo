@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -78,6 +79,7 @@ import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
@@ -87,6 +89,7 @@ import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.hookins.FileDrop;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
@@ -625,8 +628,9 @@ public class PlotPanel extends TabbedLayerPanel {
 		if (mapTask == null) return;
 
 		TaskMonitorView taskView = new TaskMonitorView(mapTask);
-		TaskMonitorPanel taskPanel = new TaskMonitorPanel("Generating Maps", taskView);
-		ModalLayer layer = new ModalLayer(this, taskPanel);
+		//TaskMonitorPanel taskPanel = new TaskMonitorPanel("Generating Maps", taskView);
+		//ModalLayer layer = new ModalLayer(this, taskPanel);
+		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Maps", taskView);
 		
 		mapTask.addListener(event -> {
 			
@@ -874,23 +878,30 @@ public class PlotPanel extends TabbedLayerPanel {
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().getAnalysis().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().getAnalysis().maximumIntensity());
 
+		//Only load those attributes which have values
+		BiConsumer<String, String> populator = (k, v) -> {
+			if (v != null && !"".equals(v)) {
+				properties.put(k, v);
+			}
+		};
+		
 		//Extended attributes
 		if (controller.data().getDataSet().getMetadata().isPresent()) {
 			Metadata metadata = controller.data().getDataSet().getMetadata().get();
 			
-			properties.put("Date of Creation", metadata.getCreationTime());
-			properties.put("Created By", metadata.getCreator());
+			populator.accept("Date of Creation", metadata.getCreationTime());
+			populator.accept("Created By", metadata.getCreator());
 			
-			properties.put("Project Name", metadata.getProjectName());
-			properties.put("Session Name", metadata.getSessionName());
-			properties.put("Experiment Name", metadata.getExperimentName());
-			properties.put("Sample Name", metadata.getSampleName());
-			properties.put("Scan Name", metadata.getScanName());
+			populator.accept("Project Name", metadata.getProjectName());
+			populator.accept("Session Name", metadata.getSessionName());
+			populator.accept("Experiment Name", metadata.getExperimentName());
+			populator.accept("Sample Name", metadata.getSampleName());
+			populator.accept("Scan Name", metadata.getScanName());
 			
-			properties.put("Facility", metadata.getFacilityName());
-			properties.put("Laboratory", metadata.getLaboratoryName());
-			properties.put("Instrument", metadata.getInstrumentName());
-			properties.put("Technique", metadata.getTechniqueName());
+			populator.accept("Facility", metadata.getFacilityName());
+			populator.accept("Laboratory", metadata.getLaboratoryName());
+			populator.accept("Instrument", metadata.getInstrumentName());
+			populator.accept("Technique", metadata.getTechniqueName());
 			
 		}
 		
@@ -925,8 +936,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		
 		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).collect(Collectors.toList());
-		TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Energy Level", views);
-		ModalLayer layer = new ModalLayer(this, panel);
+		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Detecting Energy Level", views);
 		
 		energyTask.last().addListener(event -> {
 			//if event is not progress, then its either COMPLETED or ABORTED, so hide the panel

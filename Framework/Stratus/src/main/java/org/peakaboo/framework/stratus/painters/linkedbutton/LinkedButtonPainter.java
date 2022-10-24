@@ -18,7 +18,7 @@ import org.peakaboo.framework.stratus.theme.Theme;
 public class LinkedButtonPainter extends ButtonPainter {
 
     public LinkedButtonPainter(Theme theme, ButtonState... buttonStates) {
-    	this(theme, 1, buttonStates);
+    	this(theme, theme.widgetMargins(), buttonStates);
     }
 	
 	public LinkedButtonPainter(Theme theme, int margin, ButtonState... buttonStates) {
@@ -88,7 +88,7 @@ public class LinkedButtonPainter extends ButtonPainter {
     	}
     	
     	Area area;
-    	float p = pad+1;
+    	float p = pad;
     	float x = p+getXOffset(object, pad);
     	float w = width-p*2+getWOffset(object, pad);
     	float h = height - p*2;
@@ -136,54 +136,11 @@ public class LinkedButtonPainter extends ButtonPainter {
 
     }
     
+      
     @Override
-    protected Shape shadowShape(JComponent object, float width, float height, float pad) {
+    protected Shape selectionShape(JComponent object, float width, float height, float pad) {
     	if (!isLinked(object)) {
-    		return super.shadowShape(object, width, height, pad);
-    	}
-    	
-    	GeneralPath path = new GeneralPath();
-    	float y = (int)(height-(pad)*2);
-
-    	if (isFirst(object)) {
-    		path.moveTo(pad+2, y);
-        	path.lineTo(width-(pad+1), y);
-    	} else if (isLast(object)) {
-    		path.moveTo(2, y);
-        	path.lineTo(width-(pad+1)*2, y);
-    	} else {
-        	path.moveTo(pad+1, y);
-        	path.lineTo(width-(pad)*2, y);
-    	}
-    	
-
-    	return path;
-    }
-    
-    @Override
-    protected Shape bevelShape(JComponent object, float width, float height, float pad) {  	
-    	if (!isLinked(object)) {
-    		return super.bevelShape(object, width, height, pad);
-    	}
-    	
-    	GeneralPath path = new GeneralPath();
-    	if (isFirst(object)) {
-    		path.moveTo(pad+2, pad+1);
-    		path.lineTo(width-(pad-1)*2, pad+1);
-    	} else if (isLast(object)) {
-    		path.moveTo(pad, pad+1);
-    		path.lineTo(width-(pad+1)*2, pad+1);
-    	} else {
-    		path.moveTo(pad, pad+1);
-    		path.lineTo(width-(pad-1)*2, pad+1);
-    	}
-    	return path;
-    }
-    
-    @Override
-    protected Shape dashShape(JComponent object, float width, float height, float pad) {
-    	if (!isLinked(object)) {
-    		return super.dashShape(object, width, height, pad);
+    		return super.selectionShape(object, width, height, pad);
     	}
     	
     	float x = pad;

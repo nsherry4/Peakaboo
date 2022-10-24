@@ -28,7 +28,7 @@ public class PlotMenuMain extends JPopupMenu {
 		FluentMenuItem mOpen = new FluentMenuItem()
 				.withText("Open Data\u2026")
 				.withTooltip("Opens new data sets.")
-				.withIcon(StockIcon.DOCUMENT_OPEN)
+				.withIcon(StockIcon.DOCUMENT_OPEN, true)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_O)
 				.withAction(plot::actionOpenData);
@@ -36,14 +36,14 @@ public class PlotMenuMain extends JPopupMenu {
 
 		save = new FluentMenuItem()
 				.withText("Save Session")
-				.withIcon(StockIcon.DOCUMENT_SAVE)
+				.withIcon(StockIcon.DOCUMENT_SAVE, true)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK), plot)
 				.withAction(plot::actionSaveSession);
 		this.add(save);
 
 		saveAs = new FluentMenuItem()
 				.withText("Save Session As\u2026")
-				.withIcon(StockIcon.DOCUMENT_SAVE_AS)
+				.withIcon(StockIcon.DOCUMENT_SAVE_AS, true)
 				.withAction(plot::actionSaveSessionAs);
 		this.add(saveAs);
 		
@@ -59,7 +59,7 @@ public class PlotMenuMain extends JPopupMenu {
 		undo = new FluentMenuItem()
 				.withText("Undo")
 				.withTooltip("Undoes a previous action")
-				.withIcon(StockIcon.EDIT_UNDO)
+				.withIcon(StockIcon.EDIT_UNDO, true)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_U)
 				.withAction(() -> controller.history().undo());
@@ -68,7 +68,7 @@ public class PlotMenuMain extends JPopupMenu {
 		redo = new FluentMenuItem()
 				.withText("Redo")
 				.withTooltip("Redoes a previously undone action")
-				.withIcon(StockIcon.EDIT_REDO)
+				.withIcon(StockIcon.EDIT_REDO, true)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_R)
 				.withAction(() -> controller.history().redo());
@@ -124,14 +124,14 @@ public class PlotMenuMain extends JPopupMenu {
 		
 		JMenuItem help = new FluentMenuItem()
 				.withText("Help")
-				.withIcon(StockIcon.BADGE_HELP)
+				.withIcon(StockIcon.BADGE_HELP, true)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), plot)
 				.withAction(plot::actionHelp);
 		this.add(help);
 		
 		JMenuItem about = new FluentMenuItem()
 				.withText("About")
-				.withIcon(StockIcon.MISC_ABOUT)
+				.withIcon(StockIcon.MISC_ABOUT, true)
 				.withAction(plot::actionAbout);
 		this.add(about);
 	}

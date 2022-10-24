@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.modes.MapModes;
@@ -46,7 +47,7 @@ public class MapFittingPanel extends ClearPanel
 		card = new CardLayout();
 		cardPanel.setLayout(card);
 		
-		//create each of the three panels
+		//create each of the view mode panels
 		compPanel = new Composite(controller);
 		overPanel = new Overlay(controller);
 		ratioPanel = new Ratio(controller);
@@ -71,7 +72,10 @@ public class MapFittingPanel extends ClearPanel
 		});
 		JPanel modeSelectPanel = new ClearPanel(new BorderLayout());
 		modeSelectPanel.add(modeSelectBox, BorderLayout.CENTER);
-		modeSelectPanel.setBorder(Spacing.bSmall());
+		modeSelectPanel.setBorder(Spacing.bMedium());
+		
+		
+		
 		
 		
 		FluentButton selectAll = new FluentButton(StockIcon.SELECTION_ALL)
@@ -83,6 +87,7 @@ public class MapFittingPanel extends ClearPanel
 				.withTooltip("Select None")
 				.withAction(() -> controller.getActiveMode().setAllVisible(false));
 		ButtonLinker linker = new ButtonLinker(selectNone, selectAll);
+		linker.setBorder(new EmptyBorder(0, Spacing.small, 0, 0));
 		modeSelectPanel.add(linker, BorderLayout.EAST);
 		
 		//add the two components to this panel

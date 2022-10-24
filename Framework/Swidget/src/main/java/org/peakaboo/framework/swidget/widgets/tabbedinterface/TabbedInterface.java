@@ -78,7 +78,7 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane
 	
 
 	private void makeNewTabButton() {
-		Icon newmapButton = StockIcon.WINDOW_TAB_NEW.toImageIcon(IconSize.BUTTON);
+		Icon newmapButton = StockIcon.WINDOW_TAB_NEW.toSymbolicIcon(IconSize.BUTTON);
 		this.addTab("", newmapButton, new ClearPanel());	
 	}
 	

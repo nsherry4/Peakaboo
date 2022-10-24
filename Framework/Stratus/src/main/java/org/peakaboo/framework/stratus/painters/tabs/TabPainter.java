@@ -1,12 +1,10 @@
 package org.peakaboo.framework.stratus.painters.tabs;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.Window;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
@@ -18,78 +16,54 @@ import org.peakaboo.framework.stratus.theme.Theme;
 
 public class TabPainter extends StatefulPainter{
 
-	Color fillNL, bottomNL;
-	Color fillTL, bottomTL;
-	
-	Stroke bottomStroke = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+	protected Color normal, top;
 	
 	public TabPainter(Theme theme, ButtonState... buttonState) {
 		super(theme, buttonState);
-		
-		if (isSelected()) {
-			fillNL = getTheme().getNegative();
-			bottomNL = getTheme().getHighlight();
-			fillTL = getTheme().getNegative();
-			bottomTL = getTheme().getHighlight();
-		} else {
-			fillNL = getTheme().getNegative();
-			bottomNL = Stratus.darken(getTheme().getWidgetBorder());
-			fillTL = getTheme().getNegative();
-			bottomTL = Stratus.darken(getTheme().getWidgetBorder());
-		}
-
-		
+		top = getTheme().getNegative();
+		normal = getTheme().getControl();
 	}
 
 	
 	@Override
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
 		
+    	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		
-		Color fill, bottom;
+		Theme theme = getTheme();
+		
+		Color color;
 		boolean isTopLevel = (object.getParent().getParent().getParent().getParent() instanceof Window);
-		if (isTopLevel) {
-			fill = fillTL;
-			bottom = bottomTL;
+		boolean focused = Stratus.focusedWindow(object);
+		
+		if (isTopLevel && focused) {
+			color = top;
 		} else {
-			fill = fillNL;
-			bottom = bottomNL;
+			color = normal;
 		}
 		
+		
+		if (isSelected()) {
+			color = Stratus.darken(color, 0.10f);
+		}
+		
+		if (isMouseOver()) {
+			color = Stratus.darken(color, theme.selectionStrength());
+		}
+		
+		
+		float pad = 3;
+		float radius = theme.borderRadius();
+		Shape shape = new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2, radius, radius);
+
+
 		if (isFocused() || isSelected() || isMouseOver()) {
-		
-			g.setColor(fill);
-			g.fillRect(0, 0, width, height);
-
-			//bottom stroke
-			Stroke old = g.getStroke();
-			g.setStroke(bottomStroke);
-			g.setColor(bottom);
-			g.drawLine(0, height-2, width, height-2);
-			g.setStroke(old);
-			
-			//border
-			g.setColor(getTheme().getWidgetBorder());
-			GeneralPath border = new GeneralPath();
-			border.moveTo(0, height-1);
-			border.lineTo(0, 0);
-			border.lineTo(width, 0);
-			border.lineTo(width, height-1);
-			g.draw(border);
-			
-
+			g.setColor(color);
+			g.fill(shape);
 		}
 		
-    	//Focus dash if focused but not pressed
-		int pad = 4;
-    	if (isFocused() && !isPressed()) {
-        	g.setPaint(new Color(0, 0, 0, 0.15f));
-        	Shape focus = new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2 - 3, 0, 0);
-        	Stroke old = g.getStroke();
-        	g.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[] {2, 2}, 0f));
-        	g.draw(focus);
-        	g.setStroke(old);
-    	}
 	}
+	
 
 }

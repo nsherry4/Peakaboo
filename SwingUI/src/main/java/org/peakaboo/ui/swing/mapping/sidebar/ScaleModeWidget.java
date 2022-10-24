@@ -51,7 +51,7 @@ public class ScaleModeWidget extends JPanel {
 		
 		if (warnRelative) {
 			relativeButton.setToolTipText("This option gives qualitative results only");
-			relativeButton.setBackground(new Color(0x00FFA000));
+			relativeButton.setBackground(new Color(0x00e5a50a));
 		}
 				
 		this.add(box, BorderLayout.CENTER);

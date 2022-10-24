@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 
 import org.peakaboo.common.Version;
 import org.peakaboo.framework.swidget.dialogues.HeaderDialog;
+import org.peakaboo.framework.swidget.hookins.WindowDragger;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;

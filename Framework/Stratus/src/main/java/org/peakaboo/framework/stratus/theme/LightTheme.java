@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.theme;
 
 import java.awt.Color;
+import java.awt.Paint;
 
 import org.peakaboo.framework.stratus.Stratus;
 
@@ -57,10 +58,15 @@ public class LightTheme implements Theme {
 	}
 	
 	@Override
-	public Color getWidgetDashAlpha() {
+	public Color getWidgetSelectionAlpha() {
 		return dashAlpha;
 	}
 	
+	@Override
+	public Color getWidgetAlpha() {
+		return widget;
+	}
+
 
 	@Override
 	public Color getMenu() {
@@ -124,6 +130,7 @@ public class LightTheme implements Theme {
 	public float widgetCurve() {
 		return 0.03f;
 	}
+
 	
 	
 }

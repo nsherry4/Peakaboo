@@ -43,6 +43,7 @@ import org.peakaboo.framework.stratus.theme.LightTheme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
+import org.peakaboo.framework.swidget.hookins.FileDrop;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
@@ -56,8 +57,8 @@ import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
+import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.environment.DesktopApp;
-import org.peakaboo.ui.swing.plotting.FileDrop;
 
 public class PluginsOverview extends HeaderLayer {
 
@@ -85,7 +86,7 @@ public class PluginsOverview extends HeaderLayer {
 			@Override
 			public void urlsDropped(URL[] urls) {
 				
-				TaskMonitor<List<File>> monitor = FileDrop.getUrlsAsync(Arrays.asList(urls), optfiles -> {
+				TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
 					if (!optfiles.isPresent()) {
 						return;
 					}
@@ -110,13 +111,13 @@ public class PluginsOverview extends HeaderLayer {
 		
 		
 		//header controls
-		add = new FluentButton(StockIcon.EDIT_ADD).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
-		remove = new FluentButton(StockIcon.EDIT_REMOVE).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
-		reload = new FluentButton(StockIcon.ACTION_REFRESH).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		add = new FluentButton(StockIcon.EDIT_ADD, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
+		remove = new FluentButton(StockIcon.EDIT_REMOVE, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
+		reload = new FluentButton(StockIcon.ACTION_REFRESH, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
 		remove.setEnabled(false);
 		
-		browse = new FluentButton(StockIcon.PLACE_FOLDER_OPEN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new FluentButton(StockIcon.GO_DOWN).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
+		browse = new FluentButton(StockIcon.DOCUMENT_OPEN, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
+		download = new FluentButton(StockIcon.GO_DOWN, true).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
 		
 		ButtonLinker edits = new ButtonLinker(add, remove, reload);
 		ButtonLinker tools = new ButtonLinker(browse, download);

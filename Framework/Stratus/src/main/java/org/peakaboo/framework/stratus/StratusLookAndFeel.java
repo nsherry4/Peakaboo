@@ -1,15 +1,21 @@
 package org.peakaboo.framework.stratus;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.GrayFilter;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -58,6 +64,8 @@ import org.peakaboo.framework.stratus.painters.toolbar.ToolbarBorderPainter.Side
 import org.peakaboo.framework.stratus.theme.LightTheme;
 import org.peakaboo.framework.stratus.theme.Theme;
 
+import sun.swing.ImageIconUIResource;
+
 public class StratusLookAndFeel extends NimbusLookAndFeel {
 
 	public static boolean DISABLE_FONT_HINTING = true;
@@ -68,6 +76,10 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 	private Theme theme;
 	
 	
+	public Theme getTheme() {
+		return theme;
+	}
+
 	public StratusLookAndFeel() {
 		this(new LightTheme());
 	}
@@ -735,6 +747,40 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		return image;
 		
 	}
+	
+	
+    /**
+     * Returns an <code>Icon</code> with a disabled appearance.
+     * This method is used to generate a disabled <code>Icon</code> when
+     * one has not been specified.  For example, if you create a
+     * <code>JButton</code> and only specify an <code>Icon</code> via
+     * <code>setIcon</code> this method will be called to generate the
+     * disabled <code>Icon</code>. If {@code null} is passed as
+     * <code>icon</code> this method returns {@code null}.
+     * <p>
+     * Some look and feels might not render the disabled {@code Icon}, in which
+     * case they will ignore this.
+     *
+     * @param component {@code JComponent} that will display the {@code Icon},
+     *         may be {@code null}
+     * @param icon {@code Icon} to generate the disabled icon from
+     * @return disabled {@code Icon}, or {@code null} if a suitable
+     *         {@code Icon} can not be generated
+     * @since 1.5
+     */
+    public Icon getDisabledIcon(JComponent component, Icon icon) {
+        if (icon instanceof ImageIcon) {
+        	Image img = ((ImageIcon) icon).getImage();
+        	BufferedImage target = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), java.awt.Transparency.TRANSLUCENT);
+        	Graphics2D g = target.createGraphics();
+        	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        	g.drawImage(img, 0, 0, null);
+        	g.dispose();
+        	Image grey = GrayFilter.createDisabledImage(target);
+            return new ImageIcon(grey);
+        }
+        return null;
+    }
 	
 	private static URL getImageIconURL(String imageName, int size)
 	{

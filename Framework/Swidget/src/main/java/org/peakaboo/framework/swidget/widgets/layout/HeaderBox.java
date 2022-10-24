@@ -11,10 +11,6 @@ import java.awt.Graphics2D;
 import java.awt.LayoutManager2;
 import java.awt.LinearGradientPaint;
 import java.awt.Paint;
-import java.awt.Point;
-import java.awt.Window;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JFrame;
@@ -32,6 +28,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.hookins.WindowDragger;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -49,58 +46,8 @@ public class HeaderBox extends JPanel {
 	boolean showClose;
 	
 	private Theme theme = null;
+	private WindowDragger dragger;
 	
-	//dragging
-	private boolean dragable = true;
-	
-	
-	public class DragListener extends MouseAdapter {
-		private Point initialClick, initialPos;
-
-		public void mousePressed(MouseEvent e) {
-			initialClick = e.getLocationOnScreen();
-			JFrame window = (JFrame) SwingUtilities.getWindowAncestor(HeaderBox.this);
-			initialPos = window.getLocation();
-		}
-		
-		public void mouseDragged(MouseEvent e) {
-			JFrame window = (JFrame) SwingUtilities.getWindowAncestor(HeaderBox.this);
-			
-			//Only drag on left mouse button
-			if(!SwingUtilities.isLeftMouseButton(e)) {
-				return;
-			}
-			
-			//only drag if we're mouse-down on a draggable component
-			if (initialClick == null || !dragable) {
-				return;
-			}
-			
-			//dont' move parent window if it's maximized
-			JFrame parentJFrame = (JFrame) window;
-			if ((parentJFrame.getExtendedState() & JFrame.MAXIMIZED_HORIZ) == JFrame.MAXIMIZED_HORIZ ||
-				(parentJFrame.getExtendedState() & JFrame.MAXIMIZED_VERT) == JFrame.MAXIMIZED_VERT) {
-				return;
-			}
-
-			//Calculate new x,y for window
-			Point currentClick = e.getLocationOnScreen();
-			int dx = currentClick.x - initialClick.x;
-			int dy = currentClick.y - initialClick.y;
-			int x = initialPos.x + dx;
-			int y = initialPos.y + dy;
-			window.setLocation(x, y);
-			
-		}
-		
-		public void mouseReleased(MouseEvent e) {
-			initialClick = null;
-			initialPos = null;
-		}
-		
-		
-		
-	}
 	
 	public HeaderBox(Component left, String title, Component right) {
 		this.left = left;
@@ -135,31 +82,13 @@ public class HeaderBox extends JPanel {
 		}
 		
 		
-		DragListener dragger = new DragListener();
-		addMouseMotionListener(dragger);
-		addMouseListener(dragger);	
+		dragger = new WindowDragger(HeaderBox.this);
 		
 	}
 	
 	
-	private Paint getBackgroundPaint() {
-		Color base = getBackground();
-		float curve = 0.05f;
-		
-		if (theme != null) {
-			if (Stratus.focusedWindow(this)) {
-				base = theme.getNegative();
-				curve = theme.widgetCurve();
-			} else {
-				base = theme.getControl();
-				curve = 0f;
-			}
-		}
-		
-		return new LinearGradientPaint(0, 0, 0, this.getPreferredSize().height, new float[] {0, 1f}, new Color[] {
-				lighten(base, curve/2f),
-				darken(base, curve/2f)
-			});
+	protected Paint getBackgroundPaint() {
+		return theme.getNegative();
 	}
 	
 
@@ -224,11 +153,7 @@ public class HeaderBox extends JPanel {
 		}
 		
 		Border b = Spacing.bMedium();
-		Color borderColour = new Color(0x20000000, true);
-		if (Swidget.isStratusLaF()) {
-			borderColour = Stratus.getTheme().getWidgetBorderAlpha();
-		}
-		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, borderColour), b);
+		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, Swidget.dividerColor()), b);
 		setBorder(b);
 		
 	}
@@ -292,12 +217,12 @@ public class HeaderBox extends JPanel {
 	
 	
 	
-	public boolean isDragable() {
-		return dragable;
+	public boolean isDraggable() {
+		return dragger.isDraggable();
 	}
 
-	public void setDragable(boolean dragable) {
-		this.dragable = dragable;
+	public void setDragable(boolean draggable) {
+		this.dragger.setDraggable(draggable);
 	}
 
 	public static JLabel makeHeaderTitle(String title) {
@@ -338,7 +263,7 @@ public class HeaderBox extends JPanel {
 	public static FluentButton closeButton() {
 		FluentButton close = new FluentButton()
 				.withTooltip("Close")
-				.withIcon(StockIcon.WINDOW_CLOSE)
+				.withIcon(StockIcon.WINDOW_CLOSE, true)
 				.withButtonSize(FluentButtonSize.LARGE)
 				.withBordered(false);
 		return close;

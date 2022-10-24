@@ -29,8 +29,10 @@ public interface Theme {
 	
 	public Color getScrollHandle();
 	
+	public Color getWidgetAlpha();
+	
 	Color getWidgetBorderAlpha();
-	Color getWidgetDashAlpha();
+	Color getWidgetSelectionAlpha();
 	Color getShadow();
 	
 	/**
@@ -73,9 +75,18 @@ public interface Theme {
 		return 5f;
 	}
 	
-	default float selectionLighten() {
+	default float selectionStrength() {
 		return 0.05f;
 	}
+	
+	default boolean isFlat() {
+		return false;
+	}
+	
+	default int widgetMargins() {
+		return 1;
+	}
+	
 	 
 	
 	

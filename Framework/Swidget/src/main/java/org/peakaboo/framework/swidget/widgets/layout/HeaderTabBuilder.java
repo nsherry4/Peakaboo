@@ -2,6 +2,8 @@ package org.peakaboo.framework.swidget.widgets.layout;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;

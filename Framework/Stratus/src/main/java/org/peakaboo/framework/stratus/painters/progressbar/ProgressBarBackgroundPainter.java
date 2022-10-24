@@ -44,8 +44,8 @@ public class ProgressBarBackgroundPainter extends SimpleThemed implements Painte
     	g.fill(border);
     	
     	//Border
-    	g.setPaint(Stratus.darken(getTheme().getWidgetBorder(), 0.1f));
-    	g.draw(border);
+    	//g.setPaint(Stratus.darken(getTheme().getWidgetBorder(), 0.1f));
+    	//g.draw(border);
     	
     	
     	

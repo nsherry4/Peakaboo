@@ -1,5 +1,8 @@
 package org.peakaboo.framework.swidget.widgets.listcontrols;
 
+import java.awt.Color;
+import java.awt.Paint;
+
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
@@ -14,12 +17,14 @@ public abstract class SelectionListControls extends HeaderBox
 		
 		super();
 		
-		FluentButton add = new FluentButton(StockIcon.CHOOSE_OK)
+		FluentButton add = new FluentButton()
+				.withIcon(StockIcon.CHOOSE_OK, true)
 				.withTooltip("Add Selected " + name)
 				.withBordered(false)
 				.withAction(() -> approve());
 		
-		FluentButton cancel = new FluentButton(StockIcon.CHOOSE_CANCEL)
+		FluentButton cancel = new FluentButton()
+				.withIcon(StockIcon.CHOOSE_CANCEL, true)
 				.withTooltip("Discard Selections")
 				.withBordered(false)
 				.withAction(() -> cancel());
@@ -33,5 +38,9 @@ public abstract class SelectionListControls extends HeaderBox
 	
 	protected abstract void approve();
 	protected abstract void cancel();
+	
+	protected Paint getBackgroundPaint() {
+		return new Color(0x00000000, true);
+	}
 	
 }

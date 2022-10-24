@@ -25,7 +25,8 @@ public class ProgressBarForegroundPainter extends SimpleThemed implements Painte
 	private boolean enabled=true;
 	private Mode mode;
 	static final int HEIGHT = 6;
-	private Color cBorder, cFill;
+	private Color cFill;
+	private float radius;
 	
 	public ProgressBarForegroundPainter(Theme theme, boolean enabled, Mode mode) {
 		super(theme);
@@ -33,8 +34,7 @@ public class ProgressBarForegroundPainter extends SimpleThemed implements Painte
 		this.mode = mode;
 		
 		cFill = getTheme().getHighlight();
-		cBorder = Stratus.darken(getTheme().getHighlight(), 0.3f);
-		
+		radius = Math.min(HEIGHT, getTheme().borderRadius());
 	}
 	
 	
@@ -42,17 +42,16 @@ public class ProgressBarForegroundPainter extends SimpleThemed implements Painte
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
     	
 		int pad = 2;
-		float radius = Math.max(HEIGHT/2, getTheme().borderRadius());
-		float startx = (height-HEIGHT)/2;
-		
+		float startx = (height-HEIGHT)/2f;
+			
     	//Background Fill
     	g.setPaint(cFill);
     	Shape border = new RoundRectangle2D.Float(pad, startx, width-pad*2, HEIGHT, radius, radius);
     	g.fill(border);
     	
     	//Border
-    	g.setPaint(cBorder);
-    	g.draw(border);
+    	//g.setPaint(cBorder);
+    	//g.draw(border);
     	
 	}
 

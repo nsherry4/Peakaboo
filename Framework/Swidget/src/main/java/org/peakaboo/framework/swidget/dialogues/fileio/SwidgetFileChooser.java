@@ -37,8 +37,9 @@ public class SwidgetFileChooser extends JFileChooser {
 
 	//replacement widgets
 	private FluentButton makeDirButton;
-	private PlacesPanel placesWidget;
-	private HeaderBox headerWidget;
+	PlacesPanel placesWidget;
+	HeaderBox headerWidget;
+	JScrollPane scroller, placesScroller;
 	private JPanel chooserPanel;
 	private FluentButton affirmative, negative;
 	
@@ -94,10 +95,10 @@ public class SwidgetFileChooser extends JFileChooser {
 		JToggleButton blistview = (JToggleButton) buttons.getComponent(7);
 				
 		JPanel filepanechild = (JPanel) filepane.getComponent(0);
-		JScrollPane filepanescroller = (JScrollPane) filepanechild.getComponent(0);
-		filepanescroller.setBorder(Spacing.bNone());
+		scroller = (JScrollPane) filepanechild.getComponent(0);
+		scroller.setBorder(Spacing.bNone());
 		
-		filelist = (JList) filepanescroller.getViewport().getView();
+		filelist = (JList) scroller.getViewport().getView();
 				
 		details = (JPanel) getComponent(3);
 		details.setBorder(Spacing.bMedium());

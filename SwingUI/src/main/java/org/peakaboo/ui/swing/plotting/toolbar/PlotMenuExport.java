@@ -43,7 +43,7 @@ public class PlotMenuExport extends JPopupMenu {
 		snapshotMenuItem = new FluentMenuItem()
 				.withText("Plot as Image\u2026")
 				.withTooltip("Saves the current plot as an image")
-				.withIcon(StockIcon.MIME_RASTER)
+				.withIcon(StockIcon.MIME_SVG, true)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_P)
 				.withAction(plot::actionSavePicture);
@@ -52,14 +52,14 @@ public class PlotMenuExport extends JPopupMenu {
 		exportFilteredSpectrumMenuItem = new FluentMenuItem()
 				.withText("Filtered Spectrum as CSV")
 				.withTooltip("Saves the filtered spectrum to a CSV file")
-				.withIcon(StockIcon.DOCUMENT_EXPORT)
+				.withIcon(StockIcon.DOCUMENT_EXPORT, true)
 				.withAction(plot::actionSaveFilteredSpectrum);
 		this.add(exportFilteredSpectrumMenuItem);
 		
 		exportFilteredDataMenuItem = new FluentMenuItem()
 				.withText("Filtered Data Set as CSV")
 				.withTooltip("Saves the filtered dataset to a CSV file")
-				.withIcon(StockIcon.DOCUMENT_EXPORT)
+				.withIcon(StockIcon.DOCUMENT_EXPORT, true)
 				.withAction(plot::actionSaveFilteredDataSet);
 		this.add(exportFilteredDataMenuItem);
 		

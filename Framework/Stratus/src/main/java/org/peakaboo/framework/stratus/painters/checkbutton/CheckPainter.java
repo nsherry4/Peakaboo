@@ -42,11 +42,6 @@ public class CheckPainter extends SimpleThemed implements Painter<JComponent>{
 		int width = (w-pad*2);
 		
 		if (enabled && Stratus.focusedWindow(object)) {
-			//check shadow/bevel
-			Graphics2D gshadow = (Graphics2D) g.create();
-			gshadow.setPaint(getTheme().getControlText());
-			gshadow.translate(0, -1f);
-			drawCheck(gshadow, width, height);
 			//check
 			g.setPaint(getTheme().getHighlightText());
 			drawCheck(g, width, height);

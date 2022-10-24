@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
@@ -126,8 +127,8 @@ public class MapDimensionsPanel extends JPanel {
 				.withAction(() -> {
 					StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
 					TaskMonitorView view = new TaskMonitorView(guessTask);
-					TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Dimensions", view);
-					ModalLayer layer = new ModalLayer(tabPanel, panel);
+					TaskMonitorLayer layer = new TaskMonitorLayer(tabPanel, "Detecting Dimensions", view);
+
 					guessTask.addListener(event -> {
 						SwingUtilities.invokeLater(() -> {
 							if (event == Event.ABORTED) {
