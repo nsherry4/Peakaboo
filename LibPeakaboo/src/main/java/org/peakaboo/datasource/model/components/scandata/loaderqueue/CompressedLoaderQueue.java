@@ -1,6 +1,7 @@
 package org.peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooConfiguration;
@@ -28,6 +29,7 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	private Thread thread;
 	private ScratchEncoder<Spectrum> encoder;
 	private Analysis analysis;
+	private Consumer<Spectrum> preprocessor = null;
 	
 	public CompressedLoaderQueue(SimpleScanData data, Analysis analysis) {
 		this(data, analysis, 1000);
@@ -71,7 +73,15 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	public void submit(int index, Spectrum s) throws InterruptedException {
 		SpectrumIndex struct = new SpectrumIndex();
 		struct.index = index;
-		this.analysis.process(s); //has to be done manually before compression
+		
+		//has to be done manually before compression rather than as part of the ScanData instance
+		this.analysis.process(s);
+		
+		//This also must be done before compression
+		if (preprocessor != null) {
+			preprocessor.accept(s);
+		}
+		
 		struct.spectrum = Compressed.create(s, this.encoder);
 		queue.put(struct);
 	}
@@ -80,6 +90,11 @@ public class CompressedLoaderQueue implements LoaderQueue {
 	public void finish() throws InterruptedException {
 		queue.put(new SpectrumIndex());
 		thread.join();
+	}
+	
+	@Override
+	public void setPreprocessor(Consumer<Spectrum> preprocessor) {
+		this.preprocessor = preprocessor;
 	}
 
 	

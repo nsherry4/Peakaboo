@@ -1,6 +1,7 @@
 package org.peakaboo.datasource.model.components.scandata.loaderqueue;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import org.peakaboo.common.PeakabooLog;
@@ -17,6 +18,7 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	
 	private LinkedBlockingQueue<SpectrumIndex> queue;
 	private Thread thread;
+	private Consumer<Spectrum> preprocessor = null;
 	
 	public SimpleLoaderQueue(SimpleScanData data) {
 		this(data, 1000);
@@ -29,6 +31,9 @@ public class SimpleLoaderQueue implements LoaderQueue {
 				try {
 					SpectrumIndex struct = queue.take();
 					if (struct.spectrum != null) {
+						if (preprocessor != null) {
+							preprocessor.accept(struct.spectrum);
+						}
 						if (struct.index == -1) {
 							data.add(struct.spectrum);
 						} else {
@@ -70,6 +75,11 @@ public class SimpleLoaderQueue implements LoaderQueue {
 			queue.put(struct);
 			thread.join();
 		}
+	}
+	
+	@Override
+	public void setPreprocessor(Consumer<Spectrum> preprocessor) {
+		this.preprocessor = preprocessor;
 	}
 
 }
