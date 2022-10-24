@@ -37,7 +37,7 @@ import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.stratus.StratusLookAndFeel;
-import org.peakaboo.framework.stratus.theme.LightTheme;
+import org.peakaboo.framework.stratus.theme.BrightTheme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
 import org.peakaboo.framework.swidget.hookins.FileDrop;
@@ -168,7 +168,7 @@ public class Peakaboo {
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		IconFactory.customPath = "/org/peakaboo/ui/swing/icons/";
-		StratusLookAndFeel laf = new StratusLookAndFeel(new LightTheme());
+		StratusLookAndFeel laf = new StratusLookAndFeel(new BrightTheme());
 		
 		
 		//warm up the peak table, which is lazy

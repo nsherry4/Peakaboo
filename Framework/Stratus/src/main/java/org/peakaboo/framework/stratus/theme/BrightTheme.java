@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.peakaboo.framework.stratus.Stratus;
 
-public class TestTheme implements Theme {
+public class BrightTheme implements Theme {
 
 	private Color highlight = new Color(0x498ed8);
 	private Color control = new Color(0xfafafa);

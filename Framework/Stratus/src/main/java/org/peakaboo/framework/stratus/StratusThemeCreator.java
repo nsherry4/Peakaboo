@@ -125,7 +125,7 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
 import org.peakaboo.framework.stratus.theme.LightTheme;
-import org.peakaboo.framework.stratus.theme.TestTheme;
+import org.peakaboo.framework.stratus.theme.BrightTheme;
 
 
 //import com.sun.java.swing.Painter;
@@ -159,7 +159,7 @@ public class StratusThemeCreator
 
 	private static void setStratusLookAndFeel() {
 		try {
-			UIManager.setLookAndFeel(new StratusLookAndFeel(new TestTheme()));
+			UIManager.setLookAndFeel(new StratusLookAndFeel(new BrightTheme()));
 		} catch (UnsupportedLookAndFeelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
