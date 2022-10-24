@@ -17,12 +17,14 @@ public abstract class SelectionListControls extends HeaderBox
 		
 		super();
 		
-		FluentButton add = new FluentButton(StockIcon.CHOOSE_OK)
+		FluentButton add = new FluentButton()
+				.withIcon(StockIcon.CHOOSE_OK, true)
 				.withTooltip("Add Selected " + name)
 				.withBordered(false)
 				.withAction(() -> approve());
 		
-		FluentButton cancel = new FluentButton(StockIcon.CHOOSE_CANCEL)
+		FluentButton cancel = new FluentButton()
+				.withIcon(StockIcon.CHOOSE_CANCEL, true)
 				.withTooltip("Discard Selections")
 				.withBordered(false)
 				.withAction(() -> cancel());

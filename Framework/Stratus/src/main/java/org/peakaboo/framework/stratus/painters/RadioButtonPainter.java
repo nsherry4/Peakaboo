@@ -21,7 +21,7 @@ public class RadioButtonPainter extends AbstractButtonPainter {
 		super(theme, buttonStates);
 		
 		palette = super.makePalette(null);
-		palette.border = Stratus.darken(palette.border, 0.1f);
+		palette.border = theme.getWidgetBorderAlpha();
 		palette.fill = Color.white;
 		
 		this.selected = selected;

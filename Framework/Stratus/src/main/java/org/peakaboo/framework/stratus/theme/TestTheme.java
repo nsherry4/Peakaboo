@@ -1,7 +1,6 @@
 package org.peakaboo.framework.stratus.theme;
 
 import java.awt.Color;
-import java.awt.Paint;
 
 import org.peakaboo.framework.stratus.Stratus;
 
@@ -19,7 +18,7 @@ public class TestTheme implements Theme {
 	private Color widgetBevel = new Color(0xe6e6e6);
 	
 	private Color selectionAlpha = new Color(0x3f498ed8, true);
-	private Color borderAlpha = new Color(0x40000000, true);
+	private Color borderAlpha = new Color(0x30000000, true);
 	private Color shadowAlpha = new Color(0x27000000, true);
 	
 	private Color menuControl = new Color(0xffffff);

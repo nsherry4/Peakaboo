@@ -69,7 +69,7 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
     		g.setPaint(getTheme().getHighlight());
     		borderStroke = 3;
     	} else {
-    		g.setPaint(getTheme().getWidgetBorder());
+    		g.setPaint(getTheme().getWidgetBorderAlpha());
     	}
     	
     	g.setStroke(new BasicStroke(borderStroke));
