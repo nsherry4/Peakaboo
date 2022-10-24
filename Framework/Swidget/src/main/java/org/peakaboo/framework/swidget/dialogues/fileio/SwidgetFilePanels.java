@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
@@ -31,7 +33,18 @@ public class SwidgetFilePanels {
 			JPanel chooserPanel = new JPanel(new BorderLayout());
 			chooserPanel.add(chooser, BorderLayout.CENTER);
 			chooserPanel.setPreferredSize(new Dimension(800, 350));
-			ModalLayer layer = new ModalLayer(tabPanel, chooserPanel, false);
+			
+			ModalLayer layer = new ModalLayer(tabPanel, chooserPanel, false) {
+				protected Component wrapComponent(Component component) {
+					return component;
+				}		
+				protected JScrollPane getScroller(Component component) {
+					return chooser.scroller;
+				}
+				protected Dimension getNonScrolledSize() {
+					return new Dimension(chooser.placesWidget.getWidth(), chooser.headerWidget.getHeight());
+				}
+			};
 			//layer.setBody(chooserPanel);
 			
 			

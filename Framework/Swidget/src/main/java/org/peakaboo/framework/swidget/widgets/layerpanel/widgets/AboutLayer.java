@@ -17,7 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
+import org.peakaboo.framework.swidget.widgets.JTextLabel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
@@ -45,20 +47,26 @@ public class AboutLayer extends HeaderLayer {
 	public AboutLayer(LayerPanel owner, Contents contents) {
 		super(owner, true);
 		
-		
-		
+		Component about = aboutPanel(contents);
+		Component credits = creditsPanel(contents);
+		Component licence = licencePanel(contents);
+			
 		HeaderTabBuilder tb = new HeaderTabBuilder();
-		tb.addTab("About", aboutPanel(contents));
-		tb.addTab("Credits", creditsPanel(contents));
-		tb.addTab("Licence", licencePanel(contents));
+		tb.addTab("About", about);
+		tb.addTab("Credits", credits);
+		tb.addTab("Licence", licence);
 		
+		
+		
+		Component body = tb.getBody();
+		body.setPreferredSize(new Dimension(610, 280));
 		getHeader().setCentre(tb.getTabStrip());
-		setBody(tb.getBody());
-		getBody().setPreferredSize(new Dimension(610, 280));
+		setBody(body);
+		
 		
 	}
 
-	private Component creditsPanel(Contents contents) {
+	private static Component creditsPanel(Contents contents) {
 		
 		Map<String, String> credits = new LinkedHashMap<>();
 		for (String credit : contents.credits.split("\n")) {
@@ -75,17 +83,7 @@ public class AboutLayer extends HeaderLayer {
 	}
 	
 	private static Component licencePanel(Contents contents) {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(Spacing.bHuge());
-		JTextArea text = new JTextArea();
-		text.setEditable(false);
-		text.setBackground(Color.WHITE);
-		text.setText(contents.licence);
-		text.setFont(Font.decode(Font.MONOSPACED));
-		
-		JScrollPane scroller = new JScrollPane(text);
-		panel.add(scroller, BorderLayout.CENTER);
-		return panel;
+		return scrolled(new JTextLabel(contents.licence));
 	}
 
 	public static JPanel aboutPanel(Contents contents) {

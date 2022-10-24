@@ -19,13 +19,16 @@ import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
+import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 public class TaskMonitorPanel extends JPanel {
 
-	private FluentButton cancel; 
+	
+	private HeaderBox header;
+	private JPanel body;
 	
 	public TaskMonitorPanel(String title, TaskMonitor<?>... monitors) {
 		this(title, Arrays.asList(monitors).stream().map(TaskMonitorView::new).collect(Collectors.toList()));
@@ -35,11 +38,26 @@ public class TaskMonitorPanel extends JPanel {
 		this(title, Arrays.asList(observerViews));
 	}
 
-	public TaskMonitorPanel(String t, List<TaskMonitorView> observerViews) {
+	public TaskMonitorPanel(String title, List<TaskMonitorView> observerViews) {
 
 		this.setLayout(new BorderLayout());
 		
-		cancel = new FluentButton("Cancel")
+		header = makeHeader(title, observerViews);
+		this.add(header, BorderLayout.NORTH);
+		
+		body = makeBody(observerViews);
+		this.add(body, BorderLayout.CENTER);
+		
+	}
+	
+	
+	static HeaderBox makeHeader(String title) {
+		return makeHeader(title, Collections.emptyList());
+	}
+	
+	static HeaderBox makeHeader(String title, List<TaskMonitorView> observerViews) {
+		
+		FluentButton cancel = new FluentButton("Cancel")
 				.withStateCritical()
 				.withAction(() -> {
 					List<TaskMonitorView> reversed = new ArrayList<>(observerViews);
@@ -48,14 +66,18 @@ public class TaskMonitorPanel extends JPanel {
 						v.getExecutor().abort();
 					}
 				});
-
 		
-		HeaderBox header = new HeaderBox(null, t, cancel);
-		this.add(header, BorderLayout.NORTH);
+		return new HeaderBox(null, title, cancel);
+	}
+	
+	static JPanel makeBody() {
+		return makeBody(Collections.emptyList());
+	}
+	
+	static JPanel makeBody(List<TaskMonitorView> observerViews) {
 		
-		
-		JPanel center = new JPanel(new BorderLayout());
-		center.setBorder(Spacing.bHuge());
+		JPanel body = new JPanel(new BorderLayout());
+		body.setBorder(Spacing.bHuge());
 		
 		JPanel lineItems = new JPanel();
 		lineItems.setBorder(new EmptyBorder(0, Spacing.huge, Spacing.huge, Spacing.huge));
@@ -64,9 +86,6 @@ public class TaskMonitorPanel extends JPanel {
 		lineItems.setLayout(layout);
 
 
-		
-		
-		
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 1.0;
@@ -77,7 +96,7 @@ public class TaskMonitorPanel extends JPanel {
 			lineItems.add(obsv, c);
 			c.gridy += 1;
 		}
-		center.add(lineItems, BorderLayout.CENTER);
+		body.add(lineItems, BorderLayout.CENTER);
 		
 		
 		
@@ -85,17 +104,8 @@ public class TaskMonitorPanel extends JPanel {
 		progress.setMaximum(100);
 		progress.setMinimum(0);
 		progress.setValue(0);
-		center.add(progress, BorderLayout.SOUTH);
-
+		body.add(progress, BorderLayout.SOUTH);
 		
-		
-		this.add(center, BorderLayout.CENTER);
-		
-		
-
-
-		
-
 		for (TaskMonitorView v : observerViews) {
 			v.getExecutor().addListener(event -> {
 				TaskMonitor<?> exec = v.getExecutor();
@@ -107,12 +117,13 @@ public class TaskMonitorPanel extends JPanel {
 				}
 			});
 		}
-
+		
+		return body;
+		
 	}
 	
 	public static <T> void onLayerPanel(TaskMonitor<T> monitor, LayerPanel parent) {
-		TaskMonitorPanel progressPanel = new TaskMonitorPanel("Downloading", monitor);
-		ModalLayer layer = new ModalLayer(parent, progressPanel);
+		TaskMonitorLayer layer = new TaskMonitorLayer(parent, "Downloading", monitor);
 		parent.pushLayer(layer);
 		
 		//listener which removes the progress panel and the listener if the state changes from RUNNING

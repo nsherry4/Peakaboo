@@ -79,6 +79,7 @@ import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
@@ -627,8 +628,9 @@ public class PlotPanel extends TabbedLayerPanel {
 		if (mapTask == null) return;
 
 		TaskMonitorView taskView = new TaskMonitorView(mapTask);
-		TaskMonitorPanel taskPanel = new TaskMonitorPanel("Generating Maps", taskView);
-		ModalLayer layer = new ModalLayer(this, taskPanel);
+		//TaskMonitorPanel taskPanel = new TaskMonitorPanel("Generating Maps", taskView);
+		//ModalLayer layer = new ModalLayer(this, taskPanel);
+		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Maps", taskView);
 		
 		mapTask.addListener(event -> {
 			
@@ -934,8 +936,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		
 		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).collect(Collectors.toList());
-		TaskMonitorPanel panel = new TaskMonitorPanel("Detecting Energy Level", views);
-		ModalLayer layer = new ModalLayer(this, panel);
+		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Detecting Energy Level", views);
 		
 		energyTask.last().addListener(event -> {
 			//if event is not progress, then its either COMPLETED or ABORTED, so hide the panel

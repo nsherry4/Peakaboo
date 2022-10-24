@@ -127,14 +127,10 @@ public class ModalLayer implements Layer {
 		
 		JPanel wrap = new JPanel(new BorderLayout());
 		wrap.setOpaque(false);
-		JScrollPane modalScroller = new JScrollPane();
-		modalScroller.setViewportView(component);
-		modalScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		modalScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		modalScroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		Component wrapped = wrapComponent(component);
 		
 		
-		wrap.add(modalScroller, BorderLayout.CENTER);
+		wrap.add(wrapped, BorderLayout.CENTER);
 		Border border;
 		if (LayerPanelConfig.blur) {
 			border = new DropShadowBorder(Color.BLACK, 12, 0.3f, 20, true, true, true, true);
@@ -161,37 +157,85 @@ public class ModalLayer implements Layer {
 			
 			modalPanel.add(wrap, c);
 			
-			updateModalContentDimensions(modalScroller);
+			updateScrolledContentDimensions(wrapped);
 			listener = new ComponentAdapter() {
 				public void componentResized(ComponentEvent e) {
-					updateModalContentDimensions(modalScroller);
+					updateScrolledContentDimensions(wrapped);
 				}
 			};
 			owner.addComponentListener(listener);
 			
 			SwingUtilities.invokeLater(() -> {
-				updateModalContentDimensions(modalScroller);
+				updateScrolledContentDimensions(wrapped);
 			});
 		}
 		
 	}
 	
-	private void updateModalContentDimensions(JScrollPane modalScroller) {
-		if (modalScroller == null) { 
-			return; 
+	protected static JScrollPane scrolled(Component component) {
+		JScrollPane scroller = new JScrollPane();
+		scroller.setViewportView(component);
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		return scroller;
+	}
+	
+	/**
+	 * Wraps the component (for the layer body). By default it is wrapped in a JScrollPane
+	 * @param component
+	 * @return
+	 */
+	protected Component wrapComponent(Component component) {
+		return scrolled(component);
+	}
+	
+	/**
+	 * Given the component added to this ModalLayer, looks up the JScrollPane component within. Subclasses that add more chrome can narrow the scrolled area.
+	 */
+	protected JScrollPane getScroller(Component component) {
+		if (component == null) {
+			return null; 
 		}
-		Component modal = modalScroller.getViewport().getView();
+		if (component instanceof JScrollPane) {
+			return (JScrollPane) component;
+		}
+		return null;
+	}
+	
+	/**
+	 * When overriding getScrolledFromComponent and wrapComponent to only scroll 
+	 * part of the contents of the layer, this allows you to specify the size of 
+	 * the space not scrolled. This is used in calculating the preferred size of
+	 * the scrolled component based on the parent/owner's size.
+	 * @return
+	 */
+	
+	protected Dimension getNonScrolledSize() {
+		return new Dimension(0, 0);
+	}
+		
+	private void updateScrolledContentDimensions(Component component) {
+		JScrollPane scroller = getScroller(component);
+		if (scroller == null) {
+			return;
+		}
+		Component modal = scroller.getViewport().getView();
 		if (modal == null) {
 			return;
 		}
+	
+		Dimension nonscrolled = getNonScrolledSize();
 		Dimension ownerSize = owner.getSize();
-		int newWidth = (int)Math.max(50, Math.min(ownerSize.getWidth()-40, modal.getPreferredSize().getWidth()));
-		int newHeight = (int)Math.max(50, Math.min(ownerSize.getHeight()-40, modal.getPreferredSize().getHeight()));
-		
-		modalScroller.getViewport().setPreferredSize(new Dimension(newWidth, newHeight));
-		modalScroller.revalidate();
-		
+
+		int newWidth = (int)Math.max(50, Math.min(ownerSize.getWidth()-40-nonscrolled.width, modal.getPreferredSize().getWidth()));
+		int newHeight = (int)Math.max(50, Math.min(ownerSize.getHeight()-40-nonscrolled.height, modal.getPreferredSize().getHeight()));
+
+		scroller.getViewport().setPreferredSize(new Dimension(newWidth, newHeight));
+		scroller.getViewport().setMinimumSize(new Dimension(newWidth, newHeight));
+		scroller.revalidate();
 	}
+	
 	
 	@Override
 	public boolean modal() {
