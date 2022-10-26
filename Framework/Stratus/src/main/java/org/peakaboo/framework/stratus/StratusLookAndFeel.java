@@ -32,7 +32,6 @@ import org.peakaboo.framework.stratus.components.StratusComboBoxUI;
 import org.peakaboo.framework.stratus.components.StratusSpinnerUI;
 import org.peakaboo.framework.stratus.painters.BorderPainter;
 import org.peakaboo.framework.stratus.painters.ButtonPainter;
-import org.peakaboo.framework.stratus.painters.AbstractButtonPainter;
 import org.peakaboo.framework.stratus.painters.ComboBoxArrowPainter;
 import org.peakaboo.framework.stratus.painters.CompositePainter;
 import org.peakaboo.framework.stratus.painters.EmptyPainter;
@@ -63,8 +62,6 @@ import org.peakaboo.framework.stratus.painters.toolbar.ToolbarBorderPainter;
 import org.peakaboo.framework.stratus.painters.toolbar.ToolbarBorderPainter.Side;
 import org.peakaboo.framework.stratus.theme.LightTheme;
 import org.peakaboo.framework.stratus.theme.Theme;
-
-import sun.swing.ImageIconUIResource;
 
 public class StratusLookAndFeel extends NimbusLookAndFeel {
 
