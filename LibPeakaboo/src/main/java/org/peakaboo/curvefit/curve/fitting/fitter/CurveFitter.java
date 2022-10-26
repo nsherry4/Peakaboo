@@ -22,6 +22,8 @@ public interface CurveFitter {
 
 	FittingResult fit(ReadOnlySpectrum data, ROCurve curve);
 	
-	String name(); 
+	String name();
+	
+	String description();
 		
 }

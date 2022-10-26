@@ -90,4 +90,11 @@ public class OptimizingCurveFitter implements CurveFitter {
 		return name();
 	}
 
+
+
+	@Override
+	public String description() {
+		return "Least Squares weighted against overfitting";
+	}
+
 }
