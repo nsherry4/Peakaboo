@@ -1,7 +1,8 @@
 package org.peakaboo.ui.swing.plotting;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,12 +17,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.JPanel;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.curve.fitting.fitter.LeastSquaresCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.SparseSignalCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
@@ -31,14 +32,14 @@ import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFuncti
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
-import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
-import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel.LabelPosition;
-import org.peakaboo.framework.swidget.widgets.settings.OptionBlock;
-import org.peakaboo.framework.swidget.widgets.settings.OptionBox;
-import org.peakaboo.framework.swidget.widgets.settings.OptionLabel;
+import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
+import org.peakaboo.framework.swidget.widgets.options.OptionBox;
+import org.peakaboo.framework.swidget.widgets.options.OptionLabel;
+import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
@@ -50,9 +51,49 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		makeUI(controller);
 		
-		ClearPanel main = new ClearPanel();
+		ClearPanel main = new ClearPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				return new Dimension(500, 300);
+			}
+
+		};
+		CardLayout cards = new CardLayout();
+		main.setLayout(cards);
+		
+		
+		
+		
+		String KEY_DETECTOR = "Detector";
+		JPanel detectorPanel = makeDetectorPanel(controller);
+		main.add(detectorPanel, KEY_DETECTOR);
+		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, StockIcon.DEVICE_CAMERA);
+		
+		String KEY_CURVEFIT = "Curve Fitting";
+		JPanel curvefitPanel = makeCurvefitPanel(controller);
+		main.add(curvefitPanel, KEY_CURVEFIT);
+		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, StockIcon.DEVICE_COMPUTER);
+		
+		
+		OptionSidebar sidebar = new OptionSidebar(List.of(curvefitEntry, detectorEntry), e -> {
+			cards.show(main, e.getName());
+		});
+		sidebar.select(curvefitEntry);
+		
+		//TODO: have the OptionSidebar work as a cardlayout for the main content
+		ClearPanel removeme = new ClearPanel(new BorderLayout());
+		removeme.add(main, BorderLayout.CENTER);
+		removeme.add(sidebar, BorderLayout.WEST);
+		
+		setBody(removeme);
+		
+	}
+
+	private JPanel makeEmptySettingsPanel(OptionBlock... blocks) {
+		JPanel main = new ClearPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 		main.setBorder(Spacing.bHuge());
+		
 		boolean first = true;
 		for (OptionBlock block : blocks) {
 			if (!first) {
@@ -61,10 +102,86 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			main.add(block);
 			first = false;
 		}
-		setBody(main);
+		
+		main.add(Box.createVerticalGlue());
+		
+		return main;
+	}
+	
+	private JPanel makeDetectorPanel(PlotController controller) {
+		
+		OptionBlock detector = new OptionBlock();
+		
+		JComboBox<?> escapePeakBox = makeCombo(
+				b -> b == controller.fitting().getShowEscapePeaks(),
+				b -> controller.fitting().setShowEscapePeaks(b),
+				b -> b ? "On" : "Off",
+				true,
+				false
+			);
+		JCheckBox escapePeakToggle = new JCheckBox();
+		escapePeakToggle.setSelected(controller.fitting().getShowEscapePeaks());
+		escapePeakToggle.addActionListener(e -> controller.fitting().setShowEscapePeaks(escapePeakToggle.isSelected()));
+		
+		build(detector, escapePeakToggle, "Escape Peaks", "Models energy absorbed by a detector being re-emitted", true);
+		
+		
+		JComboBox<?> detectorMaterialBox = makeCombo(
+				e -> e.type() == controller.fitting().getDetectorMaterial(),
+				e -> controller.fitting().setDetectorMaterial(e.type()),
+				null,
+				DetectorMaterialType.SILICON.get(),
+				DetectorMaterialType.GERMANIUM.get()
+			);
+		build(detector, detectorMaterialBox, "Detector Material", "Changes some properties of the peak model", true);
+		
+
+		return makeEmptySettingsPanel(detector);
+	}
+	
+	private JPanel makeCurvefitPanel(PlotController controller) {
+		
+		OptionBlock fitting = new OptionBlock();
+		
+		JComboBox<?> peakModelBox = makeCombo(
+				f -> f.getClass() == controller.fitting().getFittingFunction(),
+				f -> controller.fitting().setFittingFunction(f.getClass()),
+				null,
+				new PseudoVoigtFittingFunction(),
+				new ConvolvingVoigtFittingFunction(),
+				new GaussianFittingFunction(),
+				new LorentzFittingFunction()
+			);
+		build(fitting, peakModelBox, "Peak Model", "Function used to model individual peaks", true);
+		
+		
+		JComboBox<?> fittersBox = makeCombo(
+				f -> f.getClass() == controller.fitting().getCurveFitter().getClass(),
+				f -> controller.fitting().setCurveFitter(f),
+				null,
+				new UnderCurveFitter(),
+				new OptimizingCurveFitter(),
+				new LeastSquaresCurveFitter(),
+				new SparseSignalCurveFitter()
+				
+			);
+		build(fitting, fittersBox, "Single-Curve Fitting", "Technique used to fit a single curve to signal", true);
+
+				
+		JComboBox<?> solversBox = makeCombo(
+				f -> f.getClass() == controller.fitting().getFittingSolver().getClass(), 
+				f -> controller.fitting().setFittingSolver(f), 
+				null,
+				new GreedyFittingSolver(),
+				new OptimizingFittingSolver(),
+				new MultisamplingOptimizingFittingSolver()
+			);
+		build(fitting, solversBox, "Multi-Curve Solver", "Technique to fit overlapping curves to signal", true);
+		
+		return makeEmptySettingsPanel(fitting);
 		
 	}
-
+	
 
 	private class ValueBox<T> {
 
@@ -116,77 +233,10 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	private void makeUI(PlotController controller) {
 		
 		
-		OptionBlock detector = new OptionBlock();
-		blocks.add(detector);
-		
-		
-		JComboBox<?> escapePeakBox = makeCombo(
-				b -> b == controller.fitting().getShowEscapePeaks(),
-				b -> controller.fitting().setShowEscapePeaks(b),
-				b -> b ? "On" : "Off",
-				true,
-				false
-			);
-		JCheckBox escapePeakToggle = new JCheckBox();
-		escapePeakToggle.setSelected(controller.fitting().getShowEscapePeaks());
-		escapePeakToggle.addActionListener(e -> controller.fitting().setShowEscapePeaks(escapePeakToggle.isSelected()));
-		
-		build(detector, escapePeakToggle, "Escape Peaks", "Models energy absorbed by a detector being re-emitted", true);
-		
-		
-		JComboBox<?> detectorMaterialBox = makeCombo(
-				e -> e.type() == controller.fitting().getDetectorMaterial(),
-				e -> controller.fitting().setDetectorMaterial(e.type()),
-				null,
-				DetectorMaterialType.SILICON.get(),
-				DetectorMaterialType.GERMANIUM.get()
-			);
-		build(detector, detectorMaterialBox, "Detector Material", "Changes some properties of the peak model", true);
-		
 
 		
 		
-		OptionBlock fitting = new OptionBlock();
-		blocks.add(fitting);
-		
-		JComboBox<?> peakModelBox = makeCombo(
-				f -> f.getClass() == controller.fitting().getFittingFunction(),
-				f -> controller.fitting().setFittingFunction(f.getClass()),
-				null,
-				new PseudoVoigtFittingFunction(),
-				new ConvolvingVoigtFittingFunction(),
-				new GaussianFittingFunction(),
-				new LorentzFittingFunction()
-			);
-		build(fitting, peakModelBox, "Peak Model", "Function used to model individual peaks", true);
-		
-		
-		
-		
-		JComboBox<?> fittersBox = makeCombo(
-				f -> f.getClass() == controller.fitting().getCurveFitter().getClass(),
-				f -> controller.fitting().setCurveFitter(f),
-				null,
-				new UnderCurveFitter(),
-				new OptimizingCurveFitter(),
-				new LeastSquaresCurveFitter()
-				
-			);
-		build(fitting, fittersBox, "Single-Curve Fitting", "Technique used to fit a single curve to signal", true);
 
-		
-		
-		
-		
-		JComboBox<?> solversBox = makeCombo(
-				f -> f.getClass() == controller.fitting().getFittingSolver().getClass(), 
-				f -> controller.fitting().setFittingSolver(f), 
-				null,
-				new GreedyFittingSolver(),
-				new OptimizingFittingSolver(),
-				new MultisamplingOptimizingFittingSolver()
-			);
-		build(fitting, solversBox, "Multi-Curve Solver", "Technique to fit overlapping curves to signal", true);
 		
 		
 		

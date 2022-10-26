@@ -25,5 +25,22 @@ public interface CurveFitter {
 	String name();
 	
 	String description();
+	
+	default float maxSignal(ReadOnlySpectrum data, ROCurve curve) {
 		
+		float maxSignal = Float.MIN_VALUE;
+		boolean hasSignal = false;
+		float currentSignal;
+		
+		//look at every point in the ranges covered by transitions, find the max intensity
+		for (Integer i : curve.getIntenseChannels()) {
+			if (i < 0 || i >= data.size()) continue;
+			currentSignal = data.get(i);
+			if (currentSignal > maxSignal) maxSignal = currentSignal;
+			hasSignal = true;
+		}
+		if (! hasSignal) return 0.0f;
+		return maxSignal;
+	}
+	
 }

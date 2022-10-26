@@ -35,35 +35,16 @@ public class UnderCurveFitter implements CurveFitter {
 	 *            the data to scale the fit to match
 	 * @return a scale value
 	 */
-	private float getRatioForCurveUnderData(ReadOnlySpectrum data, ROCurve curve)
-	{
+	private float getRatioForCurveUnderData(ReadOnlySpectrum data, ROCurve curve) {
 			
-		float topIntensity = Float.MIN_VALUE;
-		boolean dataConsidered = false;
-		float currentIntensity;
+		float maxSignal = maxSignal(data, curve);
 		float cutoff;
 		
-		//look at every point in the ranges covered by transitions, find the max intensity
-		for (Integer i : curve.getIntenseChannels())
-		{
-			if (i < 0 || i >= data.size()) continue;
-			currentIntensity = data.get(i);
-			if (currentIntensity > topIntensity) topIntensity = currentIntensity;
-			dataConsidered = true;
-			
-		}
-		if (! dataConsidered) return 0.0f;	
-		
-		
-		
 		// calculate cut-off point where we do not consider any signal weaker than this when trying to fit
-		if (topIntensity > 0.0)
-		{
-			cutoff = (float) Math.log(topIntensity * 2);
-			cutoff = cutoff / topIntensity; // expresessed w.r.t strongest signal
-		}
-		else
-		{
+		if (maxSignal > 0.0) {
+			cutoff = (float) Math.log(maxSignal * 2);
+			cutoff = cutoff / maxSignal; // expresessed w.r.t strongest signal
+		} else {
 			cutoff = 0.0f;
 		}
 
@@ -72,18 +53,15 @@ public class UnderCurveFitter implements CurveFitter {
 		boolean ratiosConsidered = false;
 
 		
-		//look at every point in the ranges covered by transitions 
-		for (Integer i : curve.getIntenseChannels())
-		{
+		//look at every point in the ranges covered by transitions
+		ReadOnlySpectrum curveSignal = curve.get();
+		for (Integer i : curve.getIntenseChannels()) {
 			if (i < 0 || i >= data.size()) continue;
 			
-			
-			if (curve.get().get(i) >= cutoff)
-			{
-				
-				thisFactor = data.get(i) / curve.get().get(i);
-				if (thisFactor < smallestFactor && !Float.isNaN(thisFactor)) 
-				{
+			float curveChannelSignal = curveSignal.get(i);
+			if (curveChannelSignal >= cutoff) {
+				thisFactor = data.get(i) / curveChannelSignal;
+				if (thisFactor < smallestFactor && !Float.isNaN(thisFactor)) {
 					smallestFactor = thisFactor;
 					ratiosConsidered = true;
 				}

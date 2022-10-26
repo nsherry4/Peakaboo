@@ -72,6 +72,12 @@ public class OptionBox extends OptionComponent {
 		return getPreferredSize();
 	}
 
+	@Override
+	public Dimension getMaximumSize() {
+		return new Dimension(super.getMaximumSize().width, getPreferredSize().height);
+	}
+
+	
 	
 
 	
