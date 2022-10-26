@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.settings;
+package org.peakaboo.framework.swidget.widgets.options;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

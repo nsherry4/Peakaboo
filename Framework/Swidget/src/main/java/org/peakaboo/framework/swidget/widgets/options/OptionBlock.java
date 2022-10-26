@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.settings;
+package org.peakaboo.framework.swidget.widgets.options;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+
+/**
+ * A block of related option entries
+ *
+ */
 
 public class OptionBlock extends OptionComponent {
 
@@ -21,7 +26,7 @@ public class OptionBlock extends OptionComponent {
 		Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius);
 		g.setColor(bg);
 		g.fill(outline);
-		g.setColor(border);
+		g.setColor(borderAlpha);
 		g.draw(outline);
 
 	}

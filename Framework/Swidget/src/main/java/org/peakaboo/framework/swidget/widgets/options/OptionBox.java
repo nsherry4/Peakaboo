@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.settings;
+package org.peakaboo.framework.swidget.widgets.options;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,6 +13,10 @@ import javax.swing.border.EmptyBorder;
 import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
+/**
+ * An individual option entry
+ *
+ */
 public class OptionBox extends OptionComponent {
 
 	private OptionBlock block = null;
@@ -39,11 +43,11 @@ public class OptionBox extends OptionComponent {
 			Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			g.setColor(bg);
 			g.fill(outline);
-			g.setColor(border);
+			g.setColor(borderAlpha);
 			g.draw(outline);
 		} else {
 			if (block.children().indexOf(this) != block.children().size()-1) {
-				g.setColor(Stratus.lighten(border, 0.5f));
+				g.setColor(Stratus.lighten(borderAlpha, 0.5f));
 				g.drawLine(1, getHeight()-1, getWidth()-1, getHeight()-1);
 			}
 		}

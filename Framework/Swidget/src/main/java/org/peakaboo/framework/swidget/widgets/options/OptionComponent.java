@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.settings;
+package org.peakaboo.framework.swidget.widgets.options;
 
 import java.awt.Color;
 
@@ -13,6 +13,7 @@ public abstract class OptionComponent extends PaintedComponent {
 	protected Color bg = Color.WHITE;
 	protected Color fg = Color.BLACK;
 	protected Color fgDisabled = Color.GRAY;
+	protected Color borderAlpha = Color.LIGHT_GRAY;
 	protected Color border = Color.LIGHT_GRAY;
 	
 	public OptionComponent() {
@@ -22,7 +23,8 @@ public abstract class OptionComponent extends PaintedComponent {
 			bg = theme.getRecessedControl();
 			fg = theme.getRecessedText();
 			fgDisabled = theme.getControlTextDisabled();
-			border = theme.getWidgetBorderAlpha();
+			borderAlpha = theme.getWidgetBorderAlpha();
+			border = theme.getWidgetBorder();
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package org.peakaboo.framework.swidget.widgets.settings;
+package org.peakaboo.framework.swidget.widgets.options;
 
 import java.awt.Color;
 import java.awt.Dimension;
