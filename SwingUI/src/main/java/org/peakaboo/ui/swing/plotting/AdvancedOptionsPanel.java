@@ -36,9 +36,9 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel.LabelPosition;
-import org.peakaboo.framework.swidget.widgets.settings.OptionBlock;
-import org.peakaboo.framework.swidget.widgets.settings.OptionBox;
-import org.peakaboo.framework.swidget.widgets.settings.OptionLabel;
+import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
+import org.peakaboo.framework.swidget.widgets.options.OptionBox;
+import org.peakaboo.framework.swidget.widgets.options.OptionLabel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
