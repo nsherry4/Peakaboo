@@ -7,12 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import org.apache.batik.dom.GenericDOMImplementation;
+import org.apache.batik.dom.GenericDocument;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
+
+
 
 /**
  * @author Nathaniel Sherry, 2009
@@ -82,9 +83,9 @@ public class AwtSurfaceFactory
 	{
 
 		// Get a DOMImplementation.
-		DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
+		GenericDOMImplementation domImpl = (GenericDOMImplementation) GenericDOMImplementation.getDOMImplementation();
 
-		Document d = domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
+		GenericDocument d = (GenericDocument) domImpl.createDocument("http://www.w3.org/2000/svg", "svg", null);
 
 		// Create an instance of the SVG Generator.
 		SVGGraphics2D svg = new SVGGraphics2D(d);
