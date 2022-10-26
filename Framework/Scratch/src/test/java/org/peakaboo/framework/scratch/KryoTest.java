@@ -1,4 +1,4 @@
-package net.sciencestudio.scratch;
+package org.peakaboo.framework.scratch;
 
 import org.junit.Assert;
 import org.junit.Test;

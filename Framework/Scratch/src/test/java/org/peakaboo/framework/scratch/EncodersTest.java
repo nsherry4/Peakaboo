@@ -1,18 +1,23 @@
-package net.sciencestudio.scratch;
-
-import java.io.IOException;
+package org.peakaboo.framework.scratch;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.peakaboo.framework.scratch.encoders.CompoundEncoder;
+import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.encoders.compressors.Compressors;
 import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
-import org.peakaboo.framework.scratch.single.Scratched;
+import org.peakaboo.framework.scratch.single.Compressed;
 
-public class FileBackedTest {
+public class EncodersTest {
 
 	@Test
-	public void string() throws IOException {
+	public void test() {
+		 testEncoder(Serializers.java());
+		 testEncoder(Serializers.fstUnsafe(String.class).then(Compressors.snappy()));
+		 testEncoder(Serializers.kryo(String.class).then(Compressors.lz4fast()));
+		 testEncoder(Serializers.kryo(String.class).then(Compressors.lz4good()));
+	}
+	
+	private void testEncoder(ScratchEncoder<String> encoder) {
 		String s = "\n" + 
 				"\n" + 
 				"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nec sapien eu nulla egestas egestas ut nec arcu. Fusce sollicitudin nisl orci, eu scelerisque orci facilisis et. Donec efficitur tellus porta erat volutpat suscipit. Suspendisse vel tellus ullamcorper, tempor erat vel, rhoncus nulla. Proin id tellus odio. Donec in nulla id arcu imperdiet tempus. Donec et augue risus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.\n" + 
@@ -25,8 +30,8 @@ public class FileBackedTest {
 				"\n" + 
 				"Donec erat libero, sagittis ut magna eget, mattis pharetra est. Quisque vitae accumsan sapien. Vestibulum sed consequat nulla. Morbi molestie sapien arcu, in varius ligula iaculis a. Vestibulum ex urna, convallis at hendrerit sit amet, porttitor pharetra metus. Nunc eget rutrum mauris, a luctus mi. Ut euismod leo arcu, non laoreet ante ullamcorper sit amet. In hac habitasse platea dictumst. Integer luctus ex elit, sit amet vestibulum mauris dignissim vitae. Nulla facilisi. Suspendisse eu tempor eros.";
 		
-		Scratched<String> fb = Scratched.create(s,new CompoundEncoder<>(Serializers.java(), Compressors.lz4fast()));
-		Assert.assertEquals(s, fb.get());
+		Compressed<String> c = Compressed.create(s, encoder);
+		Assert.assertEquals(s, c.get());
 	}
 	
 }

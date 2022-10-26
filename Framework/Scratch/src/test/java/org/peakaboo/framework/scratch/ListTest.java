@@ -1,4 +1,4 @@
-package net.sciencestudio.scratch;
+package org.peakaboo.framework.scratch;
 
 import java.io.IOException;
 import java.util.List;
