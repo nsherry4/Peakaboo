@@ -100,5 +100,10 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 		return name() + " (Beta)";
 	}
 	
+	@Override
+	public String description() {
+		return "Convolution of Gaussian and Lorentz functions, accurate but slow";
+	}
+	
 	
 }

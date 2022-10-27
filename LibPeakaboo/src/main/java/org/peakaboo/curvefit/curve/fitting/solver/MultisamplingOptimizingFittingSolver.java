@@ -25,6 +25,11 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 	public String toString() {
 		return name();
 	}
+	
+	@Override
+	public String description() {
+		return "Optimizing solver run on several permutations of fittings order";
+	}
 
 	
 	@Override

@@ -127,34 +127,7 @@ public enum StockIcon {
 	
 	public ImageIcon toSymbolicIcon(IconSize size, Color c) {
 		ImageIcon icon = toSymbolicIcon(size);
-		
-		//Get a BufferedImage from this icon
-		Image image = icon.getImage();
-		BufferedImage bi = new BufferedImage(size.size(), size.size(), BufferedImage.TYPE_INT_ARGB);
-		bi.createGraphics().drawImage(image, 0, 0, null);
-		
-		
-		//Go through pixel by pixel and update all the rgb elements to match the given colour, leaving alpha alone
-		int[] argb = new int[4];
-		WritableRaster raster = bi.getRaster();
-		
-		int r = c.getRed();
-		int g = c.getGreen();
-		int b = c.getBlue();
-		
-		for (int y = 0; y < bi.getHeight(); y++) {
-			for (int x = 0; x < bi.getWidth(); x++) {
-				raster.getPixel(x, y, argb);
-				argb[0] = r;
-				argb[1] = g;
-				argb[2] = b;
-				raster.setPixel(x, y, argb);
-			}
-		}
-	
-		
-		return new ImageIcon(bi);
-		
+		return IconFactory.recolour(icon, c);
 	}
 		
 }

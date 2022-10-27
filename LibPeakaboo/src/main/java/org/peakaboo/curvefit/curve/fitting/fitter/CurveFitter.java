@@ -1,5 +1,6 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
+import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.ROCurve;
@@ -18,14 +19,10 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * @author NAS
  *
  */
-public interface CurveFitter {
+public interface CurveFitter extends SelfDescribing {
 
 	FittingResult fit(ReadOnlySpectrum data, ROCurve curve);
-	
-	String name();
-	
-	String description();
-	
+		
 	default float maxSignal(ReadOnlySpectrum data, ROCurve curve) {
 		
 		float maxSignal = Float.MIN_VALUE;

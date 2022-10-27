@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
@@ -14,6 +15,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
@@ -26,8 +28,8 @@ public class OptionSidebar extends OptionComponent {
 	
 	public static class Entry {
 		String name;
-		StockIcon icon;
-		public Entry(String name, StockIcon icon) {
+		ImageIcon icon;
+		public Entry(String name, ImageIcon icon) {
 			this.name = name;
 			this.icon = icon;
 		}
@@ -52,10 +54,11 @@ public class OptionSidebar extends OptionComponent {
 		}
 		
 		@Override
-		protected void onSetValue(Entry value) {
-			label.setText(value.name);
+		protected void onSetValue(Entry entry) {
+			label.setText(entry.name);
 			label.setForeground(this.getForeground());
-			label.setIcon(value.icon.toSymbolicIcon(IconSize.BUTTON, this.getForeground()));
+			//label.setIcon(value.icon.toSymbolicIcon(IconSize.BUTTON, this.getForeground()));
+			label.setIcon(IconFactory.recolour(entry.icon, this.getForeground()));
 		}
 		
 	}

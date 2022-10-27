@@ -26,6 +26,11 @@ public class GreedyFittingSolver implements FittingSolver {
 		return name();
 	}
 	
+	@Override
+	public String description() {
+		return "Sequentially matches fittings to as much signal as they will fit";
+	}
+	
 	/**
 	 * Fit this FittingSet against spectrum data
 	 */
@@ -58,5 +63,7 @@ public class GreedyFittingSolver implements FittingSolver {
 		return results;
 		
 	}
+
+
 	
 }

@@ -68,5 +68,11 @@ public class LorentzFittingFunction implements FittingFunction {
 		return name();
 	}
 	
+	@Override
+	public String description() {
+		//TODO: explain purpose
+		return "Cauchy–Lorentz distribution function";
+	}
+	
 
 }

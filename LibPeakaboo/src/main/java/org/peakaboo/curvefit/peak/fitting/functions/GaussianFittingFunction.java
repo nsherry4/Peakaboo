@@ -63,6 +63,11 @@ public class GaussianFittingFunction implements FittingFunction {
 		return name();
 	}
 	
+	@Override
+	public String description() {
+		//TODO: explain purpose
+		return "Gaussian (normal) distribution function";
+	}
 	
 	
 }

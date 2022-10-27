@@ -76,7 +76,7 @@ public class UnderCurveFitter implements CurveFitter {
 
 	@Override
 	public String description() {
-		return "Fits the curve by weakest channel, never overfitting";
+		return "Fits curves by signal's weakest channel, never overfitting";
 	}
 
 	
