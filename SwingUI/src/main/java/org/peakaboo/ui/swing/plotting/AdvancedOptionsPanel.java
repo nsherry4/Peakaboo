@@ -187,9 +187,10 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			
 						
 			OptionBox box = new OptionBox(block);
-			box.add(new OptionLabel(solver.name(), solver.description()));
-			box.addSpacer();
 			box.add(selector);
+			box.addSpacer();
+			box.add(new OptionLabel(solver.name(), solver.description()));
+			box.addExpander();
 			block.add(box);
 			
 		}
@@ -319,7 +320,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionBox box = new OptionBox(block);
 		OptionLabel lbl = new OptionLabel(title, tooltip);		
 		box.add(lbl);
-		box.addSpacer();
+		box.addExpander();
 		box.add(component);
 		block.add(box);
 		

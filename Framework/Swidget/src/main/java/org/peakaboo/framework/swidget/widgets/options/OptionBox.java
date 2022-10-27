@@ -31,9 +31,13 @@ public class OptionBox extends OptionComponent {
 		this.setBorder(new EmptyBorder(padding, padding, padding, padding));
 	}
 	
-	public void addSpacer() {
+	public void addExpander() {
 		this.add(Box.createHorizontalStrut(Spacing.medium));
 		this.add(Box.createHorizontalGlue());
+	}
+	
+	public void addSpacer() {
+		this.add(Box.createHorizontalStrut(Spacing.large));
 	}
 	
 	@Override
