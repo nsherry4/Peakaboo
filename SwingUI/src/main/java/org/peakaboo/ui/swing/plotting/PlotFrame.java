@@ -38,7 +38,7 @@ public class PlotFrame extends LiveFrame
 
 		addWindowListener(new TabWindowListener(this, tabControl));
 		
-		setPreferredSize(new Dimension(1000, 473));
+		setPreferredSize(new Dimension(1200, 569));
 		setIconImage(IconFactory.getImage(Version.logo));
 		setTitle(Tier.provider().appName());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
