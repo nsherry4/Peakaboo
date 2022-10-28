@@ -274,7 +274,7 @@ public class Ternary extends JPanel {
 		}
 		
 		@Override
-		protected void onSetValue(ITransitionSeries ts) {
+		protected void onSetValue(ITransitionSeries ts, boolean selected) {
 			this.ts = ts;
 			linker.setVisible(controller.ternaryMode().getVisibility(ts));
 			

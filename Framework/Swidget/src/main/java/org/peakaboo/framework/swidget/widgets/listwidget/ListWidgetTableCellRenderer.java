@@ -1,6 +1,7 @@
 package org.peakaboo.framework.swidget.widgets.listwidget;
 
 import java.awt.Component;
+import java.awt.Dimension;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -28,7 +29,7 @@ public class ListWidgetTableCellRenderer<T> implements TableCellRenderer, ListWi
 			widget.setOpaque(false);
 		}
 		
-		widget.setValue((T) value);
+		widget.setValue((T) value, isSelected);
 		
 		if (table.getRowHeight() < widget.getPreferredSize().height) {
 			table.setRowHeight(widget.getPreferredSize().height);

@@ -16,8 +16,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.peakaboo.framework.swidget.icons.IconFactory;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetListCellRenderer;
@@ -54,7 +52,7 @@ public class OptionSidebar extends OptionComponent {
 		}
 		
 		@Override
-		protected void onSetValue(Entry entry) {
+		protected void onSetValue(Entry entry, boolean selected) {
 			label.setText(entry.name);
 			label.setForeground(this.getForeground());
 			//label.setIcon(value.icon.toSymbolicIcon(IconSize.BUTTON, this.getForeground()));
