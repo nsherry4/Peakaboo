@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>1.30</version>
+			<version>1.32</version>
 		</dependency>
 
 		<!-- Note that while Kryo 5.x is out, it requires changes to Scratch which will require more time -->
