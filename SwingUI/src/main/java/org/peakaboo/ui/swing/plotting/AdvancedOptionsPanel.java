@@ -4,22 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.ChangeEvent;
@@ -35,6 +28,7 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
+import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
@@ -53,8 +47,7 @@ import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
-	private List<OptionBlock> blocks = new ArrayList<>();
-	
+
 	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
 		super(parent, true);
 		getHeader().setCentre("Advanced Options");
@@ -127,13 +120,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		OptionBlock detector = new OptionBlock();
 		
-		JComboBox<?> escapePeakBox = makeCombo(
-				b -> b == controller.fitting().getShowEscapePeaks(),
-				b -> controller.fitting().setShowEscapePeaks(b),
-				b -> b ? "On" : "Off",
-				true,
-				false
-			);
+
 		JCheckBox escapePeakToggle = new JCheckBox();
 		escapePeakToggle.setSelected(controller.fitting().getShowEscapePeaks());
 		escapePeakToggle.addActionListener(e -> controller.fitting().setShowEscapePeaks(escapePeakToggle.isSelected()));
@@ -141,16 +128,30 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		build(detector, escapePeakToggle, "Escape Peaks", "Models energy absorbed by a detector being re-emitted", true);
 		
 		
-		JComboBox<?> detectorMaterialBox = makeCombo(
-				e -> e.type() == controller.fitting().getDetectorMaterial(),
-				e -> controller.fitting().setDetectorMaterial(e.type()),
-				null,
-				DetectorMaterialType.SILICON.get(),
+		
+		List<DetectorMaterial> materials = List.of(
+				DetectorMaterialType.SILICON.get(), 
 				DetectorMaterialType.GERMANIUM.get()
 			);
-		build(detector, detectorMaterialBox, "Detector Material", "Changes some properties of the peak model", true);
-				
-		return blockToPanel(detector);
+		
+		FittingController fits = controller.fitting();
+		OptionBlock materialBlock = makeRadioBlock(materials, 
+				() -> fits.getDetectorMaterial().get(), 
+				m -> fits.setDetectorMaterial(m.type())
+			);
+		
+		
+		
+//		JComboBox<?> detectorMaterialBox = makeCombo(
+//				e -> e.type() == controller.fitting().getDetectorMaterial(),
+//				e -> controller.fitting().setDetectorMaterial(e.type()),
+//				null,
+//				DetectorMaterialType.SILICON.get(),
+//				DetectorMaterialType.GERMANIUM.get()
+//			);
+//		build(detector, detectorMaterialBox, "Detector Material", "Changes some properties of the peak model", true);
+//				
+		return blockToPanel(detector, materialBlock);
 	}
 	
 	
@@ -228,24 +229,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				i -> fitter.setFittingFunction(i.getClass())
 			);
 		return blockToPanel(peakBlock);
-		
-		
-//		OptionBlock peakModel = new OptionBlock();
-//		
-//		JComboBox<?> peakModelBox = makeCombo(
-//				f -> f.getClass() == controller.fitting().getFittingFunction(),
-//				f -> controller.fitting().setFittingFunction(f.getClass()),
-//				null,
-//				new PseudoVoigtFittingFunction(),
-//				new ConvolvingVoigtFittingFunction(),
-//				new GaussianFittingFunction(),
-//				new LorentzFittingFunction()
-//			);
-//		build(peakModel, peakModelBox, "Peak Model", "Function used to model individual peaks", true);
-//		
-//				
-//		return blockToPanel(peakModel);
-		
+				
 	}
 	
 	
@@ -266,54 +250,6 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		return blockToPanel(overlap);
 		
 	}
-	
-	
-	
-
-	private class ValueBox<T> {
-
-		public T value;
-		public String name;
-		
-		public ValueBox(T value, Function<T, String> pretty) {
-			this.value = value;
-			if (pretty != null) {
-				this.name = pretty.apply(value);
-			} else {
-				this.name = value == null ? "" : value.toString();
-			}
-		}
-		
-		public String toString() {
-			return name;
-		}
-		
-	}
-	
-	private <T> JComboBox<?> makeCombo(Predicate<T> matchesCurrent, Consumer<T> onSelect, Function<T, String> pretty, T... items) {
-		
-		List<ValueBox<T>> boxes = Arrays.asList(items).stream().map(t -> new ValueBox<>(t, pretty)).collect(Collectors.toList());
-		
-		JComboBox<ValueBox<T>> comboBox = new JComboBox<>();
-		Consumer<ValueBox<T>> addItem = fitter -> {
-			comboBox.addItem(fitter);
-			if (matchesCurrent.test(fitter.value)) {
-				comboBox.setSelectedItem(fitter);
-			}
-		};
-		for (ValueBox<T> item : boxes) {
-			addItem.accept(item);
-		}
-		comboBox.addActionListener(e -> {
-			ValueBox<T> box = (ValueBox<T>) comboBox.getSelectedItem();
-			onSelect.accept(box.value);
-		});
-		
-		((JLabel)comboBox.getRenderer()).setHorizontalAlignment(JLabel.CENTER);
-		
-		return comboBox;
-	}
-	
 
 
 	public void build(OptionBlock block, JComponent component, String title, String tooltip, boolean fill) {

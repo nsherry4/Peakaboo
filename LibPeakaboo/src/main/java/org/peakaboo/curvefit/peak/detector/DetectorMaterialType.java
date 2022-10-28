@@ -1,5 +1,7 @@
 package org.peakaboo.curvefit.peak.detector;
 
+import org.peakaboo.common.SelfDescribing;
+
 /**
  * Describes the kind of properties that would be expected from different kinds of detectors.
  * @author Nathaniel Sherry, 2010-2019
@@ -24,12 +26,10 @@ public enum DetectorMaterialType
 		default: return silicon;
 		}
 	}
-	
-	
-	public static DetectorMaterialType getDefault()
-	{
+		
+	public static DetectorMaterialType getDefault() {
 		return SILICON;
 	}
-	
+
 	
 }

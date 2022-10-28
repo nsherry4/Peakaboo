@@ -2,20 +2,25 @@ package org.peakaboo.curvefit.peak.detector;
 
 import java.util.List;
 
+import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 
-public interface DetectorMaterial {
+public interface DetectorMaterial extends SelfDescribing {
 	
 	boolean hasOffset();
 	List<Transition> offset();
 	float energyGap();
 	float fanoFactor();
-	String pretty();
 	ITransitionSeries transitionSeries();
 	
 	DetectorMaterialType type();
+	
+	@Override
+	default String description() {
+		return "Detector with " + name() + "-based sensors";
+	}
 	
 	static float intensity(Element e)
 	{

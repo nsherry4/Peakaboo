@@ -31,13 +31,13 @@ public class SiliconDetectorMaterial implements DetectorMaterial {
 	}
 
 	@Override
-	public String pretty() {
+	public String name() {
 		return "Silicon";
 	}
 	
 	@Override
 	public String toString() {
-		return pretty();
+		return name();
 	}
 
 	@Override
