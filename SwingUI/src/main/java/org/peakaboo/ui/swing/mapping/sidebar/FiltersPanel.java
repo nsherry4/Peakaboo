@@ -258,7 +258,7 @@ class MapFilterWidget extends ListWidget<MapFilter> {
 	}
 	
 	@Override
-	protected void onSetValue(MapFilter filter) {
+	protected void onSetValue(MapFilter filter, boolean selected) {
 		label.setText(filter.getFilterName());
 	}
 	
@@ -297,7 +297,7 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	}
 	
 	@Override
-	protected void onSetValue(MapFilter filter) {
+	protected void onSetValue(MapFilter filter, boolean selected) {
 		this.filter = filter;
 		button.setVisible(!filter.getParameters().isEmpty());
 	}

@@ -25,6 +25,15 @@ mkdir ./symbolic/48/
 ./harvest.rb elementary/mimes x-office-drawing mime-svg
 ./harvest.rb elementary/mimes text-x-generic mime-text
 ./harvest.rb elementary/mimes image mime-raster
+./harvest.rb elementary/mimes video-x-generic mime-video
+./harvest.rb elementary/mimes audio-x-generic mime-audio
+./harvest.rb elementary/mimes x-office-spreadsheet mime-spreadsheet
+./harvest.rb elementary/mimes x-office-presentation mime-presentation
+./harvest.rb elementary/mimes office-document mime-document
+./harvest.rb elementary-xfce/mimes package-x-generic mime-archive
+./harvest.rb elementary-xfce/mimes text-html mime-html
+./harvest.rb elementary/mimes empty mime-file
+
 
 #actions
 ./harvest.rb elementary/actions view-refresh action-refresh

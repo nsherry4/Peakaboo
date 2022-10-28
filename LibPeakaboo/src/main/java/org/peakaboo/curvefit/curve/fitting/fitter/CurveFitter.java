@@ -1,5 +1,6 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
+import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.ROCurve;
@@ -18,12 +19,25 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * @author NAS
  *
  */
-public interface CurveFitter {
+public interface CurveFitter extends SelfDescribing {
 
 	FittingResult fit(ReadOnlySpectrum data, ROCurve curve);
-	
-	String name();
-	
-	String description();
 		
+	default float maxSignal(ReadOnlySpectrum data, ROCurve curve) {
+		
+		float maxSignal = Float.MIN_VALUE;
+		boolean hasSignal = false;
+		float currentSignal;
+		
+		//look at every point in the ranges covered by transitions, find the max intensity
+		for (Integer i : curve.getIntenseChannels()) {
+			if (i < 0 || i >= data.size()) continue;
+			currentSignal = data.get(i);
+			if (currentSignal > maxSignal) maxSignal = currentSignal;
+			hasSignal = true;
+		}
+		if (! hasSignal) return 0.0f;
+		return maxSignal;
+	}
+	
 }

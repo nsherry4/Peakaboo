@@ -73,7 +73,7 @@ public class PluginsOverview extends HeaderLayer {
 	public PluginsOverview(LayerPanel parent) {
 		super(parent, true);
 		this.parent = parent;
-		getContentRoot().setPreferredSize(new Dimension(800, 350));
+		getContentRoot().setPreferredSize(new Dimension(850, 400));
 				
 		//body
 		JPanel body = new JPanel(new BorderLayout());
@@ -384,7 +384,7 @@ public class PluginsOverview extends HeaderLayer {
 		
 		
 		JScrollPane scroller = new JScrollPane(tree);
-		scroller.setPreferredSize(new Dimension(200, 300));
+		scroller.setPreferredSize(new Dimension(250, 300));
 		scroller.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		return scroller;
 		

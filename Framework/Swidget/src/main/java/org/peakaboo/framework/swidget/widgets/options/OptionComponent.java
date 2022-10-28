@@ -15,6 +15,8 @@ public abstract class OptionComponent extends PaintedComponent {
 	protected Color fgDisabled = Color.GRAY;
 	protected Color borderAlpha = Color.LIGHT_GRAY;
 	protected Color border = Color.LIGHT_GRAY;
+	protected Color selectionBg = Color.LIGHT_GRAY;
+	protected Color selectionFg = Color.BLACK;
 	
 	public OptionComponent() {
 		if (Swidget.isStratusLaF()) {
@@ -25,6 +27,8 @@ public abstract class OptionComponent extends PaintedComponent {
 			fgDisabled = theme.getControlTextDisabled();
 			borderAlpha = theme.getWidgetBorderAlpha();
 			border = theme.getWidgetBorder();
+			selectionBg = theme.getHighlight();
+			selectionFg = theme.getHighlightText();
 		}
 	}
 	

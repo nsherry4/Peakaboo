@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1em"
+   height="1em"
+   preserveAspectRatio="xMidYMid meet"
+   viewBox="0 0 256 256"
+   style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="options-peakmodel.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   inkscape:export-filename="/media/Rowlf/Share/Work/SS/Git/Peakaboo/SwingUI/src/main/resources/org/peakaboo/ui/swing/icons/svg-sources/options-peakmodel.png"
+   inkscape:export-xdpi="6"
+   inkscape:export-ydpi="6"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="2.9101562"
+     inkscape:cx="124.04832"
+     inkscape:cy="128"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="5760"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <path
+     fill="currentColor"
+     d="M212 40a12 12 0 0 1-12 12h-29.3A20 20 0 0 0 151 68.4l-8.6 47.6H184a12 12 0 0 1 0 24h-46l-9.4 51.9A44 44 0 0 1 85.3 228H56a12 12 0 0 1 0-24h29.3a20 20 0 0 0 19.7-16.4l8.6-47.6H72a12 12 0 0 1 0-24h46l9.4-51.9A44 44 0 0 1 170.7 28H200a12 12 0 0 1 12 12Z"
+     id="path2"
+     style="fill:#404040;fill-opacity:1" />
+</svg>

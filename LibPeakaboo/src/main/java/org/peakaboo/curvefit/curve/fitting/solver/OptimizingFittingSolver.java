@@ -38,6 +38,13 @@ public class OptimizingFittingSolver implements FittingSolver {
 	public String toString() {
 		return name();
 	}
+	
+	@Override
+	public String description() {
+		return "Matches fits to signal using a least squares algorithm";
+	}
+	
+	
 
 	@Override
 	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitter fitter) {

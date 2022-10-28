@@ -1,23 +1,35 @@
 package org.peakaboo.framework.swidget.dialogues.fileio;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.RoundRectangle2D;
 import java.io.File;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
+import org.peakaboo.framework.stratus.Stratus;
+import org.peakaboo.framework.stratus.theme.Theme;
 import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.filechooser.breadcrumb.FileBreadCrumb;
@@ -25,6 +37,8 @@ import org.peakaboo.framework.swidget.widgets.filechooser.places.Places;
 import org.peakaboo.framework.swidget.widgets.filechooser.places.PlacesPanel;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
+import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetListCellRenderer;
 
 
 public class SwidgetFileChooser extends JFileChooser {
@@ -33,7 +47,7 @@ public class SwidgetFileChooser extends JFileChooser {
 	private JPanel details;
 	private JPanel filepane;
 	private JButton bmkdir;
-	private JList filelist;
+	private JList<File> filelist;
 
 	//replacement widgets
 	private FluentButton makeDirButton;
@@ -58,6 +72,11 @@ public class SwidgetFileChooser extends JFileChooser {
 		dosetup();
 	}
 	
+	@Override
+	public ImageIcon getIcon(File file) {
+		return StockIcon.fromMimeType(file).toImageIcon(IconSize.TOOLBAR_SMALL);
+	}
+	
 	private void dosetup() {
 		try {
 			
@@ -75,13 +94,31 @@ public class SwidgetFileChooser extends JFileChooser {
 				this.add(placesWidget, BorderLayout.WEST);
 			}
 			
-			this.setPreferredSize(new Dimension(800, 350));
+			this.setPreferredSize(new Dimension(850, 400));
 						
 		} catch (ClassCastException e) {
 			return;
 		}
 	}
 
+
+	private <T> T getFilesWidget(Container container, Class<? extends Component> clazz) {
+		for (Component component : container.getComponents()) {
+			if (clazz.isInstance(component)) {
+				return (T) component;
+			}
+			if (component instanceof Container) {
+				Component fromChild = getFilesWidget((Container) component, clazz);
+				if (fromChild != null) {
+					return (T) fromChild;
+				}
+			}
+
+		}
+		return null;
+	}
+	
+	
 	private void scrapeWidgets() {
 		//component 0 is the button bar with the look-in drop down and the up/home/new-dir buttons
 		JPanel header = (JPanel) getComponent(0);
@@ -98,8 +135,36 @@ public class SwidgetFileChooser extends JFileChooser {
 		scroller = (JScrollPane) filepanechild.getComponent(0);
 		scroller.setBorder(Spacing.bNone());
 		
-		filelist = (JList) scroller.getViewport().getView();
-				
+		
+		
+		
+		
+		filepane.addPropertyChangeListener("viewType", e -> {
+			int type = (int) e.getNewValue();
+			switch (type) {
+				case 0: //list
+					break;
+				case 1: //table
+					JTable table = getFilesWidget(this, JTable.class);
+					
+					//No wasted space on detail view border
+					JScrollPane detailScroller = (JScrollPane) table.getParent().getParent();
+					detailScroller.setBorder(Spacing.bNone());
+					
+					//Row height to match larger icons
+					table.setRowHeight(Math.max(table.getFont().getSize() + 4, 24 + 1));
+					
+					break;
+			}
+		});
+		
+		
+		
+		filelist = getFilesWidget(this, JList.class);
+		filelist.setSelectionBackground(getBackground());
+		ListWidgetListCellRenderer<File> r = new ListWidgetListCellRenderer<>(new ListFileWidget(filelist));
+		filelist.setCellRenderer(r);
+		
 		details = (JPanel) getComponent(3);
 		details.setBorder(Spacing.bMedium());
 
@@ -122,6 +187,8 @@ public class SwidgetFileChooser extends JFileChooser {
 				if (onCancel != null) onCancel.run();
 			}
 		});
+		
+
 		
 	}
 	
@@ -211,4 +278,103 @@ public class SwidgetFileChooser extends JFileChooser {
 		return super.showOpenDialog(parent);
 	}
 
+	
+
+	abstract class BaseFileWidget extends ListWidget<File> {
+		JLabel label;
+		Color selBg;
+		Color selFg;
+		Color bg;
+		Color fg;
+		
+		@Override
+		protected void onSetValue(File file, boolean selected) {
+			SwidgetFileChooser chooser = SwidgetFileChooser.this;
+			
+			label.setText(chooser.getName(file));
+			label.setIcon(chooser.getIcon(file));
+			label.setForeground(this.getForeground());
+							
+			this.setOpaque(selected);
+			this.setBackground(selected ? selBg : bg);
+			this.setForeground(selected ? selFg : fg);
+			label.setForeground(selected ? selFg : fg);
+			
+		}
+		
+	}
+	
+	class ListFileWidget extends BaseFileWidget {
+
+
+		public ListFileWidget(JList<File> list) {
+			label = new JLabel();
+			
+			label.setBorder(Spacing.bTiny());
+			setLayout(new BorderLayout());
+			this.add(label, BorderLayout.CENTER);
+			label.setOpaque(false);
+			
+			if (Swidget.isStratusLaF()) {
+				Theme theme = Stratus.getTheme();
+				selBg = theme.getHighlight();
+				selFg = theme.getHighlightText();
+				bg = theme.getRecessedControl();
+				fg = theme.getRecessedText();
+			} else {
+				selBg = list.getSelectionBackground();
+				selFg = list.getSelectionForeground();
+				bg = list.getBackground();
+				fg = list.getForeground();
+			}
+			
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			if (isOpaque()) {
+				Graphics2D g2 = (Graphics2D) g;
+				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		    	
+				g2.setColor(getBackground());
+				g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 6, 6));
+			}
+		}
+
+
+		
+	}
+	
+	class DetailsFileWidget extends BaseFileWidget {
+
+
+
+		public DetailsFileWidget(JTable owner) {
+			label = new JLabel();
+			
+			label.setBorder(Spacing.bTiny());
+			setLayout(new BorderLayout());
+			this.add(label, BorderLayout.CENTER);
+			label.setOpaque(false);
+			
+			if (Swidget.isStratusLaF()) {
+				Theme theme = Stratus.getTheme();
+				selBg = theme.getHighlight();
+				selFg = theme.getHighlightText();
+				bg = theme.getRecessedControl();
+				fg = theme.getRecessedText();
+			} else {
+				selBg = owner.getSelectionBackground();
+				selFg = owner.getSelectionForeground();
+				bg = owner.getBackground();
+				fg = owner.getForeground();
+			}
+			
+		}
+
+		
+	};
+	
+	
 }

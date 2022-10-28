@@ -28,8 +28,6 @@ import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 
 public class PluginView extends JPanel {
 	
-	private JLabel description;
-	
 	public PluginView(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		super(new GridBagLayout());
 		setBorder(Spacing.bHuge());
@@ -54,7 +52,7 @@ public class PluginView extends JPanel {
 		propertyPanel.setBadge(getIcon(plugin));
 		
 		
-		description = new JLabel();
+		JLabel description = new JLabel();
 		description.setText(Swidget.lineWrapHTML(description, plugin.getDescription(), 420));
 		description.setVerticalAlignment(SwingConstants.TOP);
 		JScrollPane scroller = new JScrollPane(description);

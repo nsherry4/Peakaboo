@@ -1,5 +1,14 @@
 package org.peakaboo.framework.swidget.icons;
 
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+
 import javax.swing.ImageIcon;
 
 public enum StockIcon {
@@ -69,6 +78,14 @@ public enum StockIcon {
 	MIME_RASTER,
 	MIME_SVG,
 	MIME_TEXT,
+	MIME_VIDEO,
+	MIME_AUDIO,
+	MIME_SPREADSHEET,
+	MIME_PRESENTATION,
+	MIME_DOCUMENT,
+	MIME_ARCHIVE,
+	MIME_HTML,
+	MIME_FILE,
 	
 	MISC_ABOUT,
 	MISC_PREFERENCES,
@@ -111,14 +128,61 @@ public enum StockIcon {
 		return toString();
 	}
 	
-	public ImageIcon toImageIcon(IconSize size)
-	{
+	public ImageIcon toImageIcon(IconSize size) {
 		return IconFactory.getImageIcon(toString(), size);
 	}
 	
-	public ImageIcon toSymbolicIcon(IconSize size)
-	{
+	public ImageIcon toSymbolicIcon(IconSize size) {
 		return IconFactory.getSymbolicIcon(toString(), size);
 	}
+	
+	public ImageIcon toSymbolicIcon(IconSize size, Color c) {
+		ImageIcon icon = toSymbolicIcon(size);
+		return IconFactory.recolour(icon, c);
+	}
+	
+	public static StockIcon fromMimeType(File file) {
+
+		if (file.isDirectory()) {
+			return PLACE_FOLDER;
+		}
+		
+		try {
+			String mime = Files.probeContentType(file.toPath());
+			if (mime == null) { mime = "text/plain"; }
+			StockIcon stock;
+			
+			stock = switch (mime) {
+				case "text/plain", "application/json" -> MIME_TEXT;
+				case "image/jpeg", "image/png" -> MIME_RASTER;
+				case "image/svg+xml" -> MIME_SVG;
+				case "application/zip", "application/gzip", "application/x-tar", "application/bz2", "application/x-gtar-compressed", "application/java-archive" -> MIME_ARCHIVE;
+				case "application/pdf" -> MIME_PDF;
+				case "application/xml", "text/html" -> MIME_HTML;
+				case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet", "text/csv" -> MIME_SPREADSHEET;
+				case "application/vnd.openxmlformats-officedocument.presentationml.presentation", "application/vnd.oasis.opendocument.presentation" -> MIME_PRESENTATION;
+				case "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document" -> MIME_DOCUMENT;
+				default -> null;
+			};
+			if (stock != null) return stock;
+			
+			String category = mime.split("/")[0];
+			
+			stock = switch (category) {
+				case "image" -> MIME_RASTER;
+				case "video" -> MIME_VIDEO;
+				case "audio" -> MIME_AUDIO;
+				case "text" -> MIME_TEXT;
+				default -> null;
+			};
+			if (stock != null) return stock;
+						
+			return MIME_FILE;
+		} catch (IOException e) {
+			return MIME_FILE;
+		}
+
+	}
+	
 		
 }

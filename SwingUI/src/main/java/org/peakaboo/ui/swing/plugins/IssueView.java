@@ -5,14 +5,15 @@ import java.awt.GridBagLayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import org.apache.batik.ext.swing.GridBagConstants;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.JTextLabel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
@@ -31,10 +32,10 @@ public class IssueView extends JPanel {
 		TitledPanel titlePanel = new TitledPanel(new PropertyPanel(properties), issue.title(), true);
 		titlePanel.setBadge(StockIcon.BADGE_ERROR.toImageIcon(IconSize.ICON));
 		
-		JTextLabel desc = new JTextLabel(issue.description());
-		JScrollPane scroller = new JScrollPane(desc);
-		scroller.setBorder(Spacing.bLarge());
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JLabel desc = new JLabel();
+		desc.setVerticalAlignment(SwingConstants.TOP);
+		desc.setBorder(Spacing.bHuge());
+		desc.setText(Swidget.lineWrap(desc, issue.description(), 500));
 
 		JPanel actionPanel = new JPanel(new GridBagLayout());
 		FluentButton action = null;
@@ -75,7 +76,7 @@ public class IssueView extends JPanel {
 		c.gridy++;
 		c.weighty=1f;
 		c.fill = GridBagConstraints.BOTH;
-		this.add(scroller, c);
+		this.add(desc, c);
 				
 	}
 	

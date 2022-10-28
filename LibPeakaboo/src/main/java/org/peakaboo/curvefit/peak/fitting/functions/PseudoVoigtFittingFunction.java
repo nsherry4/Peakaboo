@@ -41,5 +41,10 @@ public class PseudoVoigtFittingFunction implements FittingFunction {
 	public String toString() {
 		return name();
 	}
+
+	@Override
+	public String description() {
+		return "Sum of Gaussian and Lorentz functions approximating a Voigt function";
+	}
 	
 }

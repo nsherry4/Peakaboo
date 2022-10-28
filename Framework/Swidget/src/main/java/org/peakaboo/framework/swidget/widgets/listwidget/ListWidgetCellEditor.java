@@ -23,7 +23,7 @@ public class ListWidgetCellEditor<T> extends DefaultCellEditor implements ListWi
 		widget.setBackground(table.getSelectionBackground());
 		widget.setOpaque(true);
 				
-		widget.setValue((T) value);
+		widget.setValue((T) value, isSelected);
 		
 		return widget;
 	}

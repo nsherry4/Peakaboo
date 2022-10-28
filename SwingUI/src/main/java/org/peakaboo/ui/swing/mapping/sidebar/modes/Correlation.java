@@ -272,7 +272,7 @@ public class Correlation extends JPanel {
 		}
 		
 		@Override
-		protected void onSetValue(ITransitionSeries ts) {
+		protected void onSetValue(ITransitionSeries ts, boolean selected) {
 			this.ts = ts;
 			linker.setVisible(controller.correlationMode().getVisibility(ts));
 				

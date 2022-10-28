@@ -1,6 +1,5 @@
 package org.peakaboo.framework.swidget.widgets.options;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -8,8 +7,6 @@ import java.awt.Graphics2D;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-
-import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class OptionLabel extends OptionComponent {
 

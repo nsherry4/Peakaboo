@@ -31,13 +31,13 @@ public class GermaniumDetectorMaterial implements DetectorMaterial {
 	}
 
 	@Override
-	public String pretty() {
+	public String name() {
 		return "Germanium";
 	}
 
 	@Override
 	public String toString() {
-		return pretty();
+		return name();
 	}
 
 	@Override
@@ -49,6 +49,5 @@ public class GermaniumDetectorMaterial implements DetectorMaterial {
 	public ITransitionSeries transitionSeries() {
 		return PeakTable.SYSTEM.get(Element.Ge, TransitionShell.K);
 	}
-
 	
 }

@@ -11,6 +11,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.stratus.controls.ButtonLinker;
 import org.peakaboo.framework.swidget.hookins.WindowDragger;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
@@ -78,6 +79,7 @@ public class PlotToolbar extends JToolBar {
 
 		c.gridx += 1;
 		this.add(new JToolBar.Separator( null ), c);
+
 		
 		
 		
@@ -91,6 +93,12 @@ public class PlotToolbar extends JToolBar {
 				.withIcon("map", IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
 				.withSignificance(true).withAction(plot::actionMap);
+		
+		
+		c.gridx += 1;
+		toolbarMap.setEnabled(false);
+		this.add(toolbarMap, c);
+
 		
 		
 		for (TierUIItem item : tierItems) {
@@ -107,10 +115,6 @@ public class PlotToolbar extends JToolBar {
 		}
 		
 		
-		c.gridx += 1;
-		toolbarMap.setEnabled(false);
-		this.add(toolbarMap, c);
-
 
 		c.gridx += 1;
 		c.weightx = 1.0;

@@ -13,7 +13,7 @@ public class LeastSquaresCurveFitter extends OptimizingCurveFitter {
 	
 	@Override
 	public String description() {
-		return "Minimizes error between curve and signal";
+		return "Curve fitter that minimizes error between curve and signal";
 	}
 	
 }

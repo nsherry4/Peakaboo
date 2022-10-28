@@ -43,5 +43,10 @@ public class MixedFittingFunction implements FittingFunction {
 		return name();
 	}
 	
+	@Override
+	public String description() {
+		return "Weighted average of " + f1.name() + " and " + f2.name() + " functions";
+	}
+	
 	
 }

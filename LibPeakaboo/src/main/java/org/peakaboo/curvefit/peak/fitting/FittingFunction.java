@@ -1,5 +1,7 @@
 package org.peakaboo.curvefit.peak.fitting;
 
+import org.peakaboo.common.SelfDescribing;
+
 /**
  * 
  * Defines a general interface for a function to return values at discreet points
@@ -8,7 +10,7 @@ package org.peakaboo.curvefit.peak.fitting;
  *
  */
 
-public interface FittingFunction {
+public interface FittingFunction extends SelfDescribing {
 
 	
 	/**
@@ -30,6 +32,5 @@ public interface FittingFunction {
 	 */
 	float forEnergyAbsolute(float energy);
 	
-	String name();
 	
 }

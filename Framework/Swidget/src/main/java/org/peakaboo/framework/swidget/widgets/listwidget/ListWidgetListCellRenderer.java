@@ -28,7 +28,7 @@ public class ListWidgetListCellRenderer<T> implements ListCellRenderer<T>, ListW
 			widget.setOpaque(false);
 		}
 		
-		widget.setValue((T) value);
+		widget.setValue((T) value, isSelected);
 			
 		return widget;
 		

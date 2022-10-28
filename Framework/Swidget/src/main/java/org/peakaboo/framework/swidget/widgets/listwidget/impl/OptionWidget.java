@@ -77,7 +77,7 @@ public class OptionWidget<T> extends ListWidget<T>{
 	}
 	
 	@Override
-	protected void onSetValue(T value) {
+	protected void onSetValue(T value, boolean selected) {
 		lblTitle.setText(fnTitle.apply(value));
 		lblBody.setText(fnBody.apply(value));
 		lblIcon.setIcon(fnIcon.apply(value));

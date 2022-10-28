@@ -47,7 +47,7 @@ public class PlacesPanel extends JPanel {
 		this.setBackground(new Color(items.getBackground().getRGB()));
 		this.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		
-		this.setPreferredSize(new Dimension(140, 140));
+		this.setPreferredSize(new Dimension(160, 160));
 		
 		
 		items.getColumnModel().getColumn(0).setCellRenderer(new ListWidgetTableCellRenderer<>(new DirWidget()));
@@ -123,7 +123,7 @@ class DirWidget extends ListWidget<Place> {
 	}
 	
 	@Override
-	protected void onSetValue(Place value) {
+	protected void onSetValue(Place value, boolean selected) {
 		l.setText(value.getName());
 		l.setIcon(value.getIcon());
 	}
