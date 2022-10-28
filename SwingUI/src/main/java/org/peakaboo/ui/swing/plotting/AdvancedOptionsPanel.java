@@ -41,6 +41,7 @@ import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
+import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
 import org.peakaboo.framework.swidget.widgets.options.OptionBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionLabel;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
@@ -97,24 +98,6 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 
-	private JPanel blockToPanel(OptionBlock... blocks) {
-		JPanel main = new ClearPanel();
-		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
-		main.setBorder(Spacing.bHuge());
-		
-		boolean first = true;
-		for (OptionBlock block : blocks) {
-			if (!first) {
-				main.add(Box.createVerticalStrut(Spacing.huge));
-			}
-			main.add(block);
-			first = false;
-		}
-		
-		main.add(Box.createVerticalGlue());
-		
-		return main;
-	}
 	
 	private JPanel makeDetectorPanel(PlotController controller) {
 		
@@ -141,17 +124,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			);
 		
 		
-		
-//		JComboBox<?> detectorMaterialBox = makeCombo(
-//				e -> e.type() == controller.fitting().getDetectorMaterial(),
-//				e -> controller.fitting().setDetectorMaterial(e.type()),
-//				null,
-//				DetectorMaterialType.SILICON.get(),
-//				DetectorMaterialType.GERMANIUM.get()
-//			);
-//		build(detector, detectorMaterialBox, "Detector Material", "Changes some properties of the peak model", true);
-//				
-		return blockToPanel(detector, materialBlock);
+		return new OptionBlocksPanel(detector, materialBlock);
 	}
 	
 	
@@ -167,7 +140,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionBlock fitBlock = makeRadioBlock(fitters, fits::getCurveFitter, fits::setCurveFitter);
 
 		
-		return blockToPanel(fitBlock);
+		return new OptionBlocksPanel(fitBlock);
 		
 	}
 	
@@ -228,7 +201,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				}, 
 				i -> fitter.setFittingFunction(i.getClass())
 			);
-		return blockToPanel(peakBlock);
+		return new OptionBlocksPanel(peakBlock);
 				
 	}
 	
@@ -247,7 +220,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				controller.fitting()::setFittingSolver
 			);
 				
-		return blockToPanel(overlap);
+		return new OptionBlocksPanel(overlap);
 		
 	}
 
