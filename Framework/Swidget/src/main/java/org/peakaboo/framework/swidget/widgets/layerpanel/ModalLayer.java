@@ -133,7 +133,7 @@ public class ModalLayer implements Layer {
 		wrap.add(wrapped, BorderLayout.CENTER);
 		Border border;
 		if (LayerPanelConfig.blur) {
-			border = new DropShadowBorder(Color.BLACK, 12, 0.3f, 20, true, true, true, true);
+			border = new DropShadowBorder(Color.BLACK, 10, 0.3f, 30, true, true, true, true);
 		} else {
 			border = new MatteBorder(1, 1, 1, 1, Color.BLACK);
 		}

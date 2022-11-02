@@ -59,7 +59,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				g2.drawImage(buffer, null, 0, 0);
 			}
 			
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
 			g2.setColor(Color.BLACK);
 			g2.fillRect(0, 0, c.getWidth(), c.getHeight());
 			g2.dispose();
