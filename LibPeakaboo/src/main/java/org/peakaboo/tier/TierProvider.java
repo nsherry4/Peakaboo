@@ -19,7 +19,7 @@ public interface TierProvider {
 	
 	public List<BoltPluginManager<? extends BoltPlugin>> getPluginManagers();
 
-	public List<TierUIItem> uiComponents(String location);
+	public <V, C> List<TierUIItem<V, C>> uiComponents(String location);
 
 	public String appName();
 	public String tierName();

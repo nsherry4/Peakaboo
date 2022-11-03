@@ -27,7 +27,7 @@ public class BasicTierProvider implements TierProvider {
 	}
 
 	@Override
-	public List<TierUIItem> uiComponents(String location) {
+	public <V, C> List<TierUIItem<V, C>> uiComponents(String location) {
 		return List.of();
 	}
 

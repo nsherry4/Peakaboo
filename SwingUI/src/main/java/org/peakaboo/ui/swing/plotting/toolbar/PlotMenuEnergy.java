@@ -30,7 +30,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 	private FluentButton energyGuess;
 	
 	public static final String TIER_LOCATION = "plot.energymenu";
-	private final List<TierUIItem> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	private final List<TierUIItem<PlotPanel, PlotController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
 	
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
@@ -44,7 +44,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		SettingsPanel tierui = new SettingsPanel();
 		tierui.setOpaque(false);
 		tierui.setBorder(Spacing.bMedium());
-		for (TierUIItem item : tierItems) {
+		for (TierUIItem<PlotPanel, PlotController> item : tierItems) {
 			JButton button = new FluentButton(item.text)
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> {

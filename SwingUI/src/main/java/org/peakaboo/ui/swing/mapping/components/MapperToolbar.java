@@ -22,7 +22,7 @@ import org.peakaboo.ui.swing.mapping.MapperPanel;
 public class MapperToolbar extends JToolBar {
 
 	public static final String TIER_LOCATION = "map.toolbar";
-	private final List<TierUIItem> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	private final List<TierUIItem<MapperPanel, MappingController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
 	
 	private FluentToolbarButton	showConcentrations, examineSubset;
 
@@ -48,7 +48,7 @@ public class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		for (TierUIItem item : tierItems) {
+		for (TierUIItem<MapperPanel, MappingController> item : tierItems) {
 			FluentToolbarButton component = new FluentToolbarButton(item.text)
 					.withIcon(item.iconname, IconSize.TOOLBAR_SMALL)
 					.withTooltip(item.tooltip)
@@ -81,7 +81,7 @@ public class MapperToolbar extends JToolBar {
 		controller.addListener(t -> {
 			examineSubset.setEnabled(controller.getSelection().isReplottable());
 			
-			for (TierUIItem item : tierItems) {
+			for (TierUIItem<MapperPanel, MappingController> item : tierItems) {
 				JComponent component = (JComponent) item.component;
 				component.setEnabled(item.enabled.apply(controller));
 			}

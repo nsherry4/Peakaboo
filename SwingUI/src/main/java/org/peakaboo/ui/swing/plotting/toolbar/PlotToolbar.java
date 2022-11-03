@@ -37,7 +37,7 @@ public class PlotToolbar extends JToolBar {
 	private PlotMenuExport exportMenu;
 	
 	public static final String TIER_LOCATION = "plot.toolbar";
-	private final List<TierUIItem> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	private final List<TierUIItem<PlotPanel, PlotController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
 	
 	//===MAIN MENU WIDGETS===
 	
@@ -68,7 +68,7 @@ public class PlotToolbar extends JToolBar {
 
 
 		c.gridx += 1;
-		saveButton = new FluentToolbarButton("Save", StockIcon.DOCUMENT_SAVE_AS)
+		saveButton = new FluentToolbarButton("Save", StockIcon.DOCUMENT_SAVE)
 				.withTooltip("Saves your session (eg: fittings but not dataset) to a file for later use")
 				.withAction(plot::actionSaveSession);
 		this.add(saveButton, c);
@@ -137,7 +137,7 @@ public class PlotToolbar extends JToolBar {
 		
 		toolbarInfo.setEnabled(hasData);
 		
-		for (TierUIItem item : tierItems) {
+		for (TierUIItem<PlotPanel, PlotController> item : tierItems) {
 			JComponent component = (JComponent) item.component;
 			boolean enabled = item.enabled.apply(controller);
 			component.setEnabled(enabled);
