@@ -81,20 +81,35 @@ public class OptimizingCurveFitter implements CurveFitter {
 	}
 	
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Optimizing";
 	}
 	
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 
 
 
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Least squares curve fitting weighted against overfitting";
 	}
 
+	@Override
+	public boolean pluginEnabled() {
+		return true;
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+	
+	@Override
+	public String pluginUUID() {
+		return "9e7caaf0-4684-4c50-bca7-e6a304a6fd6b";		
+	}
+	
 }

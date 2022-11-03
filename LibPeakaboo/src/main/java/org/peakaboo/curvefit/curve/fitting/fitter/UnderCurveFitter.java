@@ -8,13 +8,13 @@ public class UnderCurveFitter implements CurveFitter {
 
 
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Max Under Curve";
 	}
 	
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 	
 
@@ -75,8 +75,23 @@ public class UnderCurveFitter implements CurveFitter {
 	}
 
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Fits curves by signal's weakest channel, never overfitting";
+	}
+
+	@Override
+	public boolean pluginEnabled() {
+		return true;
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public String pluginUUID() {
+		return "8aa6a765-dbe8-4d41-8841-8cbae8af6969";
 	}
 
 	

@@ -1,10 +1,11 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
-import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
+import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
@@ -19,7 +20,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * @author NAS
  *
  */
-public interface CurveFitter extends SelfDescribing {
+public interface CurveFitter extends BoltJavaPlugin {
 
 	FittingResult fit(ReadOnlySpectrum data, ROCurve curve);
 		

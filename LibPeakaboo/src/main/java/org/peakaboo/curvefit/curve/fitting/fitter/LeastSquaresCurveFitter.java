@@ -7,13 +7,28 @@ public class LeastSquaresCurveFitter extends OptimizingCurveFitter {
 	}
 	
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Least-Squares";
 	}
 	
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Curve fitter that minimizes error between curve and signal";
+	}
+	
+	@Override
+	public boolean pluginEnabled() {
+		return true;
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+	
+	@Override
+	public String pluginUUID() {
+		return "b7599343-ce5e-4438-b829-909500f8fbd3";		
 	}
 	
 }

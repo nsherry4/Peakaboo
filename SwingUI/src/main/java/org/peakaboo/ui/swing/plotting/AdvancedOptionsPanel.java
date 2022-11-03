@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,6 +22,7 @@ import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
 import org.peakaboo.curvefit.curve.fitting.fitter.LeastSquaresCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
@@ -35,6 +37,7 @@ import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFuncti
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
@@ -129,18 +132,42 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	
 	private JPanel makeCurvefitPanel(PlotController controller) {
-			
-		List<CurveFitter> fitters = List.of(
-			new UnderCurveFitter(),
-			new OptimizingCurveFitter(),
-			new LeastSquaresCurveFitter()
-		);
+		
+		List<CurveFitter> fitters = CurveFitterPluginManager.system().getPlugins().stream().map(p -> p.create()).collect(Collectors.toList());
 		
 		FittingController fits = controller.fitting();
-		OptionBlock fitBlock = makeRadioBlock(fitters, fits::getCurveFitter, fits::setCurveFitter);
+		OptionBlock fitBlock = makeRadioBlockForPlugins(fitters, fits::getCurveFitter, fits::setCurveFitter);
 
-		
 		return new OptionBlocksPanel(fitBlock);
+		
+	}
+	
+	private <T extends BoltPlugin> OptionBlock makeRadioBlockForPlugins(List<T> instances, Supplier<T> getter, Consumer<T> setter) {
+		
+		OptionBlock block = new OptionBlock();
+		ButtonGroup group = new ButtonGroup();
+		
+		for (T solver : instances) {
+			
+			JRadioButton selector = new JRadioButton();
+			group.add(selector);
+			selector.setSelected(solver.getClass() == getter.get().getClass());
+			selector.addChangeListener((ChangeEvent e) -> {
+				if (!selector.isSelected()) return;
+				setter.accept(solver);
+			});
+			
+						
+			OptionBox box = new OptionBox(block);
+			box.add(selector);
+			box.addSpacer();
+			box.add(new OptionLabel(solver.pluginName(), solver.pluginDescription()));
+			box.addExpander();
+			block.add(box);
+			
+		}
+		
+		return block;
 		
 	}
 	

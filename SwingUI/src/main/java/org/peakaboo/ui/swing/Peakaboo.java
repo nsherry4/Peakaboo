@@ -26,6 +26,7 @@ import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.common.Version.ReleaseType;
 import org.peakaboo.controller.plotter.Settings;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
@@ -222,6 +223,7 @@ public class Peakaboo {
 			MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
 			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
+			CurveFitterPluginManager.init();
 			
 			//Any additional plugin types provided per-tier
 			Tier.provider().initializePlugins();
