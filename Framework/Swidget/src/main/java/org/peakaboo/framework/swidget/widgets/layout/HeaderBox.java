@@ -263,7 +263,7 @@ public class HeaderBox extends JPanel {
 	public static FluentButton closeButton() {
 		FluentButton close = new FluentButton()
 				.withTooltip("Close")
-				.withIcon(StockIcon.WINDOW_CLOSE, true)
+				.withIcon(StockIcon.WINDOW_CLOSE)
 				.withButtonSize(FluentButtonSize.LARGE)
 				.withBordered(false);
 		return close;

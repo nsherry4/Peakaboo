@@ -48,17 +48,17 @@ public class ExecutorView extends JPanel{
 		switch (executor.getState()){
 		
 		case COMPLETED:
-			icon.setIcon(StockIcon.PROCESS_COMPLETED.toSymbolicIcon(IconSize.BUTTON));
+			icon.setIcon(StockIcon.PROCESS_COMPLETED.toImageIcon(IconSize.BUTTON));
 			break;
 		case WORKING:
 		case STALLED:
-			icon.setIcon(StockIcon.GO_NEXT.toSymbolicIcon(IconSize.BUTTON));
+			icon.setIcon(StockIcon.GO_NEXT.toImageIcon(IconSize.BUTTON));
 			break;
 		case UNSTARTED:
 			icon.setIcon(null);
 			break;
 		case SKIPPED:
-			icon.setIcon(StockIcon.GO_DOWN.toSymbolicIcon(IconSize.BUTTON));
+			icon.setIcon(StockIcon.GO_DOWN.toImageIcon(IconSize.BUTTON));
 			break;
 		}
 		

@@ -43,12 +43,7 @@ public class FluentMenuItem extends JMenuItem implements FluentMenuItemAPI<Fluen
 		if (config.imagename == null) {
 			this.setIcon(null);
 		} else {
-			ImageIcon icon;
-			if (config.symbolic) {
-				icon = IconFactory.getSymbolicIcon(config.imagename, IconSize.BUTTON);
-			} else {
-				icon = IconFactory.getImageIcon(config.imagename, IconSize.BUTTON);
-			}
+			ImageIcon icon = IconFactory.getImageIcon(config.imagename, IconSize.BUTTON);
 			this.setIcon(icon);
 		}
 		this.setMnemonic(config.mnemonic == null ? 0 : config.mnemonic);

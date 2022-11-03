@@ -44,10 +44,10 @@ public class TaskMonitorView extends JPanel {
 		
 		exec.addListener(event -> {
 			if (event == Event.COMPLETED) {
-				icon.setIcon(StockIcon.PROCESS_COMPLETED.toSymbolicIcon(IconSize.BUTTON));
+				icon.setIcon(StockIcon.PROCESS_COMPLETED.toImageIcon(IconSize.BUTTON));
 			}
 			if (event == Event.PROGRESS && exec.getCount() > 0) {
-				icon.setIcon(StockIcon.GO_NEXT.toSymbolicIcon(IconSize.BUTTON));
+				icon.setIcon(StockIcon.GO_NEXT.toImageIcon(IconSize.BUTTON));
 			}
 		});
 		

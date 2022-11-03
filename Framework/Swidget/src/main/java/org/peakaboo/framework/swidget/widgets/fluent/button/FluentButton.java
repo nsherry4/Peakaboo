@@ -28,25 +28,15 @@ public class FluentButton extends JButton implements FluentButtonAPI<FluentButto
 	}
 
 	public FluentButton(StockIcon icon) {
-		this(icon, false);
-	}
-	
-	public FluentButton(StockIcon icon, boolean symbolic) {
 		config().imagename = icon.toIconName();
-		config().symbolic = symbolic;
 		
 		init();
 		makeWidget();
 	}
 
 	public FluentButton(StockIcon icon, IconSize size) {
-		this(icon, size, false);
-	}
-
-	public FluentButton(StockIcon icon, IconSize size, boolean symbolic) {
 		config().imagename = icon.toIconName();
 		config().size = size;
-		config().symbolic = symbolic;
 
 		init();
 		makeWidget();

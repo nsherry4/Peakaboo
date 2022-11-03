@@ -25,7 +25,7 @@ public class MapMenuExport extends JPopupMenu {
 		snapshotMenuItem = new FluentMenuItem()
 				.withText("Export as Image\u2026")
 				.withTooltip("Exports the current plot as an image")
-				.withIcon(StockIcon.MIME_SVG, true)
+				.withIcon(StockIcon.MIME_RASTER_SYMBOLIC)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK), plot)
 				.withMnemonic(KeyEvent.VK_P)
 				.withAction(plot::actionSavePicture);

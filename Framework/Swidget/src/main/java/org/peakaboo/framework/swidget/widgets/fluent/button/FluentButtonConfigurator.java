@@ -123,12 +123,7 @@ public class FluentButtonConfigurator {
 			button.setBorderPainted(config.bordered == BORDER_STYLE.ALWAYS);
 		}
 		
-		ImageIcon image;
-		if (config.symbolic) {
-			image = IconFactory.getSymbolicIcon(config.imagename, config.size);
-		} else {
-			image = IconFactory.getImageIcon(config.imagename, config.size);	
-		}
+		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);	
 		
 		
 		

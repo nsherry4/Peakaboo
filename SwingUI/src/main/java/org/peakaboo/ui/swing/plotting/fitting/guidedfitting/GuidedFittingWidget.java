@@ -138,7 +138,7 @@ class GuidedFittingWidget extends TSSelectorGroup {
 
 	private FluentButton createEditButton(final TSSelector selector, final int index) {
 
-		final FluentButton edit = new FluentButton(StockIcon.EDIT_EDIT, IconSize.BUTTON, true)
+		final FluentButton edit = new FluentButton(StockIcon.EDIT_EDIT, IconSize.BUTTON)
 				.withTooltip("Edit this fitting")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);

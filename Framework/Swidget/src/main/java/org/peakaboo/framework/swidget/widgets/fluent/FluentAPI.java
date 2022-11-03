@@ -30,17 +30,8 @@ public interface FluentAPI<
 	default B withIcon(StockIcon stock) {
 		return withIcon(stock, getComponentConfig().size);
 	}
-	
-	default B withIcon(StockIcon stock, boolean symbolic) {
-		return withIcon(stock, getComponentConfig().size, symbolic);
-	}
-	
+			
 	default B withIcon(StockIcon stock, IconSize size) {
-		return withIcon(stock, size, false);
-	}
-	
-	default B withIcon(StockIcon stock, IconSize size, boolean symbolic) {
-		getComponentConfig().symbolic = symbolic;
 		return withIcon(stock.toIconName(), size);
 	}
 	

@@ -25,19 +25,22 @@ public enum StockIcon {
 	BADGE_HELP,
 	BADGE_ERROR,
 	
-	DEVICE_COMPUTER,
 	DEVICE_HARDDISK,
-	DEVICE_MONITOR,
-	DEVICE_CAMERA,
-	DEVICE_PRINTER,
+	DEVICE_HARDDISK_SYMBOLIC,
 	
 	DOCUMENT_EXPORT,
-	DOCUMENT_EXPORT_ARCHIVE,
 	DOCUMENT_IMPORT,
-	DOCUMENT_NEW,
 	DOCUMENT_OPEN,
 	DOCUMENT_SAVE_AS,
 	DOCUMENT_SAVE,
+
+	DOCUMENT_EXPORT_SYMBOLIC,
+	DOCUMENT_EXPORT_ARCHIVE_SYMBOLIC,
+	DOCUMENT_IMPORT_SYMBOLIC,
+	DOCUMENT_NEW_SYMBOLIC,
+	DOCUMENT_OPEN_SYMBOLIC,
+	DOCUMENT_SAVE_AS_SYMBOLIC,
+	DOCUMENT_SAVE_SYMBOLIC,
 	
 	EDIT_CUT,
 	EDIT_COPY,
@@ -76,6 +79,7 @@ public enum StockIcon {
 	
 	MIME_PDF,
 	MIME_RASTER,
+	MIME_RASTER_SYMBOLIC,
 	MIME_SVG,
 	MIME_TEXT,
 	MIME_VIDEO,
@@ -88,18 +92,21 @@ public enum StockIcon {
 	MIME_FILE,
 	
 	MISC_ABOUT,
+	MISC_HELP,
 	MISC_PREFERENCES,
 	MISC_PROPERTIES,
 	MISC_EXECUTABLE,
 	MISC_LOCKED,
 	
 	PLACE_DESKTOP,
-	PLACE_FOLDER_OPEN,
-	PLACE_FOLDER,
-	PLACE_FOLDER_NEW,
 	PLACE_HOME,
-	PLACE_REMOTE,
-	PLACE_TRASH,
+	PLACE_FOLDER,
+	
+	PLACE_DESKTOP_SYMBOLIC,
+	PLACE_HOME_SYMBOLIC,
+	PLACE_FOLDER_SYMBOLIC,
+	PLACE_FOLDER_NEW_SYMBOLIC,
+
 	
 	WINDOW_CLOSE,
 	WINDOW_NEW,
@@ -132,12 +139,8 @@ public enum StockIcon {
 		return IconFactory.getImageIcon(toString(), size);
 	}
 	
-	public ImageIcon toSymbolicIcon(IconSize size) {
-		return IconFactory.getSymbolicIcon(toString(), size);
-	}
-	
-	public ImageIcon toSymbolicIcon(IconSize size, Color c) {
-		ImageIcon icon = toSymbolicIcon(size);
+	public ImageIcon toImageIcon(IconSize size, Color c) {
+		ImageIcon icon = toImageIcon(size);
 		return IconFactory.recolour(icon, c);
 	}
 	

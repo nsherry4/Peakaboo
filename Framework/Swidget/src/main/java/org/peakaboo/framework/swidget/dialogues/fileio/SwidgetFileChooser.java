@@ -253,9 +253,9 @@ public class SwidgetFileChooser extends JFileChooser {
 
 	private JPanel getBreadcrumb() {
 		
-		makeDirButton = new FluentButton(StockIcon.PLACE_FOLDER_NEW);
+		makeDirButton = new FluentButton(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC);
 		makeDirButton.setAction(bmkdir.getAction());
-		makeDirButton.withText("").withIcon(StockIcon.PLACE_FOLDER_NEW);
+		makeDirButton.withText("").withIcon(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC);
 		
 		FileBreadCrumb breadcrumb = new FileBreadCrumb(this, places);
 		JPanel box = new JPanel(new BorderLayout(Spacing.small, Spacing.small));
