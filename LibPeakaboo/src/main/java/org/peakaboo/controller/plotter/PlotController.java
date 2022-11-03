@@ -18,6 +18,8 @@ import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.controller.plotter.io.IOController;
+import org.peakaboo.controller.plotter.notification.NotificationController;
+import org.peakaboo.controller.plotter.notification.NotificationController.Notice;
 import org.peakaboo.controller.plotter.undo.UndoController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
@@ -57,6 +59,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	private ViewController					viewController;
 	private CalibrationController			calibrationController;
 	private IOController					ioController;
+	private NotificationController			notificationController;
 	
 	private File configDir;
 
@@ -77,6 +80,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		calibrationController = Tier.provider().createPlotCalibrationController(this);
 		viewController = new ViewController(this);
 		ioController = new IOController();
+		notificationController = new NotificationController();
 		
 		undoController.addListener(() -> updateListeners(PlotUpdateType.UNDO));
 		dataController.addListener(() -> updateListeners(PlotUpdateType.DATA));
@@ -106,12 +110,14 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 	public void loadSettings(String data, boolean isUndoAction) {
 		SavedSession saved = SavedSession.deserialize(data);
-		loadSessionSettings(saved, isUndoAction);		
+		loadSessionSettings(saved, isUndoAction);
 	}
+	
 	
 	public void loadSessionSettings(SavedSession saved, boolean isUndoAction) {
 		if (!isUndoAction) undoController.setUndoPoint("Load Session");
-		saved.loadInto(this);
+		
+		List<String> errors = saved.loadInto(this);
 		
 		filteringController.filteredDataInvalidated();
 		fittingController.fittingDataInvalidated();
@@ -123,6 +129,10 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		//indicating that the change is not comming from inside the fitting controller
 		fittingController.updateListeners(true);
 
+		for (String error : errors) {
+			this.notifications().updateListeners(new Notice(error, null));
+		}
+		
 	}
 
 	/**
@@ -323,9 +333,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
 		}
 	}
-	
-	
-	
+		
 	public DataController data()
 	{
 		return dataController;
@@ -361,6 +369,10 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 	public CalibrationController calibration() {
 		return calibrationController;
+	}	
+
+	public NotificationController notifications() {
+		return notificationController;
 	}	
 	
 }

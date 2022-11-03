@@ -1,5 +1,8 @@
 package org.peakaboo.controller.plotter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.peakaboo.calibration.SavedCalibrationSession;
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.plotter.data.SavedDataSession;
@@ -54,7 +57,9 @@ public class SavedSession extends DruthersStorable {
 	/**
 	 * applies serialized preferences to the model
 	 */
-	public void loadInto(PlotController plotController) {
+	public List<String> loadInto(PlotController plotController) {
+		
+		List<String> errors = new ArrayList<>();
 		
 		//restore data settings
 		this.data.loadInto(plotController.data());
@@ -63,7 +68,7 @@ public class SavedSession extends DruthersStorable {
 		this.filtering.loadInto(plotController.filtering());
 		
 		//restore fitting settings
-		this.fitting.loadInto(plotController.fitting());
+		errors.addAll(this.fitting.loadInto(plotController.fitting()));
 		
 		//restore calibration information
 		if (this.calibration == null) {
@@ -75,6 +80,8 @@ public class SavedSession extends DruthersStorable {
 		//restore view settings directly, since it's model is serializable
 		plotController.view().getViewModel().copy(this.view);
 
+		return errors;
+		
 	}
 	
 }

@@ -2,6 +2,7 @@ package org.peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,8 +83,10 @@ public class SavedFittingSession {
 		return this;
 	}
 	
-	public void loadInto(FittingController controller) {
-				
+	public List<String> loadInto(FittingController controller) {
+	
+		List<String> errors = new ArrayList<>();
+	
 		//we can't serialize TransitionSeries directly, so we store a list of Ni:K strings instead
 		//we now convert them back to TransitionSeries
 		controller.fittingModel.selections.clear();
@@ -117,6 +120,10 @@ public class SavedFittingSession {
 		try {
 			curveFitterClass = (Class<? extends CurveFitter>) Class.forName(fitter);
 			controller.fittingModel.curveFitter = curveFitterClass.getDeclaredConstructor().newInstance();
+		} catch (ClassNotFoundException e) {
+			String[] parts = fitter.split("\\.");
+			String shortname = parts[parts.length-1];
+			errors.add("Failed to find Curve Fitter " + shortname);
 		} catch (ReflectiveOperationException | RuntimeException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + fitter, e);
 		}
@@ -145,6 +152,8 @@ public class SavedFittingSession {
 		
 		
 		controller.setShowEscapePeaks(showEscapePeaks);
+		
+		return errors;
 		
 	}
 	

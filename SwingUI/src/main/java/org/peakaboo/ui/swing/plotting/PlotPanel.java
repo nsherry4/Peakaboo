@@ -148,11 +148,11 @@ public class PlotPanel extends TabbedLayerPanel {
 		this.tabs = container;
 		
 		controller = new PlotController(DesktopApp.appDir());
-				
-
+		
 		initGUI();
 
 		controller.addListener(msg -> setWidgetsState());
+		controller.notifications().addListener(notice -> notifyUser(notice.message(), notice.action()));
 		setWidgetsState();
 		
 		doVersionCheck();
@@ -168,17 +168,22 @@ public class PlotPanel extends TabbedLayerPanel {
 			Thread versionCheck = new Thread(() -> {
 				
 				if (Version.hasNewVersion()) {
-					SwingUtilities.invokeLater(() -> this.pushLayer(new ToastLayer(
-						this, 
-						"A new version of Peakaboo is available", 
-						() -> DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases")
-					)));
+					notifyUser(
+							"A new version of Peakaboo is available", 
+							() -> DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases")
+						);
 				}
 				
 			}); //thread
 			versionCheck.setDaemon(true);
 			versionCheck.start();
 		}
+	}
+	
+	
+	private void notifyUser(String message, Runnable action) {
+		Runnable onclick = action == null ? () -> {} : action;
+		SwingUtilities.invokeLater(() -> this.pushLayer(new ToastLayer(this, message, onclick)));
 	}
 	
 	private void doFirstRun() {
