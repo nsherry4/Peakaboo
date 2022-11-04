@@ -171,6 +171,12 @@ public class PlotMenuMain extends JPopupMenu {
 		save.setEnabled(hasData && controller.io().getSessionFile() != null && controller.history().hasUnsavedWork());
 		saveAs.setEnabled(hasData);
 		
+		exportImage.setEnabled(hasData);
+		exportFittings.setEnabled(hasData);
+		exportFilteredData.setEnabled(hasData);
+		exportArchive.setEnabled(hasData);
+		exportSinks.setEnabled(hasData);
+	
 	}
 	
 	
