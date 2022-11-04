@@ -299,7 +299,6 @@ public class PlotPanel extends TabbedLayerPanel {
 		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
 		sidebarTabs.setPreferredSize(new Dimension(225, sidebarTabs.getPreferredSize().height));
-		split.add(sidebarTabs, BorderLayout.WEST);
 		split.add(blankCanvas, BorderLayout.CENTER);
 				
 		split.setBorder(Spacing.bNone());
@@ -310,6 +309,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (controller.data().hasDataSet() && Arrays.asList(split.getComponents()).contains(blankCanvas)) {
 				split.remove(blankCanvas);
 				split.add(canvasPanel, BorderLayout.CENTER);
+				split.add(sidebarTabs, BorderLayout.WEST);
 			}
 		});		
 
