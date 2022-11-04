@@ -6,6 +6,7 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -34,7 +35,6 @@ public class LayerDialog {
 	private MessageType messageType;
 	private List<JButton> leftButtons = new ArrayList<>(), rightButtons = new ArrayList<>();
 	private Runnable hider = () -> {};
-	private boolean header = false;
 	private FluentButton defaultButton;
 	
 	public LayerDialog(String title, String body, MessageType messageType) {
@@ -87,7 +87,7 @@ public class LayerDialog {
 	}
 	
 	private void showInLayer(LayerPanel owner) {
-		JPanel panel = buildPanel(header);
+		JPanel panel = buildPanel(true);
 		Layer layer = new ModalLayer(owner, panel);
 		owner.pushLayer(layer);
 		if (defaultButton != null) { defaultButton.grabFocus(); }
@@ -100,23 +100,30 @@ public class LayerDialog {
 
 		JPanel center = new JPanel(new BorderLayout(pad, pad));
 		center.setBorder(new EmptyBorder(pad, pad, pad, pad));
-		JLabel lblTitle = new JLabel("<html><span style='font-size: 175%; font-weight: bold;'>" + title + "</span></html>");
-		lblTitle.setVerticalAlignment(JLabel.TOP);
-		center.add(lblTitle, BorderLayout.NORTH);
 		center.add(this.body, BorderLayout.CENTER);
-		
 		panel.add(center, BorderLayout.CENTER);
 		
 		JLabel icon = new JLabel(getBadge());
-		icon.setVerticalAlignment(JLabel.TOP);
+		
 		icon.setHorizontalAlignment(JLabel.CENTER);
 		icon.setBorder(new EmptyBorder(pad, pad, pad, 0));
 		panel.add(icon, BorderLayout.WEST);
-
-		
+			
 		if (!selfcontained) {
+			
+			JLabel lblTitle = new JLabel("<html><span style='font-size: 175%; font-weight: bold;'>" + title + "</span></html>");
+			lblTitle.setVerticalAlignment(JLabel.TOP);
+			center.add(lblTitle, BorderLayout.NORTH);
+			icon.setVerticalAlignment(JLabel.NORTH);
+			
 			panel.add(buildButtonBox(), BorderLayout.SOUTH);
-		} else {			
+			
+		} else {
+			
+			center.add(Box.createVerticalGlue(), BorderLayout.NORTH);
+			center.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
+			icon.setVerticalAlignment(JLabel.CENTER);
+			
 			panel.add(buildHeaderBox(), BorderLayout.NORTH);
 		}
 		
@@ -128,7 +135,7 @@ public class LayerDialog {
 	private static JComponent buildBodyComponent(String body) {
 		int pad = Spacing.huge * 2;
 		JLabel lblBody = new JLabel("<html>" + body.replace("\n",	"<br/>") + "</html>");
-		lblBody.setVerticalAlignment(JLabel.TOP);
+		lblBody.setVerticalAlignment(JLabel.CENTER);
 		return lblBody;
 	}
 	
