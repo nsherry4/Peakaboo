@@ -2,12 +2,14 @@ package org.peakaboo.ui.swing.plotting.filters;
 
 
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Window;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -37,6 +39,8 @@ class EditButtonEditor extends DefaultCellEditor {
 	private String					label;
 	private boolean					isPushed;
 	
+	private ImageIcon 				imgEdit, imgEditSelected;
+	
 	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
 
@@ -47,7 +51,10 @@ class EditButtonEditor extends DefaultCellEditor {
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL)
+		imgEdit = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL);
+		imgEditSelected = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL, Color.WHITE);
+		
+		button = new FluentButton(StockIcon.EDIT_EDIT, IconSize.TOOLBAR_SMALL)
 				.withTooltip("Edit Filter")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false)
@@ -72,11 +79,15 @@ class EditButtonEditor extends DefaultCellEditor {
 
 		
 		container.remove(button);
-		if (numParameters == 0)
-		{		
+		if (numParameters == 0){		
 			return container;
 		}
 		container.add(button);
+		if (table.getSelectedRow() == row) {
+			button.setIcon(imgEditSelected);
+		} else {
+			button.setIcon(imgEdit);
+		}
 		return container;
 	}
 

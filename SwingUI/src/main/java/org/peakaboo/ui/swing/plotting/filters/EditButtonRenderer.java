@@ -1,8 +1,10 @@
 package org.peakaboo.ui.swing.plotting.filters;
 
 
+import java.awt.Color;
 import java.awt.Component;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -20,14 +22,20 @@ class EditButtonRenderer implements TableCellRenderer {
 	private FluentButton	edit;
 	private JPanel container;
 
+	private ImageIcon imgEdit, imgEditSelected;
 
 	public EditButtonRenderer() {
 
-		edit = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
+		imgEdit = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL);
+		imgEditSelected = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL, Color.WHITE);
+		
+		edit = new FluentButton(StockIcon.EDIT_EDIT, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
 		edit.setOpaque(false);
 				
 		container = new JPanel();
 		container.setBorder(Spacing.bNone());
+		
+		
 
 	}
 
@@ -53,13 +61,14 @@ class EditButtonRenderer implements TableCellRenderer {
 		if (isSelected) {
 			container.setBackground(table.getSelectionBackground());
 			container.setOpaque(true);
+			edit.setIcon(imgEditSelected);
 		} else {
 			container.setBackground(table.getBackground());
 			container.setOpaque(false);
+			edit.setIcon(imgEdit);
 		}
 		
-		if (numParameters == 0)
-		{
+		if (numParameters == 0)	{
 			return container;
 		}
 		container.add(edit);

@@ -81,11 +81,11 @@ public class PluginView extends JPanel {
 		}
 		
 		if (pluginBaseClass == JavaFilterPlugin.class) {
-			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.ICON);
+			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.ICON);
 		}
 		
 		if (pluginBaseClass == JavaMapFilterPlugin.class) {
-			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.ICON);
+			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.ICON);
 		}
 		
 		return IconFactory.getImageIcon(plugin.getManager().getName(), IconSize.ICON);

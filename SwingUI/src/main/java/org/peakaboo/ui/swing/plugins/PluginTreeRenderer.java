@@ -71,11 +71,11 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
 		}
 		
 		if (pluginBaseClass == JavaFilterPlugin.class) {
-			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON);
+			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 
 		if (pluginBaseClass == JavaMapFilterPlugin.class) {
-			return StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON);
+			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 		
 		return IconFactory.getImageIcon(plugin.getManager().getName(), IconSize.BUTTON);
