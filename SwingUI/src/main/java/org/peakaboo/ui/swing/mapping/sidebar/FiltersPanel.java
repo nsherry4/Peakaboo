@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.DropMode;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -266,8 +267,10 @@ class MapFilterWidget extends ListWidget<MapFilter> {
 
 class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	
-	private FluentButton button = new FluentButton(StockIcon.MISC_PREFERENCES, IconSize.TOOLBAR_SMALL);
+	private FluentButton button = new FluentButton(StockIcon.EDIT_EDIT, IconSize.TOOLBAR_SMALL);
 	private MapFilter filter;
+	
+	private ImageIcon imgEdit, imgEditSel;
 	
 	private static Map<MapFilter, MapFilterDialog> dialogs = new HashMap<>();
 	
@@ -275,6 +278,8 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 		
 		setLayout(new BorderLayout());
 		add(button, BorderLayout.CENTER);
+		
+		imgEdit = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL);
 		
 		button.withBordered(false);
 		button.setOpaque(false);
@@ -300,6 +305,14 @@ class MapFilterSettingsButton extends ListWidget<MapFilter> {
 	protected void onSetValue(MapFilter filter, boolean selected) {
 		this.filter = filter;
 		button.setVisible(!filter.getParameters().isEmpty());
+		if (selected) {
+			if (imgEditSel == null) {
+				imgEditSel = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL, getForeground());
+			}
+			button.setIcon(imgEditSel);
+		} else {
+			button.setIcon(imgEdit);
+		}
 	}
 	
 }

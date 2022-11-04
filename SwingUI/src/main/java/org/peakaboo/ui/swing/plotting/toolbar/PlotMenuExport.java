@@ -54,6 +54,7 @@ public class PlotMenuExport extends JPopupMenu {
 		exportImage.setEnabled(hasData);
 		exportFittings.setEnabled(hasData);
 		exportFilteredData.setEnabled(hasData);
+		exportFilteredSpectrum.setEnabled(hasData);
 		exportArchive.setEnabled(hasData);
 		exportSinks.setEnabled(hasData);
 	}

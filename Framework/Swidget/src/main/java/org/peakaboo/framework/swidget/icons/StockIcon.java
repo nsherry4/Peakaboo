@@ -1,13 +1,9 @@
 package org.peakaboo.framework.swidget.icons;
 
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 
@@ -17,8 +13,10 @@ public enum StockIcon {
 	CHOOSE_CANCEL,
 	
 	ACTION_REFRESH,
+	
 	MENU_MAIN,
 	MENU_SETTINGS,
+	MENU_DISPLAY,
 	
 	BADGE_INFO,
 	BADGE_WARNING,
@@ -91,10 +89,10 @@ public enum StockIcon {
 	MIME_HTML,
 	MIME_FILE,
 	
-	MISC_ABOUT,
-	MISC_HELP,
-	MISC_PREFERENCES,
-	MISC_PROPERTIES,
+	APP_ABOUT,
+	APP_HELP,
+	
+	
 	MISC_EXECUTABLE,
 	MISC_LOCKED,
 	MISC_PLUGIN,
@@ -108,9 +106,7 @@ public enum StockIcon {
 	PLACE_FOLDER_SYMBOLIC,
 	PLACE_FOLDER_NEW_SYMBOLIC,
 
-	
 	WINDOW_CLOSE,
-	WINDOW_NEW,
 	WINDOW_TAB_NEW,
 	
 	ZOOM_BEST_FIT,
@@ -186,6 +182,14 @@ public enum StockIcon {
 			return MIME_FILE;
 		}
 
+	}
+	
+	public static void main(String args[]) {
+		for (StockIcon icon : StockIcon.values()) {
+			for (IconSize size : IconSize.values()) {
+				icon.toImageIcon(size);
+			}
+		}
 	}
 	
 		

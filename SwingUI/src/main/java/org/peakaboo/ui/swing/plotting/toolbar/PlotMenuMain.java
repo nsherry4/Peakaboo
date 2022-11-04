@@ -149,14 +149,14 @@ public class PlotMenuMain extends JPopupMenu {
 		
 		JMenuItem help = new FluentMenuItem()
 				.withText("Help")
-				.withIcon(StockIcon.MISC_HELP)
+				.withIcon(StockIcon.APP_HELP)
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), plot)
 				.withAction(plot::actionHelp);
 		this.add(help);
 		
 		JMenuItem about = new FluentMenuItem()
 				.withText("About")
-				.withIcon(StockIcon.MISC_ABOUT)
+				.withIcon(StockIcon.APP_ABOUT)
 				.withAction(plot::actionAbout);
 		this.add(about);
 	}
@@ -174,6 +174,7 @@ public class PlotMenuMain extends JPopupMenu {
 		exportImage.setEnabled(hasData);
 		exportFittings.setEnabled(hasData);
 		exportFilteredData.setEnabled(hasData);
+		exportFilteredSpectrum.setEnabled(hasData);
 		exportArchive.setEnabled(hasData);
 		exportSinks.setEnabled(hasData);
 	
