@@ -20,6 +20,8 @@ public class PlotMenuMain extends JPopupMenu {
 
 	private PlotController controller;
 	private JMenuItem undo, redo, save, saveAs;
+	private JMenu export;
+	private JMenuItem exportSinks, exportImage, exportFilteredSpectrum, exportFilteredData, exportFittings, exportArchive;
 	
 	public PlotMenuMain(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
@@ -51,6 +53,29 @@ public class PlotMenuMain extends JPopupMenu {
 				.withText("Load Session")
 				.withAction(plot::actionLoadSession);
 		this.add(mLoad);
+		
+
+		export = new JMenu("Export");
+		this.add(export);
+		
+		exportSinks = PlotMenuExport.makeExportSinks(plot);
+		export.add(exportSinks);
+
+		exportImage = PlotMenuExport.makeExportImage(plot);
+		export.add(exportImage);
+
+		exportFilteredSpectrum = PlotMenuExport.makeExportFilteredSpectrum(plot);
+		export.add(exportFilteredSpectrum);
+		
+		exportFilteredData = PlotMenuExport.makeExportFilteredDataset(plot);
+		export.add(exportFilteredData);
+		
+		exportFittings = PlotMenuExport.makeExportFittings(plot);
+		export.add(exportFittings);
+
+		exportArchive = PlotMenuExport.makeExportArchive(plot);
+		export.add(exportArchive);
+		
 		
 
 		this.addSeparator();
