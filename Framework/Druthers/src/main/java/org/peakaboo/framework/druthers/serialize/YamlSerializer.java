@@ -31,6 +31,9 @@ public class YamlSerializer {
 		yaml = yaml.replace(": peakaboo.", ": org.peakaboo.");
 		yaml = yaml.replace("!!org.peakaboo.controller.settings.SavedSession", "!!org.peakaboo.controller.plotter.SavedSession");
 		
+		//TODO: Keep for a while after Peakaboo 6
+		yaml = yaml.replace("!!org.peakaboo.calibration.SerializedCalibrationProfile", "!!org.peakaboo.pro.quantification.calibration.SerializedCalibrationProfile");
+		
 		//be forgiving of fields which are unfamiliar, this may 
 		//be a peakaboo session file from the future
 		Representer representer = new Representer();
