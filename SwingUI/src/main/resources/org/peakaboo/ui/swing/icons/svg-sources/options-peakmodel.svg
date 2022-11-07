@@ -28,11 +28,11 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="2.9101562"
-     inkscape:cx="124.04832"
-     inkscape:cy="128"
+     inkscape:cx="115.62953"
+     inkscape:cy="127.82819"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
-     inkscape:window-x="5760"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4" />
@@ -40,5 +40,5 @@
      fill="currentColor"
      d="M212 40a12 12 0 0 1-12 12h-29.3A20 20 0 0 0 151 68.4l-8.6 47.6H184a12 12 0 0 1 0 24h-46l-9.4 51.9A44 44 0 0 1 85.3 228H56a12 12 0 0 1 0-24h29.3a20 20 0 0 0 19.7-16.4l8.6-47.6H72a12 12 0 0 1 0-24h46l9.4-51.9A44 44 0 0 1 170.7 28H200a12 12 0 0 1 12 12Z"
      id="path2"
-     style="fill:#404040;fill-opacity:1" />
+     style="fill:#555555;fill-opacity:1" />
 </svg>

@@ -7,7 +7,7 @@
    style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
    version="1.1"
    id="svg4"
-   sodipodi:docname="options-peakfit.svg"
+   sodipodi:docname="options-curvefit.svg"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    inkscape:export-filename="/media/Rowlf/Share/Work/SS/Git/Peakaboo/SwingUI/src/main/resources/org/peakaboo/ui/swing/icons/svg-sources/options-peakfit.png"
    inkscape:export-xdpi="6"
@@ -28,11 +28,11 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="2.9101562"
-     inkscape:cx="124.04832"
-     inkscape:cy="127.82819"
+     inkscape:cx="115.62953"
+     inkscape:cy="127.48457"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
-     inkscape:window-x="5760"
+     inkscape:window-x="1920"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg4" />
@@ -40,5 +40,5 @@
      fill="currentColor"
      d="M224.3 141a100.7 100.7 0 0 0-31.4-49H240a12 12 0 0 0 0-24h-78.1a35.9 35.9 0 0 0-67.8 0H16a12 12 0 0 0 0 24h47.1a100.7 100.7 0 0 0-31.4 49a35.9 35.9 0 1 0 24.3 2.7a76.7 76.7 0 0 1 41.1-45.2a36 36 0 0 0 61.8 0a76.7 76.7 0 0 1 41.1 45.2a36.1 36.1 0 1 0 24.3-2.7ZM40 188a12 12 0 1 1 12-12a12 12 0 0 1-12 12Zm88-96a12 12 0 1 1 12-12a12 12 0 0 1-12 12Zm88 96a12 12 0 1 1 12-12a12 12 0 0 1-12 12Z"
      id="path2"
-     style="fill:#404040;fill-opacity:1" />
+     style="fill:#555555;fill-opacity:1" />
 </svg>
