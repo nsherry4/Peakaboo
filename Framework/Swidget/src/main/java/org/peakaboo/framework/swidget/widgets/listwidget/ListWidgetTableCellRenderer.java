@@ -1,7 +1,6 @@
 package org.peakaboo.framework.swidget.widgets.listwidget;
 
 import java.awt.Component;
-import java.awt.Dimension;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
@@ -13,6 +12,22 @@ public class ListWidgetTableCellRenderer<T> implements TableCellRenderer, ListWi
 	public ListWidgetTableCellRenderer(ListWidget<T> widget) {
 		this.widget = widget;
 		widget.setParent(this);
+	}
+	
+	/**
+	 * Constructor that pre-adjusts the table's row-height to not be less than the
+	 * widget's preferred height. Otherwise, this will be done at render-time and
+	 * can result it a glitchy first-rendering
+	 */
+	public ListWidgetTableCellRenderer(ListWidget<T> widget, JTable table) {
+		this(widget);
+		checkHeight(table);
+	}
+	
+	private void checkHeight(JTable table) {
+		if (table.getRowHeight() < widget.getPreferredSize().height) {
+			table.setRowHeight(widget.getPreferredSize().height);
+		}
 	}
 	
 	@Override
@@ -31,9 +46,7 @@ public class ListWidgetTableCellRenderer<T> implements TableCellRenderer, ListWi
 		
 		widget.setValue((T) value, isSelected);
 		
-		if (table.getRowHeight() < widget.getPreferredSize().height) {
-			table.setRowHeight(widget.getPreferredSize().height);
-		}
+		checkHeight(table);
 		
 		return widget;
 		

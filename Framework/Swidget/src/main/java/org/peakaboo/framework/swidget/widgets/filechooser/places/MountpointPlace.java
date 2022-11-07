@@ -11,14 +11,16 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 class MountpointPlace implements Place {
 	
 	private File mountpoint;
+	private Icon icon;
 	
 	public MountpointPlace(File mountpoint) {
 		this.mountpoint = mountpoint;
+		icon = StockIcon.DEVICE_HARDDISK.toImageIcon(IconSize.BUTTON);
 	}
 
 	@Override
 	public Icon getIcon() {
-		return StockIcon.DEVICE_HARDDISK.toImageIcon(IconSize.BUTTON);
+		return icon;
 	}
 
 	@Override

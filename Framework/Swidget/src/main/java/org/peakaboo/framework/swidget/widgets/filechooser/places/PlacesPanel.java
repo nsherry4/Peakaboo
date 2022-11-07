@@ -50,7 +50,7 @@ public class PlacesPanel extends JPanel {
 		this.setPreferredSize(new Dimension(160, 160));
 		
 		
-		items.getColumnModel().getColumn(0).setCellRenderer(new ListWidgetTableCellRenderer<>(new DirWidget()));
+		items.getColumnModel().getColumn(0).setCellRenderer(new ListWidgetTableCellRenderer<>(new DirWidget(), items));
 		items.setShowGrid(false);
 		items.setTableHeader(null);
 		items.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
