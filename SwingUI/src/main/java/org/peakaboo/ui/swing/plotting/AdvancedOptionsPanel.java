@@ -46,7 +46,9 @@ import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
 import org.peakaboo.framework.swidget.widgets.options.OptionBox;
+import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionLabel;
+import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
@@ -107,13 +109,16 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionBlock detector = new OptionBlock();
 		
 
-		JCheckBox escapePeakToggle = new JCheckBox();
-		escapePeakToggle.setSelected(controller.fitting().getShowEscapePeaks());
-		escapePeakToggle.addActionListener(e -> controller.fitting().setShowEscapePeaks(escapePeakToggle.isSelected()));
+		OptionCheckBox escapeToggle = new OptionCheckBox(
+				detector, 
+				"Escape Peaks", 
+				"Models energy absorbed by a detector being re-emitted", 
+				controller.fitting().getShowEscapePeaks(), 
+				controller.fitting()::setShowEscapePeaks);
 		
-		build(detector, escapePeakToggle, "Escape Peaks", "Models energy absorbed by a detector being re-emitted", true);
+		detector.add(escapeToggle);
 		
-		
+
 		
 		List<DetectorMaterial> materials = List.of(
 				DetectorMaterialType.SILICON.get(), 
@@ -149,21 +154,17 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		for (T solver : instances) {
 			
-			JRadioButton selector = new JRadioButton();
-			group.add(selector);
-			selector.setSelected(solver.getClass() == getter.get().getClass());
-			selector.addChangeListener((ChangeEvent e) -> {
-				if (!selector.isSelected()) return;
-				setter.accept(solver);
-			});
+			OptionRadioButton radio = new OptionRadioButton(
+					block, 
+					group, 
+					solver.pluginName(), 
+					solver.pluginDescription(), 
+					solver.getClass() == getter.get().getClass(), 
+					() -> setter.accept(solver)
+				);
 			
-						
-			OptionBox box = new OptionBox(block);
-			box.add(selector);
-			box.addSpacer();
-			box.add(new OptionLabel(solver.pluginName(), solver.pluginDescription()));
-			box.addExpander();
-			block.add(box);
+			
+			block.add(radio);
 			
 		}
 		
@@ -178,21 +179,16 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		for (T solver : instances) {
 			
-			JRadioButton selector = new JRadioButton();
-			group.add(selector);
-			selector.setSelected(solver.getClass() == getter.get().getClass());
-			selector.addChangeListener((ChangeEvent e) -> {
-				if (!selector.isSelected()) return;
-				setter.accept(solver);
-			});
+			OptionRadioButton radio = new OptionRadioButton(
+					block, 
+					group, 
+					solver.name(), 
+					solver.description(), 
+					solver.getClass() == getter.get().getClass(), 
+					() -> setter.accept(solver));
 			
-						
-			OptionBox box = new OptionBox(block);
-			box.add(selector);
-			box.addSpacer();
-			box.add(new OptionLabel(solver.name(), solver.description()));
-			box.addExpander();
-			block.add(box);
+			
+			block.add(radio);
 			
 		}
 		
@@ -252,14 +248,5 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 
-	public void build(OptionBlock block, JComponent component, String title, String tooltip, boolean fill) {
-		OptionBox box = new OptionBox(block);
-		OptionLabel lbl = new OptionLabel(title, tooltip);		
-		box.add(lbl);
-		box.addExpander();
-		box.add(component);
-		block.add(box);
-		
-	}
 	
 }

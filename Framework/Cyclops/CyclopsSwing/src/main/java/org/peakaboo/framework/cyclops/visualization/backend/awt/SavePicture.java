@@ -14,27 +14,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
-import javax.swing.Icon;
+import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.border.MatteBorder;
-import javax.swing.table.TableColumn;
 
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
@@ -43,18 +36,16 @@ import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.live.LiveDialog;
-import org.peakaboo.framework.swidget.models.ListTableModel;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
-import org.peakaboo.framework.swidget.widgets.listwidget.ListWidgetTableCellRenderer;
-import org.peakaboo.framework.swidget.widgets.listwidget.impl.OptionWidget;
+import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
+import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
+import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 
 
 public class SavePicture extends JPanel
@@ -74,54 +65,43 @@ public class SavePicture extends JPanel
 	
 	public static class FormatPicker extends JPanel {
 
-		private JTable table;
+		private SurfaceType type = SurfaceType.RASTER;
 		
 		public FormatPicker() {
 		
-			List<SurfaceType> items = new ArrayList<>(Arrays.asList(SurfaceType.values()));
-			table = new JTable(new ListTableModel<>(items));
-			TableColumn c = table.getColumnModel().getColumn(0);
-			c.setCellRenderer(new ListWidgetTableCellRenderer<>( new OptionWidget<SurfaceType>(
-					FormatPicker::getName, 
-					FormatPicker::getDescription, 
-					FormatPicker::getIcon
-				)));
-			table.setBorder(new MatteBorder(1, 1, 1, 1, Swidget.dividerColor()));
-			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			table.getSelectionModel().setSelectionInterval(0, 0);
+			OptionBlock formats = new OptionBlock();
+			ButtonGroup group = new ButtonGroup();
 			
+			OptionRadioButton raster = new OptionRadioButton(
+					formats, 
+					group, 
+					"Pixel Image (PNG)", 
+					"A grid of coloured dots with a fixed size and level of detail",
+					type == SurfaceType.RASTER,
+					() -> type = SurfaceType.RASTER
+				);
+			formats.add(raster);
+			
+			OptionRadioButton vector = new OptionRadioButton(
+					formats, 
+					group,
+					"Scalable Vector Graphic (SVG)", 
+					"Defined by points, lines, and curves, they are scalable to any size",
+					type == SurfaceType.VECTOR,
+					() -> type = SurfaceType.VECTOR
+				);
+			formats.add(vector);
+			
+			OptionBlocksPanel panel = new OptionBlocksPanel(formats);
 			this.setLayout(new BorderLayout());
-			this.add(table, BorderLayout.CENTER);
+			this.add(panel, BorderLayout.CENTER);
 			
 		}
 
 		public SurfaceType getSelectedSurfaceType() {
-			return SurfaceType.values()[table.getSelectedRow()];
+			return type;
 		}
 
-		private static Icon getIcon(SurfaceType format) {
-			switch (format) {
-			case RASTER: return StockIcon.MIME_RASTER.toImageIcon(IconSize.ICON);
-			case VECTOR: return StockIcon.MIME_SVG.toImageIcon(IconSize.ICON);
-			default: return null;
-			}
-		}
-		
-		private static String getName(SurfaceType format) {
-			switch (format) {
-			case RASTER: return "Pixel Image (PNG)";
-			case VECTOR: return "Vector Image (SVG)";
-			default: return null;
-			}
-		}
-		
-		private static String getDescription(SurfaceType format) {
-			switch (format) {
-			case RASTER: return "Pixel based images are a grid of coloured dots. They have a fixed size and level of detail.";
-			case VECTOR: return "Vector images use points, lines, and curves to define an image. They can be scaled to any size.";
-			default: return null;
-			}
-		}
 		
 	}
 
@@ -210,8 +190,6 @@ public class SavePicture extends JPanel
 		this.owner = owner;
 		this.controller = controller;
 		this.startingFolder = startingFolder;
-		
-		setPreferredSize(new Dimension(500, 350));
 		
 		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 		this.getInputMap(JComponent.WHEN_FOCUSED).put(key, key.toString());

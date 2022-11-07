@@ -21,7 +21,7 @@ public class ExportPanel extends JPanel {
 	private DimensionPicker dimensionPicker;
 
 	public ExportPanel(LayerPanel parent, GraphicsPanel canvas, Runnable onAccept) {
-		this.setPreferredSize(new Dimension(500, 350));
+		//this.setPreferredSize(new Dimension(500, 350));
 		this.setLayout(new BorderLayout());
 		ModalLayer layer = new ModalLayer(parent, this);
 		
