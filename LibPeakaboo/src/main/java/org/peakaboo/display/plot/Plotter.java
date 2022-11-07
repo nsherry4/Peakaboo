@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooConfiguration;
-import org.peakaboo.common.PeakabooConfiguration.MemorySize;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -36,10 +34,10 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.Spectr
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PrimaryPlotPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class Plotter {
@@ -141,7 +139,7 @@ public class Plotter {
 
 
 		// draw the filtered data
-		plotPainters.add(new PrimaryPlotPainter(data.filtered, settings.monochrome));
+		plotPainters.add(getPlotPainter(data.filtered, settings.monochrome));
 
 		
 		// draw the original data
@@ -341,6 +339,12 @@ public class Plotter {
 		context.setSource(new PaletteColour(0xffffffff));
 		context.fill();
 	}
+	
+	private AreaPainter getPlotPainter(ReadOnlySpectrum filtered, boolean monochrome) {
+		PaletteColour fill = new PaletteColour(monochrome ? 0xff606060 : 0xff26a269);
+		PaletteColour stroke = new PaletteColour(monochrome ? 0xff202020 : 0xff1e7e52);
+		return new AreaPainter(filtered, fill, stroke);
+	}
 
 	private PlotPalette getSelectedPalette(boolean monochrome) {
 		PlotPalette palette = new PlotPalette();
@@ -357,11 +361,11 @@ public class Plotter {
 		}
 		else
 		{
-			palette.fitFill = new PaletteColour(0x800288D1);
-			palette.fitStroke = new PaletteColour(0xff01579B);
-			palette.sumStroke = new PaletteColour(0xff01579B);
+			palette.fitFill = new PaletteColour(0x801c71d8);
+			palette.fitStroke = new PaletteColour(0xff1a5fb4);
+			palette.sumStroke = new PaletteColour(0xff1a5fb4);
 			palette.labelText = new PaletteColour(0xffffffff);
-			palette.labelBackground = new PaletteColour(0xA001579B);
+			palette.labelBackground = new PaletteColour(0xA01c71d8);
 			palette.labelStroke = palette.fitStroke;
 			palette.markings = palette.fitStroke;
 		}
@@ -382,9 +386,9 @@ public class Plotter {
 		}
 		else
 		{
-			palette.fitFill = new PaletteColour(0xA0D32F2F);
-			palette.fitStroke = new PaletteColour(0xA0B71C1C);
-			palette.sumStroke = new PaletteColour(0xD0B71C1C);
+			palette.fitFill = new PaletteColour(0xA09141ac);
+			palette.fitStroke = new PaletteColour(0xA0613583);
+			palette.sumStroke = new PaletteColour(0xD0613583);
 			palette.labelText = new PaletteColour(0xffffffff);
 			palette.labelBackground = palette.fitStroke;
 			palette.labelStroke = palette.labelBackground;

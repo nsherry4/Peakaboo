@@ -10,13 +10,12 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 public class AreaPainter extends SpectrumPainter
 {
 
-	private PaletteColour topColour, bottomColour, strokeColour;
+	private PaletteColour fillColour, strokeColour;
 
-	public AreaPainter(ReadOnlySpectrum data, PaletteColour top, PaletteColour bottom, PaletteColour stroke)
+	public AreaPainter(ReadOnlySpectrum data, PaletteColour fill, PaletteColour stroke)
 	{
 		super(data);
-		topColour = top;
-		bottomColour = bottom;
+		fillColour = fill;
 		strokeColour = stroke;
 	}
 
@@ -24,8 +23,7 @@ public class AreaPainter extends SpectrumPainter
 	public AreaPainter(ReadOnlySpectrum data)
 	{
 		super(data);
-		topColour = new PaletteColour(0xff7f7f7f);
-		bottomColour = new PaletteColour(0xff606060);
+		fillColour = new PaletteColour(0xff7f7f7f);
 		strokeColour = new PaletteColour(0xff202020);
 	}
 
@@ -34,7 +32,7 @@ public class AreaPainter extends SpectrumPainter
 	{
 
 		traceData(p, traceType);
-		p.context.setSourceGradient(0, 0, topColour, 0, p.plotSize.y, bottomColour);
+		p.context.setSource(this.fillColour);
 		p.context.fillPreserve();
 
 		// stroke darker
