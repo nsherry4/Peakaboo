@@ -72,24 +72,16 @@ public class SavePicture extends JPanel
 			OptionBlock formats = new OptionBlock();
 			ButtonGroup group = new ButtonGroup();
 			
-			OptionRadioButton raster = new OptionRadioButton(
-					formats, 
-					group, 
-					"Pixel Image (PNG)", 
-					"A grid of coloured dots with a fixed size and level of detail",
-					type == SurfaceType.RASTER,
-					() -> type = SurfaceType.RASTER
-				);
+			OptionRadioButton raster = new OptionRadioButton(formats, group)
+					.withText("Pixel Image (PNG)", "A grid of coloured dots with a fixed size and level of detail")
+					.withSelection(type == SurfaceType.RASTER)
+					.withListener(() -> type = SurfaceType.RASTER);
 			formats.add(raster);
 			
-			OptionRadioButton vector = new OptionRadioButton(
-					formats, 
-					group,
-					"Scalable Vector Graphic (SVG)", 
-					"Defined by points, lines, and curves, they are scalable to any size",
-					type == SurfaceType.VECTOR,
-					() -> type = SurfaceType.VECTOR
-				);
+			OptionRadioButton vector = new OptionRadioButton(formats, group)
+					.withText("Scalable Vector Graphic (SVG)", "Defined by points, lines, and curves, they are scalable to any size")
+					.withSelection(type == SurfaceType.VECTOR)
+					.withListener(() -> type = SurfaceType.VECTOR);
 			formats.add(vector);
 			
 			OptionBlocksPanel panel = new OptionBlocksPanel(formats);

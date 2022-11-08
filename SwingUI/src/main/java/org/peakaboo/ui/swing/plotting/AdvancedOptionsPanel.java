@@ -9,23 +9,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.event.ChangeEvent;
 
 import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
-import org.peakaboo.curvefit.curve.fitting.fitter.LeastSquaresCurveFitter;
-import org.peakaboo.curvefit.curve.fitting.fitter.OptimizingCurveFitter;
-import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
@@ -41,13 +32,11 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
-import org.peakaboo.framework.swidget.widgets.options.OptionBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
-import org.peakaboo.framework.swidget.widgets.options.OptionLabel;
+import org.peakaboo.framework.swidget.widgets.options.OptionLabel.TextSize;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 
@@ -108,13 +97,13 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		OptionBlock detector = new OptionBlock();
 		
-
-		OptionCheckBox escapeToggle = new OptionCheckBox(
-				detector, 
-				"Escape Peaks", 
-				"Models energy absorbed by a detector being re-emitted", 
-				controller.fitting().getShowEscapePeaks(), 
-				controller.fitting()::setShowEscapePeaks);
+		OptionCheckBox escapeToggle = new OptionCheckBox(detector)
+				.withText("Escape Peaks", "Models energy absorbed by a detector being re-emitted")
+				.withTextSize(TextSize.LARGE)
+				.withSelection(controller.fitting().getShowEscapePeaks())
+				.withListener(controller.fitting()::setShowEscapePeaks);
+				
+		escapeToggle.setTextSize(TextSize.LARGE);
 		
 		detector.add(escapeToggle);
 		
@@ -154,15 +143,11 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		for (T solver : instances) {
 			
-			OptionRadioButton radio = new OptionRadioButton(
-					block, 
-					group, 
-					solver.pluginName(), 
-					solver.pluginDescription(), 
-					solver.getClass() == getter.get().getClass(), 
-					() -> setter.accept(solver)
-				);
-			
+			OptionRadioButton radio = new OptionRadioButton(block, group)
+					.withText(solver.pluginName(), solver.pluginDescription())
+					.withSelection(solver.getClass() == getter.get().getClass())
+					.withListener(() -> setter.accept(solver))
+					.withTextSize(TextSize.LARGE);
 			
 			block.add(radio);
 			
@@ -179,14 +164,11 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		for (T solver : instances) {
 			
-			OptionRadioButton radio = new OptionRadioButton(
-					block, 
-					group, 
-					solver.name(), 
-					solver.description(), 
-					solver.getClass() == getter.get().getClass(), 
-					() -> setter.accept(solver));
-			
+			OptionRadioButton radio = new OptionRadioButton(block, group)
+					.withText(solver.name(), solver.description())
+					.withSelection(solver.getClass() == getter.get().getClass())
+					.withListener(() -> setter.accept(solver))
+					.withTextSize(TextSize.LARGE);
 			
 			block.add(radio);
 			

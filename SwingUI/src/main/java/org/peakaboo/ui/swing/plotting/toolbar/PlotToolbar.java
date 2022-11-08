@@ -29,6 +29,7 @@ public class PlotToolbar extends JToolBar {
 	private FluentToolbarButton saveButton;
 	private FluentToolbarButton toolbarMap;
 	private FluentToolbarButton toolbarInfo;
+	private FluentToolbarButton energyMenuButton, viewMenuButton;
 
 	
 	private PlotMenuEnergy energyMenu;
@@ -123,10 +124,12 @@ public class PlotToolbar extends JToolBar {
 
 
 		c.gridx++;
-		this.add(createEnergyMenuButton(), c);
+		energyMenuButton = createEnergyMenuButton();
+		this.add(energyMenuButton, c);
 				
 		c.gridx++;
-		this.add(createViewMenuButton(), c);
+		viewMenuButton = createViewMenuButton();
+		this.add(viewMenuButton, c);
 		
 		c.gridx++;
 		this.add(createMainMenuButton(), c);
@@ -155,6 +158,11 @@ public class PlotToolbar extends JToolBar {
 		viewMenu.setWidgetState(hasData);
 		mainMenu.setWidgetState(hasData);
 		exportMenu.setWidgetState(hasData);
+		
+		energyMenuButton.setEnabled(hasData);
+		viewMenuButton.setEnabled(hasData);
+		
+		
 		
 		
 	}

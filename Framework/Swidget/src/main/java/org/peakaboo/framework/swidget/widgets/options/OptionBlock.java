@@ -16,18 +16,28 @@ import javax.swing.BoxLayout;
 
 public class OptionBlock extends OptionComponent {
 
+	private boolean bordered = true;
+	private boolean dividers = true;
+	
 	public OptionBlock() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 	
 	@Override
-	public void paintBackground(Graphics2D g) {
+	public void paintBackground(Graphics2D go) {
+		
+		Graphics2D g = (Graphics2D) go.create();
 		
 		Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius);
 		g.setColor(bg);
 		g.fill(outline);
-		g.setColor(borderAlpha);
-		g.draw(outline);
+		if (bordered) {
+			g.setColor(borderAlpha);
+			g.draw(outline);
+		}
+		
+		g.dispose();
+		
 
 	}
 	
@@ -40,5 +50,26 @@ public class OptionBlock extends OptionComponent {
 		}
 		return children;
 	}
+	
+	public OptionBlock withBorder(boolean bordered) {
+		this.bordered = bordered;
+		repaint();
+		return this;
+	}
+	
+	public boolean isBordered() {
+		return this.bordered;
+	}
 
+	public OptionBlock withDividers(boolean dividers) {
+		this.dividers = dividers;
+		repaint();
+		return this;
+	}
+	
+	public boolean hasDividers() {
+		// TODO Auto-generated method stub
+		return dividers;
+	}
+	
 }

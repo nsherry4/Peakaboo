@@ -6,127 +6,139 @@ import java.awt.event.KeyEvent;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentCheckMenuItem;
-import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentRadioMenuItem;
+import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
+import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
+import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
+import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {
 
-	private JCheckBoxMenuItem logPlot, consistentScale, monochrome, raw, title, fittings;
-	private JCheckBoxMenuItem markings, intensities;
-	private JRadioButtonMenuItem individual, average, maximum;
+	private OptionRadioButton oInd, oAvg, oMax;
+	private OptionCheckBox oLog, oConsist, oFit, oMarks, oIntens, oMono, oRaw, oTitle;
 	
 	private PlotController controller;
 	
 	public PlotMenuView(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
-
-		ButtonGroup viewGroup = new ButtonGroup();
-
-		individual = new FluentRadioMenuItem()
-				.withText(ChannelCompositeMode.NONE.show())
+		
+		
+		OptionBlock compositeBlock = new OptionBlock().withDividers(false);
+		ButtonGroup compositeGroup = new ButtonGroup();
+		
+		oInd = new OptionRadioButton(compositeBlock, compositeGroup)
+				.withTitle(ChannelCompositeMode.NONE.show())
+				.withTooltip("Shows one spectrum at a time")
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), plot)
-				.withMnemonic(KeyEvent.VK_I)
-				.withAction(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.NONE));
-		individual.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE);
-		viewGroup.add(individual);
-		this.add(individual);
+				.withSelection(controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE)
+				.withListener(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.NONE));
+		compositeBlock.add(oInd);
+		compositeGroup.add(oInd.getButton());
 		
-
-		average = new FluentRadioMenuItem()
-				.withText(ChannelCompositeMode.AVERAGE.show())
+		oAvg = new OptionRadioButton(compositeBlock, compositeGroup)
+				.withTitle(ChannelCompositeMode.AVERAGE.show())
+				.withTooltip("Shows an average of all spectra")
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), plot)
-				.withMnemonic(KeyEvent.VK_M)
-				.withAction(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE));
-		average.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE);
-		viewGroup.add(average);
-		this.add(average);
+				.withSelection(controller.view().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE)
+				.withListener(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE));
+		compositeBlock.add(oAvg);
+		compositeGroup.add(oAvg.getButton());
 		
-
-		maximum = new FluentRadioMenuItem()
-				.withText(ChannelCompositeMode.MAXIMUM.show())
+		oMax = new OptionRadioButton(compositeBlock, compositeGroup)
+				.withTitle(ChannelCompositeMode.MAXIMUM.show())
+				.withTooltip("Shows the maximum counts per channel across all spectra")
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), plot)
-				.withMnemonic(KeyEvent.VK_T)
-				.withAction(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM));
-		maximum.setSelected(controller.view().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM);
-		viewGroup.add(maximum);
-		this.add(maximum);
-		
-		
-		
-		
-		
-		
-		
-		
-		this.addSeparator();
-		
-		
+				.withSelection(controller.view().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM)
+				.withListener(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM));
+		compositeBlock.add(oMax);
+		compositeGroup.add(oMax.getButton());
 		
 
-
-
-
 		
-		logPlot = new FluentCheckMenuItem()
-				.withText("Logarithmic Scale")
-				.withTooltip("Toggles the plot between a linear and logarithmic scale")
+		
+		OptionBlock scaleBlock = new OptionBlock().withDividers(false).withBorder(false);
+		
+		oLog = new OptionCheckBox(scaleBlock)
+				.withTitle("Logarithmic Scale")
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), plot)
-				.withMnemonic(KeyEvent.VK_L)
-				.withAction(controller.view()::setViewLog);
-
-		consistentScale = new FluentCheckMenuItem()
-				.withText("Consistent Scale")
-				.withTooltip("All spectra in a dataset will be displayed with a consisntent scale")
-				.withAction(controller.view()::setConsistentScale);
-				
-		fittings = new FluentCheckMenuItem()
-				.withText("Individual Fittings")
-				.withTooltip("Switches between showing all fittings as a single curve and showing all fittings individually")
-				.withMnemonic(KeyEvent.VK_F)
-				.withAction(controller.view()::setShowIndividualSelections);
-
-		markings = new FluentCheckMenuItem()
-				.withText("Transition Lines")
-				.withTooltip("Label fittings with lines denoting their transition energies")
-				.withAction(controller.view()::setShowElementMarkers);
-
-		intensities = new FluentCheckMenuItem()
-				.withText("Fitting Intensities")
-				.withTooltip("Label fittings with their intensities")
-				.withAction(controller.view()::setShowElementIntensities);
-	
-		raw = new FluentCheckMenuItem()
-				.withText("Raw Data Outline")
-				.withTooltip("Toggles an outline of the original raw data")
-				.withMnemonic(KeyEvent.VK_R)
-				.withAction(controller.view()::setShowRawData);
-
-		title = new FluentCheckMenuItem()
-				.withText("Show Dataset Title")
-				.withTooltip("Toggles showing the dataset title in the plot")
-				.withAction(controller.view()::setShowTitle);
+				.withSelection(controller.view().getViewLog())
+				.withTooltip("Toggles the plot between a linear and logarithmic scale")
+				.withListener(controller.view()::setViewLog);
+		scaleBlock.add(oLog);
 		
-		monochrome = new FluentCheckMenuItem()
-				.withText("Monochrome")
+		
+		oConsist = new OptionCheckBox(scaleBlock)
+				.withTitle("Consistent Scale")
+				.withTooltip("All spectra in a dataset will be displayed with a consisntent scale")
+				.withSelection(controller.view().getConsistentScale())
+				.withListener(controller.view()::setConsistentScale);
+		scaleBlock.add(oConsist);
+		
+		
+		
+		OptionBlock viewBlock = new OptionBlock().withDividers(false).withBorder(false);
+		
+		
+
+		
+		
+				
+		oFit = new OptionCheckBox(viewBlock)
+				.withTitle("Individual Fittings")
+				.withTooltip("Switches between showing all fittings as a single curve and showing all fittings individually")
+				.withSelection(controller.view().getShowIndividualSelections())
+				.withListener(controller.view()::setShowIndividualSelections);
+		viewBlock.add(oFit);
+		
+
+		oMarks = new OptionCheckBox(viewBlock)
+				.withTitle("Transition Lines")
+				.withTooltip("Label fittings with lines denoting their transition energies")
+				.withSelection(controller.view().getShowElementMarkers())
+				.withListener(controller.view()::setShowElementMarkers);
+		viewBlock.add(oMarks);
+
+		
+		oIntens = new OptionCheckBox(viewBlock)
+				.withTitle("Fitting Intensities")
+				.withTooltip("Label fittings with their intensities")
+				.withSelection(controller.view().getShowElementIntensities())
+				.withListener(controller.view()::setShowElementIntensities);
+		viewBlock.add(oIntens);
+	
+		
+		oRaw = new OptionCheckBox(viewBlock)
+				.withTitle("Raw Data Outline")
+				.withTooltip("Toggles an outline of the original raw data")
+				.withSelection(controller.view().getShowRawData())
+				.withListener(controller.view()::setShowRawData);
+		viewBlock.add(oRaw);
+
+		
+		oTitle = new OptionCheckBox(viewBlock)
+				.withTitle("Show Dataset Title")
+				.withTooltip("Toggles showing the dataset title in the plot")
+				.withSelection(controller.view().getShowTitle())
+				.withListener(controller.view()::setShowTitle);
+		viewBlock.add(oTitle);
+		
+		
+		oMono = new OptionCheckBox(viewBlock)
+				.withTitle("Monochrome")
 				.withTooltip("Toggles the monochrome colour palette")
-				.withMnemonic(KeyEvent.VK_M)
-				.withAction(controller.view()::setMonochrome);
+				.withSelection(controller.view().getMonochrome())
+				.withListener(controller.view()::setMonochrome);
+		viewBlock.add(oMono);
 
-		this.add(logPlot);
-		this.add(consistentScale);
-		this.add(fittings);
-		this.add(markings);
-		this.add(intensities);
-		this.add(raw);
-		this.add(title);
-		this.add(monochrome);
 
+		
+		OptionBlocksPanel compositePanel = new OptionBlocksPanel(compositeBlock, scaleBlock, viewBlock);
+		this.add(compositePanel);
 		
 		updateWidgetValues();
 		controller.addListener(s -> updateWidgetValues());
@@ -135,25 +147,25 @@ public class PlotMenuView extends JPopupMenu {
 
 	private void updateWidgetValues() {
 		
-		logPlot.setSelected(controller.view().getViewLog());
-		monochrome.setSelected(controller.view().getMonochrome());
-		markings.setSelected(controller.view().getShowElementMarkers());
-		intensities.setSelected(controller.view().getShowElementIntensities());
-		raw.setSelected(controller.view().getShowRawData());
-		fittings.setSelected(controller.view().getShowIndividualSelections());
-		consistentScale.setSelected(controller.view().getConsistentScale());
+		oLog.setSelected(controller.view().getViewLog());
+		oMono.setSelected(controller.view().getMonochrome());
+		oMarks.setSelected(controller.view().getShowElementMarkers());
+		oIntens.setSelected(controller.view().getShowElementIntensities());
+		oRaw.setSelected(controller.view().getShowRawData());
+		oFit.setSelected(controller.view().getShowIndividualSelections());
+		oConsist.setSelected(controller.view().getConsistentScale());
 
 		switch (controller.view().getChannelCompositeMode())
 		{
 
 			case NONE:
-				individual.setSelected(true);
+				oInd.setSelected(true);
 				break;
 			case AVERAGE:
-				average.setSelected(true);
+				oAvg.setSelected(true);
 				break;
 			case MAXIMUM:
-				maximum.setSelected(true);
+				oMax.setSelected(true);
 				break;
 		}
 		
