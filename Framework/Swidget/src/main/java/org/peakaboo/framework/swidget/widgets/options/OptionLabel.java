@@ -1,13 +1,8 @@
 package org.peakaboo.framework.swidget.widgets.options;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.function.Consumer;
 
 import javax.lang.model.type.NullType;
 import javax.swing.Box;
@@ -20,31 +15,6 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 	private JLabel lblDesc;
 	private JLabel lblTitle;
 		
-	public enum TextSize {
-		SMALL, 
-		MEDIUM, 
-		LARGE
-		
-		;
-
-		float getTitleSize() {
-			return switch(this) {
-				case SMALL -> 10;
-				case MEDIUM -> 12;
-				case LARGE -> 14;
-			};
-		}
-		
-		float getDescriptionSize() {
-			return switch(this) {
-				case SMALL -> 8;
-				case MEDIUM -> 10;
-				case LARGE -> 11;
-			};
-		}
-		
-	}
-	
 	public OptionLabel(String title, String description) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -58,7 +28,7 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 		lblDesc.setForeground(fgDisabled);
 		this.add(lblDesc);
 		
-		this.setTextSize(TextSize.MEDIUM);
+		this.setTextSize(OptionSize.MEDIUM);
 		
 	}
 
@@ -79,7 +49,7 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 	
 
 
-	public void setTextSize(TextSize size) {
+	public void setTextSize(OptionSize size) {
 		lblTitle.setFont(lblTitle.getFont().deriveFont(size.getTitleSize()).deriveFont(Font.PLAIN));
 		lblDesc.setFont(lblDesc.getFont().deriveFont(size.getDescriptionSize()).deriveFont(Font.PLAIN));
 	}
@@ -105,7 +75,7 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 	}
 
 	@Override
-	public OptionFluentAPI<NullType> withTextSize(TextSize size) {
+	public OptionFluentAPI<NullType> withSize(OptionSize size) {
 		this.setTextSize(size);
 		setDimensions();
 		return this;

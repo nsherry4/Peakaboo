@@ -34,7 +34,7 @@ public abstract class OptionBox extends OptionComponent {
 	public OptionBox(OptionBlock block) {
 		this.block = block;
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		this.setBorder(new EmptyBorder(padding, padding, padding, padding));
+		setPadding(padding);
 		
 		this.addMouseListener(new MouseAdapter() {
 
@@ -54,6 +54,11 @@ public abstract class OptionBox extends OptionComponent {
 		
 	}
 	
+	void setPadding(int size) {
+		this.padding = size;
+		this.setBorder(new EmptyBorder(padding, padding, padding, padding));
+	}
+	
 	public void addExpander() {
 		this.add(Box.createHorizontalStrut(Spacing.medium));
 		this.add(Box.createHorizontalGlue());
@@ -71,7 +76,7 @@ public abstract class OptionBox extends OptionComponent {
 			g.setColor(bg);
 			g.fill(outline);
 			if (hover) {
-				g.setColor(new Color(0x20000000, true));
+				g.setColor(new Color(0x08000000, true));
 				g.fill(outline);
 			}
 			g.setColor(borderAlpha);
@@ -85,14 +90,29 @@ public abstract class OptionBox extends OptionComponent {
 				g.drawLine(1, getHeight()-1, getWidth()-1, getHeight()-1);
 			}
 			if (hover) {
+				
 				Area area = new Area();
-				Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius);
-				area.add(new Area(outline));
-				if (index > 0) {
-					area.add(new Area(new Rectangle(0, 0, getWidth()-1, (int)radius+1)));
-				}
-				if (index < count-1) {
-					area.add(new Area(new Rectangle(0, (int)(getHeight()-radius-1), getWidth()-1, getHeight()-1)));
+				
+				if (block.isBordered()) {
+					Shape outline;
+					if (index > 0 && index < count - 1) {
+						//somewhere in the middle
+						outline = new Rectangle(0, 0, getWidth()-1, getHeight()-1);
+						area.add(new Area(outline));
+					} else {
+						outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius);
+						area.add(new Area(outline));
+						if (index > 0) {
+							area.add(new Area(new Rectangle(0, 0, getWidth()-1, (int)radius+1)));
+						}
+						if (index < count-1) {
+							area.add(new Area(new Rectangle(0, (int)(getHeight()-radius-1), getWidth()-1, getHeight()-1)));
+						}
+					}
+
+				} else {
+					Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius);
+					area.add(new Area(outline));
 				}
 				
 				g.setColor(new Color(0x08000000, true));

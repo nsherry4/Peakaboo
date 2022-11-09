@@ -15,8 +15,6 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-import org.peakaboo.framework.swidget.widgets.options.OptionLabel.TextSize;
-
 public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<Boolean> {
 	
 	private JCheckBox checkbox;
@@ -51,7 +49,7 @@ public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<
 		return checkbox;
 	}
 
-	public void setTextSize(TextSize size) {
+	public void setTextSize(OptionSize size) {
 		label.setTextSize(size);
 	}
 
@@ -84,8 +82,9 @@ public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<
 	}
 
 	@Override
-	public OptionCheckBox withTextSize(TextSize size) {
-		label.withTextSize(size);
+	public OptionCheckBox withSize(OptionSize size) {
+		label.withSize(size);
+		this.setPadding(size.getPaddingSize());
 		return this;
 	}
 

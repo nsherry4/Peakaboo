@@ -1,7 +1,6 @@
 package org.peakaboo.framework.swidget.widgets.options;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -13,9 +12,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 import javax.swing.KeyStroke;
-
-import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentCheckMenuItem;
-import org.peakaboo.framework.swidget.widgets.options.OptionLabel.TextSize;
 
 public class OptionRadioButton extends OptionBox implements OptionFluentControlAPI<NullType> {
 
@@ -52,7 +48,7 @@ public class OptionRadioButton extends OptionBox implements OptionFluentControlA
 		return button;
 	}
 	
-	public void setTextSize(TextSize size) {
+	public void setTextSize(OptionSize size) {
 		label.setTextSize(size);
 	}
 
@@ -84,8 +80,9 @@ public class OptionRadioButton extends OptionBox implements OptionFluentControlA
 	}
 
 	@Override
-	public OptionRadioButton withTextSize(TextSize size) {
-		label.withTextSize(size);
+	public OptionRadioButton withSize(OptionSize size) {
+		label.withSize(size);
+		this.setPadding(size.getPaddingSize());
 		return this;
 	}
 

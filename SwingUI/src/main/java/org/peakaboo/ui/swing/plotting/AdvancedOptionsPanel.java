@@ -36,9 +36,9 @@ import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
 import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
-import org.peakaboo.framework.swidget.widgets.options.OptionLabel.TextSize;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
+import org.peakaboo.framework.swidget.widgets.options.OptionSize;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
@@ -99,11 +99,11 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		OptionCheckBox escapeToggle = new OptionCheckBox(detector)
 				.withText("Escape Peaks", "Models energy absorbed by a detector being re-emitted")
-				.withTextSize(TextSize.LARGE)
+				.withSize(OptionSize.LARGE)
 				.withSelection(controller.fitting().getShowEscapePeaks())
 				.withListener(controller.fitting()::setShowEscapePeaks);
 				
-		escapeToggle.setTextSize(TextSize.LARGE);
+		escapeToggle.setTextSize(OptionSize.LARGE);
 		
 		detector.add(escapeToggle);
 		
@@ -147,7 +147,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 					.withText(solver.pluginName(), solver.pluginDescription())
 					.withSelection(solver.getClass() == getter.get().getClass())
 					.withListener(() -> setter.accept(solver))
-					.withTextSize(TextSize.LARGE);
+					.withSize(OptionSize.LARGE);
 			
 			block.add(radio);
 			
@@ -168,7 +168,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 					.withText(solver.name(), solver.description())
 					.withSelection(solver.getClass() == getter.get().getClass())
 					.withListener(() -> setter.accept(solver))
-					.withTextSize(TextSize.LARGE);
+					.withSize(OptionSize.LARGE);
 			
 			block.add(radio);
 			
