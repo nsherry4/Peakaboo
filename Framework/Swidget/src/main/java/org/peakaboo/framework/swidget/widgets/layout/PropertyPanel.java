@@ -1,23 +1,31 @@
 package org.peakaboo.framework.swidget.widgets.layout;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 
 import javax.swing.Box;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.HyperlinkEvent;
 
+import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 
 public class PropertyPanel extends JPanel {
 
-	private int minWidth = 0;;
+	private int minWidth = 0;
 	private Map<String, String> properties = new HashMap<>();
 	private boolean centered = false;
 	private boolean rightAlignedLabels = true;
@@ -104,7 +112,7 @@ public class PropertyPanel extends JPanel {
 		
 		for (Entry<String, String> property : properties.entrySet())
 		{
-			addJLabelPair(property.getKey(), property.getValue());
+			addKVPair(property.getKey(), property.getValue());
 		}
 
 		if (!verticalCenterd) {
@@ -121,10 +129,10 @@ public class PropertyPanel extends JPanel {
 	
 	
 
-	private void addJLabelPair(String one, String two)
+	private void addKVPair(String name, String value)
 	{
 		
-		JLabel label;
+		JLabel lblName;
 		
 		
 		c.gridx = 0;
@@ -132,9 +140,12 @@ public class PropertyPanel extends JPanel {
 		c.fill = (centered ? GridBagConstraints.HORIZONTAL : GridBagConstraints.NONE);
 		c.anchor = rightAlignedLabels ? GridBagConstraints.NORTHEAST : GridBagConstraints.NORTHWEST;
 		
-		label = new JLabel(one);
-		label.setForeground(Color.GRAY);
-		add(label, c);
+		lblName = new JLabel(name);
+		lblName.setForeground(Color.GRAY);
+		add(lblName, c);
+		
+		
+		
 		
 		
 		
@@ -143,11 +154,32 @@ public class PropertyPanel extends JPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		
-		label = new JLabel(two);
-		if (!centered && minWidth > 0) label.setPreferredSize(new Dimension(minWidth, label.getPreferredSize().height));
-		label.setToolTipText(two);
-		label.setBorder(new EmptyBorder(0, Spacing.large, 0, 0));
-		add(label, c);
+		//If the value text contains links
+		if (value.startsWith("<html>") && value.contains("href")) {
+			JEditorPane lblValue = new JEditorPane("text/html", value);
+			lblValue.setEditable(false);
+			lblValue.setOpaque(false);
+			lblValue.addHyperlinkListener(event -> {
+				if (event.getEventType() != HyperlinkEvent.EventType.ACTIVATED) return;
+				URL url = event.getURL();
+				try {
+					Desktop.getDesktop().browse(url.toURI());
+				} catch (IOException | URISyntaxException e) {
+					Swidget.logger().log(Level.WARNING, "Failed to open link to " + url.toString(), e);
+				}
+			});
+			
+			if (!centered && minWidth > 0) lblValue.setPreferredSize(new Dimension(minWidth, lblValue.getPreferredSize().height));
+			lblValue.setBorder(new EmptyBorder(0, Spacing.large, 0, 0));
+			add(lblValue, c);
+		} else {
+			JLabel lblValue;
+			lblValue = new JLabel(value);
+			if (!centered && minWidth > 0) lblValue.setPreferredSize(new Dimension(minWidth, lblValue.getPreferredSize().height));
+			lblValue.setToolTipText(value);
+			lblValue.setBorder(new EmptyBorder(0, Spacing.large, 0, 0));
+			add(lblValue, c);
+		}
 		
 		c.gridy += 1;
 		c.gridx = 0;
