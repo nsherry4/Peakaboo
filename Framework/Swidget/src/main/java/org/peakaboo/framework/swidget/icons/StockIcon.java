@@ -1,18 +1,15 @@
 package org.peakaboo.framework.swidget.icons;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import javax.swing.ImageIcon;
-
-public enum StockIcon {
+public enum StockIcon implements IconSet {
 
 	CHOOSE_OK,
 	CHOOSE_CANCEL,
 	
-	ACTION_REFRESH,
+	ACTION_REFRESH_SYMBOLIC,
 	
 	MENU_MAIN,
 	MENU_SETTINGS,
@@ -20,7 +17,7 @@ public enum StockIcon {
 	
 	BADGE_INFO,
 	BADGE_WARNING,
-	BADGE_HELP,
+	BADGE_QUESTION,
 	BADGE_ERROR,
 	
 	DEVICE_HARDDISK,
@@ -116,29 +113,14 @@ public enum StockIcon {
 	
 	PROCESS_COMPLETED,
 	PROCESS_ERROR,
-
-	
 	
 	;
 	
+	public static final String PATH = "/swidget/icons/";
+
 	@Override
-	public String toString()
-	{
-		return this.name().replace("_", "-").toLowerCase();
-	}
-	
-	public String toIconName()
-	{
-		return toString();
-	}
-	
-	public ImageIcon toImageIcon(IconSize size) {
-		return IconFactory.getImageIcon(toString(), size);
-	}
-	
-	public ImageIcon toImageIcon(IconSize size, Color c) {
-		ImageIcon icon = toImageIcon(size);
-		return IconFactory.recolour(icon, c);
+	public String path() {
+		return PATH;
 	}
 	
 	public static StockIcon fromMimeType(File file) {

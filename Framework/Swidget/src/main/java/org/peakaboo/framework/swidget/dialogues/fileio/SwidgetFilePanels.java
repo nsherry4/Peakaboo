@@ -15,12 +15,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 
@@ -197,8 +196,7 @@ public class SwidgetFilePanels {
 	
 	
 	
-	static void warnFileExists(Component parent, File filename, Consumer<Boolean> onResult)
-	{
+	static void warnFileExists(Component parent, File filename, Consumer<Boolean> onResult) {
 		
 		String body = "The file you have selected already exists, are you sure you want to replace it?";
 		String title = "File Already Exists";
@@ -209,7 +207,7 @@ public class SwidgetFilePanels {
 				new LayerDialog(
 						title, 
 						body, 
-						MessageType.QUESTION)
+						StockIcon.BADGE_QUESTION)
 					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
 					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
 					.showIn((LayerPanel) parent);
@@ -219,7 +217,7 @@ public class SwidgetFilePanels {
 				new LayerDialog(
 						title, 
 						body, 
-						MessageType.QUESTION)
+						StockIcon.BADGE_QUESTION)
 					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
 					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
 					.showInWindow((Window)parent);

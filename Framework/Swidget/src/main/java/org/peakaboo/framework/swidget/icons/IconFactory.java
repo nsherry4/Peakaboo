@@ -13,52 +13,47 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 
 public class IconFactory {
 
-	public static final String PATH_IMAGE = "/swidget/icons/";
-	public static final String PATH_SYMBOLIC = "/swidget/icons/symbolic/";
 	public static String customPath = null;
+
+	public static ImageIcon getImageIcon(IconSet icon){
+		return getImageIcon(icon.path(), icon.toIconName(), null);
+	}
 	
-	public static ImageIcon getImageIcon(String imageName){
-		return getImageIcon(imageName, null);
+	public static ImageIcon getImageIcon(String path, String imageName){
+		return getImageIcon(path, imageName, null);
 	}
 
-	public static ImageIcon getSymbolicIcon(String imageName){
-		return getImageIcon(imageName, null);
+	
+	public static ImageIcon getImageIcon(IconSet icon, IconSize size){
+		return getImageIcon(icon.path(), icon.toIconName(), size);
 	}
 	
-	public static ImageIcon getImageIcon(String imageName, IconSize size){
-		return getImageIcon(imageName, size, PATH_IMAGE);
-	}
+	public static ImageIcon getImageIcon(String path, String imageName, IconSize size){
 	
-	public static ImageIcon getSymbolicIcon(String imageName, IconSize size){
-		return getImageIcon(imageName, size, PATH_SYMBOLIC);
-	}
-	
-	public static ImageIcon getImageIcon(String imageName, IconSize size, String path){
+		if (path == null) {
+			path = StockIcon.PATH;
+		}
 		
-	
-		URL url = getImageIconURL(imageName, size, path);
+		URL url = getImageIconURL(path, imageName, size);
 
 		//if we can't find the image, look for it elsewhere
-		if (url == null) { url = getImageIconURL(imageName, size, path); }
-		if (url == null && customPath != null) { url = getImageIconURL(imageName, size, customPath); }
+		if (url == null && customPath != null) { url = getImageIconURL(customPath, imageName, size); }
 		
 		
 		if (url == null){
-			if (!  (imageName == null || "".equals(imageName))  )
-			{
+			if (!  (imageName == null || "".equals(imageName))  ) {
 				System.out.println("Image not found: " + imageName);
 			}
-			url = getImageIconURL("notfound", null, path);	
+			url = getImageIconURL(path, "notfound", null);
 		}
-		
-		
+
 		ImageIcon image;
 		image = new ImageIcon(url);
 		return image;
 		
 	}
 	
-	public static URL getImageIconURL(String imageName, IconSize size, String path)
+	public static URL getImageIconURL(String path, String imageName, IconSize size)
 	{
 		String iconDir = "";
 
@@ -68,20 +63,16 @@ public class IconFactory {
 		
 	}
 	
-	public static Image getImage(String imageName)
+	public static Image getImage(String path, String imageName)
 	{
 		
-		return getImageIcon(imageName, null).getImage();
+		return getImageIcon(path, imageName, null).getImage();
 		
 	}
 	
-	public static boolean hasImage(String imageName, IconSize size) {
+	public static boolean hasImage(String imageName, IconSize size, String path) {
 		
-		URL url = getImageIconURL(imageName, size, PATH_IMAGE);
-
-		//if we can't find the image, look for it elsewhere
-		if (url == null) { url = getImageIconURL(imageName, size, PATH_IMAGE); }
-		if (url == null && customPath != null) { url = getImageIconURL(imageName, size, customPath); }
+		URL url = getImageIconURL(path, imageName, size);
 		
 		return url != null;
 		

@@ -18,6 +18,7 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIItem;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotToolbar extends JToolBar {
@@ -62,7 +63,7 @@ public class PlotToolbar extends JToolBar {
 		c.insets = new Insets(2, 2, 2, 2);
 		c.fill = GridBagConstraints.NONE;
 
-		FluentToolbarButton ibutton = new FluentToolbarButton("Open", "document-open")
+		FluentToolbarButton ibutton = new FluentToolbarButton("Open", StockIcon.DOCUMENT_OPEN)
 				.withTooltip("Open a new data set or session")
 				.withAction(plot::actionOpenData);
 		this.add(ibutton, c);
@@ -91,7 +92,7 @@ public class PlotToolbar extends JToolBar {
 		this.add(toolbarInfo, c);
 		
 		toolbarMap = new FluentToolbarButton("Map Fittings")
-				.withIcon("map", IconSize.TOOLBAR_SMALL)
+				.withIcon(PeakabooIcons.MAP, IconSize.TOOLBAR_SMALL)
 				.withTooltip("Display a 2D map of the relative intensities of the fitted elements")
 				.withSignificance(true).withAction(plot::actionMap);
 		
@@ -104,7 +105,7 @@ public class PlotToolbar extends JToolBar {
 		
 		for (TierUIItem item : tierItems) {
 			FluentToolbarButton tierButton = new FluentToolbarButton(item.text)
-					.withIcon(item.iconname, IconSize.TOOLBAR_SMALL)
+					.withIcon(Tier.provider().assetPath() + "/icons/", item.iconname, IconSize.TOOLBAR_SMALL)
 					.withTooltip(item.tooltip)
 					.withSignificance(false)
 					.withAction(() -> item.action.accept(plot, controller));
@@ -179,7 +180,7 @@ public class PlotToolbar extends JToolBar {
 	private FluentToolbarButton createEnergyMenuButton() {
 		energyMenu = new PlotMenuEnergy(plot, controller);
 		return new FluentToolbarButton()
-				.withIcon("menu-energy")
+				.withIcon(PeakabooIcons.MENU_ENERGY)
 				.withTooltip("Energy & Peak Calibration")
 				.withPopupMenuAction(energyMenu, true);
 	}
@@ -194,7 +195,7 @@ public class PlotToolbar extends JToolBar {
 	private FluentToolbarButton createViewMenuButton() {
 		viewMenu = new PlotMenuView(plot, controller);
 		return new FluentToolbarButton()
-				.withIcon("menu-view")
+				.withIcon(PeakabooIcons.MENU_VIEW)
 				.withTooltip("Plot Settings Menu")
 				.withPopupMenuAction(viewMenu, true);
 	}

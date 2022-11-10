@@ -116,7 +116,7 @@ public class SwingAutoDialog extends LiveDialog
 		}
 		
 		
-		info = new FluentButton(StockIcon.BADGE_HELP)
+		info = new FluentButton(StockIcon.BADGE_QUESTION)
 				.withTooltip("More Information")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(true)
@@ -126,7 +126,7 @@ public class SwingAutoDialog extends LiveDialog
 						Swidget.lineWrapHTML(SwingAutoDialog.this, helpMessage),
 						helpTitle, 
 						JOptionPane.INFORMATION_MESSAGE, 
-						StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON)
+						StockIcon.BADGE_QUESTION.toImageIcon(IconSize.ICON)
 					)
 				);
 		info.setFocusable(false);

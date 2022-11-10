@@ -20,6 +20,7 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIItem;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuEnergy extends JPopupMenu {
@@ -146,7 +147,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		energy.addSetting(noiseEnergy, "Noise (eV)");
 		
 		energyGuess = new FluentButton("Guess Calibration")
-				.withIcon("auto", IconSize.TOOLBAR_SMALL)
+				.withIcon(PeakabooIcons.AUTO, IconSize.TOOLBAR_SMALL)
 				.withTooltip("Try to detect the correct max energy value by matching fittings to strong signal. Use with care.")
 				.withBordered(false)
 				.withAction(() -> {

@@ -38,7 +38,7 @@ public class FluentRadioMenuItem extends JRadioButtonMenuItem implements FluentM
 		if (config.imagename == null) {
 			this.setIcon(null);
 		} else {
-			ImageIcon icon = IconFactory.getImageIcon(config.imagename, IconSize.BUTTON);
+			ImageIcon icon = IconFactory.getImageIcon(config.imagepath, config.imagename, IconSize.BUTTON);
 			this.setIcon(icon);
 		}
 		this.setMnemonic(config.mnemonic == null ? 0 : config.mnemonic);

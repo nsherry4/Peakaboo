@@ -17,6 +17,7 @@ import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIItem;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapperToolbar extends JToolBar {
@@ -50,7 +51,7 @@ public class MapperToolbar extends JToolBar {
 		
 		for (TierUIItem<MapperPanel, MappingController> item : tierItems) {
 			FluentToolbarButton component = new FluentToolbarButton(item.text)
-					.withIcon(item.iconname, IconSize.TOOLBAR_SMALL)
+					.withIcon(Tier.provider().assetPath() + "/icons/", item.iconname, IconSize.TOOLBAR_SMALL)
 					.withTooltip(item.tooltip)
 					.withSignificance(true)
 					.withAction(() -> item.action.accept(panel, controller));
@@ -98,7 +99,7 @@ public class MapperToolbar extends JToolBar {
 		JPopupMenu menu = new MapMenuView(controller);
 		
 		FluentToolbarButton opts = new FluentToolbarButton()
-				.withIcon("menu-view")
+				.withIcon(PeakabooIcons.MENU_VIEW)
 				.withTooltip("Map Settings Menu");
 		
 		opts.withAction(() -> {

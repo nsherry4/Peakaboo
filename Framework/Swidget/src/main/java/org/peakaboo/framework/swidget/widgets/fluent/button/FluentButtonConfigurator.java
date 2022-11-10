@@ -111,6 +111,9 @@ public class FluentButtonConfigurator {
 		
 	}
 	
+	private ImageIcon makeImage() {
+		return IconFactory.getImageIcon(config.imagepath, config.imagename, config.size);
+	}
 
 	public void makeButton() {
 				
@@ -122,9 +125,6 @@ public class FluentButtonConfigurator {
 			button.setContentAreaFilled(config.bordered == BORDER_STYLE.ALWAYS);
 			button.setBorderPainted(config.bordered == BORDER_STYLE.ALWAYS);
 		}
-		
-		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);	
-		
 		
 		
 		FluentButtonLayout mode = config.layout;
@@ -157,7 +157,7 @@ public class FluentButtonConfigurator {
 				}
 				
 								
-				button.setIcon(image);
+				button.setIcon(makeImage());
 				if (tooltip == null || "".equals(tooltip)) {
 					tooltip = text;
 				}
@@ -183,7 +183,7 @@ public class FluentButtonConfigurator {
 					button.setMargin(Spacing.iSmall());
 				}
 				
-				button.setIcon(image);
+				button.setIcon(makeImage());
 				button.setText(text);
 
 				button.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -199,7 +199,7 @@ public class FluentButtonConfigurator {
 					button.setMargin(Spacing.iSmall());
 				}
 				
-				button.setIcon(image);
+				button.setIcon(makeImage());
 				button.setText(text);
 
 				break;
@@ -213,7 +213,7 @@ public class FluentButtonConfigurator {
 	
 	protected FluentButtonLayout guessLayout() {
 		FluentButtonLayout mode = FluentButtonLayout.IMAGE_ON_SIDE;
-		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
+		ImageIcon image = IconFactory.getImageIcon(config.imagepath, config.imagename, config.size);
 		if (config.imagename == null || image.getIconHeight() == -1) {
 			mode = FluentButtonLayout.TEXT;
 		} else if (config.text == null || "".equals(config.text)) {

@@ -4,6 +4,7 @@ package org.peakaboo.ui.swing.plotting.fitting;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.TrayIcon.MessageType;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -13,12 +14,11 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.util.Mutable;
-import org.peakaboo.framework.eventful.EventfulTypeListener;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.ui.swing.plotting.PlotCanvas;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 import org.peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
@@ -121,7 +121,7 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 			new LayerDialog(
 					"Missing Data Set or Energy Calibration", 
 					"Guided fitting cannot proceed without a data set and energy calibration.", 
-					MessageType.WARNING
+					StockIcon.BADGE_WARNING
 				).showIn(plotPanel);
 			
 		}
@@ -157,7 +157,7 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 			new LayerDialog(
 					"Misisng Data Set or Energy Calibration", 
 					"Automatic fitting cannot proceed without a data set and energy calibration.", 
-					MessageType.WARNING
+					StockIcon.BADGE_WARNING
 				).showIn(plotPanel);
 			
 		}

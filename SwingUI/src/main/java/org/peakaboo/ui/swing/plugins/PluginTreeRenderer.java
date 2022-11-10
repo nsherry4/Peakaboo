@@ -78,7 +78,7 @@ public class PluginTreeRenderer extends DefaultTreeCellRenderer {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 		
-		return IconFactory.getImageIcon(plugin.getManager().getName(), IconSize.BUTTON);
+		return IconFactory.getImageIcon(plugin.getManager().getAssetPath() + "/icons/", plugin.getManager().getName(), IconSize.BUTTON);
 		
 	}
 

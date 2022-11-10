@@ -26,26 +26,41 @@ import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 
 public class LayerDialog {
 
-	public enum MessageType {
-		ERROR, WARNING, INFO, QUESTION; 
-	}
-	
 	private String title;
 	private JComponent body;
-	private MessageType messageType;
 	private List<JButton> leftButtons = new ArrayList<>(), rightButtons = new ArrayList<>();
 	private Runnable hider = () -> {};
 	private FluentButton defaultButton;
+	private ImageIcon icon;
+
 	
-	public LayerDialog(String title, String body, MessageType messageType) {
-		this(title, buildBodyComponent(body), messageType);
+	public LayerDialog(String title, String body) {
+		this(title, body, (ImageIcon)null);
 	}
 	
-	public LayerDialog(String title, JComponent body, MessageType messageType) {
+	public LayerDialog(String title, String body, StockIcon icon) {
+		this(title, body, icon.toImageIcon(IconSize.ICON));
+	}
+	
+	public LayerDialog(String title, String body, ImageIcon icon) {
+		this(title, buildBodyComponent(body), icon);
+	}
+
+	
+	public LayerDialog(String title, JComponent body) {
+		this(title, body, (ImageIcon)null);
+	}
+	
+	public LayerDialog(String title, JComponent body, StockIcon icon) {
+		this(title, body, icon.toImageIcon(IconSize.ICON));
+	}
+	
+	public LayerDialog(String title, JComponent body, ImageIcon icon) {
 		this.title = title;
 		this.body = body;
-		this.messageType = messageType;
+		this.icon = icon;
 	}
+	
 	
 	public LayerDialog addLeft(JButton button) {
 		leftButtons.add(button);
@@ -103,26 +118,30 @@ public class LayerDialog {
 		center.add(this.body, BorderLayout.CENTER);
 		panel.add(center, BorderLayout.CENTER);
 		
-		JLabel icon = new JLabel(getBadge());
-		
-		icon.setHorizontalAlignment(JLabel.CENTER);
-		icon.setBorder(new EmptyBorder(pad, pad, pad, 0));
-		panel.add(icon, BorderLayout.WEST);
+		JLabel lblIcon = new JLabel();
+		lblIcon.setHorizontalAlignment(JLabel.CENTER);
+		lblIcon.setBorder(new EmptyBorder(pad, pad, pad, 0));
+		if (icon != null) {
+			lblIcon.setIcon(icon);
+			panel.add(lblIcon, BorderLayout.WEST);
+		}
 			
 		if (!selfcontained) {
 			
 			JLabel lblTitle = new JLabel("<html><span style='font-size: 175%; font-weight: bold;'>" + title + "</span></html>");
 			lblTitle.setVerticalAlignment(JLabel.TOP);
 			center.add(lblTitle, BorderLayout.NORTH);
-			icon.setVerticalAlignment(JLabel.NORTH);
+			lblIcon.setVerticalAlignment(JLabel.NORTH);
 			
 			panel.add(buildButtonBox(), BorderLayout.SOUTH);
 			
 		} else {
 			
-			center.add(Box.createVerticalGlue(), BorderLayout.NORTH);
-			center.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
-			icon.setVerticalAlignment(JLabel.CENTER);
+			if (icon != null) {
+				center.add(Box.createVerticalGlue(), BorderLayout.NORTH);
+				center.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
+			}
+			lblIcon.setVerticalAlignment(JLabel.CENTER);
 			
 			panel.add(buildHeaderBox(), BorderLayout.NORTH);
 		}
@@ -191,16 +210,7 @@ public class LayerDialog {
 		HeaderBox box = new HeaderBox(left, this.title, right);
 		return box;
 	}
-	
-	private ImageIcon getBadge() {
-		switch (this.messageType) {
-		case ERROR: 	return StockIcon.BADGE_ERROR.toImageIcon(IconSize.ICON);
-		case WARNING:	return StockIcon.BADGE_WARNING.toImageIcon(IconSize.ICON);
-		case INFO:		return StockIcon.BADGE_INFO.toImageIcon(IconSize.ICON);
-		case QUESTION:	return StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON);
-		default:		return StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON);
-		}
-	}
+
 	
 	public void hide() {
 		hider.run();

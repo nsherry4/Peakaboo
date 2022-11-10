@@ -8,8 +8,8 @@ import javax.swing.JButton;
 
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.IconSet;
 import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonConfig.BORDER_STYLE;
 
 
@@ -31,17 +31,19 @@ public class FluentToolbarButton extends JButton implements FluentButtonAPI<Flue
 	
 	
 
-	public FluentToolbarButton(StockIcon icon) {
+	public FluentToolbarButton(IconSet icon) {
 		firstconfig();
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 		
 		init();
 		makeWidget();
 	}
 
-	public FluentToolbarButton(StockIcon icon, IconSize size) {
+	public FluentToolbarButton(IconSet icon, IconSize size) {
 		firstconfig();
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 		config().size = size;
 
 		init();
@@ -49,19 +51,21 @@ public class FluentToolbarButton extends JButton implements FluentButtonAPI<Flue
 	}
 
 	
-	public FluentToolbarButton(String text, StockIcon icon) {
+	public FluentToolbarButton(String text, IconSet icon) {
 		firstconfig();
 		config().text = text;
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 
 		init();
 		makeWidget();
 	}
 	
-	public FluentToolbarButton(String text, String icon) {
+	public FluentToolbarButton(String text, String path, String icon) {
 		firstconfig();
 		config().text = text;
 		config().imagename = icon;
+		config().imagepath = path;
 
 		init();
 		makeWidget();
@@ -184,7 +188,7 @@ class ToolbarImageButtonConfigurator extends FluentButtonConfigurator {
 	@Override
 	protected FluentButtonLayout guessLayout() {
 		FluentButtonLayout mode = this.isSignificant ? FluentButtonLayout.IMAGE_ON_SIDE : FluentButtonLayout.IMAGE;
-		ImageIcon image = IconFactory.getImageIcon(config.imagename, config.size);
+		ImageIcon image = IconFactory.getImageIcon(config.imagepath, config.imagename, config.size);
 		if (config.imagename == null || image.getIconHeight() == -1) {
 			mode = FluentButtonLayout.TEXT;
 		} else if (config.text == null || "".equals(config.text)) {

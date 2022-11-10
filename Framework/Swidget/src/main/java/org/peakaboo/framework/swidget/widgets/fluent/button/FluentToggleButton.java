@@ -7,9 +7,8 @@ import java.util.function.Consumer;
 import javax.swing.JToggleButton;
 
 import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.icons.IconSet;
 import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentCheckMenuItem;
 
 
 
@@ -30,15 +29,17 @@ public class FluentToggleButton extends JToggleButton implements FluentButtonAPI
 		makeWidget();
 	}
 	
-	public FluentToggleButton(StockIcon icon) {
+	public FluentToggleButton(IconSet icon) {
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 
 		init();
 		makeWidget();
 	}
 
-	public FluentToggleButton(StockIcon icon, IconSize size) {
+	public FluentToggleButton(IconSet icon, IconSize size) {
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 		config().size = size;
 
 		init();
@@ -46,17 +47,19 @@ public class FluentToggleButton extends JToggleButton implements FluentButtonAPI
 	}
 
 	
-	public FluentToggleButton(String text, StockIcon icon) {
+	public FluentToggleButton(String text, IconSet icon) {
 		config().text = text;
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 
 		init();
 		makeWidget();
 	}
 	
-	public FluentToggleButton(String text, String icon) {
+	public FluentToggleButton(String text, String path, String icon) {
 		config().text = text;
 		config().imagename = icon;
+		config().imagepath = path;
 
 		init();
 		makeWidget();

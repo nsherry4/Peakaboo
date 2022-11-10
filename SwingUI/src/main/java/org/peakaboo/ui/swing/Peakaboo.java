@@ -43,12 +43,13 @@ import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
 import org.peakaboo.framework.swidget.hookins.FileDrop;
 import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanelConfig;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.environment.DesktopApp;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 
@@ -69,7 +70,7 @@ public class Peakaboo {
 				title = "Release Candidate for Peakaboo";
 			}
 			
-			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
+			new LayerDialog(title, message, StockIcon.BADGE_INFO).showInWindow(null, true);
 			
 		}
 	}
@@ -82,7 +83,7 @@ public class Peakaboo {
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
 						
-			new LayerDialog(title, message, MessageType.INFO).showInWindow(null, true);
+			new LayerDialog(title, message, StockIcon.BADGE_INFO).showInWindow(null, true);
 		}
 	}
 	
@@ -168,7 +169,6 @@ public class Peakaboo {
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
-		IconFactory.customPath = "/org/peakaboo/ui/swing/icons/";
 		StratusLookAndFeel laf = new StratusLookAndFeel(new BrightTheme());
 		
 		
@@ -193,7 +193,7 @@ public class Peakaboo {
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
-		Swidget.initialize(Version.splash, Version.logo, "Peakaboo", () -> {
+		Swidget.initialize(PeakabooIcons.PATH, Version.splash, Version.logo, "Peakaboo", () -> {
 			//Init settings store
 			try {
 				File settingsDir = DesktopApp.appDir("Settings");

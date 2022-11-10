@@ -45,6 +45,11 @@ public class BasicTierProvider implements TierProvider {
 	public String tierName() {
 		return "Community Edition";
 	}
+
+	@Override
+	public String assetPath() {
+		return "";
+	}
 	
 	
 

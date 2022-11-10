@@ -7,10 +7,10 @@ import javax.swing.JFrame;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotSelectionButton extends FluentToolbarButton {
@@ -19,7 +19,7 @@ public class PlotSelectionButton extends FluentToolbarButton {
 	private TabbedInterface<TabbedLayerPanel> plotter;
 	
 	public PlotSelectionButton(MappingController controller, TabbedInterface<TabbedLayerPanel> plotter) {
-		super("Plot Selection", "plot");
+		super("Plot Selection", PeakabooIcons.PLOT);
 		this.controller = controller;
 		this.plotter = plotter;
 		this.withSignificance(true).withTooltip("Plot the selection as a new data set");

@@ -2,8 +2,8 @@ package org.peakaboo.framework.swidget.widgets.fluent;
 
 import javax.swing.JComponent;
 
+import org.peakaboo.framework.swidget.icons.IconSet;
 import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 
 public interface FluentAPI<
 		B extends JComponent & FluentAPI<B, C>, 
@@ -27,20 +27,21 @@ public interface FluentAPI<
 	
 	
 
-	default B withIcon(StockIcon stock) {
+	default B withIcon(IconSet stock) {
 		return withIcon(stock, getComponentConfig().size);
 	}
 			
-	default B withIcon(StockIcon stock, IconSize size) {
-		return withIcon(stock.toIconName(), size);
+	default B withIcon(IconSet stock, IconSize size) {
+		return withIcon(stock.path(), stock.toIconName(), size);
 	}
 	
-	default B withIcon(String filename) {
-		return withIcon(filename, getComponentConfig().size);
+	default B withIcon(String filepath, String filename) {
+		return withIcon(filepath, filename, getComponentConfig().size);
 	}
 	
-	default B withIcon(String filename, IconSize size) {
+	default B withIcon(String filepath, String filename, IconSize size) {
 		getComponentConfig().imagename = filename;
+		getComponentConfig().imagepath = filepath;
 		getComponentConfig().size = size;
 		makeWidget();
 		return getSelf();

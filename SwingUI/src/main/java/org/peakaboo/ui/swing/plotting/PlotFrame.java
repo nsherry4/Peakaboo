@@ -23,6 +23,7 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 
 public class PlotFrame extends LiveFrame
@@ -39,7 +40,7 @@ public class PlotFrame extends LiveFrame
 		addWindowListener(new TabWindowListener(this, tabControl));
 		
 		setPreferredSize(new Dimension(1200, 569));
-		setIconImage(IconFactory.getImage(Version.logo));
+		setIconImage(IconFactory.getImage(PeakabooIcons.PATH, Version.logo));
 		setTitle(Tier.provider().appName());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		tabControl.init();
@@ -182,7 +183,7 @@ class TabWindowListener extends WindowAdapter {
 		JLabel bodyText = new JLabel(details.toString());
 		bodyText.setVerticalAlignment(SwingConstants.TOP);
 		body.add(bodyText, BorderLayout.CENTER);
-		JLabel icon = new JLabel(StockIcon.BADGE_HELP.toImageIcon(IconSize.ICON));
+		JLabel icon = new JLabel(StockIcon.BADGE_QUESTION.toImageIcon(IconSize.ICON));
 		icon.setVerticalAlignment(SwingConstants.TOP);
 		body.add(icon, BorderLayout.WEST);
 		body.setBorder(Spacing.bHuge());

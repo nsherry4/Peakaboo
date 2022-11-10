@@ -74,6 +74,10 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 		return name;
 	}
 	
+	public String getAssetPath() {
+		return "/" + name;
+	}
+	
 	public final synchronized List<BoltPluginPrototype<? extends P>> getPlugins() {
 		load();
 		return plugins.getPlugins();

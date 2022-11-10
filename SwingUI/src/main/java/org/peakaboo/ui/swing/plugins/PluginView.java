@@ -88,7 +88,7 @@ public class PluginView extends JPanel {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.ICON);
 		}
 		
-		return IconFactory.getImageIcon(plugin.getManager().getName(), IconSize.ICON);
+		return IconFactory.getImageIcon(plugin.getManager().getAssetPath() + "/icons/", plugin.getManager().getName(), IconSize.ICON);
 
 	}
 	

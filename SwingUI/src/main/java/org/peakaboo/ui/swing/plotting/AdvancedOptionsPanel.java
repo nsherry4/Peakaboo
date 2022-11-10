@@ -39,6 +39,7 @@ import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 import org.peakaboo.framework.swidget.widgets.options.OptionSize;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
@@ -61,22 +62,22 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		String KEY_DETECTOR = "Detector";
 		JPanel detectorPanel = makeDetectorPanel(controller);
 		body.add(detectorPanel, KEY_DETECTOR);
-		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, IconFactory.getImageIcon("options-detector", IconSize.BUTTON));
+		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_DETECTOR, IconSize.BUTTON));
 		
 		String KEY_PEAKMODEL = "Peak Model";
 		JPanel peakPanel = makePeakModelPanel(controller);
 		body.add(peakPanel, KEY_PEAKMODEL);
-		OptionSidebar.Entry peakEntry = new OptionSidebar.Entry(KEY_PEAKMODEL, IconFactory.getImageIcon("options-peakmodel", IconSize.BUTTON));
+		OptionSidebar.Entry peakEntry = new OptionSidebar.Entry(KEY_PEAKMODEL, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PEAKMODEL, IconSize.BUTTON));
 		
 		String KEY_CURVEFIT = "Curve Fitting";
 		JPanel curvefitPanel = makeCurvefitPanel(controller);
 		body.add(curvefitPanel, KEY_CURVEFIT);
-		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, IconFactory.getImageIcon("options-curvefit", IconSize.BUTTON));
+		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_CURVEFIT, IconSize.BUTTON));
 		
 		String KEY_OVERLAP = "Overlap Solving";
 		JPanel overlapPanel = makeOverlapPanel(controller);
 		body.add(overlapPanel, KEY_OVERLAP);
-		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon("options-solver", IconSize.BUTTON));
+		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.BUTTON));
 		
 		
 		OptionSidebar sidebar = new OptionSidebar(List.of(detectorEntry, peakEntry, curvefitEntry, overlapEntry), e -> {

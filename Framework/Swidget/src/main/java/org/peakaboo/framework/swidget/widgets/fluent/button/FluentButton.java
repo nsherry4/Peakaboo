@@ -6,8 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JButton;
 
 import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.swidget.icons.IconSet;
 import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
 
 
 public class FluentButton extends JButton implements FluentButtonAPI<FluentButton, FluentButtonConfig> {
@@ -27,32 +27,36 @@ public class FluentButton extends JButton implements FluentButtonAPI<FluentButto
 		makeWidget();
 	}
 
-	public FluentButton(StockIcon icon) {
+	public FluentButton(IconSet icon) {
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 		
 		init();
 		makeWidget();
 	}
 
-	public FluentButton(StockIcon icon, IconSize size) {
+	public FluentButton(IconSet icon, IconSize size) {
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 		config().size = size;
 
 		init();
 		makeWidget();
 	}
 	
-	public FluentButton(String text, StockIcon icon) {
+	public FluentButton(String text, IconSet icon) {
 		config().text = text;
 		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
 
 		init();
 		makeWidget();
 	}
 	
-	public FluentButton(String text, String icon) {
+	public FluentButton(String text, String path, String icon) {
 		config().text = text;
 		config().imagename = icon;
+		config().imagepath = path;
 
 		init();
 		makeWidget();

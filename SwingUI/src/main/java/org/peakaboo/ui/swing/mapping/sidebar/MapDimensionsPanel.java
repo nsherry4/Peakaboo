@@ -23,6 +23,7 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 public class MapDimensionsPanel extends JPanel {
 
@@ -120,7 +121,7 @@ public class MapDimensionsPanel extends JPanel {
 	
 	private FluentButton makeGuessDimensionsButton(LayerPanel tabPanel, MappingController controller, boolean compact) {
 		return new FluentButton(compact ? "Guess" : "Guess Dimensions")
-				.withIcon("auto", IconSize.TOOLBAR_SMALL)
+				.withIcon(PeakabooIcons.AUTO, IconSize.TOOLBAR_SMALL)
 				.withTooltip("Try to detect the map's dimensions.")
 				.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
 				.withBordered(false)
@@ -156,7 +157,7 @@ public class MapDimensionsPanel extends JPanel {
 	}
 	
 	private FluentButton makeResetDimensionsButton(MappingController controller) {
-		return new FluentButton(StockIcon.ACTION_REFRESH, IconSize.TOOLBAR_SMALL)
+		return new FluentButton(StockIcon.ACTION_REFRESH_SYMBOLIC, IconSize.TOOLBAR_SMALL)
 				.withTooltip("Reset the dimensions to those given in the data set.")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false)

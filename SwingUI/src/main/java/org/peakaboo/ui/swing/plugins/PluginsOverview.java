@@ -52,7 +52,6 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
 import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
@@ -113,7 +112,7 @@ public class PluginsOverview extends HeaderLayer {
 		//header controls
 		add = new FluentButton(StockIcon.EDIT_ADD).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
 		remove = new FluentButton(StockIcon.EDIT_REMOVE).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
-		reload = new FluentButton(StockIcon.ACTION_REFRESH).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		reload = new FluentButton(StockIcon.ACTION_REFRESH_SYMBOLIC).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
 		remove.setEnabled(false);
 		
 		browse = new FluentButton(StockIcon.DOCUMENT_OPEN_SYMBOLIC).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
@@ -180,7 +179,7 @@ public class PluginsOverview extends HeaderLayer {
 		new LayerDialog(
 				"Delete Plugin Container?", 
 				"Are you sure you want to delete the container with the plugins:\n\n" + listToUL(container.getPlugins()), 
-				MessageType.QUESTION)
+				StockIcon.BADGE_QUESTION)
 			.addRight(
 				new FluentButton("Delete").withAction(() -> {
 					plugin.getContainer().delete();
@@ -233,7 +232,7 @@ public class PluginsOverview extends HeaderLayer {
 			new LayerDialog(
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
-					MessageType.ERROR).showIn(parent);
+					StockIcon.BADGE_ERROR).showIn(parent);
 			handled = true;
 		}
 		
@@ -241,7 +240,7 @@ public class PluginsOverview extends HeaderLayer {
 			new LayerDialog(
 					"No Plugins Found", 
 					"Peakboo could not fint any plugins in the file(s) provided", 
-					MessageType.ERROR).showIn(parent);
+					StockIcon.BADGE_ERROR).showIn(parent);
 		}
 		
 		reload();
@@ -263,7 +262,7 @@ public class PluginsOverview extends HeaderLayer {
 		new LayerDialog(
 				"Imported New Plugins", 
 				"Peakboo successfully imported the following plugin(s):\n" + listToUL(container.getPlugins()), 
-				MessageType.INFO).showIn(parent);
+				StockIcon.BADGE_INFO).showIn(parent);
 
 		return true;
 

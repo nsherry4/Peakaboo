@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -42,7 +41,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
-import org.peakaboo.calibration.CalibrationProfile;
 import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.common.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
@@ -52,7 +50,6 @@ import org.peakaboo.controller.plotter.Settings;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
@@ -60,7 +57,6 @@ import org.peakaboo.datasink.model.DataSink;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
-import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.datafile.PathDataFile;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
@@ -68,10 +64,8 @@ import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
-import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.util.StringInput;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
@@ -80,7 +74,6 @@ import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
-import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutorSet;
@@ -91,6 +84,7 @@ import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
 import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
 import org.peakaboo.framework.swidget.hookins.FileDrop;
 import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
 import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
@@ -99,7 +93,6 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog.MessageType;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
 import org.peakaboo.framework.swidget.widgets.layerpanel.widgets.AboutLayer;
@@ -113,6 +106,7 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.environment.DesktopApp;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
@@ -358,7 +352,7 @@ public class PlotPanel extends TabbedLayerPanel {
 				new LayerDialog(
 						"Open Failed", 
 						message, 
-						MessageType.ERROR
+						StockIcon.BADGE_ERROR
 					).showIn(PlotPanel.this);
 			}
 
@@ -427,7 +421,7 @@ public class PlotPanel extends TabbedLayerPanel {
 				new LayerDialog(
 						"Open Associated Data Set?", 
 						"This session is associated with another data set.\nDo you want to open that data set now?", 
-						MessageType.QUESTION)
+						StockIcon.BADGE_QUESTION)
 					.addRight(buttonYes)
 					.addLeft(buttonNo)
 					.showIn(PlotPanel.this);
@@ -437,7 +431,10 @@ public class PlotPanel extends TabbedLayerPanel {
 
 			@Override
 			public void onSessionFailure() {
-				new LayerDialog("Loading Session Failed", "The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", MessageType.ERROR).showIn(PlotPanel.this);
+				new LayerDialog(
+						"Loading Session Failed", 
+						"The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", 
+						StockIcon.BADGE_ERROR).showIn(PlotPanel.this);
 			}
 			
 		};
@@ -514,7 +511,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	// ////////////////////////////////////////////////////////
 
 	public void actionAbout() {
-		ImageIcon logo = IconFactory.getImageIcon( Version.logo );
+		ImageIcon logo = IconFactory.getImageIcon( PeakabooIcons.PATH, Version.logo );
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
 		
 		
@@ -927,7 +924,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			new LayerDialog(
 					"Cannot Detect Energy Calibration", 
 					"Detecting energy calibration requires that at least one element be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
-					MessageType.WARNING
+					StockIcon.BADGE_WARNING
 				).showIn(this);
 			return;
 		}
@@ -1012,7 +1009,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 		});
 		textfield.setText(controller.fitting().getAnnotation(selected));
-		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, MessageType.QUESTION);
+		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, StockIcon.BADGE_QUESTION);
 		dialogbox.set(dialog);
 		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
 		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
@@ -1065,7 +1062,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 		});
 		textfield.setText(controller.data().getTitle());
-		LayerDialog dialog = new LayerDialog("Change Dataset Title", textfield, MessageType.QUESTION);
+		LayerDialog dialog = new LayerDialog("Change Dataset Title", textfield, StockIcon.BADGE_QUESTION);
 		dialogbox.set(dialog);
 		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
 		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {

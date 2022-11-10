@@ -24,4 +24,6 @@ public interface TierProvider {
 	public String appName();
 	public String tierName();
 	
+	public String assetPath();
+	
 }

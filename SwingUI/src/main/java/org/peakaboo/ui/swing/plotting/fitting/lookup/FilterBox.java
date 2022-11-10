@@ -16,13 +16,14 @@ import javax.swing.border.EmptyBorder;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 /**
  * A JTextField dressed up to look like a filter/search box
  */
 public class FilterBox extends JTextField {
 
-	private ImageIcon icon = IconFactory.getImageIcon("filter", IconSize.BUTTON);
+	private ImageIcon icon = IconFactory.getImageIcon(PeakabooIcons.FILTER, IconSize.BUTTON);
 	
 	public FilterBox() {
 		super();

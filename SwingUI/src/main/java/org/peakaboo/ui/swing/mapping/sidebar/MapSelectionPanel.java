@@ -16,6 +16,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
+import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 public class MapSelectionPanel extends SettingsPanel {
 
@@ -30,22 +31,22 @@ public class MapSelectionPanel extends SettingsPanel {
 		
 		
 		FluentToggleButton selRect = new FluentToggleButton()
-				.withIcon("select-rectangular", IconSize.BUTTON)
+				.withIcon(PeakabooIcons.SELECT_RECTANGULAR, IconSize.BUTTON)
 				.withTooltip("Select Rectangle")
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.RECTANGLE));
 		FluentToggleButton selEllipse = new FluentToggleButton()
-				.withIcon("select-ellipse", IconSize.BUTTON)
+				.withIcon(PeakabooIcons.SELECT_ELLIPSE, IconSize.BUTTON)
 				.withTooltip("Select Ellipse")
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.ELLIPSE));
 		FluentToggleButton selSimilar = new FluentToggleButton()
-				.withIcon("select-continuous-area", IconSize.BUTTON)
+				.withIcon(PeakabooIcons.SELECT_CONTINUOUS_AREA, IconSize.BUTTON)
 				.withTooltip("Select By Similarity")
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SIMILAR));
 		FluentToggleButton selShape = new FluentToggleButton()
-				.withIcon("select-lasso", IconSize.BUTTON)
+				.withIcon(PeakabooIcons.SELECT_LASSO, IconSize.BUTTON)
 				.withTooltip("Select Hand-Drawn Shape")
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SHAPE));
