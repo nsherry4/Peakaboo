@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -45,6 +48,7 @@ import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
 import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
+import org.peakaboo.framework.swidget.widgets.options.OptionChooserPanel;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 
 
@@ -56,47 +60,11 @@ public class SavePicture extends JPanel
 	private Component				owner;
 	private JDialog					dialog;
 	Consumer<Optional<File>> 		onComplete;
-	private FormatPicker			formatPicker;
+	private OptionChooserPanel<SurfaceType> formatPicker;
 	private DimensionPicker			dimensionPicker;
 	
 	
 	private ModalLayer				layer = null;
-	
-	
-	public static class FormatPicker extends JPanel {
-
-		private SurfaceType type = SurfaceType.RASTER;
-		
-		public FormatPicker() {
-		
-			OptionBlock formats = new OptionBlock();
-			ButtonGroup group = new ButtonGroup();
-			
-			OptionRadioButton raster = new OptionRadioButton(formats, group)
-					.withText("Pixel Image (PNG)", "A grid of coloured dots with a fixed size and level of detail")
-					.withSelection(type == SurfaceType.RASTER)
-					.withListener(() -> type = SurfaceType.RASTER);
-			formats.add(raster);
-			
-			OptionRadioButton vector = new OptionRadioButton(formats, group)
-					.withText("Scalable Vector Graphic (SVG)", "Defined by points, lines, and curves, they are scalable to any size")
-					.withSelection(type == SurfaceType.VECTOR)
-					.withListener(() -> type = SurfaceType.VECTOR);
-			formats.add(vector);
-			
-			OptionBlocksPanel panel = new OptionBlocksPanel(formats);
-			this.setLayout(new BorderLayout());
-			this.add(panel, BorderLayout.CENTER);
-			
-		}
-
-		public SurfaceType getSelectedSurfaceType() {
-			return type;
-		}
-
-		
-	}
-
 	
 	
 	
@@ -260,7 +228,7 @@ public class SavePicture extends JPanel
 		return new FluentButton("Save").withAction(() -> {
 			Cursor oldCursor = getCursor();
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			saveSurfaceType(formatPicker.getSelectedSurfaceType());
+			saveSurfaceType(formatPicker.getSelected());
 			setCursor(oldCursor);
 		});
 	}
@@ -283,7 +251,9 @@ public class SavePicture extends JPanel
 		dimensionPicker = new DimensionPicker((int)Math.ceil(controller.getUsedWidth()), (int)Math.ceil(controller.getUsedHeight()));
 		panel.add(dimensionPicker, BorderLayout.NORTH);
 		
-		formatPicker = new FormatPicker();
+		formatPicker = new OptionChooserPanel<>(Arrays.asList(SurfaceType.values()), item -> {
+			return new OptionRadioButton().withText(item.title(), item.description());
+		});
 		panel.add(formatPicker, BorderLayout.CENTER);
 		
 		return panel;

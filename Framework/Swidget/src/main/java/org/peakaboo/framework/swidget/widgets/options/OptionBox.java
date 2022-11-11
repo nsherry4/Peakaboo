@@ -123,8 +123,11 @@ public abstract class OptionBox extends OptionComponent {
 		}
 		
 	}
-
 	
+	public void setBlock(OptionBlock block) {
+		this.block = block;
+	}
+
 	@Override
 	public Dimension getPreferredSize() {
 		

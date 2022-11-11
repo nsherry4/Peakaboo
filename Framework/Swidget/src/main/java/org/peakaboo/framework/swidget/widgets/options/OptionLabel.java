@@ -28,7 +28,7 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 		lblDesc.setForeground(fgDisabled);
 		this.add(lblDesc);
 		
-		this.setTextSize(OptionSize.MEDIUM);
+		this.withSize(OptionSize.MEDIUM);
 		
 	}
 
@@ -50,8 +50,8 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 
 
 	public void setTextSize(OptionSize size) {
-		lblTitle.setFont(lblTitle.getFont().deriveFont(size.getTitleSize()).deriveFont(Font.PLAIN));
-		lblDesc.setFont(lblDesc.getFont().deriveFont(size.getDescriptionSize()).deriveFont(Font.PLAIN));
+		lblTitle.setFont(lblTitle.getFont().deriveFont((float)size.getTitleSize()));
+		lblDesc.setFont(lblDesc.getFont().deriveFont((float)size.getDescriptionSize()));
 	}
 
 	@Override

@@ -19,11 +19,15 @@ public class OptionRadioButton extends OptionBox implements OptionFluentControlA
 	private OptionLabel label;
 	private Consumer<NullType> listener;
 	
+	public OptionRadioButton() {
+		this(null, null);
+	}
+	
 	public OptionRadioButton(OptionBlock block, ButtonGroup group) {
 		super(block);
 		
 		button = new JRadioButton();
-		group.add(button);
+		if (group != null) { group.add(button); }
 		
 		label = new OptionLabel("", "");
 		
