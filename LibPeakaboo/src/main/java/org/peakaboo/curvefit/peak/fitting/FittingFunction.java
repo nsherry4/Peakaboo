@@ -1,6 +1,6 @@
 package org.peakaboo.curvefit.peak.fitting;
 
-import org.peakaboo.common.SelfDescribing;
+import org.peakaboo.framework.autodialog.model.SelfDescribing;
 
 /**
  * 

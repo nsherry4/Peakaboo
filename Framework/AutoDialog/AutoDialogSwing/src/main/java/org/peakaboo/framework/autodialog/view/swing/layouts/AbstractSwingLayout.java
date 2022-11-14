@@ -42,13 +42,11 @@ public abstract class AbstractSwingLayout implements SwingLayout {
 	
 	@Override
 	public boolean expandVertical() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean expandHorizontal() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

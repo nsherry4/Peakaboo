@@ -1,11 +1,11 @@
 package org.peakaboo.curvefit.curve.fitting.solver;
 
-import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 

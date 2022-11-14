@@ -1,6 +1,6 @@
 package org.peakaboo.curvefit.peak.detector;
 
-import org.peakaboo.common.SelfDescribing;
+import org.peakaboo.framework.autodialog.model.SelfDescribing;
 
 /**
  * Describes the kind of properties that would be expected from different kinds of detectors.

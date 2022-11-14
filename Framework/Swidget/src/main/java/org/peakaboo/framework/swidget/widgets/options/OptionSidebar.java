@@ -11,10 +11,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.peakaboo.framework.stratus.Stratus;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.widgets.Spacing;
 import org.peakaboo.framework.swidget.widgets.listwidget.ListWidget;
@@ -27,6 +29,7 @@ public class OptionSidebar extends OptionComponent {
 	public static class Entry {
 		String name;
 		ImageIcon icon;
+		public boolean trailingSeparator = false;
 		public Entry(String name, ImageIcon icon) {
 			this.name = name;
 			this.icon = icon;
@@ -40,15 +43,18 @@ public class OptionSidebar extends OptionComponent {
 	class Widget extends ListWidget<Entry> {
 
 		private JLabel label;
+		private Border separatorBorder;
 		
 		public Widget() {
 			setLayout(new BorderLayout());
 			label = new JLabel();
-			label.setBorder(Spacing.bLarge());
+			label.setBorder(Spacing.bHuge());
 			label.setFont(label.getFont().deriveFont(14f));
 			this.add(label, BorderLayout.CENTER);
-			this.setPreferredSize(new Dimension(180, 40));
-			label.setIconTextGap(Spacing.large);
+			this.setPreferredSize(new Dimension(200, 40));
+			label.setIconTextGap(Spacing.huge);
+
+			separatorBorder = new MatteBorder(0, 0, 1, 0, Stratus.moreTransparent(borderAlpha, 0.1f));
 		}
 		
 		@Override
@@ -57,6 +63,13 @@ public class OptionSidebar extends OptionComponent {
 			label.setForeground(this.getForeground());
 			//label.setIcon(value.icon.toSymbolicIcon(IconSize.BUTTON, this.getForeground()));
 			label.setIcon(IconFactory.recolour(entry.icon, this.getForeground()));
+			
+			if (entry.trailingSeparator) {
+				this.setBorder(separatorBorder);
+			} else {
+				this.setBorder(null);
+			}
+			
 		}
 		
 	}

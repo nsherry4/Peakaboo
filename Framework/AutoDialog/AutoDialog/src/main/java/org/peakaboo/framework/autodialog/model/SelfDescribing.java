@@ -1,4 +1,4 @@
-package org.peakaboo.common;
+package org.peakaboo.framework.autodialog.model;
 
 public interface SelfDescribing {
 

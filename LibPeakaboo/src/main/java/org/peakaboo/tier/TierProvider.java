@@ -19,11 +19,12 @@ public interface TierProvider {
 	
 	public List<BoltPluginManager<? extends BoltPlugin>> getPluginManagers();
 
-	public <V, C> List<TierUIItem<V, C>> uiComponents(String location);
+	public <V, C> List<TierUIAction<V, C>> uiComponents(String location);
 
 	public String appName();
 	public String tierName();
 	
 	public String assetPath();
+	public List<TierUIAutoGroup<PlotController>> getAdvancedOptions();
 	
 }

@@ -1,11 +1,8 @@
 package org.peakaboo.framework.swidget.widgets.options;
 
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
@@ -13,13 +10,16 @@ import javax.swing.Action;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 
 public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<Boolean> {
 	
 	private JCheckBox checkbox;
 	private OptionLabel label;
 	private Consumer<Boolean> listener;
+	
+	public OptionCheckBox() {
+		this(null);
+	}
 	
 	public OptionCheckBox(OptionBlock block) {
 		super(block);

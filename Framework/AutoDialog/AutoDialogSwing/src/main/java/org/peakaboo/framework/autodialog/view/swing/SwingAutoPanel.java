@@ -2,6 +2,7 @@ package org.peakaboo.framework.autodialog.view.swing;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -13,14 +14,23 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
 public class SwingAutoPanel extends JPanel {
 
 	public SwingAutoPanel(Group group) {
+		this(group, true);
+	}
+	
+	public SwingAutoPanel(Group group, boolean scrolled) {
 		setLayout(new BorderLayout());
 		
-		JScrollPane scroller = new JScrollPane(SwingLayoutFactory.forGroup(group).getComponent());
-		scroller.setBorder(Spacing.bNone());
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		JComponent component = SwingLayoutFactory.forGroup(group).getComponent();
 		
-		this.add(scroller, BorderLayout.CENTER);
+		if (scrolled) {
+			JScrollPane scroller = new JScrollPane(component);
+			scroller.setBorder(Spacing.bNone());
+			scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			this.add(scroller, BorderLayout.CENTER);
+		} else {
+			this.add(component, BorderLayout.CENTER);
+		}
 		
 	}
 	

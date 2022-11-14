@@ -16,14 +16,14 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.tier.TierUIItem;
+import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapperToolbar extends JToolBar {
 
 	public static final String TIER_LOCATION = "map.toolbar";
-	private final List<TierUIItem<MapperPanel, MappingController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	private final List<TierUIAction<MapperPanel, MappingController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
 	
 	private FluentToolbarButton	showConcentrations, examineSubset;
 
@@ -49,7 +49,7 @@ public class MapperToolbar extends JToolBar {
 		c.gridx++;
 		
 		
-		for (TierUIItem<MapperPanel, MappingController> item : tierItems) {
+		for (TierUIAction<MapperPanel, MappingController> item : tierItems) {
 			FluentToolbarButton component = new FluentToolbarButton(item.text)
 					.withIcon(Tier.provider().assetPath() + "/icons/", item.iconname, IconSize.TOOLBAR_SMALL)
 					.withTooltip(item.tooltip)
@@ -82,7 +82,7 @@ public class MapperToolbar extends JToolBar {
 		controller.addListener(t -> {
 			examineSubset.setEnabled(controller.getSelection().isReplottable());
 			
-			for (TierUIItem<MapperPanel, MappingController> item : tierItems) {
+			for (TierUIAction<MapperPanel, MappingController> item : tierItems) {
 				JComponent component = (JComponent) item.component;
 				component.setEnabled(item.enabled.apply(controller));
 			}

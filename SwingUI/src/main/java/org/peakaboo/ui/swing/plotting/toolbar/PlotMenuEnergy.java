@@ -19,7 +19,7 @@ import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
 import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.tier.TierUIItem;
+import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
@@ -31,7 +31,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 	private FluentButton energyGuess;
 	
 	public static final String TIER_LOCATION = "plot.energymenu";
-	private final List<TierUIItem<PlotPanel, PlotController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	private final List<TierUIAction<PlotPanel, PlotController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
 	
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
@@ -45,7 +45,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		SettingsPanel tierui = new SettingsPanel();
 		tierui.setOpaque(false);
 		tierui.setBorder(Spacing.bMedium());
-		for (TierUIItem<PlotPanel, PlotController> item : tierItems) {
+		for (TierUIAction<PlotPanel, PlotController> item : tierItems) {
 			JButton button = new FluentButton(item.text)
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> {

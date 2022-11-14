@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
@@ -29,6 +29,12 @@ import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFuncti
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.framework.autodialog.AutoDialog;
+import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.autodialog.model.SelfDescribing;
+import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
+import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
+import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.IconSize;
@@ -40,13 +46,14 @@ import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar.Entry;
-import org.peakaboo.tier.Tier;
 import org.peakaboo.framework.swidget.widgets.options.OptionSize;
+import org.peakaboo.tier.Tier;
+import org.peakaboo.tier.TierUIAction;
+import org.peakaboo.tier.TierUIAutoGroup;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
-
 	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
 		super(parent, true);
 		getHeader().setCentre("Advanced Options");
@@ -82,10 +89,18 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		body.add(overlapPanel, KEY_OVERLAP);
 		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.TOOLBAR_SMALL));
 		
-		
 		var entries = new ArrayList<Entry>();
 		entries.addAll(List.of(detectorEntry, peakEntry, curvefitEntry, overlapEntry));
 		
+		for (TierUIAutoGroup<PlotController> item : Tier.provider().getAdvancedOptions()) {
+			Group group = item.getValue();
+			String groupKey = group.getName();
+			JComponent groupPanel = SwingLayoutFactory.forGroup(group).getComponent();
+			body.add(groupPanel, groupKey);
+			OptionSidebar.Entry itemEntry = new OptionSidebar.Entry(groupKey, IconFactory.getImageIcon(Tier.provider().assetPath() + "/icons/", item.getIconPath(), IconSize.TOOLBAR_SMALL));
+			entries.add(itemEntry);
+		}
+
 		
 		OptionSidebar sidebar = new OptionSidebar(entries, e -> {
 			cards.show(body, e.getName());

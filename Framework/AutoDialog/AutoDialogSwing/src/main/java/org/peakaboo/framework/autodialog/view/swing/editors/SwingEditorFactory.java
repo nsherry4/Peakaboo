@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.CoreStyle;
+import org.peakaboo.framework.autodialog.view.swing.editors.options.OptionRadioEditor;
 
 public class SwingEditorFactory {
 
@@ -17,6 +18,7 @@ public class SwingEditorFactory {
 	static {
 		registerStyleProvider("file-name", FilenameEditor::new);
 		registerStyleProvider("integer-slider", IntegerSliderEditor::new);
+		registerStyleProvider("option-radio", OptionRadioEditor::new);
 	}
 	
 	private SwingEditorFactory() {

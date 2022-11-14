@@ -2,10 +2,10 @@ package org.peakaboo.curvefit.peak.detector;
 
 import java.util.List;
 
-import org.peakaboo.common.SelfDescribing;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.framework.autodialog.model.SelfDescribing;
 
 public interface DetectorMaterial extends SelfDescribing {
 	

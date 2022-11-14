@@ -27,7 +27,7 @@ public class BasicTierProvider implements TierProvider {
 	}
 
 	@Override
-	public <V, C> List<TierUIItem<V, C>> uiComponents(String location) {
+	public <V, C> List<TierUIAction<V, C>> uiComponents(String location) {
 		return List.of();
 	}
 
@@ -49,6 +49,11 @@ public class BasicTierProvider implements TierProvider {
 	@Override
 	public String assetPath() {
 		return "";
+	}
+
+	@Override
+	public List<TierUIAutoGroup<PlotController>> getAdvancedOptions() {
+		return List.of();
 	}
 	
 	

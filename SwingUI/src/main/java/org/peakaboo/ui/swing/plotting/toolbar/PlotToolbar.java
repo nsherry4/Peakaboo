@@ -17,7 +17,7 @@ import org.peakaboo.framework.swidget.icons.IconSize;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.tier.TierUIItem;
+import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
@@ -39,7 +39,7 @@ public class PlotToolbar extends JToolBar {
 	private PlotMenuExport exportMenu;
 	
 	public static final String TIER_LOCATION = "plot.toolbar";
-	private final List<TierUIItem<PlotPanel, PlotController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
+	private final List<TierUIAction<PlotPanel, PlotController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
 	
 	//===MAIN MENU WIDGETS===
 	
@@ -103,7 +103,7 @@ public class PlotToolbar extends JToolBar {
 
 		
 		
-		for (TierUIItem item : tierItems) {
+		for (TierUIAction item : tierItems) {
 			FluentToolbarButton tierButton = new FluentToolbarButton(item.text)
 					.withIcon(Tier.provider().assetPath() + "/icons/", item.iconname, IconSize.TOOLBAR_SMALL)
 					.withTooltip(item.tooltip)
@@ -141,7 +141,7 @@ public class PlotToolbar extends JToolBar {
 		
 		toolbarInfo.setEnabled(hasData);
 		
-		for (TierUIItem<PlotPanel, PlotController> item : tierItems) {
+		for (TierUIAction<PlotPanel, PlotController> item : tierItems) {
 			JComponent component = (JComponent) item.component;
 			boolean enabled = item.enabled.apply(controller);
 			component.setEnabled(enabled);
