@@ -3,15 +3,12 @@
    width="1em"
    height="1em"
    preserveAspectRatio="xMidYMid meet"
-   viewBox="0 0 256 256"
+   viewBox="0 0 24 24"
    style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
    version="1.1"
    id="svg4"
    sodipodi:docname="options-detector.svg"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   inkscape:export-filename="/media/Rowlf/Share/Work/SS/Git/Peakaboo/SwingUI/src/main/resources/org/peakaboo/ui/swing/icons/svg-sources/options-detector.png"
-   inkscape:export-xdpi="6"
-   inkscape:export-ydpi="6"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,9 +24,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      showgrid="false"
-     inkscape:zoom="2.9101562"
-     inkscape:cx="111.50604"
-     inkscape:cy="127.82819"
+     inkscape:zoom="31.041667"
+     inkscape:cx="11.226846"
+     inkscape:cy="12"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="1920"
@@ -38,7 +35,7 @@
      inkscape:current-layer="svg4" />
   <path
      fill="currentColor"
-     d="M208 52h-25.6L170 33.3a12.1 12.1 0 0 0-10-5.3H96a12.1 12.1 0 0 0-10 5.3L73.6 52H48a28.1 28.1 0 0 0-28 28v112a28.1 28.1 0 0 0 28 28h160a28.1 28.1 0 0 0 28-28V80a28.1 28.1 0 0 0-28-28Zm4 140a4 4 0 0 1-4 4H48a4 4 0 0 1-4-4V80a4 4 0 0 1 4-4h32a12.1 12.1 0 0 0 10-5.3L102.4 52h51.2L166 70.7a12.1 12.1 0 0 0 10 5.3h32a4 4 0 0 1 4 4ZM128 84a48 48 0 1 0 48 48a48 48 0 0 0-48-48Zm0 72a24 24 0 1 1 24-24a24.1 24.1 0 0 1-24 24Z"
+     d="M13.925 2.504a2.25 2.25 0 0 1 1.94 1.11l.814 1.387h2.071A3.25 3.25 0 0 1 22 8.25v9.5A3.25 3.25 0 0 1 18.75 21H5.25A3.25 3.25 0 0 1 2 17.75v-9.5A3.25 3.25 0 0 1 5.25 5h2.08l.875-1.424a2.25 2.25 0 0 1 1.917-1.073h3.803Zm0 1.5h-3.803a.75.75 0 0 0-.574.268l-.065.09l-1.093 1.78a.75.75 0 0 1-.639.358h-2.5A1.75 1.75 0 0 0 3.5 8.25v9.5c0 .966.784 1.75 1.75 1.75h13.5a1.75 1.75 0 0 0 1.75-1.75v-9.5a1.75 1.75 0 0 0-1.75-1.75h-2.5a.75.75 0 0 1-.647-.37l-1.032-1.757a.75.75 0 0 0-.646-.37ZM12 8a4.5 4.5 0 1 1 0 9a4.5 4.5 0 0 1 0-9Zm0 1.5a3 3 0 1 0 0 6a3 3 0 0 0 0-6Z"
      id="path2"
      style="fill:#555555;fill-opacity:1" />
 </svg>

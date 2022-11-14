@@ -3,15 +3,12 @@
    width="1em"
    height="1em"
    preserveAspectRatio="xMidYMid meet"
-   viewBox="0 0 256 256"
+   viewBox="0 0 24 24"
    style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);"
    version="1.1"
    id="svg4"
    sodipodi:docname="options-peakmodel.svg"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
-   inkscape:export-filename="/media/Rowlf/Share/Work/SS/Git/Peakaboo/SwingUI/src/main/resources/org/peakaboo/ui/swing/icons/svg-sources/options-peakmodel.png"
-   inkscape:export-xdpi="6"
-   inkscape:export-ydpi="6"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,9 +24,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      showgrid="false"
-     inkscape:zoom="2.9101562"
-     inkscape:cx="115.62953"
-     inkscape:cy="127.82819"
+     inkscape:zoom="31.041667"
+     inkscape:cx="11.226846"
+     inkscape:cy="11.983893"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="1920"
@@ -38,7 +35,7 @@
      inkscape:current-layer="svg4" />
   <path
      fill="currentColor"
-     d="M212 40a12 12 0 0 1-12 12h-29.3A20 20 0 0 0 151 68.4l-8.6 47.6H184a12 12 0 0 1 0 24h-46l-9.4 51.9A44 44 0 0 1 85.3 228H56a12 12 0 0 1 0-24h29.3a20 20 0 0 0 19.7-16.4l8.6-47.6H72a12 12 0 0 1 0-24h46l9.4-51.9A44 44 0 0 1 170.7 28H200a12 12 0 0 1 12 12Z"
+     d="M12.482 3.827c-1.113-.824-2.696-.091-2.788 1.29L9.535 7.5h2.715a.75.75 0 0 1 0 1.5H9.435l-.6 9.006c-.18 2.685-3.358 4.002-5.383 2.23l-.196-.172a.75.75 0 0 1 .988-1.129l.195.171c1.091.955 2.803.246 2.899-1.2L7.932 9H5.75a.75.75 0 0 1 0-1.5h2.282l.165-2.483c.171-2.565 3.112-3.926 5.178-2.395l.371.275a.75.75 0 1 1-.892 1.205l-.372-.275Zm1.23 8.936a.75.75 0 0 0-1.152-.22l-.322.276a.75.75 0 1 1-.976-1.139l.322-.276a2.25 2.25 0 0 1 3.456.66l.977 1.858l2.703-2.703a.75.75 0 1 1 1.06 1.061l-3.031 3.032l1.539 2.924a.75.75 0 0 0 1.152.22l.322-.276a.75.75 0 0 1 .976 1.14l-.322.275a2.25 2.25 0 0 1-3.456-.66l-1.322-2.513l-3.358 3.358a.75.75 0 1 1-1.06-1.06l3.687-3.687l-1.195-2.27Z"
      id="path2"
      style="fill:#555555;fill-opacity:1" />
 </svg>

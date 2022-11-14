@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -38,6 +39,8 @@ import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
 import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
+import org.peakaboo.framework.swidget.widgets.options.OptionSidebar.Entry;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.framework.swidget.widgets.options.OptionSize;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
@@ -62,25 +65,29 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		String KEY_DETECTOR = "Detector";
 		JPanel detectorPanel = makeDetectorPanel(controller);
 		body.add(detectorPanel, KEY_DETECTOR);
-		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_DETECTOR, IconSize.BUTTON));
+		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_DETECTOR, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_PEAKMODEL = "Peak Model";
 		JPanel peakPanel = makePeakModelPanel(controller);
 		body.add(peakPanel, KEY_PEAKMODEL);
-		OptionSidebar.Entry peakEntry = new OptionSidebar.Entry(KEY_PEAKMODEL, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PEAKMODEL, IconSize.BUTTON));
+		OptionSidebar.Entry peakEntry = new OptionSidebar.Entry(KEY_PEAKMODEL, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PEAKMODEL, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_CURVEFIT = "Curve Fitting";
 		JPanel curvefitPanel = makeCurvefitPanel(controller);
 		body.add(curvefitPanel, KEY_CURVEFIT);
-		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_CURVEFIT, IconSize.BUTTON));
+		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_CURVEFIT, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_OVERLAP = "Overlap Solving";
 		JPanel overlapPanel = makeOverlapPanel(controller);
 		body.add(overlapPanel, KEY_OVERLAP);
-		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.BUTTON));
+		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.TOOLBAR_SMALL));
 		
 		
-		OptionSidebar sidebar = new OptionSidebar(List.of(detectorEntry, peakEntry, curvefitEntry, overlapEntry), e -> {
+		var entries = new ArrayList<Entry>();
+		entries.addAll(List.of(detectorEntry, peakEntry, curvefitEntry, overlapEntry));
+		
+		
+		OptionSidebar sidebar = new OptionSidebar(entries, e -> {
 			cards.show(body, e.getName());
 		});
 		sidebar.select(detectorEntry);
