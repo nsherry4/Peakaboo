@@ -97,7 +97,7 @@ public class Env
 			case WINDOWS -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
 			case MAC -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
 			case OTHER -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
-			case UNIX -> new File("/opt/" + appname.toLowerCase() + "/lib/app" + appname + ".cfg");
+			case UNIX -> new File("/opt/" + appname.toLowerCase() + "/lib/app/" + appname + ".cfg");
 			default -> throw new IllegalArgumentException("Unexpected value: " + getOS());
 		};
 	}
