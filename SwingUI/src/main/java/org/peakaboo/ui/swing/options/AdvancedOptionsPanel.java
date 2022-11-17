@@ -113,7 +113,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		entries.get(entries.size()-1).trailingSeparator = true;
 		
 		
-		String KEY_APP = "Peakaboo Settings";
+		String KEY_APP = "App Settings";
 		JPanel appPanel = makeAppPanel(controller);
 		body.add(appPanel, KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APP, IconSize.TOOLBAR_SMALL));
@@ -155,23 +155,24 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		startup.add(firstrun);
 
 		
+		OptionBlock heapBlock = new OptionBlock();
 		ButtonGroup heapGroup = new ButtonGroup();
-		OptionRadioButton heapPercent = new OptionHeapSize(startup, heapGroup, Settings::getHeapSizePercent, Settings::setHeapSizePercent)
-				.withText("Java Heap Size (% of Total)", "Limit system memory to use by amount available")
+		OptionRadioButton heapPercent = new OptionHeapSize(heapBlock, heapGroup, Settings::getHeapSizePercent, Settings::setHeapSizePercent)
+				.withText("Java Heap Size (Percentage)", "Limit memory use to portion of total available")
 				.withSize(OptionSize.LARGE)
 				.withSelection(Settings.isHeapSizePercent())
 				.withListener(() -> Settings.setHeapSizeIsPercent(true));
-		startup.add(heapPercent);
-		OptionRadioButton heapMegabytes = new OptionHeapSize(startup, heapGroup, Settings::getHeapSizeMegabytes, Settings::setHeapSizeMegabytes)
-				.withText("Java Heap Size (Megabytes)", "Limit system memory to use as fixed amount")
+		heapBlock.add(heapPercent);
+		OptionRadioButton heapMegabytes = new OptionHeapSize(heapBlock, heapGroup, Settings::getHeapSizeMegabytes, Settings::setHeapSizeMegabytes)
+				.withText("Java Heap Size (Megabytes)", "Limit memory use to fixed amount")
 				.withSize(OptionSize.LARGE)
 				.withSelection(!Settings.isHeapSizePercent())
 				.withListener(() -> Settings.setHeapSizeIsPercent(false));
-		startup.add(heapMegabytes);
+		heapBlock.add(heapMegabytes);
 		
 		
 		
-		return new OptionBlocksPanel(datasets, startup);
+		return new OptionBlocksPanel(datasets, startup, heapBlock);
 				
 	}
 

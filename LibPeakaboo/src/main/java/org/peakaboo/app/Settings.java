@@ -51,7 +51,7 @@ public class Settings {
 
 	private static final String HEAP_SIZE_MB = "org.peakaboo.app.heapsize-megabytes";
 	public static int getHeapSizeMegabytes() {
-		return provider.getInt(HEAP_SIZE_MB, Math.max(128, (int)(Env.maxHeap() * 0.75f)));
+		return provider.getInt(HEAP_SIZE_MB, Math.min(Math.max(128, (int)(Env.maxHeap() * 0.75f)), 2048)  );
 	}
 	public static void setHeapSizeMegabytes(int size) {
 		if (size < 128) { size = 128; }
