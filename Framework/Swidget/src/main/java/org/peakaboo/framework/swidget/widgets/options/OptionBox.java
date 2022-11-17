@@ -22,7 +22,7 @@ import org.peakaboo.framework.swidget.widgets.Spacing;
  * An individual option entry
  *
  */
-public abstract class OptionBox extends OptionComponent {
+public class OptionBox extends OptionComponent {
 
 	private OptionBlock block = null;
 	private boolean hover = false;
@@ -56,7 +56,7 @@ public abstract class OptionBox extends OptionComponent {
 	
 	void setPadding(int size) {
 		this.padding = size;
-		this.setBorder(new EmptyBorder(padding, padding, padding, padding));
+		this.setBorder(new EmptyBorder(padding, (int)(padding*1.3f), padding, (int)(padding*1.3f)));
 	}
 	
 	public void addExpander() {

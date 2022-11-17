@@ -1,8 +1,6 @@
 package org.peakaboo.framework.swidget.widgets.options;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
@@ -11,10 +9,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
-public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<Boolean> {
+public class OptionCheckBox extends OptionCustomComponent implements OptionFluentControlAPI<Boolean> {
 	
 	private JCheckBox checkbox;
-	private OptionLabel label;
 	private Consumer<Boolean> listener;
 	
 	public OptionCheckBox() {
@@ -22,35 +19,19 @@ public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<
 	}
 	
 	public OptionCheckBox(OptionBlock block) {
-		super(block);
-		
-		checkbox = new JCheckBox();
-		label = new OptionLabel("", "");
-		
-		this.add(checkbox);
-		this.addSpacer();
-		this.add(label);
-		this.addExpander();
-		
-		this.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				boolean state = !isSelected();
-				setSelected(state);
-				if (listener != null) listener.accept(state);
-			}
-		});
-		
+		super(block, new JCheckBox(), true);
+		checkbox = (JCheckBox) this.getComponent();
 	}
 
-
+	@Override
+	protected void onClick() {
+		boolean state = !isSelected();
+		setSelected(state);
+		if (listener != null) listener.accept(state);
+	}
+	
 	public JCheckBox getCheckbox() {
 		return checkbox;
-	}
-
-	public void setTextSize(OptionSize size) {
-		label.setTextSize(size);
 	}
 
 	public boolean isSelected() {
@@ -64,27 +45,31 @@ public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<
 
 	@Override
 	public OptionCheckBox withDescription(String description) {
-		label.withDescription(description);
+		super.withDescription(description);
 		return this;
 	}
 
 	@Override
 	public OptionCheckBox withTooltip(String tooltip) {
-		this.setToolTipText(tooltip);
-		checkbox.setToolTipText(tooltip);
+		super.withTooltip(tooltip);
 		return this;
 	}
 
 	@Override
 	public OptionCheckBox withTitle(String title) {
-		label.withTitle(title);
+		super.withTitle(title);
 		return this;
 	}
 
 	@Override
 	public OptionCheckBox withSize(OptionSize size) {
-		label.withSize(size);
-		this.setPadding(size.getPaddingSize());
+		super.withSize(size);
+		return this;
+	}
+
+	@Override
+	public OptionCheckBox withText(String title, String description) {
+		super.withText(title, description);
 		return this;
 	}
 
@@ -94,13 +79,7 @@ public class OptionCheckBox extends OptionBox implements OptionFluentControlAPI<
 		checkbox.addActionListener(e -> listener.accept(isSelected()));
 		return this;
 	}
-
-	@Override
-	public OptionCheckBox withText(String title, String description) {
-		label.withText(title, description);
-		return this;
-	}
-
+	
 	public OptionCheckBox withSelection(boolean selected) {
 		this.setSelected(selected);
 		return this;

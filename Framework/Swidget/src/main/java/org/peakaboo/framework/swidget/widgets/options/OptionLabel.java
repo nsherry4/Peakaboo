@@ -9,7 +9,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
-public class OptionLabel extends OptionComponent implements OptionFluentAPI<NullType> {
+public class OptionLabel extends OptionComponent implements OptionFluentAPI {
 
 	private final int LINE_SPACING = 2;
 	private JLabel lblDesc;
@@ -55,27 +55,27 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 	}
 
 	@Override
-	public OptionFluentAPI<NullType> withDescription(String description) {
+	public OptionLabel withDescription(String description) {
 		lblDesc.setText(description);
 		setDimensions();
 		return this;
 	}
 
 	@Override
-	public OptionFluentAPI<NullType> withTooltip(String tooltip) {
+	public OptionLabel withTooltip(String tooltip) {
 		this.setToolTipText(tooltip);
 		return this;
 	}
 
 	@Override
-	public OptionFluentAPI<NullType> withTitle(String title) {
+	public OptionLabel withTitle(String title) {
 		lblTitle.setText(title);
 		setDimensions();
 		return this;
 	}
 
 	@Override
-	public OptionFluentAPI<NullType> withSize(OptionSize size) {
+	public OptionLabel withSize(OptionSize size) {
 		this.setTextSize(size);
 		setDimensions();
 		return this;
@@ -83,7 +83,7 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI<Null
 
 
 	@Override
-	public OptionFluentAPI<NullType> withText(String title, String description) {
+	public OptionLabel withText(String title, String description) {
 		lblTitle.setText(title);
 		lblDesc.setText(description);
 		setDimensions();
