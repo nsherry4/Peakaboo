@@ -1,0 +1,9 @@
+--input ./jar
+--name "Peakaboo" 
+--main-class org.peakaboo.ui.swing.Peakaboo 
+--main-jar Peakaboo.jar 
+--description "XRF Analysis Software"
+--about-url https://peakaboo.org
+--license-file ../../LICENSE
+--java-options "--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.sql/java.sql=ALL-UNNAMED"
+--java-options "-XX:MaxRAMPercentage=75"
