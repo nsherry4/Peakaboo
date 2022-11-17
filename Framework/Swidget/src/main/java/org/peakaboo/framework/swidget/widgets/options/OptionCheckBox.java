@@ -76,7 +76,7 @@ public class OptionCheckBox extends OptionCustomComponent implements OptionFluen
 	@Override
 	public OptionCheckBox withListener(Consumer<Boolean> listener) {
 		this.listener = listener;
-		checkbox.addActionListener(e -> listener.accept(isSelected()));
+		checkbox.addItemListener(e -> listener.accept(isSelected()));
 		return this;
 	}
 	

@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.plotting;
+package org.peakaboo.ui.swing.options;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -58,6 +58,7 @@ import org.peakaboo.framework.swidget.widgets.options.OptionSize;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
 	
@@ -152,52 +153,21 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withSelection(Settings.isFirstrun())
 				.withListener(Settings::setFirstrun);
 		startup.add(firstrun);
-		
-		
-		JPanel heapControls = new JPanel();
-		heapControls.setOpaque(false);
-		heapControls.setLayout(new BoxLayout(heapControls, BoxLayout.LINE_AXIS));
 
-		JTextField size = new JTextField("" + (Settings.isHeapSizePercent() ? Settings.getHeapSizePercent() : Settings.getHeapSizeMegabytes()), 6);
-		size.setMaximumSize(size.getPreferredSize());
-		heapControls.add(size);
 		
-		JComboBox<String> units = new JComboBox<>(new String[] {"MB", "%"});
-		units.setMaximumSize(units.getMinimumSize());
-		units.setPreferredSize(units.getMinimumSize());
-		units.setSelectedIndex(Settings.isHeapSizePercent() ? 1 : 0);
-		heapControls.add(units);
-		
-		Runnable setHeap = () -> {
-			Settings.setHeapSize(Integer.parseInt(size.getText()), units.getSelectedIndex() == 1);
-		};
-		size.addActionListener(e -> setHeap.run());
-		size.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent arg0) {
-				setHeap.run();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent arg0) {
-				setHeap.run();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent arg0) {
-				setHeap.run();
-			}
-		});
-		units.addActionListener(e -> setHeap.run());
-		
-		
-		
-		
-		OptionBox heap = new OptionCustomComponent(startup, heapControls, false)
-				.withText("Java Heap Size", "Limit on system memory to use")
-				.withSize(OptionSize.LARGE);
-		startup.add(heap);
+		ButtonGroup heapGroup = new ButtonGroup();
+		OptionRadioButton heapPercent = new OptionHeapSize(startup, heapGroup, Settings::getHeapSizePercent, Settings::setHeapSizePercent)
+				.withText("Java Heap Size (% of Total)", "Limit system memory to use by amount available")
+				.withSize(OptionSize.LARGE)
+				.withSelection(Settings.isHeapSizePercent())
+				.withListener(() -> Settings.setHeapSizeIsPercent(true));
+		startup.add(heapPercent);
+		OptionRadioButton heapMegabytes = new OptionHeapSize(startup, heapGroup, Settings::getHeapSizeMegabytes, Settings::setHeapSizeMegabytes)
+				.withText("Java Heap Size (Megabytes)", "Limit system memory to use as fixed amount")
+				.withSize(OptionSize.LARGE)
+				.withSelection(!Settings.isHeapSizePercent())
+				.withListener(() -> Settings.setHeapSizeIsPercent(false));
+		startup.add(heapMegabytes);
 		
 		
 		

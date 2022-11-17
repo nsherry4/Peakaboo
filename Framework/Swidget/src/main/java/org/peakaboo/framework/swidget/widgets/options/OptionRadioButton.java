@@ -82,7 +82,7 @@ public class OptionRadioButton extends OptionCustomComponent implements OptionFl
 		this.listener = e -> {
 			if (isSelected()) event.accept(null);
 		};
-		button.addChangeListener(e -> this.listener.accept(null));
+		button.addItemListener(e -> this.listener.accept(null));
 		return this;
 	}
 	

@@ -57,6 +57,7 @@ public class Settings {
 		if (size < 128) { size = 128; }
 		if (size > Env.maxHeap()) { size = (int) Env.maxHeap(); }
 		provider.setInt(HEAP_SIZE_MB, size);
+		writeHeapConfig();
 	}
 	
 	
@@ -68,6 +69,7 @@ public class Settings {
 		if (size > 95) { size = 95; }
 		if (size < 2) { size = 2; }
 		provider.setInt(HEAP_SIZE_PERCENT, size);
+		writeHeapConfig();
 	}
 	
 	
@@ -77,6 +79,7 @@ public class Settings {
 	}
 	public static void setHeapSizeIsPercent(boolean isPercent) {
 		provider.setBoolean(HEAP_SIZE_IS_PERCENT, isPercent);
+		writeHeapConfig();
 	}
 	
 	
@@ -104,28 +107,17 @@ public class Settings {
 			String cfgContents = Files.readString(sourceCFG.toPath());
 			//replace the default memory option with the new one
 			cfgContents = cfgContents.replace("java-options=-XX:MaxRAMPercentage=75", jvmOption);
-			System.out.println(cfgContents);
+			File userCFG = Env.userCFGFile(Version.program_name);
+			Files.writeString(userCFG.toPath(), cfgContents);
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.WARNING, "Cannot write to per-user Peakaboo.cfg file", e);
 			throw new RuntimeException(e);
 		}
+		
+		
 
 		
 	}
 
-	public static boolean setHeapSize(int size, boolean isPercent) {
-		try {
-			setHeapSizeIsPercent(isPercent);
-			if (isPercent) {
-				setHeapSizePercent(size);
-			} else {
-				setHeapSizeMegabytes(size);
-			}
-			writeHeapConfig();
-			return true;
-		} catch (RuntimeException e) {
-			return false;
-		}
-	}
 	
 }

@@ -109,6 +109,7 @@ import org.peakaboo.ui.swing.environment.DesktopApp;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
+import org.peakaboo.ui.swing.options.AdvancedOptionsPanel;
 import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import org.peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;

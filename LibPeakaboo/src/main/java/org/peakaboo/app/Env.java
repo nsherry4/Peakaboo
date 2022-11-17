@@ -101,6 +101,10 @@ public class Env
 			default -> throw new IllegalArgumentException("Unexpected value: " + getOS());
 		};
 	}
+	
+	public static File userCFGFile(String appname) {
+		return appDirEntry(appname, appname + ".cfg");
+	}
 
 	public static File homeDirectory() {
 		return new File(System.getProperty("user.home"));
