@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.peakaboo.common.Version;
+import org.peakaboo.app.Version;
 import org.peakaboo.framework.swidget.dialogues.HeaderDialog;
 import org.peakaboo.framework.swidget.hookins.WindowDragger;
 import org.peakaboo.framework.swidget.icons.IconFactory;

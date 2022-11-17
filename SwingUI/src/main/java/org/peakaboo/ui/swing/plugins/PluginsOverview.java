@@ -24,8 +24,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import org.peakaboo.common.Env;
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.Env;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;

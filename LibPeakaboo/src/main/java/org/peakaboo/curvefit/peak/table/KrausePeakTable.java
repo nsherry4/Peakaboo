@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;

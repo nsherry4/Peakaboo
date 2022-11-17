@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.util.Mutable;

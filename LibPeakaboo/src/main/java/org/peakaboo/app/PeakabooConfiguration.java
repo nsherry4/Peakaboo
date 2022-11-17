@@ -1,4 +1,4 @@
-package org.peakaboo.common;
+package org.peakaboo.app;
 
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -9,7 +9,6 @@ import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class PeakabooConfiguration {
 
-	public static boolean diskstore = true;
 	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(Serializers.fstUnsafe(ISpectrum.class), Compressors.lz4fast());
 
 	

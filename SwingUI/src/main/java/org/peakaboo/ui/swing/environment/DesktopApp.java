@@ -7,9 +7,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 
-import org.peakaboo.common.Env;
-import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.common.Version;
+import org.peakaboo.app.Env;
+import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.Version;
 
 
 
@@ -78,10 +78,10 @@ public class DesktopApp {
 	}
 	
 	public static File appDir() {
-		return Env.appDataDirectory(Version.program_name + Version.versionNoMajor);
+		return Env.appDir(Version.program_name);
 	}
 	public static File appDir(String subdir) {
-		return Env.appDataDirectory(Version.program_name + Version.versionNoMajor, subdir);
+		return Env.appDirEntry(Version.program_name, subdir);
 	}
 	
 }

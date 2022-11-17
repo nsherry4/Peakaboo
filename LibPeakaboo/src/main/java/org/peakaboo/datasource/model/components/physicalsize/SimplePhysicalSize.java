@@ -3,8 +3,8 @@ package org.peakaboo.datasource.model.components.physicalsize;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.common.PeakabooConfiguration;
-import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.app.PeakabooConfiguration;
+import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.datasource.model.PeakabooLists;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;

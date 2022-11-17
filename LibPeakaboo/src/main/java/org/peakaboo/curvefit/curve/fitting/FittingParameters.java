@@ -2,7 +2,7 @@ package org.peakaboo.curvefit.curve.fitting;
 
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;

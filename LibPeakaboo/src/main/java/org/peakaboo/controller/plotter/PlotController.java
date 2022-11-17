@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.calibration.CalibrationProfile;
-import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.controller.plotter.filtering.FilteringController;

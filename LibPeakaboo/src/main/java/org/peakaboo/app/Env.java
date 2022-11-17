@@ -1,4 +1,4 @@
-package org.peakaboo.common;
+package org.peakaboo.app;
 
 
 
@@ -71,11 +71,11 @@ public class Env
 	}
 	
 	
-	public static File appDataDirectory(String appname) {
-		return appDataDirectory(appname, "");
+	public static File appDir(String appname) {
+		return appDirEntry(appname, "");
 	}
 	
-	public static File appDataDirectory(String appname, String subpath) {
+	public static File appDirEntry(String appname, String subpath) {
 		appname = appname.toLowerCase();
 		switch (getOS()) {
 			case ANDROID: throw new UnsupportedOperationException("Function not supported on Android"); 	

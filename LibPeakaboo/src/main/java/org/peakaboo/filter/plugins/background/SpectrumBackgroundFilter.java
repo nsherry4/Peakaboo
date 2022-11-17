@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.datasource.model.DataSource;

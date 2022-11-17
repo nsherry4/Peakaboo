@@ -3,8 +3,8 @@ package org.peakaboo.filter.plugins.advanced;
 import java.util.List;
 import java.util.Optional;
 
-import org.peakaboo.common.Version;
-import org.peakaboo.common.Version.ReleaseType;
+import org.peakaboo.app.Version;
+import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;

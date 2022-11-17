@@ -41,12 +41,12 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
-import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.common.Version;
+import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.Settings;
+import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.Settings;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
@@ -181,9 +181,8 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 	
 	private void doFirstRun() {
-		String key = "org.peakaboo.ui.swing.firstrun";
-		if (!Settings.provider().getBoolean(key, false)) {
-			Settings.provider().setBoolean(key, true);
+		if (Settings.isFirstrun()) {
+			Settings.setFirstrun(false);
 			FirstRun fr = new FirstRun(this);
 			this.pushLayer(fr);
 		}

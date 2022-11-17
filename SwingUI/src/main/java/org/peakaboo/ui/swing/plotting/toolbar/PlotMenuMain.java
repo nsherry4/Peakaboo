@@ -9,7 +9,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.swidget.icons.StockIcon;

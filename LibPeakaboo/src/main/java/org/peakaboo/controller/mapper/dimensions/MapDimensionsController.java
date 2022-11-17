@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.calibration.BasicCalibrationProfile;
-import org.peakaboo.common.PeakabooLog;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;

@@ -1,6 +1,7 @@
 package org.peakaboo.datasource.model;
 
-import org.peakaboo.common.PeakabooConfiguration;
+import org.peakaboo.app.PeakabooConfiguration;
+import org.peakaboo.app.Settings;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.DiskStrategy;
@@ -43,7 +44,7 @@ public final class PeakabooLists {
 	
 	public static <T> ScratchList<T> create(ScratchEncoder<T> encoder) {
 		//Config for disk-backed
-		DiskStrategy onDisk = PeakabooConfiguration.diskstore ? DiskStrategy.PREFER_DISK : DiskStrategy.PREFER_MEMORY;
+		DiskStrategy onDisk = Settings.isDiskstore() ? DiskStrategy.PREFER_DISK : DiskStrategy.PREFER_MEMORY;
 		return ScratchLists.get(onDisk, encoder);
 
 	}

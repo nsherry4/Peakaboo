@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.yaml.snakeyaml.Yaml;
 
 public class URLDataFile implements DataFile {

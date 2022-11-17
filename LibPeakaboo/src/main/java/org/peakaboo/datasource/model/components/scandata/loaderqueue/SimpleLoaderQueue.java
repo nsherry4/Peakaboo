@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 

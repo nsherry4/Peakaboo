@@ -3,8 +3,8 @@ package org.peakaboo.controller.plotter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.app.Version;
 import org.peakaboo.calibration.SavedCalibrationSession;
-import org.peakaboo.common.Version;
 import org.peakaboo.controller.plotter.data.SavedDataSession;
 import org.peakaboo.controller.plotter.filtering.SavedFilteringSession;
 import org.peakaboo.controller.plotter.fitting.SavedFittingSession;

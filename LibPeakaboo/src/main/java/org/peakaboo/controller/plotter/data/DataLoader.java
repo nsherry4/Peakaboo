@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.common.Version;
+import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.Version;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;

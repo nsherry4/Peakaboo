@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.datasink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.datasink.model.components.interaction.Interaction;
 import org.peakaboo.datasource.model.DataSource;

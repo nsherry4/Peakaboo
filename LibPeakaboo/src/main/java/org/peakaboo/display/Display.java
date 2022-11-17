@@ -1,7 +1,7 @@
 package org.peakaboo.display;
 
-import org.peakaboo.common.PeakabooConfiguration;
-import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.app.PeakabooConfiguration;
+import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.framework.cyclops.Coord;
 
 public class Display {

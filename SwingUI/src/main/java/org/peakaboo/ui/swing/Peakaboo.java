@@ -19,13 +19,13 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.peakaboo.common.Env;
-import org.peakaboo.common.PeakabooConfiguration;
-import org.peakaboo.common.PeakabooConfiguration.MemorySize;
-import org.peakaboo.common.PeakabooLog;
-import org.peakaboo.common.Version;
-import org.peakaboo.common.Version.ReleaseType;
-import org.peakaboo.controller.plotter.Settings;
+import org.peakaboo.app.Env;
+import org.peakaboo.app.PeakabooConfiguration;
+import org.peakaboo.app.PeakabooConfiguration.MemorySize;
+import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.Settings;
+import org.peakaboo.app.Version;
+import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
@@ -42,7 +42,6 @@ import org.peakaboo.framework.stratus.theme.BrightTheme;
 import org.peakaboo.framework.swidget.Swidget;
 import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
 import org.peakaboo.framework.swidget.hookins.FileDrop;
-import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.icons.StockIcon;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
 import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanelConfig;
@@ -165,12 +164,10 @@ public class Peakaboo {
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		org.peakaboo.common.PeakabooConfiguration.diskstore = true;
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		StratusLookAndFeel laf = new StratusLookAndFeel(new BrightTheme());
-		
 		
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 

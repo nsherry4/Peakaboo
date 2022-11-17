@@ -23,7 +23,10 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	
 	@Override
 	public T get(int index) {
-		return encoder.decode(backing.get(index));
+		if (index >= backing.size()) { return null; }
+		byte[] encodedValue = backing.get(index);
+		if (encodedValue == null) { return null; }
+		return encoder.decode(encodedValue);
 	}
 	
 	@Override
@@ -34,7 +37,18 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	@Override
 	public T set(int index, T element) {
 		T t = get(index);
-		backing.set(index, encoder.encode(element));
+		
+		//backfill to support wish-it-were-sparse
+		while (backing.size() <= index) {
+			backing.add(backing.size(), null);
+		}
+		
+		//add or set based on if we're extending this list by 1
+		if (backing.size() == index) {
+			backing.add(encoder.encode(element));	
+		} else {
+			backing.set(index, encoder.encode(element));
+		}
 		return t;
 	}
 	

@@ -3,7 +3,7 @@ package org.peakaboo.filter.model;
 import java.io.File;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;

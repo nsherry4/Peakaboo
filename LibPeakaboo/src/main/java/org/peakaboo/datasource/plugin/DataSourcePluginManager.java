@@ -3,7 +3,7 @@ package org.peakaboo.datasource.plugin;
 import java.io.File;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.datasource.plugin.plugins.PlainText;
 import org.peakaboo.datasource.plugin.plugins.SingleColumn;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;

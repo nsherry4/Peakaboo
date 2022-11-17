@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datasource.model.datafile.PathDataFile;

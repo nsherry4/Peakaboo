@@ -1,7 +1,7 @@
 package org.peakaboo.datasource.model.components.scandata;
 
-import org.peakaboo.common.PeakabooConfiguration;
-import org.peakaboo.common.PeakabooConfiguration.MemorySize;
+import org.peakaboo.app.PeakabooConfiguration;
+import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.datasource.model.PeakabooLists;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;

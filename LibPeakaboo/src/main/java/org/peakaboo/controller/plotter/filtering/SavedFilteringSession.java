@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.filter.model.SerializedFilter;

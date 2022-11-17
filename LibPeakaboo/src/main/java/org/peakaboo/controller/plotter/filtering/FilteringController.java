@@ -3,7 +3,7 @@ package org.peakaboo.controller.plotter.filtering;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;

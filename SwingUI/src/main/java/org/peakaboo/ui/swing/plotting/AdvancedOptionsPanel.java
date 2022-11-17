@@ -14,6 +14,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
@@ -29,11 +30,8 @@ import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFuncti
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
-import org.peakaboo.framework.autodialog.AutoDialog;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.SelfDescribing;
-import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
-import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.swidget.icons.IconFactory;
@@ -48,7 +46,6 @@ import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar.Entry;
 import org.peakaboo.framework.swidget.widgets.options.OptionSize;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.tier.TierUIAutoGroup;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
@@ -88,7 +85,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		JPanel overlapPanel = makeOverlapPanel(controller);
 		body.add(overlapPanel, KEY_OVERLAP);
 		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.TOOLBAR_SMALL));
-		
+				
 		var entries = new ArrayList<Entry>();
 		entries.addAll(List.of(detectorEntry, peakEntry, curvefitEntry, overlapEntry));
 		
@@ -101,7 +98,19 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			entries.add(itemEntry);
 		}
 
+		//separator between dataset-focused options and app options
+		entries.get(entries.size()-1).trailingSeparator = true;
 		
+		
+		String KEY_APP = "Peakaboo Settings";
+		JPanel appPanel = makeAppPanel(controller);
+		body.add(appPanel, KEY_APP);
+		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APP, IconSize.TOOLBAR_SMALL));
+		entries.add(appEntry);
+		
+		
+		
+		//Create the UI components from the model
 		OptionSidebar sidebar = new OptionSidebar(entries, e -> {
 			cards.show(body, e.getName());
 		});
@@ -116,6 +125,31 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 	
+	private JPanel makeAppPanel(PlotController controller) {
+
+		OptionBlock datasets = new OptionBlock();
+		OptionCheckBox diskbacked = new OptionCheckBox(datasets)
+				.withText("Disk Backing", "Stores datasets in a compressed temp file on disk, lowers memory use")
+				.withSize(OptionSize.LARGE)
+				.withSelection(Settings.isDiskstore())
+				.withListener(Settings::setDiskstore);
+		datasets.add(diskbacked);
+		
+		OptionBlock startup = new OptionBlock();
+		OptionCheckBox firstrun = new OptionCheckBox(startup)
+				.withText("Show First Run Introduction", "Toggles the first-run introduction screen")
+				.withSize(OptionSize.LARGE)
+				.withSelection(Settings.isFirstrun())
+				.withListener(Settings::setFirstrun);
+		startup.add(firstrun);
+		
+		
+		
+		return new OptionBlocksPanel(datasets, startup);
+				
+	}
+
+
 	private JPanel makeDetectorPanel(PlotController controller) {
 		
 		OptionBlock detector = new OptionBlock();

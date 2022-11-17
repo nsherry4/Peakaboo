@@ -11,7 +11,7 @@ import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.datasource.model.DataSource;
 import org.peakaboo.datasource.model.DataSource.DataSourceReadException;

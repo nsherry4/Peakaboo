@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.common.PeakabooLog;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterType;

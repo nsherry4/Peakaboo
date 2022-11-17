@@ -1,4 +1,4 @@
-package org.peakaboo.common;
+package org.peakaboo.app;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
