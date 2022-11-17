@@ -18,33 +18,21 @@ public class Env
 		OTHER;
 		
 		
-		public static boolean isWindows()
-		{
-
+		public static boolean isWindows() {
 			String os = System.getProperty("os.name").toLowerCase();
-			// windows
 			return (os.indexOf("win") >= 0);
-
 		}
 
 
-		public static boolean isMac()
-		{
-
+		public static boolean isMac() {
 			String os = System.getProperty("os.name").toLowerCase();
-			// Mac
 			return (os.indexOf("mac") >= 0);
-
 		}
 
 
-		public static boolean isUnix()
-		{
-
+		public static boolean isUnix() {
 			String os = System.getProperty("os.name").toLowerCase();
-			// linux or unix
 			return (!isAndroid()) && (os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0);
-
 		}
 		
 		public static boolean isAndroid() {
@@ -60,8 +48,7 @@ public class Env
 
 
 	
-	public static Env.OS getOS()
-	{
+	public static Env.OS getOS() {
 		if (OS.isWindows()) return OS.WINDOWS;
 		if (OS.isMac()) return OS.MAC;
 		if (OS.isUnix()) return OS.UNIX;
@@ -72,16 +59,14 @@ public class Env
 	/**
 	 * Returns the maximum size of the heap in megabytes
 	 */
-	public static long maxHeap()
-	{
+	public static long maxHeap() {
 		return (long)(maxHeapBytes() >> 20);
 	}
 	
 	/**
 	 * Returns the maximum size of the heap in bytes
 	 */
-	public static long maxHeapBytes()
-	{
+	public static long maxHeapBytes() {
 		return Runtime.getRuntime().maxMemory();
 	}
 	
@@ -90,10 +75,9 @@ public class Env
 		return appDataDirectory(appname, "");
 	}
 	
-	public static File appDataDirectory(String appname, String subpath)
-	{
-		switch (getOS())
-		{
+	public static File appDataDirectory(String appname, String subpath) {
+		appname = appname.toLowerCase();
+		switch (getOS()) {
 			case ANDROID: throw new UnsupportedOperationException("Function not supported on Android"); 	
 			case WINDOWS: return new File(System.getenv("APPDATA") + "\\" + appname + "\\" + subpath);
 			case MAC: return new File(homeDirectory() + "/Library/Application Support/" + appname + "/" + subpath);
@@ -101,11 +85,22 @@ public class Env
 			case OTHER:
 			case UNIX:
 			default:
-				return new File(homeDirectory() + "/.config/" + appname + "/" + subpath);
+				return new File(homeDirectory() + "/.local/" + appname + "/" + subpath);
 		}
 
 	}
 	
+	
+	public static File systemCFGFile(String appname) {
+		return switch(getOS()) {
+			case ANDROID -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
+			case WINDOWS -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
+			case MAC -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
+			case OTHER -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
+			case UNIX -> new File("/opt/" + appname.toLowerCase() + "/lib/app" + appname + ".cfg");
+			default -> throw new IllegalArgumentException("Unexpected value: " + getOS());
+		};
+	}
 
 	public static File homeDirectory() {
 		return new File(System.getProperty("user.home"));
