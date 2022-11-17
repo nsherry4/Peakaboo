@@ -3,6 +3,9 @@ package org.peakaboo.ui.swing.plotting;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +13,14 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
@@ -40,7 +48,9 @@ import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
+import org.peakaboo.framework.swidget.widgets.options.OptionBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
+import org.peakaboo.framework.swidget.widgets.options.OptionCustomComponent;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar.Entry;
@@ -144,6 +154,52 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		startup.add(firstrun);
 		
 		
+		JPanel heapControls = new JPanel();
+		heapControls.setOpaque(false);
+		heapControls.setLayout(new BoxLayout(heapControls, BoxLayout.LINE_AXIS));
+
+		JTextField size = new JTextField("" + (Settings.isHeapSizePercent() ? Settings.getHeapSizePercent() : Settings.getHeapSizeMegabytes()), 6);
+		size.setMaximumSize(size.getPreferredSize());
+		heapControls.add(size);
+		
+		JComboBox<String> units = new JComboBox<>(new String[] {"MB", "%"});
+		units.setMaximumSize(units.getMinimumSize());
+		units.setPreferredSize(units.getMinimumSize());
+		units.setSelectedIndex(Settings.isHeapSizePercent() ? 1 : 0);
+		heapControls.add(units);
+		
+		Runnable setHeap = () -> {
+			Settings.setHeapSize(Integer.parseInt(size.getText()), units.getSelectedIndex() == 1);
+		};
+		size.addActionListener(e -> setHeap.run());
+		size.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				setHeap.run();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				setHeap.run();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				setHeap.run();
+			}
+		});
+		units.addActionListener(e -> setHeap.run());
+		
+		
+		
+		
+		OptionBox heap = new OptionCustomComponent(startup, heapControls, false)
+				.withText("Java Heap Size", "Limit on system memory to use")
+				.withSize(OptionSize.LARGE);
+		startup.add(heap);
+		
+		
 		
 		return new OptionBlocksPanel(datasets, startup);
 				
@@ -159,9 +215,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withSize(OptionSize.LARGE)
 				.withSelection(controller.fitting().getShowEscapePeaks())
 				.withListener(controller.fitting()::setShowEscapePeaks);
-				
-		escapeToggle.setTextSize(OptionSize.LARGE);
-		
+
 		detector.add(escapeToggle);
 		
 
