@@ -23,6 +23,7 @@ public enum PeakabooIcons implements IconSet {
 	
 	MENU_VIEW,
 	MENU_ENERGY,
+	MENU_SETTINGS
 	
 	;
 

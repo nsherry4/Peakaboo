@@ -30,7 +30,7 @@ public class PlotToolbar extends JToolBar {
 	private FluentToolbarButton saveButton;
 	private FluentToolbarButton toolbarMap;
 	private FluentToolbarButton toolbarInfo;
-	private FluentToolbarButton energyMenuButton, viewMenuButton;
+	private FluentToolbarButton energyMenuButton, viewMenuButton, settingsMenuButton;
 
 	
 	private PlotMenuEnergy energyMenu;
@@ -133,6 +133,14 @@ public class PlotToolbar extends JToolBar {
 		this.add(viewMenuButton, c);
 		
 		c.gridx++;
+		settingsMenuButton = createSettingsMenuButton();
+		this.add(settingsMenuButton, c);
+		
+		
+		c.gridx += 1;
+		this.add(new JToolBar.Separator( null ), c);
+		
+		c.gridx++;
 		this.add(createMainMenuButton(), c);
 		
 	}
@@ -162,6 +170,7 @@ public class PlotToolbar extends JToolBar {
 		
 		energyMenuButton.setEnabled(hasData);
 		viewMenuButton.setEnabled(hasData);
+		settingsMenuButton.setEnabled(hasData);
 		
 		
 		
@@ -196,12 +205,18 @@ public class PlotToolbar extends JToolBar {
 		viewMenu = new PlotMenuView(plot, controller);
 		return new FluentToolbarButton()
 				.withIcon(PeakabooIcons.MENU_VIEW)
-				.withTooltip("Plot Settings Menu")
+				.withTooltip("Plot Display Options")
 				.withPopupMenuAction(viewMenu, true);
 	}
 	
 	
-
+	private FluentToolbarButton createSettingsMenuButton() {
+		return new FluentToolbarButton()
+				.withIcon(PeakabooIcons.MENU_SETTINGS)
+				.withTooltip("Advanced Settings & Tuneables")
+				.withAction(() -> plot.actionShowAdvancedOptions());
+	}
+	
 	
 
 	

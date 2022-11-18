@@ -41,11 +41,12 @@ public class PlotMenuEnergy extends JPopupMenu {
 
 		outer.addSetting(energyCalibration(plot));
 		
-		
+		boolean hasTierComponents = false;
 		SettingsPanel tierui = new SettingsPanel();
 		tierui.setOpaque(false);
 		tierui.setBorder(Spacing.bMedium());
 		for (TierUIAction<PlotPanel, PlotController> item : tierItems) {
+			hasTierComponents = true;
 			JButton button = new FluentButton(item.text)
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> {
@@ -59,10 +60,10 @@ public class PlotMenuEnergy extends JPopupMenu {
 			item.component = button;
 		}
 		
-		outer.addSetting(tierui);
+		if (hasTierComponents) {
+			outer.addSetting(tierui);
+		}
 		
-		
-		outer.addSetting(advanced(plot));
 		outer.setOpaque(false);
 		this.add(outer);
 		
@@ -70,23 +71,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 	}
 
 	
-	private SettingsPanel advanced(PlotPanel plot) {
-		SettingsPanel advanced = new SettingsPanel(Spacing.iTiny());
-		advanced.setOpaque(false);
-		advanced.setBorder(Spacing.bMedium());
-		JButton button = new FluentButton("Advanced Options")
-				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(() -> {
-					this.setVisible(false);
-					plot.actionShowAdvancedOptions();		
-				});
 
-		button.setHorizontalAlignment(SwingConstants.CENTER);
-		button.setFont(button.getFont().deriveFont(Font.BOLD));
-		advanced.addSetting(button);
-
-		return advanced;
-	}
 	
 	private SettingsPanel energyCalibration(PlotPanel plot) {
 
