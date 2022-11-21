@@ -3,9 +3,6 @@ package org.peakaboo.ui.swing.options;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +10,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
@@ -48,9 +40,7 @@ import org.peakaboo.framework.swidget.widgets.ClearPanel;
 import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
 import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
-import org.peakaboo.framework.swidget.widgets.options.OptionBox;
 import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
-import org.peakaboo.framework.swidget.widgets.options.OptionCustomComponent;
 import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar;
 import org.peakaboo.framework.swidget.widgets.options.OptionSidebar.Entry;
@@ -105,7 +95,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			String groupKey = group.getName();
 			JComponent groupPanel = SwingLayoutFactory.forGroup(group).getComponent();
 			body.add(groupPanel, groupKey);
-			OptionSidebar.Entry itemEntry = new OptionSidebar.Entry(groupKey, IconFactory.getImageIcon(Tier.provider().assetPath() + "/icons/", item.getIconPath(), IconSize.TOOLBAR_SMALL));
+			OptionSidebar.Entry itemEntry = new OptionSidebar.Entry(groupKey, IconFactory.getImageIcon(Tier.provider().iconPath(), item.getIconPath(), IconSize.TOOLBAR_SMALL));
 			entries.add(itemEntry);
 		}
 
@@ -265,12 +255,14 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 
 		
 		
-		List<FittingFunction> fitters = List.of(
+		List<FittingFunction> fitters = new ArrayList<>(List.of(
 				new PseudoVoigtFittingFunction(),
 				new ConvolvingVoigtFittingFunction(),
 				new GaussianFittingFunction(),
 				new LorentzFittingFunction()
-			);
+			));
+		
+		fitters.addAll(Tier.provider().getFittingFunctions());
 		
 		
 		FittingController fitter = controller.fitting();

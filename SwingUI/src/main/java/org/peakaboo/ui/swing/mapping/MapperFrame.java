@@ -17,6 +17,7 @@ import org.peakaboo.framework.swidget.icons.IconFactory;
 import org.peakaboo.framework.swidget.live.LiveFrame;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
 import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 
@@ -108,7 +109,7 @@ public class MapperFrame extends LiveFrame
 			}
 		};
 		setTitle("Peakaboo");
-		setIconImage(IconFactory.getImage(PeakabooIcons.PATH, Version.logo));
+		setIconImage(IconFactory.getImage(Tier.provider().iconPath(), Version.logo));
 		
 		pane.add(tabs, BorderLayout.CENTER);
 		this.pack();

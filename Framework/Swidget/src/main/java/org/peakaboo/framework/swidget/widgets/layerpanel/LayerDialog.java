@@ -92,7 +92,8 @@ public class LayerDialog {
 		hider = () -> dialog.setVisible(false);
 		dialog.setTitle(this.title);
 		dialog.setModal(true);
-		dialog.setContentPane(buildPanel(false));
+		dialog.setUndecorated(true);
+		dialog.setContentPane(buildPanel(true));
 		
 		dialog.pack();
 		dialog.setLocationRelativeTo(frame);

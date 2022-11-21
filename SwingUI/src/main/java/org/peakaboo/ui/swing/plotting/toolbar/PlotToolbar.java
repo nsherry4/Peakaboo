@@ -105,7 +105,7 @@ public class PlotToolbar extends JToolBar {
 		
 		for (TierUIAction item : tierItems) {
 			FluentToolbarButton tierButton = new FluentToolbarButton(item.text)
-					.withIcon(Tier.provider().assetPath() + "/icons/", item.iconname, IconSize.TOOLBAR_SMALL)
+					.withIcon(Tier.provider().iconPath(), item.iconname, IconSize.TOOLBAR_SMALL)
 					.withTooltip(item.tooltip)
 					.withSignificance(false)
 					.withAction(() -> item.action.accept(plot, controller));

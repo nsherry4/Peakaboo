@@ -511,7 +511,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	// ////////////////////////////////////////////////////////
 
 	public void actionAbout() {
-		ImageIcon logo = IconFactory.getImageIcon( PeakabooIcons.PATH, Version.logo );
+		ImageIcon logo = IconFactory.getImageIcon(Tier.provider().iconPath(), Version.logo);
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
 		
 		

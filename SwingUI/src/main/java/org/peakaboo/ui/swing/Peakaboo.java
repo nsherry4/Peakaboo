@@ -190,7 +190,7 @@ public class Peakaboo {
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
-		Swidget.initialize(PeakabooIcons.PATH, Version.splash, Version.logo, "Peakaboo", () -> {
+		Swidget.initialize(Tier.provider().iconPath(), Version.splash, Version.logo, "Peakaboo", () -> {
 			//Init settings store
 			try {
 				File settingsDir = DesktopApp.appDir("Settings");

@@ -40,7 +40,7 @@ public class PlotFrame extends LiveFrame
 		addWindowListener(new TabWindowListener(this, tabControl));
 		
 		setPreferredSize(new Dimension(1200, 569));
-		setIconImage(IconFactory.getImage(PeakabooIcons.PATH, Version.logo));
+		setIconImage(IconFactory.getImage(Tier.provider().iconPath(), Version.logo));
 		setTitle(Tier.provider().appName());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		tabControl.init();

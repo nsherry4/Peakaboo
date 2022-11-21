@@ -51,7 +51,7 @@ public class MapperToolbar extends JToolBar {
 		
 		for (TierUIAction<MapperPanel, MappingController> item : tierItems) {
 			FluentToolbarButton component = new FluentToolbarButton(item.text)
-					.withIcon(Tier.provider().assetPath() + "/icons/", item.iconname, IconSize.TOOLBAR_SMALL)
+					.withIcon(Tier.provider().iconPath(), item.iconname, IconSize.TOOLBAR_SMALL)
 					.withTooltip(item.tooltip)
 					.withSignificance(true)
 					.withAction(() -> item.action.accept(panel, controller));

@@ -8,8 +8,6 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-
 
 public class IconFactory {
 
@@ -42,7 +40,7 @@ public class IconFactory {
 		
 		if (url == null){
 			if (!  (imageName == null || "".equals(imageName))  ) {
-				System.out.println("Image not found: " + imageName);
+				System.out.println("Image not found: " + imageName + "(" + path + ", " + imageName + ", " + (size == null ? "nosize" : size.toString()) + ")");
 			}
 			url = getImageIconURL(path, "notfound", null);
 		}
@@ -58,8 +56,8 @@ public class IconFactory {
 		String iconDir = "";
 
 		if (size != null) iconDir = size.size() + "/";
-						
-		return FluentButton.class.getResource(path + iconDir + imageName + ".png");
+		
+		return IconFactory.class.getResource(path + iconDir + imageName + ".png");
 		
 	}
 	
