@@ -21,7 +21,6 @@
 		<module>Scratch</module>
 		<module>Druthers</module>
 		<!-- Modules with internal deps -->
-		<module>Swidget</module>
 		<module>Cyclops</module>
 		<module>AutoDialog</module>
 		<module>Plural</module>
