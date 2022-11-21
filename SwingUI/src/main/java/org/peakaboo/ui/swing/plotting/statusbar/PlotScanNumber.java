@@ -9,10 +9,10 @@ import javax.swing.JSpinner;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 
 public class PlotScanNumber extends ClearPanel {
 

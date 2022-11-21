@@ -10,11 +10,11 @@ import javax.swing.KeyStroke;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
-import org.peakaboo.framework.swidget.widgets.fluent.menuitem.FluentCheckMenuItem;
-import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
-import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
-import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
-import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentCheckMenuItem;
+import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
+import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
+import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
+import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuView extends JPopupMenu {

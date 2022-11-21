@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
-			<artifactId>swidget</artifactId>
+			<artifactId>stratus</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

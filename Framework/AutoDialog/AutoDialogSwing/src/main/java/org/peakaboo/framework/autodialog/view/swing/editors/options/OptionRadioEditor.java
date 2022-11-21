@@ -12,10 +12,10 @@ import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.autodialog.model.style.CoreStyle;
 import org.peakaboo.framework.autodialog.model.style.SimpleStyle;
 import org.peakaboo.framework.autodialog.view.swing.editors.AbstractSwingEditor;
-import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
-import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
-import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
-import org.peakaboo.framework.swidget.widgets.options.OptionSize;
+import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
+import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
+import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
+import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 
 public class OptionRadioEditor<T extends SelfDescribing> extends AbstractSwingEditor<T> {
 

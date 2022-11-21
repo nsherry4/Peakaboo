@@ -11,12 +11,12 @@ import javax.swing.JTextField;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
-import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
-import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileFilter;
-import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFileChooser;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileFilter;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFileChooser;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
 
 public class FilenameEditor extends AbstractSwingEditor<String> {
 
@@ -81,7 +81,7 @@ class FileSelector extends JPanel {
 	JTextField filenameField;
 	JButton open;
 	String filename;
-	SwidgetFileChooser chooser;
+	StratusFileChooser chooser;
 	
 	public FileSelector(final FilenameEditor parent, FileNameStyle style) {
 		super(new BorderLayout());
@@ -90,7 +90,7 @@ class FileSelector extends JPanel {
 		filenameField = new JTextField(10);
 		filenameField.setEditable(false);
 		
-		chooser = new SwidgetFileChooser();
+		chooser = new StratusFileChooser();
 		if (style.getTypeTitle() != null && style.getTypeExtensions() != null) {
 			chooser.setFileFilter(new SimpleFileFilter(new SimpleFileExtension(style.getTypeTitle(), style.getTypeExtensions())));	
 		}

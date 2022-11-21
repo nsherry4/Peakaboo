@@ -11,13 +11,13 @@ import javax.swing.SwingConstants;
 
 import org.apache.batik.ext.swing.GridBagConstants;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
-import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.StratusText;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
+import org.peakaboo.framework.stratus.components.panels.TitledPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 
 public class IssueView extends JPanel {
 
@@ -35,7 +35,7 @@ public class IssueView extends JPanel {
 		JLabel desc = new JLabel();
 		desc.setVerticalAlignment(SwingConstants.TOP);
 		desc.setBorder(Spacing.bHuge());
-		desc.setText(Swidget.lineWrap(desc, issue.description(), 500));
+		desc.setText(StratusText.lineWrap(desc, issue.description(), 500));
 
 		JPanel actionPanel = new JPanel(new GridBagLayout());
 		FluentButton action = null;

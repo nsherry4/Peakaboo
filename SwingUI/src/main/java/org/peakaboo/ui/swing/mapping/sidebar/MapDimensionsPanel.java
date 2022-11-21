@@ -16,13 +16,13 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 public class MapDimensionsPanel extends JPanel {

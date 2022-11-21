@@ -79,34 +79,33 @@ import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 import org.peakaboo.framework.plural.swing.ExecutorSetView;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
-import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
-import org.peakaboo.framework.swidget.hookins.FileDrop;
-import org.peakaboo.framework.swidget.icons.IconFactory;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
-import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener.Buttons;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ToastLayer;
-import org.peakaboo.framework.swidget.widgets.layerpanel.widgets.AboutLayer;
-import org.peakaboo.framework.swidget.widgets.layout.HeaderPanel;
-import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
-import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener;
+import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener.Buttons;
+import org.peakaboo.framework.stratus.api.hookins.FileDrop;
+import org.peakaboo.framework.stratus.api.icons.IconFactory;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
+import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
+import org.peakaboo.framework.stratus.components.panels.TitledPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
+import org.peakaboo.framework.stratus.components.ui.layers.AboutLayer;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
+import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
+import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.environment.DesktopApp;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.options.AdvancedOptionsPanel;
@@ -290,7 +289,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.BOTH;
 		
-		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
+		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
 		sidebarTabs.setPreferredSize(new Dimension(225, sidebarTabs.getPreferredSize().height));
 		split.add(blankCanvas, BorderLayout.CENTER);
@@ -550,7 +549,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		SimpleFileExtension session = new SimpleFileExtension("Peakaboo Session Files", "peakaboo");
 		exts.add(session);
 		
-		SwidgetFilePanels.openFiles(this, "Select Data Files to Open", controller.io().getLastFolder(), exts, files -> {
+		StratusFilePanels.openFiles(this, "Select Data Files to Open", controller.io().getLastFolder(), exts, files -> {
 			if (!files.isPresent()) return;
 			controller.io().setLastFolder(files.get().get(0).getParentFile());
 			
@@ -596,7 +595,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		DataSource source = controller.data().getDataSet().getDataSource();
 
 		SimpleFileExtension ext = new SimpleFileExtension(sink.getFormatName(), sink.getFormatExtension());
-		SwidgetFilePanels.saveFile(this, "Export Scan Data", controller.io().getLastFolder(), ext, file -> {
+		StratusFilePanels.saveFile(this, "Export Scan Data", controller.io().getLastFolder(), ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
@@ -691,7 +690,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
 		
-		SwidgetFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), peakaboo, file -> {
+		StratusFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
@@ -726,7 +725,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		export.set(new ExportPanel(this, canvas, () -> 
 			
-			SwidgetFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(), new SimpleFileExtension("Zip Archive", "zip"), file -> {
+			StratusFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(), new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
 					return;
 				}
@@ -799,7 +798,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	public void actionSaveFilteredDataSet() {	
 		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
-		SwidgetFilePanels.saveFile(this, "Save Fitted Data to CSV File", controller.io().getLastFolder(), text, saveFile -> {
+		StratusFilePanels.saveFile(this, "Save Fitted Data to CSV File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
 				return;
 			}
@@ -824,7 +823,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionSaveFilteredSpectrum() {	
 		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
-		SwidgetFilePanels.saveFile(this, "Save Spectrum to CSV File", controller.io().getLastFolder(), text, saveFile -> {
+		StratusFilePanels.saveFile(this, "Save Spectrum to CSV File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
 				return;
 			}
@@ -837,7 +836,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	public void actionSaveFittingInformation()
 	{
 		SimpleFileExtension ext = new SimpleFileExtension("Text File", "txt");
-		SwidgetFilePanels.saveFile(this, "Save Fitting Information to Text File", controller.io().getLastFolder(), ext, file -> {
+		StratusFilePanels.saveFile(this, "Save Fitting Information to Text File", controller.io().getLastFolder(), ext, file -> {
 			if (!file.isPresent()) {
 				return;
 			}
@@ -858,7 +857,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	public void actionLoadSession() {
 
 		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		SwidgetFilePanels.openFile(this, "Load Session Data", controller.io().getSessionFile(), peakaboo, file -> {
+		StratusFilePanels.openFile(this, "Load Session Data", controller.io().getSessionFile(), peakaboo, file -> {
 			if (!file.isPresent()) {
 				return;
 			}

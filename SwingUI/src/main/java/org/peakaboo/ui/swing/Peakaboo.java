@@ -37,18 +37,17 @@ import org.peakaboo.framework.druthers.serialize.YamlSerializer;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
-import org.peakaboo.framework.stratus.StratusLookAndFeel;
-import org.peakaboo.framework.stratus.theme.BrightTheme;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.ErrorDialog;
-import org.peakaboo.framework.swidget.hookins.FileDrop;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanelConfig;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.hookins.FileDrop;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.dialogs.ErrorDialog;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.environment.DesktopApp;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 
@@ -152,7 +151,7 @@ public class Peakaboo {
 	
 	private static void uiPerformanceTune() {
 		if (PeakabooConfiguration.memorySize == MemorySize.TINY || PeakabooConfiguration.memorySize == MemorySize.SMALL) {
-			LayerPanelConfig.blur = false;
+			LayerPanel.blurLowerLayers = false;
 		}
 	}
 	
@@ -190,7 +189,7 @@ public class Peakaboo {
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
-		Swidget.initialize(Tier.provider().iconPath(), Version.splash, Version.logo, "Peakaboo", () -> {
+		Stratus.initialize(Tier.provider().iconPath(), Version.splash, Version.logo, "Peakaboo", () -> {
 			//Init settings store
 			try {
 				File settingsDir = DesktopApp.appDir("Settings");

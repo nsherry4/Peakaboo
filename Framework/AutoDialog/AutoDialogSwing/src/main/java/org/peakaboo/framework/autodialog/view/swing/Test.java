@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -24,15 +23,15 @@ import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.TabbedLayoutStyle;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
-import org.peakaboo.framework.stratus.StratusLookAndFeel;
-import org.peakaboo.framework.swidget.Swidget;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 
 public class Test {
 
 	public static void main(String[] args) throws UnsupportedLookAndFeelException
 	{
 		UIManager.setLookAndFeel(new StratusLookAndFeel());
-		Swidget.initialize(Test::gui, "Test");
+		Stratus.initialize(Test::gui, "Test");
 	}
 			
 	public static void gui() {

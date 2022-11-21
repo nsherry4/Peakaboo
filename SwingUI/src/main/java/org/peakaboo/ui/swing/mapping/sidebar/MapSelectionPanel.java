@@ -10,12 +10,12 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.selection.MapSelectionController.SelectionType;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
-import org.peakaboo.framework.stratus.controls.ButtonLinker;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
-import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 
 public class MapSelectionPanel extends SettingsPanel {

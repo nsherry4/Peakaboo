@@ -12,11 +12,11 @@ import java.util.List;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelector;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 

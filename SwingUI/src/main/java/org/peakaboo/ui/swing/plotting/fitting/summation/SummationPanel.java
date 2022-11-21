@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.listcontrols.SelectionListControls;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.ui.itemlist.SelectionListControls;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 

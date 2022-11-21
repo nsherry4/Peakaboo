@@ -2,30 +2,23 @@ package org.peakaboo.framework.cyclops.visualization.backend.awt;
 
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
-import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -36,29 +29,23 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.SurfaceType;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
-import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
-import org.peakaboo.framework.swidget.live.LiveDialog;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
-import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
-import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
-import org.peakaboo.framework.swidget.widgets.options.OptionBlocksPanel;
-import org.peakaboo.framework.swidget.widgets.options.OptionChooserPanel;
-import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
+import org.peakaboo.framework.stratus.components.ui.options.OptionChooserPanel;
+import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 
 
-public class SavePicture extends JPanel
-{
+public class SavePicture extends JPanel {
 
 	private GraphicsPanel			controller;
 	private File					startingFolder;
-	private Component				owner;
-	private JDialog					dialog;
+	private LayerPanel				owner;
 	Consumer<Optional<File>> 		onComplete;
 	private OptionChooserPanel<SurfaceType> formatPicker;
 	private DimensionPicker			dimensionPicker;
@@ -144,8 +131,7 @@ public class SavePicture extends JPanel
 	
 	
 	
-	public SavePicture(Component owner, GraphicsPanel controller, File startingFolder, Consumer<Optional<File>> onComplete)
-	{
+	public SavePicture(LayerPanel owner, GraphicsPanel controller, File startingFolder, Consumer<Optional<File>> onComplete) {
 		this.onComplete = onComplete;
 		this.owner = owner;
 		this.controller = controller;
@@ -165,60 +151,21 @@ public class SavePicture extends JPanel
 	}
 
 	public void show() {
-		if (owner instanceof LayerPanel) {
-			makeGUI(true);
-			layer = new ModalLayer((LayerPanel) owner, this);
-			((LayerPanel) owner).pushLayer(layer);
-			this.requestFocus();
-		} else {
-			makeGUI(false);
-			showDialog();
-		}
+		makeGUI();
+		layer = new ModalLayer((LayerPanel) owner, this);
+		((LayerPanel) owner).pushLayer(layer);
+		this.requestFocus();
 	}
 	
 	public void hide() {
-		if (owner instanceof LayerPanel) {
-			((LayerPanel) owner).removeLayer(layer);
-		} else {
-			if (dialog != null) {
-				dialog.setVisible(false);
-				dialog = null;
-			}
-		}
+		((LayerPanel) owner).removeLayer(layer);
 	}
 	
-	private void showDialog() {
-		
-		if (owner instanceof Window) {
-			dialog = new LiveDialog((Window)owner);
-		} else {
-			dialog = new LiveDialog();
-		}
 
-		dialog.setTitle("Save as Image");
-		dialog.getContentPane().setLayout(new BorderLayout());
-		dialog.getContentPane().add(this, BorderLayout.CENTER);
-		
-		dialog.pack();
-		dialog.setResizable(false);
-		dialog.setLocationRelativeTo(owner);
-		dialog.setModal(true);
-		setVisible(true);
-	}
-
-	private void makeGUI(boolean inLayer) {
-		if (inLayer) {
-			setLayout(new BorderLayout());
-			add(createOptionsPane(), BorderLayout.CENTER);
-			add(new HeaderBox(cancelButton(), "Save as Image", saveButton().withStateDefault()), BorderLayout.NORTH);
-		} else {
-			setLayout(new BorderLayout());
-			add(createOptionsPane(), BorderLayout.CENTER);
-			ButtonBox box = new ButtonBox();
-			box.addLeft(cancelButton());
-			box.addRight(saveButton());
-			add(box, BorderLayout.SOUTH);
-		}
+	private void makeGUI() {
+		setLayout(new BorderLayout());
+		add(createOptionsPane(), BorderLayout.CENTER);
+		add(new HeaderBox(cancelButton(), "Save as Image", saveButton().withStateDefault()), BorderLayout.NORTH);
 	}
 
 
@@ -285,7 +232,7 @@ public class SavePicture extends JPanel
 			
 
 			SimpleFileExtension png = new SimpleFileExtension("Portable Network Graphic", "png");
-			SwidgetFilePanels.saveFile(owner, "Save Picture As...", startingFolder, png, result -> {
+			StratusFilePanels.saveFile(owner, "Save Picture As...", startingFolder, png, result -> {
 				if (!result.isPresent()) {
 					return;
 				}
@@ -322,7 +269,7 @@ public class SavePicture extends JPanel
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			
 			SimpleFileExtension svg = new SimpleFileExtension("Scalable Vector Graphic", "svg");
-			SwidgetFilePanels.saveFile(owner, "Save Picture As...", startingFolder, svg, result -> {
+			StratusFilePanels.saveFile(owner, "Save Picture As...", startingFolder, svg, result -> {
 				if (!result.isPresent()) {
 					return;
 				}
@@ -402,7 +349,7 @@ public class SavePicture extends JPanel
 			}
 		};
 		
-		Swidget.initializeAndWait("Test");
+		Stratus.initializeAndWait("Test");
 		
 		new SavePicture(null, g, null, file -> {});
 		

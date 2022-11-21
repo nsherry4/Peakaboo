@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.view.swing.editors.AbstractSwingEditor;
-import org.peakaboo.framework.swidget.widgets.options.OptionCheckBox;
+import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
 
 public class OptionCheckEditor extends AbstractSwingEditor<Boolean>{
 	

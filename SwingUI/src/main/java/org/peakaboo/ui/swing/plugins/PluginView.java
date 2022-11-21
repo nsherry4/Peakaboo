@@ -17,13 +17,13 @@ import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
 import org.peakaboo.filter.plugins.JavaFilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.icons.IconFactory;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.layout.PropertyPanel;
-import org.peakaboo.framework.swidget.widgets.layout.TitledPanel;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.StratusText;
+import org.peakaboo.framework.stratus.api.icons.IconFactory;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
+import org.peakaboo.framework.stratus.components.panels.TitledPanel;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 
 public class PluginView extends JPanel {
@@ -53,7 +53,7 @@ public class PluginView extends JPanel {
 		
 		
 		JLabel description = new JLabel();
-		description.setText(Swidget.lineWrapHTML(description, plugin.getDescription(), 420));
+		description.setText(StratusText.lineWrapHTML(description, plugin.getDescription(), 420));
 		description.setVerticalAlignment(SwingConstants.TOP);
 		JScrollPane scroller = new JScrollPane(description);
 		scroller.setBorder(Spacing.bLarge());

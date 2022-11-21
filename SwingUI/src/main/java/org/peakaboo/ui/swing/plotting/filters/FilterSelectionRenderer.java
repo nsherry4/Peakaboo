@@ -8,14 +8,12 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.StratusText;
 
-class FilterSelectionRenderer extends DefaultTreeCellRenderer
-{
+class FilterSelectionRenderer extends DefaultTreeCellRenderer {
 
-	FilterSelectionRenderer()
-	{
+	FilterSelectionRenderer() {
 		super();
 		setBorder(Spacing.bSmall());
 	}
@@ -36,7 +34,7 @@ class FilterSelectionRenderer extends DefaultTreeCellRenderer
 			Filter f = (Filter) value;
 			setText(f.getFilterName());
 			
-			setToolTipText(Swidget.lineWrapHTML(this, f.getFilterDescription()));
+			setToolTipText(StratusText.lineWrapHTML(this, f.getFilterDescription()));
 
 		} else if (value instanceof FilterType) {
 

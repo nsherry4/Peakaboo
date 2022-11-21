@@ -9,9 +9,9 @@ import javax.swing.border.TitledBorder;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.MapScaleMode;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToggleButton;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.ButtonBox;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 
 public class ScaleModeWidget extends JPanel {
 

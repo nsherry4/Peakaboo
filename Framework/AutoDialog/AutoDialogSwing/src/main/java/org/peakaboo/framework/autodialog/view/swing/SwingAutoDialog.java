@@ -12,14 +12,14 @@ import javax.swing.JScrollPane;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.live.LiveDialog;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonLayout;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.StratusText;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ButtonBox;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
+import org.peakaboo.framework.stratus.components.ui.live.LiveDialog;
 
 
 public class SwingAutoDialog extends LiveDialog
@@ -86,8 +86,7 @@ public class SwingAutoDialog extends LiveDialog
 	
 	
 	
-	private JPanel createButtonBox()
-	{
+	private JPanel createButtonBox() {
 		
 		ButtonBox bbox = new ButtonBox();
 		
@@ -123,7 +122,7 @@ public class SwingAutoDialog extends LiveDialog
 				.withAction(() -> 
 					JOptionPane.showMessageDialog(
 						SwingAutoDialog.this, 
-						Swidget.lineWrapHTML(SwingAutoDialog.this, helpMessage),
+						StratusText.lineWrapHTML(SwingAutoDialog.this, helpMessage),
 						helpTitle, 
 						JOptionPane.INFORMATION_MESSAGE, 
 						StockIcon.BADGE_QUESTION.toImageIcon(IconSize.ICON)

@@ -8,8 +8,8 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.peakaboo.framework.swidget.widgets.options.OptionBlock;
-import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
+import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
+import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 
 public class OptionHeapSize extends OptionRadioButton {
 

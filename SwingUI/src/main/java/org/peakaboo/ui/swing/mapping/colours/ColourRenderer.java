@@ -13,7 +13,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.Icon;
 
-import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.stratus.api.Spacing;
 
 
 class ColourRenderer implements Icon

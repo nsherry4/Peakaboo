@@ -13,11 +13,11 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
-import org.peakaboo.framework.swidget.widgets.layout.SettingsPanel;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;

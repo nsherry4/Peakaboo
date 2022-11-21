@@ -17,12 +17,12 @@ import javax.swing.border.EmptyBorder;
 import org.peakaboo.framework.eventful.EventfulEnumListener;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
-import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 
 public class TaskMonitorPanel extends JPanel {
 

@@ -12,16 +12,16 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.peakaboo.app.Version;
-import org.peakaboo.framework.swidget.dialogues.HeaderDialog;
-import org.peakaboo.framework.swidget.hookins.WindowDragger;
-import org.peakaboo.framework.swidget.icons.IconFactory;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.live.LiveFrame;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.hookins.WindowDragger;
+import org.peakaboo.framework.stratus.api.icons.IconFactory;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderDialog;
+import org.peakaboo.framework.stratus.components.ui.live.LiveFrame;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 

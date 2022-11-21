@@ -15,10 +15,10 @@ import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
 
 public class TaskMonitorView extends JPanel {
 
@@ -64,7 +64,7 @@ public class TaskMonitorView extends JPanel {
 		
 		EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 				
-		Swidget.initialize(() -> {
+		Stratus.initialize(() -> {
 			int size = 10000;
 			
 			List<Integer> ints = new ArrayList<>();

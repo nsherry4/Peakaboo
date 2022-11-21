@@ -17,17 +17,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
-import org.peakaboo.framework.stratus.Stratus;
-import org.peakaboo.framework.stratus.StratusLookAndFeel;
-import org.peakaboo.framework.swidget.dialogues.SplashScreen;
-import org.peakaboo.framework.swidget.icons.IconFactory;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.icons.IconFactory;
+import org.peakaboo.framework.stratus.components.dialogs.SplashScreen;
+import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 
 
 
-public class Swidget
+public class asdfSwidget
 {
 
-	private static SplashScreen splashWindow;
+	
 	
 	private static Semaphore initWaiter = new Semaphore(1);
 	public static void initializeAndWait(String appName) {
@@ -46,14 +46,13 @@ public class Swidget
 		initialize(() -> {}, appName);
 	}
 	
-	public static void initialize(Runnable startupTasks, String appName)
-	{
+	public static void initialize(Runnable startupTasks, String appName) {
 		initialize(null, null, null, appName, startupTasks);
 	}
 	
-	
-	public static void initialize(String splashPath, String splashBackground, String splashIcon, String appName, Runnable startupTasks)
-	{
+
+	private static SplashScreen splashWindow;
+	public static void initialize(String splashPath, String splashBackground, String splashIcon, String appName, Runnable startupTasks) {
 		
 		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
 		//NEED TO SET THESE RIGHT AT THE START BEFORE ANY AWT/SWING STUFF HAPPENS.
@@ -96,66 +95,6 @@ public class Swidget
 		}
 	}
 	
-	public static String lineWrap(Component c, String text) {
-		return lineWrap(c, text, 400);
-	}
-	
-	public static String lineWrap(Component c, String text, int width) {
-		if (text.contains("\n")) {
-			String[] lines = text.split("\n");
-			StringBuilder sb = new StringBuilder();
-			for (String line : lines) {
-				sb.append(lineWrap(c, line, width));
-				sb.append("\n");
-			}
-			return sb.toString();
-		}
-		
-		List<String> lines = new ArrayList<String>();
-		
-		Font font = c.getFont();
-		FontMetrics metrics = c.getFontMetrics(font);
-				
-		String line = "";
-		Graphics g = c.getGraphics();
-		
-		List<String> words = new ArrayList<String>(Arrays.asList(text.split(" ")));
-		
-		
-		lines.clear();
-		while (words.size() > 0)
-		{
-		
-			while ( metrics.getStringBounds(line, g).getWidth() < width )
-			{
-				if (words.size() == 0) break;
-				if (!line.equals("")) line += " ";
-				line = line + words.remove(0);
-			}
-			
-			lines.add(line);
-			line = "";
-			
-		}
-		
-		Optional<String> str = lines.stream().reduce((a, b) -> a + "\n" + b);
-		return str.orElse("");
-	}
-	
-	
-	public static String lineWrapHTML(Component c, String text) {
-		return "<html>" + lineWrap(c, text).replace("\n", "<br/>") + "</html>";
-	}
-	
-	public static String lineWrapHTML(Component c, String text, int width) {
-		return "<html>" + lineWrap(c, text, width).replace("\n", "<br/>") + "</html>";
-	}
-	
-	
-	public static void main(String[] args)
-	{
-		
-	}
 	
 	public static Logger logger() {
 		StackTraceElement[] stElements = Thread.currentThread().getStackTrace();

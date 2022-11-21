@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelector;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
 

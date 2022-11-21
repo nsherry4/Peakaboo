@@ -11,11 +11,11 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.framework.stratus.controls.ButtonLinker;
-import org.peakaboo.framework.swidget.hookins.WindowDragger;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
+import org.peakaboo.framework.stratus.api.hookins.WindowDragger;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;

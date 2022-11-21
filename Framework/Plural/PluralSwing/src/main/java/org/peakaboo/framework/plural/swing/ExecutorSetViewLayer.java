@@ -1,8 +1,8 @@
 package org.peakaboo.framework.plural.swing;
 
 import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 
 public class ExecutorSetViewLayer extends ModalLayer {
 

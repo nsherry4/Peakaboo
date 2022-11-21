@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
-import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 
 public class TaskMonitorLayer extends HeaderLayer {
 

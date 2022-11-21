@@ -18,7 +18,7 @@ import javax.swing.table.TableCellRenderer;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.display.map.modes.ratio.RatioColour;
-import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.stratus.api.Spacing;
 
 
 

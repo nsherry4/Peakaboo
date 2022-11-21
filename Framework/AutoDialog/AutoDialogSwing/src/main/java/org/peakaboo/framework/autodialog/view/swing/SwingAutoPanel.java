@@ -9,7 +9,7 @@ import javax.swing.JScrollPane;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
-import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.stratus.api.Spacing;
 
 public class SwingAutoPanel extends JPanel {
 

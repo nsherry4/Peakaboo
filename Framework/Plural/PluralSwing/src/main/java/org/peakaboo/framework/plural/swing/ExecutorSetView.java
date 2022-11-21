@@ -12,9 +12,9 @@ import javax.swing.border.EmptyBorder;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.executor.ExecutorState;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 
 public class ExecutorSetView extends JPanel
 {

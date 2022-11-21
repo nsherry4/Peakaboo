@@ -9,12 +9,12 @@ import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture.DimensionPicker;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.framework.swidget.widgets.layerpanel.ModalLayer;
-import org.peakaboo.framework.swidget.widgets.layout.HeaderBox;
-import org.peakaboo.framework.swidget.widgets.options.OptionChooserPanel;
-import org.peakaboo.framework.swidget.widgets.options.OptionRadioButton;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
+import org.peakaboo.framework.stratus.components.ui.options.OptionChooserPanel;
+import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 
 public class ExportPanel extends JPanel {
 	

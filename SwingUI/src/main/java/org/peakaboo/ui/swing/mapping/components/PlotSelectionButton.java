@@ -7,9 +7,9 @@ import javax.swing.JFrame;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentToolbarButton;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.ui.swing.environment.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 

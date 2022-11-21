@@ -1,6 +1,6 @@
 package org.peakaboo.ui.swing.environment;
 
-import org.peakaboo.framework.swidget.icons.IconSet;
+import org.peakaboo.framework.stratus.api.icons.IconSet;
 
 public enum PeakabooIcons implements IconSet {
 	

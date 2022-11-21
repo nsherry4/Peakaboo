@@ -36,15 +36,15 @@ import org.peakaboo.framework.cyclops.visualization.backend.awt.AwtSurfaceFactor
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
-import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener;
-import org.peakaboo.framework.swidget.widgets.DraggingScrollPaneListener.Buttons;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener;
+import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener.Buttons;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapStatusBar;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
@@ -99,7 +99,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		MapperSidebar sidebar = new MapperSidebar(this, controller);
 		JPanel mapCanvas = createCanvasPanel();
 		
-		sidebar.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
+		sidebar.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
 		sidebar.setPreferredSize(new Dimension(225, sidebar.getPreferredSize().height));
 		split.add(sidebar, BorderLayout.WEST);
@@ -232,7 +232,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	public void actionSaveCSV()
 	{		
 		SimpleFileExtension txt = new SimpleFileExtension("Comma Separated Values", "csv");
-		SwidgetFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().lastFolder, txt, file -> {
+		StratusFilePanels.saveFile(this, "Save Map(s) as CSV", controller.getSettings().lastFolder, txt, file -> {
 			if (!file.isPresent()) { return; }
 			controller.getSettings().lastFolder = file.get().getParentFile();
 			actionSaveCSV(file.get());
@@ -257,7 +257,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		
 		export.set(new ExportPanel(this, canvas, () -> {
 			
-			SwidgetFilePanels.saveFile(this, "Save Archive", controller.getSettings().lastFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
+			StratusFilePanels.saveFile(this, "Save Archive", controller.getSettings().lastFolder, new SimpleFileExtension("Zip Archive", "zip"), file -> {
 				if (!file.isPresent()) {
 					return;
 				}

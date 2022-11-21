@@ -8,9 +8,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
-import org.peakaboo.framework.swidget.widgets.Spacing;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
 public class PlotStatusBar extends ClearPanel {
 
@@ -37,7 +37,7 @@ public class PlotStatusBar extends ClearPanel {
 		scanSelector = new PlotScanNumber(controller);
 		this.add(scanSelector, BorderLayout.WEST);
 
-		this.setBorder(new MatteBorder(1, 0, 0, 0, Swidget.dividerColor()));
+		this.setBorder(new MatteBorder(1, 0, 0, 0, Stratus.getTheme().getWidgetBorder()));
 		
 
 	}

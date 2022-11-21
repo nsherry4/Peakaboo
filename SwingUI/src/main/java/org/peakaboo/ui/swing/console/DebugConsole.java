@@ -8,11 +8,11 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import org.peakaboo.framework.stratus.StratusLookAndFeel;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.HeaderFrame;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedInterface;
-import org.peakaboo.framework.swidget.widgets.tabbedinterface.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderFrame;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 
 import bsh.Interpreter;
 import bsh.util.JConsole;
@@ -72,7 +72,7 @@ public class DebugConsole extends TabbedLayerPanel {
 	
 	
 	public static void main(String[] args) throws UnsupportedLookAndFeelException {
-		Swidget.initialize("JTextPane Test");
+		Stratus.initialize("JTextPane Test");
 		UIManager.setLookAndFeel(new StratusLookAndFeel());
 		
 		HeaderFrame frame = new HeaderFrame();

@@ -32,7 +32,7 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
-import org.peakaboo.framework.swidget.hookins.FileDrop;
+import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.ui.swing.Peakaboo;
 
 

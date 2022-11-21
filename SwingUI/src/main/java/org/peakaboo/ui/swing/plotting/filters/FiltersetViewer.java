@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Window;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
-import org.peakaboo.framework.swidget.widgets.ClearPanel;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
 public class FiltersetViewer extends ClearPanel {
 

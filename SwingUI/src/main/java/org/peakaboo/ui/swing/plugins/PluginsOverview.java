@@ -37,23 +37,23 @@ import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
-import org.peakaboo.framework.stratus.StratusLookAndFeel;
-import org.peakaboo.framework.stratus.controls.ButtonLinker;
-import org.peakaboo.framework.stratus.theme.LightTheme;
-import org.peakaboo.framework.swidget.Swidget;
-import org.peakaboo.framework.swidget.dialogues.fileio.SimpleFileExtension;
-import org.peakaboo.framework.swidget.dialogues.fileio.SwidgetFilePanels;
-import org.peakaboo.framework.swidget.hookins.FileDrop;
-import org.peakaboo.framework.swidget.icons.IconSize;
-import org.peakaboo.framework.swidget.icons.StockIcon;
-import org.peakaboo.framework.swidget.widgets.BlankMessagePanel;
-import org.peakaboo.framework.swidget.widgets.Spacing;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButton;
-import org.peakaboo.framework.swidget.widgets.fluent.button.FluentButtonSize;
-import org.peakaboo.framework.swidget.widgets.layerpanel.HeaderLayer;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerDialog;
-import org.peakaboo.framework.swidget.widgets.layerpanel.LayerPanel;
-import org.peakaboo.framework.swidget.widgets.layout.ButtonBox;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.hookins.FileDrop;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ButtonBox;
+import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
+import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
+import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.laf.theme.LightTheme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
@@ -128,7 +128,7 @@ public class PluginsOverview extends HeaderLayer {
 	}
 	
 	private void add() {
-		SwidgetFilePanels.openFile(parent, "Import Plugins", Env.homeDirectory(), new SimpleFileExtension("Peakaboo Plugin", "jar"), result -> {
+		StratusFilePanels.openFile(parent, "Import Plugins", Env.homeDirectory(), new SimpleFileExtension("Peakaboo Plugin", "jar"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}
@@ -384,7 +384,7 @@ public class PluginsOverview extends HeaderLayer {
 		
 		JScrollPane scroller = new JScrollPane(tree);
 		scroller.setPreferredSize(new Dimension(250, 300));
-		scroller.setBorder(new MatteBorder(0, 0, 0, 1, Swidget.dividerColor()));
+		scroller.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		return scroller;
 		
 	}
