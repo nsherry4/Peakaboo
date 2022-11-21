@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    inkscape:export-ydpi="96"
    inkscape:export-xdpi="96"
    inkscape:export-filename="/home/nathaniel/Projects/SS/Git/Peakaboo/Art/firstrun/slide4.png"
    sodipodi:docname="slides.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    id="svg1922"
    version="1.1"
    viewBox="0 0 158.75 79.375002"
    height="300"
-   width="600">
+   width="600"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs1916">
     <linearGradient
@@ -214,24 +214,25 @@
   </defs>
   <sodipodi:namedview
      inkscape:window-maximized="1"
-     inkscape:window-y="27"
+     inkscape:window-y="0"
      inkscape:window-x="1920"
-     inkscape:window-height="1016"
+     inkscape:window-height="1043"
      inkscape:window-width="1920"
      units="px"
      showgrid="false"
      inkscape:document-rotation="0"
-     inkscape:current-layer="svg1922"
+     inkscape:current-layer="layer10"
      inkscape:document-units="mm"
-     inkscape:cy="178.8847"
-     inkscape:cx="262.14447"
-     inkscape:zoom="1.4142136"
+     inkscape:cy="173.052"
+     inkscape:cx="263.83338"
+     inkscape:zoom="1.2337332"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
      bordercolor="#666666"
      pagecolor="#ffffff"
-     id="base" />
+     id="base"
+     inkscape:pagecheckerboard="0" />
   <metadata
      id="metadata1919">
     <rdf:RDF>
@@ -245,13 +246,13 @@
     </rdf:RDF>
   </metadata>
   <g
-     sodipodi:insensitive="true"
      style="display:inline"
      id="layer1"
      inkscape:groupmode="layer"
-     inkscape:label="Background">
+     inkscape:label="Background"
+     sodipodi:insensitive="true">
     <rect
-       style="fill:#388e3c;fill-opacity:1;stroke-width:0.214561"
+       style="fill:#26a269;fill-opacity:1;stroke-width:0.214561"
        y="0"
        x="0"
        height="79.375"
@@ -270,13 +271,13 @@
          sodipodi:role="line" /></text>
   </g>
   <g
-     sodipodi:insensitive="true"
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="MediaBox"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <rect
-       style="fill:#388e3c;fill-opacity:1;stroke:none;stroke-width:0.680316"
+       style="fill:#26a269;fill-opacity:1;stroke:none;stroke-width:0.680316"
        id="rect862"
        width="158.75"
        height="66.145836"
@@ -288,7 +289,8 @@
      style="display:inline"
      inkscape:label="Progress"
      id="layer13"
-     inkscape:groupmode="layer">
+     inkscape:groupmode="layer"
+     sodipodi:insensitive="true">
     <g
        transform="translate(3.6414032)"
        id="g3945">
@@ -325,7 +327,7 @@
      style="display:inline"
      sodipodi:insensitive="true">
     <rect
-       style="fill:#ffc107;stroke:none;stroke-width:0.269584"
+       style="fill:#ffa348;fill-opacity:1;stroke:none;stroke-width:0.269584"
        id="rect848"
        width="158.75"
        height="13.229167"
@@ -333,15 +335,16 @@
        y="66.145836" />
   </g>
   <g
-     sodipodi:insensitive="true"
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="Slide 1"
-     style="display:none">
+     style="display:none"
+     sodipodi:insensitive="true">
     <g
        inkscape:groupmode="layer"
        id="layer3"
-       inkscape:label="Text">
+       inkscape:label="Text"
+       sodipodi:insensitive="true">
       <text
          id="text2805"
          y="74.083755"
@@ -358,7 +361,8 @@
        inkscape:groupmode="layer"
        id="layer2"
        inkscape:label="Media"
-       style="display:inline">
+       style="display:inline"
+       sodipodi:insensitive="true">
       <g
          id="g844"
          transform="translate(0,-6.6145821)">
@@ -387,7 +391,7 @@
       </g>
       <path
          d="m 135.16916,0.93275958 c -1.15258,1.92481262 -3.34415,4.21305412 -4.4483,5.13353662 0.70463,-0.2880077 2.0859,-0.8160152 3.12487,-0.9322427 -1.41008,4.0914052 -6.57061,4.4582564 -10.73113,5.0730755 6.70796,0.548473 12.44729,-1.006426 13.48858,-5.0606731 1.02439,0.139841 2.3343,0.6421149 3.01377,0.9198403 -1.10416,-0.9204825 -3.2952,-3.208724 -4.44779,-5.13353662 z"
-         style="display:inline;fill:#ffc107;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="display:inline;fill:#ffa348;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          id="path2786" />
       <circle
          transform="translate(3.6414033)"
@@ -399,11 +403,11 @@
     </g>
   </g>
   <g
-     sodipodi:insensitive="true"
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="Slide 2"
-     style="display:none">
+     style="display:none"
+     sodipodi:insensitive="true">
     <g
        inkscape:groupmode="layer"
        id="layer8"
@@ -587,7 +591,7 @@
      inkscape:label="Slide 4"
      id="g956"
      inkscape:groupmode="layer"
-     style="display:none">
+     style="display:inline">
     <g
        style="display:inline"
        inkscape:label="Text"
