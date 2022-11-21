@@ -10,12 +10,24 @@ public interface ROFittingParameters {
 
 	ROFittingParameters copy();
 
-	FittingFunction forTransition(Transition transition, TransitionShell type);
+	FittingFunction forTransition(Transition transition);
 
-	FittingFunction forEscape(Transition transition, Transition escape, Element element, TransitionShell type);
+	FittingFunction forEscape(Transition transition, Transition escape, Element element);
 
-	float getFWHM(Transition t);
-
+	/**
+	 * The FWHM value for a {@link Transition} changes based on the energy level. This method 
+	 * calculates the FWHM value which should be used for this energy level.
+	 */
+	float getFWHM(float energy);
+	
+	/**
+	 * The FWHM value for a {@link Transition} changes based on the energy level. This method 
+	 * calculates the FWHM value which should be used for this energy level.
+	 */
+	default float getFWHM(Transition t) {
+		return getFWHM(t.energyValue);
+	}
+	
 	float getFWHMBase();
 
 	EnergyCalibration getCalibration();
@@ -25,5 +37,7 @@ public interface ROFittingParameters {
 	Class<? extends FittingFunction> getFittingFunction();
 
 	boolean getShowEscapePeaks();
+
+	
 
 }

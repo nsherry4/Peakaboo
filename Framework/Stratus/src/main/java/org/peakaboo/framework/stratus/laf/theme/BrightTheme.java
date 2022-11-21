@@ -7,6 +7,8 @@ import org.peakaboo.framework.stratus.api.StratusColour;
 public class BrightTheme implements Theme {
 
 	private Color highlight = new Color(0x498ed8);
+	private Color highlightText = new Color(0xffffff);
+	
 	private Color control = new Color(0xfafafa);
 	private Color controlText = new Color(0x323232);
 	private Color controlTextDisabled = new Color(0x969696);
@@ -20,6 +22,8 @@ public class BrightTheme implements Theme {
 	private Color selectionAlpha = new Color(0x3f498ed8, true);
 	private Color borderAlpha = new Color(0x30000000, true);
 	private Color shadowAlpha = new Color(0x27000000, true);
+	
+	private Color recessedComponent = new Color(0xffffff);
 	
 	private Color menuControl = new Color(0xffffff);
 	private Color menuControlText = controlText;
@@ -86,7 +90,7 @@ public class BrightTheme implements Theme {
 
 	@Override
 	public Color getHighlightText() {
-		return Color.WHITE;
+		return highlightText;
 	}
 
 	
@@ -103,7 +107,7 @@ public class BrightTheme implements Theme {
 
 	@Override
 	public Color getRecessedControl() {
-		return Color.WHITE;
+		return recessedComponent;
 	}
 
 	@Override

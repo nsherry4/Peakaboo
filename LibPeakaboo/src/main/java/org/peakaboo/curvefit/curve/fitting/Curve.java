@@ -272,11 +272,11 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		for (Transition t : this.transitionSeries)
 		{
 
-			functions.add(parameters.forTransition(t, this.transitionSeries.getShell()));
+			functions.add(parameters.forTransition(t));
 
 			if (fitEscape && parameters.getDetectorMaterial().get().hasOffset()) {
 				for (Transition esc : parameters.getDetectorMaterial().get().offset()) {
-					functions.add(parameters.forEscape(t, esc, this.transitionSeries.getElement(), this.transitionSeries.getShell()));
+					functions.add(parameters.forEscape(t, esc, this.transitionSeries.getElement()));
 				}
 			}
 

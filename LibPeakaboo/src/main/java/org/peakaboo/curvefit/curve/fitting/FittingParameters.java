@@ -4,6 +4,8 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
+import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
+import org.peakaboo.curvefit.peak.fitting.EscapeFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
@@ -60,13 +62,13 @@ public class FittingParameters implements ROFittingParameters {
 	}
 	
 	
-	public FittingFunction forTransition(Transition transition, TransitionShell type) {
-		FittingContext context = new FittingContext(this, transition, type);
+	public FittingFunction forTransition(Transition transition) {
+		FittingContext context = new TransitionFittingContext(this, transition);
 		return buildFunction(context);
 	}
 
-	public FittingFunction forEscape(Transition transition, Transition escape, Element element, TransitionShell type) {
-		FittingContext context = new FittingContext(this, transition, escape, element, type);
+	public FittingFunction forEscape(Transition transition, Transition escape, Element element) {
+		FittingContext context = new EscapeFittingContext(this, transition, escape, element);
 		return buildFunction(context);
 	}
 
@@ -91,12 +93,11 @@ public class FittingParameters implements ROFittingParameters {
 	
 	
 	
-	/**
-	 * The FWHM value for a {@link Transition} changes based on the energy level. This method 
-	 * calculates the FWHM value which should be used for this Transition.
-	 */
-	public float getFWHM(Transition t) {
+	@Override
+	public float getFWHM(float energy) {
 		//See Handbook of X-Ray Spectrometry rev2 p282
+		
+		if (energy < 0) { energy = 0; }
 		
 		//Energy required to create electron-hole pair in detector material
 		float energyGap = getDetectorMaterial().get().energyGap();
@@ -104,7 +105,6 @@ public class FittingParameters implements ROFittingParameters {
 		
 		float noise = fwhmBase;
 		
-		float energy = t.energyValue;
 		float noiseComponent = (float) (Math.pow(noise / 2.3548, 2));
 		float energyComponent = (float) (energyGap*fano*energy);
 			
@@ -115,7 +115,6 @@ public class FittingParameters implements ROFittingParameters {
 		float fwhm = sigma * 2.35482f;
 		
 		return fwhm;
-		
 	}
 
 	public float getFWHMBase() {

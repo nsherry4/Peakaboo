@@ -1,7 +1,10 @@
 package org.peakaboo.curvefit.peak.fitting.functions;
 
+import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
+import org.peakaboo.curvefit.peak.fitting.DelegatingFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.CustomFittingContext;
 import org.peakaboo.curvefit.peak.transition.Transition;
 
 public class ConvolvingVoigtFittingFunction implements FittingFunction {
@@ -14,7 +17,7 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 	public void initialize(FittingContext context) {
 		this.context = context;
 		signal = lorentz();
-		FittingContext copy = new FittingContext(context) {
+		FittingContext copy = new DelegatingFittingContext(context) {
 			/*
 			 * Hardcoded as 10ev because according to Handbook of X-Ray Spectrometry rev. 2
 			 * p242, lorentz function represents actual xray emission, and is therefore on
@@ -40,8 +43,7 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 			return 0;
 		}
 		//Create a kernel transition+fittingfunction centered around the current energy
-		Transition fake = new Transition(energy, 1f, "Fake Transition for Voigt Fitting Function");
-		FittingContext copy = new FittingContext(context.getFittingParameters(), fake, context.getTransitionSeriesType());
+		FittingContext copy = new CustomFittingContext(context.getFittingParameters(), energy);
 		FittingFunction kernel = gaussian();
 		kernel.initialize(copy);
 		

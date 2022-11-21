@@ -1,5 +1,6 @@
 package org.peakaboo.curvefit.peak.fitting.functions;
 
+import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 

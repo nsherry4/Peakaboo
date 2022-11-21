@@ -4,7 +4,6 @@ import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class DelegatingROFittingParameters implements ROFittingParameters {
 
@@ -20,18 +19,18 @@ public class DelegatingROFittingParameters implements ROFittingParameters {
 	}
 
 	@Override
-	public FittingFunction forTransition(Transition transition, TransitionShell type) {
-		return params.forTransition(transition, type);
+	public FittingFunction forTransition(Transition transition) {
+		return params.forTransition(transition);
 	}
 
 	@Override
-	public FittingFunction forEscape(Transition transition, Transition escape, Element element, TransitionShell type) {
-		return params.forEscape(transition, escape, element, type);
+	public FittingFunction forEscape(Transition transition, Transition escape, Element element) {
+		return params.forEscape(transition, escape, element);
 	}
 
 	@Override
-	public float getFWHM(Transition t) {
-		return params.getFWHM(t);
+	public float getFWHM(float energy) {
+		return params.getFWHM(energy);
 	}
 
 	@Override
