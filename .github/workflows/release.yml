@@ -103,7 +103,7 @@ jobs:
       uses: actions/download-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
-        path: ./jar/Peakaboo.jar
+        path: ./Packaging/jar/Peakaboo.jar
         
     - name: Run JPackage Mac Script
       run: ./build-macos.sh
@@ -147,7 +147,7 @@ jobs:
       uses: actions/download-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
-        path: ./jar/Peakaboo.jar
+        path: ./Packaging/jar/Peakaboo.jar
         
     - name: Run JPackage Windows Script
       run: ./build-windows.bat
