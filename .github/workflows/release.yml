@@ -45,6 +45,13 @@ jobs:
 
     steps:
     
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 19
+        distribution: 'temurin'
+        cache: maven
+    
     - uses: actions/checkout@v3
       with:
         ref: ${{ github.ref }}
@@ -78,6 +85,13 @@ jobs:
         working-directory: ./Packaging
 
     steps:
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 19
+        distribution: 'temurin'
+        cache: maven
     
     - uses: actions/checkout@v3
       with:
@@ -116,6 +130,13 @@ jobs:
         working-directory: ./Packaging
 
     steps:
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 19
+        distribution: 'temurin'
+        cache: maven
     
     - uses: actions/checkout@v3
       with:
