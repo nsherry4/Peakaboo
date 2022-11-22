@@ -39,9 +39,6 @@ jobs:
     
     needs: build-jar
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./Packaging
 
     steps:
       
@@ -63,6 +60,7 @@ jobs:
         
     - name: Run JPackage Deb Script
       run: ./build-deb.sh
+      working-directory: ./Packaging
     
     - name: Dump contents of CWD
       run: ls .
@@ -72,16 +70,13 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.deb
-        path: ~/peakaboo*.deb
+        path: ./peakaboo*.deb
 
 
   build-macos:
     
     needs: build-jar
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./Packaging
 
     steps:
        
@@ -107,6 +102,7 @@ jobs:
         
     - name: Run JPackage Mac Script
       run: ./build-macos.sh
+      working-directory: ./Packaging
     
     - name: Dump contents of CWD
       run: ls .
@@ -116,16 +112,14 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.dmg
-        path: ~/Peakaboo*.dmg
+        path: ./Peakaboo*.dmg
 
 
   build-windows:
     
     needs: build-jar
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: ./Packaging
+    
 
     steps:
        
@@ -152,6 +146,7 @@ jobs:
     - name: Run JPackage Windows Script
       run: ./build-windows.bat
       shell: cmd
+      working-directory: ./Packaging
     
     - name: Dump contents of CWD
       run: ls .
