@@ -73,6 +73,44 @@ jobs:
         path: ./Packaging/peakaboo*.deb
 
 
+  build-rpm:
+    
+    needs: build-jar
+    runs-on: ubuntu-latest
+
+    steps:
+      
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 19
+        distribution: 'temurin'
+    
+    - name: Download Jar
+      uses: actions/download-artifact@v3
+      with: 
+        name: Peakaboo-${{ github.ref_name }}.jar
+        path: ./Packaging/jar/Peakaboo.jar
+        
+    - name: Run JPackage Deb Script
+      run: ./build-rpm.sh
+      working-directory: ./Packaging
+    
+    - name: Dump contents of CWD
+      run: ls .
+      shell: bash
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with: 
+        name: Peakaboo-${{ github.ref_name }}.rpm
+        path: ./Packaging/peakaboo*.rpm
+
+
   build-macos:
     
     needs: build-jar
