@@ -58,8 +58,12 @@ jobs:
     - name: Run JPackage Deb Script
       run: /home/runner/work/Peakaboo/Peakaboo/Packaging/build-deb.sh
     
+    - name: Dump contents of CWD
+      run: ls .
+      shell: bash
+    
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.deb
-        path: /home/runner/work/Peakaboo/Peakaboo/Packaging/peakaboo-*.deb
+        path: /home/runner/work/Peakaboo/Peakaboo/Packaging/Peakaboo-*.deb
