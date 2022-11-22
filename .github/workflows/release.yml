@@ -133,7 +133,7 @@ jobs:
         
     - name: Run JPackage Windows Script
       run: ./build-windows.bat
-      shell cmd
+      shell: cmd
     
     - name: Dump contents of CWD
       run: ls .
