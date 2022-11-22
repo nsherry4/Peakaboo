@@ -67,3 +67,80 @@ jobs:
       with: 
         name: Peakaboo-${{ github.ref_name }}.deb
         path: /home/runner/work/Peakaboo/Peakaboo/Packaging/peakaboo*.deb
+
+
+  build-macos:
+    
+    needs: build-jar
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./Packaging
+
+    steps:
+    
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
+        
+    - name: Introspect jpackage
+      run: which jpackage && jpackage --version
+      shell: bash
+        
+    - name: Download Jar
+      uses: actions/download-artifact@v3
+      with: 
+        name: Peakaboo-${{ github.ref_name }}.jar
+        path: /home/runner/work/Peakaboo/Peakaboo/Packaging/jar/Peakaboo.jar
+        
+    - name: Run JPackage Mac Script
+      run: /home/runner/work/Peakaboo/Peakaboo/Packaging/build-macos.sh
+    
+    - name: Dump contents of CWD
+      run: ls .
+      shell: bash
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with: 
+        name: Peakaboo-${{ github.ref_name }}.dmg
+        path: /home/runner/work/Peakaboo/Peakaboo/Packaging/Peakaboo*.dmg
+
+
+  build-windows:
+    
+    needs: build-jar
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: ./Packaging
+
+    steps:
+    
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
+        
+    - name: Introspect jpackage
+      run: which jpackage && jpackage --version
+      shell: bash
+        
+    - name: Download Jar
+      uses: actions/download-artifact@v3
+      with: 
+        name: Peakaboo-${{ github.ref_name }}.jar
+        path: ./jar/Peakaboo.jar
+        
+    - name: Run JPackage Windows Script
+      run: ./build-windows.bat
+      shell cmd
+    
+    - name: Dump contents of CWD
+      run: ls .
+      shell: bash
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with: 
+        name: Peakaboo-${{ github.ref_name }}.exe
+        path: ./Peakaboo*.exe
