@@ -70,7 +70,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.deb
-        path: ./peakaboo*.deb
+        path: ./Packaging/peakaboo*.deb
 
 
   build-macos:
@@ -112,7 +112,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.dmg
-        path: ./Peakaboo*.dmg
+        path: ./Packaging/Peakaboo*.dmg
 
 
   build-windows:
@@ -156,4 +156,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.exe
-        path: ~/Peakaboo*.exe
+        path: ./Packaging/Peakaboo*.exe
