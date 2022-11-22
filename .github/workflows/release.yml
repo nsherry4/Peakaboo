@@ -19,11 +19,19 @@ jobs:
         java-version: 19
         distribution: 'temurin'
         cache: maven
-        
-    - name: Test JPackage
-      run: which jpackage
-      shell: bash
       
-    - name: Get JPackage Version
-      run: jpackage --version
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+      
+    - name: Move Jar to Packaging Location
+      run: mv /home/runner/work/Peakaboo/Peakaboo/Peakaboo-*-SNAPSHOT.jar /home/runner/work/Peakaboo/Peakaboo/Packaging/jar/Peakaboo.jar
       shell: bash
+    
+    - name: Run JPackage
+      run: /home/runner/work/Peakaboo/Peakaboo/Packaging/build-deb.sh
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with: 
+        name: Peakaboo ${{ github.ref_name }} for Debian/Ubuntu
+        path: /home/runner/work/Peakaboo/Peakaboo/Packaging/peakaboo-*.deb
