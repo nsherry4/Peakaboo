@@ -91,10 +91,10 @@ jobs:
       uses: actions/download-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
-        path: /home/runner/work/Peakaboo/Peakaboo/Packaging/jar/Peakaboo.jar
+        path: ./jar/Peakaboo.jar
         
     - name: Run JPackage Mac Script
-      run: /home/runner/work/Peakaboo/Peakaboo/Packaging/build-macos.sh
+      run: ./build-macos.sh
     
     - name: Dump contents of CWD
       run: ls .
@@ -104,7 +104,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.dmg
-        path: /home/runner/work/Peakaboo/Peakaboo/Packaging/Peakaboo*.dmg
+        path: ./Peakaboo*.dmg
 
 
   build-windows:
@@ -122,7 +122,7 @@ jobs:
         ref: ${{ github.ref }}
         
     - name: Introspect jpackage
-      run: which jpackage && jpackage --version
+      run: which jpackage.exe && jpackage.exe --version
       shell: bash
         
     - name: Download Jar
