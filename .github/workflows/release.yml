@@ -44,18 +44,17 @@ jobs:
         working-directory: ./Packaging
 
     steps:
+      
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
     
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         java-version: 19
         distribution: 'temurin'
-        cache: maven
     
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.ref }}
-        
     - name: Download Jar
       uses: actions/download-artifact@v3
       with: 
@@ -85,18 +84,17 @@ jobs:
         working-directory: ./Packaging
 
     steps:
+       
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
     
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         java-version: 19
         distribution: 'temurin'
-        cache: maven
     
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.ref }}
-        
     - name: Introspect jpackage
       run: which jpackage && jpackage --version
       shell: bash
@@ -130,18 +128,17 @@ jobs:
         working-directory: ./Packaging
 
     steps:
-    
+       
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
+   
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         java-version: 19
         distribution: 'temurin'
-        cache: maven
-    
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.ref }}
-        
+   
     - name: Introspect jpackage
       run: which jpackage.exe && jpackage.exe --version
       shell: bash
