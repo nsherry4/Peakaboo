@@ -31,7 +31,7 @@ jobs:
     - name: Upload Jar
       uses: actions/upload-artifact@v3
       with: 
-        name: Peakaboo.jar
+        name: Peakaboo-${{ github.ref_name }}.jar
         path: /home/runner/work/Peakaboo/Peakaboo/Peakaboo.jar
       
 
@@ -52,7 +52,7 @@ jobs:
     - name: Download Jar
       uses: actions/download-artifact@v3
       with: 
-        name: Peakaboo ${{ github.ref_name }} Jar
+        name: Peakaboo-${{ github.ref_name }}.jar
         path: /home/runner/work/Peakaboo/Peakaboo/Packaging/jar/Peakaboo.jar
         
     - name: Run JPackage Deb Script
@@ -61,5 +61,5 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with: 
-        name: Peakaboo.jar
+        name: Peakaboo-${{ github.ref_name }}.deb
         path: /home/runner/work/Peakaboo/Peakaboo/Packaging/peakaboo-*.deb
