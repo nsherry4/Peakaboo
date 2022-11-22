@@ -1,0 +1,29 @@
+name: Package Release
+
+on: workflow_dispatch
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref }}
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 19
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Test JPackage
+      run: which jpackage
+      shell: bash
+      
+    - name: Get JPackage Version
+      run: jpackage --version
+      shell: bash
