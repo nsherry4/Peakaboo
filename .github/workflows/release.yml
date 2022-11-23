@@ -56,7 +56,15 @@ jobs:
       uses: actions/download-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
-        path: ./Packaging/jar/Peakaboo.jar
+        path: ./Packaging/jar
+        
+    - name: Dump contents of input folder
+      run: ls ./Packaging/jar/
+      shell: bash
+      
+    - name: Ensure name of jar file
+      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
+      shell: bash
         
     - name: Run JPackage Deb Script
       run: ./build-deb.sh
@@ -94,7 +102,15 @@ jobs:
       uses: actions/download-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
-        path: ./Packaging/jar/Peakaboo.jar
+        path: ./Packaging/jar
+        
+    - name: Dump contents of input folder
+      run: ls ./Packaging/jar
+      shell: bash
+      
+    - name: Ensure name of jar file
+      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
+      shell: bash
         
     - name: Run JPackage Deb Script
       run: ./build-rpm.sh
@@ -136,7 +152,15 @@ jobs:
       uses: actions/download-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
-        path: ./Packaging/jar/Peakaboo.jar
+        path: ./Packaging/jar
+        
+    - name: Dump contents of input folder
+      run: ls ./Packaging/jar/
+      shell: bash
+      
+    - name: Ensure name of jar file
+      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
+      shell: bash
         
     - name: Run JPackage Mac Script
       run: ./build-macos.sh
@@ -179,7 +203,15 @@ jobs:
       uses: actions/download-artifact@v3
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
-        path: ./Packaging/jar/Peakaboo.jar
+        path: ./Packaging/jar
+        
+    - name: Dump contents of input folder
+      run: ls ./Packaging/jar/
+      shell: bash
+      
+    - name: Ensure name of jar file
+      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
+      shell: bash
         
     - name: Run JPackage Windows Script
       run: ./build-windows.bat
