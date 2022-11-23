@@ -4,14 +4,9 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
-
-import org.peakaboo.framework.stratus.api.StratusLog;
 
 
 public class IconFactory {
@@ -36,29 +31,17 @@ public class IconFactory {
 		}
 		
 		URL url = getImageIconURL(path, imageName, size);
-		InputStream stream = getImageIconStream(path, imageName, size);
-		
-		if (stream == null){
+
+		if (url == null){
 			if (!  (imageName == null || "".equals(imageName))  ) {
 				System.out.println("Image not found: " + imageName + "(" + path + ", " + imageName + ", " + (size == null ? "nosize" : size.toString()) + ")");
 			}
-			stream = getImageIconStream(path, "notfound", null);
+			url = getImageIconURL(path, "notfound", null);
 		}
 
-		try {
-			byte[] bytes = stream.readAllBytes();
-			ImageIcon image = new ImageIcon(bytes);
-			return image;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				StratusLog.get().log(Level.WARNING, "Failed to close stream for image or icon", e);
-			}
-		}
-		
+		ImageIcon image;
+		image = new ImageIcon(url);
+		return image;
 		
 	}
 	
@@ -68,21 +51,16 @@ public class IconFactory {
 
 		if (size != null) iconDir = size.size() + "/";
 		
-		URL url = IconFactory.class.getResource(path + iconDir + imageName + ".png");
+		String location = path + iconDir + imageName + ".png";
+		//otherwise loading from jars breaks...
+		location = location.replace("//", "/");
+		
+		URL url = IconFactory.class.getClassLoader().getResource(location);
 //		if (url == null) {
 //			System.out.println("Failed to locate: " + path + iconDir + imageName + ".png");
 //		}
 		return url;
 		
-	}
-	
-	public static InputStream getImageIconStream(String path, String imageName, IconSize size)
-	{
-		String iconDir = "";
-
-		if (size != null) iconDir = size.size() + "/";
-		
-		return IconFactory.class.getResourceAsStream(path + iconDir + imageName + ".png");
 	}
 	
 	public static Image getImage(String path, String imageName)
