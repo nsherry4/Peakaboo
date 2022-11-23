@@ -57,22 +57,10 @@ jobs:
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-        
-    - name: Dump contents of input folder
-      run: ls ./Packaging/jar/
-      shell: bash
-      
-    - name: Ensure name of jar file
-      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
-      shell: bash
-        
+                
     - name: Run JPackage Deb Script
       run: ./build-deb.sh
       working-directory: ./Packaging
-    
-    - name: Dump contents of CWD
-      run: ls .
-      shell: bash
     
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
@@ -103,23 +91,11 @@ jobs:
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-        
-    - name: Dump contents of input folder
-      run: ls ./Packaging/jar
-      shell: bash
-      
-    - name: Ensure name of jar file
-      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
-      shell: bash
-        
+                
     - name: Run JPackage Deb Script
       run: ./build-rpm.sh
       working-directory: ./Packaging
-    
-    - name: Dump contents of CWD
-      run: ls .
-      shell: bash
-    
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with: 
@@ -153,22 +129,10 @@ jobs:
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-        
-    - name: Dump contents of input folder
-      run: ls ./Packaging/jar/
-      shell: bash
-      
-    - name: Ensure name of jar file
-      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
-      shell: bash
-        
+                
     - name: Run JPackage Mac Script
       run: ./build-macos.sh
       working-directory: ./Packaging
-    
-    - name: Dump contents of CWD
-      run: ls .
-      shell: bash
     
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
@@ -204,23 +168,11 @@ jobs:
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-        
-    - name: Dump contents of input folder
-      run: ls ./Packaging/jar/
-      shell: bash
-      
-    - name: Ensure name of jar file
-      run: mv ./Packaging/jar/Peakaboo*.jar ./Packaging/jar/Peakaboo.jar  
-      shell: bash
-        
+                
     - name: Run JPackage Windows Script
       run: ./build-windows.bat
       shell: cmd
       working-directory: ./Packaging
-    
-    - name: Dump contents of CWD
-      run: ls .
-      shell: bash
     
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
