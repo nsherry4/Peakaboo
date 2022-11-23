@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 
+import org.peakaboo.framework.stratus.api.StratusLog;
+
 
 public class IconFactory {
-
-	public static String customPath = null;
 
 	public static ImageIcon getImageIcon(IconSet icon){
 		return getImageIcon(icon.path(), icon.toIconName(), null);
@@ -33,21 +36,29 @@ public class IconFactory {
 		}
 		
 		URL url = getImageIconURL(path, imageName, size);
-
-		//if we can't find the image, look for it elsewhere
-		if (url == null && customPath != null) { url = getImageIconURL(customPath, imageName, size); }
+		InputStream stream = getImageIconStream(path, imageName, size);
 		
-		
-		if (url == null){
+		if (stream == null){
 			if (!  (imageName == null || "".equals(imageName))  ) {
 				System.out.println("Image not found: " + imageName + "(" + path + ", " + imageName + ", " + (size == null ? "nosize" : size.toString()) + ")");
 			}
-			url = getImageIconURL(path, "notfound", null);
+			stream = getImageIconStream(path, "notfound", null);
 		}
 
-		ImageIcon image;
-		image = new ImageIcon(url);
-		return image;
+		try {
+			byte[] bytes = stream.readAllBytes();
+			ImageIcon image = new ImageIcon(bytes);
+			return image;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				StratusLog.get().log(Level.WARNING, "Failed to close stream for image or icon", e);
+			}
+		}
+		
 		
 	}
 	
@@ -63,6 +74,15 @@ public class IconFactory {
 //		}
 		return url;
 		
+	}
+	
+	public static InputStream getImageIconStream(String path, String imageName, IconSize size)
+	{
+		String iconDir = "";
+
+		if (size != null) iconDir = size.size() + "/";
+		
+		return IconFactory.class.getResourceAsStream(path + iconDir + imageName + ".png");
 	}
 	
 	public static Image getImage(String path, String imageName)
