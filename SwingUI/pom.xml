@@ -81,6 +81,9 @@
 						<manifest>
 							<mainClass>org.peakaboo.ui.swing.Peakaboo</mainClass>
 						</manifest>
+						<manifestEntries>
+							<Add-Opens>java.base/java.lang java.base/java.math java.base/java.util java.base/java.util.concurrent java.base/java.net java.base/java.text</Add-Opens>
+						</manifestEntries>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
