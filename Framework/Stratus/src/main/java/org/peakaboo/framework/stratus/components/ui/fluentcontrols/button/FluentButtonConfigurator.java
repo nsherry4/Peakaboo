@@ -183,8 +183,7 @@ public class FluentButtonConfigurator {
 	
 	protected FluentButtonLayout guessLayout() {
 		FluentButtonLayout mode = FluentButtonLayout.IMAGE_ON_SIDE;
-		ImageIcon image = IconFactory.getImageIcon(config.imagepath, config.imagename, config.size);
-		if (config.imagename == null || image.getIconHeight() == -1) {
+		if (config.imagename == null || config.imagepath == null) {
 			mode = FluentButtonLayout.TEXT;
 		} else if (config.text == null || "".equals(config.text)) {
 			mode = FluentButtonLayout.IMAGE;

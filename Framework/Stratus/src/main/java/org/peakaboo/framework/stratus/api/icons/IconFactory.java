@@ -5,8 +5,11 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.net.URL;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
+
+import org.peakaboo.framework.stratus.api.StratusLog;
 
 
 public class IconFactory {
@@ -24,7 +27,7 @@ public class IconFactory {
 		return getImageIcon(icon.path(), icon.toIconName(), size);
 	}
 	
-	public static ImageIcon getImageIcon(String path, String imageName, IconSize size){
+	public static ImageIcon getImageIcon(String path, String imageName, IconSize size) {
 	
 		if (path == null) {
 			path = StockIcon.PATH;
@@ -39,43 +42,37 @@ public class IconFactory {
 			url = getImageIconURL(path, "notfound", null);
 		}
 
-		ImageIcon image;
-		image = new ImageIcon(url);
-		return image;
+		if (url == null) {
+			return new ImageIcon();
+		} else {
+			return new ImageIcon(url);
+		}
 		
 	}
 	
-	public static URL getImageIconURL(String path, String imageName, IconSize size)
-	{
+	public static URL getImageIconURL(String path, String imageName, IconSize size) {
 		String iconDir = "";
-
 		if (size != null) iconDir = size.size() + "/";
 		
 		String location = path + iconDir + imageName + ".png";
 		//otherwise loading from jars breaks...
 		location = location.replace("//", "/");
 		
-		URL url = IconFactory.class.getClassLoader().getResource(location);
-//		if (url == null) {
-//			System.out.println("Failed to locate: " + path + iconDir + imageName + ".png");
-//		}
+		URL url = IconFactory.class.getResource(location);
+		if (url == null) {
+			StratusLog.get().log(Level.FINE, "Failed to locate: " + path + iconDir + imageName + ".png");
+		}
 		return url;
 		
 	}
 	
-	public static Image getImage(String path, String imageName)
-	{
-		
+	public static Image getImage(String path, String imageName) {
 		return getImageIcon(path, imageName, null).getImage();
-		
 	}
 	
 	public static boolean hasImage(String imageName, IconSize size, String path) {
-		
 		URL url = getImageIconURL(path, imageName, size);
-		
 		return url != null;
-		
 	}
 	
 	
