@@ -2,9 +2,7 @@ package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
@@ -17,10 +15,7 @@ import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
-import org.peakaboo.tier.Tier;
-import org.peakaboo.tier.TierUIAction;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuEnergy extends JPopupMenu {
@@ -30,43 +25,13 @@ public class PlotMenuEnergy extends JPopupMenu {
 	private JSpinner minEnergy, maxEnergy, noiseEnergy;
 	private FluentButton energyGuess;
 	
-	public static final String TIER_LOCATION = "plot.energymenu";
-	private final List<TierUIAction<PlotPanel, PlotController>> tierItems = Tier.provider().uiComponents(TIER_LOCATION);
-	
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
 		
-		
 		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
-
 		outer.addSetting(energyCalibration(plot));
-		
-		boolean hasTierComponents = false;
-		SettingsPanel tierui = new SettingsPanel();
-		tierui.setOpaque(false);
-		tierui.setBorder(Spacing.bMedium());
-		for (TierUIAction<PlotPanel, PlotController> item : tierItems) {
-			hasTierComponents = true;
-			JButton button = new FluentButton(item.text)
-					.withButtonSize(FluentButtonSize.COMPACT)
-					.withAction(() -> {
-						this.setVisible(false);
-						item.action.accept(plot, controller);	
-					});
-			button.setHorizontalAlignment(SwingConstants.CENTER);
-			button.setFont(button.getFont().deriveFont(Font.BOLD));
-			
-			tierui.addSetting(button);
-			item.component = button;
-		}
-		
-		if (hasTierComponents) {
-			outer.addSetting(tierui);
-		}
-		
 		outer.setOpaque(false);
 		this.add(outer);
-		
 		
 	}
 

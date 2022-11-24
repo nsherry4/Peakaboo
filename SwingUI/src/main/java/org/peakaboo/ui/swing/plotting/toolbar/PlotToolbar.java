@@ -18,7 +18,8 @@ import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAction;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
+import org.peakaboo.ui.swing.app.TierWidgetFactory;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotToolbar extends JToolBar {
@@ -103,12 +104,8 @@ public class PlotToolbar extends JToolBar {
 
 		
 		
-		for (TierUIAction item : tierItems) {
-			FluentToolbarButton tierButton = new FluentToolbarButton(item.text)
-					.withIcon(Tier.provider().iconPath(), item.iconname, IconSize.TOOLBAR_SMALL)
-					.withTooltip(item.tooltip)
-					.withSignificance(false)
-					.withAction(() -> item.action.accept(plot, controller));
+		for (var item : tierItems) {
+			var tierButton = TierWidgetFactory.toolbarButton(item, plot, controller);
 			item.component = tierButton;
 			c.gridx += 1;
 			this.add(tierButton, c);

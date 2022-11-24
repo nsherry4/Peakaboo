@@ -18,7 +18,7 @@ import org.peakaboo.framework.stratus.components.ui.live.LiveFrame;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 
 /**

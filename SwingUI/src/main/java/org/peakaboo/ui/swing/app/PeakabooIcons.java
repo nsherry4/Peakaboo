@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.environment;
+package org.peakaboo.ui.swing.app;
 
 import org.peakaboo.framework.stratus.api.icons.IconSet;
 

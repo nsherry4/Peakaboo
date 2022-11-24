@@ -17,7 +17,8 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAction;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
+import org.peakaboo.ui.swing.app.TierWidgetFactory;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapperToolbar extends JToolBar {
@@ -50,11 +51,7 @@ public class MapperToolbar extends JToolBar {
 		
 		
 		for (TierUIAction<MapperPanel, MappingController> item : tierItems) {
-			FluentToolbarButton component = new FluentToolbarButton(item.text)
-					.withIcon(Tier.provider().iconPath(), item.iconname, IconSize.TOOLBAR_SMALL)
-					.withTooltip(item.tooltip)
-					.withSignificance(true)
-					.withAction(() -> item.action.accept(panel, controller));
+			var component = TierWidgetFactory.toolbarButton(item, panel, controller);
 			this.add(component, c);
 			c.gridx++;
 			component.setEnabled(item.enabled.apply(controller));

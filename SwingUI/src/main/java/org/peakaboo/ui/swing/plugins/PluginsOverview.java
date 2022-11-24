@@ -57,7 +57,7 @@ import org.peakaboo.framework.stratus.laf.theme.LightTheme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
-import org.peakaboo.ui.swing.environment.DesktopApp;
+import org.peakaboo.ui.swing.app.DesktopApp;
 
 public class PluginsOverview extends HeaderLayer {
 

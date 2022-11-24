@@ -23,7 +23,7 @@ import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.Fluent
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 public class MapDimensionsPanel extends JPanel {
 

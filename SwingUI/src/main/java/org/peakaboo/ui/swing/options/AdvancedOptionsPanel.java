@@ -47,7 +47,7 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
-import org.peakaboo.ui.swing.environment.PeakabooIcons;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {

@@ -94,7 +94,7 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 	
 	@Override
 	public String name() {
-		return "Convolving Voigt";
+		return "Voigt";
 	}
 
 	@Override

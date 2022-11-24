@@ -13,7 +13,6 @@ import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BORDER_STYLE;
 
 
-//TODO: Can't base this on ImageButton anymore
 public class FluentToolbarButton extends JButton implements FluentButtonAPI<FluentToolbarButton, FluentButtonConfig>{
 
 	private ToolbarImageButtonConfigurator configurator;

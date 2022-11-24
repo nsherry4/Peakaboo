@@ -47,7 +47,7 @@ import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.environment.DesktopApp;
+import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 
