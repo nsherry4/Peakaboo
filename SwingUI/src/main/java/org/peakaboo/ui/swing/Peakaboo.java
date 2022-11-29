@@ -45,6 +45,7 @@ import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
+import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
@@ -54,6 +55,8 @@ import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 public class Peakaboo {
 	private static Timer gcTimer;
+	public static Theme appTheme;
+	
 	
 	private static void showError(Throwable throwable, String message) {
 		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
@@ -166,7 +169,7 @@ public class Peakaboo {
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
-		StratusLookAndFeel laf = new StratusLookAndFeel(new BrightTheme());
+		StratusLookAndFeel laf = new StratusLookAndFeel(appTheme);
 		
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 
@@ -257,8 +260,8 @@ public class Peakaboo {
 		}
 	}
 
-	public static void main(String[] args)
-	{	
+	public static void main(String[] args) {	
+		Peakaboo.appTheme = new BrightTheme();
 		run();
 	}
 

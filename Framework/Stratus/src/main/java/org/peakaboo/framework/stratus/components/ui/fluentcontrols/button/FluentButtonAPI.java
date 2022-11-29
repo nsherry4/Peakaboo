@@ -6,6 +6,7 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentAPI;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BORDER_STYLE;
 
@@ -64,7 +65,7 @@ interface FluentButtonAPI<
 	}
 	
 	default B withStateDefault() {
-		this.setBackground(new Color(0xff3584e4, true));
+		this.setBackground(Stratus.getTheme().getHighlight());
 		this.setForeground(Color.WHITE);
 		return getSelf();
 	}

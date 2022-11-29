@@ -6,31 +6,31 @@ import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class BrightTheme implements Theme {
 
-	private Color highlight = new Color(0x498ed8);
-	private Color highlightText = new Color(0xffffff);
+	protected Color highlight = new Color(0x498ed8);
+	protected Color highlightText = new Color(0xffffff);
 	
-	private Color control = new Color(0xfafafa);
-	private Color controlText = new Color(0x323232);
-	private Color controlTextDisabled = new Color(0x969696);
-	private Color negative = new Color(0xebebeb);
-	private Color border = new Color(0xdadada);
+	protected Color control = new Color(0xfafafa);
+	protected Color controlText = new Color(0x323232);
+	protected Color controlTextDisabled = new Color(0x969696);
+	protected Color negative = new Color(0xebebeb);
+	protected Color border = new Color(0xdadada);
 	
-	private Color widget = new Color(0xe6e6e6);
-	private Color widgetAlpha = new Color(0x13000000, true);
-	private Color widgetBevel = new Color(0xe6e6e6);
+	protected Color widget = new Color(0xe6e6e6);
+	protected Color widgetAlpha = new Color(0x13000000, true);
+	protected Color widgetBevel = new Color(0xe6e6e6);
 	
-	private Color selectionAlpha = new Color(0x3f498ed8, true);
-	private Color borderAlpha = new Color(0x30000000, true);
-	private Color shadowAlpha = new Color(0x27000000, true);
+	protected Color selectionAlpha = new Color(0x3f498ed8, true);
+	protected Color borderAlpha = new Color(0x30000000, true);
+	protected Color shadowAlpha = new Color(0x27000000, true);
 	
-	private Color recessedComponent = new Color(0xffffff);
+	protected Color recessedComponent = new Color(0xffffff);
 	
-	private Color menuControl = new Color(0xffffff);
-	private Color menuControlText = controlText;
+	protected Color menuControl = new Color(0xffffff);
+	protected Color menuControlText = controlText;
 	
-	private Color tableHeaderText = new Color(0x666666);
+	protected Color tableHeaderText = new Color(0x666666);
 	
-	private Color scrollHandle = StratusColour.darken(getWidgetBorder(), 0.1f);
+	protected Color scrollHandle = StratusColour.darken(getWidgetBorder(), 0.1f);
 	
 	@Override
 	public Color getHighlight() {
