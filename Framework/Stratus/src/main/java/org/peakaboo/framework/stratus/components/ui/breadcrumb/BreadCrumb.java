@@ -18,10 +18,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import javax.swing.AbstractButton;
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -368,8 +371,12 @@ public class BreadCrumb<T> extends JPanel {
 		buttons.add(goLeft);
 		buttons.addAll(subset(first, last).stream().map(e -> e.getButton()).collect(toList()));
 		buttons.add(goRight);
-		ButtonLinker linker = new ButtonLinker(buttons, true);
-		this.add(linker, this.alignment);
+		Box box = Box.createHorizontalBox();
+		box.setBorder(Spacing.bSmall());
+		for (var button : buttons) {
+			box.add(button);
+		}
+		this.add(box, this.alignment);
 		
 		this.repaint();
 		
@@ -428,7 +435,7 @@ public class BreadCrumb<T> extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		
+
 		Theme theme = Stratus.getTheme();
 		
 		g = g.create();
@@ -439,12 +446,9 @@ public class BreadCrumb<T> extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		
 		
-		Color bg, fg;
-		float radius;
-			
-		bg = theme.getControl();
-		fg = theme.getWidgetBorder();
-		radius = theme.borderRadius();
+		Color bg = theme.getControl();
+		Color fg = theme.getWidgetBorder();
+		float radius = theme.borderRadius();
 
 		
 		//Fill b/ bg colour

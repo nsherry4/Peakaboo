@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.function.Function;
 
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 
@@ -35,8 +36,12 @@ public class BreadCrumbEntry<T> {
 				parent.makeSelection(item);
 			}
 		});
+
+		button.withBordered(false);
+		button.withBorder(Spacing.bMedium());
 		
 		button.addMouseWheelListener(parent.onScroll);
+		
 		
 		button.addKeyListener(new KeyAdapter() {
 			@Override
