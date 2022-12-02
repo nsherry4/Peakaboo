@@ -124,13 +124,11 @@ public class TabbedInterfaceTitle extends JPanel {
         
     }
     
-    protected void setTitle(String title)
-    {
+    protected void setTitle(String title) {
     	label.setText(title);
     }
     
-    protected String getTitle()
-    {
+    protected String getTitle() {
     	return label.getText();
     }
  

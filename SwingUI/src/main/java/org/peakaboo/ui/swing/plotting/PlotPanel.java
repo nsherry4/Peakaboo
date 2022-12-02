@@ -3,6 +3,7 @@ package org.peakaboo.ui.swing.plotting;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -92,6 +93,7 @@ import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
 import org.peakaboo.framework.stratus.components.panels.TitledPanel;
+import org.peakaboo.framework.stratus.components.ui.colour.ColourChooser;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
@@ -105,6 +107,7 @@ import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
+import org.peakaboo.ui.swing.app.PeakabooTabTitle;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
@@ -1045,13 +1048,21 @@ public class PlotPanel extends TabbedLayerPanel {
 			return;
 		}
 		
-		Mutable<LayerDialog> dialogbox = new Mutable<>();
+		var dialogbox = new Mutable<LayerDialog>();
+		var textfield = new JTextField(20);
+		var title = (PeakabooTabTitle) getTabbedInterface().getTabTitleComponent(this);
+		var colours = new ArrayList<Color>(Stratus.getTheme().getPalette().getShadeColours("4").values());
+		var chooser = new ColourChooser(colours, title.getColour());
 		
-		JTextField textfield = new JTextField(20);
-		textfield.addActionListener(ae -> {
+		
+		Runnable onClose = () -> {
 			controller.data().setTitle(textfield.getText());
+			title.setColour(chooser.getColour());
 			dialogbox.get().hide();
-		});
+			
+		};
+				
+		textfield.addActionListener(e -> onClose.run());
 		textfield.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -1061,13 +1072,15 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 		});
 		textfield.setText(controller.data().getTitle());
-		LayerDialog dialog = new LayerDialog("Change Dataset Title", textfield, StockIcon.BADGE_QUESTION);
+		
+		JPanel body = new JPanel(new BorderLayout());
+		body.add(textfield, BorderLayout.CENTER);		
+		body.add(chooser, BorderLayout.SOUTH);
+		
+		LayerDialog dialog = new LayerDialog("Dataset Title", body);
 		dialogbox.set(dialog);
 		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
-		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
-			controller.data().setTitle(textfield.getText());
-			dialog.hide();
-		}));
+		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(onClose));
 		dialog.showIn(this);
 		textfield.grabFocus();
 		

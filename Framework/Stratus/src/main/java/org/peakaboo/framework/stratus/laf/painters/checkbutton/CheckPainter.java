@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.geom.Path2D;
 
 import javax.swing.JComponent;
 import javax.swing.Painter;
@@ -62,8 +63,11 @@ public class CheckPainter extends SimpleThemed implements Painter<JComponent>{
 	private void drawCheck(Graphics2D g, int width, int height) {
 		Stroke old = g.getStroke();
 		g.setStroke(new BasicStroke(2));
-		g.drawLine(pad, pad+height/2+voffset, pad+width/3, pad+height+voffset);
-		g.drawLine(pad+width/3, pad+height+voffset, pad+width, pad+voffset);
+		Path2D shape = new Path2D.Float();
+		shape.moveTo(pad, pad+height/2+voffset);
+		shape.lineTo(pad+width/3, pad+height+voffset);
+		shape.lineTo(pad+width, pad+voffset);
+		g.draw(shape);
 		g.setStroke(old);
 	}
 

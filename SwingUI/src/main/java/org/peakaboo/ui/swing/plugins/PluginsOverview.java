@@ -53,7 +53,7 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
-import org.peakaboo.framework.stratus.laf.theme.LightTheme;
+import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
@@ -391,7 +391,7 @@ public class PluginsOverview extends HeaderLayer {
 	
 	public static void main(String[] args) throws UnsupportedLookAndFeelException {
 		
-		UIManager.setLookAndFeel(new StratusLookAndFeel(new LightTheme()));
+		UIManager.setLookAndFeel(new StratusLookAndFeel(new BrightTheme()));
 		
 		JFrame frame = new JFrame();
 		frame.setPreferredSize(new Dimension(640, 480));

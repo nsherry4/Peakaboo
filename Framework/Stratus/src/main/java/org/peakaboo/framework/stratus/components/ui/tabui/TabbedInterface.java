@@ -1,5 +1,6 @@
 package org.peakaboo.framework.stratus.components.ui.tabui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,13 +83,11 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane {
 	}
 	
 	
-	protected JTabbedPane getJTabbedPane()
-	{
+	protected JTabbedPane getJTabbedPane() {
 		return this;
 	}
 	
-	public void addTab(T component)
-	{
+	public void addTab(T component) {
 		int count = this.getTabCount() - 1;
 		
 		TabbedInterfaceTitle titleComponent = makeTitleComponent(component);
@@ -97,10 +96,14 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane {
 		setTabTitle(component, titleFunction.apply(component));
 	}
 	
-	public TabbedInterfaceTitle makeTitleComponent(T component) {
-		TabbedInterfaceTitle title = new TabbedInterfaceTitle(this, tabWidth);
+	private TabbedInterfaceTitle makeTitleComponent(T component) {
+		TabbedInterfaceTitle title = this.provideTitleComponent();
 		title.setOnDoubleClick(() -> titleDoubleClicked(component));
 		return title;
+	}
+	
+	protected TabbedInterfaceTitle provideTitleComponent() {
+		return new TabbedInterfaceTitle(this, tabWidth);
 	}
 	
 	public void addActiveTab(T component) {
@@ -108,16 +111,14 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane {
 		setActiveTab(component);
 	}
 	
-	public T newTab()
-	{
+	public T newTab() {
 		T component = createComponent();
 		addActiveTab(component);
 		return component;
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void closeTab(int i)
-	{
+	protected void closeTab(int i) {
 		//If this is the last tab before the new-tab tab and it's focused, try to focus another tab first
 		if (i == this.getTabCount() - 2 && this.getSelectedIndex() == i && i != 0) {
 			setActiveTab(i-1);
@@ -129,15 +130,13 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane {
 		
 	}
 	
-	public void closeTab(T component)
-	{
+	public void closeTab(T component) {
 		destroyComponent(component);
 		this.remove(component);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public T getActiveTab()
-	{
+	public T getActiveTab() {
 		//if the new-tab tab is focused now, return the last tab to have focus
 		if (this.getSelectedIndex() == this.getTabCount()-1) {
 			return lastSelectedTab;
@@ -149,27 +148,30 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane {
 	private TabbedInterfaceTitle getActiveTabTitle() {
 		return (TabbedInterfaceTitle) this.getTabComponentAt(this.getSelectedIndex());
 	}
-		
-	public void setActiveTab(T component)
-	{
+	
+	public TabbedInterfaceTitle getTabTitleComponent(T component) {
+		int i = this.indexOfComponent(component);
+		if (i < 0) return null;
+		return (TabbedInterfaceTitle) this.getTabComponentAt(i);
+	}
+	
+	public void setActiveTab(T component) {
 		this.setSelectedComponent(component);
 		component.requestFocus();
 		lastSelectedTab = component;
 		titleChanged(getActiveTabTitle().getTitle());
 	}
 	
-	public void setActiveTab(int i)
-	{
+	public void setActiveTab(int i) {
 		this.setSelectedIndex(i);
 		titleChanged(getActiveTabTitle().getTitle());
 	}
 	
-	
-	public void setTabTitle(T component, String title)
-	{
+		
+	public void setTabTitle(T component, String title) {
 		int i = this.indexOfComponent(component);
 		if (i < 0) return;
-		TabbedInterfaceTitle titleComponent = (TabbedInterfaceTitle) this.getTabComponentAt(i);
+		TabbedInterfaceTitle titleComponent = getTabTitleComponent(component);
 		titleComponent.setTitle(title);
 		this.setToolTipTextAt(i, title);
 		if (i == this.getSelectedIndex()) {

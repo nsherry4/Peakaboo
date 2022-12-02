@@ -21,9 +21,11 @@ import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.Fluent
 import org.peakaboo.framework.stratus.components.ui.header.HeaderDialog;
 import org.peakaboo.framework.stratus.components.ui.live.LiveFrame;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
+import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterfaceTitle;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
+import org.peakaboo.ui.swing.app.PeakabooTabTitle;
 
 
 public class PlotFrame extends LiveFrame
@@ -59,7 +61,7 @@ public class PlotFrame extends LiveFrame
 
 
 	private TabbedInterface<TabbedLayerPanel> createTabControl() {
-		return new TabbedInterface<TabbedLayerPanel>(this, p -> "No Data", 150) {
+		return new TabbedInterface<TabbedLayerPanel>(this, p -> "No Data", 180) {
 
 			@Override
 			protected PlotPanel createComponent() {
@@ -79,6 +81,12 @@ public class PlotFrame extends LiveFrame
 			@Override
 			protected void titleDoubleClicked(TabbedLayerPanel component) {
 				component.titleDoubleClicked();
+			}
+			
+			@Override
+			public TabbedInterfaceTitle provideTitleComponent() {
+				return new PeakabooTabTitle(this, super.tabWidth);
+				
 			}
 		};
 	}
