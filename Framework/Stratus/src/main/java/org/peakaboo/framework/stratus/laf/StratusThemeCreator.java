@@ -121,12 +121,10 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
-
-import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
-import org.peakaboo.framework.stratus.laf.theme.LightTheme;
-
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
+
+import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 
 
 //import com.sun.java.swing.Painter;

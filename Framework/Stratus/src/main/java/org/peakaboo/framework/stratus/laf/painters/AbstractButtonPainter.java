@@ -100,7 +100,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     	} else {
     		
     		BiFunction<Color, Float, Color> darken;
-        	if (isCustomColour(object)) {
+        	if (StratusColour.isCustomColour(object.getBackground())) {
         		palette.fill = object.getBackground();
         		palette.selection = new Color(0x2fffffff, true);
         		darken = StratusColour::darken;
@@ -136,10 +136,6 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     	
     	setupPalette(palette, object);
     	return palette;
-    }
-
-    private boolean isCustomColour(JComponent object) {
-    	return object.getBackground().getClass().getName().equals("java.awt.Color");
     }
     
     @Override

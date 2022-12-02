@@ -52,4 +52,8 @@ public class StratusColour {
 		return new Color(src.getRed(), src.getGreen(), src.getBlue(), (int)Math.max(src.getAlpha()-(amount*255), 0f));
 	}
 
+    public static boolean isCustomColour(Color c) {
+    	return c.getClass().getName().equals("java.awt.Color");
+    }
+	
 }

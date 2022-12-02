@@ -2,22 +2,26 @@ package org.peakaboo.framework.stratus.laf.theme;
 
 import java.awt.Color;
 
+import org.peakaboo.framework.stratus.api.ColourPalette;
 import org.peakaboo.framework.stratus.api.StratusColour;
+import org.peakaboo.framework.stratus.laf.palettes.BrightPalette;
 
 public class BrightTheme implements Theme {
 
-	protected Color highlight = new Color(0x498ed8);
-	protected Color highlightText = new Color(0xffffff);
+	protected ColourPalette palette = new BrightPalette();
+	
+	protected Color highlight = palette.getColour("Blue", "3");
+	protected Color highlightText = palette.getColour("Light", "1");
 	
 	protected Color control = new Color(0xfafafa);
-	protected Color controlText = new Color(0x323232);
-	protected Color controlTextDisabled = new Color(0x969696);
+	protected Color controlText = palette.getColour("Dark", "3");
+	protected Color controlTextDisabled = palette.getColour("Light", "5");
 	protected Color negative = new Color(0xebebeb);
 	protected Color border = new Color(0xdadada);
 	
 	protected Color widget = new Color(0xe6e6e6);
 	protected Color widgetAlpha = new Color(0x13000000, true);
-	protected Color widgetBevel = new Color(0xe6e6e6);
+	protected Color widgetBevel = widget;
 	
 	protected Color selectionAlpha = new Color(0x3f498ed8, true);
 	protected Color borderAlpha = new Color(0x30000000, true);
@@ -31,6 +35,11 @@ public class BrightTheme implements Theme {
 	protected Color tableHeaderText = new Color(0x666666);
 	
 	protected Color scrollHandle = StratusColour.darken(getWidgetBorder(), 0.1f);
+	
+	@Override
+	public ColourPalette getPalette() {
+		return palette;
+	}
 	
 	@Override
 	public Color getHighlight() {

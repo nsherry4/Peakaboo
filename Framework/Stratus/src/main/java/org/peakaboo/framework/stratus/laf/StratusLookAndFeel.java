@@ -27,8 +27,8 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
-import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
+import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.components.StratusComboBoxUI;
 import org.peakaboo.framework.stratus.laf.components.StratusSpinnerUI;
 import org.peakaboo.framework.stratus.laf.painters.BorderPainter;
@@ -61,7 +61,7 @@ import org.peakaboo.framework.stratus.laf.painters.textfield.TextFieldBorderPain
 import org.peakaboo.framework.stratus.laf.painters.toolbar.ToolbarBackgroundPainter;
 import org.peakaboo.framework.stratus.laf.painters.toolbar.ToolbarBorderPainter;
 import org.peakaboo.framework.stratus.laf.painters.toolbar.ToolbarBorderPainter.Side;
-import org.peakaboo.framework.stratus.laf.theme.LightTheme;
+import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
 public class StratusLookAndFeel extends NimbusLookAndFeel {
@@ -79,7 +79,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 	}
 
 	public StratusLookAndFeel() {
-		this(new LightTheme());
+		this(new BrightTheme());
 	}
 	
 	public StratusLookAndFeel(Theme theme) {

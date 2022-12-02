@@ -2,6 +2,8 @@ package org.peakaboo.framework.stratus.laf.theme;
 
 import java.awt.Color;
 
+import org.peakaboo.framework.stratus.api.ColourPalette;
+
 public interface Theme {
 
 	//Highlighted items/text, eg menu items, text, table entries
@@ -34,6 +36,8 @@ public interface Theme {
 	Color getWidgetBorderAlpha();
 	Color getWidgetSelectionAlpha();
 	Color getShadow();
+	
+	ColourPalette getPalette();
 	
 	/**
 	 * Colour for control components representing negative space around widgets (eg
