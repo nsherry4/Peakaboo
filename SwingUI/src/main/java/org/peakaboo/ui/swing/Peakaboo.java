@@ -40,7 +40,7 @@ import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.dialogs.ErrorDialog;
+import org.peakaboo.framework.stratus.components.dialogs.error.ErrorDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
@@ -59,7 +59,9 @@ public class Peakaboo {
 	
 	
 	private static void showError(Throwable throwable, String message) {
-		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable);
+		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable, report -> {
+			//TODO
+		});
 		errorDialog.setVisible(true);
 	}
 
@@ -216,7 +218,8 @@ public class Peakaboo {
 			checkLowMemory();
 			checkDevRelease();
 			uiPerformanceTune();
-
+		
+			
 			//Init plugins
 			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
 			MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));

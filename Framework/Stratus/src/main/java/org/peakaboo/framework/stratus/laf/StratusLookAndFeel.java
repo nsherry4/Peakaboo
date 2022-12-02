@@ -514,16 +514,23 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			
 			//TEXTAREA
-			reg(ret, "TextArea.background", theme.getRecessedControl());
-			reg(ret, "TextArea.foreground", theme.getRecessedText());
+//			reg(ret, "TextArea.background", theme.getRecessedControl());
+//			reg(ret, "TextArea.foreground", theme.getRecessedText());
 			
 			reg(ret, "TextArea[Enabled].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
 			reg(ret, "TextArea[Enabled+NotInScrollPane].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
 			reg(ret, "TextArea[Selected].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
 			
-			reg(ret, "TextArea[Enabled].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextArea[Enabled].backgroundPainter", theme.getRecessedControl());
 			reg(ret, "TextArea[Enabled+NotInScrollPane].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
-			reg(ret, "TextArea[Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextArea[Selected].backgroundPainter", theme.getRecessedControl());
+			reg(ret, "TextArea[Focused+NotInScrollPane].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));
+			
+			reg(ret, "TextArea[Enabled+NotInScrollPane].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
+			reg(ret, "TextArea[Focused+NotInScrollPane].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));
+			
+			
+			
 			
 			//TEXTPANE
 			reg(ret, "TextPane.background", theme.getRecessedControl());
@@ -555,12 +562,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			
 			//TEXT AREA
-			reg(ret, "TextArea[Enabled+NotInScrollPane].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED));
-			reg(ret, "TextArea[Focused+NotInScrollPane].borderPainter", new TextFieldBorderPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));
-			
-			reg(ret, "TextArea[Enabled+NotInScrollPane].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED));
-			reg(ret, "TextArea[Focused+NotInScrollPane].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));
-			
+
 			
 			//EDITOR PANE
 //			reg(ret, "EditorPane[Selected].backgroundPainter", new TextFieldBackgroundPainter(theme, ButtonState.ENABLED, ButtonState.SELECTED));

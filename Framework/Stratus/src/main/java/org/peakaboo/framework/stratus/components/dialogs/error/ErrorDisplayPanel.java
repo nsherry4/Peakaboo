@@ -1,4 +1,4 @@
-package org.peakaboo.framework.stratus.components.panels;
+package org.peakaboo.framework.stratus.components.dialogs.error;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,16 +16,16 @@ import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 
-public class ErrorPanel extends JPanel {
+public class ErrorDisplayPanel extends JPanel {
 
 	private Throwable t;
 	
 	
-	public ErrorPanel(Throwable t) {
+	public ErrorDisplayPanel(Throwable t) {
 		this(null, t);
 	}
 	
-	public ErrorPanel(String msg, Throwable t) {
+	public ErrorDisplayPanel(String msg, Throwable t) {
 		if (t == null) {
 			throw new RuntimeException("Error Panel cannot be shown without exception");
 		}
@@ -38,7 +38,6 @@ public class ErrorPanel extends JPanel {
 		
 		JTextArea tracer = new JTextArea(getStackTrace());
 		tracer.setEditable(false);
-		tracer.setBackground(Color.WHITE);
 		JScrollPane scroller = new JScrollPane(tracer);
 		add(scroller, BorderLayout.CENTER);
 		

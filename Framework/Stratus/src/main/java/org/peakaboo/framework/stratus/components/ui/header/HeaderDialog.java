@@ -35,9 +35,7 @@ public class HeaderDialog extends LiveDialog {
 		
 		root.getHeader().setShowClose(true);
 		root.getHeader().setOnClose(() -> {
-			this.setVisible(false);
-			Toolkit.getDefaultToolkit().removeAWTEventListener(glass);
-			this.onClose.run();
+			close();
 		});
 
 		HeaderFrameGlassPane glass = new HeaderFrameGlassPane(this);
@@ -48,6 +46,12 @@ public class HeaderDialog extends LiveDialog {
 		
 	}
 
+	public void close() {
+		this.setVisible(false);
+		Toolkit.getDefaultToolkit().removeAWTEventListener(glass);
+		this.onClose.run();
+	}
+	
 
 	public HeaderBox getHeader() {
 		return root.getHeader();
