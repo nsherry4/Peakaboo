@@ -1,5 +1,9 @@
 package org.peakaboo.framework.bolt.plugin.core.issue;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 
 /**
@@ -26,6 +30,17 @@ public interface BoltIssue<T extends BoltPlugin> {
 	
 	default boolean isFixDestructuve() {
 		return false;
+	}
+	
+	default Map<String, String> infodump() {
+		return new HashMap<String, String>() {{
+			put("title", title());
+			put("description", description());
+			put("shortSource", shortSource());
+			put("longSource", longSource());
+			put("hasFix", Boolean.toString(hasFix()));
+			put("isFixDestructuve", Boolean.toString(isFixDestructuve()));
+		}};
 	}
 	
 }

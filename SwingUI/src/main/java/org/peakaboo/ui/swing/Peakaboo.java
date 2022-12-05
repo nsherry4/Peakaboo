@@ -48,8 +48,12 @@ import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
+import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
+
+import com.bugsnag.Bugsnag;
+import com.bugsnag.Severity;
 
 
 
@@ -57,14 +61,6 @@ public class Peakaboo {
 	private static Timer gcTimer;
 	public static Theme appTheme;
 	
-	
-	private static void showError(Throwable throwable, String message) {
-		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable, report -> {
-			//TODO
-		});
-		errorDialog.setVisible(true);
-	}
-
 	private static void checkDevRelease() {
 		if (Version.releaseType != ReleaseType.RELEASE){
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
@@ -90,8 +86,7 @@ public class Peakaboo {
 		}
 	}
 	
-	private static void runPeakaboo()
-	{
+	private static void showPeakabooMainWindow() {
 
 		//Any errors that don't get handled anywhere else come here and get shown
 		//to the user and printed to standard out.
@@ -99,6 +94,7 @@ public class Peakaboo {
 			new PlotFrame();
 		} catch (Throwable e) {
 			PeakabooLog.get().log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
+			//TODO: can we show an error dialog here?
 			System.exit(1);
 		}
 		
@@ -121,7 +117,7 @@ public class Peakaboo {
 						return;
 					}
 					
-					showError(t, m);
+					CrashHandler.get().handle(m, t);
 				}
 			}
 			
@@ -159,6 +155,7 @@ public class Peakaboo {
 			LayerPanel.blurLowerLayers = false;
 		}
 	}
+
 	
 	public static void run() {
 		
@@ -169,9 +166,12 @@ public class Peakaboo {
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
+		CrashHandler.init();
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
 		StratusLookAndFeel laf = new StratusLookAndFeel(appTheme);
+		
+		
 		
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 
@@ -219,7 +219,6 @@ public class Peakaboo {
 			checkDevRelease();
 			uiPerformanceTune();
 		
-			
 			//Init plugins
 			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
 			MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
@@ -237,12 +236,13 @@ public class Peakaboo {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to start up properly, Peakaboo must now exit.", e);
 				System.exit(2);
 			}
-			runPeakaboo();
+			showPeakabooMainWindow();
 		});
 		
 		
 	}
 	
+
 	//TODO: Remove this in Peakaboo 6
 	/**
 	 * This method exists to transfer settings from the old

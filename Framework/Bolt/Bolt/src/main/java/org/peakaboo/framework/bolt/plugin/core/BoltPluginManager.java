@@ -2,7 +2,9 @@ package org.peakaboo.framework.bolt.plugin.core;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
@@ -128,6 +130,20 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 		BoltManagedLoader<P> loader = importer(file);
 		if (loader == null) { return false; }
 		return true;
+	}
+	
+	
+	public List<Map<String, Object>> infodump() {
+		return this.getPlugins().stream().map(p -> new HashMap<String, Object>() {{
+			put("class", p.getReferenceInstance().getClass().getCanonicalName());
+			put("uuid", p.getUUID());
+			put("name", p.getName());
+			put("description", p.getDescription());
+			put("version", p.getVersion());
+			put("sourcename", p.getContainer().getSourceName());
+			put("sourcepath", p.getContainer().getSourcePath());
+			put("issues", p.getContainer().getIssues().stream().map(i -> i.infodump()).collect(Collectors.toList()));
+		}}).collect(Collectors.toList());
 	}
 
 	//TODO

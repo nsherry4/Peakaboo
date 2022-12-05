@@ -18,6 +18,9 @@ import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+import org.peakaboo.app.CustomFormatter.BufferHandler;
+
 
 public class PeakabooLog {
 
@@ -26,6 +29,10 @@ public class PeakabooLog {
 	private static boolean initted = false;
 	private static String logfilename;
 	private static Level logLevel;
+
+	private static BufferHandler bufferedHandler;
+	
+
 	
 	public synchronized static void init(File logDir) {
 		if (initted == true) {
@@ -65,14 +72,23 @@ public class PeakabooLog {
 		consoleHandler.setLevel(logLevel);
 		getRoot().addHandler(consoleHandler);
 		
+		
 		//Set up log file handler
 		configFileHandler(logDir);
 
-
+		
+		//In-memory logger
+		bufferedHandler = new BufferHandler(new CustomFormatter(format));
+		bufferedHandler.setLevel(logLevel);
+		getRoot().addHandler(bufferedHandler);
 		
 	}
 
 
+	public static String getRecentLogs() {
+		return bufferedHandler.getRecentLogs();
+	}
+	
 
 	private static void configFileHandler(File logDir) {
 	
@@ -163,6 +179,39 @@ class CustomFormatter extends Formatter {
 			record.getMessage(),
 			thrown
 		);
+	}
+	
+	
+	public static class BufferHandler extends Handler {
+
+		private Formatter formatter;
+		private CircularFifoQueue<String> entries;
+		
+		public BufferHandler(Formatter formatter) {
+			this.formatter = formatter;
+			this.entries = new CircularFifoQueue<>(100);
+		}
+		
+		@Override
+		public void close() throws SecurityException {}
+
+		@Override
+		public void flush() {}
+
+		@Override
+		public void publish(LogRecord record) {
+			String entry = formatter.format(record);
+			this.entries.add(entry);
+		}
+		
+		public String getRecentLogs() {
+			StringBuilder builder = new StringBuilder();
+			for (String entry : entries) {
+				builder.append(entry);
+			}
+			return builder.toString();
+		}
+		
 	}
 
 }

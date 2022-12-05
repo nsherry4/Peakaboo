@@ -29,7 +29,7 @@ public class ErrorReportPanel extends JPanel {
 		this.add(notesPanel, BorderLayout.CENTER);
 		
 		//Attach logs
-		logCheck = new JCheckBox("Attach Peakaboo's logs to crash report");
+		logCheck = new JCheckBox("Attach recent logs to crash report");
 		this.add(logCheck, BorderLayout.SOUTH);
 		
 	}
