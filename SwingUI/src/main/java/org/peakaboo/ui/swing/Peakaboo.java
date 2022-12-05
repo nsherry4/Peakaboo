@@ -156,9 +156,8 @@ public class Peakaboo {
 		}
 	}
 
-	
-	public static void run() {
-		
+
+	public static void init() {
 		//Needed to work around https://bugs.openjdk.java.net/browse/JDK-8130400
 		//NEED TO SET THESE RIGHT AT THE START BEFORE ANY AWT/SWING STUFF HAPPENS.
 		//THAT INCLUDES CREATING ANY ImageIcon DATA FOR SPLASH SCREEN
@@ -169,9 +168,11 @@ public class Peakaboo {
 		CrashHandler.init();
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
+	}
+	
+	public static void run() {
+		
 		StratusLookAndFeel laf = new StratusLookAndFeel(appTheme);
-		
-		
 		
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 
@@ -234,6 +235,7 @@ public class Peakaboo {
 				peakLoader.join();
 			} catch (InterruptedException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to start up properly, Peakaboo must now exit.", e);
+				//TODO crash reporting here?
 				System.exit(2);
 			}
 			showPeakabooMainWindow();
@@ -265,6 +267,7 @@ public class Peakaboo {
 
 	public static void main(String[] args) {	
 		Peakaboo.appTheme = new BrightTheme();
+		init();
 		run();
 	}
 
