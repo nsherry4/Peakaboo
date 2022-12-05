@@ -62,7 +62,7 @@ public class Stratus {
 				
 				SwingUtilities.invokeLater(() -> {
 					startupTasks.run();
-					splashWindow.setVisible(false);
+					removeSplash();
 				});
 			});
 		} else {
@@ -71,6 +71,11 @@ public class Stratus {
 			});
 		}
 		
+	}
+	
+	public static void removeSplash() {
+		if (splashWindow == null) return;
+		splashWindow.setVisible(false);
 	}
     
     

@@ -93,8 +93,8 @@ public class Peakaboo {
 		try {
 			new PlotFrame();
 		} catch (Throwable e) {
+			Stratus.removeSplash();
 			PeakabooLog.get().log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
-			//TODO: can we show an error dialog here?
 			System.exit(1);
 		}
 		
@@ -208,6 +208,7 @@ public class Peakaboo {
 				}
 				
 			} catch (IOException e) {
+				Stratus.removeSplash();
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load persistent settings, Peakaboo must now exit.", e);
 				System.exit(2);
 			}
@@ -234,9 +235,9 @@ public class Peakaboo {
 			try {
 				peakLoader.join();
 			} catch (InterruptedException e) {
+				Stratus.removeSplash();
 				PeakabooLog.get().log(Level.SEVERE, "Failed to start up properly, Peakaboo must now exit.", e);
-				//TODO crash reporting here?
-				System.exit(2);
+				System.exit(3);
 			}
 			showPeakabooMainWindow();
 		});

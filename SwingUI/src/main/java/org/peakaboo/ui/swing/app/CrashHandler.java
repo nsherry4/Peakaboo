@@ -1,5 +1,7 @@
 package org.peakaboo.ui.swing.app;
 
+import java.util.logging.Level;
+
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
@@ -56,8 +58,9 @@ public class CrashHandler {
 				
 			});
 		});
-		
+		errorDialog.setModal(true);
 		errorDialog.setVisible(true);
 	}
+
 	
 }
