@@ -32,9 +32,9 @@ import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.api.models.GroupedListTreeModel;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidget;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetCellEditor;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetTableCellRenderer;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
+import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ListControls;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ReorderTransferHandler;
@@ -147,14 +147,14 @@ public class FiltersPanel extends JPanel {
 		filterTable.getColumnModel().getColumn(0).setPreferredWidth(32);
 		filterTable.getColumnModel().getColumn(0).setMaxWidth(32);
 		
-		filterTable.getColumnModel().getColumn(1).setCellRenderer(new ListWidgetTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller, window)));
-		filterTable.getColumnModel().getColumn(1).setCellEditor(new ListWidgetCellEditor<MapFilter>(new MapFilterSettingsButton(controller, window)));
+		filterTable.getColumnModel().getColumn(1).setCellRenderer(new StencilTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller, window)));
+		filterTable.getColumnModel().getColumn(1).setCellEditor(new StencilCellEditor<MapFilter>(new MapFilterSettingsButton(controller, window)));
 		filterTable.getColumnModel().getColumn(1).setMinWidth(32);
 		filterTable.getColumnModel().getColumn(1).setPreferredWidth(32);
 		filterTable.getColumnModel().getColumn(1).setMaxWidth(32);
 		
-		filterTable.getColumnModel().getColumn(2).setCellRenderer(new ListWidgetTableCellRenderer<MapFilter>(new MapFilterWidget()));
-		filterTable.getColumnModel().getColumn(2).setCellEditor(new ListWidgetCellEditor<MapFilter>(new MapFilterWidget()));
+		filterTable.getColumnModel().getColumn(2).setCellRenderer(new StencilTableCellRenderer<MapFilter>(new MapFilterWidget()));
+		filterTable.getColumnModel().getColumn(2).setCellEditor(new StencilCellEditor<MapFilter>(new MapFilterWidget()));
 		
 		
 		
@@ -240,7 +240,7 @@ public class FiltersPanel extends JPanel {
 	
 }
 
-class MapFilterWidget extends ListWidget<MapFilter> {
+class MapFilterWidget extends Stencil<MapFilter> {
 
 	private JLabel label = new JLabel();
 	
@@ -265,7 +265,7 @@ class MapFilterWidget extends ListWidget<MapFilter> {
 	
 }
 
-class MapFilterSettingsButton extends ListWidget<MapFilter> {
+class MapFilterSettingsButton extends Stencil<MapFilter> {
 	
 	private FluentButton button = new FluentButton(StockIcon.EDIT_EDIT, IconSize.TOOLBAR_SMALL);
 	private MapFilter filter;

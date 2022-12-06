@@ -21,10 +21,10 @@ import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidget;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetCellEditor;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetTableCellRenderer;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
+import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
@@ -224,7 +224,7 @@ public class Correlation extends JPanel {
 	}
 		
 	
-	class AxisWidget extends ListWidget<ITransitionSeries> {
+	class AxisWidget extends Stencil<ITransitionSeries> {
 	
 		FluentToggleButton group1, group2;
 		ButtonGroup group;
@@ -286,17 +286,17 @@ public class Correlation extends JPanel {
 		
 	}
 	
-	class AxisRenderer extends ListWidgetTableCellRenderer<ITransitionSeries> {
+	class AxisRenderer extends StencilTableCellRenderer<ITransitionSeries> {
 	
-		public AxisRenderer(ListWidget<ITransitionSeries> widget) {
+		public AxisRenderer(Stencil<ITransitionSeries> widget) {
 			super(widget);
 		}
 		
 	}
 	
-	class AxisEditor extends ListWidgetCellEditor<ITransitionSeries> {
+	class AxisEditor extends StencilCellEditor<ITransitionSeries> {
 	
-		public AxisEditor(ListWidget<ITransitionSeries> widget) {
+		public AxisEditor(Stencil<ITransitionSeries> widget) {
 			super(widget);
 		}
 		

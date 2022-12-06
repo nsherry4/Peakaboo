@@ -1,15 +1,15 @@
-package org.peakaboo.framework.stratus.components.listwidget;
+package org.peakaboo.framework.stratus.components.stencil;
 
 import java.awt.Component;
 
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-public class ListWidgetListCellRenderer<T> implements ListCellRenderer<T>, ListWidgetParent {
+public class StencilListCellRenderer<T> implements ListCellRenderer<T>, StencilParent {
 
-	private ListWidget<T> widget;
+	private Stencil<T> widget;
 	
-	public ListWidgetListCellRenderer(ListWidget<T> widget) {
+	public StencilListCellRenderer(Stencil<T> widget) {
 		this.widget = widget;
 		widget.setParent(this);
 	}

@@ -1,4 +1,4 @@
-package org.peakaboo.framework.stratus.components.listwidget;
+package org.peakaboo.framework.stratus.components.stencil;
 
 import java.awt.Component;
 
@@ -6,11 +6,11 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
-public class ListWidgetCellEditor<T> extends DefaultCellEditor implements ListWidgetParent {
+public class StencilCellEditor<T> extends DefaultCellEditor implements StencilParent {
 
-	private ListWidget<T> widget;
+	private Stencil<T> widget;
 	
-	public ListWidgetCellEditor(ListWidget<T> widget) {
+	public StencilCellEditor(Stencil<T> widget) {
 		super(new JCheckBox());
 		this.widget = widget;
 		widget.setParent(this);

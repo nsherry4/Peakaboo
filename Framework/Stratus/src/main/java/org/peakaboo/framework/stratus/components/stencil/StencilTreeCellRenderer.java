@@ -1,4 +1,4 @@
-package org.peakaboo.framework.stratus.components.listwidget;
+package org.peakaboo.framework.stratus.components.stencil;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -10,12 +10,12 @@ import javax.swing.tree.TreeCellRenderer;
 
 import org.peakaboo.framework.stratus.api.Stratus;
 
-public class ListWidgetTreeCellRenderer<T> implements TreeCellRenderer, ListWidgetParent {
+public class StencilTreeCellRenderer<T> implements TreeCellRenderer, StencilParent {
 
-	private ListWidget<T> widget;
+	private Stencil<T> widget;
 	private Color selBg, selFg, nonBg, nonFg;
 	
-	public ListWidgetTreeCellRenderer(ListWidget<T> widget) {
+	public StencilTreeCellRenderer(Stencil<T> widget) {
 		this.widget = widget;
 		widget.setParent(this);
 		

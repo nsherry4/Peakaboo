@@ -17,11 +17,11 @@ import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidget;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetTreeCellRenderer;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilTreeCellRenderer;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 
-public class PluginTreeWidget extends ListWidget<Object> {
+public class PluginTreeWidget extends Stencil<Object> {
 
 	private JLabel label;
 	

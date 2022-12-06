@@ -21,8 +21,8 @@ import javax.swing.table.TableModel;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.models.ListTableModel;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidget;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetTableCellRenderer;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
 
 public class PlacesPanel extends JPanel {
 
@@ -50,7 +50,7 @@ public class PlacesPanel extends JPanel {
 		this.setPreferredSize(new Dimension(160, 160));
 		
 		
-		items.getColumnModel().getColumn(0).setCellRenderer(new ListWidgetTableCellRenderer<>(new DirWidget(), items));
+		items.getColumnModel().getColumn(0).setCellRenderer(new StencilTableCellRenderer<>(new DirWidget(), items));
 		items.setShowGrid(false);
 		items.setTableHeader(null);
 		items.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -110,7 +110,7 @@ public class PlacesPanel extends JPanel {
 
 }
 
-class DirWidget extends ListWidget<Place> {
+class DirWidget extends Stencil<Place> {
 
 	JLabel l;
 	

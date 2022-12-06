@@ -46,8 +46,8 @@ import org.peakaboo.framework.stratus.components.ButtonBox;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetTreeCellRenderer;
 import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
+import org.peakaboo.framework.stratus.components.stencil.StencilTreeCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
@@ -348,7 +348,7 @@ public class PluginsOverview extends HeaderLayer {
 	private JComponent pluginTree() {	
 			
 		tree = new JTree(buildTreeModel());
-		tree.setCellRenderer(new ListWidgetTreeCellRenderer<>(new PluginTreeWidget()));
+		tree.setCellRenderer(new StencilTreeCellRenderer<>(new PluginTreeWidget()));
 		tree.setRootVisible(false);		
 		
 		tree.addTreeSelectionListener(tse -> {

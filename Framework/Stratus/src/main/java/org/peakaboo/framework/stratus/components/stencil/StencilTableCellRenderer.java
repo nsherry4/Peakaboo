@@ -1,15 +1,15 @@
-package org.peakaboo.framework.stratus.components.listwidget;
+package org.peakaboo.framework.stratus.components.stencil;
 
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-public class ListWidgetTableCellRenderer<T> implements TableCellRenderer, ListWidgetParent {
+public class StencilTableCellRenderer<T> implements TableCellRenderer, StencilParent {
 
-	private ListWidget<T> widget;
+	private Stencil<T> widget;
 	
-	public ListWidgetTableCellRenderer(ListWidget<T> widget) {
+	public StencilTableCellRenderer(Stencil<T> widget) {
 		this.widget = widget;
 		widget.setParent(this);
 	}
@@ -19,7 +19,7 @@ public class ListWidgetTableCellRenderer<T> implements TableCellRenderer, ListWi
 	 * widget's preferred height. Otherwise, this will be done at render-time and
 	 * can result it a glitchy first-rendering
 	 */
-	public ListWidgetTableCellRenderer(ListWidget<T> widget, JTable table) {
+	public StencilTableCellRenderer(Stencil<T> widget, JTable table) {
 		this(widget);
 		checkHeight(table);
 	}

@@ -30,8 +30,8 @@ import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidget;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetListCellRenderer;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilListCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.filechooser.breadcrumb.FileBreadCrumb;
 import org.peakaboo.framework.stratus.components.ui.filechooser.places.Places;
 import org.peakaboo.framework.stratus.components.ui.filechooser.places.PlacesPanel;
@@ -161,7 +161,7 @@ public class StratusFileChooser extends JFileChooser {
 		
 		filelist = getFilesWidget(this, JList.class);
 		filelist.setSelectionBackground(getBackground());
-		ListWidgetListCellRenderer<File> r = new ListWidgetListCellRenderer<>(new ListFileWidget(filelist));
+		var r = new StencilListCellRenderer<>(new ListFileWidget(filelist));
 		filelist.setCellRenderer(r);
 		
 		details = (JPanel) getComponent(3);
@@ -279,7 +279,7 @@ public class StratusFileChooser extends JFileChooser {
 
 	
 
-	abstract class BaseFileWidget extends ListWidget<File> {
+	abstract class BaseFileWidget extends Stencil<File> {
 		JLabel label;
 		Color selBg;
 		Color selFg;

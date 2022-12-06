@@ -19,8 +19,8 @@ import javax.swing.event.ListSelectionListener;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidget;
-import org.peakaboo.framework.stratus.components.listwidget.ListWidgetListCellRenderer;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilListCellRenderer;
 
 public class OptionSidebar extends OptionComponent {
 	
@@ -40,7 +40,7 @@ public class OptionSidebar extends OptionComponent {
 		
 	}
 	
-	class Widget extends ListWidget<Entry> {
+	class Widget extends Stencil<Entry> {
 
 		private JLabel label;
 		private Border separatorBorder;
@@ -86,7 +86,7 @@ public class OptionSidebar extends OptionComponent {
 		list.setSelectionBackground(selectionBg);
 		list.setSelectionForeground(selectionFg);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		ListWidgetListCellRenderer<Entry> cellRenderer = new ListWidgetListCellRenderer<>(new Widget());
+		StencilListCellRenderer<Entry> cellRenderer = new StencilListCellRenderer<>(new Widget());
 		list.setCellRenderer(cellRenderer);
 		list.addListSelectionListener(new ListSelectionListener() {
 			
