@@ -11,20 +11,29 @@ import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 import javax.swing.KeyStroke;
 
-public class OptionRadioButton extends OptionCustomComponent implements OptionFluentControlAPI<NullType> {
+public class OptionRadioButton<T> extends OptionCustomComponent implements OptionFluentControlAPI<T> {
 
 	private JRadioButton button;
-	private Consumer<NullType> listener;
+	private Consumer<T> listener;
+	private T item;
 	
 	public OptionRadioButton() {
 		this(null, null);
 	}
 	
 	public OptionRadioButton(OptionBlock block, ButtonGroup group) {
+		this(block, group, null);
+	}
+	
+	public OptionRadioButton(OptionBlock block, ButtonGroup group, T item) {
 		super(block, new JRadioButton(), true);
+		this.item = item;
 		
 		button = (JRadioButton) super.getComponent();
 		if (group != null) { group.add(button); }
+		button.addItemListener(e -> {
+			if (this.listener != null) this.listener.accept(this.item);
+		});
 		
 	}
 	
@@ -48,45 +57,44 @@ public class OptionRadioButton extends OptionCustomComponent implements OptionFl
 	}
 
 	@Override
-	public OptionRadioButton withDescription(String description) {
+	public OptionRadioButton<T> withDescription(String description) {
 		super.withDescription(description);
 		return this;
 	}
 
 	@Override
-	public OptionRadioButton withTooltip(String tooltip) {
+	public OptionRadioButton<T> withTooltip(String tooltip) {
 		super.withTooltip(tooltip);
 		return this;
 	}
 
 	@Override
-	public OptionRadioButton withTitle(String title) {
+	public OptionRadioButton<T> withTitle(String title) {
 		super.withTitle(title);
 		return this;
 	}
 
 	@Override
-	public OptionRadioButton withSize(OptionSize size) {
+	public OptionRadioButton<T> withSize(OptionSize size) {
 		super.withSize(size);
 		return this;
 	}
 	
 	@Override
-	public OptionRadioButton withText(String title, String description) {
+	public OptionRadioButton<T> withText(String title, String description) {
 		super.withText(title, description);
 		return this;
 	}
 
 	@Override
-	public OptionRadioButton withListener(Consumer<NullType> event) {
+	public OptionRadioButton<T> withListener(Consumer<T> event) {
 		this.listener = e -> {
-			if (isSelected()) event.accept(null);
+			if (isSelected()) event.accept(this.item);
 		};
-		button.addItemListener(e -> this.listener.accept(null));
 		return this;
 	}
 	
-	public OptionRadioButton withListener(Runnable event) {
+	public OptionRadioButton<T> withListener(Runnable event) {
 		return withListener(nul -> event.run());
 	}
 

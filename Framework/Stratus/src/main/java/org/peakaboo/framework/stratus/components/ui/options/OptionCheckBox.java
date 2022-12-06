@@ -21,6 +21,9 @@ public class OptionCheckBox extends OptionCustomComponent implements OptionFluen
 	public OptionCheckBox(OptionBlock block) {
 		super(block, new JCheckBox(), true);
 		checkbox = (JCheckBox) this.getComponent();
+		checkbox.addItemListener(e -> {
+			if (this.listener != null) this.listener.accept(isSelected());
+		});
 	}
 
 	@Override
@@ -76,7 +79,6 @@ public class OptionCheckBox extends OptionCustomComponent implements OptionFluen
 	@Override
 	public OptionCheckBox withListener(Consumer<Boolean> listener) {
 		this.listener = listener;
-		checkbox.addItemListener(e -> listener.accept(isSelected()));
 		return this;
 	}
 	
@@ -104,7 +106,8 @@ public class OptionCheckBox extends OptionCustomComponent implements OptionFluen
 						setSelected(state);
 					}
 					
-					OptionCheckBox.this.listener.accept(state);
+					var listener = OptionCheckBox.this.listener;
+					if (listener != null) listener.accept(state);
 
 				}
 			};

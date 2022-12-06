@@ -1,5 +1,6 @@
 package org.peakaboo.ui.swing;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -48,6 +49,7 @@ import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
+import org.peakaboo.ui.swing.app.AccentedTheme;
 import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
@@ -59,7 +61,6 @@ import com.bugsnag.Severity;
 
 public class Peakaboo {
 	private static Timer gcTimer;
-	public static Theme appTheme;
 	
 	private static void checkDevRelease() {
 		if (Version.releaseType != ReleaseType.RELEASE){
@@ -172,7 +173,7 @@ public class Peakaboo {
 	
 	public static void run() {
 		
-		StratusLookAndFeel laf = new StratusLookAndFeel(appTheme);
+		
 		
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 
@@ -212,6 +213,13 @@ public class Peakaboo {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to load persistent settings, Peakaboo must now exit.", e);
 				System.exit(2);
 			}
+			
+
+			Color accent = AccentedTheme.accentColours.get(Settings.getAccentColour());
+			if (accent == null) {
+				accent = AccentedTheme.accentColours.get("Blue");
+			}
+			StratusLookAndFeel laf = new StratusLookAndFeel(new AccentedTheme(accent));
 			
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
@@ -267,7 +275,6 @@ public class Peakaboo {
 	}
 
 	public static void main(String[] args) {	
-		Peakaboo.appTheme = new BrightTheme();
 		init();
 		run();
 	}

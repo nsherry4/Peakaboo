@@ -5,41 +5,34 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.ItemSelectable;
-import java.awt.RenderingHints;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import org.peakaboo.framework.stratus.api.HSLColor;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 
-public class ColourChoice extends ColourComponent implements ItemSelectable {
+public class ColourChoice extends ColourView implements ItemSelectable {
 	
-	private boolean selectable, selected;
+	private boolean selected, deselectable;
 	private List<ItemListener> listeners = new ArrayList<>();
 	
 	public ColourChoice(Color colour) {
-		this.colour = colour;
-		this.selectable = true;
-		
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				setSelected(!isSelected());
-			}
-		});
-		
+		super(colour);
+		this.deselectable = true;
 	}
-
+	
+	@Override
+	protected void onMouseClick() {
+		if (isDeselectable()) {
+			setSelected(!isSelected());
+		} else {
+			setSelected(true);
+		}
+	}
+	
 	protected void updateListeners() {
 		for (var listener : listeners) {
 			listener.itemStateChanged(new ItemEvent(
@@ -50,27 +43,31 @@ public class ColourChoice extends ColourComponent implements ItemSelectable {
 				));
 		}
 	}
-	
-	public boolean isSelectable() {
-		return selectable;
+
+	/**
+	 * Indicates if this component will become deselected if it is clicked on while
+	 * already selected.
+	 */
+	public boolean isDeselectable() {
+		return deselectable;
 	}
 
-	public void setSelectable(boolean selectable) {
-		this.selectable = selectable;
+	public void setDeselectable(boolean deselectable) {
+		this.deselectable = deselectable;
 	}
-
-
 
 	public boolean isSelected() {
 		return selected;
 	}
 
 	public void setSelected(boolean selected) {
-		if (!isSelectable() || this.selected == selected) { return; }
+		//If an item is not deselectable, we want to emit re-selection events
+		if (isDeselectable() && this.selected == selected) { return; }
 		this.selected = selected;
 		repaint();
 		updateListeners();
 	}
+	
 
 
 
@@ -78,21 +75,11 @@ public class ColourChoice extends ColourComponent implements ItemSelectable {
 	public void paint(Graphics g0) {
 		super.paint(g0);
 		
-		g0 = g0.create();
-		Graphics2D g = (Graphics2D) g0;
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-
-		int r = size/2;
-		int inset;
+		Graphics2D g = Stratus.g2d(g0);
 		
-		g.setColor(this.colour);
-		inset = 2;
-		g.fill(new RoundRectangle2D.Float(inset, inset, size-inset-2, size-inset-2, r, r));
-		
-		if (isSelectable() && isSelected()) {
+		if (isSelected()) {
 			Path2D shape = new Path2D.Float();
-			float pad = inset + 8;
+			float pad = INSET + 8;
 			float voffset = 0;
 			float inner = size - (pad*2);
 			float halfin= inner/2;

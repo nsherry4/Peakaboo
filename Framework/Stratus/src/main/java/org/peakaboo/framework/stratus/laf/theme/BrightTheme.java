@@ -8,14 +8,14 @@ import org.peakaboo.framework.stratus.laf.palettes.BrightPalette;
 
 public class BrightTheme implements Theme {
 
-	protected ColourPalette palette = new BrightPalette();
+	protected static final ColourPalette PALETTE = new BrightPalette();
 	
-	protected Color highlight = palette.getColour("Blue", "3");
-	protected Color highlightText = palette.getColour("Light", "1");
+	protected Color highlight = PALETTE.getColour("Blue", "3");
+	protected Color highlightText = PALETTE.getColour("Light", "1");
 	
 	protected Color control = new Color(0xfafafa);
-	protected Color controlText = palette.getColour("Dark", "3");
-	protected Color controlTextDisabled = palette.getColour("Light", "5");
+	protected Color controlText = PALETTE.getColour("Dark", "3");
+	protected Color controlTextDisabled = PALETTE.getColour("Light", "5");
 	protected Color negative = new Color(0xebebeb);
 	protected Color border = new Color(0xdadada);
 	
@@ -36,9 +36,10 @@ public class BrightTheme implements Theme {
 	
 	protected Color scrollHandle = StratusColour.darken(getWidgetBorder(), 0.1f);
 	
+	
 	@Override
 	public ColourPalette getPalette() {
-		return palette;
+		return PALETTE;
 	}
 	
 	@Override

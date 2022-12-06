@@ -29,6 +29,8 @@ import java.util.logging.Level;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.StratusLog;
 
 /**
@@ -88,9 +90,10 @@ public class FileDrop {
 	private static Boolean supportsDnD;
 
 	// Default border color
-	private static Color defaultBorderColor = new Color(0x7f3584e4, true);
-	private static Color rejectBorderColor = new Color(0x7fe01b24, true);
-
+	private static Color defaultBorderColor = StratusColour.moreTransparent(Stratus.getTheme().getHighlight(), 0.5f);
+	private static Color rejectBorderColor = StratusColour.moreTransparent(Stratus.getTheme().getPalette().getColour("Red", "3"), 0.5f);
+	private static int border = 3;
+	
 	private enum DropType {
 		DROP_FILELIST,
 		DROP_LINUX,
@@ -113,8 +116,8 @@ public class FileDrop {
 	public FileDrop(final Component c, final Listener listener) {
 		this(null, // Logging stream
 				c, // Drop target
-				BorderFactory.createMatteBorder(2, 2, 2, 2, defaultBorderColor), // Drag border
-				BorderFactory.createMatteBorder(2, 2, 2, 2, rejectBorderColor), // Drag reject border
+				BorderFactory.createMatteBorder(border, border, border, border, defaultBorderColor), // Drag border
+				BorderFactory.createMatteBorder(border, border, border, border, rejectBorderColor), // Drag reject border
 				true, // Recursive
 				listener);
 	} // end constructor
@@ -134,8 +137,8 @@ public class FileDrop {
 	public FileDrop(final Component c, final boolean recursive, final Listener listener) {
 		this(null, // Logging stream
 				c, // Drop target
-				BorderFactory.createMatteBorder(2, 2, 2, 2, defaultBorderColor), // Drag border
-				BorderFactory.createMatteBorder(2, 2, 2, 2, rejectBorderColor), // Drag reject border
+				BorderFactory.createMatteBorder(border, border, border, border, defaultBorderColor), // Drag border
+				BorderFactory.createMatteBorder(border, border, border, border, rejectBorderColor), // Drag reject border
 				recursive, // Recursive
 				listener);
 	} // end constructor
@@ -156,8 +159,8 @@ public class FileDrop {
 	public FileDrop(final java.io.PrintStream out, final Component c, final Listener listener) {
 		this(out, // Logging stream
 				c, // Drop target
-				BorderFactory.createMatteBorder(2, 2, 2, 2, defaultBorderColor),
-				BorderFactory.createMatteBorder(2, 2, 2, 2, rejectBorderColor), // Drag reject border
+				BorderFactory.createMatteBorder(border, border, border, border, defaultBorderColor),
+				BorderFactory.createMatteBorder(border, border, border, border, rejectBorderColor), // Drag reject border
 				false, // Recursive
 				listener);
 	} // end constructor
@@ -183,8 +186,8 @@ public class FileDrop {
 			final Listener listener) {
 		this(out, // Logging stream
 				c, // Drop target
-				BorderFactory.createMatteBorder(2, 2, 2, 2, defaultBorderColor), // Drag border
-				BorderFactory.createMatteBorder(2, 2, 2, 2, rejectBorderColor), // Drag reject border
+				BorderFactory.createMatteBorder(border, border, border, border, defaultBorderColor), // Drag border
+				BorderFactory.createMatteBorder(border, border, border, border, rejectBorderColor), // Drag reject border
 				recursive, // Recursive
 				listener);
 	} // end constructor

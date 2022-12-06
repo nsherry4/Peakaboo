@@ -48,6 +48,14 @@ public class Settings {
 		provider.setBoolean(FIRST_RUN, firstrun);
 	}
 	
+	
+	private static final String ACCENT_COLOUR = "org.peakaboo.app.accent-colour";
+	public static String getAccentColour() {
+		return provider.get(ACCENT_COLOUR, "Blue");
+	}
+	public static void setAccentColour(String colour) {
+		provider.set(ACCENT_COLOUR, colour);
+	}
 
 	private static final String HEAP_SIZE_MB = "org.peakaboo.app.heapsize-megabytes";
 	public static int getHeapSizeMegabytes() {

@@ -1057,7 +1057,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		Runnable onClose = () -> {
 			controller.data().setTitle(textfield.getText());
-			title.setColour(chooser.getColour());
+			title.setColour(chooser.getSelected());
 			dialogbox.get().hide();
 			
 		};

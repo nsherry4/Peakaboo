@@ -2,10 +2,12 @@ package org.peakaboo.ui.swing.options;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -14,6 +16,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
@@ -34,6 +37,7 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -41,12 +45,14 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
 import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
+import org.peakaboo.framework.stratus.components.ui.options.OptionColours;
 import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
+import org.peakaboo.ui.swing.app.AccentedTheme;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
@@ -103,7 +109,13 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		entries.get(entries.size()-1).trailingSeparator = true;
 		
 		
-		String KEY_APP = "App Settings";
+		String KEY_PERFORMANCE = "Performance";
+		JPanel perfPanel = makePerformancePanel(controller);
+		body.add(perfPanel, KEY_PERFORMANCE);
+		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
+		entries.add(perfEntry);
+		
+		String KEY_APP = "Interface";
 		JPanel appPanel = makeAppPanel(controller);
 		body.add(appPanel, KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APP, IconSize.TOOLBAR_SMALL));
@@ -126,8 +138,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 	
-	private JPanel makeAppPanel(PlotController controller) {
-
+	private JPanel makePerformancePanel(PlotController controller) {
 		OptionBlock datasets = new OptionBlock();
 		OptionCheckBox diskbacked = new OptionCheckBox(datasets)
 				.withText("Disk Backing", "Stores datasets in a compressed temp file on disk, lowers memory use")
@@ -135,16 +146,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withSelection(Settings.isDiskstore())
 				.withListener(Settings::setDiskstore);
 		datasets.add(diskbacked);
-		
-		OptionBlock startup = new OptionBlock();
-		OptionCheckBox firstrun = new OptionCheckBox(startup)
-				.withText("Show First Run Introduction", "Toggles the first-run introduction screen")
-				.withSize(OptionSize.LARGE)
-				.withSelection(Settings.isFirstrun())
-				.withListener(Settings::setFirstrun);
-		startup.add(firstrun);
-
-		
+				
 		OptionBlock heapBlock = new OptionBlock();
 		ButtonGroup heapGroup = new ButtonGroup();
 		OptionRadioButton heapPercent = new OptionHeapSize(heapBlock, heapGroup, Settings::getHeapSizePercent, Settings::setHeapSizePercent)
@@ -159,10 +161,39 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withSelection(!Settings.isHeapSizePercent())
 				.withListener(() -> Settings.setHeapSizeIsPercent(false));
 		heapBlock.add(heapMegabytes);
+
+				
 		
 		
+		return new OptionBlocksPanel(datasets, heapBlock);
+	}
+	
+	private JPanel makeAppPanel(PlotController controller) {
+	
+		OptionBlock startup = new OptionBlock();
+		OptionCheckBox firstrun = new OptionCheckBox(startup)
+				.withText("Show First Run Introduction", "Toggles the first-run introduction screen")
+				.withSize(OptionSize.LARGE)
+				.withSelection(Settings.isFirstrun())
+				.withListener(Settings::setFirstrun);
+		startup.add(firstrun);
 		
-		return new OptionBlocksPanel(datasets, startup, heapBlock);
+		
+		OptionBlock uxBlock = new OptionBlock();
+		var colours = AccentedTheme.accentColours;
+		Color accentColour = colours.get(Settings.getAccentColour()); 
+		if (accentColour == null) {
+			accentColour = colours.get("Blue");
+		}
+		OptionColours accent = new OptionColours(uxBlock, new ArrayList<>(colours.values()), accentColour)
+				.withListener(c -> Settings.setAccentColour(colours.getKey(c)))
+				.withText("Accent Colour", "")
+				.withSize(OptionSize.LARGE);
+		uxBlock.add(accent);
+				
+		
+		
+		return new OptionBlocksPanel(startup, uxBlock);
 				
 	}
 

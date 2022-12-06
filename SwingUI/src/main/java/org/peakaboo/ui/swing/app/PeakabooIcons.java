@@ -9,6 +9,7 @@ public enum PeakabooIcons implements IconSet {
 	OPTIONS_CURVEFIT,
 	OPTIONS_SOLVER,
 	OPTIONS_APP,
+	OPTIONS_PERFORMANCE,
 	
 	MAP,
 	PLOT,
