@@ -115,10 +115,10 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(perfEntry);
 		
-		String KEY_APP = "Interface";
+		String KEY_APP = "Appearance";
 		JPanel appPanel = makeAppPanel(controller);
 		body.add(appPanel, KEY_APP);
-		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APP, IconSize.TOOLBAR_SMALL));
+		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
 		
 		
@@ -187,7 +187,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		}
 		OptionColours accent = new OptionColours(uxBlock, new ArrayList<>(colours.values()), accentColour)
 				.withListener(c -> Settings.setAccentColour(colours.getKey(c)))
-				.withText("Accent Colour", "")
+				.withText("Accent Colour", "Requires restart")
 				.withSize(OptionSize.LARGE);
 		uxBlock.add(accent);
 				
