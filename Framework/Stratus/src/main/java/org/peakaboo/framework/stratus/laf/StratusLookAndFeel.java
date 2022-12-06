@@ -687,8 +687,8 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Tree.background", theme.getRecessedControl());
 			reg(ret, "Tree[Enabled].expandedIconPainter", new TreeArrowPainter(theme.getControlText(), true));
 			reg(ret, "Tree[Enabled].collapsedIconPainter", new TreeArrowPainter(theme.getControlText(), false));
-			reg(ret, "Tree[Enabled+Selected].expandedIconPainter", new TreeArrowPainter(theme.getControlText(), true));
-			reg(ret, "Tree[Enabled+Selected].collapsedIconPainter", new TreeArrowPainter(theme.getControlText(), false));
+			reg(ret, "Tree[Enabled+Selected].expandedIconPainter", new TreeArrowPainter(theme.getHighlightText(), true));
+			reg(ret, "Tree[Enabled+Selected].collapsedIconPainter", new TreeArrowPainter(theme.getHighlightText(), false));
 			
 			//LIST
 			reg(ret, "List.background", theme.getRecessedControl());			
