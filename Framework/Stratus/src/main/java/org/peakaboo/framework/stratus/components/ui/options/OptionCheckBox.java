@@ -28,6 +28,7 @@ public class OptionCheckBox extends OptionCustomComponent implements OptionFluen
 
 	@Override
 	protected void onClick() {
+		if (!isEnabled()) return;
 		boolean state = !isSelected();
 		setSelected(state);
 		if (listener != null) listener.accept(state);

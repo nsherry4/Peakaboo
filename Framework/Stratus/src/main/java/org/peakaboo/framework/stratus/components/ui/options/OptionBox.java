@@ -75,7 +75,7 @@ public class OptionBox extends OptionComponent {
 			Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			g.setColor(bg);
 			g.fill(outline);
-			if (hover) {
+			if (hover && isEnabled()) {
 				g.setColor(new Color(0x08000000, true));
 				g.fill(outline);
 			}
@@ -89,7 +89,7 @@ public class OptionBox extends OptionComponent {
 				g.setColor(StratusColour.lighten(borderAlpha, 0.5f));
 				g.drawLine(1, getHeight()-1, getWidth()-1, getHeight()-1);
 			}
-			if (hover) {
+			if (hover && isEnabled()) {
 				
 				Area area = new Area();
 				

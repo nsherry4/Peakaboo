@@ -167,9 +167,6 @@ public class PlotToolbar extends JToolBar {
 		
 		energyMenuButton.setEnabled(hasData);
 		viewMenuButton.setEnabled(hasData);
-		settingsMenuButton.setEnabled(hasData);
-		
-		
 		
 		
 	}

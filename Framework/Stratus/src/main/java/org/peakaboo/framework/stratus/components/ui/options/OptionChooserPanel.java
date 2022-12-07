@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.function.Function;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JPanel;
 
-public class OptionChooserPanel<T> extends JPanel {
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+
+public class OptionChooserPanel<T> extends ClearPanel {
 
 	private T selected;
 	

@@ -73,23 +73,29 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		body.setLayout(cards);
 		
 		
+		var hasdata = controller.data().hasDataSet();
+		
 		String KEY_DETECTOR = "Detector";
 		JPanel detectorPanel = makeDetectorPanel(controller);
+		detectorPanel.setEnabled(hasdata);
 		body.add(detectorPanel, KEY_DETECTOR);
 		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_DETECTOR, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_PEAKMODEL = "Peak Model";
 		JPanel peakPanel = makePeakModelPanel(controller);
+		peakPanel.setEnabled(hasdata);
 		body.add(peakPanel, KEY_PEAKMODEL);
 		OptionSidebar.Entry peakEntry = new OptionSidebar.Entry(KEY_PEAKMODEL, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PEAKMODEL, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_CURVEFIT = "Curve Fitting";
 		JPanel curvefitPanel = makeCurvefitPanel(controller);
+		curvefitPanel.setEnabled(hasdata);
 		body.add(curvefitPanel, KEY_CURVEFIT);
 		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_CURVEFIT, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_OVERLAP = "Overlap Solving";
 		JPanel overlapPanel = makeOverlapPanel(controller);
+		overlapPanel.setEnabled(hasdata);
 		body.add(overlapPanel, KEY_OVERLAP);
 		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.TOOLBAR_SMALL));
 				

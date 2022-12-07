@@ -39,6 +39,7 @@ public class OptionRadioButton<T> extends OptionCustomComponent implements Optio
 	
 	@Override
 	protected void onClick() {
+		if (!isEnabled()) return;
 		boolean state = !isSelected();
 		setSelected(state);
 		if (listener != null) listener.accept(null);
