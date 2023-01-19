@@ -111,6 +111,10 @@ public class TernaryModeController extends SimpleModeController {
 				Map<String, Number> valueMap = new HashMap<>();
 				valueMap.put("xbin", xbin);
 				valueMap.put("ybin", ybin);
+				valueMap.put("xSignal", xSignal);
+				valueMap.put("ySignal", ySignal);
+				valueMap.put("total", total);
+				valueMap.put("bincount", bincount);
 				String values = valueMap.entrySet().stream().map(e -> "\t" + e.getKey() + ": " + e.getValue().toString()).reduce((a, b) -> a + "\n" + b).get();
 				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bincount*bincount + "\n" + values);
 			}
