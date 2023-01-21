@@ -30,8 +30,8 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.Mapper;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
-import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
+import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -206,14 +206,14 @@ public class MappingController extends EventfulType<MapUpdateType>
 	}
 
 
-	public ExecutorSet<Void> writeArchive(OutputStream fos, SurfaceType format, int width, int height, Supplier<SaveableSurface> surfaceFactory) throws IOException {
+	public ExecutorSet<Void> writeArchive(OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
 		//we make a copy of the controller to prevent spamming the UI with changes as we generate map after map
 		MappingController exportController = new MappingController(this.rawDataController, this.plotcontroller);
 		new SavedMapSession().storeFrom(this).loadInto(exportController);
 		return writeArchive(exportController, fos, format, width, height, surfaceFactory);
 	}
 	
-	private static ExecutorSet<Void> writeArchive(MappingController controller, OutputStream fos, SurfaceType format, int width, int height, Supplier<SaveableSurface> surfaceFactory) throws IOException {
+	private static ExecutorSet<Void> writeArchive(MappingController controller, OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
 		final ZipOutputStream zos = new ZipOutputStream(fos);
 		
 		List<ITransitionSeries> tss = controller.getFitting().getAllTransitionSeries();
@@ -242,19 +242,11 @@ public class MappingController extends EventfulType<MapUpdateType>
 			MapRenderSettings settings = controller.getRenderSettings();
 			
 			//image extension
-			String ext = "";
-			switch (format) {
-			case RASTER:
-				ext = "png";
-				break;
-			case VECTOR:
-				ext = "svg";
-				break;			
-			}
+			String ext = format.extension().toLowerCase();
 			try {
 				ZipEntry entry = new ZipEntry(ts.toString() + "." + ext);
 				zos.putNextEntry(entry);
-				SaveableSurface context = surfaceFactory.get();
+				ExportableSurface context = surfaceFactory.get();
 				mapper.draw(data, settings, context, size);
 				context.write(zos);
 				zos.closeEntry();

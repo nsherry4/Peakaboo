@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops.visualization.backend.awt;
+package org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.graphics;
 
 
 import java.awt.Graphics2D;
@@ -19,13 +19,11 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 	private int[]			datasource;
 
  
-	public ImageBuffer(int x, int y)
-	{
+	public ImageBuffer(int x, int y) {
 		this(new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB));
 	}
 
-	public ImageBuffer(BufferedImage image)
-	{
+	public ImageBuffer(BufferedImage image) {
 		super((Graphics2D) image.getGraphics());
 		this.image = image;
 	}

@@ -30,7 +30,7 @@ public class PluginTreeWidget extends Stencil<Object> {
 		this.label = new JLabel();
 		this.setBackground(Color.RED);
 		this.add(label);
-		this.setBorder(Spacing.bSmall());
+		this.setBorder(Spacing.bMedium());
 		
 		this.setOpaque(true);
 		this.label.setOpaque(false);

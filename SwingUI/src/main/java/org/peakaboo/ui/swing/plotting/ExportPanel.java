@@ -1,14 +1,14 @@
 package org.peakaboo.ui.swing.plotting;
 
 import java.awt.BorderLayout;
-import java.util.Arrays;
 
 import javax.swing.JPanel;
 
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture.DimensionPicker;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceExporterRegistry;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
@@ -18,7 +18,7 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 
 public class ExportPanel extends JPanel {
 	
-	private OptionChooserPanel<SurfaceType> formatPicker;
+	private OptionChooserPanel<SurfaceDescriptor> formatPicker;
 	private DimensionPicker dimensionPicker;
 
 	public ExportPanel(LayerPanel parent, GraphicsPanel canvas, Runnable onAccept) {
@@ -47,7 +47,7 @@ public class ExportPanel extends JPanel {
 		body.add(dimensionPicker, BorderLayout.NORTH);
 
 		
-		formatPicker = new OptionChooserPanel<>(Arrays.asList(SurfaceType.values()), item -> {
+		formatPicker = new OptionChooserPanel<>(SurfaceExporterRegistry.exporters(), item -> {
 			return new OptionRadioButton().withText(item.title(), item.description());
 		});
 		body.add(formatPicker, BorderLayout.CENTER);
@@ -61,7 +61,7 @@ public class ExportPanel extends JPanel {
 	
 
 	
-	public SurfaceType getPlotFormat() {
+	public SurfaceDescriptor getPlotFormat() {
 		return formatPicker.getSelected();
 	}
 	

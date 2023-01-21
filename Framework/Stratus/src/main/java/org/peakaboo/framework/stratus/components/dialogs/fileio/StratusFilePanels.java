@@ -209,7 +209,7 @@ public class StratusFilePanels {
 						body, 
 						StockIcon.BADGE_QUESTION)
 					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
-					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
+					.addRight(new FluentButton("Replace").withStateCritical().withAction(() -> onResult.accept(true)))
 					.showIn((LayerPanel) parent);
 				
 			} else if (parent instanceof Window) {
@@ -219,7 +219,7 @@ public class StratusFilePanels {
 						body, 
 						StockIcon.BADGE_QUESTION)
 					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
-					.addRight(new FluentButton("Replace").withAction(() -> onResult.accept(true)))
+					.addRight(new FluentButton("Replace").withStateCritical().withAction(() -> onResult.accept(true)))
 					.showInWindow((Window)parent);
 			} else {
 				

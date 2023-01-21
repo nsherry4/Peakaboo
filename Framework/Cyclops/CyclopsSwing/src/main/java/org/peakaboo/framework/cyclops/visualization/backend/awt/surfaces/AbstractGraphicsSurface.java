@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops.visualization.backend.awt;
+package org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces;
 
 
 import java.awt.AlphaComposite;
@@ -21,6 +21,8 @@ import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.composite.BlendComposite;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.graphics.ImageBuffer;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 /**
@@ -35,7 +37,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
  * 
  */
 
-abstract class AbstractGraphicsSurface implements Surface
+public abstract class AbstractGraphicsSurface implements Surface
 {
 
 	protected Graphics2D		graphics;
@@ -44,11 +46,11 @@ abstract class AbstractGraphicsSurface implements Surface
 	private Stack<Graphics2D>	saveStack;
 	
 	private CompositeModes		compositeMode;
+	protected SurfaceDescriptor descriptor;
 
-
-	public AbstractGraphicsSurface(Graphics2D g)
+	public AbstractGraphicsSurface(Graphics2D g, SurfaceDescriptor descriptor)
 	{
-		
+		this.descriptor = descriptor;
 		this.graphics = g;
 
 		graphics.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
@@ -405,6 +407,11 @@ abstract class AbstractGraphicsSurface implements Surface
 	public CompositeModes getCompositeMode()
 	{
 		return compositeMode;
+	}
+	
+	@Override
+	public SurfaceDescriptor getSurfaceDescriptor() {
+		return descriptor;
 	}
 
 

@@ -2,6 +2,7 @@ package org.peakaboo.framework.cyclops.visualization.backend.awt;
 
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Transparency;
 import java.awt.image.VolatileImage;
 import java.io.IOException;
@@ -10,9 +11,10 @@ import java.io.OutputStream;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
+import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.Surface;
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.graphics.ScreenSurface;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 
 
 /**
@@ -23,27 +25,23 @@ import org.peakaboo.framework.cyclops.visualization.SurfaceType;
  * 
  */
 
-public abstract class GraphicsPanel extends JPanel
-{
+public abstract class GraphicsPanel extends JPanel {
 
 	private boolean buffer = false;
 	private float bufferSlack = 1.2f;
 	private VolatileImage bimage;
 
-	public GraphicsPanel()
-	{
+	public GraphicsPanel() {
 		System.setProperty("sun.java2d.opengl", "True");
 	}
 	
-	public GraphicsPanel(boolean buffered)
-	{
+	public GraphicsPanel(boolean buffered) {
 		this();
 		buffer = buffered;
 	}
 
 	@Override
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
 		Coord<Integer> size = new Coord<Integer>(getWidth(), getHeight());
@@ -58,18 +56,17 @@ public abstract class GraphicsPanel extends JPanel
 			}
 					
 			Graphics bg = bimage.getGraphics();
-			draw(bg, size);
+			draw((Graphics2D) bg, size);
 			g.drawImage(bimage, 0, 0, this);
 		
 		} else {
 
-			draw(g, size);
+			draw((Graphics2D) g, size);
 			
 		}
 	}
 	
-	private void createBackBuffer()
-	{
+	private void createBackBuffer() {
 		bimage = getGraphicsConfiguration().createCompatibleVolatileImage(
 					(int)(getWidth()*bufferSlack), 
 					(int)(getHeight()*bufferSlack), 
@@ -78,29 +75,13 @@ public abstract class GraphicsPanel extends JPanel
 		bimage.setAccelerationPriority(1f);
 	}
 	
-	private void draw(Object drawContext, Coord<Integer> size)
-	{
-		Surface surface = AwtSurfaceFactory.createScreenSurface(drawContext);
+	private void draw(Graphics2D g, Coord<Integer> size) {
+		Surface surface = new ScreenSurface(g);
 		drawGraphics(surface, size);
 	}
 
-
-	public void writePNG(OutputStream out, Coord<Integer> size) throws IOException
-	{
-		write(SurfaceType.RASTER, out, size);
-	}
-
-
-	public void writeSVG(OutputStream out, Coord<Integer> size) throws IOException
-	{
-		write(SurfaceType.VECTOR, out, size);
-	}
-
-
-
-	private void write(SurfaceType type, OutputStream out, Coord<Integer> size) throws IOException
-	{		
-		SaveableSurface surface = AwtSurfaceFactory.createSaveableSurface(type, size.x, size.y);
+	public void write(SurfaceDescriptor descriptor, OutputStream out, Coord<Integer> size) throws IOException {		
+		ExportableSurface surface = (ExportableSurface) descriptor.create(size);
 		drawGraphics(surface, size);
 		surface.write(out);
 	}

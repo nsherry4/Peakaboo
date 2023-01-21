@@ -16,7 +16,7 @@ import java.nio.file.StandardOpenOption;
  * 
  */
 
-public interface SaveableSurface extends Surface
+public interface ExportableSurface extends Surface
 {
 
 	/**

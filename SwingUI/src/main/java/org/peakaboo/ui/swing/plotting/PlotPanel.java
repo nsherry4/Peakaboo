@@ -69,8 +69,8 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.util.StringInput;
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
@@ -734,7 +734,7 @@ public class PlotPanel extends TabbedLayerPanel {
 				}
 				controller.io().setLastFolder(file.get().getParentFile());
 				
-				SurfaceType format = export.get().getPlotFormat();
+				SurfaceDescriptor format = export.get().getPlotFormat();
 				int width = export.get().getImageWidth();
 				int height = export.get().getImageHeight();
 				
@@ -745,31 +745,15 @@ public class PlotPanel extends TabbedLayerPanel {
 		));
 	}
 	
-	private void actionExportArchiveToZip(File file, SurfaceType format, int width, int height) {
+	private void actionExportArchiveToZip(File file, SurfaceDescriptor format, int width, int height) {
 		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file))) {
 
 			//Save Plot
-			String ext = "";
-			switch (format) {
-			case RASTER:
-				ext = "png";
-				break;
-			case VECTOR:
-				ext = "svg";
-				break;			
-			}
-			
+			String ext = format.extension().toLowerCase();			
 			ZipEntry e = new ZipEntry("plot." + ext);
 			zos.putNextEntry(e);
 
-			switch (format) {
-			case RASTER:
-				canvas.writePNG(zos, new Coord<Integer>(width, height));
-				break;
-			case VECTOR:
-				canvas.writeSVG(zos, new Coord<Integer>(width, height));	
-				break;					
-			}
+			canvas.write(format, zos, new Coord<Integer>(width, height));
 			zos.closeEntry();
 			
 			

@@ -1,5 +1,6 @@
 package org.peakaboo.framework.cyclops.visualization;
 
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 /**
@@ -396,6 +397,6 @@ public interface Surface
 	
 	Surface getNewContextForSurface();
 
-	SurfaceType getSurfaceType();
+	SurfaceDescriptor getSurfaceDescriptor();
 	
 }

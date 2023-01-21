@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -28,7 +27,8 @@ import javax.swing.SpinnerNumberModel;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Surface;
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceExporterRegistry;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
@@ -47,7 +47,7 @@ public class SavePicture extends JPanel {
 	private File					startingFolder;
 	private LayerPanel				owner;
 	Consumer<Optional<File>> 		onComplete;
-	private OptionChooserPanel<SurfaceType> formatPicker;
+	private OptionChooserPanel<SurfaceDescriptor> formatPicker;
 	private DimensionPicker			dimensionPicker;
 	
 	
@@ -198,7 +198,9 @@ public class SavePicture extends JPanel {
 		dimensionPicker = new DimensionPicker((int)Math.ceil(controller.getUsedWidth()), (int)Math.ceil(controller.getUsedHeight()));
 		panel.add(dimensionPicker, BorderLayout.NORTH);
 		
-		formatPicker = new OptionChooserPanel<>(Arrays.asList(SurfaceType.values()), item -> {
+		
+		
+		formatPicker = new OptionChooserPanel<>(SurfaceExporterRegistry.exporters(), item -> {
 			return new OptionRadioButton().withText(item.title(), item.description());
 		});
 		panel.add(formatPicker, BorderLayout.CENTER);
@@ -207,94 +209,36 @@ public class SavePicture extends JPanel {
 
 	}
 
+	private void saveSurfaceType(SurfaceDescriptor descriptor) {
+		
+		setEnabled(false);
+		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-	
-	
-	private void saveSurfaceType(SurfaceType format) {
-		switch (format) {
-		case RASTER: 
-			savePNG();
-			return;
-		case VECTOR:
-			saveSVG();
-			return;
-		}
+		var ext = new SimpleFileExtension(descriptor.title() + " (" + descriptor.extension() + ")", descriptor.extension().toLowerCase());
+		
+		StratusFilePanels.saveFile(owner, "Save Picture As...", startingFolder, ext, result -> {
+			if (!result.isPresent()) { return; }
+			
+			try {
+				OutputStream os = new FileOutputStream(result.get());
+				controller.write(descriptor, os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
+				os.close();
+
+				startingFolder = result.get().getParentFile();
+				hide();
+				
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				setEnabled(true);
+				
+				onComplete.accept(result);
+				
+			} catch (IOException e) {
+				CyclopsLog.get().log(Level.SEVERE, "Failed to save image", e);
+			}
+		});
+
 	}
 	
-
-	private void savePNG()
-	{
-
-
-			
-			setEnabled(false);
-			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			
-
-			SimpleFileExtension png = new SimpleFileExtension("Portable Network Graphic", "png");
-			StratusFilePanels.saveFile(owner, "Save Picture As...", startingFolder, png, result -> {
-				if (!result.isPresent()) {
-					return;
-				}
-				try
-				{
-					OutputStream os = new FileOutputStream(result.get());
-					controller.writePNG(os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
-					os.close();
-	
-					startingFolder = result.get().getParentFile();
-					hide();
-					
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-					setEnabled(true);
-					
-					onComplete.accept(result);
-					
-				}
-				catch (IOException e)
-				{
-					CyclopsLog.get().log(Level.SEVERE, "Failed to save PNG", e);
-				}
-			});
-
-
-	}
-
-
-	private void saveSVG()
-	{
-
-			
-			setEnabled(false);
-			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			
-			SimpleFileExtension svg = new SimpleFileExtension("Scalable Vector Graphic", "svg");
-			StratusFilePanels.saveFile(owner, "Save Picture As...", startingFolder, svg, result -> {
-				if (!result.isPresent()) {
-					return;
-				}
-				try
-				{
-					OutputStream os = new FileOutputStream(result.get());				
-					controller.writeSVG(os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
-					os.close();
-
-					startingFolder = result.get().getParentFile();
-					hide();
-					
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-					setEnabled(true);
-					onComplete.accept(result);
-				}
-				catch (IOException e)
-				{
-					CyclopsLog.get().log(Level.SEVERE, "Failed to save SVG", e);
-				}
-
-			});
-						
-
-	}
 
 	public File getStartingFolder()
 	{

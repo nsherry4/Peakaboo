@@ -21,7 +21,6 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
@@ -70,7 +69,7 @@ public class Plotter {
 		//Should be use a buffer, or are we too tight on memory?
 		boolean doBuffer = Display.useBuffer(size);
 		 
-		if (context.getSurfaceType() != SurfaceType.RASTER) {
+		if (context.getSurfaceDescriptor().isVector()) {
 			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
 			drawToBuffer(data, settings, context, size);

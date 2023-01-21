@@ -8,7 +8,6 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
 import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
 
@@ -44,7 +43,8 @@ public class Mapper {
 		boolean doBuffer = Display.useBuffer(size);
 		
 		
-		if (context.getSurfaceType() != SurfaceType.RASTER) {
+		
+		if (context.getSurfaceDescriptor().isVector()) {
 			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
 			mapmode.draw(size, data, settings, context, spectrumSteps);

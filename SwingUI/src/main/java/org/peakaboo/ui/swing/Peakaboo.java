@@ -34,6 +34,7 @@ import org.peakaboo.datasink.plugin.DataSinkPluginManager;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
 import org.peakaboo.framework.druthers.serialize.YamlSerializer;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
@@ -169,6 +170,8 @@ public class Peakaboo {
 		CrashHandler.init();
 		
 		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
+		
+		CyclopsSurface.init();
 	}
 	
 	public static void run() {
@@ -214,13 +217,14 @@ public class Peakaboo {
 				System.exit(2);
 			}
 			
-
+			
 			Color accent = AccentedTheme.accentColours.get(Settings.getAccentColour());
 			if (accent == null) {
 				accent = AccentedTheme.accentColours.get("Blue");
 			}
 			StratusLookAndFeel laf = new StratusLookAndFeel(new AccentedTheme(accent));
 			
+					
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();

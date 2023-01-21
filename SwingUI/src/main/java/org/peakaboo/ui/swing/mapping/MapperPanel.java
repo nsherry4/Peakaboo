@@ -29,11 +29,11 @@ import javax.swing.border.MatteBorder;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
-import org.peakaboo.framework.cyclops.visualization.SaveableSurface;
-import org.peakaboo.framework.cyclops.visualization.SurfaceType;
-import org.peakaboo.framework.cyclops.visualization.backend.awt.AwtSurfaceFactory;
+import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -263,7 +263,7 @@ public class MapperPanel extends TabbedLayerPanel {
 				}
 				controller.getSettings().lastFolder = file.get().getParentFile();
 				
-				SurfaceType format = export.get().getPlotFormat();
+				SurfaceDescriptor format = export.get().getPlotFormat();
 				int width = export.get().getImageWidth();
 				int height = export.get().getImageHeight();
 				
@@ -278,17 +278,10 @@ public class MapperPanel extends TabbedLayerPanel {
 		}));
 	}
 
-	void actionSaveArchive(File file, SurfaceType format, int width, int height) throws IOException {
+	void actionSaveArchive(File file, SurfaceDescriptor format, int width, int height) throws IOException {
 		FileOutputStream fos = new FileOutputStream(file);
 		
-		Supplier<SaveableSurface> surfaceFactory = () -> {
-			switch (format) {
-			case RASTER: return AwtSurfaceFactory.createSaveableSurface(SurfaceType.RASTER, width, height);
-			case VECTOR:return AwtSurfaceFactory.createSaveableSurface(SurfaceType.VECTOR, width, height);
-			}
-			return null;
-		};
-		
+		Supplier<ExportableSurface> surfaceFactory = () -> (ExportableSurface)format.create(new Coord<>(width, height));
 		ExecutorSet<Void> executorset = controller.writeArchive(fos, format, width, height, surfaceFactory);
 		
 		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, executorset);
