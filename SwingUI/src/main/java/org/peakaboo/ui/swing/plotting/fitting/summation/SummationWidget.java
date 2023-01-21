@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelector;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
@@ -68,10 +69,12 @@ class SummationWidget extends TSSelectorGroup {
 			c.gridx = 0;
 			c.weightx = 1.0;
 			add(selector, c);
+			
 
 			c.gridx = 1;
 			c.weightx = 0.0;
-			add(createRemoveButton(selector), c);
+			var button = createRemoveButton(selector);
+			add(button, c);
 
 
 		}

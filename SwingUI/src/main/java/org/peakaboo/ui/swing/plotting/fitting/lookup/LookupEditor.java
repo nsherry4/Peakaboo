@@ -17,17 +17,20 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.ui.swing.plotting.fitting.lookup.LookupRenderer.ElementRenderer;
+import org.peakaboo.ui.swing.plotting.fitting.lookup.LookupRenderer.TSRenderer;
 
 
 
 class LookupEditor extends DefaultTreeCellEditor {
 
-	private LookupWidget	tswidget;
-	private JLabel						tstLabel;
 	private FittingController			controller;
 	private DefaultTreeCellRenderer		cellRenderer;
-
-
+	
+	private ElementRenderer elementWidget;
+	private TSRenderer tsWidget;
+	
 
 	public LookupEditor(JTree tree, DefaultTreeCellRenderer renderer, FittingController controller) {
 
@@ -36,16 +39,10 @@ class LookupEditor extends DefaultTreeCellEditor {
 		this.cellRenderer = renderer;
 		this.controller = controller;
 
-		tswidget = new LookupWidget();
-		tswidget.setOpaque(true);
+		elementWidget = new ElementRenderer(true);
+		tsWidget = new TSRenderer(true);
+		tsWidget.check.addItemListener(e -> stopCellEditing());
 		
-
-		tstLabel = new JLabel();
-		tstLabel.setOpaque(true);
-		tstLabel.setBorder(Spacing.bTiny());
-
-		tswidget.getCheckBox().addItemListener(e -> LookupEditor.this.stopCellEditing());
-
 	}
 
 
@@ -53,34 +50,26 @@ class LookupEditor extends DefaultTreeCellEditor {
 	public Component getTreeCellEditorComponent(
 			JTree tree, 
 			Object value, 
-			boolean isSelected, 
+			boolean selected, 
 			boolean expanded,
 			boolean leaf, 
 			int row) {
 
-		Component c = super.getTreeCellEditorComponent(tree, value, isSelected, expanded, leaf, row);
+		Component c = super.getTreeCellEditorComponent(tree, value, selected, expanded, leaf, row);
 
 		if (value instanceof ITransitionSeries) {
-
 			ITransitionSeries ts = (ITransitionSeries) value;
-			tswidget.setName(ts.getShell().toString());
-
-			tswidget.setBackground(cellRenderer.getBackgroundSelectionColor());
-			tswidget.setForeground(cellRenderer.getTextSelectionColor());
-			tswidget.setBorder(Spacing.bTiny());
-			
-			tswidget.setSelected(controller.getProposedTransitionSeries().contains(ts));
-			return tswidget;
+			tsWidget.setTransitionSeries(ts);
+			tsWidget.setSelected(selected);
+			tsWidget.check.setSelected(controller.getProposedTransitionSeries().contains(ts));
+			return tsWidget;
 
 		} else if (value instanceof Element) {
 			Element element = (Element) value;
-			tstLabel.setText(element.atomicNumber() + " " + element.toString() + " (" + element.name() + ")");
-			
-			tstLabel.setBackground(cellRenderer.getBackgroundSelectionColor());
-			tstLabel.setForeground(cellRenderer.getTextSelectionColor());
-			tstLabel.setBorder(Spacing.bSmall());			
+			elementWidget.setElement(element);
+			elementWidget.setSelected(selected);
+			return elementWidget;
 
-			return tstLabel;
 		}
 
 
@@ -92,7 +81,7 @@ class LookupEditor extends DefaultTreeCellEditor {
 
 	@Override
 	public Object getCellEditorValue() {
-		return tswidget.isSelected();
+		return tsWidget.check.isSelected();
 	}
 
 
@@ -101,10 +90,9 @@ class LookupEditor extends DefaultTreeCellEditor {
 		Object selected = tree.getLastSelectedPathComponent();
 
 		if (selected == null) return false;
-		if (selected instanceof TransitionShell) return false;
-		if (selected instanceof String) return false;
-		
-		return true;
+		if (selected instanceof ITransitionSeries) return true;
+
+		return false;
 	}
 
 }

@@ -8,13 +8,24 @@ import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 public class AccentedTheme extends BrightTheme {
 
 	public static DualLinkedHashBidiMap<String, Color> accentColours = new DualLinkedHashBidiMap<String, Color>(){{
-		put("Blue", PALETTE.getColour("Blue", "3"));
-		//put("DarkBlue", new Color(0x4D6787));
+		
+		put("Red", new Color(0xc94939));
+		put("Orange", new Color(0xd96221));
+		put("Yellow", new Color(0xd5a42a));
+		
+		
+		put("Olive", new Color(0x829843));
+		put("Green", new Color(0x2c8c46));
 		put("Teal", new Color(0x3e8889));
-		put("Green", PALETTE.getColour("Green", "5"));
-		put("Purple", new Color(0x6250a6));
+		
+		put("Blue", new Color(0x3584e4));
+		put("Purple", new Color(0x6652b3));
+
 		put("Pink", new Color(0xba5eb1));
-		put("Orange", PALETTE.getColour("Orange", "4"));
+		
+		
+		
+		
 		
 	}};
 

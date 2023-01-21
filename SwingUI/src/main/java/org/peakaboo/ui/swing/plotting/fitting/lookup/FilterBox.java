@@ -41,7 +41,7 @@ public class FilterBox extends JTextField {
         this.putClientProperty("Nimbus.Overrides", dialogTheme);
 		
 		
-		this.setBorder(Spacing.bLarge());
+		this.setBorder(new EmptyBorder(Spacing.medium, Spacing.large * 2 + icon.getIconWidth(), Spacing.medium, Spacing.large));
 		this.setBackground(Color.GRAY);
 		
 	}
@@ -61,7 +61,7 @@ public class FilterBox extends JTextField {
 		int y = (this.getHeight() - iconHeight) / 2;
 		icon.paintIcon(this, g, x, y);
 
-		setBorder(new EmptyBorder(Spacing.medium, Spacing.large * 2 + iconWidth, Spacing.medium, Spacing.large));
+		
 	}
 
 	private void paintText(Graphics g) {

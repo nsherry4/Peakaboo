@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.components.ui.itemlist;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Paint;
 
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -39,8 +40,7 @@ public abstract class SelectionListControls extends HeaderBox
 	protected abstract void approve();
 	protected abstract void cancel();
 	
-	protected Paint getBackgroundPaint() {
-		return new Color(0x00000000, true);
-	}
+	@Override
+	public void paintComponent(Graphics g) {}
 	
 }

@@ -20,6 +20,7 @@ import javax.swing.table.TableModel;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
@@ -275,7 +276,15 @@ public class Correlation extends JPanel {
 		protected void onSetValue(ITransitionSeries ts, boolean selected) {
 			this.ts = ts;
 			linker.setVisible(controller.correlationMode().getVisibility(ts));
-				
+			
+			if (selected) {
+				group1.setForeground(Stratus.getTheme().getHighlightText());
+				group2.setForeground(Stratus.getTheme().getHighlightText());
+			} else {
+				group1.setForeground(Stratus.getTheme().getControlText());
+				group2.setForeground(Stratus.getTheme().getControlText());
+			}
+			
 			if (controller.correlationMode().getSide(ts) == 1) {
 				group1.setSelected(true);
 			} else {
