@@ -10,13 +10,13 @@ import org.peakaboo.framework.druthers.settings.YamlSettingsStore;
 
 public class Settings {
 
-	private static SettingsStore provider;
+	protected static SettingsStore provider;
 	
-	public static void init(File directory) throws IOException {
+	public static void load(File directory) throws IOException {
 		  provider = new YamlSettingsStore(directory);
 	}
 	
-	public static void init(SettingsStore impl) {
+	public static void load(SettingsStore impl) {
 		  provider = impl;
 	}
 	
@@ -39,23 +39,16 @@ public class Settings {
 		provider.setBoolean(DISK_BACKED, diskBacked);
 	}
 	
-
-	private static final String FIRST_RUN = "org.peakaboo.app.firstrun";
-	public static boolean isFirstrun() {
-		return provider.getBoolean(FIRST_RUN, true);
+	
+	private static final String VERBOSE_LOGGING = "org.peakaboo.app.verbose-logging";
+	public static boolean isVerboseLogging() {
+		return provider.getBoolean(VERBOSE_LOGGING, false);
 	}
-	public static void setFirstrun(boolean firstrun) {
-		provider.setBoolean(FIRST_RUN, firstrun);
+	public static void setVerboseLogging(boolean verbose) {
+		provider.setBoolean(VERBOSE_LOGGING, verbose);
+		PeakabooLog.reloadSettings();
 	}
 	
-	
-	private static final String ACCENT_COLOUR = "org.peakaboo.app.accent-colour";
-	public static String getAccentColour() {
-		return provider.get(ACCENT_COLOUR, "Blue");
-	}
-	public static void setAccentColour(String colour) {
-		provider.set(ACCENT_COLOUR, colour);
-	}
 
 	private static final String HEAP_SIZE_MB = "org.peakaboo.app.heapsize-megabytes";
 	public static int getHeapSizeMegabytes() {

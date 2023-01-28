@@ -107,6 +107,7 @@ import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
+import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.app.PeakabooTabTitle;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
@@ -184,8 +185,8 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 	
 	private void doFirstRun() {
-		if (Settings.isFirstrun()) {
-			Settings.setFirstrun(false);
+		if (DesktopSettings.isFirstrun()) {
+			DesktopSettings.setFirstrun(false);
 			FirstRun fr = new FirstRun(this);
 			this.pushLayer(fr);
 		}

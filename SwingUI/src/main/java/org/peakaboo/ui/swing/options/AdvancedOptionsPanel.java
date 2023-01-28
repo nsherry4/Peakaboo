@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
@@ -17,6 +18,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
@@ -54,6 +56,7 @@ import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
 import org.peakaboo.ui.swing.app.AccentedTheme;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
+import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
@@ -127,6 +130,12 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
 		
+		String KEY_ERRORS = "Errors";
+		JPanel errorsPanel = makeErrorsPanel(controller);
+		body.add(errorsPanel, KEY_ERRORS);
+		OptionSidebar.Entry errorsEntry = new OptionSidebar.Entry(KEY_ERRORS, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_ERRORS, IconSize.TOOLBAR_SMALL));
+		entries.add(errorsEntry);
+		
 		
 		
 		//Create the UI components from the model
@@ -180,19 +189,19 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionCheckBox firstrun = new OptionCheckBox(startup)
 				.withText("Show First Run Introduction", "Toggles the first-run introduction screen")
 				.withSize(OptionSize.LARGE)
-				.withSelection(Settings.isFirstrun())
-				.withListener(Settings::setFirstrun);
+				.withSelection(DesktopSettings.isFirstrun())
+				.withListener(DesktopSettings::setFirstrun);
 		startup.add(firstrun);
 		
 		
 		OptionBlock uxBlock = new OptionBlock();
 		var colours = AccentedTheme.accentColours;
-		Color accentColour = colours.get(Settings.getAccentColour()); 
+		Color accentColour = colours.get(DesktopSettings.getAccentColour()); 
 		if (accentColour == null) {
 			accentColour = colours.get("Blue");
 		}
 		OptionColours accent = new OptionColours(uxBlock, new ArrayList<>(colours.values()), accentColour)
-				.withListener(c -> Settings.setAccentColour(colours.getKey(c)))
+				.withListener(c -> DesktopSettings.setAccentColour(colours.getKey(c)))
 				.withText("Accent Colour", "Requires restart")
 				.withSize(OptionSize.LARGE);
 		uxBlock.add(accent);
@@ -203,6 +212,30 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				
 	}
 
+	
+	private JPanel makeErrorsPanel(PlotController controller) {
+		
+		OptionBlock reporting = new OptionBlock();
+		
+		OptionCheckBox verbose = new OptionCheckBox(reporting)
+				.withText("Verbose Logging", "Include more details in Peakaboo's logs")
+				.withSize(OptionSize.LARGE)
+				.withSelection(Settings.isVerboseLogging())
+				.withListener(Settings::setVerboseLogging);
+		reporting.add(verbose);
+		
+		OptionCheckBox autoreport = new OptionCheckBox(reporting)
+				.withText("Automatic Crash Reports", "Automatically send crash reports to Peakaboo's developers")
+				.withSize(OptionSize.LARGE)
+				.withSelection(DesktopSettings.isCrashAutoreporting())
+				.withListener(DesktopSettings::setCrashAutoreporting);
+		reporting.add(autoreport);
+		
+		
+		return new OptionBlocksPanel(reporting);
+				
+	}
+	
 
 	private JPanel makeDetectorPanel(PlotController controller) {
 		

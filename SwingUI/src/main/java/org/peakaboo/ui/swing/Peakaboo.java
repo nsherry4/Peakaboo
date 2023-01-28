@@ -53,6 +53,7 @@ import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.AccentedTheme;
 import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
+import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 import com.bugsnag.Bugsnag;
@@ -166,6 +167,7 @@ public class Peakaboo {
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
+		DesktopSettings.init();
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		CrashHandler.init();
 		
@@ -200,25 +202,8 @@ public class Peakaboo {
 		peakLoader.start();
 		
 		Stratus.initialize(Tier.provider().iconPath(), Version.splash, Version.logo, "Peakaboo", () -> {
-			//Init settings store
-			try {
-				File settingsDir = DesktopApp.appDir("Settings");
-				boolean firstSettings = !settingsDir.exists();
-				Settings.init(settingsDir);
-				if (firstSettings) {
-					//This is the first time running a version of Peakaboo that uses the new
-					//Druthers settings store. We'll try to load existing settings into it
-					transferSettings();
-				}
-				
-			} catch (IOException e) {
-				Stratus.removeSplash();
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load persistent settings, Peakaboo must now exit.", e);
-				System.exit(2);
-			}
-			
-			
-			Color accent = AccentedTheme.accentColours.get(Settings.getAccentColour());
+
+			Color accent = AccentedTheme.accentColours.get(DesktopSettings.getAccentColour());
 			if (accent == null) {
 				accent = AccentedTheme.accentColours.get("Blue");
 			}
@@ -243,7 +228,6 @@ public class Peakaboo {
 			//Any additional plugin types provided per-tier
 			Tier.provider().initializePlugins();
 			
-
 			try {
 				peakLoader.join();
 			} catch (InterruptedException e) {
@@ -256,27 +240,7 @@ public class Peakaboo {
 		
 		
 	}
-	
 
-	//TODO: Remove this in Peakaboo 6
-	/**
-	 * This method exists to transfer settings from the old
-	 * method of storing them to the new one
-	 */
-	private static void transferSettings() {
-		File oldFile = new File(DesktopApp.appDir() + "/settings.yaml");
-		try {
-			Map<String, Map<String, Boolean>> oldSettings = YamlSerializer.deserializeGeneric(oldFile);
-			Map<String, Boolean> oldPersistent = oldSettings.get("persistent");
-			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.constantscale", 	oldPersistent.get("consistentScale"));
-			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.monochrome", 		oldPersistent.get("monochrome"));
-			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.fit.intensity", 	oldPersistent.get("showElementFitIntensities"));
-			Settings.provider().setBoolean("org.peakaboo.controller.plotter.view.fit.markers", 	oldPersistent.get("showElementFitMarkers"));
-			Settings.provider().setBoolean("org.peakaboo.controller.plot.view.fit.individual", 	oldPersistent.get("showIndividualFittings"));
-		} catch (IOException e) {
-			PeakabooLog.get().warning("Failed to transfer old settings");
-		}
-	}
 
 	public static void main(String[] args) {	
 		init();

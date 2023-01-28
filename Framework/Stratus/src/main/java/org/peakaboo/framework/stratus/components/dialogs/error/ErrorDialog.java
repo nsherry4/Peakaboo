@@ -23,16 +23,16 @@ public class ErrorDialog extends HeaderDialog {
 
 	private ErrorDisplayPanel error;
 	private ErrorReportPanel report;
-	private Consumer<ErrorReport> onReport;
+	private Consumer<Feedback> onReport;
 	private Throwable throwable;
 	
-	public static record ErrorReport(Throwable t, String notes, boolean includeLogs) {};
+	public static record Feedback(Throwable t, String notes, boolean includeLogs) {};
 	
 	public ErrorDialog(Window parent, String title, String message, Throwable t) {
 		this(parent, title, message, t, null);
 	}
 	
-	public ErrorDialog(Window parent, String title, String message, Throwable t, Consumer<ErrorReport> onReport) {
+	public ErrorDialog(Window parent, String title, String message, Throwable t, Consumer<Feedback> onReport) {
 		super(parent);
 		this.onReport = onReport;
 		this.throwable = t;
@@ -97,7 +97,7 @@ public class ErrorDialog extends HeaderDialog {
 					.withTooltip("Send crash report to developers")
 					.withAction(() -> {
 						ErrorDialog.this.close();
-						onReport.accept(new ErrorReport(throwable, report.getNotes(), report.getAttachLogs()));
+						onReport.accept(new Feedback(throwable, report.getNotes(), report.getAttachLogs()));
 					});
 			buttons.add(send);
 		}

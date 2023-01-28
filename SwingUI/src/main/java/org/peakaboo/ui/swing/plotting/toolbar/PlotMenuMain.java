@@ -119,19 +119,6 @@ public class PlotMenuMain extends JPopupMenu {
 				.withAction(plot::actionShowLogs);
 		debug.add(logs);
 
-		Mutable<Boolean> isDebug = new Mutable<>(false);
-		JMenuItem debugLog = new FluentMenuItem()
-				.withText("Verbose Logging")
-				.withTooltip("Generates extra logging information for troubleshooting purposes")
-				.withAction(() -> {
-					isDebug.set(!isDebug.get());
-					if (isDebug.get()) {
-						PeakabooLog.getRoot().setLevel(Level.FINE);
-					} else {
-						PeakabooLog.getRoot().setLevel(Level.INFO);
-					}
-				});
-		debug.add(debugLog);
 		
 		JMenuItem bugreport = new FluentMenuItem()
 				.withText("Report a Bug")

@@ -28,9 +28,10 @@ public class PeakabooLog {
 	private final static Map<String, Logger> loggers = new HashMap<>();
 	private static boolean initted = false;
 	private static String logfilename;
-	private static Level logLevel;
 
 	private static BufferHandler bufferedHandler;
+	private static FileHandler fileHandler;
+	private static ConsoleHandler consoleHandler;
 	
 
 	
@@ -40,13 +41,9 @@ public class PeakabooLog {
 		}
 		initted = true;
 		
-		String logLevelString = "INFO";
-		logLevelString = System.getProperty("java.util.logging.loglevel", logLevelString);
-		logLevel = Level.parse(logLevelString);
-		
 		Properties props = new Properties();
-		props.setProperty("java.util.logging.loglevel", logLevelString);
-		props.setProperty("java.util.logging.ConsoleHandler.level", logLevelString);
+		props.setProperty("java.util.logging.loglevel", getLevel().getName());
+		props.setProperty("java.util.logging.ConsoleHandler.level", getLevel().getName());
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(512);
 		try {
 			props.store(bos, "No Comment");
@@ -68,8 +65,8 @@ public class PeakabooLog {
 		}
 		
 		//add console handler
-		ConsoleHandler consoleHandler = new ConsoleHandler();
-		consoleHandler.setLevel(logLevel);
+		consoleHandler = new ConsoleHandler();
+		consoleHandler.setLevel(getLevel());
 		getRoot().addHandler(consoleHandler);
 		
 		
@@ -79,7 +76,7 @@ public class PeakabooLog {
 		
 		//In-memory logger
 		bufferedHandler = new BufferHandler(new CustomFormatter(format));
-		bufferedHandler.setLevel(logLevel);
+		bufferedHandler.setLevel(getLevel());
 		getRoot().addHandler(bufferedHandler);
 		
 	}
@@ -100,10 +97,10 @@ public class PeakabooLog {
 			new File(logDir.getPath() + "/Peakaboo.log").createNewFile();
 			////////////////////////////
 			
-			FileHandler handler = new FileHandler(logfilename, 16*1024*1024, 1, true);
-			handler.setFormatter(new CustomFormatter(format));
-			handler.setLevel(logLevel);
-			getRoot().addHandler(handler);
+			fileHandler = new FileHandler(logfilename, 16*1024*1024, 1, true);
+			fileHandler.setFormatter(new CustomFormatter(format));
+			fileHandler.setLevel(getLevel());
+			getRoot().addHandler(fileHandler);
 		} catch (SecurityException | IOException e) {
 			getRoot().log(Level.WARNING, "Cannot create Peakaboo log file", e);
 		}
@@ -120,10 +117,22 @@ public class PeakabooLog {
 		return get(name);
 	}
 	
+	static void reloadSettings() {
+		Level level = getLevel();
+		PeakabooLog.getRoot().setLevel(level);
+		fileHandler.setLevel(level);
+		bufferedHandler.setLevel(level);
+		consoleHandler.setLevel(level);
+	}
+	
+	private static Level getLevel() {
+		return Settings.isVerboseLogging() ? Level.FINE : Level.INFO;
+	}
+	
 	private static Logger get(String name) {
 		if (!loggers.containsKey(name)) {
 			Logger logger = Logger.getLogger(name);
-			logger.setLevel(logLevel);
+			logger.setLevel(getLevel());
 			loggers.put(name, logger);
 		}
 		return loggers.get(name);
