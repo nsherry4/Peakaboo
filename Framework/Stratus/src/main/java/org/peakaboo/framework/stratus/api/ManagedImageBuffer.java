@@ -16,6 +16,7 @@ public class ManagedImageBuffer {
 
 	private SoftReference<BufferedImage> buffer = new SoftReference<>(null);
 	private int width, height;
+	private boolean unpainted = true;
 	
 	public ManagedImageBuffer() {
 		this(100, 100);
@@ -45,9 +46,15 @@ public class ManagedImageBuffer {
 	 * it.
 	 */
 	public void resize(int width, int height) {
+		
+		boolean resized = width != this.width || height != this.height;
+		if (resized) {
+			markUnpainted();
+		}
+		
 		this.width = width;
 		this.height = height;
-		
+				
 		boolean createBuffer = false;
 		BufferedImage image = buffer.get();
 		if (image == null) {
@@ -65,6 +72,7 @@ public class ManagedImageBuffer {
 	private BufferedImage create() {
 		BufferedImage image = new BufferedImage((int) (width * 1.2), (int) (height * 1.2), BufferedImage.TYPE_INT_ARGB);
 		buffer = new SoftReference<BufferedImage>(image);
+		markUnpainted();
 		return image;
 	}
 	
@@ -86,6 +94,34 @@ public class ManagedImageBuffer {
 	public BufferedImage get(int width, int height) {
 		resize(width, height);
 		return get();
+	}
+	
+	/**
+	 * Mark the managed buffer as being in an unpainted state, needing to be
+	 * repainted before it can be used. The buffer will be considered unpainted at
+	 * initialization, or after a call to {@link #resize(int, int)} where the size
+	 * actually changes. painted.
+	 */
+	public void markUnpainted() {
+		unpainted = true;
+	}
+	
+	/**
+	 * Mark the managed buffer as being in a painted state. Clients should call this
+	 * method after painting the buffer as desired.
+	 */
+	public void markPainted() {
+		unpainted = false;
+	}
+	
+	/**
+	 * Indicates that this buffer is in a painted state, and does not need to be
+	 * repainted before being used.
+	 * 
+	 * @return
+	 */
+	public boolean isPainted() {
+		return !unpainted;
 	}
 
 }

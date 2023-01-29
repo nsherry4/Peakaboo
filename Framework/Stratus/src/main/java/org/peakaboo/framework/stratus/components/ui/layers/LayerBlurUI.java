@@ -11,21 +11,26 @@ import java.awt.image.BufferedImageOp;
 import javax.swing.JComponent;
 import javax.swing.plaf.LayerUI;
 
+import org.jdesktop.swingx.image.AbstractFilter;
 import org.jdesktop.swingx.image.FastBlurFilter;
+import org.jdesktop.swingx.util.GraphicsUtilities;
 import org.peakaboo.framework.stratus.api.ManagedImageBuffer;
 
 class LayerBlurUI<T extends Component> extends LayerUI<T> {
-	private BufferedImageOp mOperation;
-	private ManagedImageBuffer bufferer;
+	private FastBlurFilter mOperation;
+	
+	private ManagedImageBuffer paintBufferer, blurBufferer;
 
 	private LayerPanel parent;
 	private Component component;
+	private long lastTime;
 	
 	public LayerBlurUI(LayerPanel parent, Component component) {
 		this.parent = parent;
 		this.component = component;
 		mOperation = new FastBlurFilter(1);
-		bufferer = new ManagedImageBuffer();
+		paintBufferer = new ManagedImageBuffer();
+		blurBufferer = new ManagedImageBuffer();
 	}
 
 	@Override
@@ -43,27 +48,56 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				return;
 			}
 	
-			bufferer.resize(w, h);
-			bufferer.clear();
-			BufferedImage buffer = bufferer.get();
-			
-			Graphics2D ig2 = buffer.createGraphics();
-			super.paint(ig2, c);
-			ig2.dispose();
+			paintBufferer.resize(w, h);
+			blurBufferer.resize(w, h);
+			var blurBuffer = blurBufferer.get();
 	
-			Graphics2D g2 = (Graphics2D) g.create();
-			g2.setClip(g.getClip());
-			if (LayerPanel.blurLowerLayers) {
-				g2.drawImage(buffer, mOperation, 0, 0);
-			} else {
-				g2.drawImage(buffer, null, 0, 0);
+			//If the buffer needs repainting or the last image ages out, repaint
+			long time = System.currentTimeMillis();
+			if (time - lastTime > 500 || !blurBufferer.isPainted()) {
+				paintBufferer.clear();
+				var paintBuffer = paintBufferer.get();
+				
+				//Paint the window contents to the first buffer
+				Graphics2D pg = paintBuffer.createGraphics();
+				super.paint(pg, c);
+				pg.dispose();
+				paintBufferer.markPainted();
+				
+				//Paint the first buffer to the second buffer with the blur filter
+				blurBufferer.clear();
+				blurBuffer = blurBufferer.get();
+				Graphics2D bg = blurBuffer.createGraphics();
+				
+				//First draw the painter buffer to the blur buffer, blurring (usually)
+				if (LayerPanel.blurLowerLayers) {
+					//mOperation.setSize(w, h);
+					bg.drawImage(paintBuffer, mOperation, 0, 0);
+				} else {
+					bg.drawImage(paintBuffer, null, 0, 0);
+				}
+				
+				//Then darken the background
+				bg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
+				bg.setColor(Color.BLACK);
+				bg.fillRect(0, 0, c.getWidth(), c.getHeight());
+				
+				//Mark this buffer as freshly painted
+				bg.dispose();
+				blurBufferer.markPainted();
+				
+				//Reset the time of the last buffer update
+				lastTime = time;	
 			}
 			
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
-			g2.setColor(Color.BLACK);
-			g2.fillRect(0, 0, c.getWidth(), c.getHeight());
+			Graphics2D g2 = (Graphics2D) g.create();
+			g2.setClip(g.getClip());
+			g2.drawImage(blurBuffer, null, 0, 0);
+			
 			g2.dispose();
 			
 		}
 	}
+	
+	
 }

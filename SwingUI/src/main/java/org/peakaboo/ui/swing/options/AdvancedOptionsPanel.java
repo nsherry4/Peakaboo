@@ -39,6 +39,7 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
@@ -74,7 +75,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		};
 		CardLayout cards = new CardLayout();
 		body.setLayout(cards);
-		
+		body.setBorder(Spacing.bMedium());
 		
 		var hasdata = controller.data().hasDataSet();
 		
@@ -185,15 +186,6 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private JPanel makeAppPanel(PlotController controller) {
 	
-		OptionBlock startup = new OptionBlock();
-		OptionCheckBox firstrun = new OptionCheckBox(startup)
-				.withText("Show First Run Introduction", "Toggles the first-run introduction screen")
-				.withSize(OptionSize.LARGE)
-				.withSelection(DesktopSettings.isFirstrun())
-				.withListener(DesktopSettings::setFirstrun);
-		startup.add(firstrun);
-		
-		
 		OptionBlock uxBlock = new OptionBlock();
 		var colours = AccentedTheme.accentColours;
 		Color accentColour = colours.get(DesktopSettings.getAccentColour()); 
@@ -207,8 +199,15 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		uxBlock.add(accent);
 				
 		
-		
-		return new OptionBlocksPanel(startup, uxBlock);
+		OptionBlock startup = new OptionBlock();
+		OptionCheckBox firstrun = new OptionCheckBox(startup)
+				.withText("Show First Run Introduction", "Toggles the first-run introduction screen")
+				.withSize(OptionSize.LARGE)
+				.withSelection(DesktopSettings.isFirstrun())
+				.withListener(DesktopSettings::setFirstrun);
+		startup.add(firstrun);
+
+		return new OptionBlocksPanel(uxBlock, startup);
 				
 	}
 
