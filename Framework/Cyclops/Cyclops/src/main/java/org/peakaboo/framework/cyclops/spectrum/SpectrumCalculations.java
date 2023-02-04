@@ -3,6 +3,7 @@ package org.peakaboo.framework.cyclops.spectrum;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -205,8 +206,24 @@ public class SpectrumCalculations
 		
 		return target;
 	}
+	
 
-
+	
+	
+	public static Spectrum fma(final ReadOnlySpectrum source, float mult, final ReadOnlySpectrum add, final Spectrum target) {
+		
+		final float[] sourceArray = ((Spectrum)source).backingArray();
+		final float[] addArray = ((Spectrum)add).backingArray();
+		final float[] targetArray = ((Spectrum)target).backingArray();
+		
+		final int size = source.size();
+		for (int i = 0; i < size; i++) {
+			targetArray[i] = Math.fma(sourceArray[i], mult, addArray[i]);
+		}
+		
+		return target;
+				
+	}
 
 
 	/**
@@ -409,7 +426,11 @@ public class SpectrumCalculations
 
 		return result;
 	}
+	
 
+	
+	
+	
 
 	/**
 	 * adds the elements of the two lists together, placing the results in l1
@@ -433,6 +454,7 @@ public class SpectrumCalculations
 		
 	}
 
+	
 
 	/**
 	 * Subtracts l2 from l1
@@ -546,7 +568,6 @@ public class SpectrumCalculations
 		}
 		
 	}
-
 
 
 

@@ -58,6 +58,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	//Areas (in channels) where the curve is strong enough that we need to consider it.
 	private RangeSet				intenseRanges;
 	private Set<Integer>			intenseChannels;
+	private List<Integer>			intenseChannelList;
 	
 	//how large a footprint this curve has, used in scoring fittings
 	private int						baseSize;
@@ -77,6 +78,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		intenseRanges = new RangeSet();
 		intenseChannels = new LinkedHashSet<>();
+		intenseChannelList = new ArrayList<>();
 		
 		if (ts != null) setTransitionSeries(ts);
 		
@@ -144,6 +146,13 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	}
 
 
+	@Override
+	public void scaleOnto(float scale, Spectrum target) {
+		// We can take advantage of SIMD instructions here to perform a "fused multiply
+		// add" where the multiply scales the normalizedCurve and then add it to the
+		// target spectrum
+		SpectrumCalculations.fma(normalizedCurve, scale, target, target);
+	}
 
 
 
@@ -192,6 +201,15 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	@Override
 	public Set<Integer> getIntenseChannels() {
 		return Collections.unmodifiableSet(intenseChannels);
+	}
+	
+	/**
+	 * Returns an ordered List of Integers containing the channels for which this
+	 * Curve is intense or significant.
+	 */
+	@Override
+	public List<Integer> getIntenseChannelList() {
+		return Collections.unmodifiableList(intenseChannelList);
 	}
 	
 	@Override
@@ -245,9 +263,12 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		}
 		
 		intenseChannels.clear();
+		intenseChannelList.clear();
 		for (int channel : intenseRanges) {
 			intenseChannels.add(channel);
 		}
+		intenseChannelList.addAll(intenseChannels);
+		intenseChannelList.sort(Integer::compare);
 		
 		
 

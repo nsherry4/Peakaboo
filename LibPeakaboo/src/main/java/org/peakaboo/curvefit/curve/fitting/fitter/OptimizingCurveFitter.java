@@ -34,7 +34,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 		UnivariateFunction score = scoringFunction(data, curve);
 		
 		double guess = 0;
-		for (int channel : curve.getIntenseChannels()) {
+		for (int channel : curve.getIntenseChannelList()) {
 			guess = Math.max(guess, data.get(channel));
 		}
 		
@@ -67,7 +67,7 @@ public class OptimizingCurveFitter implements CurveFitter {
 				SpectrumCalculations.subtractLists_target(data, scaled, residual);
 				
 				float score = 0;
-				for (int i : curve.getIntenseChannels()) {
+				for (int i : curve.getIntenseChannelList()) {
 					float value = residual.get(i);
 					if (value < 0) {
 						value *= overfitPenalty;

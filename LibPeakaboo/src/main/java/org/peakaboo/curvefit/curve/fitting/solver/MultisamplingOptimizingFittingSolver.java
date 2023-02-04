@@ -42,7 +42,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		
 		List<ROCurve> curves = fittings.getVisibleCurves();
 		sortCurves(curves);
-		Set<Integer> intenseChannels = getIntenseChannels(curves);
+		List<Integer> intenseChannels = getIntenseChannels(curves);
 		
 		List<ROCurve> perm = new ArrayList<>(curves);
 		int counter = 0;

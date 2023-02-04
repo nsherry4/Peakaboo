@@ -31,7 +31,7 @@ public interface CurveFitter extends BoltJavaPlugin {
 		float currentSignal;
 		
 		//look at every point in the ranges covered by transitions, find the max intensity
-		for (Integer i : curve.getIntenseChannels()) {
+		for (Integer i : curve.getIntenseChannelList()) {
 			if (i < 0 || i >= data.size()) continue;
 			currentSignal = data.get(i);
 			if (currentSignal > maxSignal) maxSignal = currentSignal;

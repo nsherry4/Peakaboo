@@ -55,7 +55,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		List<ROCurve> curves = new ArrayList<>(fittings.getVisibleCurves());
 		sortCurves(curves);
-		Set<Integer> intenseChannels = getIntenseChannels(curves);
+		List<Integer> intenseChannels = getIntenseChannels(curves);
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
 		MultivariateFunction cost = getCostFunction(context, intenseChannels);
 		double[] guess = getInitialGuess(size, curves, fitter, data);
@@ -128,15 +128,17 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return guess;
 	}
 	
-	protected Set<Integer> getIntenseChannels(List<ROCurve> curves) {
+	protected List<Integer> getIntenseChannels(List<ROCurve> curves) {
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
 		for (ROCurve curve : curves) {
 			intenseChannels.addAll(curve.getIntenseChannels());
 		}
-		return intenseChannels;
+		List<Integer> asList = new ArrayList<>(intenseChannels);
+		asList.sort(Integer::compare);
+		return asList;
 	}
 	
-	protected MultivariateFunction getCostFunction(EvaluationContext context, Set<Integer> intenseChannels) {
+	protected MultivariateFunction getCostFunction(EvaluationContext context, List<Integer> intenseChannels) {
 		return new MultivariateFunction() {
 			
 			@Override
@@ -179,18 +181,18 @@ public class OptimizingFittingSolver implements FittingSolver {
 
 	private void test(double[] point, EvaluationContext context) {
 		int index = 0;
-		context.scratch.zero();
+		//context.scratch.zero();
 		context.total.zero();
 		for (ROCurve curve : context.curves) {
 			float scale = (float) point[index++];
-			curve.scaleInto(scale, context.scratch);
-			SpectrumCalculations.addLists_inplace(context.total, context.scratch);
+			curve.scaleOnto(scale, context.total);
 		}
 		SpectrumCalculations.subtractLists_target(context.data, context.total, context.residual);
 
 	}
 	
-	private float score(double[] point, Set<Integer> intenseChannels, Spectrum residual) {
+	
+	private float score(double[] point, List<Integer> intenseChannels, Spectrum residual) {
 		float[] ra = residual.backingArray();
 		float score = 0;
 		for (int i : intenseChannels) {
@@ -199,16 +201,11 @@ public class OptimizingFittingSolver implements FittingSolver {
 			//Negative values mean that we've fit more signal than exists
 			//We penalize this to prevent making up data where none exists.
 			if (channelValue < 0) {
-				channelValue = (-channelValue)*50;
+				channelValue = channelValue*-50;
 			}
 			score += channelValue;
 		}
 		
-//		for (double p : point) {
-//			System.out.print(p + ", ");
-//		}
-//		System.out.println("");
-//		System.out.println(score);
 		return score;
 	}
 	

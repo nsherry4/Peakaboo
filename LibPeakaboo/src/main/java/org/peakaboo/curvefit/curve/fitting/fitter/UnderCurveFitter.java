@@ -55,7 +55,7 @@ public class UnderCurveFitter implements CurveFitter {
 		
 		//look at every point in the ranges covered by transitions
 		ReadOnlySpectrum curveSignal = curve.get();
-		for (Integer i : curve.getIntenseChannels()) {
+		for (Integer i : curve.getIntenseChannelList()) {
 			if (i < 0 || i >= data.size()) continue;
 			
 			float curveChannelSignal = curveSignal.get(i);
