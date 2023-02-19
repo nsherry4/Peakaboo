@@ -1,33 +1,51 @@
 package org.peakaboo.ui.swing.plotting.guides;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Image;
+import java.awt.FlowLayout;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+import org.peakaboo.ui.swing.app.DesktopSettings;
 
 public class FirstRun extends HeaderLayer {
 
 	private List<ImageIcon> slides = new ArrayList<>();
 	private JLabel slideView;
 	private FluentButton next, back;
+	private JCheckBox reporting;
 	private int index = 0;
-	private static final int slideCount = 4;
+	private static final int slideCount = 5;
 	
 	public FirstRun(LayerPanel owner) {	
 		super(owner, true);
 		next = new FluentButton("Next").withStateDefault().withAction(this::next);
 		back = new FluentButton("Back").withAction(this::back);
-		getHeader().setRight(next);
+		
+		var nextbox = new ClearPanel(new FlowLayout(FlowLayout.TRAILING, 0, 0));
+		nextbox.setBorder(Spacing.bNone());
+		reporting = new JCheckBox();
+		reporting.addItemListener(e -> {
+			DesktopSettings.setCrashAutoreporting(reporting.isSelected());
+		});
+		reporting.setBorder(new EmptyBorder(0, 0, 0, Spacing.large));
+		reporting.setVisible(false);
+		nextbox.add(reporting);
+		nextbox.add(next);
+		
+		
+		getHeader().setRight(nextbox);
 		getHeader().setLeft(back);
 		getHeader().setCentre("Welcome to Peakaboo!");
 		
@@ -62,6 +80,8 @@ public class FirstRun extends HeaderLayer {
 		} else {
 			next.setText("Next");
 		}
+		reporting.setVisible(index == 4);
+		
 		back.setEnabled(index != 0);
 		showSlide(index);
 	}
