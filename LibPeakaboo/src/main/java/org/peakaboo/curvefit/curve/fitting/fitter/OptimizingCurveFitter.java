@@ -63,11 +63,15 @@ public class OptimizingCurveFitter implements CurveFitter {
 			
 			@Override
 			public double value(double scale) {
-				curve.scaleInto((float) scale, scaled);
-				SpectrumCalculations.subtractLists_target(data, scaled, residual);
+				var intenseChannels = curve.getIntenseChannelList();
+				int firstChannel = intenseChannels.get(0);
+				int lastChannel = intenseChannels.get(intenseChannels.size()-1);
+				//curve.scaleInto((float) scale, scaled);
+				//SpectrumCalculations.subtractLists_target(data, scaled, residual);
+				curve.scaleOnto((float)-scale, data, residual, firstChannel, lastChannel);
 				
 				float score = 0;
-				for (int i : curve.getIntenseChannelList()) {
+				for (int i : intenseChannels) {
 					float value = residual.get(i);
 					if (value < 0) {
 						value *= overfitPenalty;

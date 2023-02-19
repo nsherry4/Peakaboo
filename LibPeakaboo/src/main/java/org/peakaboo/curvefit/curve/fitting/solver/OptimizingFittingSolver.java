@@ -22,6 +22,7 @@ import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -138,6 +139,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return asList;
 	}
 	
+	
 	protected MultivariateFunction getCostFunction(EvaluationContext context, List<Integer> intenseChannels) {
 		return new MultivariateFunction() {
 			
@@ -152,7 +154,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 					}
 				}
 
-				test(point, context);
+				test(point, intenseChannels, context);
 				float score = score(point, intenseChannels, context.residual);
 				if (containsNegatives > 0) {
 					return score * (1f+containsNegatives);
@@ -179,31 +181,35 @@ public class OptimizingFittingSolver implements FittingSolver {
 		});
 	}
 
-	private void test(double[] point, EvaluationContext context) {
+	private void test(double[] point, List<Integer> channels, EvaluationContext context) {
 		int index = 0;
 		//context.scratch.zero();
 		context.total.zero();
+		int first = channels.get(0);
+		int last = channels.get(channels.size()-1);
 		for (ROCurve curve : context.curves) {
 			float scale = (float) point[index++];
-			curve.scaleOnto(scale, context.total);
+			curve.scaleOnto(scale, context.total, first, last);						
 		}
-		SpectrumCalculations.subtractLists_target(context.data, context.total, context.residual);
+		SpectrumCalculations.subtractLists_target(context.data, context.total, context.residual, first, last);
 
 	}
 	
 	
-	private float score(double[] point, List<Integer> intenseChannels, Spectrum residual) {
+	private float score(double[] point, List<Integer> channels, Spectrum residual) {
 		float[] ra = residual.backingArray();
 		float score = 0;
-		for (int i : intenseChannels) {
-			float channelValue = ra[i];
+		for (int i : channels) {
+			float value = ra[i];
 			
 			//Negative values mean that we've fit more signal than exists
 			//We penalize this to prevent making up data where none exists.
-			if (channelValue < 0) {
-				channelValue = channelValue*-50;
+			if (value < 0) {
+				value = value*-50;
 			}
-			score += channelValue;
+			
+			score += value;	
+			
 		}
 		
 		return score;

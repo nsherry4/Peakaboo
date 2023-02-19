@@ -211,18 +211,19 @@ public class SpectrumCalculations
 	
 	
 	public static Spectrum fma(final ReadOnlySpectrum source, float mult, final ReadOnlySpectrum add, final Spectrum target) {
-		
+		return fma(source, mult, add, target, 0, source.size()-1);				
+	}
+	
+	public static Spectrum fma(final ReadOnlySpectrum source, float mult, final ReadOnlySpectrum add, final Spectrum target, int first, int last) {
 		final float[] sourceArray = ((Spectrum)source).backingArray();
 		final float[] addArray = ((Spectrum)add).backingArray();
 		final float[] targetArray = ((Spectrum)target).backingArray();
 		
-		final int size = source.size();
-		for (int i = 0; i < size; i++) {
+		for (int i = first; i <= last; i++) {
 			targetArray[i] = Math.fma(sourceArray[i], mult, addArray[i]);
 		}
 		
 		return target;
-				
 	}
 
 
@@ -540,14 +541,17 @@ public class SpectrumCalculations
 	}
 
 	
+
 	public static void subtractLists_target(ReadOnlySpectrum l1, ReadOnlySpectrum l2, Spectrum target) {
+		subtractLists_target(l1, l2, target, 0, Math.min(l1.size(), l2.size())-1);
+	}
+	
+	public static void subtractLists_target(ReadOnlySpectrum l1, ReadOnlySpectrum l2, Spectrum target, int first, int last) {
 		float[] l1a = ((Spectrum)l1).backingArray();
 		float[] l2a = ((Spectrum)l2).backingArray();
 		float[] ta = target.backingArray();
 		
-		int maxInd = Math.min(l1.size(), l2.size());
-		for (int i = 0; i < maxInd; i++)
-		{
+		for (int i = first; i <= last; i++) {
 			ta[i] = l1a[i] - l2a[i];
 		}
 	}

@@ -153,8 +153,16 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		// target spectrum
 		SpectrumCalculations.fma(normalizedCurve, scale, target, target);
 	}
+	
 
+	@Override
+	public void scaleOnto(float scale, Spectrum target, int firstChannel, int lastChannel) {
+		SpectrumCalculations.fma(normalizedCurve, scale, target, target, firstChannel, lastChannel);
+	}
 
+	public void scaleOnto(float scale, ReadOnlySpectrum source, Spectrum target, int firstChannel, int lastChannel) {
+		SpectrumCalculations.fma(normalizedCurve, scale, source, target, firstChannel, lastChannel);
+	}
 
 
 	/**
