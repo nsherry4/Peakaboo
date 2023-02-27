@@ -1,20 +1,28 @@
 package org.peakaboo.datasource.model.components.scandata.analysis;
 
+import java.util.List;
+
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
-public class DataSourceAnalysis implements Analysis {
+public class CombinedAnalysis implements Analysis {
 
 	protected int channelCount;
 	protected Spectrum summedSpectrum;
 	protected int summedScanCount;
 	protected Spectrum maximumSpectrum;
 	protected float maxValue;
-
-	public DataSourceAnalysis() {
-		channelCount = -1;
+	
+	public CombinedAnalysis(List<Analysis> analyses) {
+		init(analyses.get(0).channelsPerScan());
+		for (var analysis : analyses) {
+			SpectrumCalculations.addLists_inplace(summedSpectrum, analysis.summedPlot());
+			SpectrumCalculations.maxLists_inplace(maximumSpectrum, analysis.maximumPlot());
+			summedScanCount += analysis.scanCount();
+			maxValue = Math.max(maxValue, analysis.maximumIntensity());
+		}
 	}
 	
 	public void init(int channelCount) {
@@ -24,21 +32,10 @@ public class DataSourceAnalysis implements Analysis {
 		maximumSpectrum = new ISpectrum(channelCount);
 		maxValue = 0;
 	}
-
+	
 	@Override
 	public void process(ReadOnlySpectrum spectrum) {
-		if (spectrum == null) { return; }
-		
-		// if this is the first (non-null) spectrum that we're seeing, use it to detect
-		// the channel count and initialize things
-		if (channelCount == -1) {
-			init(spectrum.size());
-		}
-		
-		SpectrumCalculations.addLists_inplace(summedSpectrum, spectrum);
-		summedScanCount++;
-		SpectrumCalculations.maxLists_inplace(maximumSpectrum, spectrum);
-		maxValue = Math.max(maxValue, spectrum.max());
+		throw new UnsupportedOperationException("This implementation can only report data");
 	}
 
 	@Override

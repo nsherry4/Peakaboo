@@ -2,6 +2,7 @@ package org.peakaboo.framework.scratch.list;
 
 import java.util.AbstractList;
 
+import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.single.Compressed;
 
 public abstract class ScratchList<T> extends AbstractList<T> {
@@ -12,5 +13,7 @@ public abstract class ScratchList<T> extends AbstractList<T> {
 		
 	public abstract void addCompressed(int index, Compressed<T> compressed);
 	public abstract void setCompressed(int index, Compressed<T> compressed);
+	
+	public abstract ScratchEncoder<T> getEncoder();
 	
 }

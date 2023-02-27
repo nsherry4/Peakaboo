@@ -27,6 +27,11 @@ public class ScratchDiskList<T> extends ScratchList<T>{
 	///////////////////////////////////////////////////
 	
 	@Override
+	public ScratchEncoder<T> getEncoder() {
+		return encoder;
+	}
+	
+	@Override
 	public T get(int index) {
 		byte[] bytes = backing.get(index);
 		if (bytes == null) { return null; }

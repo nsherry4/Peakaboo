@@ -11,6 +11,11 @@ public class DummyAnalysis implements Analysis {
 	}
 
 	@Override
+	public Spectrum summedPlot() {
+		return null;
+	}
+	
+	@Override
 	public float maximumIntensity() {
 		return 0;
 	}
@@ -27,6 +32,11 @@ public class DummyAnalysis implements Analysis {
 
 	@Override
 	public int channelsPerScan() {
+		return 0;
+	}
+
+	@Override
+	public int scanCount() {
 		return 0;
 	}
 

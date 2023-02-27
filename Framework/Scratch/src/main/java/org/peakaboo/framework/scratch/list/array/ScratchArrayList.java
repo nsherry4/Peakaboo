@@ -1,6 +1,7 @@
 package org.peakaboo.framework.scratch.list.array;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.peakaboo.framework.scratch.ScratchEncoder;
@@ -33,6 +34,11 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	public int size() {
 		return backing.size();
 	}
+	
+	@Override
+	public ScratchEncoder<T> getEncoder() {
+		return encoder;
+	}
 
 	@Override
 	public T set(int index, T element) {
@@ -55,6 +61,9 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	public void setCompressed(int index, Compressed<T> compressed) {
 		if (!compressed.getEncoder().equals(encoder)) {
 			throw new RuntimeException("Cannot add Compressed element with different ScratchEncoder");
+		}
+		while (backing.size() <= index) {
+			backing.add(null);
 		}
 		backing.set(index, compressed.getBytes());
 	}

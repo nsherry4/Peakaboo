@@ -5,18 +5,15 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.datasource.model.components.scandata.ScanData.ScanEntry;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 
 public class SimpleLoaderQueue implements LoaderQueue {
 	
-	class SpectrumIndex {
-		public Spectrum spectrum;
-		public int index;
-	}
 	
-	private LinkedBlockingQueue<SpectrumIndex> queue;
+	private LinkedBlockingQueue<ScanEntry> queue;
 	private Thread thread;
 	private Consumer<Spectrum> preprocessor = null;
 	
@@ -29,15 +26,18 @@ public class SimpleLoaderQueue implements LoaderQueue {
 		thread = new Thread(() -> {
 			while(true) {
 				try {
-					SpectrumIndex struct = queue.take();
-					if (struct.spectrum != null) {
+					ScanEntry struct = queue.take();
+					Spectrum spectrum = struct.spectrum();
+					int index = struct.index();
+					
+					if (spectrum != null) {
 						if (preprocessor != null) {
-							preprocessor.accept(struct.spectrum);
+							preprocessor.accept(spectrum);
 						}
-						if (struct.index == -1) {
-							data.add(struct.spectrum);
+						if (index == -1) {
+							data.add(spectrum);
 						} else {
-							data.set(struct.index, struct.spectrum);
+							data.set(index, spectrum);
 						}
 					} else {
 						return;
@@ -56,9 +56,7 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	
 	@Override
 	public void submit(int index, Spectrum s) throws InterruptedException {
-		SpectrumIndex struct = new SpectrumIndex();
-		struct.index = index;
-		struct.spectrum = s;
+		ScanEntry struct = new ScanEntry(index, s);
 		queue.put(struct);
 	}
 	
@@ -71,7 +69,7 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	@Override
 	public void finish() throws InterruptedException {
 		if (queue != null) {
-			SpectrumIndex struct = new SpectrumIndex();
+			ScanEntry struct = new ScanEntry(-1, null);
 			queue.put(struct);
 			thread.join();
 		}

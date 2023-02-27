@@ -2,39 +2,24 @@ package org.peakaboo.datasource.model.components.scandata;
 
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
-import org.peakaboo.datasource.model.PeakabooLists;
 import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
 import org.peakaboo.datasource.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.datasource.model.components.scandata.loaderqueue.SimpleLoaderQueue;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.peakaboo.framework.scratch.list.ScratchList;
 import org.peakaboo.framework.scratch.single.Compressed;
 
-public class SimpleScanData implements ScanData {
+public class SimpleScanData extends AbstractScanData {
 
-	
-	private ScratchList<Spectrum> spectra;
-	private float maxEnergy;
-	private float minEnergy = 0;
-	private String name;
 	private Analysis analysis;
 	
 	public SimpleScanData(String name) {
-		this.name = name;
-		this.spectra = PeakabooLists.create();
+		super(name);
 		this.analysis = new DataSourceAnalysis();
 	}
-		
 
-	@Override
-	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
-		return spectra.get(index); //return read-only
-	}
-	
 	public void add(Spectrum spectrum) {
 		analysis.process(spectrum);
 		spectra.add(spectrum);
@@ -77,38 +62,7 @@ public class SimpleScanData implements ScanData {
 	public void set(int index, Compressed<Spectrum> compressed) {
 		spectra.setCompressed(index, compressed);
 	}
-	@Override
-	public int scanCount() {
-		return spectra.size();
-	}
-
-	@Override
-	public String scanName(int index) {
-		return "Scan #" + (index+1);
-	}
-
-	@Override
-	public float maxEnergy() {
-		return maxEnergy;
-	}
 	
-	public void setMaxEnergy(float max) {
-		maxEnergy = max;
-	}
-
-	@Override
-	public float minEnergy() {
-		return minEnergy;
-	}
-	
-	public void setMinEnergy(float min) {
-		minEnergy = min;
-	}
-	
-	@Override
-	public String datasetName() {
-		return name;
-	}
 	
 	public LoaderQueue createLoaderQueue(int capacity) {
 		/*
@@ -128,11 +82,9 @@ public class SimpleScanData implements ScanData {
 		}
 	}
 
-
 	@Override
 	public Analysis getAnalysis() {
 		return this.analysis;
 	}
-
 
 }

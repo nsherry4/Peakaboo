@@ -38,7 +38,18 @@ public interface Analysis {
 	 */
 	ReadOnlySpectrum maximumPlot();
 
-
+	/**
+	 * Produces a single scan/list containing the sum value for each channel
+	 * 
+	 * @return summed scan
+	 */
+	ReadOnlySpectrum summedPlot();
+	
+	/**
+	 * Reports the number of scans seen by this Analysis component
+	 */
+	int scanCount();
+	
 	/**
 	 * Returns the size of a single scan
 	 * 
