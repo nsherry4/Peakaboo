@@ -37,6 +37,9 @@ public class CrashHandler {
 	
 	public CrashHandler() {
 		this.bugsnag = new Bugsnag("4b9ef1b9c7b6851433ddaceb7155e2db", /*autosubmit=*/DesktopSettings.isCrashAutoreporting());
+		this.bugsnag.setReleaseStage(Version.releaseType.toString());
+		this.bugsnag.setAppVersion(Version.longVersionNo);
+		this.bugsnag.setSendThreads(true);		
 	}
 
 	public void handle(String message, Throwable throwable) {
