@@ -7,6 +7,8 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class ISpectrumTests {
 
+	private static final double EPSILON = 1e-15;
+	
 	@Test
 	public void test() {
 		
@@ -26,7 +28,7 @@ public class ISpectrumTests {
 		
 		
 		s2.zero();
-		Assert.assertEquals(s2.sum(), 0f);
+		Assert.assertEquals(s2.sum(), 0f, EPSILON);
 		Assert.assertEquals(s2.size(), 5);
 		
 		s2 = new ISpectrum(s1);
@@ -34,10 +36,10 @@ public class ISpectrumTests {
 		
 		s2 = new ISpectrum(new float[] {0, 1, 2, 3, 4});
 		Assert.assertEquals(s1, s2);
-		Assert.assertEquals(s2.subSpectrum(1, 3).sum(), 6f);
+		Assert.assertEquals(s2.subSpectrum(1, 3).sum(), 6f, EPSILON);
 		
 		s2 = new ISpectrum(5, 1f);
-		Assert.assertEquals(s2.sum(), 5f);
+		Assert.assertEquals(s2.sum(), 5f, EPSILON);
 		
 	}
 	
