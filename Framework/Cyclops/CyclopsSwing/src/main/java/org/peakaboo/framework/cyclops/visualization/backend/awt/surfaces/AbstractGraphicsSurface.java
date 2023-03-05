@@ -366,7 +366,6 @@ public abstract class AbstractGraphicsSurface implements Surface
 
 	public Buffer getImageBuffer(int x, int y)
 	{
-		//BufferedImage bi = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
 		return new ImageBuffer(x, y);
 	}
 

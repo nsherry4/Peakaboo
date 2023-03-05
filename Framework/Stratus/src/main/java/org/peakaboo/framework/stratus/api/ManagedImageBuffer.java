@@ -70,7 +70,7 @@ public class ManagedImageBuffer {
 	}
 
 	private BufferedImage create() {
-		BufferedImage image = new BufferedImage((int) (width * 1.2), (int) (height * 1.2), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = Stratus.acceleratedImage((int) (width * 1.2), (int) (height * 1.2));
 		buffer = new SoftReference<BufferedImage>(image);
 		markUnpainted();
 		return image;

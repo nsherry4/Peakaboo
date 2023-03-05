@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
+import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
@@ -66,26 +67,27 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 	}
 
 
-	private Buffer drawAsRaster(PainterData p, final Spectrum data, final float maxIntensity,
+	private Buffer drawAsRaster(PainterData p, final Spectrum data, float maxIntensity,
 			final int maximumIndex)
 	{
 
 		final Buffer b = p.context.getImageBuffer(p.dr.dataWidth, p.dr.dataHeight);
 
-		IntStream.range(0, data.size()).parallel().forEach(ordinal -> {				
-			float intensity = data.get(ordinal);
-			
-			if (maximumIndex > ordinal) {
-				b.setPixelValue(ordinal, getColourFromRules(intensity, maxIntensity, p.dr.viewTransform));
-			}
-		});
+		int size = Math.min(maximumIndex, data.size());
+		if (p.dr.viewTransform == ViewTransform.LOG) {
+			//intensity will already have been log'd, we just have to log the max
+			maxIntensity = (float) Math.log1p(maxIntensity);
+		}
 		
+		for (int ordinal = 0; ordinal < size; ordinal++) {
+			b.setPixelValue(ordinal, getColourFromRules(data.get(ordinal), maxIntensity));
+		}	
 		
 		return b;
 	}
 
 
-	private void drawAsScalar(PainterData p, Spectrum data, float cellSize, final float maxIntensity)
+	private void drawAsScalar(PainterData p, Spectrum data, float cellSize, float maxIntensity)
 	{
 		float intensity;
 		PaletteColour c;
@@ -94,6 +96,11 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 		p.context.save();
 		
 		
+		if (p.dr.viewTransform == ViewTransform.LOG) {
+			//intensity will already have been log'd, we just have to log the max
+			maxIntensity = (float) Math.log1p(maxIntensity);
+		}
+		
 		// draw the map
 		for (int y = 0; y < p.dr.dataHeight; y++) {
 			for (int x = 0; x < p.dr.dataWidth; x++) {
@@ -101,7 +108,7 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 				index = y * p.dr.dataWidth + x;
 				intensity = data.get(index);
 
-				c = getColourFromRules(intensity, maxIntensity, p.dr.viewTransform);
+				c = getColourFromRules(intensity, maxIntensity);
 
 				p.context.rectAt(x * cellSize, y * cellSize, cellSize + 1, cellSize + 1);
 

@@ -2,7 +2,11 @@ package org.peakaboo.framework.stratus.api;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.JComponent;
@@ -92,6 +96,11 @@ public class Stratus {
 	}
     
     
+	public static BufferedImage acceleratedImage(int width, int height) {
+		GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+		return config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+	}
+
 	public static boolean hasTheme() {
 		return getTheme() != null;
 	}

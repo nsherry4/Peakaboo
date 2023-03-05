@@ -2,6 +2,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.peakaboo.framework.cyclops.GridPerspective;
@@ -54,15 +55,10 @@ public abstract class MapPainter extends Painter
 		return 1;
 	}
 	
-	public PaletteColour getColourFromRules(double intensity, double maximum, ViewTransform transform)
+	public PaletteColour getColourFromRules(double intensity, double maximum)
 	{
 
 		PaletteColour c;
-		
-		if (transform == ViewTransform.LOG) {
-			//intensity will already have been log'd, we just have to log the max
-			maximum = Math.log1p(maximum);
-		}
 		
 		for (AbstractPalette r : colourRules) {
 			c = r.getFillColour(intensity, maximum);
@@ -124,16 +120,45 @@ public abstract class MapPainter extends Painter
 			 * cyclops-native format. So when flipY is set, we don't have to do anything.
 			 * It's when it's not set that we have to flip it...
 			 */
-			GridPerspective<Float> grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
+			int width = dr.dataWidth;
+			int height = dr.dataHeight;
+			
 			Spectrum flip = new ISpectrum(transformedData.size());
-			for (int i = 0; i < data.size(); i++) {
-				IntPair xy = grid.getXYFromIndex(i);
-				int x = xy.first;
-				int y = xy.second;
-				y = (dr.dataHeight-1) - y;
-				flip.set(i, grid.get(transformedData, x, y));
+			float[] transformedDataArray = transformedData.backingArray();
+			float[] flipArray = flip.backingArray();
+			for (int y = 0; y < height; y++) {
+				//Copy the memory row by row, since we know that's how this reversal works
+				System.arraycopy(transformedDataArray, width*y, flipArray, width*(height-1-y), width);
 			}
 			transformedData = flip;
+			
+			
+			
+//			GridPerspective<Float> grid = new GridPerspective<>(width, height, 0f);
+//			Spectrum flip = new ISpectrum(transformedData.size());
+//			int x = 0, y1 = 0, y2 = height-1;
+//			for (int i = 0; i < data.size(); i++) {
+//				
+//				
+////				IntPair xy = grid.getXYFromIndex(i);
+////				int x = xy.first;
+////				int y = xy.second;
+////				y = (dr.dataHeight-1) - y;
+////				flip.set(i, grid.get(transformedData, x, y));
+//				
+//				
+//				flip.set(i, grid.get(transformedData, x, height - y1);
+//				
+//				//increment x and y to avoid modulo, div, etc operations
+//				x++;
+//				if (x == width) {
+//					x = 0;
+//					y1++;
+//					y2--;
+//				}
+//				
+//			}
+//			transformedData = flip;
 		}		
 		
 		return transformedData;

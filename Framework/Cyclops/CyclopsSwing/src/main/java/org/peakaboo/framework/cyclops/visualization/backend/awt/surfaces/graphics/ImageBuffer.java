@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
+import org.peakaboo.framework.stratus.api.Stratus;
 
 public class ImageBuffer extends ScreenSurface implements Buffer
 {
@@ -20,7 +21,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 
  
 	public ImageBuffer(int x, int y) {
-		this(new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB));
+		this(Stratus.acceleratedImage(x, y));
 	}
 
 	public ImageBuffer(BufferedImage image) {
@@ -30,7 +31,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 	private synchronized void init()
 	{
 		if (datasource == null) {
-			datasource = image.getRaster().getPixels(0, 0, image.getWidth(), image.getHeight(), datasource); 
+			datasource = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
 		}
 	}
 
@@ -44,7 +45,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 	private void commitChanges()
 	{
 		if (dirty) {
-			image.getRaster().setPixels(0, 0, image.getWidth(), image.getHeight(), datasource);
+			image.setRGB(0, 0, image.getWidth(), image.getHeight(), datasource, 0, image.getWidth());
 		}
 		dirty = false;
 	}
@@ -73,12 +74,8 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		}
 		
 		dirty = true;
-		offset *= 4;
-
-		datasource[offset + 3] = c.getAlpha();
-		datasource[offset + 0] = c.getRed();
-		datasource[offset + 1] = c.getGreen();
-		datasource[offset + 2] = c.getBlue();
+		
+		datasource[offset] = c.getARGB();
 
 	}
 	
@@ -97,14 +94,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 			init();
 		}
 		
-		int offset = index * 4;
-		
-		return new PaletteColour(
-				datasource[offset+3], 
-				datasource[offset+0], 
-				datasource[offset+1], 
-				datasource[offset+2]
-			);
+		return new PaletteColour(datasource[index]);
 	}
 
 	@Override
@@ -137,16 +127,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 
 	@Override
 	public int getPixelARGB(int index) {
-		int offset = index * 4;
-		
-		int argb = 0;
-		argb += datasource[offset+3] << 24;
-		argb += datasource[offset+0] << 16;
-		argb += datasource[offset+1] << 8;
-		argb += datasource[offset+2];
-		
-		return argb;
-		
+		return datasource[index];	
 	}
 
 	@Override

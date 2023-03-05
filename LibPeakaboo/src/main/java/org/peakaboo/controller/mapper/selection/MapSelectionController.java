@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
@@ -320,13 +321,15 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		int y = dimensions.y;
 		int size = x*y;
 
-		List<Integer> trimmed = new ArrayList<>();
-		for (int i : points) {
+		List<Integer> trimmed = new ArrayList<>(points.size());
+		for (int index = 0; index < points.size(); index++) {
+			int i = points.get(index);
 			if (i >= 0 && i < size) {
 				trimmed.add(i);
 			}
 		}
 		return trimmed;
+		
 	}
 	
 	/**

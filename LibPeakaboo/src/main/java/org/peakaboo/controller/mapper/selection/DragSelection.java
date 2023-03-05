@@ -98,17 +98,38 @@ class DragSelection extends AbstractSelection {
 	private List<Integer> getPointsRectangle(GridPerspective<Float> grid) {
 		points.clear();
 		
-		final int xstart = getStart().x;
-		final int ystart = getStart().y;
+		int xstart = getStart().x;
+		int ystart = getStart().y;
 		
-		final int xend = getEnd().x;
-		final int yend = getEnd().y;
+		int xend = getEnd().x;
+		int yend = getEnd().y;
 		
-		for (int y : new Range(ystart, yend)) {
-			for (int x : new Range(xstart, xend)) {
-				points.add( grid.getIndexFromXY(x, y) );
+		if (xstart > xend) {
+			int temp = xend;
+			xend = xstart;
+			xstart = temp;
+		}
+		
+		if (ystart > yend) {
+			int temp = yend;
+			yend = ystart;
+			ystart = temp;
+		}
+		
+		for (int y = ystart; y <= yend; y++) {
+			int row = y * grid.width;
+			for (int x = xstart; x <= xend; x++) {
+				//points.add( grid.getIndexFromXY(x, y) );
+				//OPTIMIZATION: if the above line (which has worked for a very long time) were ever OOB, this would fail.
+				points.add(row + x);
 			}
 		}
+			
+//		for (int y : new Range(ystart, yend)) {
+//			for (int x : new Range(xstart, xend)) {
+//				points.add( grid.getIndexFromXY(x, y) );
+//			}
+//		}
 		
 		return points;
 		

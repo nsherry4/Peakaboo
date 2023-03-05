@@ -156,7 +156,12 @@ public class OverlayMapMode extends MapMode {
 					if (overlaySpectra.containsKey(colour) && overlayMapPainters.containsKey(colour) ) {
 						Spectrum colourSpectrum = overlaySpectra.get(colour);
 						RasterSpectrumMapPainter colourPainter = overlayMapPainters.get(colour);
-						addedColour = addedColour.add(colourPainter.getColourFromRules(colourSpectrum.get(i), colourPainter.calcMaxIntensity(p), dr.viewTransform));
+						double maxIntensity = colourPainter.calcMaxIntensity(p);
+						if (dr.viewTransform == ViewTransform.LOG) {
+							//intensity will already have been log'd, we just have to log the max
+							maxIntensity = Math.log1p(maxIntensity);
+						}
+						addedColour = addedColour.add(colourPainter.getColourFromRules(colourSpectrum.get(i), maxIntensity));
 					}
 				}
 				addedColours.add(addedColour);

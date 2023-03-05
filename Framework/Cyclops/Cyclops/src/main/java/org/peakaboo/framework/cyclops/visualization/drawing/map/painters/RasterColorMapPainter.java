@@ -84,13 +84,12 @@ public class RasterColorMapPainter extends MapPainter
 	{
 		final PaletteColour transparent = new PaletteColour(0x00000000);
 		
-		IntStream.range(0, data.size()).parallel().forEach(ordinal -> {		
-			if (maximumIndex > ordinal) {
-				PaletteColour c = data.get(ordinal);
-				if (c == null) c = transparent;
-				buffer.setPixelValue(ordinal, c);
-			}
-		});
+		int size = Math.min(maximumIndex, data.size());
+		for (int ordinal = 0; ordinal < size; ordinal++) {
+			PaletteColour c = data.get(ordinal);
+			if (c == null) c = transparent;
+			buffer.setPixelValue(ordinal, c);
+		}
 		
 		this.stale = false;
 		
