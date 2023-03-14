@@ -15,6 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -40,6 +41,8 @@ import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener;
 import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener.Buttons;
+import org.peakaboo.framework.stratus.components.Banner;
+import org.peakaboo.framework.stratus.components.Banner.BannerAction;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -60,7 +63,7 @@ public class MapperPanel extends TabbedLayerPanel {
 	protected MappingController		controller;
 	protected TabbedInterface<TabbedLayerPanel> parentPlotter;
 	
-	private JLabel					warnOnTooSmallDataset;
+	private Banner					warnOnTooSmallDataset;
 	private MapStatusBar			statusBar;
 	
 	public MapperPanel(MappingController controller, TabbedInterface<TabbedLayerPanel> parentPlotter, TabbedInterface<TabbedLayerPanel> owner) {
@@ -129,9 +132,9 @@ public class MapperPanel extends TabbedLayerPanel {
 
 		controller.addListener(t -> {
 			if (controller.getUserDimensions().getUserDataHeight() * controller.getUserDimensions().getUserDataWidth() == controller.rawDataController.getMapSize()) {
-				warnOnTooSmallDataset.setVisible(false);
+				warnOnTooSmallDataset.hideBanner();
 			} else {
-				warnOnTooSmallDataset.setVisible(true);
+				warnOnTooSmallDataset.showBanner();
 			}
 
 			fullRedraw();
@@ -162,20 +165,18 @@ public class MapperPanel extends TabbedLayerPanel {
 		c.fill = GridBagConstraints.BOTH;
 		canvasContainer.add(canvasScroller, c);
 
-		warnOnTooSmallDataset = new JLabel("Warning: Map dimensions are smaller than data set ("
-				+ controller.rawDataController.getMapSize() + ")");
-		warnOnTooSmallDataset.setBorder(Spacing.bSmall());
-		warnOnTooSmallDataset.setBackground(new Color(0.64f, 0.0f, 0.0f));
-		warnOnTooSmallDataset.setForeground(new Color(1.0f, 1.0f, 1.0f));
-		warnOnTooSmallDataset.setOpaque(true);
-		warnOnTooSmallDataset.setHorizontalAlignment(SwingConstants.CENTER);
+		warnOnTooSmallDataset = new Banner(
+				"Map dimensions are smaller than data set (" + controller.rawDataController.getMapSize() + ")", 
+				Banner.STYLE_WARN, 
+				true
+			);
 		
 		int userHeight = controller.getUserDimensions().getUserDataHeight();
 		int userWidth = controller.getUserDimensions().getUserDataWidth();
 		if (userHeight * userWidth == controller.rawDataController.getMapSize()) {
-			warnOnTooSmallDataset.setVisible(false);
+			warnOnTooSmallDataset.hideBanner();
 		} else {
-			warnOnTooSmallDataset.setVisible(true);
+			warnOnTooSmallDataset.showBanner();
 		}
 
 		c.gridx = 0;
