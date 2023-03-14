@@ -64,6 +64,12 @@ public class OptimizingCurveFitter implements CurveFitter {
 			@Override
 			public double value(double scale) {
 				var intenseChannels = curve.getIntenseChannelList();
+				
+				//If there are no intense channels, we return a 0
+				if (intenseChannels.isEmpty()) {
+					return 0;
+				}
+				
 				int firstChannel = intenseChannels.get(0);
 				int lastChannel = intenseChannels.get(intenseChannels.size()-1);
 				//curve.scaleInto((float) scale, scaled);

@@ -290,7 +290,7 @@ public class SpectrumCalculations
 	 * @param value
 	 * @return a copy of data, with value subtracted from each element
 	 */
-	public static Spectrum subtractFromList_target(Spectrum source, Spectrum target, float value)
+	public static Spectrum subtractFromList_target(ReadOnlySpectrum source, Spectrum target, float value)
 	{
 		return subtractFromList(source, target, value, Float.NaN);
 	}

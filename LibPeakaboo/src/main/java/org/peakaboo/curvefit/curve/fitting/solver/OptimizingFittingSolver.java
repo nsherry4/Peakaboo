@@ -165,6 +165,10 @@ public class OptimizingFittingSolver implements FittingSolver {
 		};
 	}
 	
+	
+	/**
+	 * Given a list of curves, sort them by by shell first, and then by element
+	 */
 	protected void sortCurves(List<ROCurve> curves) {
 		curves.sort((a, b) -> {
 			TransitionShell as, bs;
@@ -181,10 +185,20 @@ public class OptimizingFittingSolver implements FittingSolver {
 		});
 	}
 
+	/** 
+	 * Calculate the residual from data (signal) and total (fittings). Store the result in residual 
+	 */
 	private void test(double[] point, List<Integer> channels, EvaluationContext context) {
 		int index = 0;
 		//context.scratch.zero();
 		context.total.zero();
+		
+		//When there are no intense channels to consider, the residual will be equal to the data
+		if (channels.isEmpty()) {
+			SpectrumCalculations.subtractFromList_target(context.data, context.residual, 0f);
+			return;
+		}
+		
 		int first = channels.get(0);
 		int last = channels.get(channels.size()-1);
 		for (ROCurve curve : context.curves) {
@@ -196,6 +210,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 	}
 	
 	
+	/**
+	 * Score the context's residual spectrum
+	 */
 	private float score(double[] point, List<Integer> channels, Spectrum residual) {
 		float[] ra = residual.backingArray();
 		float score = 0;
@@ -215,6 +232,11 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return score;
 	}
 	
+	/**
+	 * Accepts an array of doubles (the weights from the solver, one per fitting)
+	 * and a context. Scales the context.curves by the weights. Returns a new
+	 * FittingResultSet containing the fitted curves and other totals.
+	 */
 	protected FittingResultSet evaluate(double[] point, EvaluationContext context) {
 		int index = 0;
 		List<FittingResult> fits = new ArrayList<>();
