@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.cyclops.FloatException;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -132,7 +133,7 @@ public class FilterSet implements Iterable<Filter> {
 		Spectrum corrected = null;
 		for (int i = 0; i < data.size(); i++) {
 			float v = data.get(i);
-			if (Float.isInfinite(v) || Float.isNaN(v)) {
+			if (!FloatException.valid(v)) {
 				//only incur the copy penalty if needed
 				if (corrected == null) {
 					corrected = new ISpectrum(data);

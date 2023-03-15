@@ -3,6 +3,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.framework.cyclops.FloatException;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.Surface;
@@ -11,10 +12,18 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 public class AxisMarkGenerator
 {
 
-	public static List<Pair<Float, Integer>> getAxisMarkList(float maxTicks, float axisHeight, int incrementSigDigits, float valueRangeStart, float valueRangeEnd)
-	{
+	public static List<Pair<Float, Integer>> getAxisMarkList(
+			float maxTicks, 
+			float axisHeight, 
+			int incrementSigDigits, 
+			float valueRangeStart, 
+			float valueRangeEnd
+	) {
 		
-	
+		
+		FloatException.guard(valueRangeStart);
+		FloatException.guard(valueRangeEnd);
+			
 		float valueRange = valueRangeEnd - valueRangeStart;
 		List<Pair<Float, Integer>> ticks = new ArrayList<>();
 

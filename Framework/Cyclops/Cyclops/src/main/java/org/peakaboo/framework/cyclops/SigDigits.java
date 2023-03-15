@@ -1,6 +1,7 @@
 package org.peakaboo.framework.cyclops;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 public class SigDigits
@@ -9,7 +10,7 @@ public class SigDigits
 
 	public static int toIntSigDigit(double value, int significantDigits)
 	{
-		
+		if (!FloatException.valid(value)) value = 0;
 		if (value == 0.0) return (int)value;
 		
 		if (significantDigits < 1) significantDigits = 1;
@@ -38,10 +39,9 @@ public class SigDigits
 	public static String roundFloatTo(float value, int decimals, boolean trimZeroes)
 	{
 		
-		if (Float.isNaN(value)) return "-";
-		if (Float.isInfinite(value)) return "-";
+		if (! FloatException.valid(value)) return "-";
 		BigDecimal bd = new BigDecimal(Float.toString(value));
-		bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_EVEN);
+		bd = bd.setScale(decimals, RoundingMode.HALF_EVEN);
 		
 		String text = bd.toPlainString();
 		while (text.endsWith("0") && text.contains(".") || text.endsWith(".")) { text = text.substring(0, text.length() - 1); }
