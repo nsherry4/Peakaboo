@@ -439,6 +439,12 @@ public class PlotPanel extends TabbedLayerPanel {
 						"The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", 
 						StockIcon.BADGE_ERROR).showIn(PlotPanel.this);
 			}
+
+			@Override
+			public void onWarn(String message) {
+				var toast = new ToastLayer(PlotPanel.this, message);
+				PlotPanel.this.pushLayer(toast);
+			}
 			
 		};
 		

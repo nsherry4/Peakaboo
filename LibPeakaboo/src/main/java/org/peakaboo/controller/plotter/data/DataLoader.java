@@ -121,7 +121,12 @@ public abstract class DataLoader {
 		 */
 		List<JavaDataSourcePlugin> formats = new ArrayList<>();
 		if (dataSourceUUID != null) {
-			formats.add(DataSourcePluginManager.system().getByUUID(dataSourceUUID).create());
+			var plugin = DataSourcePluginManager.system().getByUUID(dataSourceUUID);
+			if (plugin != null) { 
+				formats.add(plugin.create());
+			} else {
+				onWarn("Could not find data source plugin requested by saved session.");
+			}
 		}
 		if (formats.isEmpty()) {
 			List<JavaDataSourcePlugin> candidates =  DataSourcePluginManager.system().newInstances();
@@ -253,6 +258,7 @@ public abstract class DataLoader {
 
 	public abstract void onLoading(ExecutorSet<DatasetReadResult> job);
 	public abstract void onSuccess(List<DataFile> paths, File session);
+	public abstract void onWarn(String message);
 	public abstract void onFail(List<DataFile> paths, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
 	public abstract void onSelection(List<JavaDataSourcePlugin> datasources, Consumer<JavaDataSourcePlugin> selected);
