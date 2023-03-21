@@ -9,7 +9,7 @@ public enum OptionSize {
 
 	int getTitleSize() {
 		return switch(this) {
-			case SMALL -> 10;
+			case SMALL -> 11;
 			case MEDIUM -> 12;
 			case LARGE -> 14;
 		};
@@ -25,7 +25,7 @@ public enum OptionSize {
 	
 	int getPaddingSize() {
 		return switch(this) {
-			case SMALL -> 6;
+			case SMALL -> 5;
 			case MEDIUM -> 8;
 			case LARGE -> 10;
 		};
