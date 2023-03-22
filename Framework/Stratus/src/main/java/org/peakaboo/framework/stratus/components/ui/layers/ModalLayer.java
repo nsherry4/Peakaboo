@@ -4,11 +4,10 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,7 +17,6 @@ import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
@@ -120,10 +118,8 @@ public class ModalLayer implements Layer {
 		
 		JPanel wrap = new JPanel(new BorderLayout());
 		wrap.setOpaque(false);
-		Component wrapped = wrapComponent(component);
+		wrap.add(component, BorderLayout.CENTER);
 		
-		
-		wrap.add(wrapped, BorderLayout.CENTER);
 		Border border;
 		if (LayerPanel.blurLowerLayers) {
 			border = new DropShadowBorder(Color.BLACK, 10, 0.3f, 30, true, true, true, true);
@@ -150,86 +146,10 @@ public class ModalLayer implements Layer {
 			
 			modalPanel.add(wrap, c);
 			
-			updateScrolledContentDimensions(wrapped);
-			listener = new ComponentAdapter() {
-				public void componentResized(ComponentEvent e) {
-					updateScrolledContentDimensions(wrapped);
-				}
-			};
-			owner.addComponentListener(listener);
-			
-			SwingUtilities.invokeLater(() -> {
-				updateScrolledContentDimensions(wrapped);
-			});
 		}
 		
 	}
-	
-	protected static JScrollPane scrolled(Component component) {
-		JScrollPane scroller = new JScrollPane();
-		scroller.setViewportView(component);
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
-		return scroller;
-	}
-	
-	/**
-	 * Wraps the component (for the layer body). By default it is wrapped in a JScrollPane
-	 * @param component
-	 * @return
-	 */
-	protected Component wrapComponent(Component component) {
-		return scrolled(component);
-	}
-	
-	/**
-	 * Given the component added to this ModalLayer, looks up the JScrollPane component within. Subclasses that add more chrome can narrow the scrolled area.
-	 */
-	protected JScrollPane getScroller(Component component) {
-		if (component == null) {
-			return null; 
-		}
-		if (component instanceof JScrollPane) {
-			return (JScrollPane) component;
-		}
-		return null;
-	}
-	
-	/**
-	 * When overriding getScrolledFromComponent and wrapComponent to only scroll 
-	 * part of the contents of the layer, this allows you to specify the size of 
-	 * the space not scrolled. This is used in calculating the preferred size of
-	 * the scrolled component based on the parent/owner's size.
-	 * @return
-	 */
-	
-	protected Dimension getNonScrolledSize() {
-		return new Dimension(0, 0);
-	}
-		
-	private void updateScrolledContentDimensions(Component component) {
-		JScrollPane scroller = getScroller(component);
-		if (scroller == null) {
-			return;
-		}
-		Component modal = scroller.getViewport().getView();
-		if (modal == null) {
-			return;
-		}
-	
-		Dimension nonscrolled = getNonScrolledSize();
-		Dimension ownerSize = owner.getSize();
 
-		int newWidth = (int)Math.max(50, Math.min(ownerSize.getWidth()-40-nonscrolled.width, modal.getPreferredSize().getWidth()));
-		int newHeight = (int)Math.max(50, Math.min(ownerSize.getHeight()-40-nonscrolled.height, modal.getPreferredSize().getHeight()));
-
-		scroller.getViewport().setPreferredSize(new Dimension(newWidth, newHeight));
-		scroller.getViewport().setMinimumSize(new Dimension(newWidth, newHeight));
-		scroller.revalidate();
-	}
-	
-	
 	@Override
 	public boolean modal() {
 		return true;

@@ -1,6 +1,5 @@
 package org.peakaboo.framework.stratus.components.ui.layers;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -15,11 +14,9 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.JTextLabel;
 import org.peakaboo.framework.stratus.components.layouts.CenteringLayout;
 import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
@@ -82,7 +79,7 @@ public class AboutLayer extends HeaderLayer {
 	}
 	
 	private static Component licencePanel(Contents contents) {
-		return scrolled(new JTextLabel(contents.licence));
+		return Stratus.scrolled(new JTextLabel(contents.licence));
 	}
 
 	public static JPanel aboutPanel(Contents contents) {

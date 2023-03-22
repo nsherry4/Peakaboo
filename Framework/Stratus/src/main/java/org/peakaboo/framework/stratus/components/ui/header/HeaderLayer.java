@@ -1,7 +1,6 @@
 package org.peakaboo.framework.stratus.components.ui.header;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -60,25 +59,6 @@ public class HeaderLayer extends ModalLayer {
 		});
 	}
 	
-	//Don't wrap the whole thing in a JScrollPane like our parent class would, we provide our own
-	@Override
-	protected Component wrapComponent(Component component) {
-		return component;
-	}
-	
-	//Provide parent class the part of our UI that is scrolled
-	@Override
-	protected JScrollPane getScroller(Component component) {
-		return scroller;
-	}
-
-	//Inform parent class how much space is unscrolled
-	@Override
-	protected Dimension getNonScrolledSize() {
-		return new Dimension(0, root.getHeader().getPreferredSize().height); //?
-	}
-	
-	
 	public JComponent getContentRoot() {
 		return root.getContentLayer();
 	}
@@ -92,8 +72,7 @@ public class HeaderLayer extends ModalLayer {
 	}
 
 	public void setBody(Component body) {	
-		scroller = scrolled(body);
-		root.setBody(scroller);
+		root.setBody(body);
 	}
 
 	@Override

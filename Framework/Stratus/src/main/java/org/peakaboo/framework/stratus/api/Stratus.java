@@ -1,5 +1,6 @@
 package org.peakaboo.framework.stratus.api;
 
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -10,8 +11,10 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.components.dialogs.SplashScreen;
@@ -126,5 +129,15 @@ public class Stratus {
 			return true;
 		}
 	}
-    	
+    
+	public static JScrollPane scrolled(Component component) {
+		JScrollPane scroller = new JScrollPane();
+		scroller.setViewportView(component);
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		return scroller;
+	}		
+	
+	
 }
