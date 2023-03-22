@@ -39,7 +39,7 @@ public class QuickMapPanel extends HeaderLayer {
 		
 		RawDataController rawDataController = new RawDataController();
 		DataSet sourceDataset = plotcontroller.data().getDataSet();
-		rawDataController.setMapData(maps, sourceDataset, "", Collections.emptyList(), Tier.provider().createCalibrationProfile());
+		rawDataController.setMapData(maps, sourceDataset, "", Collections.emptyList(), Tier.provider().createDetectorProfile());
 		this.controller = new MappingController(rawDataController, plotcontroller);
 		
 		// load saved dimensions, and when the window closes, save them

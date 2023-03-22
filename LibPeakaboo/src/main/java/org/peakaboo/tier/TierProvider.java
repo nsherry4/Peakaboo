@@ -3,7 +3,7 @@ package org.peakaboo.tier;
 import java.util.Collection;
 import java.util.List;
 
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
@@ -15,7 +15,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 public interface TierProvider {
 	
 	public CalibrationController createPlotCalibrationController(PlotController plotController);
-	public CalibrationProfile createCalibrationProfile();
+	public DetectorProfile createDetectorProfile();
 	
 	public void initializePlugins();
 	

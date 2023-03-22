@@ -669,7 +669,7 @@ public class PlotPanel extends TabbedLayerPanel {
 					sourceDataset,
 					controller.data().getTitle(),
 					controller.data().getDiscards().list(),
-					controller.calibration().getCalibrationProfile()
+					controller.calibration().getDetectorProfile()
 				);
 			
 			
@@ -770,10 +770,10 @@ public class PlotPanel extends TabbedLayerPanel {
 			controller.writeFittingInformation(zos);
 			zos.closeEntry();
 			
-			if (controller.calibration().hasCalibrationProfile()) {
-				e = new ZipEntry("z-calibration-profile.pbcp");
+			if (controller.calibration().hasDetectorProfile()) {
+				e = new ZipEntry("detector-profile.pbdp");
 				zos.putNextEntry(e);
-				String profileYaml = controller.calibration().getCalibrationProfile().save();
+				String profileYaml = controller.calibration().getDetectorProfile().save();
 				zos.write(profileYaml.getBytes());
 				zos.closeEntry();
 			}

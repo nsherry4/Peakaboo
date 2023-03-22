@@ -4,8 +4,8 @@ package org.peakaboo.controller.mapper.rawdata;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.calibration.BasicCalibrationProfile;
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.BasicDetectorProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
@@ -14,7 +14,7 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
 
 
 
-public class RawDataModel
+class RawDataModel
 {
 
 	
@@ -30,7 +30,7 @@ public class RawDataModel
 	public String					datasetTitle		= "";
 	
 	public List<Integer>			badPoints			= new ArrayList<>();
-	public CalibrationProfile 		calibrationProfile	= new BasicCalibrationProfile();
+	public DetectorProfile 			detectorProfile	= new BasicDetectorProfile();
 	public DataSet 					sourceDataset		= null;
 	
 

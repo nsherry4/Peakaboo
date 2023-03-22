@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.calibration.BasicCalibrationProfile;
+import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
@@ -95,9 +95,9 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 
 	public StreamExecutor<Coord<Integer>> guessDataDimensions() {
 		
-		//We don't need the real calibration profile just to guess the dimensions
+		//We don't need the real detector profile just to guess the dimensions
 		//we also don't want filtered maps, since the size of the data may change with map resizing
-		Spectrum all = mappingController.rawDataController.getMapResultSet().getSummedRawMap(new BasicCalibrationProfile());
+		Spectrum all = mappingController.rawDataController.getMapResultSet().getSummedRawMap(new BasicDetectorProfile());
 		
 		//find the highest average edge delta
 		int min = (int) Math.max(Math.sqrt(all.size()) / 15, 2); //don't consider dimensions that are too small

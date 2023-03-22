@@ -108,7 +108,7 @@ public class PlotMenuExport extends JPopupMenu {
 	public static JMenuItem makeExportArchive(PlotPanel plot) {
 		return new FluentMenuItem()
 				.withText("All-In-One Zip Archive")
-				.withTooltip("Saves the plot, session file, z-calibration and fittings")
+				.withTooltip("Saves the plot, session file, fittings, and related data")
 				.withAction(plot::actionExportArchive);
 	}
 	

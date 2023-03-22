@@ -4,7 +4,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
-public interface CalibrationProfile {
+public interface DetectorProfile {
 
 	String getName();
 
@@ -15,7 +15,7 @@ public interface CalibrationProfile {
 	boolean isEmpty();
 
 	String save();
-	CalibrationProfile load(String yaml);
+	DetectorProfile load(String yaml);
 	
 	public float calibrate(float value, ITransitionSeries ts);
 	default float calibratedSum(FittingResult fittingResult) {

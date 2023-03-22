@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.peakaboo.calibration.BasicCalibrationProfile;
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.BasicDetectorProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.BasicCalibrationController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
@@ -34,8 +34,8 @@ public class BasicTierProvider implements TierProvider {
 	}
 
 	@Override
-	public CalibrationProfile createCalibrationProfile() {
-		return new BasicCalibrationProfile();
+	public DetectorProfile createDetectorProfile() {
+		return new BasicDetectorProfile();
 	}
 
 	@Override

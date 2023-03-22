@@ -2,7 +2,7 @@ package org.peakaboo.mapping.rawmap;
 
 
 
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -37,7 +37,7 @@ public class RawMap implements Cloneable {
 	}
 	
 	
-	public ReadOnlySpectrum getData(CalibrationProfile profile) {
+	public ReadOnlySpectrum getData(DetectorProfile profile) {
 		return profile.calibrateMap(data, transitionSeries);
 	}
 	

@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -143,7 +143,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap> {
 	 * 
 	 * Places a value at a given index for the {@link RawMap} data associated
 	 * with the given {@link ITransitionSeries}. This method will apply the
-	 * {@link CalibrationProfile} to the added values.
+	 * {@link DetectorProfile} to the added values.
 	 * 
 	 * @param intensity the intensity value to place in the {@link RawMap} data
 	 * @param ts        the {@link ITransitionSeries} associated with the desired
@@ -168,7 +168,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap> {
 	}
 	
 	
-	public Spectrum getSummedRawMap(CalibrationProfile profile) {
+	public Spectrum getSummedRawMap(DetectorProfile profile) {
 		Spectrum s = new ISpectrum(maps.get(0).size());
 		for (RawMap map : maps) {
 			SpectrumCalculations.addLists_inplace(s, map.getData(profile));

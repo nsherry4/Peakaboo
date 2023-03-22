@@ -29,7 +29,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 	
 	@Override
 	public String getFilterName() {
-		return "Weighted Averaging";
+		return "Weighted Average";
 	}
 
 

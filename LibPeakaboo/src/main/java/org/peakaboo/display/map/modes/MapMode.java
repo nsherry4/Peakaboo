@@ -79,8 +79,8 @@ public abstract class MapMode {
 
 	protected AxisPainter getDescriptionPainter(MapRenderSettings settings) {
 		String title = settings.spectrumTitle;
-		if (!settings.calibrationProfile.isEmpty()) {
-			title += " calibrated with " + settings.calibrationProfile.getName();	
+		if (!settings.detectorProfile.isEmpty()) {
+			title += " calibrated with " + settings.detectorProfile.getName();	
 		}
 		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, title);
 	}

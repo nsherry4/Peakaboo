@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.controller.plotter.filtering.FilteringController;
@@ -292,11 +292,11 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		try {
 			// get an output stream to write the data to
 			OutputStreamWriter osw = new OutputStreamWriter(os);
-			CalibrationProfile profile = calibration().getCalibrationProfile();
+			DetectorProfile profile = calibration().getDetectorProfile();
 			
 			//header
 			osw.write("Fitting, Intensity (Raw), Area (Raw)");
-			if (calibration().hasCalibrationProfile()) {
+			if (calibration().hasDetectorProfile()) {
 				osw.write(", Intensity (Calibrated with " + profile.getName() + "), Area (Calibrated with " + profile.getName() + ")");
 			}
 			osw.write("\n");

@@ -32,7 +32,9 @@ public class YamlSerializer {
 		yaml = yaml.replace("!!org.peakaboo.controller.settings.SavedSession", "!!org.peakaboo.controller.plotter.SavedSession");
 		
 		//TODO: Keep for a while after Peakaboo 6
-		yaml = yaml.replace("!!org.peakaboo.calibration.SerializedCalibrationProfile", "!!org.peakaboo.pro.quantification.calibration.SerializedCalibrationProfile");
+		yaml = yaml.replace("!!org.peakaboo.calibration.SerializedCalibrationProfile", "!!org.peakaboo.pro.quantification.calibration.SerializedDetectorProfile");
+		yaml = yaml.replace("!!org.peakaboo.pro.quantification.calibration.SerializedCalibrationProfile", "!!org.peakaboo.pro.quantification.calibration.SerializedDetectorProfile");
+		
 		
 		//be forgiving of fields which are unfamiliar, this may 
 		//be a peakaboo session file from the future

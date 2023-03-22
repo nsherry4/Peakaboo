@@ -2,7 +2,7 @@ package org.peakaboo.controller.mapper.fitting;
 
 import java.util.List;
 
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.CompositeModeController;
@@ -239,16 +239,16 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	 * Indicates if this TransitionSeries is enabled, or disabled (due to a lack of calibration, for example)
 	 */
 	public boolean getTransitionSeriesEnabled(ITransitionSeries ts) {
-		if (getCalibrationProfile().isEmpty()) {
+		if (getDetectorProfile().isEmpty()) {
 			return true;
 		}
-		return getCalibrationProfile().contains(ts);
+		return getDetectorProfile().contains(ts);
 	}
 	
 
 
-	public CalibrationProfile getCalibrationProfile() {
-		return map.rawDataController.getCalibrationProfile();
+	public DetectorProfile getDetectorProfile() {
+		return map.rawDataController.getDetectorProfile();
 	}
 
 

@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.table.Element;
@@ -213,12 +213,12 @@ class CachedMaps {
 		Coord<Integer> size = controller.getUserDimensions().getDimensions();
 
 		//get calibrated map data and generate AreaMaps
-		CalibrationProfile profile = controller.rawDataController.getCalibrationProfile();
+		DetectorProfile profile = controller.rawDataController.getDetectorProfile();
 		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
 		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
 			EventfulSoftCache<AreaMap> mapcache = new EventfulSoftCache<>(() -> {
-				//turn a rawmap into an AreaMap with the z-calibration profile applied
+				//turn a rawmap into an AreaMap with the detector profile applied
 				ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
 				AreaMap areamap = new AreaMap(calibrated, ts.getElement(), size, controller.rawDataController.getRealDimensions());
 				//interpolate points marked by the user as bad. We do this 

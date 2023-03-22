@@ -5,7 +5,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 
-public class BasicCalibrationProfile implements CalibrationProfile {
+public class BasicDetectorProfile implements DetectorProfile {
 
 	protected String name = "None";
 
@@ -45,7 +45,7 @@ public class BasicCalibrationProfile implements CalibrationProfile {
 	}
 
 	@Override
-	public CalibrationProfile load(String yaml) {
+	public DetectorProfile load(String yaml) {
 		return this;
 	}
 	

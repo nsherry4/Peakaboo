@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.peakaboo.calibration.CalibrationProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.datasource.model.DataSource;
@@ -35,14 +35,13 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 
 	/**
 	 * Sets the map's data model.
-	 * @param calibrationProfile 
 	 */
 	public void setMapData(
 			RawMapSet data,
 			DataSet sourceDataset,
 			String datasetName,
 			List<Integer> badPoints,
-			CalibrationProfile calibrationProfile		
+			DetectorProfile detectorProfile		
 	) {
 	
 		
@@ -68,7 +67,7 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 			mapModel.realDimensionsUnits = null;
 		}
 		
-		mapModel.calibrationProfile = calibrationProfile;
+		mapModel.detectorProfile = detectorProfile;
 
 		updateListeners(MapUpdateType.DATA);
 
@@ -153,8 +152,8 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 		return mapModel.mapResults;
 	}
 
-	public CalibrationProfile getCalibrationProfile() {
-		return mapModel.calibrationProfile;
+	public DetectorProfile getDetectorProfile() {
+		return mapModel.detectorProfile;
 	}
 
 

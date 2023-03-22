@@ -1,20 +1,20 @@
 package org.peakaboo.controller.plotter.calibration;
 
-import org.peakaboo.calibration.BasicCalibrationProfile;
+import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.SavedCalibrationSession;
 import org.peakaboo.framework.eventful.Eventful;
 
 public class BasicCalibrationController extends Eventful implements CalibrationController {
 
-	private BasicCalibrationProfile profile = new BasicCalibrationProfile();
+	private BasicDetectorProfile profile = new BasicDetectorProfile();
 	
 	@Override
-	public boolean hasCalibrationProfile() {
+	public boolean hasDetectorProfile() {
 		return false;
 	}
 
 	@Override
-	public BasicCalibrationProfile getCalibrationProfile() {
+	public BasicDetectorProfile getDetectorProfile() {
 		return profile;
 	}
 
