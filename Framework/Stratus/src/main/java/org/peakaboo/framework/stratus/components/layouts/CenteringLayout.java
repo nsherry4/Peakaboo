@@ -3,9 +3,7 @@ package org.peakaboo.framework.stratus.components.layouts;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.LayoutManager2;
+import java.awt.LayoutManager;
 
 /**
  * Centres a single component without expanding it like BorderLayout would.
@@ -13,81 +11,88 @@ import java.awt.LayoutManager2;
  * @author NAS
  *
  */
-public class CenteringLayout implements LayoutManager2 {
+public class CenteringLayout implements LayoutManager {
 
-	private Component component;
-	private GridBagLayout backer = new GridBagLayout();
-	private GridBagConstraints c = new GridBagConstraints();
+	private Component child(Container container) {
+		var children = container.getComponents();
+		if (children.length == 0) return null;
+		return children[0];
+	}
+	
+	@Override
+	public void addLayoutComponent(String name, Component component) {
+		//NOOP
+	}
+	
+	@Override
+	public void removeLayoutComponent(Component component) {
+		//NOOP
+	}
 
 	@Override
-	public void addLayoutComponent(String name, Component comp) {
-		if (component != null) {
-			return;
+	public Dimension minimumLayoutSize(Container container) {
+		var component = child(container);
+		if (component == null) return new Dimension(0,0);
+		return component.getMinimumSize();
+	}
+
+	@Override
+	public Dimension preferredLayoutSize(Container container) {
+		var component = child(container);
+		if (component == null) return new Dimension(0,0);
+		return component.getPreferredSize();
+	}
+
+	@Override
+	public void layoutContainer(Container container) {
+		
+		var children = container.getComponents();
+		if (children.length == 0) return;
+		var child = children[0];
+		
+		var csize = container.getSize();
+		int cw = csize.width;
+		int ch = csize.height;
+		
+		var psize = child.getPreferredSize();
+		int pw = psize.width;
+		int ph = psize.height;
+		
+		var msize = child.getMinimumSize();
+		int mw = msize.width;
+		int mh = msize.height;
+		
+		
+		int x, w;
+		if (cw >= pw) {
+			w = pw;
+			x = (cw - pw) / 2;
+		} else if (cw < pw && cw >= mw) {
+			w = cw;
+			x = 0;
+		} else {
+			w = mw;
+			x = 0;
 		}
-
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0f;
-		c.weighty = 0f;
-
-		backer.addLayoutComponent(comp, c);
-	}
-
-	@Override
-	public void removeLayoutComponent(Component comp) {
-		if (comp == component) {
-			component = null;
-			backer.removeLayoutComponent(comp);
+		
+		
+		int y, h;
+		if (ch >= ph) {
+			h = ph;
+			y = (ch - ph) / 2;
+		} else if (ch < ph && ch >= mh) {
+			h = ch;
+			y = 0;
+		} else {
+			h = mh;
+			y = 0;
 		}
+		
+		
+		child.setBounds(x, y, w, h);
+		
 	}
 
-	@Override
-	public Dimension preferredLayoutSize(Container parent) {
-		return backer.preferredLayoutSize(parent);
-	}
 
-	@Override
-	public Dimension minimumLayoutSize(Container parent) {
-		return backer.minimumLayoutSize(parent);
-	}
-
-	@Override
-	public void layoutContainer(Container parent) {
-		backer.layoutContainer(parent);
-	}
-
-	@Override
-	public void addLayoutComponent(Component comp, Object constraints) {
-		if (component != null) {
-			return;
-		}
-
-		c.anchor = GridBagConstraints.CENTER;
-		c.fill = GridBagConstraints.NONE;
-		c.weightx = 0f;
-		c.weighty = 0f;
-
-		backer.addLayoutComponent(comp, c);
-	}
-
-	@Override
-	public Dimension maximumLayoutSize(Container target) {
-		return backer.maximumLayoutSize(target);
-	}
-
-	@Override
-	public float getLayoutAlignmentX(Container target) {
-		return backer.getLayoutAlignmentX(target);
-	}
-
-	@Override
-	public float getLayoutAlignmentY(Container target) {
-		return backer.getLayoutAlignmentY(target);
-	}
-
-	@Override
-	public void invalidateLayout(Container target) {
-		backer.invalidateLayout(target);
-	}
 
 }

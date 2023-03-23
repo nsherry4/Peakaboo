@@ -4,9 +4,6 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -16,12 +13,11 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import org.jdesktop.swingx.border.DropShadowBorder;
+import org.peakaboo.framework.stratus.components.layouts.CenteringLayout;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
 public class ModalLayer implements Layer {
@@ -134,18 +130,8 @@ public class ModalLayer implements Layer {
 			modalPanel.setLayout(new BorderLayout());
 			modalPanel.add(wrap, BorderLayout.CENTER);
 		} else {
-			modalPanel.setLayout(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-			c.fill = GridBagConstraints.NONE;
-			c.gridheight = 3;
-			c.gridwidth = 3;
-			c.weightx = 0f;
-			c.weighty = 0f;
-			c.gridx = 1;
-			c.gridy = 1;
-			
-			modalPanel.add(wrap, c);
-			
+			modalPanel.setLayout(new CenteringLayout());
+			modalPanel.add(wrap);			
 		}
 		
 	}
