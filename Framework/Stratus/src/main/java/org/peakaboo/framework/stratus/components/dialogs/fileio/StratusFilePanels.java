@@ -31,7 +31,7 @@ public class StratusFilePanels {
 			
 			JPanel chooserPanel = new JPanel(new BorderLayout());
 			chooserPanel.add(chooser, BorderLayout.CENTER);
-			chooserPanel.setPreferredSize(new Dimension(850, 400));
+			chooserPanel.setPreferredSize(new Dimension(900, 400));
 			
 			ModalLayer layer = new ModalLayer(tabPanel, chooserPanel, false) {
 				protected Component wrapComponent(Component component) {

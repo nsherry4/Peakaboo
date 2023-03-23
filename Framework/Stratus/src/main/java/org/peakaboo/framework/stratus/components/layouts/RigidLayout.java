@@ -11,6 +11,13 @@ import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
 public class RigidLayout implements LayoutManager {
 
+	private int width, height;
+	
+	public RigidLayout(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
+	
 	@Override
 	public void addLayoutComponent(String arg0, Component arg1) {
 		//NOOP
@@ -32,17 +39,25 @@ public class RigidLayout implements LayoutManager {
 	@Override
 	public Dimension minimumLayoutSize(Container c) {
 		//Component minimum size is whatever the container's minimum size is
-		return c.getMinimumSize();
+		if (c.isMinimumSizeSet()) {
+			return c.getMinimumSize();
+		} else {
+			return new Dimension(width, height);
+		}
 	}
 
 	@Override
 	public Dimension preferredLayoutSize(Container c) {
 		//Component preferred size is whatever the container's size is right now
-		return c.getSize();
+		if (c.isPreferredSizeSet()) {
+			return c.getSize();
+		} else {
+			return new Dimension(width, height);
+		}
 	}
 
-	public static JPanel wrap(Component component) {
-		ClearPanel wrapper = new ClearPanel(new RigidLayout());
+	public static JPanel wrap(Component component, int width, int height) {
+		ClearPanel wrapper = new ClearPanel(new RigidLayout(width, height));
 		wrapper.add(component);
 		return wrapper;		
 	}
