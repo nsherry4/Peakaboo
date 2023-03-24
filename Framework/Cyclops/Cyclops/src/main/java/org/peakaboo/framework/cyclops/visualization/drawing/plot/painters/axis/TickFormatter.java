@@ -62,7 +62,7 @@ public class TickFormatter {
 			// text isn't rotated out so calculate the maximum width of a text entry here
 			int maxValue = (int) (this.end.floatValue());
 			String text = this.formatter.apply(maxValue);
-			float maxWidth = p.context.getTextWidth(text);
+			float maxWidth = p.context.getTextWidth(text) + 4;
 			if (maxWidth < 1) { maxWidth = 1; }
 			maxTicks = freeSpace / (maxWidth * 3.0f);
 		}
