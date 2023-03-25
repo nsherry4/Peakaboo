@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,9 @@ import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.peakaboo.app.PeakabooLog;
@@ -69,7 +72,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		ClearPanel body = new ClearPanel() {
 			@Override
 			public Dimension getPreferredSize() {
-				return new Dimension(500, 300);
+				return new Dimension(500, 350);
 			}
 
 		};
@@ -78,29 +81,31 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		body.setBorder(Spacing.bMedium());
 		
 		var hasdata = controller.data().hasDataSet();
+		final String SETTING_PER_DATASET = "Per-Session Settings";
+		final String SETTING_PER_USER = "Global Settings";
 		
 		String KEY_DETECTOR = "Detector";
-		JPanel detectorPanel = makeDetectorPanel(controller);
+		OptionBlocksPanel detectorPanel = makeDetectorPanel(controller);
 		detectorPanel.setEnabled(hasdata);
-		body.add(detectorPanel, KEY_DETECTOR);
+		body.add(wrapSettingsInfo(detectorPanel, SETTING_PER_DATASET), KEY_DETECTOR);
 		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_DETECTOR, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_PEAKMODEL = "Peak Model";
-		JPanel peakPanel = makePeakModelPanel(controller);
+		OptionBlocksPanel peakPanel = makePeakModelPanel(controller);
 		peakPanel.setEnabled(hasdata);
-		body.add(peakPanel, KEY_PEAKMODEL);
+		body.add(wrapSettingsInfo(peakPanel, SETTING_PER_DATASET), KEY_PEAKMODEL);
 		OptionSidebar.Entry peakEntry = new OptionSidebar.Entry(KEY_PEAKMODEL, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PEAKMODEL, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_CURVEFIT = "Curve Fitting";
-		JPanel curvefitPanel = makeCurvefitPanel(controller);
+		OptionBlocksPanel curvefitPanel = makeCurvefitPanel(controller);
 		curvefitPanel.setEnabled(hasdata);
-		body.add(curvefitPanel, KEY_CURVEFIT);
+		body.add(wrapSettingsInfo(curvefitPanel, SETTING_PER_DATASET), KEY_CURVEFIT);
 		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_CURVEFIT, IconSize.TOOLBAR_SMALL));
 		
 		String KEY_OVERLAP = "Overlap Solving";
-		JPanel overlapPanel = makeOverlapPanel(controller);
+		OptionBlocksPanel overlapPanel = makeOverlapPanel(controller);
 		overlapPanel.setEnabled(hasdata);
-		body.add(overlapPanel, KEY_OVERLAP);
+		body.add(wrapSettingsInfo(overlapPanel, SETTING_PER_DATASET), KEY_OVERLAP);
 		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.TOOLBAR_SMALL));
 				
 		var entries = new ArrayList<Entry>();
@@ -110,7 +115,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			Group group = item.getValue();
 			String groupKey = group.getName();
 			JComponent groupPanel = SwingLayoutFactory.forGroup(group).getComponent();
-			body.add(groupPanel, groupKey);
+			body.add(wrapSettingsInfo(groupPanel, SETTING_PER_DATASET), groupKey);
 			OptionSidebar.Entry itemEntry = new OptionSidebar.Entry(groupKey, IconFactory.getImageIcon(Tier.provider().iconPath(), item.getIconPath(), IconSize.TOOLBAR_SMALL));
 			entries.add(itemEntry);
 		}
@@ -120,20 +125,20 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		
 		String KEY_PERFORMANCE = "Performance";
-		JPanel perfPanel = makePerformancePanel(controller);
-		body.add(perfPanel, KEY_PERFORMANCE);
+		OptionBlocksPanel perfPanel = makePerformancePanel(controller);
+		body.add(wrapSettingsInfo(perfPanel, SETTING_PER_USER), KEY_PERFORMANCE);
 		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(perfEntry);
 		
 		String KEY_APP = "Appearance";
-		JPanel appPanel = makeAppPanel(controller);
-		body.add(appPanel, KEY_APP);
+		OptionBlocksPanel appPanel = makeAppPanel(controller);
+		body.add(wrapSettingsInfo(appPanel, SETTING_PER_USER), KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
 		
 		String KEY_ERRORS = "Errors";
-		JPanel errorsPanel = makeErrorsPanel(controller);
-		body.add(errorsPanel, KEY_ERRORS);
+		OptionBlocksPanel errorsPanel = makeErrorsPanel(controller);
+		body.add(wrapSettingsInfo(errorsPanel, SETTING_PER_USER), KEY_ERRORS);
 		OptionSidebar.Entry errorsEntry = new OptionSidebar.Entry(KEY_ERRORS, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_ERRORS, IconSize.TOOLBAR_SMALL));
 		entries.add(errorsEntry);
 		
@@ -154,7 +159,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 	
-	private JPanel makePerformancePanel(PlotController controller) {
+	private OptionBlocksPanel makePerformancePanel(PlotController controller) {
 		OptionBlock datasets = new OptionBlock();
 		OptionCheckBox diskbacked = new OptionCheckBox(datasets)
 				.withText("Disk Backing", "Stores datasets in a compressed temp file on disk, lowers memory use")
@@ -184,7 +189,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		return new OptionBlocksPanel(datasets, heapBlock);
 	}
 	
-	private JPanel makeAppPanel(PlotController controller) {
+	private OptionBlocksPanel makeAppPanel(PlotController controller) {
 	
 		OptionBlock uxBlock = new OptionBlock();
 		var colours = AccentedTheme.accentColours;
@@ -212,7 +217,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 	
-	private JPanel makeErrorsPanel(PlotController controller) {
+	private OptionBlocksPanel makeErrorsPanel(PlotController controller) {
 		
 		OptionBlock reporting = new OptionBlock();
 		
@@ -236,7 +241,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 	
 
-	private JPanel makeDetectorPanel(PlotController controller) {
+	private OptionBlocksPanel makeDetectorPanel(PlotController controller) {
 		
 		OptionBlock detector = new OptionBlock();
 		
@@ -266,7 +271,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 	
 	
-	private JPanel makeCurvefitPanel(PlotController controller) {
+	private OptionBlocksPanel makeCurvefitPanel(PlotController controller) {
 		
 		List<CurveFitter> fitters = CurveFitterPluginManager.system().getPlugins().stream().map(p -> p.create()).collect(Collectors.toList());
 		
@@ -320,7 +325,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 	
-	private JPanel makePeakModelPanel(PlotController controller) {
+	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
 
 		
 		
@@ -353,9 +358,18 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				
 	}
 	
-	
+	private ClearPanel wrapSettingsInfo(JComponent panel, String info) {
+		var label = new JLabel(info, SwingConstants.CENTER);
+		label.setForeground(Stratus.getTheme().getPalette().getColour("Dark", "1"));
+		label.setFont(label.getFont().deriveFont(11f));
+		
+		var wrap = new ClearPanel(new BorderLayout());
+		wrap.add(panel, BorderLayout.CENTER);
+		wrap.add(label, BorderLayout.SOUTH);
+		return wrap;
+	}
 
-	private JPanel makeOverlapPanel(PlotController controller) {
+	private OptionBlocksPanel makeOverlapPanel(PlotController controller) {
 
 		List<FittingSolver> solvers = List.of(
 				new GreedyFittingSolver(), 
