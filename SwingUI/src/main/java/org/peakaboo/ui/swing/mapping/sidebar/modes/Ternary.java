@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -29,7 +30,6 @@ import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRendere
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
-import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
 public class Ternary extends JPanel {
 
@@ -195,8 +195,8 @@ public class Ternary extends JPanel {
 		TableColumn column = null;
 		column = table.getColumnModel().getColumn(0);
 		column.setResizable(false);
-		column.setPreferredWidth(45);
-		column.setMaxWidth(45);
+		column.setPreferredWidth(35);
+		column.setMaxWidth(35);
 
 		
 		
@@ -256,6 +256,26 @@ public class Ternary extends JPanel {
 			this.add(linker, c);
 		}
 		
+		@Override
+		public void setForeground(Color fg) {
+			super.setForeground(fg);
+			if (groupX != null) {
+				groupX.setForeground(fg);
+				groupY.setForeground(fg);
+				groupO.setForeground(fg);
+			}
+		}
+		
+		@Override
+		public void setBackground(Color bg) {
+			super.setBackground(bg);
+			if (groupX != null) {
+				groupX.setBackground(bg);
+				groupY.setBackground(bg);
+				groupO.setBackground(bg);
+			}
+		}
+
 		private int getSide() {
 			if (groupX.isSelected()) { return 1; }
 			if (groupY.isSelected()) { return 2; }

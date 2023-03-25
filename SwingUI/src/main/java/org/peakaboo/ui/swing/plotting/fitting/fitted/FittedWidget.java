@@ -2,7 +2,6 @@ package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
@@ -10,6 +9,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -23,8 +23,17 @@ public class FittedWidget extends ClearPanel
 	
 	private boolean flagged = false;
 	
-	public FittedWidget()
-	{
+	
+	public static FittedWidget large() {
+		return new FittedWidget(16, 11, Spacing.large);
+	}
+
+	public static FittedWidget medium() {
+		return new FittedWidget(14, 11, Spacing.medium);
+	}
+	
+	
+	private FittedWidget(float titleSize, float detailSize, int borderSize)	{
 		super();
 		
 		setLayout(new BorderLayout());
@@ -36,7 +45,7 @@ public class FittedWidget extends ClearPanel
 		elementIntensity = new JLabel("");
 		
 		elementContents.add(elementName, BorderLayout.CENTER);
-		elementContents.setBorder(Spacing.bLarge());
+		elementContents.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
 		add(elementContents, BorderLayout.CENTER);
 				
@@ -44,9 +53,9 @@ public class FittedWidget extends ClearPanel
 		elementNumber.setOpaque(false);
 		elementIntensity.setOpaque(false);
 		
-		elementName.setFont(elementName.getFont().deriveFont(elementName.getFont().getSize() * 1.4f).deriveFont(Font.BOLD));
-		elementNumber.setFont(elementNumber.getFont().deriveFont(elementNumber.getFont().getSize() * 0.9f));
-		elementIntensity.setFont(elementIntensity.getFont().deriveFont(elementIntensity.getFont().getSize() * 0.9f));
+		elementName.setFont(elementName.getFont().deriveFont(titleSize));
+		elementNumber.setFont(elementNumber.getFont().deriveFont(detailSize));
+		elementIntensity.setFont(elementIntensity.getFont().deriveFont(detailSize));
 		
 		JPanel details = new ClearPanel(new BorderLayout(8, 0));
 		details.add(elementIntensity, BorderLayout.WEST);
@@ -58,8 +67,7 @@ public class FittedWidget extends ClearPanel
 	}
 	
 	@Override
-	public void setName(String title)
-	{
+	public void setName(String title) {
 		elementName.setText(title);
 	}
 
@@ -70,8 +78,7 @@ public class FittedWidget extends ClearPanel
 
 	
 	@Override
-	public void setForeground(Color c)
-	{
+	public void setForeground(Color c) {
 		
 		super.setForeground(c);
 		if (elementName == null) return;

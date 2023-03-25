@@ -150,8 +150,8 @@ public class Overlay extends JPanel {
 		TableColumn column = null;
 		column = table.getColumnModel().getColumn(0);
 		column.setResizable(false);
-		column.setPreferredWidth(45);
-		column.setMaxWidth(45);
+		column.setPreferredWidth(35);
+		column.setMaxWidth(35);
 
 		
 		

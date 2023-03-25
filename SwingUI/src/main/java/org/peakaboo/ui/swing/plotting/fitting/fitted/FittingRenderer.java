@@ -1,12 +1,10 @@
 package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
@@ -30,7 +28,7 @@ class FittingRenderer extends DefaultTableCellRenderer
 		
 		this.controller = controller;
 		
-		tswidget = new FittedWidget();		
+		tswidget = FittedWidget.large();
 	}
 
 	@Override
@@ -42,19 +40,13 @@ class FittingRenderer extends DefaultTableCellRenderer
 		
 
 		if (selected){
-					
 			tswidget.setOpaque(true);
 			tswidget.setBackground(table.getSelectionBackground());
 			tswidget.setForeground(table.getSelectionForeground());
-			tswidget.setBorder(new EmptyBorder(1, 1, 1, 1));
-
 		} else {
-			
 			tswidget.setOpaque(false);
 			tswidget.setBackground(table.getBackground());
-			tswidget.setForeground(table.getForeground());
-			tswidget.setBorder(new EmptyBorder(1, 1, 1, 1));
-			
+			tswidget.setForeground(table.getForeground());			
 		}
 		
 		float intensity;
@@ -84,7 +76,6 @@ class FittingRenderer extends DefaultTableCellRenderer
 			}
 			tswidget.setToolTipText(tooltip);
 			
-			tswidget.setMinimumSize(new Dimension(0, 100));
 			return tswidget;
 		} 
 		

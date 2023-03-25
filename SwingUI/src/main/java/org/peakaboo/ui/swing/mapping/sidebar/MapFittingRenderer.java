@@ -1,13 +1,11 @@
 package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.peakaboo.curvefit.peak.table.Element;
@@ -23,7 +21,7 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 	
 	
 	public MapFittingRenderer(Predicate<ITransitionSeries> enabled){
-		tswidget = new FittedWidget();	
+		tswidget = FittedWidget.medium();	
 		this.tsEnabled = enabled;
 	}
 
@@ -35,20 +33,14 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 		super.getTableCellRendererComponent(table, value, selected, hasFocus, row, column);
 		
 
-		if (selected){
-					
+		if (selected){	
 			tswidget.setOpaque(true);
 			tswidget.setBackground(table.getSelectionBackground());
 			tswidget.setForeground(table.getSelectionForeground());
-			tswidget.setBorder(new EmptyBorder(1, 1, 1, 1));
-
 		} else {
-			
 			tswidget.setOpaque(false);
 			tswidget.setBackground(table.getBackground());
 			tswidget.setForeground(table.getForeground());
-			tswidget.setBorder(new EmptyBorder(1, 1, 1, 1));
-			
 		}
 		
 		
@@ -73,7 +65,6 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 			}
 			tswidget.setToolTipText(tooltip);
 			
-			tswidget.setMinimumSize(new Dimension(0, 100));
 			return tswidget;
 		} 
 		
