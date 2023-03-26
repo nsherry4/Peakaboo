@@ -10,24 +10,33 @@ import java.util.logging.Level;
 import javax.swing.ImageIcon;
 
 import org.peakaboo.framework.stratus.api.StratusLog;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentConfig;
 
 
 public class IconFactory {
 
+	public static ImageIcon getImageIcon(FluentConfig config){
+		return getImageIcon(config.imagepath, config.imagename, config.size, config.imagecolour);
+	}
+	
 	public static ImageIcon getImageIcon(IconSet icon){
-		return getImageIcon(icon.path(), icon.toIconName(), null);
+		return getImageIcon(icon.path(), icon.toIconName(), null, null);
 	}
 	
 	public static ImageIcon getImageIcon(String path, String imageName){
-		return getImageIcon(path, imageName, null);
+		return getImageIcon(path, imageName, null, null);
 	}
 
 	
 	public static ImageIcon getImageIcon(IconSet icon, IconSize size){
-		return getImageIcon(icon.path(), icon.toIconName(), size);
+		return getImageIcon(icon.path(), icon.toIconName(), size, null);
 	}
 	
 	public static ImageIcon getImageIcon(String path, String imageName, IconSize size) {
+		return getImageIcon(path, imageName, size, null);
+	}
+	
+	public static ImageIcon getImageIcon(String path, String imageName, IconSize size, Color colour) {
 	
 		if (path == null) {
 			path = StockIcon.PATH;
@@ -45,7 +54,11 @@ public class IconFactory {
 		if (url == null) {
 			return new ImageIcon();
 		} else {
-			return new ImageIcon(url);
+			var image = new ImageIcon(url);
+			if (colour != null) {
+				image = recolour(image, colour);
+			}
+			return image;
 		}
 		
 	}
@@ -67,7 +80,7 @@ public class IconFactory {
 	}
 	
 	public static Image getImage(String path, String imageName) {
-		return getImageIcon(path, imageName, null).getImage();
+		return getImageIcon(path, imageName, null, null).getImage();
 	}
 	
 	public static boolean hasImage(String imageName, IconSize size, String path) {

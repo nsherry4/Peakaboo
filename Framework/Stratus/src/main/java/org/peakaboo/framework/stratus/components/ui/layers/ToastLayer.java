@@ -17,13 +17,18 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 
 public class ToastLayer implements Layer {
 
 	private JPanel toast = new ClearPanel();
+	private FluentButton close;
 	private final JLayer<JComponent> toastJLayer;
 	private JComponent label;
 	private float alpha = 0f, delta = 0.1f;
@@ -39,8 +44,8 @@ public class ToastLayer implements Layer {
 	public ToastLayer(LayerPanel parent, String message, Runnable onClick) {
 		this.parent = parent;
 		
+		
 		toast.setLayout(new FlowLayout());
-
 
 		JPanel messagePanel = new ClearPanel(new BorderLayout()){
 			
@@ -52,9 +57,11 @@ public class ToastLayer implements Layer {
 					    RenderingHints.VALUE_ANTIALIAS_ON);
 				
 				
-				Color bg = new Color(0f, 0f, 0f, alpha * 0.67f);
-				g.setColor(bg);
-				g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 10, 10);
+				
+				g.setColor(new Color(0xB0000000, true));
+				g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 20, 20);
+
+				
 				super.paintComponent(g);
 			}
 			
@@ -79,12 +86,24 @@ public class ToastLayer implements Layer {
 		} else {
 			label = makeLabel(message);
 		}
-		label.setBorder(Spacing.bLarge());
+		label.setBorder(Spacing.bMedium());
+		label.setAlignmentY(0.5f);
+		
+		close = new FluentButton()
+				.withIcon(StockIcon.WINDOW_CLOSE, IconSize.BUTTON, Color.WHITE)
+				.withAction(this::fadeOut)
+				.withBordered(false)
+				.withBorder(Spacing.bMedium());
+		close.setVerticalAlignment(SwingConstants.CENTER);
+		close.setFocusable(false);
+		close.setToolTipText(null);
 		
 		
 		toast.setFocusable(false);
 		messagePanel.add(label, BorderLayout.CENTER);
-		toast.add(messagePanel, BorderLayout.CENTER);
+		messagePanel.add(close, BorderLayout.WEST);
+		messagePanel.setBorder(Spacing.bMedium());
+		toast.add(messagePanel);
 		
 		
 		toastJLayer = new JLayer<JComponent>(toast);
@@ -124,7 +143,6 @@ public class ToastLayer implements Layer {
 				if (alpha == 1.0f) {
 					timer.cancel();
 					timer.purge();
-					stage=1;
 					delay();
 				}
 				ToastLayer.this.toastJLayer.repaint(30);
@@ -132,6 +150,8 @@ public class ToastLayer implements Layer {
 	}
 	
 	private void fadeOut() {
+		stage=2;
+		
 		Timer timer = new Timer(true);
 		timer.schedule(new TimerTask() {
 
@@ -151,6 +171,8 @@ public class ToastLayer implements Layer {
 	}
 	
 	private void delay() {
+		stage=1;
+		
 		Timer timer = new Timer(true);
 		timer.schedule(new TimerTask() {
 			
@@ -159,7 +181,6 @@ public class ToastLayer implements Layer {
 				if (stage != 1) { return; }
 				timer.cancel();
 				timer.purge();
-				stage=2;
 				fadeOut();
 			}
 		}, duration);

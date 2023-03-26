@@ -111,7 +111,7 @@ public class FluentButtonConfigurator {
 	}
 	
 	private ImageIcon makeImage() {
-		return IconFactory.getImageIcon(config.imagepath, config.imagename, config.size);
+		return IconFactory.getImageIcon(config);
 	}
 
 	public void makeButton() {

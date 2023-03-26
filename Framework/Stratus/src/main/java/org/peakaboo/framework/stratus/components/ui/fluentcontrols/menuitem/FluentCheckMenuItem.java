@@ -58,7 +58,7 @@ public class FluentCheckMenuItem extends JCheckBoxMenuItem implements FluentMenu
 		if (config.imagename == null) {
 			this.setIcon(null);
 		} else {
-			ImageIcon icon = IconFactory.getImageIcon(config.imagepath, config.imagename, IconSize.BUTTON);
+			ImageIcon icon = IconFactory.getImageIcon(config.imagepath, config.imagename, IconSize.BUTTON, config.imagecolour);
 			this.setIcon(icon);
 		}
 		this.setMnemonic(config.mnemonic == null ? 0 : config.mnemonic);

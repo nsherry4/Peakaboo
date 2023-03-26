@@ -1,5 +1,7 @@
 package org.peakaboo.framework.stratus.components.ui.fluentcontrols;
 
+import java.awt.Color;
+
 import javax.swing.JComponent;
 
 import org.peakaboo.framework.stratus.api.icons.IconSet;
@@ -32,17 +34,27 @@ public interface FluentAPI<
 	}
 			
 	default B withIcon(IconSet stock, IconSize size) {
-		return withIcon(stock.path(), stock.toIconName(), size);
+		return withIcon(stock.path(), stock.toIconName(), size, null);
+	}
+
+	default B withIcon(IconSet stock, IconSize size, Color color) {
+		return withIcon(stock.path(), stock.toIconName(), size, color);
 	}
 	
 	default B withIcon(String filepath, String filename) {
-		return withIcon(filepath, filename, getComponentConfig().size);
+		return withIcon(filepath, filename, getComponentConfig().size, null);
 	}
 	
 	default B withIcon(String filepath, String filename, IconSize size) {
+		return withIcon(filepath, filename, size, null);
+	}
+	
+	default B withIcon(String filepath, String filename, IconSize size, Color colour) {
 		getComponentConfig().imagename = filename;
 		getComponentConfig().imagepath = filepath;
+		getComponentConfig().imagecolour = colour;
 		getComponentConfig().size = size;
+		
 		makeWidget();
 		return getSelf();
 	}
