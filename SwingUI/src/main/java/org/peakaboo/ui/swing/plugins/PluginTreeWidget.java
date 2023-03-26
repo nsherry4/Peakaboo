@@ -21,7 +21,7 @@ import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.stencil.StencilTreeCellRenderer;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 
-public class PluginTreeWidget extends Stencil<Object> {
+class PluginTreeWidget extends Stencil<Object> {
 
 	private JLabel label;
 	

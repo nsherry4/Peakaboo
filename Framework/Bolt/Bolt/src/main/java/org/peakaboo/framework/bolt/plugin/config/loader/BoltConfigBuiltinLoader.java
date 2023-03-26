@@ -35,7 +35,7 @@ public class BoltConfigBuiltinLoader<T extends BoltConfigPlugin> implements Bolt
 	public List<BoltContainer<T>> getContainers() {
 		return custom
 				.stream()
-				.map(url -> new BoltConfigContainer<>(manager, url, targetClass, builder))
+				.map(url -> new BoltConfigContainer<>(manager, url, targetClass, builder, false))
 				.collect(Collectors.toList());
 	}
 

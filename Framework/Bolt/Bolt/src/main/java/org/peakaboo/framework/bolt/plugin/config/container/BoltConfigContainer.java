@@ -19,8 +19,8 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	private BoltPluginSet<T> plugins;
 	private BoltPluginManager<T> manager;
 	
-	public BoltConfigContainer(BoltPluginManager<T> manager, URL url, Class<T> pluginClass, Function<String, T> builder) {
-		super(url);
+	public BoltConfigContainer(BoltPluginManager<T> manager, URL url, Class<T> pluginClass, Function<String, T> builder, boolean deletable) {
+		super(url, deletable);
 		this.url = url;
 		this.manager = manager;
 		

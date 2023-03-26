@@ -60,7 +60,7 @@ import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.app.DesktopApp;
 
-public class PluginsOverview extends HeaderLayer {
+public class PluginManager extends HeaderLayer {
 
 	JPanel details;
 	JTree tree;
@@ -70,7 +70,7 @@ public class PluginsOverview extends HeaderLayer {
 	
 	private static String noSelectionDescription = "Select a plugin or category from the sidebar to see information about available plugins.\n\nYou can add new plugins by dragging them into this window, or by using the 'Add' button in the toolbar";
 	
-	public PluginsOverview(LayerPanel parent) {
+	public PluginManager(LayerPanel parent) {
 		super(parent, true);
 		this.parent = parent;
 		getContentRoot().setPreferredSize(new Dimension(850, 400));
@@ -381,44 +381,6 @@ public class PluginsOverview extends HeaderLayer {
 		scroller.setPreferredSize(new Dimension(250, 300));
 		scroller.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		return scroller;
-		
-	}
-	
-	public static void main(String[] args) throws UnsupportedLookAndFeelException {
-		
-		UIManager.setLookAndFeel(new StratusLookAndFeel(new BrightTheme()));
-		
-		JFrame frame = new JFrame();
-		frame.setPreferredSize(new Dimension(640, 480));
-		
-		FluentButton b1 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
-		FluentButton b2 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
-
-		FluentButton b3 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
-		FluentButton b4 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
-		
-		FluentButton b5 = new FluentButton("OK").withButtonSize(FluentButtonSize.LARGE);
-		FluentButton b6 = new FluentButton("OK", StockIcon.CHOOSE_OK).withButtonSize(FluentButtonSize.LARGE);
-		
-		ButtonBox box = new ButtonBox();
-		
-		box.addLeft(b1);
-		box.addLeft(b2);
-		
-		box.addCentre(b3);
-		box.addCentre(b4);
-		
-		box.addRight(b5);
-		box.addRight(b6);
-		
-		
-		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().add(box, BorderLayout.SOUTH);
-		
-		frame.pack();
-		
-		frame.setVisible(true);
-				
 		
 	}
 	

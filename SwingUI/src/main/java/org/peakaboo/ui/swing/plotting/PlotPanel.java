@@ -119,7 +119,7 @@ import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import org.peakaboo.ui.swing.plotting.guides.FirstRun;
 import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
-import org.peakaboo.ui.swing.plugins.PluginsOverview;
+import org.peakaboo.ui.swing.plugins.PluginManager;
 
 
 
@@ -955,7 +955,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 	
 	public void actionShowPlugins() {
-		pushLayer(new PluginsOverview(this));
+		pushLayer(new PluginManager(this));
 	}
 
 

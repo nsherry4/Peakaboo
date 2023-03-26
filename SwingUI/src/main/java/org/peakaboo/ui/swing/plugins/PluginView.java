@@ -26,7 +26,7 @@ import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
 import org.peakaboo.framework.stratus.components.panels.TitledPanel;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
 
-public class PluginView extends JPanel {
+class PluginView extends JPanel {
 	
 	public PluginView(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		super(new GridBagLayout());

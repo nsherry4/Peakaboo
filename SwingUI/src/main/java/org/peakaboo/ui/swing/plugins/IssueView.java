@@ -19,9 +19,9 @@ import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
 import org.peakaboo.framework.stratus.components.panels.TitledPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 
-public class IssueView extends JPanel {
+class IssueView extends JPanel {
 
-	public IssueView(BoltIssue<?> issue, PluginsOverview parent) {
+	public IssueView(BoltIssue<?> issue, PluginManager parent) {
 		super(new GridBagLayout());
 		this.setBorder(Spacing.bHuge());
 		

@@ -43,7 +43,7 @@ public class BoltConfigDirectoryLoader<T extends BoltConfigPlugin> extends BoltD
 	public BoltConfigContainer<T> build(File file) {
 		URL url = fileToURL(file);
 		if (url == null) { return null; }
-		return new BoltConfigContainer<>(this.manager, url, targetClass, builder);
+		return new BoltConfigContainer<>(this.manager, url, targetClass, builder, true);
 	}
 	
 }

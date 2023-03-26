@@ -9,9 +9,11 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltContainer<T>  {
 
 	protected URL url;
+	protected boolean deletable;
 	
-	public BoltURLContainer(URL url) {
+	public BoltURLContainer(URL url, boolean deletable) {
 		this.url = url;
+		this.deletable = deletable;
 	}
 
 	@Override
@@ -38,6 +40,9 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 
 	@Override
 	public boolean delete() {
+		if (!isDeletable()) {
+			throw new RuntimeException("Plugin is not deletable");
+		}
 		try {
 			File f = new File(url.toURI());
 			f.delete();
@@ -49,7 +54,7 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 
 	@Override
 	public boolean isDeletable() {
-		return true;
+		return deletable;
 	}
 	
 	
