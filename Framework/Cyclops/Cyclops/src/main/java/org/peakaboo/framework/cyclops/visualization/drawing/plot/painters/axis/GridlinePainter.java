@@ -1,10 +1,6 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 
-import java.util.List;
-
-import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
@@ -26,26 +22,12 @@ public class GridlinePainter extends PlotPainter
 	public void drawElement(PainterData p)
 	{
 		
-		float valueRangeStart = tick.getStart();
-		float valueRangeEnd = PlotDrawing.getDataScale(tick.getEnd(), tick.isLog(), tick.isPadded());	
-		if (tick.isLog()) {
-			valueRangeEnd = (float) Math.exp(valueRangeEnd);						
-		}
-		float maxTicks = tick.calcMaxTicks(p, p.plotSize.y);
-	
-		List<Pair<Float, Integer>> tickData = AxisMarkGenerator.getAxisMarkList(maxTicks, p.plotSize.y, 1, valueRangeStart, valueRangeEnd);
-		
 		p.context.save();
 		p.context.setSource(new PaletteColour(0x20000000));
 		
-		float tickPercent;
-		float yPos;
-		for (Pair<Float, Integer> aTick : tickData)
-		{
-			tickPercent = aTick.first;
-			yPos = tickPercent * p.plotSize.y;
-			AxisMarkGenerator.drawLine(p.context, 0, yPos, p.plotSize.x, yPos);
-			
+		for (var mark : tick.getTickMarks(p, p.plotSize.y)) {
+			var yPos = (1f - mark.position()) * p.plotSize.y;
+			TickMarkAxisPainter.drawTickLine(p.context, 0, yPos, p.plotSize.x, yPos);
 		}
 		
 		p.context.restore();

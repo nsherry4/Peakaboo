@@ -31,7 +31,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.SpectrumPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.RangeTickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
@@ -115,13 +115,13 @@ public class Plotter {
 		// Common Values Setup
 		////////////////////////////////////////////////////////////////////
 		float maxIntensity = getMaxIntensity(data);
-		TickFormatter tickRight = new TickFormatter(0.0f, maxIntensity)
+		RangeTickFormatter tickRight = new RangeTickFormatter(0.0f, maxIntensity)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);
-		TickFormatter tickBottom = new TickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()).withRotate(false);
-		TickFormatter tickTop = null;
-		TickFormatter tickLeft = new TickFormatter(0.0f, maxIntensity)
+		RangeTickFormatter tickBottom = new RangeTickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()).withRotate(false);
+		RangeTickFormatter tickTop = null;
+		RangeTickFormatter tickLeft = new RangeTickFormatter(0.0f, maxIntensity)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);
