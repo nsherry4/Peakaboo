@@ -9,7 +9,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 
 
-public class TickMarkAxisPainter<T> extends AxisPainter
+public class TickMarkAxisPainter extends AxisPainter
 {
 	
 	public TickFormatter yRightValueBounds, xBottomValueBounds, xTopValueBounds, yLeftValueBounds;

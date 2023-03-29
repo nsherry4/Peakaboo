@@ -18,6 +18,9 @@ public class SigDigits
 		int upper = 	(int)Math.pow(10, significantDigits);
 		int lower = 	(int)Math.pow(10, significantDigits-1);
 		
+		boolean negative = value < 0d;
+		if (negative) value = Math.abs(value);
+		
 		int counts = 0;
 		if (value > upper) {
 			while (value > upper) { value /= 10.0; counts++; }
@@ -28,6 +31,9 @@ public class SigDigits
 			value = Math.ceil(value);
 			while (counts > 0) { value /= 10.0; value = Math.ceil(value); counts--; }
 		}
+		
+		if (negative) value *= -1d;
+			
 		return (int)value;
 	}
 	

@@ -21,6 +21,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPa
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.LineAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.RangeTickFormatter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
@@ -83,8 +84,8 @@ public class TernaryMapMode extends MapMode {
 		axisPainters.add(new CornersAxisPainter(ternaryData.oCornerTitle, ternaryData.xCornerTitle, ternaryData.yCornerTitle, ""));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 2));
 		
-		RangeTickFormatter xTick = new RangeTickFormatter(0, ternaryData.xMaxCounts).withTickSize(0.5f);
-		RangeTickFormatter yTick = new RangeTickFormatter(0, ternaryData.yMaxCounts).withTickSize(0.5f).withRotate(false);
+		TickFormatter xTick = new RangeTickFormatter(0, ternaryData.xMaxCounts).withTickSize(0.5f);
+		TickFormatter yTick = new RangeTickFormatter(0, ternaryData.yMaxCounts).withTickSize(0.5f).withRotate(false);
 		axisPainters.add(new TickMarkAxisPainter(null, xTick, null, yTick));
 		axisPainters.add(new LineAxisPainter(true, false, false, true));
 		

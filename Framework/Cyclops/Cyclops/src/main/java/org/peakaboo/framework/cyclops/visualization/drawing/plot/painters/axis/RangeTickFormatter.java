@@ -7,30 +7,12 @@ import java.util.function.Function;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter.TickMark;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter.TickTextSize;
 
-public class RangeTickFormatter implements TickFormatter {
+public class RangeTickFormatter extends AbstractTickFormatter {
 	
 	private Float start, end;
 	private Function<Integer, String> formatter;
-	private boolean log = false;
-	private boolean pad = false;
 	
-	// Rotates text 90 degrees so that it is running perpendicular to the axis instead of parallel
-	private boolean textRotate = false;
-	
-	// Percentage value where 1 = 100%. Used to scale the size of tickmarks, with 1 being 100%
-	private float tickScale = 1f;
-	
-	
-	public boolean isEmpty() {
-		return this.getEnd() - this.getStart() <= 0;
-	}
-	
-	private String format(Integer value) {
-		return this.formatter.apply(value);
-	}
 	
 	public RangeTickFormatter(float start, float end) {
 		this(start, end, String::valueOf);
@@ -42,74 +24,17 @@ public class RangeTickFormatter implements TickFormatter {
 		this.formatter = formatter;
 	}
 	
-	@Override
-	public RangeTickFormatter withLog(boolean log) {
-		this.log = log;
-		return this;
-	}
 	
 	@Override
-	public boolean isLog() {
-		return log;
-	}
-	
-	/**
-	 * Accepts a float between 0 and 1, where 1 represents full size (100%)
-	 */
-	@Override
-	public RangeTickFormatter withTickSize(float percent) {
-		this.tickScale = percent;
-		return this;
-	}
-
-	@Override
-	public float getTickSize() {
-		return tickScale;
-	}
-
-	
-	
-	@Override
-	public RangeTickFormatter withRotate(boolean rotate) {
-		this.textRotate = rotate;
-		return this;
-	}
-	
-	@Override
-	public boolean isTextRotated() {
-		return textRotate;
-	}
-	
-	
-	@Override
-	public boolean isPadded() {
-		return pad;
-	}
-	
-	@Override
-	public RangeTickFormatter withPad(boolean pad) {
-		this.pad = pad;
-		return this;
-	}
-	
-
-
-	public Float getStart() {
-		return start;
-	}
-
-	public Float getEnd() {
-		return end;
-	}
-
-	
-
 	public List<TickMark> getTickMarks(PainterData p, float size) {
 		var marks = new ArrayList<TickMark>();
 		
+		if (this.isEmpty()) return marks;
+		
 		float valueRange = this.getEnd() - this.getStart();
 		float maxTicks = this.calcMaxTicks(p, size);
-		int increment = getIncrement(valueRange, maxTicks, 1); //TODO move this here
+		int increment = getIncrement(valueRange, maxTicks, 1);
+		if (increment == 0) return marks;
 		int startingValue = (int)(this.getStart() + (Math.abs(this.getStart()) % increment));
 		
 		int currentValue = startingValue;
@@ -133,9 +58,8 @@ public class RangeTickFormatter implements TickFormatter {
 		
 		return marks;
 	}
-
-
 	
+	@Override
 	public TickTextSize maxTextSize(PainterData p) {
 		
 		float height = p.context.getFontHeight();
@@ -147,12 +71,35 @@ public class RangeTickFormatter implements TickFormatter {
 		return new TickTextSize(width, height);
 		
 	}
+	
+	@Override
+	public boolean isEmpty() {
+		return this.getEnd() - this.getStart() <= 0;
+	}
+	
+	public Float getStart() {
+		return start;
+	}
+
+	public Float getEnd() {
+		return end;
+	}
+
+	private String format(int value) {
+		return this.formatter.apply(value);
+	}
+	
+
+
+
+
+
 
 
 	private float calcMaxTicks(PainterData p, float freeSpace) {
 		//how many ticks we can fit and the range of values we're drawing over
 		float maxTicks = 0;
-		if (this.textRotate) {
+		if (this.isTextRotated()) {
 			float textHeight = p.context.getFontHeight();
 			maxTicks = (float) Math.floor(freeSpace / (textHeight*3.0));
 			return maxTicks;
