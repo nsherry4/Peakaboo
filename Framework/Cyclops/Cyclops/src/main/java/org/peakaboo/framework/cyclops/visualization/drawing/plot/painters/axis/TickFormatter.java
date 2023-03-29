@@ -5,21 +5,22 @@ import java.util.function.Function;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 
 public class TickFormatter {
-	public Float start, end;
-	Function<Integer, String> formatter;
-	public boolean log = false;
-	public boolean pad = false;
 	
-	/**
-	 * Rotates text 90 degrees so that it is running perpendicular to the axis instead of parallel
-	 */
-	public boolean textRotate = false;
+	private Float start, end;
+	private Function<Integer, String> formatter;
+	private boolean log = false;
+	private boolean pad = false;
 	
-	/**
-	 * Percentage value where 1 = 100%. Used to scale the size of tickmarks, with 1 being 100%
-	 */
-	public float tickScale = 1f;
+	// Rotates text 90 degrees so that it is running perpendicular to the axis instead of parallel
+	private boolean textRotate = false;
 	
+	// Percentage value where 1 = 100%. Used to scale the size of tickmarks, with 1 being 100%
+	private float tickScale = 1f;
+	
+	
+	public String format(int value) {
+		return this.formatter.apply(value);
+	}
 	
 	public TickFormatter(float start, float end) {
 		this(start, end, String::valueOf);
@@ -36,20 +37,43 @@ public class TickFormatter {
 		return this;
 	}
 	
-	public TickFormatter withTick(float percent) {
+	public boolean isLog() {
+		return log;
+	}
+	
+	/**
+	 * Accepts a float between 0 and 1, where 1 represents full size (100%)
+	 */
+	public TickFormatter withTickSize(float percent) {
 		this.tickScale = percent;
 		return this;
 	}
+
+	public float getTickSize() {
+		return tickScale;
+	}
+
+	
 	
 	public TickFormatter withRotate(boolean rotate) {
 		this.textRotate = rotate;
 		return this;
 	}
 	
+	public boolean isTextRotated() {
+		return textRotate;
+	}
+	
+	
+	public boolean isPadded() {
+		return pad;
+	}
+	
 	public TickFormatter withPad(boolean pad) {
 		this.pad = pad;
 		return this;
 	}
+	
 	
 	public float calcMaxTicks(PainterData p, float freeSpace) {
 		//how many ticks we can fit and the range of values we're drawing over
@@ -68,5 +92,21 @@ public class TickFormatter {
 		}
 		return maxTicks;
 	}
+
+	public Float getStart() {
+		return start;
+	}
+
+	public Float getEnd() {
+		return end;
+	}
+
+
+
+
+
+	
+	
+	
 	
 }

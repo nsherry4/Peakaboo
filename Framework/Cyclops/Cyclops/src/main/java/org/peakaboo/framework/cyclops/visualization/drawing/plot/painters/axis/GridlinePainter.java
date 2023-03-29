@@ -26,9 +26,9 @@ public class GridlinePainter extends PlotPainter
 	public void drawElement(PainterData p)
 	{
 		
-		float valueRangeStart = tick.start;
-		float valueRangeEnd = PlotDrawing.getDataScale(tick.end, tick.log, tick.pad);	
-		if (tick.log) {
+		float valueRangeStart = tick.getStart();
+		float valueRangeEnd = PlotDrawing.getDataScale(tick.getEnd(), tick.isLog(), tick.isPadded());	
+		if (tick.isLog()) {
 			valueRangeEnd = (float) Math.exp(valueRangeEnd);						
 		}
 		float maxTicks = tick.calcMaxTicks(p, p.plotSize.y);

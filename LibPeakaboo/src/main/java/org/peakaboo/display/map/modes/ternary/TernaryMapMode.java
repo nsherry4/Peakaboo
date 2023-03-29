@@ -83,8 +83,8 @@ public class TernaryMapMode extends MapMode {
 		axisPainters.add(new CornersAxisPainter(ternaryData.oCornerTitle, ternaryData.xCornerTitle, ternaryData.yCornerTitle, ""));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 2));
 		
-		TickFormatter xTick = new TickFormatter(0, ternaryData.xMaxCounts).withTick(0.5f);
-		TickFormatter yTick = new TickFormatter(0, ternaryData.yMaxCounts).withTick(0.5f).withRotate(false);
+		TickFormatter xTick = new TickFormatter(0, ternaryData.xMaxCounts).withTickSize(0.5f);
+		TickFormatter yTick = new TickFormatter(0, ternaryData.yMaxCounts).withTickSize(0.5f).withRotate(false);
 		axisPainters.add(new TickMarkAxisPainter(null, xTick, null, yTick));
 		axisPainters.add(new LineAxisPainter(true, false, false, true));
 		

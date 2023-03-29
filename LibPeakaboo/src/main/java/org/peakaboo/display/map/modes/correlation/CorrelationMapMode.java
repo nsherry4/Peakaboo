@@ -79,8 +79,8 @@ public class CorrelationMapMode extends MapMode {
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, correlationData.yAxisTitle, "", "", correlationData.xAxisTitle));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 2));
 		
-		TickFormatter xTick = new TickFormatter(0, correlationData.xMaxCounts).withTick(0.5f);
-		TickFormatter yTick = new TickFormatter(0, correlationData.yMaxCounts).withTick(0.5f).withRotate(false);
+		TickFormatter xTick = new TickFormatter(0, correlationData.xMaxCounts).withTickSize(0.5f);
+		TickFormatter yTick = new TickFormatter(0, correlationData.yMaxCounts).withTickSize(0.5f).withRotate(false);
 		axisPainters.add(new TickMarkAxisPainter(null, xTick, null, yTick));
 		axisPainters.add(new LineAxisPainter(true, false, false, true));
 		
