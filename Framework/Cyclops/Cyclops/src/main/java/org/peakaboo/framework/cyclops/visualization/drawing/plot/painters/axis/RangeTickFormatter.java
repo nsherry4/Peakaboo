@@ -10,17 +10,17 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 
 public class RangeTickFormatter extends AbstractTickFormatter {
 	
-	private Float start, end;
+	private float tickStart, tickEnd;
 	private Function<Integer, String> formatter;
 	
 	
-	public RangeTickFormatter(float start, float end) {
-		this(start, end, String::valueOf);
+	public RangeTickFormatter(float tickStart, float tickEnd) {
+		this(tickStart, tickEnd, String::valueOf);
 	}
 	
-	public RangeTickFormatter(float start, float endstop, Function<Integer, String> formatter) {
-		this.start = start;
-		this.end = endstop;
+	public RangeTickFormatter(float tickStart, float tickEnd, Function<Integer, String> formatter) {
+		this.tickStart = tickStart;
+		this.tickEnd = tickEnd;
 		this.formatter = formatter;
 	}
 	
@@ -31,19 +31,19 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 		
 		if (this.isEmpty()) return marks;
 		
-		float valueRange = this.getEnd() - this.getStart();
+		float tickRange = this.tickEnd - this.tickStart;
 		float maxTicks = this.calcMaxTicks(p, size);
-		int increment = getIncrement(valueRange, maxTicks, 1);
+		int increment = getIncrement(tickRange, maxTicks, 1);
 		if (increment == 0) return marks;
-		int startingValue = (int)(this.getStart() + (Math.abs(this.getStart()) % increment));
+		int startingValue = (int)(this.tickStart + (Math.abs(this.tickStart) % increment));
 		
 		int currentValue = startingValue;
-		while (currentValue <= this.getEnd()) {
-			var position = (currentValue - this.getStart())  / valueRange;
+		while (currentValue <= this.tickEnd) {
+			var position = (currentValue - this.tickStart)  / tickRange;
 			
 			float tickValue;
 			if (this.isLog()) {
-				tickValue = (float)Math.exp(  (position) * Math.log1p(valueRange)  ) - 1.0f;
+				tickValue = (float)Math.exp(  (position) * Math.log1p(tickRange)  ) - 1.0f;
 				tickValue = SigDigits.toIntSigDigit(tickValue, 2);					
 			} else {
 				tickValue = currentValue;
@@ -64,8 +64,8 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 		
 		float height = p.context.getFontHeight();
 		
-		float startWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(this.getStart(), 2)  ));			
-		float endWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.getEnd(), false, this.isPadded()), 2)  ));
+		float startWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(this.tickStart, 2)  ));			
+		float endWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.tickEnd, false, this.isPadded()), 2)  ));
 		float width = Math.max(startWidth, endWidth);
 		
 		return new TickTextSize(width, height);
@@ -74,15 +74,7 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 	
 	@Override
 	public boolean isEmpty() {
-		return this.getEnd() - this.getStart() <= 0;
-	}
-	
-	public Float getStart() {
-		return start;
-	}
-
-	public Float getEnd() {
-		return end;
+		return this.tickEnd - this.tickStart <= 0;
 	}
 
 	private String format(int value) {
@@ -105,7 +97,7 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 			return maxTicks;
 		} else {
 			// text isn't rotated out so calculate the maximum width of a text entry here
-			int maxValue = (int) (this.end.floatValue());
+			int maxValue = (int) (this.tickEnd);
 			String text = this.formatter.apply(maxValue);
 			float maxWidth = p.context.getTextWidth(text) + 4;
 			if (maxWidth < 1) { maxWidth = 1; }

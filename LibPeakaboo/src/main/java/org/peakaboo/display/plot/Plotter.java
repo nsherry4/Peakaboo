@@ -115,14 +115,16 @@ public class Plotter {
 		////////////////////////////////////////////////////////////////////
 		// Common Values Setup
 		////////////////////////////////////////////////////////////////////
-		float maxIntensity = getMaxIntensity(data);
-		TickFormatter tickRight = new RangeTickFormatter(0.0f, maxIntensity)
+		//The max intensity is different than the plot's maximum displayable value, since it leaves a bit of padding room at the top
+		float plotMaxValue = PlotDrawing.getDataScale(getMaxIntensity(data), settings.logTransform, true);
+		
+		TickFormatter tickRight = new RangeTickFormatter(0.0f, plotMaxValue)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);
 		TickFormatter tickBottom = new RangeTickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()).withRotate(false);
 		TickFormatter tickTop = null;
-		TickFormatter tickLeft = new RangeTickFormatter(0.0f, maxIntensity)
+		TickFormatter tickLeft = new RangeTickFormatter(0.0f, plotMaxValue)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);
