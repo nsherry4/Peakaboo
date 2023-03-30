@@ -5,10 +5,10 @@ import java.io.Serializable;
 /**
  * 
  *  This class provides a method of storing a bounds using any datatype which extends Number
- *  The X and Y values are of the same type
+ *  The start and stop values are of the same type
  *
- * @author Nathaniel Sherry, 2009
- * @param <T> The type of data to be held in both slots of this range pair
+ * @author Nathaniel Sherry, 2009-2023
+ * @param <T> The type of data to be held in both slots of this bounds pair
  */
 
 public class Bounds<T extends Number> implements Serializable {
@@ -19,8 +19,7 @@ public class Bounds<T extends Number> implements Serializable {
 		this.start = start;
 		this.end = stop;
 	}
-	
-	
+		
 	public String toString()
 	{
 		return show(", ");

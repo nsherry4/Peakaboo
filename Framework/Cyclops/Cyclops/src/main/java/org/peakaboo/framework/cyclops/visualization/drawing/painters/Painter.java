@@ -1,13 +1,14 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.painters;
 
 import org.peakaboo.framework.cyclops.visualization.Surface.CompositeModes;
+import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 
 
 
 /**
  * A Painter is a general way to define a method of drawing.
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2023
  */
 
 public abstract class Painter
@@ -21,7 +22,7 @@ public abstract class Painter
 		compositeMode = CompositeModes.OVER;
 	}
 
-	protected abstract float getBaseUnitSize(org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest dr);
+	protected abstract float getBaseUnitSize(DrawingRequest dr);
 
 
 	public final void draw(PainterData p)

@@ -25,7 +25,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.L
  * 
  * This class contains logic for drawing plots.
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry, 2009-2023
  * 
  */
 
@@ -45,8 +45,7 @@ public class PlotDrawing extends Drawing
 	 * @param context the {@link Surface} to draw to
 	 * @param dr the {@link DrawingRequest} that defines how this plot should be drawn
 	 */
-	public PlotDrawing(Surface context, DrawingRequest dr, List<PlotPainter> painters, List<AxisPainter> axisPainters)
-	{
+	public PlotDrawing(Surface context, DrawingRequest dr, List<PlotPainter> painters, List<AxisPainter> axisPainters) {
 		super(dr);
 		this.context = context;
 		this.axisPainters = axisPainters;
@@ -58,8 +57,7 @@ public class PlotDrawing extends Drawing
 	 * @param context the {@link Surface} to draw to
 	 * @param dr the {@link DrawingRequest} that defines how this plot should be drawn
 	 */
-	public PlotDrawing(Surface context, DrawingRequest dr)
-	{
+	public PlotDrawing(Surface context, DrawingRequest dr) {
 		super(dr);
 		this.context = context;
 		this.axisPainters = null;
@@ -70,8 +68,7 @@ public class PlotDrawing extends Drawing
 	 * Create a plot object with no {@link AxisPainter}s
 	 * @param context the {@link Surface} to draw to
 	 */
-	public PlotDrawing(Surface context)
-	{
+	public PlotDrawing(Surface context) {
 		super(new DrawingRequest());
 		this.context = context;
 		this.axisPainters = null;
@@ -82,8 +79,7 @@ public class PlotDrawing extends Drawing
 	 * Create a plot object with no {@link AxisPainter}s
 	 * @param context the {@link Surface} to draw to
 	 */
-	public PlotDrawing(Spectrum numbers)
-	{
+	public PlotDrawing(Spectrum numbers) {
 		super(new DrawingRequest());
 		this.context = null;
 		this.axisPainters = null;
@@ -96,8 +92,7 @@ public class PlotDrawing extends Drawing
 	 * Create a plot object with no {@link AxisPainter}s
 	 * @param context the {@link Surface} to draw to
 	 */
-	public PlotDrawing()
-	{
+	public PlotDrawing() {
 		super(new DrawingRequest());
 		this.context = null;
 		this.axisPainters = null;
@@ -109,8 +104,7 @@ public class PlotDrawing extends Drawing
 	 * Gets the {@link Surface} that plots will be drawn to
 	 * @return {@link Surface}
 	 */
-	public Surface getContext()
-	{
+	public Surface getContext() {
 		return context;
 	}
 
@@ -119,29 +113,25 @@ public class PlotDrawing extends Drawing
 	 * Gets the size of the plot to be drawn
 	 * @return the current plot size
 	 */
-	public Coord<Float> getPlotSize()
-	{
+	public Coord<Float> getPlotSize() {
 		return plotSize;
 	}
 
 	
-	public void setAxisPainters(List<AxisPainter> axisPainters)
-	{
+	public void setAxisPainters(List<AxisPainter> axisPainters) {
 		this.axisPainters = axisPainters;
 	}
-	public void setAxisPainters(AxisPainter axisPainter)
-	{
+	
+	public void setAxisPainters(AxisPainter axisPainter) {
 		axisPainters = new ArrayList<AxisPainter>();
 		axisPainters.add(axisPainter);
 	}
 	
-	public void setPainters(List<PlotPainter> painters)
-	{
+	public void setPainters(List<PlotPainter> painters) {
 		this.painters = painters;
 	}
 	
-	public void setPainters(PlotPainter painter)
-	{
+	public void setPainters(PlotPainter painter) {
 		painters = new ArrayList<PlotPainter>();
 		painters.add(painter);
 	}
@@ -151,8 +141,7 @@ public class PlotDrawing extends Drawing
 	 * Draws a plot using the given painters
 	 */
 	@Override
-	public void draw()
-	{
+	public void draw() {
 		
 		if (context == null) return;
 		
@@ -237,166 +226,22 @@ public class PlotDrawing extends Drawing
 		return;
 	}
 
-/*
-	private Coord<Double> drawAxes(Coord<Double> axes)
-	{
-
-		context.setSource(0.0, 0.0, 0.0);
-
-		context.moveTo(axes.x, 0.0);
-		context.lineTo(axes.x, dr.imageHeight - axes.y);
-		context.lineTo(dr.imageWidth, dr.imageHeight - axes.y);
-		context.stroke();
-
-
-		drawXAxis(axes);
-		drawYAxis(axes);
-
-		return axes;
-
-	}
-
-
-	private void drawXAxis(Coord<Double> axes)
-	{
-
-		context.save();
-
-		// dimensions for various parts of the axis
-		double baseSize = getBaseUnitSize(dr);
-		double tickSize = getTickSize(baseSize, dr);
-		double textHeight = getTickFontHeight(context, dr);
-
-		double plotHeight = dr.imageHeight - axes.y;
-		double plotWidth = dr.imageWidth - axes.x;
-		double textBaseline = plotHeight + (dr.showAxesTickMarks ? tickSize + textHeight : 0.0);
-
-		// calculate the maximum width of a text entry here
-		context.save();
-		context.useMonoFont();
-
-		double maxEnergy = (dr.xSizePerChannel * dr.dataWidth);
-
-		int maxValue = (int) (maxEnergy);
-		String text = String.valueOf(maxValue);
-
-		double maxWidth = context.getTextWidth(text);
-
-		// this section calculates the energy step for ticks - everything is in
-		// ENERGY values, not channel values
-		// calculate how many ticks (with text) could fit on the axis
-		double maxTicks = plotWidth / (maxWidth * 2.0);
-		// we know how many we can fit on to the axis, what is the increment
-		// size so we can be near, but not above that number of ticks
-		int increment = (int) Math.ceil(maxEnergy / maxTicks);
-
-
-		String tickText;
-		double tickWidth;
-		double x;
-
-		if (dr.showAxesTickMarks) {
-			for (int curTick = increment; curTick <= maxValue; curTick += increment) {
-				x = axes.x + (curTick * (plotWidth / dr.dataWidth) / dr.xSizePerChannel);
-				context.moveTo(x, plotHeight);
-				context.lineTo(x, plotHeight + tickSize);
-				context.stroke();
-
-				tickText = String.valueOf(curTick);
-				tickWidth = context.getTextWidth(tickText);
-				context.writeText(tickText, x - (tickWidth / 2.0), textBaseline);
-
-			}
-		}
-
-
-		context.setFontSize(FONTSIZE_TITLE * dr.titleScale);
-		double titleWidth = context.getTextWidth(dr.xAxisTitle);
-		double titleHeight = context.getFontAscent();
-		context.writeText(dr.xAxisTitle, axes.x + (plotWidth - titleWidth) / 2.0, textBaseline + titleHeight);
-
-
-		context.restore();
-
-	}
-
-
-	private void drawYAxis(Coord<Double> axes)
-	{
-
-		context.save();
-
-		context.useSansFont();
-		context.setFontSize(FONTSIZE_TITLE * dr.titleScale);
-
-		context.rotate(-3.141592653589793238 / 2.0);
-
-		double titleWidth = context.getTextWidth(dr.yAxisTitle);
-		double plotHeight = dr.imageHeight - axes.y;
-		double titleStart = plotHeight - ((plotHeight - titleWidth) / 2.0);
-		double titleHeight = context.getFontHeight();
-
-		context.writeText(dr.yAxisTitle, -titleStart, titleHeight);
-
-		context.stroke();
-
-		context.restore();
-
-	}
-*/
-
 	/**
 	 * Calculates the space required for drawing the axes
 	 * @return A coordinate pair defining the x and y space consumed by the axes
 	 */
-	public Coord<Bounds<Float>> getPlotOffsetFromBottomLeft()
-	{
-		
-		Bounds<Float> availableX, availableY;
-		availableX = new Bounds<Float>(0.0f, dr.imageWidth);
-		availableY = new Bounds<Float>(0.0f, dr.imageHeight);
+	public Coord<Bounds<Float>> getPlotOffsetFromBottomLeft() {
 		PainterData p = new PainterData(context, dr, plotSize, dataHeights);
-		
-		if (axisPainters != null) {
-			
-			Pair<Float, Float> axisSizeX, axisSizeY;
-			
-			for (AxisPainter axisPainter : axisPainters){
-
-				
-				axisPainter.setDimensions( 
-						
-						new Bounds<Float>(availableX.start, availableX.end),
-						new Bounds<Float>(availableY.start, availableY.end)
-						
-				);
-				
-				axisSizeX = axisPainter.getAxisSizeX(p);
-				axisSizeY = axisPainter.getAxisSizeY(p);
-
-				availableX.start += axisSizeX.first;
-				availableX.end -= axisSizeX.second;
-				availableY.start += axisSizeY.first;
-				availableY.end -= axisSizeY.second;
-				
-			}
-			
-		}
-				
-		
-		return new Coord<Bounds<Float>>(availableX, availableY);
-
+		return AxisPainter.calcAxisBorders(p, axisPainters);
 	}
 
 
-	public static float getBaseUnitSize(DrawingRequest dr)
-	{
+	public static float getBaseUnitSize(DrawingRequest dr) {
 		return dr.imageHeight / 350.0f;
 	}
 
 
-	public static float getDataScale(DrawingRequest dr)
-	{
+	public static float getDataScale(DrawingRequest dr) {
 		
 		float datascale;
 		if (dr.maxYIntensity == -1){
@@ -419,8 +264,7 @@ public class PlotDrawing extends Drawing
 		return datascale;
 	}	
 	
-	public static float getDataScale(DrawingRequest dr, ReadOnlySpectrum data)
-	{
+	public static float getDataScale(DrawingRequest dr, ReadOnlySpectrum data) {
 		
 		float datascale;
 		if (dr.maxYIntensity == -1){
