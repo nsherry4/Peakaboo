@@ -10,7 +10,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 
 public class RangeTickFormatter extends AbstractTickFormatter {
 	
-	private float tickStart, tickEnd;
+	private float tickStart, tickEnd, axisEnd;
 	private Function<Integer, String> formatter;
 	
 	
@@ -19,9 +19,14 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 	}
 	
 	public RangeTickFormatter(float tickStart, float tickEnd, Function<Integer, String> formatter) {
+		this(tickStart, tickEnd, tickEnd, formatter);
+	}
+	
+	public RangeTickFormatter(float tickStart, float tickEnd, float axisEnd, Function<Integer, String> formatter) {
 		this.tickStart = tickStart;
 		this.tickEnd = tickEnd;
 		this.formatter = formatter;
+		this.axisEnd = axisEnd;
 	}
 	
 	
@@ -31,6 +36,7 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 		
 		if (this.isEmpty()) return marks;
 		
+		float axisRange = axisEnd - this.tickStart;
 		float tickRange = this.tickEnd - this.tickStart;
 		float maxTicks = this.calcMaxTicks(p, size);
 		int increment = getIncrement(tickRange, maxTicks, 1);
@@ -39,11 +45,11 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 		
 		int currentValue = startingValue;
 		while (currentValue <= this.tickEnd) {
-			var position = (currentValue - this.tickStart)  / tickRange;
+			var position = (currentValue - this.tickStart)  / axisRange;
 			
 			float tickValue;
 			if (this.isLog()) {
-				tickValue = (float)Math.exp(  (position) * Math.log1p(tickRange)  ) - 1.0f;
+				tickValue = (float)Math.exp(  (position) * Math.log1p(axisRange)  ) - 1.0f;
 				tickValue = SigDigits.toIntSigDigit(tickValue, 2);					
 			} else {
 				tickValue = currentValue;

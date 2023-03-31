@@ -259,9 +259,11 @@ public class PlotDrawing extends Drawing
 	
 	public static float getDataScale(float maxValue, boolean log, boolean pad) {
 		float datascale = maxValue;
-		if (log) datascale = (float)Math.log(datascale);
-		if (pad) datascale *= 1.15;
-		if (log) datascale = (float)Math.exp(datascale);
+		if (pad) {
+			if (log) datascale = (float)Math.log(datascale);
+			datascale *= 1.15;
+			if (log) datascale = (float)Math.exp(datascale);
+		}
 		return datascale;
 	}	
 	
