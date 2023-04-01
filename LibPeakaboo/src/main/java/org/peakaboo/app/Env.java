@@ -91,23 +91,25 @@ public class Env
 
 	}
 	
+	public static File installDir() {
+		String apppath = System.getProperty("jpackage.app-path");
+		if (apppath == null) return null;
+		var pathfile = new File(apppath);
+		return new File(pathfile.getParent());
+	}
 	
 	public static File systemCFGFile(String appname) {
-		try {
-			PeakabooLog.get().warning("jpackage.app-path="+System.getProperty("jpackage.app-path"));
-			PeakabooLog.get().warning("class-url="+new File(Env.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
-			PeakabooLog.get().warning("-----");
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		File install = installDir();
+		if (install == null) {
+			throw new RuntimeException("Cannot determine the install directory for " + appname);
 		}
+		PeakabooLog.get().info("Detected install directory as " + install.getPath());		
 		return switch(getOS()) {
-			case ANDROID -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
-			case WINDOWS -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
-			case MAC -> new File("/???/" + appname + ".app/Contents/app/" + appname + ".cfg");
-			case OTHER -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
-			case UNIX -> new File("/opt/" + appname.toLowerCase() + "/lib/app/" + appname + ".cfg");
-			default -> throw new IllegalArgumentException("Unexpected value: " + getOS());
+			case ANDROID -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
+			case WINDOWS -> new File(install.getPath() + "/app/" + appname + ".cfg");
+			case MAC -> new File(install.getPath() + "/Contents/app/" + appname + ".cfg");
+			case UNIX -> new File(install.getPath() + "/lib/app/" + appname + ".cfg");
+			case OTHER -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 		};
 	}
 	
