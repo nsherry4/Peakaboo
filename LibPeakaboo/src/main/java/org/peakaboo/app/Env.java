@@ -94,9 +94,9 @@ public class Env
 	
 	public static File systemCFGFile(String appname) {
 		try {
-			System.out.println("jpackage.app-path="+System.getProperty("jpackage.app-path"));
-			System.out.println("class-url="+new File(Env.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
-			System.out.println("-----");
+			PeakabooLog.get().warning("jpackage.app-path="+System.getProperty("jpackage.app-path"));
+			PeakabooLog.get().warning("class-url="+new File(Env.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
+			PeakabooLog.get().warning("-----");
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
