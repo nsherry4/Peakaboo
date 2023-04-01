@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.app.Version;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -160,17 +161,21 @@ class TabWindowListener extends WindowAdapter {
 
 		StringBuilder details = new StringBuilder();
 		details.append("<html><span style='font-size: 145%; font-weight: bold;'>");
+		details.append("Save changes before exiting?");
+		details.append("</span><br/><br/>");
+		
+		
 		details.append("Save changes to ");
 		if (unsavedWork.size() > 1) {
 			details.append(unsavedWork.size());
-			details.append(" projects");
+			details.append(" projects?");
 		} else {
 			details.append("'");
 			details.append(unsavedWork.get(0).getController().data().getTitle());
-			details.append("'");
+			details.append("'?");
 		}
-		details.append(" before exiting?");
-		details.append("</span><br/><br/>If you don't save your session(s), any unsaved work will be permanently lost.");
+
+		details.append(" Any unsaved work will be lost.");
 		details.append("</html>");
 		
 		
@@ -189,6 +194,7 @@ class TabWindowListener extends WindowAdapter {
 		
 		JPanel body = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
 		JLabel bodyText = new JLabel(details.toString());
+		bodyText.setBorder(new EmptyBorder(Spacing.medium, 0, 0, 0));
 		bodyText.setVerticalAlignment(SwingConstants.TOP);
 		body.add(bodyText, BorderLayout.CENTER);
 		JLabel icon = new JLabel(StockIcon.BADGE_QUESTION.toImageIcon(IconSize.ICON));
