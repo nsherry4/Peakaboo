@@ -96,7 +96,11 @@ public class Env
 		String apppath = System.getProperty("jpackage.app-path");
 		if (apppath == null) return null;
 		var pathfile = new File(apppath);
-		return new File(pathfile.getParent());
+		if (getOS() == OS.MAC) {
+			return new File(new File(pathfile.getParent()).getParent());
+		} else {
+			return new File(pathfile.getParent());
+		}
 	}
 	
 	public static File systemCFGFile(String appname) {
@@ -108,7 +112,7 @@ public class Env
 		File cfg = switch(getOS()) {
 			case ANDROID -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 			case WINDOWS -> new File(install.getPath() + "/app/" + appname + ".cfg");
-			case MAC -> new File(install.getPath() + "/Contents/app/" + appname + ".cfg");
+			case MAC -> new File(install.getPath() + "/app/" + appname + ".cfg");
 			case UNIX -> new File(install.getPath() + "/lib/app/" + appname + ".cfg");
 			case OTHER -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 		};
@@ -117,6 +121,7 @@ public class Env
 		}
 		return cfg;
 	}
+	
 	
 	public static File userCFGFile(String appname) {
 		return appDirEntry(appname, appname + ".cfg");
