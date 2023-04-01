@@ -3,6 +3,7 @@ package org.peakaboo.app;
 
 
 import java.io.File;
+import java.net.URISyntaxException;
 
 
 
@@ -92,10 +93,18 @@ public class Env
 	
 	
 	public static File systemCFGFile(String appname) {
+		try {
+			System.out.println("jpackage.app-path="+System.getProperty("jpackage.app-path"));
+			System.out.println("class-url="+new File(Env.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());
+			System.out.println("-----");
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return switch(getOS()) {
 			case ANDROID -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
 			case WINDOWS -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
-			case MAC -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
+			case MAC -> new File("/???/" + appname + ".app/Contents/app/" + appname + ".cfg");
 			case OTHER -> throw new UnsupportedOperationException("Unimplemented case: " + getOS());
 			case UNIX -> new File("/opt/" + appname.toLowerCase() + "/lib/app/" + appname + ".cfg");
 			default -> throw new IllegalArgumentException("Unexpected value: " + getOS());
