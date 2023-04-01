@@ -4,6 +4,7 @@ package org.peakaboo.app;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
 
 
 
@@ -103,14 +104,18 @@ public class Env
 		if (install == null) {
 			throw new RuntimeException("Cannot determine the install directory for " + appname);
 		}
-		PeakabooLog.get().info("Detected install directory as " + install.getPath());		
-		return switch(getOS()) {
+		PeakabooLog.get().log(Level.INFO, "Detected install directory as " + install.getPath());		
+		File cfg = switch(getOS()) {
 			case ANDROID -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 			case WINDOWS -> new File(install.getPath() + "/app/" + appname + ".cfg");
 			case MAC -> new File(install.getPath() + "/Contents/app/" + appname + ".cfg");
 			case UNIX -> new File(install.getPath() + "/lib/app/" + appname + ".cfg");
 			case OTHER -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 		};
+		if (!cfg.exists()) {
+			throw new RuntimeException("System CFG file not found at expected location: " + cfg.getPath());
+		}
+		return cfg;
 	}
 	
 	public static File userCFGFile(String appname) {
