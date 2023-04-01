@@ -99,9 +99,9 @@ class FilterList extends ClearPanel {
 		//EDIT column
 		column = t.getColumnModel().getColumn(1);
 		column.setResizable(false);
-		column.setMinWidth(45);
-		column.setPreferredWidth(45);
-		column.setMaxWidth(45);
+		column.setMinWidth(28);
+		column.setPreferredWidth(28);
+		column.setMaxWidth(28);
 		
 		t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		

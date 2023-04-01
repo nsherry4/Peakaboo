@@ -12,9 +12,9 @@ import javax.swing.table.TableCellRenderer;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
-import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 
 class EditButtonRenderer implements TableCellRenderer {
@@ -26,10 +26,10 @@ class EditButtonRenderer implements TableCellRenderer {
 
 	public EditButtonRenderer() {
 
-		imgEdit = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL);
-		imgEditSelected = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL, Color.WHITE);
+		imgEdit = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON);
+		imgEditSelected = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON, Color.WHITE);
 		
-		edit = new FluentButton(StockIcon.EDIT_EDIT, IconSize.TOOLBAR_SMALL).withTooltip("Edit Filter").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
+		edit = new FluentButton(PeakabooIcons.MENU_SETTINGS, IconSize.BUTTON).withTooltip("Edit Filter").withLayout(FluentButtonLayout.IMAGE).withBordered(false);
 		edit.setOpaque(false);
 				
 		container = new JPanel();

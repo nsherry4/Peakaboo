@@ -15,7 +15,7 @@ class FilterSelectionRenderer extends DefaultTreeCellRenderer {
 
 	FilterSelectionRenderer() {
 		super();
-		setBorder(Spacing.bSmall());
+		setBorder(Spacing.bMedium());
 	}
 
 

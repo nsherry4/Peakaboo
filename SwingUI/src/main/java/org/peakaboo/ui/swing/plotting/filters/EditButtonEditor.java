@@ -20,9 +20,9 @@ import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
-import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 
 
@@ -51,10 +51,10 @@ class EditButtonEditor extends DefaultCellEditor {
 		this.owner = owner;
 		this.settingsDialogs = new HashMap<>();
 
-		imgEdit = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL);
-		imgEditSelected = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL, Color.WHITE);
+		imgEdit = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON);
+		imgEditSelected = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON, Color.WHITE);
 		
-		button = new FluentButton(StockIcon.EDIT_EDIT, IconSize.TOOLBAR_SMALL)
+		button = new FluentButton(PeakabooIcons.MENU_SETTINGS, IconSize.BUTTON)
 				.withTooltip("Edit Filter")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false)

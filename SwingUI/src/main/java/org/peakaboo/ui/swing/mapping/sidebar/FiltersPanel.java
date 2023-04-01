@@ -42,6 +42,7 @@ import org.peakaboo.framework.stratus.components.ui.itemlist.SelectionListContro
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 public class FiltersPanel extends JPanel {
 
@@ -149,9 +150,9 @@ public class FiltersPanel extends JPanel {
 		
 		filterTable.getColumnModel().getColumn(1).setCellRenderer(new StencilTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller, window)));
 		filterTable.getColumnModel().getColumn(1).setCellEditor(new StencilCellEditor<MapFilter>(new MapFilterSettingsButton(controller, window)));
-		filterTable.getColumnModel().getColumn(1).setMinWidth(32);
-		filterTable.getColumnModel().getColumn(1).setPreferredWidth(32);
-		filterTable.getColumnModel().getColumn(1).setMaxWidth(32);
+		filterTable.getColumnModel().getColumn(1).setMinWidth(28);
+		filterTable.getColumnModel().getColumn(1).setPreferredWidth(28);
+		filterTable.getColumnModel().getColumn(1).setMaxWidth(28);
 		
 		filterTable.getColumnModel().getColumn(2).setCellRenderer(new StencilTableCellRenderer<MapFilter>(new MapFilterWidget()));
 		filterTable.getColumnModel().getColumn(2).setCellEditor(new StencilCellEditor<MapFilter>(new MapFilterWidget()));
@@ -203,6 +204,7 @@ public class FiltersPanel extends JPanel {
 		JTree tree = new JTree(treeModel);
 		tree.setRootVisible(false);
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+		renderer.setBorder(Spacing.bMedium());
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
 		tree.setCellRenderer(renderer);
 		
@@ -267,7 +269,7 @@ class MapFilterWidget extends Stencil<MapFilter> {
 
 class MapFilterSettingsButton extends Stencil<MapFilter> {
 	
-	private FluentButton button = new FluentButton(StockIcon.EDIT_EDIT, IconSize.TOOLBAR_SMALL);
+	private FluentButton button = new FluentButton(PeakabooIcons.MENU_SETTINGS, IconSize.BUTTON);
 	private MapFilter filter;
 	
 	private ImageIcon imgEdit, imgEditSel;
@@ -279,7 +281,7 @@ class MapFilterSettingsButton extends Stencil<MapFilter> {
 		setLayout(new BorderLayout());
 		add(button, BorderLayout.CENTER);
 		
-		imgEdit = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL);
+		imgEdit = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON);
 		
 		button.withBordered(false);
 		button.setOpaque(false);
@@ -307,7 +309,7 @@ class MapFilterSettingsButton extends Stencil<MapFilter> {
 		button.setVisible(!filter.getParameters().isEmpty());
 		if (selected) {
 			if (imgEditSel == null) {
-				imgEditSel = StockIcon.EDIT_EDIT.toImageIcon(IconSize.TOOLBAR_SMALL, getForeground());
+				imgEditSel = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON, getForeground());
 			}
 			button.setIcon(imgEditSel);
 		} else {
