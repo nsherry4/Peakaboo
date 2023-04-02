@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import org.peakaboo.framework.druthers.settings.DummySettingsStore;
 import org.peakaboo.framework.druthers.settings.SettingsStore;
 import org.peakaboo.framework.druthers.settings.YamlSettingsStore;
 
 public class Settings {
 
-	protected static SettingsStore provider;
+	protected static SettingsStore provider = new DummySettingsStore();
 	
 	public static void load(File directory) throws IOException {
 		  provider = new YamlSettingsStore(directory);
@@ -21,7 +22,7 @@ public class Settings {
 	}
 	
 	public static SettingsStore provider() {
-		if (provider == null) {
+		if (provider == null || provider instanceof DummySettingsStore) {
 			throw new RuntimeException("Settings provider has not been initialized");
 		}
 		return provider;

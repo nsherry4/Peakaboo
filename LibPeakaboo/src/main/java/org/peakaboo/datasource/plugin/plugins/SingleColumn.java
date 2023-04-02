@@ -1,5 +1,6 @@
 package org.peakaboo.datasource.plugin.plugins;
 
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -17,8 +19,10 @@ import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.fileformat.FileFormatCompatibility;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.components.scandata.PipelineScanData;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.SparsedList;
@@ -29,10 +33,10 @@ public class SingleColumn extends AbstractDataSource {
 
 	private static final String splitPattern = "[,\\s]+";
 	
-	SimpleScanData scandata;
+	PipelineScanData scandata;
 	SimpleDataSize datasize;
 	@Override
-	public Optional<Group> getParameters(List<Path> paths) {
+	public Optional<Group> getParameters(List<DataFile> paths) {
 		return Optional.empty();
 	}
 
@@ -71,22 +75,21 @@ public class SingleColumn extends AbstractDataSource {
 			}
 			
 			@Override
-			public FileFormatCompatibility compatibility(List<Path> filenames) {
+			public FileFormatCompatibility compatibility(List<DataFile> filenames) {
 				try {
 					//exactly 1 file
 					if (filenames.size() != 1) {
 						return FileFormatCompatibility.NO;
 					}
-					Path filename = filenames.get(0);
+					DataFile filename = filenames.get(0);
 					
 					//no larger than 1MB
-					if (Files.size(filename) > 1048576l) {
+					if (filename.size().orElse(0l) > 1048576l) {
 						return FileFormatCompatibility.NO;
 					}
 					
-					//remove comments, clean up, etc
-					List<String> lines = tidy(Files.readAllLines(filename));
-					
+					List<String> lines = tidy(filename.toLines());
+
 					//test if it's valid
 					if (test(lines)) {
 						return FileFormatCompatibility.MAYBE_BY_CONTENTS;
@@ -101,29 +104,29 @@ public class SingleColumn extends AbstractDataSource {
 		};
 	}
 
+
 	@Override
 	public ScanData getScanData() {
 		return scandata;
 	}
 
 	@Override
-	public void read(List<Path> filenames) throws Exception {
+	public void read(List<DataFile> files) throws DataSourceReadException, IOException, InterruptedException {
 		//exactly 1 file
-		if (filenames.size() != 1) {
+		if (files.size() != 1) {
 			throw new IllegalArgumentException("This DataSource expects a single file");
 		}
-		Path filename = filenames.get(0);
+		DataFile file = files.get(0);
 		
 		//no larger than 1MB
-		if (Files.size(filename) > 1048576l) {
+		if (file.size().orElse(0l) > 1048576l) {
 			throw new IllegalArgumentException("File is too large");
 		}
 		
-		scandata = new SimpleScanData(filename.getFileName().toString());
+		scandata = new PipelineScanData(file.getBasename());
 		
 		//remove comments, clean up, etc
-		List<String> lines = tidy(Files.readAllLines(filename));
-		
+		List<String> lines = tidy(file.toLines());
 		List<Float> floats = new SparsedList<>(new ArrayList<>());
 		
 		
@@ -146,17 +149,19 @@ public class SingleColumn extends AbstractDataSource {
 				floats.set(index++, value);
 			}
 		} else {
-			throw new Exception("Invalid file format, expected 1 or 2 entries per line, found " + parts.length);
+			throw new DataSourceReadException("Invalid file format, expected 1 or 2 entries per line, found " + parts.length);
 		}
 		
 		Spectrum s = new ISpectrum(floats);
-		scandata.add(s);
+		scandata.submit(s);
+		
+		scandata.finish();
 		
 	}
 
 	@Override
 	public String pluginVersion() {
-		return "0.2";
+		return "0.3";
 	}
 
 	@Override

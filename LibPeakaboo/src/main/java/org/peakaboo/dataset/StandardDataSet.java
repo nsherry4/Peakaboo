@@ -1,6 +1,7 @@
 package org.peakaboo.dataset;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -131,7 +132,7 @@ public class StandardDataSet implements DataSet
 					IntConsumer readScans = reading::workUnitCompleted;
 					
 					dataSource.setInteraction(new CallbackInteraction(openedScans, gotScanCount, readScans, isAborted));
-					dataSource.readDataFiles(paths);
+					dataSource.read(paths);
 	
 
 					if (isAborted.getAsBoolean()) {
@@ -165,8 +166,13 @@ public class StandardDataSet implements DataSet
 					
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
-					
+				
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return new DatasetReadResult(e);
 				} catch (DataSourceReadException e) {
+					return new DatasetReadResult(e);
+				} catch (IOException e) {
 					return new DatasetReadResult(e);
 				} catch (Throwable e) {
 					return new DatasetReadResult(e);

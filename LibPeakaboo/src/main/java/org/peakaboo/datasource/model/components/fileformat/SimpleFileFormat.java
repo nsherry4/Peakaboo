@@ -1,10 +1,11 @@
 package org.peakaboo.datasource.model.components.fileformat;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.peakaboo.datasource.model.datafile.DataFile;
 
 public class SimpleFileFormat implements FileFormat {
 
@@ -28,19 +29,19 @@ public class SimpleFileFormat implements FileFormat {
 		return Collections.unmodifiableList(extensions);
 	}
 
-	public FileFormatCompatibility compatibility(Path path) {
+	public FileFormatCompatibility compatibility(DataFile datafile) {
 		boolean match = extensions.stream()
-					.map(ext -> path.toString().toLowerCase().endsWith(ext.toLowerCase()))
+					.map(ext -> datafile.getFilename().toLowerCase().endsWith(ext.toLowerCase()))
 					.reduce(false, (a, b) -> a || b);
 		if (match) { return FileFormatCompatibility.MAYBE_BY_FILENAME; }
 		return FileFormatCompatibility.NO;
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(List<Path> paths) {
-		if (singleFile && paths.size() > 1) { return FileFormatCompatibility.NO; }
-		if (paths.isEmpty()) { return FileFormatCompatibility.NO; }
-		boolean match = paths.stream().map(f -> this.compatibility(f) != FileFormatCompatibility.NO).reduce(true, (a, b) -> a && b);
+	public FileFormatCompatibility compatibility(List<DataFile> datafile) {
+		if (singleFile && datafile.size() > 1) { return FileFormatCompatibility.NO; }
+		if (datafile.isEmpty()) { return FileFormatCompatibility.NO; }
+		boolean match = datafile.stream().map(f -> this.compatibility(f) != FileFormatCompatibility.NO).reduce(true, (a, b) -> a && b);
 		if (match) { return FileFormatCompatibility.MAYBE_BY_FILENAME; }
 		return FileFormatCompatibility.NO;
 	}

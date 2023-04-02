@@ -1,8 +1,7 @@
 package org.peakaboo.datasource.plugin.plugins;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +11,9 @@ import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.fileformat.SimpleFileFormat;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.datasource.model.components.scandata.PipelineScanData;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
-import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
-import org.peakaboo.datasource.model.components.scandata.loaderqueue.LoaderQueue;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -30,7 +29,7 @@ public class PlainText extends AbstractDataSource
 	int 	size = 0;
 	int		scanSize = -1;
 
-	private SimpleScanData scandata;
+	private PipelineScanData scandata;
 	
 	
 	//==============================================
@@ -53,7 +52,7 @@ public class PlainText extends AbstractDataSource
 
 	@Override
 	public String pluginVersion() {
-		return "1.0";
+		return "1.1";
 	}
 
 	@Override
@@ -68,21 +67,19 @@ public class PlainText extends AbstractDataSource
 	//==============================================
 
 	@Override
-	public void read(List<Path> files) throws Exception
+	public void read(List<DataFile> files) throws DataSourceReadException, IOException, InterruptedException
 	{
 		
 		if (files == null) throw new UnsupportedOperationException();
 		if (files.size() == 0) throw new UnsupportedOperationException();
 		if (files.size() > 1) throw new UnsupportedOperationException();
 		
-		Path file = files.get(0);
+		DataFile file = files.get(0);
 		
-		int fileSize = (int) Files.size(file);
+		var filesize = file.size();
 		int lineEstimate = -1;
 		
-		scandata = new SimpleScanData(file.getFileName().toString());
-		//LoaderQueue will push compression off onto the queue thread
-		LoaderQueue queue = scandata.createLoaderQueue(10);
+		scandata = new PipelineScanData(file.getBasename());
 		
 		
 		
@@ -99,11 +96,13 @@ public class PlainText extends AbstractDataSource
 		settings.setMaxCharsPerColumn(24);
 		CsvParser parser = new CsvParser(settings);
 		
-		int readcount = 0;
-		for (String[] row : parser.iterate(Files.newInputStream(file, StandardOpenOption.READ))) {
+		InputStream instream = file.getInputStream();;		
 
-			if (lineEstimate == -1) {
-				lineEstimate = fileSize / (String.join(" ", row).length());
+		int readcount = 0;
+		for (String[] row : parser.iterate(instream)) {
+
+			if (lineEstimate == -1 && filesize.isPresent()) {
+				lineEstimate = ((int)filesize.get().longValue()) / (String.join(" ", row).length());
 				getInteraction().notifyScanCount(lineEstimate);
 			}
 			
@@ -112,12 +111,13 @@ public class PlainText extends AbstractDataSource
 			Spectrum scan = parseLine(row, parser.getDetectedFormat().getDelimiter());
 			
 			if (size > 0 && scan.size() != scanSize)  {
-				throw new Exception("Spectra sizes are not equal");
+				throw new DataSourceReadException("Spectra sizes are not equal");
 			} else if (size == 0) {
 				scanSize = scan.size();
 			}
 			
-			queue.submit(scan);
+			scandata.submit(scan);
+
 			size++;
 			readcount++;
 			
@@ -129,7 +129,7 @@ public class PlainText extends AbstractDataSource
 		}
 		
 		
-		queue.finish();
+		scandata.finish();
 		
 
 	}
@@ -210,7 +210,7 @@ public class PlainText extends AbstractDataSource
 	}
 
 	@Override
-	public Optional<Group> getParameters(List<Path> paths) {
+	public Optional<Group> getParameters(List<DataFile> paths) {
 		return Optional.empty();
 	}
 

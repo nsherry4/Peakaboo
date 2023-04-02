@@ -1,6 +1,6 @@
 package org.peakaboo.datasource.model.internal;
 
-import java.nio.file.Path;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +11,7 @@ import org.peakaboo.datasource.model.components.interaction.Interaction;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 
 public class DelegatingDataSource implements DataSource {
@@ -56,7 +57,7 @@ public class DelegatingDataSource implements DataSource {
 	}
 
 
-	public void read(List<Path> files) throws Exception {
+	public void read(List<DataFile> files) throws DataSourceReadException, IOException, InterruptedException {
 		backer.read(files);
 	}
 
@@ -71,7 +72,7 @@ public class DelegatingDataSource implements DataSource {
 	}
 	
 	@Override
-	public Optional<Group> getParameters(List<Path> paths) {
+	public Optional<Group> getParameters(List<DataFile> paths) throws DataSourceReadException, IOException {
 		return backer.getParameters(paths);
 	}
 	

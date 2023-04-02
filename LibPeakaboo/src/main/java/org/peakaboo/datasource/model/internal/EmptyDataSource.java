@@ -1,6 +1,5 @@
 package org.peakaboo.datasource.model.internal;
 
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +13,7 @@ import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.datasource.model.components.scandata.ScanData;
 import org.peakaboo.datasource.model.components.scandata.SimpleScanData;
+import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 
 /**
@@ -31,7 +31,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 
 	@Override
-	public FileFormatCompatibility compatibility(List<Path> filenames) {
+	public FileFormatCompatibility compatibility(List<DataFile> filenames) {
 		return FileFormatCompatibility.NO;
 	}
 
@@ -42,7 +42,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 
 	@Override
-	public void read(List<Path> files) throws Exception {
+	public void read(List<DataFile> files) throws DataSourceReadException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -94,7 +94,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	}
 
 	@Override
-	public Optional<Group> getParameters(List<Path> paths) {
+	public Optional<Group> getParameters(List<DataFile> paths) {
 		return Optional.empty();
 	}
 

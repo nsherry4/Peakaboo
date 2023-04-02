@@ -84,7 +84,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 				//try loading the file
 				DataSource source = new PlainText();
 				Path path = new File(spectrumFile.getValue()).toPath();
-				source.readDataFiles(Collections.singletonList(new PathDataFile(path)));
+				source.read(Collections.singletonList(new PathDataFile(path)));
 				DataSet bgDataSet = new StandardDataSet(source);
 				spectrum = bgDataSet.getAnalysis().averagePlot();
 			} catch (Exception e) {

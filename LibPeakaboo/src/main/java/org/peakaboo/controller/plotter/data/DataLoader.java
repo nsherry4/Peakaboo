@@ -14,6 +14,7 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
+import org.peakaboo.datasource.model.DataSource.DataSourceReadException;
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.plugin.DataSourceLookup;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
@@ -144,7 +145,14 @@ public abstract class DataLoader {
 	}
 	
 	private void prompt(JavaDataSourcePlugin dsp) {
-		Optional<Group> parameters = dsp.getParametersForDataFile(datafiles);
+		
+		Optional<Group> parameters = Optional.empty();
+		try {
+			parameters = dsp.getParameters(datafiles);
+		} catch (DataSourceReadException | IOException e1) {
+			onFail(datafiles, "Data Source failed while loading paramters");
+			return;
+		}
 		
 		if (parameters.isPresent()) {
 			Group dsGroup = parameters.get();

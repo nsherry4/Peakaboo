@@ -20,7 +20,7 @@ public class DataSourceLookup {
 
 		for (JavaDataSourcePlugin datasource : dsps) {
 			try {
-				FileFormatCompatibility compat = datasource.getFileFormat().compatibilityWithDataFile(new ArrayList<>(datafiles));
+				FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<>(datafiles));
 				
 				PeakabooLog.get().log(Level.INFO, "DataSource plugin '" + datasource.pluginName() + "' (" + datasource.pluginUUID() + ") answers '" + compat.toString() + "'");
 				

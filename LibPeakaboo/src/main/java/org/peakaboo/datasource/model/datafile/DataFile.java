@@ -3,9 +3,14 @@ package org.peakaboo.datasource.model.datafile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
+import org.apache.commons.io.FilenameUtils;
 import org.peakaboo.datasource.model.DataSource;
 
 /**
@@ -14,6 +19,10 @@ import org.peakaboo.datasource.model.DataSource;
  * {@link InputStream}, or through a {@link Path}. The InputStream should be
  * preferred, as the file referenced by the {@link Path} may be created on
  * demand as a temporary file copied from the InputStream.
+ * 
+ * This is helpful for working in environments like Android which do not allow
+ * direct access to the filesystem, or generally don't choose/share files that 
+ * way.
  * 
  * @author NAS
  *
@@ -24,7 +33,52 @@ public interface DataFile extends AutoCloseable {
 	 * Gets a relative filename for this DataFile.
 	 */
 	String getFilename();
-
+	
+	/**
+	 * Gets the filename without the extension
+	 */
+	default String getBasename() {
+		return FilenameUtils.getBaseName(getFilename());
+	}
+	
+	static String getSharedBasename(List<DataFile> datafiles) {
+		if (datafiles.isEmpty()) return "";
+		
+		var shared = datafiles.get(0).getBasename();
+		for (var datafile : datafiles) {
+			var othername = datafile.getBasename();
+			var length = Math.min(shared.length(), othername.length());
+			for (int i = 0; i < length; i++) {
+				if (shared.charAt(i) != othername.charAt(i)) {
+					shared = shared.substring(0, i);
+				}
+			}
+		}
+		return shared;
+	}
+	
+	static String getTitle(List<DataFile> datafiles) {
+		if (datafiles.size() == 0) return "";
+		var shared = getSharedBasename(datafiles);
+		if (shared.length() > 2) return shared;
+		return datafiles.get(0).getBasename();
+	}
+	
+	default List<String> toLines() throws IOException {
+		return this.toLines(null);
+	}
+	
+	default List<String> toLines(Charset charset) throws IOException {
+		//Read lines
+		var filescanner = (charset == null) ? new Scanner(this.getInputStream()) : new Scanner(this.getInputStream(), charset);
+		List<String> lines = new ArrayList<>();
+		while (filescanner.hasNextLine()) {
+			lines.add(filescanner.nextLine());
+		}
+		filescanner.close();
+		return lines;
+	}
+	
 	/**
 	 * Returns an {@link InputStream} for this DataFile
 	 * 
