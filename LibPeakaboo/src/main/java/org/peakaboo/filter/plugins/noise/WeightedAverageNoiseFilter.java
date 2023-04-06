@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
-import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -35,8 +35,8 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.NOISE;
+	public FilterDescriptor getFilterDescriptor() {
+		return FilterDescriptor.SMOOTHING;
 	}
 
 

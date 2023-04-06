@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
-import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -47,8 +47,8 @@ public class SubtractionMathFilter extends AbstractFilter
 
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.MATHEMATICAL;
+	public FilterDescriptor getFilterDescriptor() {
+		return FilterDescriptor.MATHEMATICAL;
 	}
 
 

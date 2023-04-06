@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
-import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
 import org.peakaboo.framework.autodialog.model.classinfo.EnumClassInfo;
@@ -35,8 +35,7 @@ public final class FourierNoiseFilter extends AbstractFilter {
 	private SelectionParameter<FFT.FilterStyle> rolloff;
 
 
-	public FourierNoiseFilter()
-	{
+	public FourierNoiseFilter() {
 		super();
 	}
 	
@@ -51,9 +50,7 @@ public final class FourierNoiseFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public void initialize()
-	{
-		
+	public void initialize() {
 		
 		rolloff = new SelectionParameter<>("Roll-Off Type", new DropDownStyle<>(), FFT.FilterStyle.LINEAR, new EnumClassInfo<>(FFT.FilterStyle.class), this::validate);
 		rolloff.setPossibleValues(Arrays.asList(FFT.FilterStyle.values()));
@@ -64,8 +61,7 @@ public final class FourierNoiseFilter extends AbstractFilter {
 	}
 	
 
-	private boolean validate(Parameter<?> p)
-	{
+	private boolean validate(Parameter<?> p) {
 
 		float start, end;
 		boolean isCutoff = rolloff.getValue() == FFT.FilterStyle.CUTOFF;
@@ -85,22 +81,19 @@ public final class FourierNoiseFilter extends AbstractFilter {
 
 
 	@Override
-	public String getFilterName()
-	{
+	public String getFilterName() {
 		return "Fourier Low-Pass";
 	}
 
 
 	@Override
-	public FilterType getFilterType()
-	{
-		return FilterType.NOISE;
+	public FilterDescriptor getFilterDescriptor() {
+		return FilterDescriptor.SMOOTHING;
 	}
 
 
 	@Override
-	public String getFilterDescription()
-	{
+	public String getFilterDescription() {
 		return "The "
 				+ getFilterName()
 				+ " filter applies a Fourier transformation to the spectral data, converting it into the frequency domain. Data from a high frequency range (noise) is filtered out, while lower frequencies (peaks, background) are passed through.";
@@ -109,8 +102,7 @@ public final class FourierNoiseFilter extends AbstractFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx)
-	{
+	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		
 		data = FFT.lowPassFilter(
 			data,
@@ -123,15 +115,13 @@ public final class FourierNoiseFilter extends AbstractFilter {
 	}
 
 	@Override
-	public boolean pluginEnabled()
-	{
+	public boolean pluginEnabled() {
 		return true;
 	}
 
 
 	@Override
-	public boolean canFilterSubset()
-	{
+	public boolean canFilterSubset() {
 		return false;
 	}
 
@@ -147,8 +137,7 @@ class FFT {
 	 * @author Nathaniel Sherry
 	 * 
 	 */
-	public enum FilterStyle
-	{
+	public enum FilterStyle {
 
 		CUTOFF {
 
@@ -177,8 +166,7 @@ class FFT {
 	}
 
 	
-	public static Complex[] dataToFFT(ReadOnlySpectrum data)
-	{
+	public static Complex[] dataToFFT(ReadOnlySpectrum data) {
 		
 		// Fast Fourier Transform
 
@@ -195,8 +183,7 @@ class FFT {
 	}
 	
 
-	public static Spectrum fftToData(Complex[] fft)
-	{
+	public static Spectrum fftToData(Complex[] fft) {
 		// FFT Inverse Transform
 		fft = FourierMath.inverseTransform(fft);
 
@@ -269,8 +256,7 @@ class FFT {
 	}
 
 
-	private static Spectrum doFFTFilter(ReadOnlySpectrum data, FilterStyle style, int start, int stop)
-	{
+	private static Spectrum doFFTFilter(ReadOnlySpectrum data, FilterStyle style, int start, int stop) {
 
 		// FFT
 		Complex[] transformedData = dataToFFT(data);
@@ -301,8 +287,7 @@ class FFT {
 	}
 
 
-	private static void fftCutoffStyle(Complex[] data, int start)
-	{
+	private static void fftCutoffStyle(Complex[] data, int start) {
 
 		double centre = data.length / 2.0;
 		for (int i = 0; i < data.length; i++) {
@@ -315,8 +300,7 @@ class FFT {
 	}
 
 
-	private static void fftLinearStyle(Complex[] data, int start, int stop)
-	{
+	private static void fftLinearStyle(Complex[] data, int start, int stop) {
 
 		// start and stop are distances from the centrepoint, so start should be a higher number than stop
 
@@ -348,8 +332,7 @@ class FFT {
 	}
 
 
-	private static void fftSineStyle(Complex[] data, int start, int stop)
-	{
+	private static void fftSineStyle(Complex[] data, int start, int stop) {
 
 		// start and stop are distances from the centrepoint, so start should be a higher number than stop
 

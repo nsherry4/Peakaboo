@@ -8,6 +8,7 @@ import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -26,9 +27,10 @@ public class PeakDetectorFilter extends AbstractFilter {
 	}
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.ADVANCED;
+	public FilterDescriptor getFilterDescriptor() {
+		return FilterDescriptor.ADVANCED;
 	}
+
 
 	@Override
 	public void initialize() {

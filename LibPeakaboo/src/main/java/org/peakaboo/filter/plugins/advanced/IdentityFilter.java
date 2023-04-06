@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
-import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class IdentityFilter extends AbstractFilter
@@ -39,8 +39,8 @@ public class IdentityFilter extends AbstractFilter
 
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.ADVANCED;
+	public FilterDescriptor getFilterDescriptor() {
+		return FilterDescriptor.ADVANCED;
 	}
 
 

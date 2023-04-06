@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
-import org.peakaboo.filter.model.FilterType;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -134,8 +134,8 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	}
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.NOISE;
+	public FilterDescriptor getFilterDescriptor() {
+		return FilterDescriptor.SMOOTHING;
 	}
 
 
