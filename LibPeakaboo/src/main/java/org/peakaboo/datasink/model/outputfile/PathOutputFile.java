@@ -1,4 +1,4 @@
-package org.peakaboo.datasource.model.datafile;
+package org.peakaboo.datasink.model.outputfile;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,8 +24,7 @@ public class PathOutputFile implements OutputFile {
 		return Files.newOutputStream(path, 
 				StandardOpenOption.WRITE, 
 				StandardOpenOption.CREATE, 
-				StandardOpenOption.TRUNCATE_EXISTING,
-				StandardOpenOption.SYNC //We do this so that each plugin is not required to flush/close the outputstream
+				StandardOpenOption.TRUNCATE_EXISTING
 			);
 	}
 
@@ -34,9 +33,5 @@ public class PathOutputFile implements OutputFile {
 		return path;
 	}
 
-	@Override
-	public void finishFallback() {
-		// NOOP
-	}
 
 }

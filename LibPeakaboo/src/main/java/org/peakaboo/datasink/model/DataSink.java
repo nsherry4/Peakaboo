@@ -7,19 +7,30 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.datasink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.datasink.model.components.interaction.Interaction;
+import org.peakaboo.datasink.model.outputfile.OutputFile;
 import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.datasource.model.datafile.OutputFile;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 public interface DataSink {
 
+	public class DataSinkWriteException extends Exception {
+		
+		public DataSinkWriteException(String message) {
+			super(message);
+		}
+		
+		public DataSinkWriteException(String message, Throwable cause) {
+			super(message, cause);
+		}
+	}
+	
 
 	/**
 	 * Writes the contents of the given {@link DataSource} to the destination
 	 * {@link OutputStream} in this DataSink's format.
 	 */
-	void write(DataSource source, OutputFile destination) throws IOException;
+	void write(DataSource source, OutputFile destination) throws IOException, DataSinkWriteException;
 		
 	String getFormatExtension();
 
@@ -52,7 +63,7 @@ public interface DataSink {
 				if (interaction.isAbortedRequested()) {
 					execset.aborted();
 				}
-			} catch (IOException e) {
+			} catch (IOException | DataSinkWriteException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
 			}
 			

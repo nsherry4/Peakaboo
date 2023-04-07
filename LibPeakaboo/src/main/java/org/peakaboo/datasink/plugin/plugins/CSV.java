@@ -1,15 +1,13 @@
 package org.peakaboo.datasink.plugin.plugins;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.file.Files;
 import java.util.stream.Collectors;
 
+import org.peakaboo.datasink.model.outputfile.OutputFile;
 import org.peakaboo.datasink.plugin.AbstractDataSink;
 import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.datasource.model.datafile.OutputFile;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class CSV extends AbstractDataSink {
@@ -30,7 +28,7 @@ public class CSV extends AbstractDataSink {
 	}
 	
 	@Override
-	public void write(DataSource source, OutputFile output) throws IOException {
+	public void write(DataSource source, OutputFile output) throws IOException, DataSinkWriteException {
 		
 		Writer writer = new OutputStreamWriter(output.getOutputStream());
 				
@@ -50,6 +48,12 @@ public class CSV extends AbstractDataSink {
 		}
 		writer.flush();
 		writer.close();
+		
+		try {
+			output.close();
+		} catch (Exception e) {
+			throw new DataSinkWriteException("Failed to close output stream", e);
+		}
 
 	}
 
