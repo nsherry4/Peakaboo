@@ -11,7 +11,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -55,7 +55,7 @@ public class Mapping {
 	 */
 	public static StreamExecutor<RawMapSet> mapTask(
 			FilterSet filters, 
-			CurveFitter fitter, 
+			CurveFitterPlugin fitter, 
 			FittingSolver solver,
 			FilterContext ctx
 		) {

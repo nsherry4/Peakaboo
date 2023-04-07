@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
@@ -46,9 +46,9 @@ public class FittingModel
 	Map<ITransitionSeries, String> annotations;
 	
 	/**
-	 * {@link CurveFitter} to use for all fitting of single curves to data
+	 * {@link CurveFitterPlugin} to use for all fitting of single curves to data
 	 */
-	public CurveFitter curveFitter;
+	public CurveFitterPlugin curveFitter;
 	
 	/**
 	 * {@link FittingSolver} to use for solving for the intensities of competing curves

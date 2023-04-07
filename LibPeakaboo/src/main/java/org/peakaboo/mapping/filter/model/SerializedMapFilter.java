@@ -3,7 +3,7 @@ package org.peakaboo.mapping.filter.model;
 import java.util.List;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 /**
  * SerializedFilter holds a reference to a filter, and provides getters/setters for
@@ -54,7 +54,7 @@ public class SerializedMapFilter {
 	public MapFilter getFilter() {
 		if (filter != null) { return filter; }
 			
-		for (BoltPluginPrototype<? extends JavaMapFilterPlugin> plugin : MapFilterPluginManager.system().getPlugins()) {
+		for (BoltPluginPrototype<? extends MapFilterPlugin> plugin : MapFilterPluginManager.system().getPlugins()) {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
 				filter = plugin.create();
 				filter.initialize();

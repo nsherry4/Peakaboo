@@ -4,7 +4,7 @@ import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -16,6 +16,6 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  */
 public interface FittingSolver extends SelfDescribing {
 
-	FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitter fitter);
+	FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitterPlugin fitter);
 	
 }

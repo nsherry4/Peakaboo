@@ -14,11 +14,11 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
-import org.peakaboo.datasource.model.DataSource.DataSourceReadException;
-import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.plugin.DataSourceLookup;
-import org.peakaboo.datasource.plugin.DataSourcePluginManager;
-import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
+import org.peakaboo.dataset.source.model.DataSource.DataSourceReadException;
+import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.source.plugin.DataSourceLookup;
+import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
+import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.util.StringInput;
@@ -43,7 +43,7 @@ public abstract class DataLoader {
 		this.datafiles = datafiles;
 	}
 	
-	private void loadWithDataSource(JavaDataSourcePlugin dsp) {
+	private void loadWithDataSource(DataSourcePlugin dsp) {
 		
 		if (datafiles != null) {
 			
@@ -79,7 +79,7 @@ public abstract class DataLoader {
 		onSuccess(datafiles, sessionFile);
 	}
 
-	private void onDataSourceLoadFailure(JavaDataSourcePlugin dsp, DatasetReadResult result) {
+	private void onDataSourceLoadFailure(DataSourcePlugin dsp, DatasetReadResult result) {
 		String message = "\nSource: " + dsp.getFileFormat().getFormatName();
 		
 		if (result != null && result.message != null) {
@@ -120,7 +120,7 @@ public abstract class DataLoader {
 		 * plugin specified by uuid (eg from a reloaded session). If there is no plugin
 		 * specified, we look up all formats
 		 */
-		List<JavaDataSourcePlugin> formats = new ArrayList<>();
+		List<DataSourcePlugin> formats = new ArrayList<>();
 		if (dataSourceUUID != null) {
 			var plugin = DataSourcePluginManager.system().getByUUID(dataSourceUUID);
 			if (plugin != null) { 
@@ -130,7 +130,7 @@ public abstract class DataLoader {
 			}
 		}
 		if (formats.isEmpty()) {
-			List<JavaDataSourcePlugin> candidates =  DataSourcePluginManager.system().newInstances();
+			List<DataSourcePlugin> candidates =  DataSourcePluginManager.system().newInstances();
 			formats = DataSourceLookup.findDataSourcesForFiles(datafiles, candidates);
 		}
 		
@@ -144,7 +144,7 @@ public abstract class DataLoader {
 		
 	}
 	
-	private void prompt(JavaDataSourcePlugin dsp) {
+	private void prompt(DataSourcePlugin dsp) {
 		
 		Optional<Group> parameters = Optional.empty();
 		try {
@@ -269,7 +269,7 @@ public abstract class DataLoader {
 	public abstract void onWarn(String message);
 	public abstract void onFail(List<DataFile> paths, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
-	public abstract void onSelection(List<JavaDataSourcePlugin> datasources, Consumer<JavaDataSourcePlugin> selected);
+	public abstract void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected);
 	
 	public abstract void onSessionNewer();
 	public abstract void onSessionFailure();

@@ -41,7 +41,7 @@ import org.peakaboo.framework.stratus.components.ui.itemlist.ReorderTransferHand
 import org.peakaboo.framework.stratus.components.ui.itemlist.SelectionListControls;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 public class FiltersPanel extends JPanel {
@@ -198,8 +198,8 @@ public class FiltersPanel extends JPanel {
 	private JPanel buildAddPanel() {
 		
 		//model and tree
-		List<BoltPluginPrototype<? extends JavaMapFilterPlugin>> plugins = MapFilterPluginManager.system().getPlugins();
-		GroupedListTreeModel<BoltPluginPrototype<? extends JavaMapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
+		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.system().getPlugins();
+		GroupedListTreeModel<BoltPluginPrototype<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
 				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);
 		tree.setRootVisible(false);
@@ -219,13 +219,13 @@ public class FiltersPanel extends JPanel {
 			@Override
 			protected void approve() {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-				BoltPluginPrototype<? extends JavaMapFilterPlugin> proto = null;
+				BoltPluginPrototype<? extends MapFilterPlugin> proto = null;
 				try {
-					proto = (BoltPluginPrototype<? extends JavaMapFilterPlugin>) node.getUserObject();	
+					proto = (BoltPluginPrototype<? extends MapFilterPlugin>) node.getUserObject();	
 				} catch (ClassCastException e) {}
 				
 				if (proto != null) { 
-					JavaMapFilterPlugin plugin = proto.create();
+					MapFilterPlugin plugin = proto.create();
 					plugin.initialize();
 					controller.add(plugin);
 				}

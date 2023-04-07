@@ -3,11 +3,11 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
+import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class CurveFitterPluginManager extends BoltPluginManager<CurveFitter> {
+public class CurveFitterPluginManager extends BoltPluginManager<CurveFitterPlugin> {
 
 	
 	private static CurveFitterPluginManager SYSTEM;
@@ -26,12 +26,12 @@ public class CurveFitterPluginManager extends BoltPluginManager<CurveFitter> {
 	
 	//--------------------------------
 	
-	private BoltJavaBuiltinLoader<CurveFitter> builtins;
+	private BoltJavaBuiltinLoader<CurveFitterPlugin> builtins;
 	
 	public CurveFitterPluginManager() {
 		super("curvefit");
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, CurveFitter.class);
+		builtins = new BoltJavaBuiltinLoader<>(this, CurveFitterPlugin.class);
 		builtins.load(UnderCurveFitter.class);
 		builtins.load(OptimizingCurveFitter.class);
 		builtins.load(LeastSquaresCurveFitter.class);

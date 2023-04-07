@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
@@ -116,9 +116,9 @@ public class SavedFittingSession {
 		}
 		
 		//Restore CurveFitter
-		Class<? extends CurveFitter> curveFitterClass;
+		Class<? extends CurveFitterPlugin> curveFitterClass;
 		try {
-			curveFitterClass = (Class<? extends CurveFitter>) Class.forName(fitter);
+			curveFitterClass = (Class<? extends CurveFitterPlugin>) Class.forName(fitter);
 			controller.fittingModel.curveFitter = curveFitterClass.getDeclaredConstructor().newInstance();
 		} catch (ClassNotFoundException e) {
 			String[] parts = fitter.split("\\.");

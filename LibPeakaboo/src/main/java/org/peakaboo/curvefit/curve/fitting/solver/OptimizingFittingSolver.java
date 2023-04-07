@@ -19,7 +19,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.Pair;
@@ -48,7 +48,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	
 
 	@Override
-	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitter fitter) {
+	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitterPlugin fitter) {
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
 			return getEmptyResult(data, fittings);
@@ -111,7 +111,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected double[] getInitialGuess(int size, List<ROCurve> curves, CurveFitter fitter, ReadOnlySpectrum data) {
+	protected double[] getInitialGuess(int size, List<ROCurve> curves, CurveFitterPlugin fitter, ReadOnlySpectrum data) {
 		double[] guess = new double[size];
 		for (int i = 0; i < size; i++) {
 			ROCurve curve = curves.get(i);

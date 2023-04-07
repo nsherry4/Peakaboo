@@ -11,7 +11,7 @@ import org.apache.commons.math3.optim.PointValuePair;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
@@ -33,7 +33,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 
 	
 	@Override
-	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitter fitter) {
+	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitterPlugin fitter) {
 		
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {

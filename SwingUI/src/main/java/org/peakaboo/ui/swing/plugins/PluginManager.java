@@ -26,8 +26,8 @@ import javax.swing.tree.TreeModel;
 
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.datasink.plugin.DataSinkPluginManager;
-import org.peakaboo.datasource.plugin.DataSourcePluginManager;
+import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
+import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;

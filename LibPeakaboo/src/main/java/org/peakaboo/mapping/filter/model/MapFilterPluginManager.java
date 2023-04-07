@@ -7,7 +7,7 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalCapMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrectionMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.WeakSignalRemovalMapFilter;
@@ -30,7 +30,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate270MapFilte
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate90MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
 
-public class MapFilterPluginManager extends BoltPluginManager<JavaMapFilterPlugin> {
+public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
 
 	private static MapFilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
@@ -48,15 +48,15 @@ public class MapFilterPluginManager extends BoltPluginManager<JavaMapFilterPlugi
 	}
 	
 	
-	private BoltJavaBuiltinLoader<JavaMapFilterPlugin> builtins;
+	private BoltJavaBuiltinLoader<MapFilterPlugin> builtins;
 	
 	private MapFilterPluginManager(File directories) {
 		super("mapfilter");
 		
-		addLoader(new BoltJarDirectoryLoader<>(this, JavaMapFilterPlugin.class, directories));
-		addLoader(new BoltJarDirectoryLoader<>(this, JavaMapFilterPlugin.class));
+		addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class, directories));
+		addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, JavaMapFilterPlugin.class);
+		builtins = new BoltJavaBuiltinLoader<>(this, MapFilterPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
 	}
@@ -92,7 +92,7 @@ public class MapFilterPluginManager extends BoltPluginManager<JavaMapFilterPlugi
 	}
 
 	
-	public void registerPlugin(Class<? extends JavaMapFilterPlugin> clazz) {
+	public void registerPlugin(Class<? extends MapFilterPlugin> clazz) {
 		builtins.load(clazz);
 		reload();
 	}

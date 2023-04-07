@@ -16,7 +16,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
@@ -430,12 +430,12 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
-	public CurveFitter getCurveFitter() {
+	public CurveFitterPlugin getCurveFitter() {
 		return fittingModel.curveFitter;
 	}
 	
 	
-	public void setCurveFitter(CurveFitter curveFitter) {
+	public void setCurveFitter(CurveFitterPlugin curveFitter) {
 		this.fittingModel.curveFitter = curveFitter;
 		fittingDataInvalidated();
 	}

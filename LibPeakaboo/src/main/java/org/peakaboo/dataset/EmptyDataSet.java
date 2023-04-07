@@ -2,14 +2,14 @@ package org.peakaboo.dataset;
 
 import java.util.Optional;
 
-import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.datasource.model.components.datasize.DataSize;
-import org.peakaboo.datasource.model.components.metadata.Metadata;
-import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import org.peakaboo.datasource.model.components.scandata.DummyScanData;
-import org.peakaboo.datasource.model.components.scandata.ScanData;
-import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
-import org.peakaboo.datasource.model.components.scandata.analysis.DummyAnalysis;
+import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.components.datasize.DataSize;
+import org.peakaboo.dataset.source.model.components.metadata.Metadata;
+import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.dataset.source.model.components.scandata.DummyScanData;
+import org.peakaboo.dataset.source.model.components.scandata.ScanData;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.DummyAnalysis;
 
 
 public class EmptyDataSet implements DataSet {

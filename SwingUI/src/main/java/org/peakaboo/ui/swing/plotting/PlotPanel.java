@@ -54,16 +54,16 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
-import org.peakaboo.datasink.model.DataSink;
-import org.peakaboo.datasink.model.outputfile.PathOutputFile;
-import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.datasource.model.components.fileformat.FileFormat;
-import org.peakaboo.datasource.model.components.metadata.Metadata;
-import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.model.datafile.PathDataFile;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
-import org.peakaboo.datasource.plugin.DataSourcePluginManager;
-import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
+import org.peakaboo.dataset.sink.model.DataSink;
+import org.peakaboo.dataset.sink.model.outputfile.PathOutputFile;
+import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
+import org.peakaboo.dataset.source.model.components.metadata.Metadata;
+import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.source.model.datafile.PathDataFile;
+import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
+import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
+import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.cyclops.Coord;
@@ -397,7 +397,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 
 			@Override
-			public void onSelection(List<JavaDataSourcePlugin> datasources, Consumer<JavaDataSourcePlugin> selected) {
+			public void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected) {
 				DataSourceSelection selection = new DataSourceSelection(PlotPanel.this, datasources, selected);
 				PlotPanel.this.pushLayer(selection);
 			}
@@ -550,7 +550,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionOpenData() {	
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		for (JavaDataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
+		for (DataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);

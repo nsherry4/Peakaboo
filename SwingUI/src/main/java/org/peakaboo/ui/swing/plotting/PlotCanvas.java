@@ -23,7 +23,7 @@ import javax.swing.SwingUtilities;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datasource.model.datafile.PathDataFile;
+import org.peakaboo.dataset.source.model.datafile.PathDataFile;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
