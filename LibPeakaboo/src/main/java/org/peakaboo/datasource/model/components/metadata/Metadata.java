@@ -1,16 +1,11 @@
 package org.peakaboo.datasource.model.components.metadata;
 
 
-public interface Metadata
-{
-
+public interface Metadata {
 	
-	
-	//SS Namespace
 	String getCreationTime();
 	String getCreator();
 
-	//SSModel Namespace
 	String getProjectName();
 	String getSessionName();
 	String getFacilityName();
@@ -21,7 +16,6 @@ public interface Metadata
 	String getSampleName();
 	String getScanName();
 	
-	//Scan Namespace
 	String getStartTime();
 	String getEndTime();
 	
