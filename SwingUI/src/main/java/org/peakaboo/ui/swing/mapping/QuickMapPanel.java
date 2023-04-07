@@ -109,6 +109,7 @@ public class QuickMapPanel extends HeaderLayer {
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);
 		dimensions.setBorder(Spacing.bMedium());
 		dimensions.getMagicDimensionsButton().addActionListener(e -> menu.setVisible(false));
+		dimensions.getResetDimensionsButton().ifPresent(reset -> reset.addActionListener(e -> menu.setVisible(false)));
 		dimensions.setOpaque(false);
 		menu.add(dimensions);
 		
