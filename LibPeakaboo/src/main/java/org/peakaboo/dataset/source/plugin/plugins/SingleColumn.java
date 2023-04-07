@@ -153,7 +153,7 @@ public class SingleColumn extends AbstractDataSource {
 		}
 		
 		Spectrum s = new ISpectrum(floats);
-		scandata.submit(s);
+		scandata.submit(0, s);
 		
 		scandata.finish();
 		

@@ -98,6 +98,7 @@ public class PlainText extends AbstractDataSource
 		
 		InputStream instream = file.getInputStream();;		
 
+		int index = 0;
 		int readcount = 0;
 		for (String[] row : parser.iterate(instream)) {
 
@@ -116,7 +117,7 @@ public class PlainText extends AbstractDataSource
 				scanSize = scan.size();
 			}
 			
-			scandata.submit(scan);
+			scandata.submit(index++, scan);
 
 			size++;
 			readcount++;
