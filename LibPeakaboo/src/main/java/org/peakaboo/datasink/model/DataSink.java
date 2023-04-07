@@ -8,6 +8,7 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.datasink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.datasink.model.components.interaction.Interaction;
 import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.datafile.OutputFile;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
@@ -18,7 +19,7 @@ public interface DataSink {
 	 * Writes the contents of the given {@link DataSource} to the destination
 	 * {@link OutputStream} in this DataSink's format.
 	 */
-	void write(DataSource source, OutputStream destination) throws IOException;
+	void write(DataSource source, OutputFile destination) throws IOException;
 		
 	String getFormatExtension();
 
@@ -36,7 +37,7 @@ public interface DataSink {
 
 	void setInteraction(Interaction interaction);
 
-	static ExecutorSet<Void> write(DataSource source, DataSink sink, OutputStream output) {
+	static ExecutorSet<Void> write(DataSource source, DataSink sink, OutputFile output) {
 		
 		CallbackInteraction interaction = new CallbackInteraction();
 
@@ -51,8 +52,6 @@ public interface DataSink {
 				if (interaction.isAbortedRequested()) {
 					execset.aborted();
 				}
-				output.flush();
-				output.close();
 			} catch (IOException e) {
 				PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
 			}

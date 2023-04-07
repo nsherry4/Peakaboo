@@ -60,6 +60,7 @@ import org.peakaboo.datasource.model.components.fileformat.FileFormat;
 import org.peakaboo.datasource.model.components.metadata.Metadata;
 import org.peakaboo.datasource.model.datafile.DataFile;
 import org.peakaboo.datasource.model.datafile.PathDataFile;
+import org.peakaboo.datasource.model.datafile.PathOutputFile;
 import org.peakaboo.datasource.model.internal.SubsetDataSource;
 import org.peakaboo.datasource.plugin.DataSourcePluginManager;
 import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
@@ -617,17 +618,12 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
-
-		try {
-			OutputStream os = new FileOutputStream(file);
-			ExecutorSet<Void> writer = DataSink.write(source, sink, os);
-			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
-			pushLayer(layer);
-			writer.startWorking();
-		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Could not export data", e);
-		}
-
+		var output = new PathOutputFile(file.toPath());
+		ExecutorSet<Void> writer = DataSink.write(source, sink, output);
+		output.close();
+		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
+		pushLayer(layer);
+		writer.startWorking();
 	}
 	
 	public void actionMap() {

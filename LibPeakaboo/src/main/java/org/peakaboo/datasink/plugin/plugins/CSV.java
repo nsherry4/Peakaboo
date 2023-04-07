@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.datasink.plugin.AbstractDataSink;
 import org.peakaboo.datasource.model.DataSource;
+import org.peakaboo.datasource.model.datafile.OutputFile;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class CSV extends AbstractDataSink {
@@ -29,9 +30,9 @@ public class CSV extends AbstractDataSink {
 	}
 	
 	@Override
-	public void write(DataSource source, OutputStream output) throws IOException {
+	public void write(DataSource source, OutputFile output) throws IOException {
 		
-		Writer writer = new OutputStreamWriter(output);
+		Writer writer = new OutputStreamWriter(output.getOutputStream());
 				
 		int counter = 0;
 		for (ReadOnlySpectrum s : source.getScanData()) {
@@ -48,6 +49,7 @@ public class CSV extends AbstractDataSink {
 			}
 		}
 		writer.flush();
+		writer.close();
 
 	}
 
