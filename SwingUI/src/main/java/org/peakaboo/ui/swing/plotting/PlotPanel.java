@@ -296,7 +296,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
-		sidebarTabs.setPreferredSize(new Dimension(225, sidebarTabs.getPreferredSize().height));
+		sidebarTabs.setPreferredSize(new Dimension(230, sidebarTabs.getPreferredSize().height));
 		split.add(blankCanvas, BorderLayout.CENTER);
 				
 		split.setBorder(Spacing.bNone());

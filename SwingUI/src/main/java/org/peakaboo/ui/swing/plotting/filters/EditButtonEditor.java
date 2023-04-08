@@ -35,21 +35,20 @@ class EditButtonEditor extends DefaultCellEditor {
 
 	private Filter					filter;
 	private FilteringController		controller;
+	private FiltersetViewer 		filtersUI;
 
 	private String					label;
 	private boolean					isPushed;
 	
 	private ImageIcon 				imgEdit, imgEditSelected;
 	
-	private Map<Filter, SwingAutoDialog> settingsDialogs;
 
-
-	public EditButtonEditor(FilteringController controller, Window owner) {
+	public EditButtonEditor(FilteringController controller, Window owner, FiltersetViewer filtersUI) {
 		super(new JCheckBox());
 
 		this.controller = controller;
 		this.owner = owner;
-		this.settingsDialogs = new HashMap<>();
+		this.filtersUI = filtersUI;
 
 		imgEdit = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON);
 		imgEditSelected = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON, Color.WHITE);
@@ -96,20 +95,7 @@ class EditButtonEditor extends DefaultCellEditor {
 	public Object getCellEditorValue() {
 		
 		if (isPushed) {
-			
-			FilterDialog dialog;
-
-			if (!settingsDialogs.containsKey(filter)) {
-				
-				dialog = new FilterDialog(controller, filter, AutoDialogButtons.CLOSE, owner);	
-				dialog.setHelpMessage(filter.getFilterDescription());
-				dialog.setHelpTitle(filter.getFilterName());
-				settingsDialogs.put(filter, dialog);
-				dialog.initialize();
-			} else {
-				settingsDialogs.get(filter).setVisible(true);
-			}
-
+			this.filtersUI.showSettingsPane(this.filter);
 		}
 		isPushed = false;
 		return label;

@@ -8,19 +8,23 @@ import javax.swing.JScrollPane;
 
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayout;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.stratus.api.Spacing;
 
 public class SwingAutoPanel extends JPanel {
 
 	public SwingAutoPanel(Group group) {
-		this(group, true);
+		this(group, true, null);
 	}
 	
-	public SwingAutoPanel(Group group, boolean scrolled) {
+	public SwingAutoPanel(Group group, boolean scrolled, SwingLayout layout) {
 		setLayout(new BorderLayout());
 		
-		JComponent component = SwingLayoutFactory.forGroup(group).getComponent();
+		if (layout == null) {
+			layout = SwingLayoutFactory.forGroup(group);
+		}
+		JComponent component = layout.getComponent();
 		
 		if (scrolled) {
 			JScrollPane scroller = new JScrollPane(component);

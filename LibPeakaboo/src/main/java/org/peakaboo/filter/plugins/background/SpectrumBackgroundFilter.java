@@ -66,35 +66,42 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 
 	@Override
 	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
-		//load it lazily on first use
-		loadBackground(data);
-		return SpectrumCalculations.multiplyBy(spectrum, percent/100.0f);
+		if (loadedFile == null || spectrum == null) {
+			return new ISpectrum(data.size());
+		} else {
+			//load it lazily on first use
+			loadBackground(data);
+			return SpectrumCalculations.multiplyBy(spectrum, percent/100.0f);
+		}
 	}
 	
 	private synchronized void loadBackground(ReadOnlySpectrum data) {
-		if (!loadedFile.equals(spectrumFile.getValue())) {
+		
+		if (loadedFile == null) { return; }
+		if (loadedFile.equals(spectrumFile.getValue())) { return; }
+
 			
-			//If they haven't given a file yet
-			if (spectrumFile.getValue().length() == 0) {
-				spectrum = new ISpectrum(data.size());
-				return;
-			}
-			
-			try {
-				//try loading the file
-				DataSource source = new PlainText();
-				Path path = new File(spectrumFile.getValue()).toPath();
-				source.read(Collections.singletonList(new PathDataFile(path)));
-				DataSet bgDataSet = new StandardDataSet(source);
-				spectrum = bgDataSet.getAnalysis().averagePlot();
-			} catch (Exception e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to load background from dataset", e);
-				spectrum = new ISpectrum(data.size());
-			}
-			//now that we've loaded it (or failed), set the loadedFile so we don't constantly re-load it
-			loadedFile = spectrumFile.getValue();
-			
+		//If they haven't given a file yet
+		if (spectrumFile.getValue().length() == 0) {
+			spectrum = new ISpectrum(data.size());
+			return;
 		}
+		
+		try {
+			//try loading the file
+			DataSource source = new PlainText();
+			Path path = new File(spectrumFile.getValue()).toPath();
+			source.read(Collections.singletonList(new PathDataFile(path)));
+			DataSet bgDataSet = new StandardDataSet(source);
+			spectrum = bgDataSet.getAnalysis().averagePlot();
+		} catch (Exception e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load background from dataset", e);
+			spectrum = new ISpectrum(data.size());
+		}
+		//now that we've loaded it (or failed), set the loadedFile so we don't constantly re-load it
+		loadedFile = spectrumFile.getValue();
+
+		
 	}
 
 }

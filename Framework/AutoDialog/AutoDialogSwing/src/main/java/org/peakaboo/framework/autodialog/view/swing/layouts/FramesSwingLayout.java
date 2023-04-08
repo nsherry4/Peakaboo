@@ -7,14 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
-import org.peakaboo.framework.autodialog.view.swing.SwingView;
 
 public class FramesSwingLayout extends SimpleSwingLayout {
-
-	@Override
-	protected JComponent component(SwingView view) {
-		return view.getComponent();
-	}
 	
 	@Override
 	public JComponent getComponent() {

@@ -31,19 +31,19 @@ class FilterList extends ClearPanel {
 
 	
 	private FilteringController controller;
-	private FiltersetViewer owner;
+	private FiltersetViewer filtersUI;
 	
 	private JTable t;
 	private MutableTableModel m;
 	
 	private ListControls controls;
 	
-	FilterList(FilteringController filteringController, Window ownerWindow, FiltersetViewer ownerUI) {
+	FilterList(FilteringController filteringController, Window ownerWindow, FiltersetViewer filtersUI) {
 		
 		super();
 		
-		controller = filteringController;
-		owner = ownerUI;
+		this.controller = filteringController;
+		this.filtersUI = filtersUI;
 		
 		setLayout(new BorderLayout());
 		
@@ -80,7 +80,7 @@ class FilterList extends ClearPanel {
 		t.setFillsViewportHeight(true);
 				
 		t.getColumnModel().getColumn(1).setCellRenderer(new EditButtonRenderer());
-		t.getColumnModel().getColumn(1).setCellEditor(new EditButtonEditor(controller, owner));
+		t.getColumnModel().getColumn(1).setCellEditor(new EditButtonEditor(controller, owner, this.filtersUI));
 		
 		t.getColumnModel().getColumn(2).setCellRenderer(new FilterRenderer());
 		
@@ -126,7 +126,7 @@ class FilterList extends ClearPanel {
 		
 		FluentButton addButton = new FluentButton(StockIcon.EDIT_ADD)
 				.withTooltip("Add Filter")
-				.withAction(() -> owner.showSelectPane());
+				.withAction(() -> filtersUI.showSelectPane());
 		
 		FluentButton removeButton = new FluentButton(StockIcon.EDIT_REMOVE)
 				.withTooltip("Remove Selected Filter")

@@ -22,7 +22,7 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 
 	private GridBagLayout layout = new GridBagLayout();
 	private GridBagConstraints c = new GridBagConstraints();
-	boolean needsVerticalGlue = true;
+	private boolean needsVerticalGlue = true;
 	
 
 	public void layout() {
@@ -51,13 +51,11 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 	}
 	
 	//Lays out a single parameter as part of the process of laying out a set of parameters
-	private void layoutValue(Value<?> param) {
+	protected void layoutValue(Value<?> param) {
 		SwingView editor = fromValue(param);
 		if (editor == null) { return; }
 		
-		JLabel paramLabel = new JLabel(editor.getTitle());
-		paramLabel.setFont(paramLabel.getFont().deriveFont(Font.PLAIN));
-		paramLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		JLabel paramLabel = makeLabel(editor);
 
 		boolean expandH = expandHorizontal(editor, param);
 		boolean expandV = expandVertical(editor, param);
@@ -72,6 +70,8 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 		
 		c.anchor = GridBagConstraints.LINE_START;
 		
+		var editorComponent = editor.getComponent();
+		
 		if (editor.getLabelStyle() == LabelStyle.LABEL_ON_SIDE) {
 			c.weightx = 0;
 			c.fill = GridBagConstraints.BOTH;
@@ -82,7 +82,7 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 			c.fill = expandH ? GridBagConstraints.HORIZONTAL : GridBagConstraints.NONE;
 			c.anchor = GridBagConstraints.LINE_END;
 			
-			root.add(component(editor), c);
+			root.add(editorComponent, c);
 			
 		} else if (editor.getLabelStyle() == LabelStyle.LABEL_ON_TOP) {
 			c.gridwidth = 2;
@@ -93,17 +93,24 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 			c.gridy++;
 			
 			c.weighty = expandV ? 100f : 0f;
-			root.add(component(editor), c);
+			root.add(editorComponent, c);
 			
 			c.gridwidth = 1;
 		} else if(editor.getLabelStyle() == LabelStyle.LABEL_HIDDEN) {
 			c.gridwidth = 2;				
-			root.add(component(editor), c);
+			root.add(editorComponent, c);
 			c.gridwidth = 1;
 		}
 	}
 	
-	private boolean expandVertical(SwingView editor, Value<?> value) {
+	protected JLabel makeLabel(SwingView editor) {
+		JLabel paramLabel = new JLabel(editor.getTitle());
+		paramLabel.setFont(paramLabel.getFont().deriveFont(Font.PLAIN));
+		paramLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		return paramLabel;
+	}
+	
+	protected boolean expandVertical(SwingView editor, Value<?> value) {
 		Optional<Boolean> override = value.getStyle().getVerticalExpand();
 		if (!override.isPresent()) {
 			return editor.expandVertical();
@@ -111,7 +118,7 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 		return override.get();
 	}
 	
-	private boolean expandHorizontal(SwingView editor, Value<?> value) {
+	protected boolean expandHorizontal(SwingView editor, Value<?> value) {
 		Optional<Boolean> override = value.getStyle().getHorizontalExpand();
 		if (!override.isPresent()) {
 			return editor.expandHorizontal();
@@ -119,21 +126,6 @@ public class SimpleSwingLayout extends AbstractSwingLayout {
 		return override.get();
 	}
 
-
-	protected SwingView fromValue(Value<?> value) {
-		if (value instanceof Parameter) {
-			return SwingEditorFactory.forParameter((Parameter<?>)value);
-		} else if (value instanceof Group) {
-			return SwingLayoutFactory.forGroup((Group)value);
-		} else {
-			return null;
-		}
-	}
 	
-	
-	protected JComponent component(SwingView view) {
-		return view.getComponent();
-	}
-
 	
 }
