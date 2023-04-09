@@ -103,6 +103,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		try {
 			return Optional.of(SavedSession.deserialize(yaml));
 		} catch (Exception e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to load saved session", e);
 			return Optional.empty();
 		}
 	}

@@ -3,8 +3,10 @@ package org.peakaboo.framework.autodialog.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.peakaboo.framework.autodialog.model.style.Style;
@@ -108,6 +110,24 @@ public class Group implements Value<List<Value<?>>> {
 	}
 	
 	
+	public void deserializeMap(Map<String, Object> stored) {
+		visit(param -> {
+			var name = param.getName();
+			if ("null".equals(name)) return;
+			if (stored.containsKey(name)) {
+				var storedValue = stored.get(name);
+				if (storedValue instanceof String && param instanceof Parameter<?>) {
+					((Parameter<?>)param).deserialize((String)storedValue);
+				} else if (storedValue instanceof List<?> && param instanceof Group) {
+					((Group)param).deserialize((List<Object>) storedValue);
+				} else {
+					throw new RuntimeException("Structure mismatch");
+				}
+			}
+		});
+	}
+	
+	@Deprecated(since = "6", forRemoval = true)
 	public void deserialize(List<Object> stored) {
 		Iterator<Object> iter = stored.iterator();
 		visit(p -> {
@@ -126,6 +146,7 @@ public class Group implements Value<List<Value<?>>> {
 		});
 	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public List<Object> serialize() {
 		List<Object> dumped = new ArrayList<>();
 		visit(p -> {
@@ -133,6 +154,20 @@ public class Group implements Value<List<Value<?>>> {
 				dumped.add(((Parameter<?>) p).serialize());
 			} else if (p instanceof Group) {
 				dumped.add(((Group) p).serialize());
+			}
+		});
+		return dumped;
+	}
+	
+	public Map<String, Object> serializeMap() {
+		Map<String, Object> dumped = new HashMap<>();
+		visit(p -> {
+			if (p instanceof Parameter<?>) {
+				Parameter<?> param = (Parameter<?>) p;
+				dumped.put(param.getName(), param.serialize());
+			} else if (p instanceof Group) {
+				Group group = (Group) p;
+				dumped.put(group.getName(), group.serialize());
 			}
 		});
 		return dumped;
