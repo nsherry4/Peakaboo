@@ -196,7 +196,6 @@ public class FluentButtonConfigurator {
 			return FluentButtonSize.COMPACT;
 		}
 		return FluentButtonSize.LARGE;
-		
 	}
 	
 	protected Dimension getPreferredSize(Dimension superPreferred) {

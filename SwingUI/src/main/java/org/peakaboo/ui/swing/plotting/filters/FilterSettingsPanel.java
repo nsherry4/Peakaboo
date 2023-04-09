@@ -1,29 +1,26 @@
 package org.peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.autodialog.view.swing.editors.SwingEditorFactory;
 import org.peakaboo.framework.autodialog.view.swing.layouts.NarrowSwingLayout;
-import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentLabel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
-import org.peakaboo.framework.stratus.components.ui.header.HeaderLayout;
 
 class FilterSettingsPanel extends ClearPanel {
 	
@@ -82,6 +79,12 @@ class FilterSettingsPanel extends ClearPanel {
 			label.setFont(label.getFont().deriveFont(13f).deriveFont(Font.BOLD));
 			label.setBorder(Spacing.bSmall());
 			
+			var help = new FluentLabel()
+					.withIcon(StockIcon.APP_HELP, IconSize.BUTTON)
+					.withBorder(Spacing.bMedium())
+					.withTooltip(filter.getFilterName() + ": " + filter.getFilterDescription());		
+			help.setFocusable(false);
+			
 			var back = new FluentButton(StockIcon.GO_PREVIOUS)
 					.withTooltip("Return to filter list")
 					.withBordered(false)
@@ -91,6 +94,7 @@ class FilterSettingsPanel extends ClearPanel {
 			setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 			this.add(back);
 			this.add(label);
+			this.add(help);
 		}
 	}
 	
