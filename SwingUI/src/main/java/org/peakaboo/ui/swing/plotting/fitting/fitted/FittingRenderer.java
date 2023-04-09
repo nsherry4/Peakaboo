@@ -23,11 +23,7 @@ class FittingRenderer extends DefaultTableCellRenderer
 	
 	
 	FittingRenderer(FittingController controller){
-		
-		
-		
 		this.controller = controller;
-		
 		tswidget = FittedWidget.large();
 	}
 
