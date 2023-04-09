@@ -1,23 +1,15 @@
-package org.peakaboo.ui.swing.mapping.sidebar;
+package org.peakaboo.ui.swing.mapping.sidebar.filters;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Window;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.DropMode;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.ToolTipManager;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -25,14 +17,11 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
-import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
-import org.peakaboo.framework.autodialog.view.swing.SwingAutoDialog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.api.models.GroupedListTreeModel;
-import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
 import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -42,28 +31,29 @@ import org.peakaboo.framework.stratus.components.ui.itemlist.SelectionListContro
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
-import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 public class FiltersPanel extends JPanel {
 
-	private Window window;
 	private CardLayout layout;
+	private MapFilterSettingsPanel settings;
 	
 	private static final String PANEL_FILTERS = "PANEL_FILTERS";
 	private static final String PANEL_ADD = "PANEL_ADD";
+	private static final String PANEL_SETTINGS = "PANEL_SETTINGS";
 	
 	private MapFilteringController controller;
 	
 	private ListControls filterControls;
 	
-	public FiltersPanel(MapFilteringController controller, Window window) {
+	public FiltersPanel(MapFilteringController controller) {
 		this.controller = controller;
-		this.window = window;
+		this.settings = new MapFilterSettingsPanel(controller, this);
 		
 		layout = new CardLayout();
 		setLayout(layout);
 		add(buildFiltersPanel(), PANEL_FILTERS);
 		add(buildAddPanel(), PANEL_ADD);
+		add(this.settings, PANEL_SETTINGS);
 		
 		layout.show(this, PANEL_FILTERS);		
 		
@@ -76,6 +66,20 @@ public class FiltersPanel extends JPanel {
 		});
 		
 	}
+	
+	void showEditPane() {
+		layout.show(this, PANEL_FILTERS);
+	}
+	
+	void showAddPane() {
+		layout.show(this, PANEL_ADD);
+	}
+	
+	void showSettingsPane(MapFilter filter) {
+		settings.setFilter(filter);
+		layout.show(this, PANEL_SETTINGS);
+	}
+	
 
 	private JPanel buildFiltersPanel() {
 		JTable filterTable = new JTable(new TableModel() {
@@ -148,8 +152,8 @@ public class FiltersPanel extends JPanel {
 		filterTable.getColumnModel().getColumn(0).setPreferredWidth(32);
 		filterTable.getColumnModel().getColumn(0).setMaxWidth(32);
 		
-		filterTable.getColumnModel().getColumn(1).setCellRenderer(new StencilTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller, window)));
-		filterTable.getColumnModel().getColumn(1).setCellEditor(new StencilCellEditor<MapFilter>(new MapFilterSettingsButton(controller, window)));
+		filterTable.getColumnModel().getColumn(1).setCellRenderer(new StencilTableCellRenderer<MapFilter>(new MapFilterSettingsButton(controller, this)));
+		filterTable.getColumnModel().getColumn(1).setCellEditor(new StencilCellEditor<MapFilter>(new MapFilterSettingsButton(controller, this)));
 		filterTable.getColumnModel().getColumn(1).setMinWidth(28);
 		filterTable.getColumnModel().getColumn(1).setPreferredWidth(28);
 		filterTable.getColumnModel().getColumn(1).setMaxWidth(28);
@@ -240,91 +244,4 @@ public class FiltersPanel extends JPanel {
 		return panel;
 	}
 	
-}
-
-class MapFilterWidget extends Stencil<MapFilter> {
-
-	private JLabel label = new JLabel();
-	
-	public MapFilterWidget() {
-		label.setFont(label.getFont().deriveFont(Font.BOLD));
-		label.setBorder(Spacing.bHuge());
-		setLayout(new BorderLayout());
-		add(label, BorderLayout.CENTER);
-	}
-	
-	@Override
-	public void setForeground(Color c) {
-		super.setForeground(c);
-		if (label == null) { return; }
-		label.setForeground(c);
-	}
-	
-	@Override
-	protected void onSetValue(MapFilter filter, boolean selected) {
-		label.setText(filter.getFilterName());
-	}
-	
-}
-
-class MapFilterSettingsButton extends Stencil<MapFilter> {
-	
-	private FluentButton button = new FluentButton(PeakabooIcons.MENU_SETTINGS, IconSize.BUTTON);
-	private MapFilter filter;
-	
-	private ImageIcon imgEdit, imgEditSel;
-	
-	private static Map<MapFilter, MapFilterDialog> dialogs = new HashMap<>();
-	
-	public MapFilterSettingsButton(MapFilteringController controller, Window window) {
-		
-		setLayout(new BorderLayout());
-		add(button, BorderLayout.CENTER);
-		
-		imgEdit = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON);
-		
-		button.withBordered(false);
-		button.setOpaque(false);
-		button.withBorder(new EmptyBorder(0, 0, 0, 0));
-				
-		button.withAction(() -> {
-			MapFilterDialog dialog;
-			if (dialogs.keySet().contains(filter)) {
-				dialog = dialogs.get(filter);
-				dialog.setVisible(true);
-			} else {
-				dialog = new MapFilterDialog(controller, filter, AutoDialogButtons.CLOSE, window);
-				dialog.setHelpMessage(filter.getFilterDescription());
-				dialog.setHelpTitle(filter.getFilterName());
-				dialog.initialize();
-				dialogs.put(filter, dialog);
-			}
-			getListWidgetParent().editingStopped();
-		});
-	}
-	
-	@Override
-	protected void onSetValue(MapFilter filter, boolean selected) {
-		this.filter = filter;
-		button.setVisible(!filter.getParameters().isEmpty());
-		if (selected) {
-			if (imgEditSel == null) {
-				imgEditSel = PeakabooIcons.MENU_SETTINGS.toImageIcon(IconSize.BUTTON, getForeground());
-			}
-			button.setIcon(imgEditSel);
-		} else {
-			button.setIcon(imgEdit);
-		}
-	}
-	
-}
-
-class MapFilterDialog extends SwingAutoDialog {
-	
-	MapFilterDialog(MapFilteringController controller, MapFilter filter, AutoDialogButtons buttons, Window window) {
-		super(window, filter.getParameterGroup(), buttons);
-		
-		getGroup().getValueHook().addListener(o -> controller.filteredDataInvalidated());
-		
-	}
 }
