@@ -29,7 +29,7 @@ public class DataSourceLookup {
 				if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybeByContents.add(datasource); }
 				if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yesByContents.add(datasource); }
 			} catch (Throwable e) {
-				PeakabooLog.get().log(Level.SEVERE, "Error while evaluating data sources", e);
+				PeakabooLog.get().log(Level.WARNING, "Error while evaluating data source " + datasource.pluginName(), e);
 			} 
 		}
 			
