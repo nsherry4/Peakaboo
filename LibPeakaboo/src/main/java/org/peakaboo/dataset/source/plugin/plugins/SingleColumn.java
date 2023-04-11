@@ -186,6 +186,7 @@ public class SingleColumn extends AbstractDataSource {
 		if (parts.length == 2) {			
 			for (String line : lines) {
 				parts = line.split(splitPattern);
+				if (parts.length != 2) return false;
 				if (!isNumeric(parts[0])) return false;
 				if (!isNumeric(parts[1])) return false;
 			}
