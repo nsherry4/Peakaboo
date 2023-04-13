@@ -1,5 +1,6 @@
 package org.peakaboo.ui.swing.plotting.toolbar;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,10 +12,14 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.StratusColour;
+import org.peakaboo.framework.stratus.api.StratusLog;
 import org.peakaboo.framework.stratus.api.hookins.WindowDragger;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAction;
@@ -167,6 +172,16 @@ public class PlotToolbar extends JToolBar {
 		
 		energyMenuButton.setEnabled(hasData);
 		viewMenuButton.setEnabled(hasData);
+		
+		boolean hasEnergyCalibration = !controller.fitting().getEnergyCalibration().isZero();
+		Color accentBackground = StratusColour.moreTransparent(Stratus.getTheme().getPalette().getColour("Yellow", "4"), 0.66f);
+		if (hasData && hasEnergyCalibration || !hasData) {
+			energyMenuButton.withBordered(BorderStyle.ACTIVE);
+			energyMenuButton.setBackground(null);
+		} else {
+			energyMenuButton.setBackground(accentBackground);
+			energyMenuButton.withBordered(BorderStyle.ALWAYS);
+		}
 		
 		
 	}

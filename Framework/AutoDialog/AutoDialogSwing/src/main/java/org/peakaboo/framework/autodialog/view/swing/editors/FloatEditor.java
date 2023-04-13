@@ -28,7 +28,7 @@ public class FloatEditor extends AbstractSwingEditor<Float> {
 		param.getEnabledHook().addListener(this::setEnabled);
 		
 		model.setValue((Float)param.getValue());
-		control.getEditor().setPreferredSize(new Dimension(70, control.getEditor().getPreferredSize().height));
+		control.getEditor().setPreferredSize(new Dimension(48, control.getEditor().getPreferredSize().height));
 		control.setValue((Float)param.getValue());
 		
 		

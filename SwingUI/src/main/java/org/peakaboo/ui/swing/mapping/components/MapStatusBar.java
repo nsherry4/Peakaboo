@@ -13,31 +13,42 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.layouts.CenteringLayout;
+import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.ZoomSlider;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderLayout;
+import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 
 public class MapStatusBar extends JPanel {
 
-	private JLabel status;
 	private MappingController controller;
+	private StatusBarPillStrip pills;
+	private KeyValuePill pIndex, pX, pY, pValue;
 	
 	public MapStatusBar(MappingController controller) {
 		
 		this.controller = controller;
 		
-		setLayout(new BorderLayout());
 		
+		
+		pills = new StatusBarPillStrip();
+		this.add(pills);
+		
+		int indexdigits = (int)Math.ceil(Math.log10(controller.rawDataController.getMapSize()));
+		pIndex = new KeyValuePill("Index", indexdigits);
+		pX = new KeyValuePill("X", Math.max(indexdigits, 4));
+		pY = new KeyValuePill("Y", Math.max(indexdigits, 4));
+		pValue = new KeyValuePill("Value", 10);
+		
+		pills.addPills(pIndex, pX, pY, pValue);
 		
 		//status text
-		status = new JLabel("");
-		status.setBorder(Spacing.bSmall());
-		status.setHorizontalAlignment(JLabel.CENTER);
-		status.setFont(status.getFont().deriveFont(Font.PLAIN));
 		
 		showValueAtCoord(null);
 		
-		add(status, BorderLayout.CENTER);
+		
 		
 		
 		
@@ -59,20 +70,35 @@ public class MapStatusBar extends JPanel {
 			zoomMenu.show(zoomButton, x, y);
 		});
 		
-		add(zoomButton, BorderLayout.EAST);
+		this.add(zoomButton);
 
 		this.setBorder(new MatteBorder(1, 0, 0, 0, Stratus.getTheme().getWidgetBorder()));
-		
+		this.setLayout(new HeaderLayout(null, pills, zoomButton));
 		
 		
 	}
-	
-	public void setStatus(String text) {
-		status.setText(text);
-	}
-	
+		
 	public void showValueAtCoord(Coord<Integer> mapCoord) {
-		setStatus(controller.getFitting().getInfoAtPoint(mapCoord));
+		var info = controller.getFitting().getInfoAtPoint(mapCoord);
+		if (info.isPresent()) {
+			var index = info.get().index();
+			if (index == -1) {
+				pIndex.setVisible(false);
+			} else {
+				pIndex.setVisible(true);
+				pIndex.setValue(index);	
+			}
+			
+			pX.setValue(info.get().x());
+			pY.setValue(info.get().y());
+			pValue.setValue(info.get().value());
+		} else {
+			pIndex.setValue("");
+			pX.setValue("");
+			pY.setValue("");
+			pValue.setValue("");
+		}
+		
 	}
 	
 }

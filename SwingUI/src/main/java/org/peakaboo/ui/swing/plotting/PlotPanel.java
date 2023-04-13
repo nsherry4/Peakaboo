@@ -109,7 +109,7 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
-import org.peakaboo.ui.swing.app.PeakabooTabTitle;
+import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
@@ -467,41 +467,13 @@ public class PlotPanel extends TabbedLayerPanel {
 			values = controller.view().getValueForChannel(channel);
 		}
 
-		StringBuilder sb = new StringBuilder();
-		String sep = ",  ";
-
 		if (values != null) {
-
-			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
-			
-			sb.append("View: ");
-			sb.append(controller.view().getChannelCompositeMode().show());
-			sb.append(sep);
-			sb.append("Channel: ");
-			sb.append(String.valueOf(channel));
-			sb.append(sep);
-			sb.append("Energy: ");
-			sb.append(fmtObj.format(energy));
-			sb.append(sep);
-			sb.append("Value: ");
-			sb.append(fmtObj.format(values.first));
-			if (! values.first.equals(values.second)) {
-				sb.append(sep);
-				sb.append("Unfiltered Value: ");
-				sb.append(fmtObj.format(values.second));
-			}
-
+			statusBar.setData(controller.view().getChannelCompositeMode(), channel, energy, values.first, values.second);
 		} else {
-			
-			sb.append("View: ");
-			sb.append(controller.view().getChannelCompositeMode().show());
-			sb.append(sep);
-			sb.append("Channel: ");
-			sb.append("-");
-			
+			statusBar.setData(controller.view().getChannelCompositeMode());
 		}
 		
-		statusBar.setChannelText(sb.toString());
+		
 		
 	}
 

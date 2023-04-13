@@ -1,6 +1,7 @@
 package org.peakaboo.controller.mapper.fitting;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
@@ -14,6 +15,7 @@ import org.peakaboo.controller.mapper.fitting.modes.TernaryModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModeData;
+import org.peakaboo.display.map.modes.MapModeData.CoordInfo;
 import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -149,11 +151,11 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	/*
 	 * POST FILTERING
 	 */
-	public String getInfoAtPoint(Coord<Integer> coord) {
+	public Optional<CoordInfo> getInfoAtPoint(Coord<Integer> coord) {
 		if (mapModeData == null) {
-			return "";
+			return Optional.empty();
 		}
-		return mapModeData.getValue().getInfoAtCoord(coord);
+		return mapModeData.getValue().getCoordInfo(coord);
 	}
 	
 	

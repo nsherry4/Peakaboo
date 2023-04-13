@@ -25,6 +25,15 @@ public enum ChannelCompositeMode
 		}
 		return "Unknown";
 	}
+	
+	public String shortName() {
+		switch (this) {
+		case NONE:    return "Individual";
+		case AVERAGE: return "Mean";
+		case MAXIMUM: return "Max";
+		}
+		return "Unknown";
+	}
 
 	
 	

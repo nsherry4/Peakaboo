@@ -26,7 +26,7 @@ import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterfaceTitle;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
-import org.peakaboo.ui.swing.app.PeakabooTabTitle;
+import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
 
 
 public class PlotFrame extends LiveFrame
