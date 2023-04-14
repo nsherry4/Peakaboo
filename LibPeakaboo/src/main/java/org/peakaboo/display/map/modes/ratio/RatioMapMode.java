@@ -7,7 +7,6 @@ import org.peakaboo.controller.mapper.fitting.modes.RatioModeController.Ratios;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
-import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -26,6 +25,8 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationP
 
 public class RatioMapMode extends MapMode {
 
+	public static String MODE_NAME = "Ratio";
+	
 	private SpectrumMapPainter ratioMapPainter;
 	
 	@Override
@@ -135,14 +136,14 @@ public class RatioMapMode extends MapMode {
 	}
 
 	@Override
-	public MapModes getMode() {
-		return MapModes.RATIO;
-	}
-
-	@Override
 	public void invalidate() {
 		map.needsMapRepaint();
 		if (ratioMapPainter != null) { ratioMapPainter.clearBuffer(); }
+	}
+
+	@Override
+	public String mapModeName() {
+		return MODE_NAME;
 	}
 	
 }

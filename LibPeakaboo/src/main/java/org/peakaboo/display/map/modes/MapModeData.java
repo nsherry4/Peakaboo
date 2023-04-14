@@ -1,8 +1,10 @@
 package org.peakaboo.display.map.modes;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public interface MapModeData {
 
@@ -24,6 +26,20 @@ public interface MapModeData {
 		}
 		
 	}
+	
+	
+	
+	/** 
+	 * This data is used to giude advanced map selection masking 
+	 */
+	public static record SelectionInfo(Spectrum map, List<Integer> unselectable) {};
+	
+	/**
+	 * Returns a view of the map used to guide similarity-based selection masking,
+	 * along with a list of unselectable points
+	 */
+	public Optional<SelectionInfo> getMapSelectionInfo();
+	
 	
 	default int getIndex(Coord<Integer> coord) {
 		if (isPointInBounds(coord)) {

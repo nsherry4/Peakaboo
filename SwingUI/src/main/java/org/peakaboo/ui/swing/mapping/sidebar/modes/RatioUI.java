@@ -2,6 +2,8 @@ package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -14,42 +16,63 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
+import org.peakaboo.controller.mapper.fitting.modes.OverlayModeController;
+import org.peakaboo.controller.mapper.fitting.modes.RatioModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.display.map.modes.overlay.OverlayColour;
+import org.peakaboo.display.map.modes.overlay.OverlayMapMode;
+import org.peakaboo.display.map.modes.ratio.RatioMapMode;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.ui.swing.mapping.colours.ColourComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
 
-public class Overlay extends JPanel {
+class RatioUI extends JPanel {
 
 	private MapFittingController viewController;
-		
-	public Overlay(MapFittingController viewController) {
+
+	
+	public RatioUI(MapFittingController viewController) {
+
 		this.viewController = viewController;
-		createElementsList();
+
+		setLayout(new GridBagLayout());
+
+		GridBagConstraints maingbc = new GridBagConstraints();
+		maingbc.insets = Spacing.iNone();
+		maingbc.ipadx = 0;
+		maingbc.ipady = 0;
+
+		maingbc.gridx = 0;
+		maingbc.gridy = 0;
+		maingbc.weightx = 1.0;
+		maingbc.weighty = 1.0;
+		maingbc.fill = GridBagConstraints.BOTH;
+		add(createElementsList(), maingbc);
+
 	}
 
 	
-
+	private RatioModeController modeController() {
+		return (RatioModeController) viewController.getModeController(RatioMapMode.MODE_NAME).get();
+	}
+	
 	private JPanel createScaleOptions() {
-		JPanel options = new JPanel(new BorderLayout());
-		
-		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Colour", "All", true);
-		options.add(scaleMode, BorderLayout.CENTER);
-				
-		return options;
+		return new ScaleModeWidget(viewController, "Colour", "All", true);
 	}
 	
-	private void createElementsList() {
+	
+	
+	private JPanel createElementsList() {
 
-		setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
+		JPanel elementsPanel = new JPanel();
+		elementsPanel.setLayout(new BorderLayout(Spacing.medium, Spacing.medium));
 
 		// elements list
-		add(createTransitionSeriesList(), BorderLayout.CENTER);
-		add(createScaleOptions(), BorderLayout.SOUTH);
+		elementsPanel.add(createTransitionSeriesList(), BorderLayout.CENTER);
+		elementsPanel.add(createScaleOptions(), BorderLayout.SOUTH);
 		
+		return elementsPanel;
 	}
 
 	private JScrollPane createTransitionSeriesList() {
@@ -63,12 +86,12 @@ public class Overlay extends JPanel {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					viewController.overlayMode().setVisibility(ts, bvalue);
+					modeController().setVisibility(ts, bvalue);
 				} 
 				else if (columnIndex == 2)
 				{
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-					viewController.overlayMode().setColour(ts, (OverlayColour)value);
+					modeController().setSide(ts, (Integer)value);
 				}
 			}
 
@@ -94,9 +117,9 @@ public class Overlay extends JPanel {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
-					case 0: return viewController.overlayMode().getVisibility(ts);
+					case 0: return modeController().getVisibility(ts);
 					case 1: return ts;
-					case 2: return viewController.overlayMode().getColour(ts);
+					case 2: return modeController().getSide(ts);
 				}
 
 				return null;
@@ -112,7 +135,7 @@ public class Overlay extends JPanel {
 				switch (columnIndex) {
 					case 0:	return "Map";
 					case 1: return "Fitting";
-					case 2: return "Colour";
+					case 2: return "Ratio Sets";
 				}
 				return "";
 			}
@@ -126,7 +149,7 @@ public class Overlay extends JPanel {
 				switch (columnIndex) {
 					case 0:	return Boolean.class;
 					case 1: return ITransitionSeries.class;
-					case 2: return OverlayColour.class;
+					case 2: return Integer.class;
 				}
 				return Object.class;
 			}
@@ -155,20 +178,14 @@ public class Overlay extends JPanel {
 
 		
 		
-
-				
-		ColourComboTableCellRenderer<OverlayColour> colourRenderer = new ColourComboTableCellRenderer<>();
-		JComboBox<OverlayColour> comboBox = new JComboBox<>(OverlayColour.values());
-		comboBox.setRenderer(colourRenderer);
+		Integer[] choices = {1,2};
+		ColourComboTableCellRenderer<Integer> renderer = new ColourComboTableCellRenderer<>();
+		JComboBox<Integer> comboBox = new JComboBox<>(choices);
+		comboBox.setRenderer(renderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
-		
 		column = table.getColumnModel().getColumn(2);
-		column.setCellRenderer(colourRenderer);
+		column.setCellRenderer(renderer);
 		column.setCellEditor(editor);
-		column.setPreferredWidth(45);
-		column.setMaxWidth(45);
-		
-		
 		
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(0,0));

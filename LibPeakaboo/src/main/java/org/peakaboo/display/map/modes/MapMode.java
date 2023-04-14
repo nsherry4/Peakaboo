@@ -3,8 +3,10 @@ package org.peakaboo.display.map.modes;
 import java.lang.ref.SoftReference;
 import java.util.List;
 
+import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
+import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.Surface;
@@ -162,7 +164,7 @@ public abstract class MapMode {
 	
 	public abstract void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps);
 	
-	public abstract MapModes getMode();
+	public abstract String mapModeName();
 
 	public abstract void invalidate();
 	

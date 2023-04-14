@@ -11,7 +11,6 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
-import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -32,6 +31,8 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class OverlayMapMode extends MapMode {
 
+	public static String MODE_NAME = "Overlay";
+	
 	private Map<OverlayColour, RasterSpectrumMapPainter> overlayMapPainters;
 		
 	@Override
@@ -202,10 +203,6 @@ public class OverlayMapMode extends MapMode {
 		
 	}
 
-	@Override
-	public MapModes getMode() {
-		return MapModes.OVERLAY;
-	}
 	
 	@Override
 	public void invalidate() {
@@ -216,6 +213,10 @@ public class OverlayMapMode extends MapMode {
 			}
 		}
 	}
-	
+
+	@Override
+	public String mapModeName() {
+		return MODE_NAME;
+	}
 
 }

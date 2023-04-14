@@ -73,6 +73,11 @@ public class OverlayModeController extends SimpleModeController {
 	
 	
 	@Override
+	public String shortTitle() {
+		return "Colour" + (this.getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : "");
+	}
+	
+	@Override
 	public String longTitle() {
 		return "Overlay of " + getDatasetTitle(getVisible());	
 	}

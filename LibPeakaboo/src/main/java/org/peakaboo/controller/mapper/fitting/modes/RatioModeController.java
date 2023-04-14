@@ -80,6 +80,11 @@ public class RatioModeController extends SimpleModeController {
 	
 	
 	@Override
+	public String shortTitle() {
+		return "Intensity (ratio)" + (this.getMap().getFitting().getMapScaleMode() == MapScaleMode.RELATIVE ? " - sides scaled independently" : "");
+	}
+	
+	@Override
 	public String longTitle() {
 		String side1Title = getDatasetTitle(forSide(1));
 		String side2Title = getDatasetTitle(forSide(2));

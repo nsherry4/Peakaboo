@@ -11,18 +11,24 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
+import org.peakaboo.controller.mapper.fitting.modes.CompositeModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
-public class Composite extends JPanel {
+class CompositeUI extends JPanel {
 	
 	private MapFittingController viewController;
 
-	public Composite(MapFittingController viewController) {
+	public CompositeUI(MapFittingController viewController) {
 		this.viewController = viewController;
 		createElementsList();
+	}
+	
+	private CompositeModeController modeController() {
+		return (CompositeModeController) viewController.getModeController(CompositeMapMode.MODE_NAME).get();
 	}
 	
 	
@@ -49,7 +55,7 @@ public class Composite extends JPanel {
 				if (columnIndex == 0) {
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-					viewController.compositeMode().setVisibility(ts, bvalue);
+					modeController().setVisibility(ts, bvalue);
 				}
 			}
 
@@ -71,7 +77,7 @@ public class Composite extends JPanel {
 			public Object getValueAt(int rowIndex, int columnIndex) {
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 				if (columnIndex == 0) {
-					return viewController.compositeMode().getVisibility(ts);
+					return modeController().getVisibility(ts);
 				} else {
 					return ts;
 				}

@@ -1,9 +1,12 @@
 package org.peakaboo.display.map;
 
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.peakaboo.display.Display;
 import org.peakaboo.display.map.modes.MapMode;
-import org.peakaboo.display.map.modes.composite.CompositeMapMode;
+import org.peakaboo.display.map.modes.MapModeRegistry;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
@@ -13,14 +16,20 @@ import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
 
 public class Mapper {
 
-	private MapMode mapmode;
+	
 	
 	private boolean invalidated;
 	private ManagedBuffer bufferer = new ManagedBuffer(Display.OVERSIZE);
 	private Coord<Integer> lastSize;
 	
+	private Map<String, MapMode> modecache = new LinkedHashMap<>();
+	private MapMode mapmode;
+	
 	public Mapper() {
-		mapmode = new CompositeMapMode();
+		for (var key : MapModeRegistry.get().typeNames()) {
+			modecache.put(key, MapModeRegistry.get().create(key, null));
+		}
+		mapmode = modecache.get(MapModeRegistry.get().defaultType());
 	}
 
 	public void draw(MapRenderData data, MapRenderSettings settings, Surface context, Coord<Integer> size) {
@@ -31,8 +40,8 @@ public class Mapper {
 
 		final int spectrumSteps = (settings.contours) ? settings.contourSteps : Spectrums.DEFAULT_STEPS;
 		
-		if (mapmode.getMode() != settings.mode) {
-			mapmode = settings.mode.getMapper();
+		if (! mapmode.mapModeName().equals(settings.mode)) {
+			mapmode = modecache.get(settings.mode);
 		}
 		
 		

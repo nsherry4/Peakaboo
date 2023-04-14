@@ -1,5 +1,6 @@
 package org.peakaboo.display.map.modes.correlation;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.display.map.modes.MapModeData;
@@ -46,6 +47,11 @@ public class CorrelationModeData implements MapModeData {
 	
 	public Spectrum getData() {
 		return data;
+	}
+
+	@Override
+	public Optional<SelectionInfo> getMapSelectionInfo() {
+		return Optional.of(new SelectionInfo(data, List.of()));
 	}
 	
 	

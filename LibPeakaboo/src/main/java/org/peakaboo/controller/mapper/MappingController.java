@@ -17,6 +17,7 @@ import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.controller.mapper.fitting.modes.CompositeModeController;
+import org.peakaboo.controller.mapper.fitting.modes.ModeController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.mapper.selection.MapSelectionController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
@@ -28,6 +29,8 @@ import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.Mapper;
+import org.peakaboo.display.map.modes.MapMode;
+import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
@@ -165,25 +168,8 @@ public class MappingController extends EventfulType<MapUpdateType>
 		settings.detectorProfile = this.getFitting().getDetectorProfile();
 		settings.selectedPoints = this.getSelection().getDisplayPoints();
 			
+		settings.spectrumTitle = this.getFitting().getActiveMode().shortTitle();
 		
-		
-		switch (settings.mode) {
-		case COMPOSITE:
-			settings.spectrumTitle = "Intensity (counts)";
-			break;
-		case OVERLAY:
-			settings.spectrumTitle = "Colour" +
-					(this.getFitting().getMapScaleMode() == MapScaleMode.RELATIVE ? " - Colours scaled independently" : "");
-			break;
-		case RATIO:
-			settings.spectrumTitle = "Intensity (ratio)" + (this.getFitting().getMapScaleMode() == MapScaleMode.RELATIVE ? " - sides scaled independently" : "");
-			break;
-		case CORRELATION:
-			settings.spectrumTitle = "Correlation (Frequency)";
-			break;
-		case TERNARYPLOT:
-			settings.spectrumTitle = "Ternary Plot (Contribution)";
-		}
 		
 		String filterActions = filteringController.getActionDescription();
 		if (filterActions != null) {
@@ -230,7 +216,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 		EachIndexExecutor executor = new SimpleEachIndexExecutor(tss.size(), index -> {
 			ITransitionSeries ts = tss.get(index);
 			
-			CompositeModeController composite = controller.getFitting().compositeMode();
+			CompositeModeController composite = (CompositeModeController) controller.getFitting().getModeController(CompositeMapMode.MODE_NAME).get();
 			
 			Mapper mapper = new Mapper();
 			MapRenderData data = new MapRenderData();

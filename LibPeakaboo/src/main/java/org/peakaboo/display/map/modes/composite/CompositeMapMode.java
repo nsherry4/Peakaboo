@@ -7,7 +7,6 @@ import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapMode;
-import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
@@ -24,7 +23,8 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScal
 
 public class CompositeMapMode extends MapMode{
 
-
+	public static String MODE_NAME = "Composite";
+	
 	private SpectrumMapPainter contourMapPainter;
 	
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
@@ -110,10 +110,8 @@ public class CompositeMapMode extends MapMode{
 
 
 	@Override
-	public MapModes getMode() {
-		return MapModes.COMPOSITE;
+	public String mapModeName() {
+		return MODE_NAME;
 	}
-
-
 	
 }

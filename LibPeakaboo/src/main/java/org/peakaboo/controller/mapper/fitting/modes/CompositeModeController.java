@@ -34,6 +34,12 @@ public class CompositeModeController extends SimpleModeController {
 	}
 
 
+
+	@Override
+	public String shortTitle() {
+		return "Intensity (counts)";
+	}
+	
 	@Override
 	public String longTitle() {
 		if (super.getVisible().size() > 1) {

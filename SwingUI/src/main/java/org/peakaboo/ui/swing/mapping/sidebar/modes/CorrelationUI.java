@@ -1,7 +1,6 @@
 package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -19,9 +18,11 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
-import org.peakaboo.controller.mapper.fitting.modes.TernaryModeController;
+import org.peakaboo.controller.mapper.fitting.modes.CorrelationModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.display.map.modes.correlation.CorrelationMapMode;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
@@ -30,12 +31,15 @@ import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRendere
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
+import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
-public class Ternary extends JPanel {
+
+class CorrelationUI extends JPanel {
 
 	private MapFittingController viewController;
+
 	
-	public Ternary(MapFittingController viewController) {
+	public CorrelationUI(MapFittingController viewController) {
 
 		this.viewController = viewController;
 
@@ -54,31 +58,37 @@ public class Ternary extends JPanel {
 		add(createElementsList(), maingbc);
 
 	}
-
+	
+	private CorrelationModeController modeController() {
+		return (CorrelationModeController) viewController.getModeController(CorrelationMapMode.MODE_NAME).get();
+	}
 	
 	private JPanel createScaleOptions() {
-		
 		JPanel options = new JPanel(new BorderLayout());
 		
 		
 		JCheckBox clip = new JCheckBox();
 		clip.setBorder(Spacing.bMedium());
-		clip.addActionListener(e -> viewController.ternaryMode().setClip(clip.isSelected()));
+		clip.addActionListener(e -> modeController().setClip(clip.isSelected()));
 		
 		JSpinner bins = new JSpinner(new SpinnerNumberModel(100, 25, 250, 1));
-		bins.addChangeListener(change -> viewController.ternaryMode().setBins((Integer)bins.getValue()));
-		viewController.ternaryMode().addListener(() -> {
+		bins.addChangeListener(change -> modeController().setBins((Integer)bins.getValue()));
+		modeController().addListener(() -> {
 			int oldValue = (Integer)bins.getValue();
-			int newValue = viewController.ternaryMode().getBins();
+			int newValue = modeController().getBins();
 			if (oldValue != newValue) {
 				bins.setValue(newValue);
 			}
 		});
-
+		
+		ScaleModeWidget scaleMode = new ScaleModeWidget(viewController, "Axis", "All", false);
+		
+		
 		SettingsPanel settings = new SettingsPanel();
 		settings.setBorder(Spacing.bMedium());
 		settings.addSetting(bins, "Granularity");
 		settings.addSetting(clip, "Clip Outliers");		
+		options.add(scaleMode, BorderLayout.CENTER);
 		options.add(settings, BorderLayout.NORTH);
 		
 		
@@ -105,13 +115,12 @@ public class Ternary extends JPanel {
 		TableModel m = new TableModel() {
 
 			public void setValueAt(Object value, int rowIndex, int columnIndex) {
-				
 				if (columnIndex == 0) {
 					
 					Boolean bvalue = (Boolean) value;
 					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
-					viewController.ternaryMode().setVisibility(ts, bvalue);
+					modeController().setVisibility(ts, bvalue);
 				} 
 
 			}
@@ -135,11 +144,10 @@ public class Ternary extends JPanel {
 			}
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
-
 				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
 
 				switch (columnIndex) {
-					case 0: return viewController.ternaryMode().getVisibility(ts);
+					case 0: return modeController().getVisibility(ts);
 					case 1: return ts;
 					case 2: return ts;
 				}
@@ -206,8 +214,8 @@ public class Ternary extends JPanel {
 		column.setCellRenderer(renderer);
 		column.setCellEditor(editor);
 		column.setResizable(false);
-		column.setPreferredWidth(90);
-		column.setMaxWidth(90);
+		column.setPreferredWidth(60);
+		column.setMaxWidth(60);
 
 		
 		JScrollPane scroll = new JScrollPane(table);
@@ -217,11 +225,11 @@ public class Ternary extends JPanel {
 		return scroll;
 
 	}
+		
 	
-
 	class AxisWidget extends Stencil<ITransitionSeries> {
 	
-		FluentToggleButton groupX, groupY, groupO;
+		FluentToggleButton group1, group2;
 		ButtonGroup group;
 		ButtonLinker linker;
 		MapFittingController controller;
@@ -231,89 +239,63 @@ public class Ternary extends JPanel {
 		public AxisWidget(MapFittingController controller) {
 			this.controller = controller;
 			
-			groupX = new FluentToggleButton(TernaryModeController.X_AXIS_LABEL).withButtonSize(FluentButtonSize.COMPACT);
-			groupY = new FluentToggleButton(TernaryModeController.Y_AXIS_LABEL).withButtonSize(FluentButtonSize.COMPACT);
-			groupO = new FluentToggleButton(TernaryModeController.O_AXIS_LABEL).withButtonSize(FluentButtonSize.COMPACT);
-			groupX.setPreferredSize(new Dimension(26, 26));
-			groupY.setPreferredSize(new Dimension(26, 26));
-			groupO.setPreferredSize(new Dimension(26, 26));
+			group1 = new FluentToggleButton("X").withButtonSize(FluentButtonSize.COMPACT);
+			group2 = new FluentToggleButton("Y").withButtonSize(FluentButtonSize.COMPACT);
+			group1.setPreferredSize(new Dimension(26, 26));
+			group2.setPreferredSize(new Dimension(26, 26));
 			group = new ButtonGroup();
-			group.add(groupX);
-			group.add(groupY);
-			group.add(groupO);
-			linker = new ButtonLinker(groupX, groupY, groupO);
+			group.add(group1);
+			group.add(group2);
+			linker = new ButtonLinker(group1, group2);
 			
 			Runnable onSelect = () -> {
 				setFonts();
-				controller.ternaryMode().setSide(ts, getSide());
+				modeController().setSide(ts, getSide());
 			};
-			groupO.withAction(onSelect);
-			groupX.withAction(onSelect);
-			groupY.withAction(onSelect);
+			group1.withAction(onSelect);
+			group2.withAction(onSelect);
 			
 			this.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1f, 1f, GridBagConstraints.CENTER, GridBagConstraints.NONE, Spacing.iNone(), 0, 0);
 			this.add(linker, c);
 		}
 		
-		@Override
-		public void setForeground(Color fg) {
-			super.setForeground(fg);
-			if (groupX != null) {
-				groupX.setForeground(fg);
-				groupY.setForeground(fg);
-				groupO.setForeground(fg);
-			}
-		}
-		
-		@Override
-		public void setBackground(Color bg) {
-			super.setBackground(bg);
-			if (groupX != null) {
-				groupX.setBackground(bg);
-				groupY.setBackground(bg);
-				groupO.setBackground(bg);
-			}
-		}
-
 		private int getSide() {
-			if (groupX.isSelected()) { return 1; }
-			if (groupY.isSelected()) { return 2; }
-			return 3;
+			return group1.isSelected() ? 1 : 2;
 		}
 		
 		private void setFonts() {
-			groupX.setFont(groupX.getFont().deriveFont(Font.PLAIN));
-			groupY.setFont(groupY.getFont().deriveFont(Font.PLAIN));
-			groupO.setFont(groupO.getFont().deriveFont(Font.PLAIN));
-			
-			int side = getSide();
-			FluentToggleButton selected = buttonForSide(side);
-			selected.setFont(selected.getFont().deriveFont(Font.BOLD));
-
+			if (getSide() == 1) {
+				group1.setFont(group1.getFont().deriveFont(Font.BOLD));
+				group2.setFont(group2.getFont().deriveFont(Font.PLAIN));
+			} else {
+				group2.setFont(group2.getFont().deriveFont(Font.BOLD));
+				group1.setFont(group1.getFont().deriveFont(Font.PLAIN));
+			}
 		}
 		
 		@Override
 		protected void onSetValue(ITransitionSeries ts, boolean selected) {
 			this.ts = ts;
-			linker.setVisible(controller.ternaryMode().getVisibility(ts));
+			linker.setVisible(modeController().getVisibility(ts));
 			
-			int side = controller.ternaryMode().getSide(ts);
-			buttonForSide(side).setSelected(true);
-			setFonts();		
-		}
-
-		private FluentToggleButton buttonForSide(int side) {
-			switch (side) {
-			case 1: return groupX;
-			case 2: return groupY;
-			case 3: return groupO;
-			default: throw new RuntimeException("Unknown ternary plot group");
+			if (selected) {
+				group1.setForeground(Stratus.getTheme().getHighlightText());
+				group2.setForeground(Stratus.getTheme().getHighlightText());
+			} else {
+				group1.setForeground(Stratus.getTheme().getControlText());
+				group2.setForeground(Stratus.getTheme().getControlText());
 			}
+			
+			if (modeController().getSide(ts) == 1) {
+				group1.setSelected(true);
+			} else {
+				group2.setSelected(true);
+			}
+			setFonts();		
 		}
 		
 	}
-
 	
 	class AxisRenderer extends StencilTableCellRenderer<ITransitionSeries> {
 	
@@ -330,4 +312,5 @@ public class Ternary extends JPanel {
 		}
 		
 	}
+
 }
