@@ -1,14 +1,11 @@
 package org.peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.autodialog.model.Parameter;

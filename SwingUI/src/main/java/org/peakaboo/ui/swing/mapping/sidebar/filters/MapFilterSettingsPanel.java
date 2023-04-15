@@ -11,10 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
-import org.peakaboo.controller.plotter.filtering.FilteringController;
-import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
-import org.peakaboo.framework.autodialog.view.swing.editors.SwingEditorFactory;
 import org.peakaboo.framework.autodialog.view.swing.layouts.NarrowSwingLayout;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
@@ -46,7 +43,7 @@ class MapFilterSettingsPanel extends ClearPanel {
 		JComponent component;
 		if (!editorUIs.containsKey(filter)) {
 			var group = filter.getParameterGroup();
-			var layout =  new NarrowSwingLayout(220);
+			var layout =  new NarrowSwingLayout(200);
 			layout.initialize(group);
 			var autopanel = new SwingAutoPanel(group, true, layout);  //SwingLayoutFactory.forGroup(filter.getParameterGroup()).getComponent();
 			autopanel.setBorder(Spacing.bSmall());

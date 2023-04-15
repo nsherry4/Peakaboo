@@ -48,7 +48,7 @@ class FilterSettingsPanel extends ClearPanel {
 		JComponent component;
 		if (!editorUIs.containsKey(filter)) {
 			var group = filter.getParameterGroup();
-			var layout =  new NarrowSwingLayout(220);
+			var layout =  new NarrowSwingLayout(200);
 			layout.initialize(group);
 			var autopanel = new SwingAutoPanel(group, true, layout);  //SwingLayoutFactory.forGroup(filter.getParameterGroup()).getComponent();
 			autopanel.setBorder(Spacing.bSmall());
