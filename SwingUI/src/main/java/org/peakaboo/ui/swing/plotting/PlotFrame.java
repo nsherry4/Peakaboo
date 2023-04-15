@@ -14,7 +14,6 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.app.Version;
 import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.framework.stratus.api.hookins.WindowDragger;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
@@ -25,7 +24,6 @@ import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterfaceTitle;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
 
 
@@ -125,8 +123,7 @@ class TabWindowListener extends WindowAdapter {
 		List<PlotPanel> unsavedWork = new ArrayList<>();
 		boolean prompt = false;
 		for (TabbedLayerPanel tab : tabControl.getTabs()) {
-			if (tab instanceof PlotPanel) {
-				PlotPanel plot = (PlotPanel) tab;
+			if (tab instanceof PlotPanel plot) {
 				if (!plot.hasUnsavedWork()) {
 					tabsToClose.add(tab);
 				} else {

@@ -106,8 +106,8 @@ public class StratusFileChooser extends JFileChooser {
 			if (clazz.isInstance(component)) {
 				return (T) component;
 			}
-			if (component instanceof Container) {
-				Component fromChild = getFilesWidget((Container) component, clazz);
+			if (component instanceof Container c) {
+				Component fromChild = getFilesWidget(c, clazz);
 				if (fromChild != null) {
 					return (T) fromChild;
 				}

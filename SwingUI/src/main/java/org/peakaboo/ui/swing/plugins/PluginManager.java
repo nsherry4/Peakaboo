@@ -12,15 +12,11 @@ import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.MatteBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
@@ -37,12 +33,9 @@ import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
-import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
-import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ButtonBox;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
@@ -53,8 +46,6 @@ import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.Fluent
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
-import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
-import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
@@ -198,8 +189,7 @@ public class PluginManager extends HeaderLayer {
 		buff.append("<ul>");
 		for (Object o : stuff) {
 			String name = o.toString();
-			if (o instanceof BoltPluginPrototype<?>) {
-				BoltPluginPrototype<?> plugin = (BoltPluginPrototype<?>) o;
+			if (o instanceof BoltPluginPrototype<?> plugin) {
 				name = plugin.getName() + " (v" + plugin.getVersion() + ")";
 			}
 			buff.append("<li>" + name + "</li>");

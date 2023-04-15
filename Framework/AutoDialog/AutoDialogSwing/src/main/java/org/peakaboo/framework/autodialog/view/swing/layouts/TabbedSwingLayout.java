@@ -30,8 +30,8 @@ public class TabbedSwingLayout extends AbstractSwingLayout {
 			tabs.addTab("General", null, SwingLayoutFactory.forGroup(general).getComponent(), null);
 		}
 		for (Value<?> value : group.getValue()) {
-			if (value instanceof Group) {
-				tabs.addTab(value.getName(), null, SwingLayoutFactory.forGroup((Group)value).getComponent(), null);
+			if (value instanceof Group g) {
+				tabs.addTab(value.getName(), null, SwingLayoutFactory.forGroup(g).getComponent(), null);
 			}
 		}
 		

@@ -18,7 +18,6 @@ import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
-import org.peakaboo.framework.stratus.components.stencil.StencilTreeCellRenderer;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 class PluginTreeWidget extends Stencil<Object> {
@@ -48,8 +47,7 @@ class PluginTreeWidget extends Stencil<Object> {
         	BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>)object;
         	label.setText(plugin.getName());
         	label.setIcon(getIcon(plugin));	
-    	} else if (object instanceof BoltIssue) {
-    		BoltIssue issue = (BoltIssue) object;
+    	} else if (object instanceof BoltIssue issue) {
     		label.setText(issue.shortSource());
     		label.setIcon(StockIcon.BADGE_ERROR.toImageIcon(IconSize.BUTTON));
     	}

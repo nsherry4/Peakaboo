@@ -149,11 +149,8 @@ class FilterSelectionTreeModel implements TreeModel {
 
 	public int getChildCount(Object parent) {
 
-		if (parent instanceof FilterType) {
-
-			FilterType ft = (FilterType) parent;
+		if (parent instanceof FilterType ft) {
 			int typeCount = 0;
-
 			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 			}
@@ -168,11 +165,8 @@ class FilterSelectionTreeModel implements TreeModel {
 
 	public Object getChild(Object parent, int index) {
 
-		if (parent instanceof FilterType) {
-
+		if (parent instanceof FilterType ft) {
 			index++;
-
-			FilterType ft = (FilterType) parent;
 			int typeCount = 0;
 
 			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {

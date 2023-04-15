@@ -170,8 +170,8 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 		
 		//If size hasn't already been manually set, figure it out now
 		if (size == -1) {
-			if (source instanceof Collection<?>) {
-				setSize(((Collection<?>) source).size());
+			if (source instanceof Collection<?> c) {
+				setSize(c.size());
 			} else {
 				int count = 0;
 				for (S s : source) {
@@ -199,8 +199,8 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 			
 			//If size hasn't already been manually set, figure it out now
 			if (size == -1) {
-				if (source instanceof Collection<?>) {
-					setSize(((Collection<?>) source).size());
+				if (source instanceof Collection<?> c) {
+					setSize(c.size());
 				} else {
 					int count = 0;
 					for (S s : source) {

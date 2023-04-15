@@ -129,8 +129,7 @@ public class ISpectrum implements Spectrum
 	 */
 	public ISpectrum(ReadOnlySpectrum copy)
 	{
-		if (copy instanceof ISpectrum) {
-			ISpectrum source = (ISpectrum) copy;
+		if (copy instanceof ISpectrum source) {
 			this.data = source.backingArrayCopy();
 			this.size = source.size;
 			this.maxIndex = source.maxIndex;
@@ -390,13 +389,11 @@ public class ISpectrum implements Spectrum
 	@Override
 	public boolean equals(Object oother)
 	{
-		if (oother instanceof ISpectrum) {
-			
-			Spectrum other = (Spectrum)oother;
-			
+		if (oother instanceof ISpectrum other) {
 			if (other.size() != size()) return false;
-			
-			for (int i = 0; i < size(); i++) if (other.get(i) != get(i)) return false;
+			for (int i = 0; i < size(); i++) {
+				if (other.get(i) != get(i)) return false;
+			}
 			
 		} else {
 			return false;

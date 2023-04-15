@@ -59,8 +59,8 @@ public class StratusSpinnerUI extends SynthSpinnerUI {
     private boolean containsFocus(Container c) {
     	for (Component child : c.getComponents()) {
     		if (child.isFocusOwner()) { return true; }
-    		if (child instanceof Container) {
-    			if (containsFocus((Container) child)) { return true; }
+    		if (child instanceof Container c2) {
+    			if (containsFocus(c2)) { return true; }
     		}
     	}
     	return false;

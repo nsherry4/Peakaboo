@@ -19,7 +19,6 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
 
@@ -45,14 +44,13 @@ class LookupRenderer extends DefaultTreeCellRenderer {
 
 		Component c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
-		if (value instanceof ITransitionSeries) {
-			ITransitionSeries ts = (ITransitionSeries) value;
+		if (value instanceof ITransitionSeries ts) {
 			tsWidget.setTransitionSeries(ts);
 			tsWidget.setSelected(selected);
 			tsWidget.check.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tsWidget;
-		} else if (value instanceof Element) {
-			elementWidget.setElement((Element) value);
+		} else if (value instanceof Element e) {
+			elementWidget.setElement(e);
 			elementWidget.setSelected(selected);
 			return elementWidget;
 		}

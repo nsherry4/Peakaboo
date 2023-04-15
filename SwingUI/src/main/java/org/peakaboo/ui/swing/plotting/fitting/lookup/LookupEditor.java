@@ -3,11 +3,8 @@ package org.peakaboo.ui.swing.plotting.fitting.lookup;
 
 
 import java.awt.Component;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.EventObject;
 
-import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -15,9 +12,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.ui.swing.plotting.fitting.lookup.LookupRenderer.ElementRenderer;
 import org.peakaboo.ui.swing.plotting.fitting.lookup.LookupRenderer.TSRenderer;
 
@@ -57,15 +51,13 @@ class LookupEditor extends DefaultTreeCellEditor {
 
 		Component c = super.getTreeCellEditorComponent(tree, value, selected, expanded, leaf, row);
 
-		if (value instanceof ITransitionSeries) {
-			ITransitionSeries ts = (ITransitionSeries) value;
+		if (value instanceof ITransitionSeries ts) {
 			tsWidget.setTransitionSeries(ts);
 			tsWidget.setSelected(selected);
 			tsWidget.check.setSelected(controller.getProposedTransitionSeries().contains(ts));
 			return tsWidget;
 
-		} else if (value instanceof Element) {
-			Element element = (Element) value;
+		} else if (value instanceof Element element) {
 			elementWidget.setElement(element);
 			elementWidget.setSelected(selected);
 			return elementWidget;

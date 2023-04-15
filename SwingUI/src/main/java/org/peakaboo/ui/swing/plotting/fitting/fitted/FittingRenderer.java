@@ -51,8 +51,7 @@ class FittingRenderer extends DefaultTableCellRenderer
 			table.setRowHeight(tswidget.getPreferredSize().height);
 		}
 		
-		if (value instanceof ITransitionSeries){
-			ITransitionSeries ts = (ITransitionSeries)value;
+		if (value instanceof ITransitionSeries ts){
 			intensity = controller.getTransitionSeriesIntensity(ts);
 			tswidget.setName(ts.toString());
 			

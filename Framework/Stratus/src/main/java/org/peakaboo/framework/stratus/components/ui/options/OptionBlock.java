@@ -44,8 +44,8 @@ public class OptionBlock extends OptionComponent {
 	public List<OptionBox> children() {
 		List<OptionBox> children = new ArrayList<>();
 		for (Component c : this.getComponents()) {
-			if (c instanceof OptionBox) {
-				children.add((OptionBox) c);
+			if (c instanceof OptionBox o) {
+				children.add(o);
 			}
 		}
 		return children;

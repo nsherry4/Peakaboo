@@ -55,10 +55,10 @@ public abstract class AbstractSwingLayout implements SwingLayout {
 	}
 
 	protected SwingView fromValue(Value<?> value) {
-		if (value instanceof Parameter) {
-			return SwingEditorFactory.forParameter((Parameter<?>)value);
-		} else if (value instanceof Group) {
-			return SwingLayoutFactory.forGroup((Group)value);
+		if (value instanceof Parameter<?> p) {
+			return SwingEditorFactory.forParameter(p);
+		} else if (value instanceof Group g) {
+			return SwingLayoutFactory.forGroup(g);
 		} else {
 			return null;
 		}

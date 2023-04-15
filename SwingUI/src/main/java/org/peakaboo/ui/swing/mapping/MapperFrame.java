@@ -18,7 +18,6 @@ import org.peakaboo.framework.stratus.components.ui.live.LiveFrame;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 
 /**
@@ -123,8 +122,8 @@ public class MapperFrame extends LiveFrame
 		SavedMapSession mapSession = previousMapSession.get();
 		if (tabs.getActiveTab() != null) {
 			TabbedLayerPanel lastTab = tabs.getActiveTab();
-			if (lastTab instanceof MapperPanel) {
-				mapSession = new SavedMapSession().storeFrom(((MapperPanel)lastTab).controller);
+			if (lastTab instanceof MapperPanel mp) {
+				mapSession = new SavedMapSession().storeFrom(mp.controller);
 			}
 		}
 		

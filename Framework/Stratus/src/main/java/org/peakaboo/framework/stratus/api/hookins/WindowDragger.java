@@ -53,8 +53,7 @@ public class WindowDragger extends MouseAdapter {
 		}
 		
 		//dont' move parent window if it's maximized
-		if (window instanceof JFrame) {
-			JFrame parent = (JFrame) window;
+		if (window instanceof JFrame parent) {
 			if ((parent.getExtendedState() & JFrame.MAXIMIZED_HORIZ) == JFrame.MAXIMIZED_HORIZ ||
 				(parent.getExtendedState() & JFrame.MAXIMIZED_VERT) == JFrame.MAXIMIZED_VERT) {
 				return;

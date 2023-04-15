@@ -29,20 +29,12 @@ class FilterSelectionRenderer extends DefaultTreeCellRenderer {
 		super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
 
 
-		if (value instanceof Filter) {
-
-			Filter f = (Filter) value;
+		if (value instanceof Filter f) {
 			setText(f.getFilterName());
-			
 			setToolTipText(StratusText.lineWrapHTML(this, f.getFilterDescription()));
-
-		} else if (value instanceof FilterType) {
-
-			FilterType ft = (FilterType) value;
+		} else if (value instanceof FilterType ft) {
 			setText(ft.toString());
-			
 			setToolTipText(ft.getFilterTypeDescription());
-
 		}
 
 		return this;
