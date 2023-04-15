@@ -7,8 +7,17 @@ import javax.swing.JComponent;
 
 public class ColourComponent extends JComponent {
 
-	protected int size = 32;
+	public static final int DEFAULT_SIZE = 32;
+	protected int size = DEFAULT_SIZE;
 	protected Color colour = Color.BLACK;
+	
+	public ColourComponent() {
+		this(DEFAULT_SIZE);
+	}
+	
+	public ColourComponent(int size) {
+		this.size = size;
+	}
 	
 	public Color getColour() {
 		return colour;

@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.peakaboo.framework.stratus.api.HSLColor;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class ColourChoice extends ColourView implements ItemSelectable {
 	
@@ -21,6 +22,11 @@ public class ColourChoice extends ColourView implements ItemSelectable {
 	
 	public ColourChoice(Color colour) {
 		super(colour);
+		this.deselectable = true;
+	}
+	
+	public ColourChoice(Color colour, Settings settings) {
+		super(colour, settings);
 		this.deselectable = true;
 	}
 	
@@ -79,7 +85,7 @@ public class ColourChoice extends ColourView implements ItemSelectable {
 		
 		if (isSelected()) {
 			Path2D shape = new Path2D.Float();
-			float pad = INSET + 8;
+			float pad = this.settings.pad() + (size/4);
 			float voffset = 0;
 			float inner = size - (pad*2);
 			float halfin= inner/2;
@@ -88,15 +94,7 @@ public class ColourChoice extends ColourView implements ItemSelectable {
 			shape.lineTo(pad+(inner/3), pad+inner+voffset);
 			shape.lineTo(pad+inner, pad+voffset);
 
-			float lum = new HSLColor(this.colour).getLuminance();
-			Color highlight;
-			if (lum < 60) {
-				highlight = Stratus.getTheme().getPalette().getColour("Light", "1");
-			} else {
-				highlight = Stratus.getTheme().getPalette().getColour("Dark", "5");
-			}
-			g.setColor(highlight);
-			
+			g.setColor(StratusColour.blackOrWhite(this.colour));
 			g.setStroke(new BasicStroke(2.5f));
 			g.draw(shape);
 
