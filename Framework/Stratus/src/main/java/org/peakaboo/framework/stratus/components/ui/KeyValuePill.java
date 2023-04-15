@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
 import java.text.Format;
 
 import javax.swing.Box;
@@ -18,7 +16,6 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class KeyValuePill extends JPanel {
 
@@ -92,19 +89,14 @@ public class KeyValuePill extends JPanel {
 		Graphics2D g2d = Stratus.g2d(g);
 		g2d = (Graphics2D) g2d.create();
 		
-
 		Color bg =  Stratus.getTheme().getWidgetAlpha();
-		float r = getHeight() / 2f;
-		
-		Shape pillArea = new RoundRectangle2D.Float(padInner, padInner, getWidth()-padInner*2, getHeight()-padInner*2, r, r);
-		Shape keyArea = new RoundRectangle2D.Float(padInner, padInner, key.getWidth() + padOuter * 1.5f, getHeight()-padInner*2, r, r);
-
+		int r = (int)(getHeight() / 2f);
 
 		g2d.setColor(bg);
-		g2d.fill(pillArea);		
+		g2d.fillRoundRect(padInner, padInner, getWidth()-padInner*2, getHeight()-padInner*2, r, r);		
 		
 		g2d.setColor(bg);
-		g2d.fill(keyArea);
+		g2d.fillRoundRect(padInner, padInner, (int)(key.getWidth() + padOuter * 1.5f), getHeight()-padInner*2, r, r);
 		
 		
 	}

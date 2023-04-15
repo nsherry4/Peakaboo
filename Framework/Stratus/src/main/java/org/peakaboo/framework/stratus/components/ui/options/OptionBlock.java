@@ -2,8 +2,6 @@ package org.peakaboo.framework.stratus.components.ui.options;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +26,11 @@ public class OptionBlock extends OptionComponent {
 		
 		Graphics2D g = (Graphics2D) go.create();
 		
-		Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius);
 		g.setColor(bg);
-		g.fill(outline);
+		g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, (int)radius, (int)radius);
 		if (bordered) {
 			g.setColor(borderAlpha);
-			g.draw(outline);
+			g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, (int)radius, (int)radius);
 		}
 		
 		g.dispose();

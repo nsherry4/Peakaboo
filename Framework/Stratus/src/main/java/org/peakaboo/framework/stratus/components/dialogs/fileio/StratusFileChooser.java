@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.geom.RoundRectangle2D;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -331,7 +330,7 @@ public class StratusFileChooser extends JFileChooser {
 				g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		    	
 				g2.setColor(getBackground());
-				g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 6, 6));
+				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 6, 6);
 			}
 		}
 

@@ -4,9 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.Stroke;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
 
@@ -58,20 +56,18 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
     	
     	g.setStroke(new BasicStroke(borderStroke));
     	pad = margin;
-    	Shape border = new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2, radius, radius);     
-    	g.draw(border);
+    	g.drawRoundRect((int)pad, (int)pad, (int)(width-pad*2), (int)(height-pad*2), (int)radius, (int)radius);
     	g.setStroke(old);
     	
     	
     	//Main fill
     	pad = margin + 1;
-    	Shape fillArea = new RoundRectangle2D.Float(pad, pad, width-pad*2+1, height-pad*2+1, radius, radius);
     	Color bg = getTheme().getRecessedControl();
     	if (StratusColour.isCustomColour(object.getBackground())) {
     		bg = object.getBackground();
     	}
    		g.setPaint(bg);
-    	g.fill(fillArea);
+    	g.fillRoundRect((int)pad, (int)pad, (int)(width-pad*2+1), (int)(height-pad*2+1), (int)radius, (int)radius);
     	
     	
 

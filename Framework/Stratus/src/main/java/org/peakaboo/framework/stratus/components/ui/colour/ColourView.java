@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
 
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusColour;
@@ -46,15 +45,14 @@ public abstract class ColourView extends ColourComponent {
 
 		int r = size/2;
 		int pad = settings.pad();
-		var shape = new RoundRectangle2D.Float(pad, pad, size-pad-2, size-pad-2, r, r);
 		
 		g.setColor(this.colour);
-		g.fill(shape);
+		g.fillRoundRect(pad, pad, size-pad-2, size-pad-2, r, r);
 
 		if (this.settings.stroke() > 0) {
 			g.setColor(StratusColour.blackOrWhite(this.colour));
 			g.setStroke(new BasicStroke(this.settings.stroke()));
-			g.draw(shape);
+			g.drawRoundRect(pad, pad, size-pad-2, size-pad-2, r, r);
 		}
 		
 		g.dispose();

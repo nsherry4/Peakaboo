@@ -11,7 +11,6 @@ import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,11 +21,9 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
@@ -448,17 +445,17 @@ public class BreadCrumb<T> extends JPanel {
 		
 		Color bg = theme.getControl();
 		Color fg = theme.getWidgetBorder();
-		float radius = theme.borderRadius();
+		int radius = (int) theme.borderRadius();
 
 		
 		//Fill b/ bg colour
 		g2.setPaint(bg);
-		g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius));
+		g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
 		
 		//Draw border
 		g2.setPaint(fg);
 		g2.setStroke(new BasicStroke(1f));
-		g2.draw(new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, radius, radius));		
+		g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, radius, radius);
 		
 		g2.dispose();
 
