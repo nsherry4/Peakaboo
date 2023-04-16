@@ -12,8 +12,8 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.cyclops.ExclusiveRange;
-import org.peakaboo.framework.cyclops.ExclusiveRangeSet;
+import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.cyclops.RangeSet;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -56,7 +56,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	private float					rangeMultiplier;
 	
 	//Areas (in channels) where the curve is strong enough that we need to consider it.
-	private ExclusiveRangeSet				intenseRanges;
+	private RangeSet				intenseRanges;
 	private Set<Integer>			intenseChannels;
 	private List<Integer>			intenseChannelList;
 	
@@ -76,7 +76,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		rangeMultiplier = DEFAULT_RANGE_MULT;
 		
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
-		intenseRanges = new ExclusiveRangeSet();
+		intenseRanges = new RangeSet();
 		intenseChannels = new LinkedHashSet<>();
 		intenseChannelList = new ArrayList<>();
 		
@@ -198,8 +198,8 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	 * significant.
 	 */
 	@Override
-	public ExclusiveRangeSet getIntenseRanges() {
-		return new ExclusiveRangeSet(intenseRanges);
+	public RangeSet getIntenseRanges() {
+		return new RangeSet(intenseRanges);
 	}
 	
 	/**
@@ -266,7 +266,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 
 			baseSize += stop - start + 1;
 			
-			intenseRanges.addRange(new ExclusiveRange(start, stop+1));
+			intenseRanges.addRange(new Range(start, stop+1));
 			
 		}
 		

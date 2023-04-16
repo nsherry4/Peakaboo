@@ -4,22 +4,22 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.peakaboo.framework.cyclops.ExclusiveRange;
-import org.peakaboo.framework.cyclops.ExclusiveRangeSet;
+import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.cyclops.RangeSet;
 
-public class ExclusiveRangeTests {
+public class RangeTests {
 
-	ExclusiveRange r1 = new ExclusiveRange(1, 4);
-	ExclusiveRange r2 = new ExclusiveRange(2, 7);
-	ExclusiveRange r3 = new ExclusiveRange(4, 8);
-	ExclusiveRange r4 = new ExclusiveRange(5, 8);
-	ExclusiveRange r5 = new ExclusiveRange(0, 8, 2);
-	ExclusiveRange r6 = new ExclusiveRange(8, 16, 2);
-	ExclusiveRange r7 = new ExclusiveRange(4, 1, -1);
-	ExclusiveRange r8 = new ExclusiveRange(1, 9, 3);
-	ExclusiveRange r9 = new ExclusiveRange(2, 9, 3);
-	ExclusiveRange r10 = new ExclusiveRange(-20, -10);
-	ExclusiveRange r11 = new ExclusiveRange(-15, -14);
+	Range r1 = new Range(1, 4);
+	Range r2 = new Range(2, 7);
+	Range r3 = new Range(4, 8);
+	Range r4 = new Range(5, 8);
+	Range r5 = new Range(0, 8, 2);
+	Range r6 = new Range(8, 16, 2);
+	Range r7 = new Range(4, 1, -1);
+	Range r8 = new Range(1, 9, 3);
+	Range r9 = new Range(2, 9, 3);
+	Range r10 = new Range(-20, -10);
+	Range r11 = new Range(-15, -14);
 	
 	@Test
 	public void range() {
@@ -64,7 +64,7 @@ public class ExclusiveRangeTests {
 		
 		assertTrue(r1.isCoincident(r2));
 		assertFalse(r5.isCoincident(r6));
-		assertTrue(r5.isCoincident(new ExclusiveRange(2, 10, 2)));
+		assertTrue(r5.isCoincident(new Range(2, 10, 2)));
 		
 		assertTrue(r1.isTouching(r2));
 		assertTrue(r1.isTouching(r3));
@@ -76,26 +76,26 @@ public class ExclusiveRangeTests {
 	public void rangeset() {
 		
 		//Two adjacent ranges
-		var rs1 = new ExclusiveRangeSet();
+		var rs1 = new RangeSet();
 		rs1.addRange(r1);
 		rs1.addRange(r3);
 		
 		//Two non-adjacent ranges
-		var rs2 = new ExclusiveRangeSet();
+		var rs2 = new RangeSet();
 		rs2.addRange(r1);
 		rs2.addRange(r4);
 		
 		//Two ranges which occupy the same rough bounds, but are out of phase
-		var rs3 = new ExclusiveRangeSet();
+		var rs3 = new RangeSet();
 		rs3.addRange(r8);
 		rs3.addRange(r9);
 		
 		//Same as rs3, but we remove part of one of the earlier ranges
-		var rs4 = new ExclusiveRangeSet(rs3);
-		rs4.removeRange(new ExclusiveRange(1, 6, 3));
+		var rs4 = new RangeSet(rs3);
+		rs4.removeRange(new Range(1, 6, 3));
 		
 		
-		var rs5 = new ExclusiveRangeSet();
+		var rs5 = new RangeSet();
 		rs5.addRange(r10);
 		rs5.removeRange(r11);
 		

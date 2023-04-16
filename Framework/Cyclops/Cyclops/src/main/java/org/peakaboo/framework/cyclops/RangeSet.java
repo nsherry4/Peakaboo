@@ -10,18 +10,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
+public class RangeSet implements Serializable, Iterable<Integer> {
 
-	private List<ExclusiveRange> ranges;
+	private List<Range> ranges;
 	
 	/**
 	 * Create a new RangeSet containing no {@link InclusiveRange}s
 	 */
-	public ExclusiveRangeSet() {
+	public RangeSet() {
 		ranges = new ArrayList<>();
 	}
 	
-	public ExclusiveRangeSet(ExclusiveRangeSet copy) {
+	public RangeSet(RangeSet copy) {
 		this();
 		ranges.addAll(copy.ranges);
 	}
@@ -31,9 +31,9 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * Add the given {@link InclusiveRange}
 	 * @param range the Range to add to this RangeSet
 	 */
-	public void addRange(ExclusiveRange range) {
-		Iterator<ExclusiveRange> i;
-		ExclusiveRange r;
+	public void addRange(Range range) {
+		Iterator<Range> i;
+		Range r;
 		
 		if (range == null) return;
 		
@@ -59,7 +59,7 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * Add all of the {@link InclusiveRange}s from the given RangeSet to this RangeSet
 	 * @param rangeset the RangeSet to add the elements from
 	 */
-	public void addRangeSet(ExclusiveRangeSet rangeset) {
+	public void addRangeSet(RangeSet rangeset) {
 		for (var r : rangeset.getRanges()) {
 			addRange(r);
 		}
@@ -71,10 +71,10 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * RangeSet anymore. Eg: [1..20:2,6..30:2].removeRange(2..29:1).toSink() => [1, 30] 
 	 * @param range the Range the elements of which should be removed from this RangeSet
 	 */
-	public void removeRange(ExclusiveRange range) {
-		Iterator<ExclusiveRange> i;
-		ExclusiveRangeSet difference = new ExclusiveRangeSet();
-		ExclusiveRange r;
+	public void removeRange(Range range) {
+		Iterator<Range> i;
+		RangeSet difference = new RangeSet();
+		Range r;
 		
 		if (range == null) return;
 		
@@ -106,7 +106,7 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	public Iterator<Integer> iterator() {
 		return new Iterator<Integer>() {
 
-			Iterator<ExclusiveRange> rangeIterator = ranges.iterator();
+			Iterator<Range> rangeIterator = ranges.iterator();
 			Iterator<Integer> numIterator;
 			
 			
@@ -168,7 +168,7 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * @param other the Range to compare
 	 * @return true if the given Range is touching this RangeSet, false otherwise
 	 */
-	public boolean isTouching(ExclusiveRange other) {
+	public boolean isTouching(Range other) {
 		for (var r : ranges) {		
 			if (r.isTouching(other)) return true;
 		}
@@ -180,7 +180,7 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * @param other the RangeSet to compare
 	 * @return true if the given RangeSet is touching this RangeSet, false otherwise
 	 */
-	public boolean isTouching(ExclusiveRangeSet other) {
+	public boolean isTouching(RangeSet other) {
 		for (var r : other.ranges) {
 			if (isTouching(r)) return true;
 		}
@@ -192,7 +192,7 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * @param other the Range to compare
 	 * @return true if the given Range is overlapping this RangeSet, false otherwise
 	 */
-	public boolean isCoincident(ExclusiveRange other) {
+	public boolean isCoincident(Range other) {
 		for (var r : ranges) {		
 			if (r.isCoincident(other)) return true;
 		}
@@ -204,7 +204,7 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * @param other the RangeSet to compare
 	 * @return true if the given other RangeSet is overlapping this RangeSet, false otherwise
 	 */
-	public boolean isCoincident(ExclusiveRangeSet other) {
+	public boolean isCoincident(RangeSet other) {
 		for (var r : other.ranges) {
 			if (isCoincident(r)) return true;
 		}
@@ -223,14 +223,14 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 	 * Get a list of the {@link InclusiveRange}s included in this RangeSet
 	 * @return a list of {@link InclusiveRange}s making up this RangeSet
 	 */
-	public List<ExclusiveRange> getRanges() {
+	public List<Range> getRanges() {
 		return new ArrayList<>(ranges);
 	}
 	
 	public static void main(String[] args) {
 		
-		ExclusiveRange r1 = new ExclusiveRange(1, 10, 2);
-		ExclusiveRange r2 = new ExclusiveRange(6, 20, 2);
+		Range r1 = new Range(1, 10, 2);
+		Range r2 = new Range(6, 20, 2);
 		
 		assert(r1.isOverlapped(r2));
 		assert(!r1.isCoincident(r2));
@@ -242,7 +242,7 @@ public class ExclusiveRangeSet implements Serializable, Iterable<Integer> {
 		
 		
 		
-		ExclusiveRangeSet rs1 = new ExclusiveRangeSet();
+		RangeSet rs1 = new RangeSet();
 		rs1.addRange(r1);
 		rs1.addRange(r2);
 		System.out.println(rs1.stream().collect(Collectors.toList()));

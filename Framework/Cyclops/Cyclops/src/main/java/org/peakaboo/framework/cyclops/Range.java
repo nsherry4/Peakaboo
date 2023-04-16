@@ -3,7 +3,7 @@ package org.peakaboo.framework.cyclops;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExclusiveRange extends Sequence<Integer> {
+public class Range extends Sequence<Integer> {
 
 	private int	start, stop, step;
 
@@ -16,7 +16,7 @@ public class ExclusiveRange extends Sequence<Integer> {
 	 * Note: The upper bound is exclusive, so range(0,0)
 	 * will represent 0<=x<0
 	 */
-	public ExclusiveRange() {}
+	public Range() {}
 		
 	/**
 	 * Creates a new range from start to stop exclusive.
@@ -24,7 +24,7 @@ public class ExclusiveRange extends Sequence<Integer> {
 	 * @param start the starting value of this range
 	 * @param stop the stopping value of this range (exclusive)
 	 */
-	public ExclusiveRange(int start, int stop) {
+	public Range(int start, int stop) {
 		this(start, stop, 1);
 	}
 
@@ -35,7 +35,7 @@ public class ExclusiveRange extends Sequence<Integer> {
 	 * @param stop the stopping value of this range (exclusive)
 	 * @param step the step size of this range
 	 */
-	public ExclusiveRange(int start, final int stop, final int step) {
+	public Range(int start, final int stop, final int step) {
 		super();
 		
 		//always trust the step size -- reverse the numbers if they don't agree with the step size
@@ -72,12 +72,12 @@ public class ExclusiveRange extends Sequence<Integer> {
 		super.setStartValue(this.start);
 		super.setNextFunction(element -> {
 			if (element == null) return null;
-			Integer next = element+ExclusiveRange.this.step;			
+			Integer next = element+Range.this.step;			
 			
 			if (step < 0) {
-				return next > ExclusiveRange.this.stop ? next : null;
+				return next > Range.this.stop ? next : null;
 			} else {
-				return next < ExclusiveRange.this.stop ? next : null;	
+				return next < Range.this.stop ? next : null;	
 			}
 		});
 		
@@ -85,9 +85,9 @@ public class ExclusiveRange extends Sequence<Integer> {
 	}
 
 	/**
-	 * The integer span of this {@link ExclusiveRange}. Note that for step sizes greater than 1, this is not the same as the number of 
+	 * The integer span of this {@link Range}. Note that for step sizes greater than 1, this is not the same as the number of 
 	 * elements in the range. To determine that value, call {@link InclusiveRange#elementCount()}
-	 * @return the size of the span of the {@link ExclusiveRange}
+	 * @return the size of the span of the {@link Range}
 	 */
 	public int size()
 	{
@@ -105,7 +105,7 @@ public class ExclusiveRange extends Sequence<Integer> {
 	/**
 	 * Calculates the last value from this range. This is not the step size, but
 	 * rather the last value returned by an iterator or by
-	 * {@link ExclusiveRange#asList()}
+	 * {@link Range#asList()}
 	 */
 	public int last() {
 		return this.stop - this.step + this.phase();
@@ -123,9 +123,9 @@ public class ExclusiveRange extends Sequence<Integer> {
 	}
 	
 	/**
-	 * The number of elements contained in this {@link ExclusiveRange}. Note that for step sizes greater than 1, this is not the same 
-	 * as the size (span) of the {@link ExclusiveRange}.
-	 * @return the number of integer values included in this {@link ExclusiveRange}
+	 * The number of elements contained in this {@link Range}. Note that for step sizes greater than 1, this is not the same 
+	 * as the size (span) of the {@link Range}.
+	 * @return the number of integer values included in this {@link Range}
 	 */
 	public int elementCount()
 	{
@@ -141,12 +141,12 @@ public class ExclusiveRange extends Sequence<Integer> {
 	}
 	
 	/**
-	 * Determines if this {@link ExclusiveRange} occupies the same area as another {@link ExclusiveRange}. Overlapped ranges do not need to share any points, 
+	 * Determines if this {@link Range} occupies the same area as another {@link Range}. Overlapped ranges do not need to share any points, 
 	 * it is sufficient that their start->end spans overlap in some way.
-	 * @param other the other {@link ExclusiveRange} to compare against
-	 * @return true if the two {@link ExclusiveRange} occupy some of the same area, false otherwise 
+	 * @param other the other {@link Range} to compare against
+	 * @return true if the two {@link Range} occupy some of the same area, false otherwise 
 	 */
-	public boolean isOverlapped(ExclusiveRange other) {
+	public boolean isOverlapped(Range other) {
 		
 		//if neither of their ends lies within our ends, and none of our ends lies within theirs
 		return
@@ -160,14 +160,14 @@ public class ExclusiveRange extends Sequence<Integer> {
 	}
 	
 	/**
-	 * Determines if this {@link ExclusiveRange} shares some or all of it's points with another {@link ExclusiveRange}. {@link ExclusiveRange} which overlap by start and end position, 
+	 * Determines if this {@link Range} shares some or all of it's points with another {@link Range}. {@link Range} which overlap by start and end position, 
 	 * but which have different step sizes, or have the same step size, but out of phase, are considered to be not 
-	 * truly coincident. This allows for the creation of more complex patterns using {@link ExclusiveRangeSet}, such as 
+	 * truly coincident. This allows for the creation of more complex patterns using {@link RangeSet}, such as 
 	 * joining two ranges: eg 1..11:3 => [1, 4, 7, 10] and 2..12:3 => [2, 5, 8, 11] to produce [1, 2, 4, 5, 7, 8, 10, 11] 
 	 * @param other the other ExclusiveRange to compare against
 	 * @return true if the two ExclusiveRange contain common elements with a common step size, false otherwise 
 	 */
-	public boolean isCoincident(ExclusiveRange other)
+	public boolean isCoincident(Range other)
 	{
 		
 		if (!isOverlapped(other)) return false;
@@ -195,7 +195,7 @@ public class ExclusiveRange extends Sequence<Integer> {
 	 * @param other the other ExclusiveRange to examine
 	 * @return true if the two ExclusiveRanges are one step apart from each other, with the same step and phase, false otherwise
 	 */
-	public boolean isAdjacent(ExclusiveRange other)
+	public boolean isAdjacent(Range other)
 	{
 		//step size must match
 		if (other.step != this.step) return false;
@@ -213,22 +213,22 @@ public class ExclusiveRange extends Sequence<Integer> {
 	 * @param other the Range to check this Range against
 	 * @return true if the two ranges are touching, false otherwise
 	 */
-	public boolean isTouching(ExclusiveRange other)
+	public boolean isTouching(Range other)
 	{
 		return isCoincident(other) || isAdjacent(other);
 	}
 	
 	
 	/**
-	 * Merges two ExclusiveRange for which {@link ExclusiveRange#isTouching(ExclusiveRange)} returns true. Returns null if the ExclusiveRange do not 
+	 * Merges two ExclusiveRange for which {@link Range#isTouching(Range)} returns true. Returns null if the ExclusiveRange do not 
 	 * satisfy this requirement.
 	 * @param other the other ExclusiveRange to merge this ExclusiveRange with
 	 * @return a new ExclusiveRange representing the union of the elements of both
 	 */
-	public ExclusiveRange merge(ExclusiveRange other)
+	public Range merge(Range other)
 	{
 		if (! isTouching(other) ) return null;
-		return new ExclusiveRange(Math.min(other.start, start), Math.max(other.stop, stop), step);
+		return new Range(Math.min(other.start, start), Math.max(other.stop, stop), step);
 	}
 	
 	/**
@@ -238,9 +238,9 @@ public class ExclusiveRange extends Sequence<Integer> {
 	 * @param other the Range to remove from this Range
 	 * @return a RangeSet representing elements in this Range which are not in the other Range
 	 */
-	public ExclusiveRangeSet difference(ExclusiveRange other)
+	public RangeSet difference(Range other)
 	{
-		var result = new ExclusiveRangeSet();
+		var result = new RangeSet();
 		
 		if (! isCoincident(other))
 		{
@@ -248,8 +248,8 @@ public class ExclusiveRange extends Sequence<Integer> {
 			return result;
 		}
 		
-		if (this.start < other.start) result.addRange(new ExclusiveRange(start, other.start, step));
-		if (this.stop > other.stop) result.addRange(new ExclusiveRange(other.stop, stop, step));
+		if (this.start < other.start) result.addRange(new Range(start, other.start, step));
+		if (this.stop > other.stop) result.addRange(new Range(other.stop, stop, step));
 		
 		return result;
 		

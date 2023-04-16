@@ -17,7 +17,7 @@ import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.ExclusiveRange;
+import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -74,7 +74,7 @@ public class Mapping {
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
 		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
-		streamer.setTask(new ExclusiveRange(0, ctx.dataset.getScanData().scanCount()), stream -> {
+		streamer.setTask(new Range(0, ctx.dataset.getScanData().scanCount()), stream -> {
 			
 			long t1 = System.currentTimeMillis();
 			

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.ExclusiveRangeSet;
+import org.peakaboo.framework.cyclops.RangeSet;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
@@ -105,7 +105,7 @@ public interface ROCurve {
 	 * Returns a RangeSet containing the channels for which this Curve is intense or
 	 * significant.
 	 */
-	ExclusiveRangeSet getIntenseRanges();
+	RangeSet getIntenseRanges();
 
 	/**
 	 * Returns a Set of Integers containing the channels for which this Curve is intense or
