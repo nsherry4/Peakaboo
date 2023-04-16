@@ -86,7 +86,7 @@ public class Range extends Sequence<Integer> {
 
 	/**
 	 * The integer span of this {@link Range}. Note that for step sizes greater than 1, this is not the same as the number of 
-	 * elements in the range. To determine that value, call {@link InclusiveRange#elementCount()}
+	 * elements in the range. To determine that value, call {@link Range#elementCount()}
 	 * @return the size of the span of the {@link Range}
 	 */
 	public int size()
@@ -209,7 +209,7 @@ public class Range extends Sequence<Integer> {
 	}
 	
 	/**
-	 * Equivalent to {@link InclusiveRange#isCoincident(InclusiveRange)} OR {@link InclusiveRange#isAdjacent(InclusiveRange)}
+	 * Equivalent to {@link Range#isCoincident(Range)} OR {@link Range#isAdjacent(Range)}
 	 * @param other the Range to check this Range against
 	 * @return true if the two ranges are touching, false otherwise
 	 */
@@ -233,7 +233,7 @@ public class Range extends Sequence<Integer> {
 	
 	/**
 	 * Returns a RangeSet representing this Range with the elements in the other Range removed. The Ranges must satisfy 
-	 * {@link InclusiveRange#isOverlapping(InclusiveRange)}. If the Ranges are not overlapping, then the returned RangeSet will simply 
+	 * {@link Range#isOverlapping(Range)}. If the Ranges are not overlapping, then the returned RangeSet will simply 
 	 * represent this Range
 	 * @param other the Range to remove from this Range
 	 * @return a RangeSet representing elements in this Range which are not in the other Range

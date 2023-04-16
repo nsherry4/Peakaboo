@@ -15,7 +15,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	private List<Range> ranges;
 	
 	/**
-	 * Create a new RangeSet containing no {@link InclusiveRange}s
+	 * Create a new RangeSet containing no {@link Range}s
 	 */
 	public RangeSet() {
 		ranges = new ArrayList<>();
@@ -28,7 +28,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	
 
 	/**
-	 * Add the given {@link InclusiveRange}
+	 * Add the given {@link Range}
 	 * @param range the Range to add to this RangeSet
 	 */
 	public void addRange(Range range) {
@@ -56,7 +56,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 		
 
 	/**
-	 * Add all of the {@link InclusiveRange}s from the given RangeSet to this RangeSet
+	 * Add all of the {@link Range}s from the given RangeSet to this RangeSet
 	 * @param rangeset the RangeSet to add the elements from
 	 */
 	public void addRangeSet(RangeSet rangeset) {
@@ -66,7 +66,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	}
 	
 	/**
-	 * Removes this {@link InclusiveRange} from the RangeSet. This does not simply remove the given Range object, rather it 
+	 * Removes this {@link Range} from the RangeSet. This does not simply remove the given Range object, rather it 
 	 * modifies the collection of Ranges so that none of the elements contained in the given Range are contained in this 
 	 * RangeSet anymore. Eg: [1..20:2,6..30:2].removeRange(2..29:1).toSink() => [1, 30] 
 	 * @param range the Range the elements of which should be removed from this RangeSet
@@ -92,7 +92,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	}
 	
 	/**
-	 * Remove all {@link InclusiveRange}s from this RangeSet
+	 * Remove all {@link Range}s from this RangeSet
 	 */
 	public void clear() {
 		ranges.clear();
@@ -164,7 +164,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	}
 	
 	/**
-	 * Determines if this RangeSet is touching the given {@link InclusiveRange}. For a definition of touching, see {@link InclusiveRange#isTouching(InclusiveRange)}
+	 * Determines if this RangeSet is touching the given {@link Range}. For a definition of touching, see {@link Range#isTouching(Range)}
 	 * @param other the Range to compare
 	 * @return true if the given Range is touching this RangeSet, false otherwise
 	 */
@@ -176,7 +176,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	}
 	
 	/**
-	 * Determines if this RangeSet is touching the given other RangeSet. For a definition of touching, see {@link InclusiveRange#isTouching(InclusiveRange)}
+	 * Determines if this RangeSet is touching the given other RangeSet. For a definition of touching, see {@link Range#isTouching(Range)}
 	 * @param other the RangeSet to compare
 	 * @return true if the given RangeSet is touching this RangeSet, false otherwise
 	 */
@@ -188,7 +188,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	}
 	
 	/**
-	 * Determines if this RangeSet is overlapping the given {@link InclusiveRange}. For a definition of overlapping, see {@link InclusiveRange#isOverlapping(InclusiveRange)}
+	 * Determines if this RangeSet is overlapping the given {@link Range}. For a definition of overlapping, see {@link Range#isOverlapping(Range)}
 	 * @param other the Range to compare
 	 * @return true if the given Range is overlapping this RangeSet, false otherwise
 	 */
@@ -200,7 +200,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	}
 	
 	/**
-	 * Determines if this RangeSet is overlapping the given other RangeSet. For a definition of overlapping, see {@link InclusiveRange#isOverlapping(InclusiveRange)}
+	 * Determines if this RangeSet is overlapping the given other RangeSet. For a definition of overlapping, see {@link Range#isOverlapping(Range)}
 	 * @param other the RangeSet to compare
 	 * @return true if the given other RangeSet is overlapping this RangeSet, false otherwise
 	 */
@@ -220,8 +220,8 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 	
 	
 	/**
-	 * Get a list of the {@link InclusiveRange}s included in this RangeSet
-	 * @return a list of {@link InclusiveRange}s making up this RangeSet
+	 * Get a list of the {@link Range}s included in this RangeSet
+	 * @return a list of {@link Range}s making up this RangeSet
 	 */
 	public List<Range> getRanges() {
 		return new ArrayList<>(ranges);
