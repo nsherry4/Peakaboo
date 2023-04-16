@@ -6,8 +6,8 @@ import java.util.List;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.cyclops.RangeSet;
+import org.peakaboo.framework.cyclops.ExclusiveRange;
+import org.peakaboo.framework.cyclops.ExclusiveRangeSet;
 
 import com.github.tschoonj.xraylib.Xraylib;
 
@@ -45,24 +45,27 @@ public class XrayLibPeakTable implements PeakTable {
 		 * they must be passed to the range in 'reverse' order
 		 */
 		
-		RangeSet kLines = new RangeSet();
-		kLines.addRange(new Range(Xraylib.KP5_LINE, Xraylib.KL1_LINE));
+		//K Lines
+		ExclusiveRangeSet kLines = new ExclusiveRangeSet();
+		kLines.addRange(new ExclusiveRange(Xraylib.KP5_LINE, Xraylib.KL1_LINE+1));
 		
-		RangeSet lLines = new RangeSet();
-		lLines.addRange(new Range(Xraylib.L3P4_LINE, Xraylib.L1L2_LINE));
-		//L1L*
-		lLines.removeRange(new Range(Xraylib.L1L2_LINE, Xraylib.L1L3_LINE));
-		//L2L*
-		lLines.removeRange(new Range(Xraylib.L2L3_LINE, Xraylib.L2L3_LINE));
 		
-		RangeSet mLines = new RangeSet();
-		mLines.addRange(new Range(Xraylib.M5P5_LINE, Xraylib.M1M2_LINE));
+		//L Lines
+		ExclusiveRangeSet lLines = new ExclusiveRangeSet();
+		lLines.addRange(new ExclusiveRange(Xraylib.L3P4_LINE, Xraylib.L1L2_LINE+1));
+		//Remove L1->L*
+		lLines.removeRange(new ExclusiveRange(Xraylib.L1L3_LINE, Xraylib.L1L2_LINE+1));
+		//Remove L2->L*
+		lLines.removeRange(new ExclusiveRange(Xraylib.L2L3_LINE, Xraylib.L2L3_LINE+1));
+				
+		//M Lines
+		ExclusiveRangeSet mLines = new ExclusiveRangeSet();
+		mLines.addRange(new ExclusiveRange(Xraylib.M5P5_LINE, Xraylib.M1M2_LINE+1));
 		//Remove lines from one m to another
-		mLines.removeRange(new Range(Xraylib.M1M2_LINE, Xraylib.M1M5_LINE));
-		mLines.removeRange(new Range(Xraylib.M2M3_LINE, Xraylib.M2M5_LINE));
-		mLines.removeRange(new Range(Xraylib.M3M4_LINE, Xraylib.M3M5_LINE));
-		mLines.removeRange(new Range(Xraylib.M4M5_LINE, Xraylib.M4M5_LINE));
-		
+		mLines.removeRange(new ExclusiveRange(Xraylib.M1M5_LINE, Xraylib.M1M2_LINE+1));
+		mLines.removeRange(new ExclusiveRange(Xraylib.M2M5_LINE, Xraylib.M2M3_LINE+1));
+		mLines.removeRange(new ExclusiveRange(Xraylib.M3M5_LINE, Xraylib.M3M4_LINE+1));
+		mLines.removeRange(new ExclusiveRange(Xraylib.M4M5_LINE, Xraylib.M4M5_LINE+1));	
 		
 		for (Element e : Element.values()) {
 			readElementShell(kLines, e, TransitionShell.K);
@@ -72,7 +75,7 @@ public class XrayLibPeakTable implements PeakTable {
 
 	}
 	
-	private void readElementShell(RangeSet lines, Element elem, TransitionShell tstype) {
+	private void readElementShell(ExclusiveRangeSet lines, Element elem, TransitionShell tstype) {
 		PrimaryTransitionSeries ts = new PrimaryTransitionSeries(elem, tstype);
 		//find the strongest transition line, so we can skip anything significantly weaker than it
 		float maxRel = 0f;

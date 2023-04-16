@@ -2,6 +2,8 @@ package org.peakaboo.framework.cyclops;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -18,7 +20,7 @@ import java.io.Serializable;
  *
  */
 
-public class Range extends Sequence<Integer> implements Serializable
+public class InclusiveRange extends Sequence<Integer> implements Serializable
 {
 
 	private int	start, stop, step;
@@ -34,7 +36,7 @@ public class Range extends Sequence<Integer> implements Serializable
 	 * will represent 0<=x<=0 rather than the more conventional 
 	 * 0<=x<0, and so range(0,0) will contain 0 as its only value.  
 	 */
-	public Range()
+	public InclusiveRange()
 	{
 		
 	}
@@ -54,7 +56,7 @@ public class Range extends Sequence<Integer> implements Serializable
 	 * @param start the starting value of this range
 	 * @param stop the stopping value of this range (inclusive)
 	 */
-	public Range(int start, int stop)
+	public InclusiveRange(int start, int stop)
 	{
 		this(start, stop, 1);
 	}
@@ -75,7 +77,7 @@ public class Range extends Sequence<Integer> implements Serializable
 	 * @param stop the stopping value of this range (inclusive)
 	 * @param step the step size of this range
 	 */
-	public Range(int start, final int stop, final int step)
+	public InclusiveRange(int start, final int stop, final int step)
 	{
 		
 		super();
@@ -112,13 +114,13 @@ public class Range extends Sequence<Integer> implements Serializable
 		super.setStartValue(this.start);
 		super.setNextFunction(element -> {
 			if (element == null) return null;
-			Integer next = element+Range.this.step;			
+			Integer next = element+InclusiveRange.this.step;			
 			
 			if (step < 0)
 			{
-				return next >= Range.this.stop ? next : null;
+				return next >= InclusiveRange.this.stop ? next : null;
 			} else {
-				return next <= Range.this.stop ? next : null;	
+				return next <= InclusiveRange.this.stop ? next : null;	
 			}
 		});
 		
@@ -126,37 +128,22 @@ public class Range extends Sequence<Integer> implements Serializable
 	}
 
 	
-	/**
-	 * Creates a new range based on the length of the range 
-	 * rather than the upper bound value. fromLength(1, 3) will
-	 * create a range representing the values [1, 2, 3]
-	 * @param start the starting value of the range
-	 * @param length the length of the range
-	 * @return a new Range representing the parameters given
-	 */
-	public static Range fromLength(int start, int length)
-	{
-		return new Range(start, start + length - 1);
-	}
 	
 	/**
-	 * Creates a new range based on the length of the range 
-	 * rather than the upper bound value. fromLength(1, 5, 2) will
-	 * create a range representing the values [1, 3, 5]
-	 * @param start the starting value of the range
-	 * @param length the length of the range
-	 * @param stepsize the stepsize of the range
-	 * @return a new Range representing the parameters given
+	 * Returns the values from this range as a {@link List}
 	 */
-	public static Range fromLength(int start, int length, int stepsize)
-	{
-		return new Range(start, start + length - 1, stepsize);
+	public List<Integer> asList() {
+		List<Integer> l = new ArrayList<>();
+		for (int i : this) {
+			l.add(i);
+		}
+		return l;
 	}
-
+	
 	
 	/**
 	 * The integer span of this Range. Note that for step sizes greater than 1, this is not the same as the number of 
-	 * elements in the range. To determine that value, call {@link Range#elementCount()}
+	 * elements in the range. To determine that value, call {@link InclusiveRange#elementCount()}
 	 * @return the size of the span of the Range
 	 */
 	public int size()
@@ -188,7 +175,7 @@ public class Range extends Sequence<Integer> implements Serializable
 	 * @param other the other Range to compare against
 	 * @return true if the two Ranges occupy some of the same area, false otherwise 
 	 */
-	public boolean isOverlapped(Range other) {
+	public boolean isOverlapped(InclusiveRange other) {
 		
 		//if neither of their ends lies within our ends, and none of our ends lies within theirs
 
@@ -205,12 +192,12 @@ public class Range extends Sequence<Integer> implements Serializable
 	/**
 	 * Determines if this Range shares some or all of it's points with another Range. Ranges which overlap by start and end position, 
 	 * but which have different step sizes, or have the same step size, but out of phase, are considered to be not 
-	 * truly coincident. This allows for the creation of more complex patterns using {@link RangeSet}, such as 
+	 * truly coincident. This allows for the creation of more complex patterns using {@link InclusiveRangeSet}, such as 
 	 * joining two ranges: eg 1..10:3 => [1, 4, 7, 10] and 2..11:3 => [2, 5, 8, 11] to produce [1, 2, 4, 5, 7, 8, 10, 11] 
 	 * @param other the other Range to compare against
 	 * @return true if the two Ranges contain common elements with a common step size, false otherwise 
 	 */
-	public boolean isCoincident(Range other)
+	public boolean isCoincident(InclusiveRange other)
 	{
 		
 		if (!isOverlapped(other)) return false;
@@ -238,7 +225,7 @@ public class Range extends Sequence<Integer> implements Serializable
 	 * @param other the other Range to examine
 	 * @return true if the two Ranges are one step apart from each other, with the same step and phase, false otherwise
 	 */
-	public boolean isAdjacent(Range other)
+	public boolean isAdjacent(InclusiveRange other)
 	{
 		if (other.step != step) return false;
 		if (other.start % step != start % step) return false;
@@ -246,41 +233,41 @@ public class Range extends Sequence<Integer> implements Serializable
 	}
 	
 	/**
-	 * Equivalent to {@link Range#isCoincident(Range)} OR {@link Range#isAdjacent(Range)}
+	 * Equivalent to {@link InclusiveRange#isCoincident(InclusiveRange)} OR {@link InclusiveRange#isAdjacent(InclusiveRange)}
 	 * @param other the Range to check this Range against
 	 * @return true if the two ranges are touching, false otherwise
 	 */
-	public boolean isTouching(Range other)
+	public boolean isTouching(InclusiveRange other)
 	{
 		return isCoincident(other) || isAdjacent(other);
 	}
 	
 	
 	/**
-	 * Merges two Ranges for which {@link Range#isTouching(Range)} returns true. Returns null if the Ranges do not 
+	 * Merges two Ranges for which {@link InclusiveRange#isTouching(InclusiveRange)} returns true. Returns null if the Ranges do not 
 	 * satisfy this requirement.
 	 * @param other the other Range to merge this Range with
 	 * @return a new Range representing the union of the elements of both
 	 */
-	public Range merge(Range other)
+	public InclusiveRange merge(InclusiveRange other)
 	{
 		
 		if (! isTouching(other) ) return null;
 		
-		return new Range(Math.min(other.start, start), Math.max(other.stop, stop), step);
+		return new InclusiveRange(Math.min(other.start, start), Math.max(other.stop, stop), step);
 		
 	}
 	
 	/**
 	 * Returns a RangeSet representing this Range with the elements in the other Range removed. The Ranges must satisfy 
-	 * {@link Range#isOverlapping(Range)}. If the Ranges are not overlapping, then the returned RangeSet will simply 
+	 * {@link InclusiveRange#isOverlapping(InclusiveRange)}. If the Ranges are not overlapping, then the returned RangeSet will simply 
 	 * represent this Range
 	 * @param other the Range to remove from this Range
 	 * @return a RangeSet representing elements in this Range which are not in the other Range
 	 */
-	public RangeSet difference(Range other)
+	public InclusiveRangeSet difference(InclusiveRange other)
 	{
-		RangeSet result = new RangeSet();
+		InclusiveRangeSet result = new InclusiveRangeSet();
 		
 		if (! isCoincident(other))
 		{
@@ -290,8 +277,8 @@ public class Range extends Sequence<Integer> implements Serializable
 		
 		//other.start-1 because the range class uses an inclusive upper bound
 		//other.stop+1 for similar reasons
-		if (this.start < other.start) result.addRange(new Range(start, other.start-1, step));
-		if (this.stop > other.stop) result.addRange(new Range(other.stop+1, stop, step));
+		if (this.start < other.start) result.addRange(new InclusiveRange(start, other.start-1, step));
+		if (this.stop > other.stop) result.addRange(new InclusiveRange(other.stop+1, stop, step));
 		
 		return result;
 		

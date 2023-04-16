@@ -13,8 +13,8 @@ import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.cyclops.ExclusiveRange;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
@@ -71,7 +71,7 @@ public class AutoEnergyCalibration {
 		//SCORE THE ENERGY PAIRS AND CREATE AN INDEX -> SCORE MAP
 		StreamExecutor<List<EnergyCalibration>> scorer = new StreamExecutor<>("Searching for Calibrations", energies.size() / 100);
 		
-		scorer.setTask(new Range(0, energies.size()-1), stream -> {
+		scorer.setTask(new ExclusiveRange(0, energies.size()), stream -> {
 
 			//build a new model for experimenting with
 			FittingSet fits = fitModel(tsList, dataWidth);

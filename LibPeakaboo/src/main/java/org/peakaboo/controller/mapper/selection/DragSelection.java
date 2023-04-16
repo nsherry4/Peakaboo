@@ -9,8 +9,8 @@ import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.ExclusiveRange;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Range;
 
 /**
  * Represents a box-style selection over an area
@@ -148,9 +148,9 @@ class DragSelection extends AbstractSelection {
 		final float a = width/2f;
 		final float b = height/2f;
 
-		for (int x : new Range(xstart, xend)) {
+		for (int x : new ExclusiveRange(xstart, xend+1)) {
 			float x0 = (x - xstart) - a + 0.5f; //0.5 for the middle of the pixel
-			for (int y : new Range(ystart, yend)){
+			for (int y : new ExclusiveRange(ystart, yend+1)){
 				float y0 = (y - ystart) - b + 0.5f;	
 				float dist = (x0*x0) / (a*a) + (y0*y0) / (b*b);
 				if (dist <= 1f) {
