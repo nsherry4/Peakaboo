@@ -1,5 +1,5 @@
-logo: Art/logo/v3/icon.png
+logo: Art/logo/v4/icon.png
 remote_theme: pages-themes/cayman@v0.2.0
-show_downloads: true
+show_downloads: false
 plugins:
 - jekyll-remote-theme
