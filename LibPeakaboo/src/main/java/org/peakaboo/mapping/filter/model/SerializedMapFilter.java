@@ -1,9 +1,10 @@
 package org.peakaboo.mapping.filter.model;
 
 import java.util.List;
+import java.util.Map;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 /**
  * SerializedFilter holds a reference to a filter, and provides getters/setters for
@@ -21,7 +22,7 @@ public class SerializedMapFilter {
 	
 	//These values exist only to initialize the filter, not to be read from.
 	private String clazz;
-	private List<Object> settings;
+	private Map<String, Object> settings;
 	
 	
 	
@@ -43,22 +44,22 @@ public class SerializedMapFilter {
 		this.clazz = clazz;
 	}
 
-	public List<Object> getSettings() {
-		return filter.getParameterGroup().serialize();
+	public Map<String, Object> getSettings() {
+		return filter.getParameterGroup().serializeMap();
 	}
 
-	public void setSettings(List<Object> settings) {
+	public void setSettings(Map<String, Object> settings) {
 		this.settings = settings;
 	}
 
 	public MapFilter getFilter() {
 		if (filter != null) { return filter; }
 			
-		for (BoltPluginPrototype<? extends JavaMapFilterPlugin> plugin : MapFilterPluginManager.system().getPlugins()) {
+		for (BoltPluginPrototype<? extends MapFilterPlugin> plugin : MapFilterPluginManager.system().getPlugins()) {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
 				filter = plugin.create();
 				filter.initialize();
-				filter.getParameterGroup().deserialize(settings);
+				filter.getParameterGroup().deserializeMap(settings);
 				return filter;
 			}
 		}

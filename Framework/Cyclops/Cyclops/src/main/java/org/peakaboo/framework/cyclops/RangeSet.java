@@ -10,15 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-/**
- * 
- * @author Nathaniel Sherry, 2010-2011
- *
- */
-
-
-public class RangeSet implements Serializable, Iterable<Integer>
-{
+public class RangeSet implements Serializable, Iterable<Integer> {
 
 	private List<Range> ranges;
 	
@@ -68,7 +60,7 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * @param rangeset the RangeSet to add the elements from
 	 */
 	public void addRangeSet(RangeSet rangeset) {
-		for (Range r : rangeset.getRanges()) {
+		for (var r : rangeset.getRanges()) {
 			addRange(r);
 		}
 	}
@@ -142,6 +134,14 @@ public class RangeSet implements Serializable, Iterable<Integer>
 		
 	}
 	
+	public List<Integer> asList() {
+		List<Integer> l = new ArrayList<>();
+		for (int i : this) {
+			l.add(i);
+		}
+		return l;
+	}
+	
 	/**
 	 * Calculates the number of distinct elements in this RangeSet. Note that
 	 * because constituent ranges may contain duplicate elements, this method takes
@@ -168,16 +168,11 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * @param other the Range to compare
 	 * @return true if the given Range is touching this RangeSet, false otherwise
 	 */
-	public boolean isTouching(Range other)
-	{
-		
-		for (Range r : ranges)
-		{		
+	public boolean isTouching(Range other) {
+		for (var r : ranges) {		
 			if (r.isTouching(other)) return true;
 		}
-		
-		return false;
-		
+		return false;		
 	}
 	
 	/**
@@ -185,14 +180,10 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * @param other the RangeSet to compare
 	 * @return true if the given RangeSet is touching this RangeSet, false otherwise
 	 */
-	public boolean isTouching(RangeSet other)
-	{
-		
-		for (Range r : other.ranges)
-		{
+	public boolean isTouching(RangeSet other) {
+		for (var r : other.ranges) {
 			if (isTouching(r)) return true;
 		}
-		
 		return false;
 	}
 	
@@ -202,13 +193,10 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * @return true if the given Range is overlapping this RangeSet, false otherwise
 	 */
 	public boolean isCoincident(Range other) {
-		
-		for (Range r : ranges) {		
+		for (var r : ranges) {		
 			if (r.isCoincident(other)) return true;
 		}
-		
 		return false;
-		
 	}
 	
 	/**
@@ -217,11 +205,9 @@ public class RangeSet implements Serializable, Iterable<Integer>
 	 * @return true if the given other RangeSet is overlapping this RangeSet, false otherwise
 	 */
 	public boolean isCoincident(RangeSet other) {
-		
-		for (Range r : other.ranges) {
+		for (var r : other.ranges) {
 			if (isCoincident(r)) return true;
 		}
-		
 		return false;
 	}
 	
@@ -263,5 +249,6 @@ public class RangeSet implements Serializable, Iterable<Integer>
 		
 		
 	}
+	
 	
 }

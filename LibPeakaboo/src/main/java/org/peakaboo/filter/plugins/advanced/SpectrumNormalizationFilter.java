@@ -8,6 +8,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import org.peakaboo.framework.autodialog.model.Group;
@@ -154,8 +155,8 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.ADVANCED;
+	public FilterDescriptor getFilterDescriptor() {
+		return new FilterDescriptor(FilterType.ADVANCED, "Normalized");
 	}
 
 

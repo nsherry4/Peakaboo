@@ -17,6 +17,15 @@ public class PrimaryTransitionSeries implements ITransitionSeries {
 	private Element element;
 	private boolean visible = true;
 	
+	public PrimaryTransitionSeries(String shellement) {
+		String[] parts = shellement.split(":", 2);
+		if (parts.length != 2) {
+			throw new RuntimeException("Unable to parse shellement string");
+		}
+		this.element = Element.valueOf(parts[0]);
+		this.shell = TransitionShell.fromTypeString(parts[1].trim());
+	}
+	
 	public PrimaryTransitionSeries(Element e, TransitionShell s) {
 		this.element = e;
 		this.shell = s;

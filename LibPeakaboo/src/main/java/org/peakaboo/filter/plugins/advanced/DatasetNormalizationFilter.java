@@ -2,9 +2,9 @@ package org.peakaboo.filter.plugins.advanced;
 
 import java.util.Optional;
 
-import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterContext;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
@@ -27,8 +27,8 @@ public class DatasetNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.ADVANCED;
+	public FilterDescriptor getFilterDescriptor() {
+		return new FilterDescriptor(FilterType.ADVANCED, "Normalized");
 	}
 
 	@Override

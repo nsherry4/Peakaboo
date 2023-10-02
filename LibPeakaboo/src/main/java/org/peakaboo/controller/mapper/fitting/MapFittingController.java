@@ -1,20 +1,18 @@
 package org.peakaboo.controller.mapper.fitting;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.mapper.fitting.modes.CompositeModeController;
-import org.peakaboo.controller.mapper.fitting.modes.CorrelationModeController;
 import org.peakaboo.controller.mapper.fitting.modes.ModeController;
-import org.peakaboo.controller.mapper.fitting.modes.OverlayModeController;
-import org.peakaboo.controller.mapper.fitting.modes.RatioModeController;
-import org.peakaboo.controller.mapper.fitting.modes.TernaryModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModeData;
-import org.peakaboo.display.map.modes.MapModes;
+import org.peakaboo.display.map.modes.MapModeData.CoordInfo;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -33,43 +31,29 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	
 	private EventfulCache<MapModeData> mapModeData;
 	
-	private RatioModeController ratio;
-	private OverlayModeController overlay;
-	private CompositeModeController composite;
-	private CorrelationModeController correlation;
-	private TernaryModeController ternary;
 	
-	
-	private MapModes displayMode;
 	//TODO: should this be in MapSettingsController?
 	private MapScaleMode mapScaleMode;
 	
 	
+	private Map<String, ModeController> modeControllers = new LinkedHashMap<>();
+	private String displayMode;
 	
 	
 	public MapFittingController(MappingController map){
 		this.map = map;
 		
-		displayMode = MapModes.COMPOSITE;
 		mapScaleMode = MapScaleMode.ABSOLUTE;
 				
 		EventfulListener modeListener = () -> updateListeners(MapUpdateType.DATA_OPTIONS);
-		
-		ratio = new RatioModeController(map);
-		ratio.addListener(modeListener);
-		
-		overlay = new OverlayModeController(map);
-		overlay.addListener(modeListener);
-		
-		composite = new CompositeModeController(map);
-		composite.addListener(modeListener);
-		
-		correlation = new CorrelationModeController(map);
-		correlation.addListener(modeListener);
-		
-		ternary = new TernaryModeController(map);
-		ternary.addListener(modeListener);
-		
+
+		displayMode = ModeControllerRegistry.get().defaultType();
+		for (var type : ModeControllerRegistry.get().typeNames()) {
+			var modeController = ModeControllerRegistry.get().create(type, map);
+			modeController.addListener(modeListener);
+			modeControllers.put(type, modeController);
+		}
+				
 		mapModeData = new EventfulNullableCache<>(this::calcMapModeData);
 		map.addListener(t -> {
 			if (t == null) {
@@ -93,22 +77,26 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	}
 	
 	
-
-	public MapScaleMode getMapScaleMode()
-	{
+	public Optional<ModeController> getModeController(String mode) {
+		if (!modeControllers.containsKey(mode)) {
+			return Optional.empty();
+		} else {
+			return Optional.of(modeControllers.get(mode));
+		}
+	}
+	
+	public MapScaleMode getMapScaleMode() {
 		return this.mapScaleMode;
 	}
 
 
-	public void setMapScaleMode(MapScaleMode mode)
-	{
+	public void setMapScaleMode(MapScaleMode mode) {
 		this.mapScaleMode = mode;
 		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
-	public MapModes getMapDisplayMode()
-	{
+	public String getMapDisplayMode() {
 		return this.displayMode;
 	}
 
@@ -117,27 +105,14 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	}
 
 
-	public void setMapDisplayMode(MapModes mode)
-	{		
+	public void setMapDisplayMode(String mode) {		
 		this.displayMode = mode;
 		this.mapModeData.invalidate();
 		updateListeners(MapUpdateType.DATA_OPTIONS);
 	}
 	
 	public ModeController getActiveMode() {
-		switch (getMapDisplayMode()) {
-		case COMPOSITE:
-			return this.composite;
-		case OVERLAY:
-			return this.overlay;
-		case RATIO:
-			return this.ratio;
-		case CORRELATION:
-			return this.correlation;
-		case TERNARYPLOT:
-			return this.ternary;
-		}
-		return null;
+		return modeControllers.get(displayMode);
 	}
 	
 	private MapModeData calcMapModeData() {
@@ -149,11 +124,11 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	/*
 	 * POST FILTERING
 	 */
-	public String getInfoAtPoint(Coord<Integer> coord) {
+	public Optional<CoordInfo> getInfoAtPoint(Coord<Integer> coord) {
 		if (mapModeData == null) {
-			return "";
+			return Optional.empty();
 		}
-		return mapModeData.getValue().getInfoAtCoord(coord);
+		return mapModeData.getValue().getCoordInfo(coord);
 	}
 	
 	
@@ -250,30 +225,7 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 	public DetectorProfile getDetectorProfile() {
 		return map.rawDataController.getDetectorProfile();
 	}
-
-
-
-	
-	public CorrelationModeController correlationMode() {
-		return correlation;
-	}
-
-	public CompositeModeController compositeMode() {
-		return composite;
-	}
-	
-	public OverlayModeController overlayMode() {
-		return overlay;
-	}
-	
-	public RatioModeController ratioMode() {
-		return ratio;
-	}
-
-	public TernaryModeController ternaryMode() {
-		return ternary;
-	}
-	
+		
 	public List<ITransitionSeries> getAllTransitionSeries() {
 		return getActiveMode().getAll();
 	}

@@ -45,24 +45,27 @@ public class XrayLibPeakTable implements PeakTable {
 		 * they must be passed to the range in 'reverse' order
 		 */
 		
+		//K Lines
 		RangeSet kLines = new RangeSet();
-		kLines.addRange(new Range(Xraylib.KP5_LINE, Xraylib.KL1_LINE));
+		kLines.addRange(new Range(Xraylib.KP5_LINE, Xraylib.KL1_LINE+1));
 		
+		
+		//L Lines
 		RangeSet lLines = new RangeSet();
-		lLines.addRange(new Range(Xraylib.L3P4_LINE, Xraylib.L1L2_LINE));
-		//L1L*
-		lLines.removeRange(new Range(Xraylib.L1L2_LINE, Xraylib.L1L3_LINE));
-		//L2L*
-		lLines.removeRange(new Range(Xraylib.L2L3_LINE, Xraylib.L2L3_LINE));
-		
+		lLines.addRange(new Range(Xraylib.L3P4_LINE, Xraylib.L1L2_LINE+1));
+		//Remove L1->L*
+		lLines.removeRange(new Range(Xraylib.L1L3_LINE, Xraylib.L1L2_LINE+1));
+		//Remove L2->L*
+		lLines.removeRange(new Range(Xraylib.L2L3_LINE, Xraylib.L2L3_LINE+1));
+				
+		//M Lines
 		RangeSet mLines = new RangeSet();
-		mLines.addRange(new Range(Xraylib.M5P5_LINE, Xraylib.M1M2_LINE));
+		mLines.addRange(new Range(Xraylib.M5P5_LINE, Xraylib.M1M2_LINE+1));
 		//Remove lines from one m to another
-		mLines.removeRange(new Range(Xraylib.M1M2_LINE, Xraylib.M1M5_LINE));
-		mLines.removeRange(new Range(Xraylib.M2M3_LINE, Xraylib.M2M5_LINE));
-		mLines.removeRange(new Range(Xraylib.M3M4_LINE, Xraylib.M3M5_LINE));
-		mLines.removeRange(new Range(Xraylib.M4M5_LINE, Xraylib.M4M5_LINE));
-		
+		mLines.removeRange(new Range(Xraylib.M1M5_LINE, Xraylib.M1M2_LINE+1));
+		mLines.removeRange(new Range(Xraylib.M2M5_LINE, Xraylib.M2M3_LINE+1));
+		mLines.removeRange(new Range(Xraylib.M3M5_LINE, Xraylib.M3M4_LINE+1));
+		mLines.removeRange(new Range(Xraylib.M4M5_LINE, Xraylib.M4M5_LINE+1));	
 		
 		for (Element e : Element.values()) {
 			readElementShell(kLines, e, TransitionShell.K);

@@ -2,13 +2,10 @@ package org.peakaboo.framework.stratus.laf.painters.progressbar;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
-import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.laf.painters.SimpleThemed;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -46,12 +43,7 @@ public class ProgressBarForegroundPainter extends SimpleThemed implements Painte
 			
     	//Background Fill
     	g.setPaint(cFill);
-    	Shape border = new RoundRectangle2D.Float(pad, startx, width-pad*2, HEIGHT, radius, radius);
-    	g.fill(border);
-    	
-    	//Border
-    	//g.setPaint(cBorder);
-    	//g.draw(border);
+    	g.fillRoundRect((int)pad, (int)startx, (int)(width-pad*2), (int)HEIGHT, (int)radius, (int)radius);
     	
 	}
 

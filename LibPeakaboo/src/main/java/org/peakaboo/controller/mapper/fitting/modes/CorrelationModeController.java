@@ -168,7 +168,10 @@ public class CorrelationModeController extends SimpleModeController {
 		return new Coord<>(bincount, bincount);
 	}
 
-
+	@Override
+	public String shortTitle() {
+		return "Correlation (Frequency)";
+	}
 
 	@Override
 	public String longTitle() {

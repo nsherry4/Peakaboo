@@ -1,6 +1,7 @@
 package org.peakaboo.display.map.modes.composite;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
@@ -52,6 +53,11 @@ public class CompositeModeData implements MapModeData {
 
 	public Spectrum getInvalidPoints() {
 		return invalidMask;
+	}
+
+	@Override
+	public Optional<SelectionInfo> getMapSelectionInfo() {
+		return Optional.of(new SelectionInfo(getData(), List.of()));
 	}
 	
 	

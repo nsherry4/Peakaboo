@@ -17,7 +17,7 @@ import javax.swing.SwingConstants;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BORDER_STYLE;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 
 public class FluentButtonConfigurator {
 	
@@ -116,7 +116,7 @@ public class FluentButtonConfigurator {
 
 	public void makeButton() {
 
-		button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, config.bordered == BORDER_STYLE.ALWAYS);	
+		button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, config.bordered == BorderStyle.ALWAYS);	
 		
 		FluentButtonLayout mode = config.layout;
 		if (mode == null) {
@@ -196,7 +196,6 @@ public class FluentButtonConfigurator {
 			return FluentButtonSize.COMPACT;
 		}
 		return FluentButtonSize.LARGE;
-		
 	}
 	
 	protected Dimension getPreferredSize(Dimension superPreferred) {
@@ -235,9 +234,9 @@ public class FluentButtonConfigurator {
 	
 	void setButtonBorder(boolean forceBorder) {
 		ButtonModel m = button.getModel();
-		boolean showBackground = button.isEnabled() && config.bordered == BORDER_STYLE.ACTIVE && (m.isSelected() || m.isRollover() || m.isPressed() || m.isArmed() || button.hasFocus() || forceBorder);
+		boolean showBackground = button.isEnabled() && config.bordered == BorderStyle.ACTIVE && (m.isSelected() || m.isRollover() || m.isPressed() || m.isArmed() || button.hasFocus() || forceBorder);
 
-		if (config.bordered == BORDER_STYLE.ALWAYS || showBackground ) {
+		if (config.bordered == BorderStyle.ALWAYS || showBackground ) {
 			button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, true);	
 		} else {
 			button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, false);	

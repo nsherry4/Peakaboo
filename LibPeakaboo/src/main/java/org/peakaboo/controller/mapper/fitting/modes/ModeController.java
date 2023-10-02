@@ -46,6 +46,7 @@ public interface ModeController extends IEventful {
 	 */
 	Coord<Integer> getSize();
 
+	String shortTitle();
 	String longTitle();
 
 	MapModeData getData();
@@ -110,5 +111,7 @@ public interface ModeController extends IEventful {
 	default Spectrum sumSingleMap(ITransitionSeries ts) {
 		return sumGivenMaps(Collections.singletonList(ts));
 	}
+
+	
 
 }

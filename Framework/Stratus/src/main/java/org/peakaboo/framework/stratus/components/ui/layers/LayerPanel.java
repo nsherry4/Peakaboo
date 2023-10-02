@@ -72,9 +72,9 @@ public class LayerPanel extends JLayeredPane {
 		int layer = 0;
 		int pos = 0;
 		Object constr;
-		if (constraints instanceof StackConstraints) {
-			layer = ((StackConstraints) constraints).layer;
-			constr = ((StackConstraints) constraints).layoutConstraints;
+		if (constraints instanceof StackConstraints sc) {
+			layer = sc.layer;
+			constr = sc.layoutConstraints;
 		} else {
 			layer = getLayer(comp);
 			constr = constraints;
@@ -96,8 +96,7 @@ public class LayerPanel extends JLayeredPane {
 	 */
 	private void updateIfMinimized() {
 		Component croot = SwingUtilities.getRoot(this);
-		if (croot instanceof JFrame) {
-			JFrame frame = ((JFrame)croot);
+		if (croot instanceof JFrame frame) {
 			int state = frame.getState();
 			if (state == Frame.ICONIFIED) {
 				frame.update(frame.getGraphics());
@@ -168,8 +167,8 @@ public class LayerPanel extends JLayeredPane {
 	 */
 	public static LayerPanel parentFor(Component c) {
 		while (c != null) {
-			if (c instanceof LayerPanel) {
-				return (LayerPanel) c;
+			if (c instanceof LayerPanel lp) {
+				return lp;
 			}
 			c = c.getParent();
 		}

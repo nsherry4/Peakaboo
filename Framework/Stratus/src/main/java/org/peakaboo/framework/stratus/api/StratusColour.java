@@ -55,5 +55,16 @@ public class StratusColour {
     public static boolean isCustomColour(Color c) {
     	return c.getClass().getName().equals("java.awt.Color");
     }
+
+	public static Color blackOrWhite(Color colour) {
+		float lum = new HSLColor(colour).getLuminance();
+		Color highlight;
+		if (lum < 60) {
+			highlight = Stratus.getTheme().getPalette().getColour("Light", "1");
+		} else {
+			highlight = Stratus.getTheme().getPalette().getColour("Dark", "5");
+		}
+		return highlight;
+	}
 	
 }

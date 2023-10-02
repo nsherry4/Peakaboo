@@ -2,7 +2,6 @@ package org.peakaboo.mapping;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
@@ -10,8 +9,7 @@ import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -19,8 +17,8 @@ import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -55,7 +53,7 @@ public class Mapping {
 	 */
 	public static StreamExecutor<RawMapSet> mapTask(
 			FilterSet filters, 
-			CurveFitter fitter, 
+			CurveFitterPlugin fitter, 
 			FittingSolver solver,
 			FilterContext ctx
 		) {
@@ -76,7 +74,7 @@ public class Mapping {
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
 		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
-		streamer.setTask(new Range(0, ctx.dataset.getScanData().scanCount()-1), stream -> {
+		streamer.setTask(new Range(0, ctx.dataset.getScanData().scanCount()), stream -> {
 			
 			long t1 = System.currentTimeMillis();
 			

@@ -10,7 +10,7 @@ import org.peakaboo.framework.stratus.api.StratusText;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSet;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BORDER_STYLE;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 
 
 public class FluentToolbarButton extends JButton implements FluentButtonAPI<FluentToolbarButton, FluentButtonConfig>{
@@ -19,7 +19,7 @@ public class FluentToolbarButton extends JButton implements FluentButtonAPI<Flue
 	
 	private void firstconfig() {
 		config().size = IconSize.TOOLBAR_SMALL;
-		config().bordered = BORDER_STYLE.ACTIVE;
+		config().bordered = BorderStyle.ACTIVE;
 	}
 	
 	public FluentToolbarButton() {

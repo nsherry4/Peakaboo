@@ -3,8 +3,6 @@ package org.peakaboo.filter.model;
 import java.util.List;
 import java.util.Optional;
 
-import org.peakaboo.dataset.DataSet;
-import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -24,35 +22,10 @@ public interface Filter {
 	 */
 	String getFilterDescription();
 
-	//TODO: Remove for Peakaboo 6
 	/**
-	 * Returns the type of the filter. This will be removed in Peakaboo 6
+	 * Returns a FilterDescriptor detailing the category and action of this filter
 	 */
-	@Deprecated(forRemoval = true, since = "5.5")
-	FilterType getFilterType();
-
-	/**
-	 * Returns a FilterDescriptor detailing 
-	 * the category and action of this filter
-	 * @return
-	 */
-	default FilterDescriptor getFilterDescriptor() {
-		switch (getFilterType()) {
-		case ADVANCED:
-			return FilterDescriptor.ADVANCED;
-		case BACKGROUND:
-			return FilterDescriptor.BACKGROUND;
-		case MATHEMATICAL:
-			return FilterDescriptor.MATHEMATICAL;
-		case NOISE:
-			return FilterDescriptor.SMOOTHING;
-		case PROGRAMMING:
-			return FilterDescriptor.PROGRAMMING;
-		case OTHER:
-		default:
-			return FilterDescriptor.OTHER;		
-		}
-	}
+	FilterDescriptor getFilterDescriptor();
 	
 	/**
 	 * Returns the parameters

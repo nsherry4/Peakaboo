@@ -39,8 +39,8 @@ class ReadableReader extends Reader {
 
 	@Override
 	public void close() throws IOException {
-		if (readable instanceof Closeable) {
-			((Closeable) readable).close();
+		if (readable instanceof Closeable c) {
+			c.close();
 		}
 	}
 	

@@ -180,8 +180,7 @@ class LookupModel implements MutableTreeModel {
 	}
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
-		if (path.getLastPathComponent() instanceof ITransitionSeries) {
-			ITransitionSeries ts = (ITransitionSeries) path.getLastPathComponent();
+		if (path.getLastPathComponent() instanceof ITransitionSeries ts) {
 			boolean included = (Boolean) newValue;
 
 			if (included)
@@ -241,8 +240,7 @@ class LookupModel implements MutableTreeModel {
 
 
 	public int getChildCount(Object parent) {
-		if (parent instanceof Element) {
-			Element e = (Element) parent;
+		if (parent instanceof Element e) {
 			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).size();
 		} else if (parent instanceof String) {
 			return filtered.get().size();
@@ -255,8 +253,7 @@ class LookupModel implements MutableTreeModel {
 
 		if (parent instanceof String) {
 			return filtered.get().get(index);
-		} else if (parent instanceof Element) {
-			Element e = (Element) parent;
+		} else if (parent instanceof Element e) {
 			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).get(index);
 		}
 		return null;

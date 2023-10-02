@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterContext;
+import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterPluginManager;
-import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.model.SerializedFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
@@ -96,8 +96,16 @@ public class SubFilter extends AbstractFilter {
 	}
 
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.ADVANCED;
+	public FilterDescriptor getFilterDescriptor() {
+		// When we're choosing this filter from a list, we won't have a subfilter chosen
+		// yet, so we show it in the ADVANCED category. When using this filter to modify
+		// data, we want to show the user what the subfilter is doing, so we return it's
+		// value directly
+		if (filter == null || filter.getValue() == null) {
+			return FilterDescriptor.ADVANCED;
+		} else {
+			return filter.getValue().getFilterDescriptor();
+		}
 	}
 
 	@Override

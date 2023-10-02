@@ -9,11 +9,11 @@ public enum FilterType {
 			return "Background Removal";
 		}			
 	},
-	NOISE {
+	SMOOTHING {
 
 		@Override
 		public String toString() {
-			return "Noise Removal";
+			return "Signal Smoothing";
 		}
 	},
 	MATHEMATICAL {

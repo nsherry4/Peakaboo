@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.model.datafile.DataFiles;
+import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.source.model.datafile.DataFiles;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 

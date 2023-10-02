@@ -8,20 +8,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.display.map.modes.MapModes;
-import org.peakaboo.display.map.modes.composite.CompositeModeData;
-import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
-import org.peakaboo.display.map.modes.ratio.RatioModeData;
-import org.peakaboo.display.map.modes.ternary.TernaryModeData;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 /**
@@ -50,10 +43,12 @@ class SimilarSelection extends AbstractSelection {
 	public List<Integer> selectPoint(Coord<Integer> clickedAt, boolean contiguous) {
 		indexes.clear();
 		
-		MapModes displayMode = map.getFitting().getMapDisplayMode();
-		Pair<Spectrum, List<Integer>> displayModeData = getDisplayModeData();
-		Spectrum data = displayModeData.first;
-		List<Integer> invalid = displayModeData.second;
+		var selectionInfo = map.getFitting().getMapModeData().getMapSelectionInfo().orElseGet(() -> null);
+		if (selectionInfo == null) {
+			return new ArrayList<>();
+		}		
+		Spectrum data = selectionInfo.map();
+		List<Integer> invalid = selectionInfo.unselectable();
 		
 		
 		Coord<Integer> mapSize = mapSize();
@@ -61,17 +56,7 @@ class SimilarSelection extends AbstractSelection {
 		int h = mapSize.y;
 		GridPerspective<Float> grid = new GridPerspective<>(w, h, null);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
-		
-		//If we're selecting on a ratio map, and the selected point is 1:10 instead of 10:1,
-		//it will be represented as a negative number. We flip it here for convenience
-		if (displayMode == MapModes.RATIO && value < 0f) {
-			for (int i = 0; i < data.size(); i++) {
-				data.set(i, -data.get(i));
-			}
-			value = grid.get(data, clickedAt.x, clickedAt.y);
-		}
-
-		
+				
 		List<Integer> points;
 		if (! contiguous) {
 			points = selectNonContiguous(data, invalid, value, grid);
@@ -91,52 +76,6 @@ class SimilarSelection extends AbstractSelection {
 		
 	}
 	
-
-	/**
-	 * Returns a Spectrum representing scalar data for the map based on the current map display mode. Also returns a list of unselectable points
-	 * @return
-	 */
-	private Pair<Spectrum, List<Integer>> getDisplayModeData() {
-		MapModes displayMode = map.getFitting().getMapDisplayMode();
-		Spectrum data = null;
-		List<Integer> unselectable = new ArrayList<>();
-		
-		switch(displayMode) {
-		case COMPOSITE:
-			CompositeModeData compositeData = (CompositeModeData) map.getFitting().getMapModeData();
-			data = compositeData.getData();
-			break;
-		
-		case CORRELATION:
-			CorrelationModeData correlationData = (CorrelationModeData) map.getFitting().getMapModeData();
-			data = correlationData.data;
-			break;
-
-		case RATIO:
-			RatioModeData ratiodata = (RatioModeData) map.getFitting().getMapModeData();
-			//we modity ratio data, so we make it a copy
-			data = new ISpectrum(ratiodata.getData().first);
-			Spectrum invalidMap = ratiodata.getData().second;
-			for (int i = 0; i < invalidMap.size(); i++) {
-				if (invalidMap.get(i) > 0f) {
-					unselectable.add(i);
-				}
-			}
-			break;
-			
-		case TERNARYPLOT:
-			TernaryModeData ternaryData = (TernaryModeData) map.getFitting().getMapModeData();
-			data = ternaryData.data;
-			unselectable = ternaryData.unselectables;
-			break;
-			
-		case OVERLAY:
-		default:
-			throw new UnsupportedOperationException("Cannot perform similarity-based selection on this map mode");
-		}
-		
-		return new Pair<Spectrum, List<Integer>>(data, unselectable);
-	}
 	
 	private List<Integer> selectContiguous(Spectrum data, 
 			List<Integer> invalid,
@@ -166,13 +105,21 @@ class SimilarSelection extends AbstractSelection {
 				if (pointSet.contains(neighbour)) { continue; }
 				if (invalidPoints.contains(neighbour)) { continue; }
 				
-				x = grid.getXYFromIndex(neighbour).first;
-				y = grid.getXYFromIndex(neighbour).second;
+				var xy = grid.getXYFromIndex(neighbour);
+				x = xy.first;
+				y = xy.second;
 				
 				float other = grid.get(data, x, y);
-				// match * or / threshold percent (eg threshold=1.2 so (other/1.2, other*1.2) 
-				float otherMin = other / thresholdValue;
-				float otherMax = other * thresholdValue;
+				// match * or / threshold percent (eg threshold=1.2 so (other/1.2, other*1.2)
+				// for negative values, we reverse min and max since 8>5, but -8 !> -5
+				float otherMin, otherMax;
+				if (other > 0) {
+					otherMin = other / thresholdValue;
+					otherMax = other * thresholdValue;	
+				} else {
+					otherMin = other * thresholdValue;
+					otherMax = other / thresholdValue;	
+				}
 				if (value >= otherMin && value <= otherMax) {
 					points.add(neighbour);
 					pointSet.add(neighbour);
@@ -190,12 +137,21 @@ class SimilarSelection extends AbstractSelection {
 		//All points, even those not touching
 		List<Integer> points = new ArrayList<>();
 		float thresholdValue = threshold.getValue();
-		for (int y : new Range(0, grid.height-1)) {
-			for (int x : new Range(0, grid.width-1)) {
+		for (int y : new Range(0, grid.height)) {
+			for (int x : new Range(0, grid.width)) {
 				float other = grid.get(data, x, y);
-				// match +/- threshold percent
-				float otherMin = other / thresholdValue;
-				float otherMax = other * thresholdValue;
+				
+				// match * or / threshold percent (eg threshold=1.2 so (other/1.2, other*1.2)
+				// for negative values, we reverse min and max since 8>5, but -8 !> -5
+				float otherMin, otherMax;
+				if (other > 0) {
+					otherMin = other / thresholdValue;
+					otherMax = other * thresholdValue;
+				} else {
+					otherMin = other * thresholdValue;
+					otherMax = other / thresholdValue;
+				}
+				//If it's in bounds, add the point
 				if (value >= otherMin && value <= otherMax) {
 					points.add(grid.getIndexFromXY(x, y));
 				}

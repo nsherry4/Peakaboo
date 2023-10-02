@@ -21,6 +21,9 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	
 	public BoltConfigContainer(BoltPluginManager<T> manager, URL url, Class<T> pluginClass, Function<String, T> builder, boolean deletable) {
 		super(url, deletable);
+		if (url == null) {
+			throw new NullPointerException("URL for config plugin was null");
+		}
 		this.url = url;
 		this.manager = manager;
 		

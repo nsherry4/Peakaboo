@@ -61,6 +61,12 @@
 			<artifactId>commons-collections4</artifactId>
 			<version>4.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>scratch</artifactId>
@@ -97,6 +103,13 @@
 			<artifactId>druthers</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/ch.systemsx.cisd/sis-jhdf5-batteries_included -->
+		<dependency>
+			<groupId>cisd</groupId>
+			<artifactId>jhdf5</artifactId>
+			<version>19.04.1</version>
+		</dependency>
 
 	</dependencies>
 
@@ -105,6 +118,12 @@
 			<id>jar</id>
 			<url>file://${project.basedir}/repo/</url>
 		</repository>
+		
+		<repository>
+			<id>scijava-public</id>
+			<url>https://maven.scijava.org/content/repositories/public/</url>
+		</repository>
+		
 	</repositories>
 
 

@@ -12,17 +12,17 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.discards.Discards;
 import org.peakaboo.controller.plotter.data.discards.DiscardsList;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.dataset.StandardDataSet;
-import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.datasource.model.components.scandata.ScanData;
-import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.model.internal.SelectionDataSource;
-import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
+import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.components.scandata.ScanData;
+import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
+import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
@@ -73,7 +73,7 @@ public class DataController extends Eventful
 
 	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset (
 			List<DataFile> paths, 
-			JavaDataSourcePlugin dsp, 
+			DataSourcePlugin dsp, 
 			Consumer<DatasetReadResult> onResult) {
 
 		final StandardDataSet dataset = new StandardDataSet();

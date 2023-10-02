@@ -2,6 +2,7 @@ package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
@@ -25,15 +26,15 @@ public class FittedWidget extends ClearPanel
 	
 	
 	public static FittedWidget large() {
-		return new FittedWidget(16, 11, Spacing.large);
+		return new FittedWidget(16, 11, Spacing.large, true);
 	}
 
 	public static FittedWidget medium() {
-		return new FittedWidget(14, 11, Spacing.medium);
+		return new FittedWidget(14, 11, Spacing.medium, false);
 	}
 	
 	
-	private FittedWidget(float titleSize, float detailSize, int borderSize)	{
+	private FittedWidget(float titleSize, float detailSize, int borderSize, boolean bold)	{
 		super();
 		
 		setLayout(new BorderLayout());
@@ -53,7 +54,7 @@ public class FittedWidget extends ClearPanel
 		elementNumber.setOpaque(false);
 		elementIntensity.setOpaque(false);
 		
-		elementName.setFont(elementName.getFont().deriveFont(titleSize));
+		elementName.setFont(elementName.getFont().deriveFont(titleSize).deriveFont(bold ? Font.BOLD : 0));
 		elementNumber.setFont(elementNumber.getFont().deriveFont(detailSize));
 		elementIntensity.setFont(elementIntensity.getFont().deriveFont(detailSize));
 		

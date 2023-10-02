@@ -28,8 +28,8 @@ import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
-import org.peakaboo.datasink.plugin.DataSinkPluginManager;
-import org.peakaboo.datasource.plugin.DataSourcePluginManager;
+import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
+import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
@@ -169,26 +169,11 @@ public class Peakaboo {
 	
 	public static void run() {
 		
-		
-		
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 
 		//with all the other tasks, since this is usually the longest 
 		//running init job
-		Thread peakLoader = new Thread(() -> {
-			PeakTable original = PeakTable.SYSTEM.getSource();
-			String filename;
-			if (Version.releaseType == ReleaseType.RELEASE) {
-				filename = "derived-peakfile-" + Version.longVersionNo + ".dat";
-			} else {
-				filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".dat";
-			}
-			File peakdir = DesktopApp.appDir("PeakTable");
-			peakdir.mkdirs();
-			File peakfile = new File(DesktopApp.appDir("PeakTable") + "/" + filename);
-			
-			PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
-		});
+		Thread peakLoader = new Thread(Peakaboo::initPeakTable);
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
@@ -210,15 +195,8 @@ public class Peakaboo {
 			uiPerformanceTune();
 		
 			//Init plugins
-			FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
-			MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
-			DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
-			DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
-			CurveFitterPluginManager.init();
-			
-			//Any additional plugin types provided per-tier
-			Tier.provider().initializePlugins();
-			
+			initPluginSystem();
+						
 			try {
 				peakLoader.join();
 			} catch (InterruptedException e) {
@@ -230,6 +208,40 @@ public class Peakaboo {
 		});
 		
 		
+	}
+	
+	/** 
+	 * Performs the same final setup that the run() method does without initializing any GUI components
+	 */
+	public static void runHeadless() {
+		initPeakTable();
+		initPluginSystem();
+	}
+	
+	private static void initPeakTable() {
+		PeakTable original = PeakTable.SYSTEM.getSource();
+		String filename;
+		if (Version.releaseType == ReleaseType.RELEASE) {
+			filename = "derived-peakfile-" + Version.longVersionNo + ".dat";
+		} else {
+			filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".dat";
+		}
+		File peakdir = DesktopApp.appDir("PeakTable");
+		peakdir.mkdirs();
+		File peakfile = new File(DesktopApp.appDir("PeakTable") + "/" + filename);
+		
+		PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
+	}
+	
+	private static void initPluginSystem() {
+		FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
+		MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
+		DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
+		DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
+		CurveFitterPluginManager.init();
+		
+		//Any additional plugin types provided per-tier
+		Tier.provider().initializePlugins();
 	}
 
 

@@ -8,14 +8,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class ThreadedStage<S, T> implements Stage<S, T> {
+public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 
 	private ThreadPoolExecutor pool;
-	private Function<S, T> function;
-	private Stage<T, ?> next;
 	
 	public ThreadedStage(String name, int threads, Function<S, T> function) {
-		this.function = function;
+		super(name, function);
 		/*
 		 * Gross! This is required because of a limitation of ThreadPoolExecutor where
 		 * it cannot block when its input queue is full, only reject the input. It has a
@@ -53,26 +51,8 @@ public class ThreadedStage<S, T> implements Stage<S, T> {
 	@Override
 	public void accept(S input) {
 		this.pool.execute(() -> {
-			T output = function.apply(input);
-			if (next == null) return;
-			next.accept(output);
+			super.accept(input);
 		});
-	}
-
-	@Override
-	public <O> Pipeline<S, O> then(Stage<T, O> next) {
-		this.next = next;
-		return new Pipeline<>(this, next);
-	}
-
-	@Override
-	public void link(Stage<T, ?> next) {
-		this.next = next;
-	}
-
-	@Override
-	public Stage<T, ?> next() {
-		return next;
 	}
 
 	@Override
@@ -89,6 +69,10 @@ public class ThreadedStage<S, T> implements Stage<S, T> {
 	
 	public static <S, T> Stage<S, T> of(String name, int threads, Function<S, T> function) {
 		return new ThreadedStage<>(name, threads, function);
+	}
+
+	public static <S> Stage<S, S> noop(String name, int threads) {
+		return new ThreadedStage<>(name, threads, s -> s);
 	}
 	
 	public static <S> Stage<S, S> visit(String name, int threads, Consumer<S> function) {

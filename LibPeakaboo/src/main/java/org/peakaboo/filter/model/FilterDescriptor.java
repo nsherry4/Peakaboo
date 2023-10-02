@@ -6,7 +6,7 @@ public class FilterDescriptor {
 	public static final String ACTION_BACKGROUND = "Background Removed";
 	public static final String ACTION_OTHER = "Other Filtering";
 	
-	public static final FilterDescriptor SMOOTHING = new FilterDescriptor(FilterType.NOISE, ACTION_SMOOTHED);
+	public static final FilterDescriptor SMOOTHING = new FilterDescriptor(FilterType.SMOOTHING, ACTION_SMOOTHED);
 	public static final FilterDescriptor BACKGROUND = new FilterDescriptor(FilterType.BACKGROUND, ACTION_BACKGROUND);
 	public static final FilterDescriptor OTHER = new FilterDescriptor(FilterType.OTHER, ACTION_OTHER);
 	public static final FilterDescriptor ADVANCED = new FilterDescriptor(FilterType.ADVANCED, ACTION_OTHER);

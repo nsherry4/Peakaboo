@@ -1,22 +1,45 @@
 package org.peakaboo.display.map.modes;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public interface MapModeData {
 
 	Coord<Integer> getSize();
 	String getValueAtCoord(Coord<Integer> coord);
 	
-	default String getInfoAtCoord(Coord<Integer> coord) {
-		String noValue = "Index: -, X: -, Y: -, Value: -";
+	/**
+	 * Reports coordinate information for this map. By convention, a -1 index should
+	 * be used for non-spatial maps without a direct mapping to a scan index
+	 */
+	public static record CoordInfo(int index, int x, int y, String value) {};
+	
+	default Optional<CoordInfo> getCoordInfo(Coord<Integer> coord) {
 		if (isPointInBounds(coord)) {
 			int index = getIndex(coord);
-			return "Index: " + (index+1) + ", X: " + (coord.x+1) + ", Y: " + (coord.y+1) + ", Value: " + getValueAtCoord(coord);
+			return Optional.of(new CoordInfo(index+1, coord.x+1, coord.y+1, getValueAtCoord(coord)));
 		} else {
-			return noValue;
+			return Optional.empty();
 		}
 		
 	}
+	
+	
+	
+	/** 
+	 * This data is used to giude advanced map selection masking 
+	 */
+	public static record SelectionInfo(Spectrum map, List<Integer> unselectable) {};
+	
+	/**
+	 * Returns a view of the map used to guide similarity-based selection masking,
+	 * along with a list of unselectable points
+	 */
+	public Optional<SelectionInfo> getMapSelectionInfo();
+	
 	
 	default int getIndex(Coord<Integer> coord) {
 		if (isPointInBounds(coord)) {

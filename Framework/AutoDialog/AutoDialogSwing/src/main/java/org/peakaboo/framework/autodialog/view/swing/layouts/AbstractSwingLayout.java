@@ -4,7 +4,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.autodialog.model.Parameter;
+import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
+import org.peakaboo.framework.autodialog.view.swing.SwingView;
+import org.peakaboo.framework.autodialog.view.swing.editors.SwingEditorFactory;
 
 public abstract class AbstractSwingLayout implements SwingLayout {
 
@@ -50,6 +54,14 @@ public abstract class AbstractSwingLayout implements SwingLayout {
 		return false;
 	}
 
-
+	protected SwingView fromValue(Value<?> value) {
+		if (value instanceof Parameter<?> p) {
+			return SwingEditorFactory.forParameter(p);
+		} else if (value instanceof Group g) {
+			return SwingLayoutFactory.forGroup(g);
+		} else {
+			return null;
+		}
+	}
 	
 }

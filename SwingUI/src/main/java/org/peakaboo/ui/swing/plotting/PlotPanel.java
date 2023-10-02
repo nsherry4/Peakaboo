@@ -54,15 +54,16 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
-import org.peakaboo.datasink.model.DataSink;
-import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.datasource.model.components.fileformat.FileFormat;
-import org.peakaboo.datasource.model.components.metadata.Metadata;
-import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.model.datafile.PathDataFile;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
-import org.peakaboo.datasource.plugin.DataSourcePluginManager;
-import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
+import org.peakaboo.dataset.sink.model.DataSink;
+import org.peakaboo.dataset.sink.model.outputfile.PathOutputFile;
+import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
+import org.peakaboo.dataset.source.model.components.metadata.Metadata;
+import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.source.model.datafile.PathDataFile;
+import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
+import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
+import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.cyclops.Coord;
@@ -108,7 +109,7 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
-import org.peakaboo.ui.swing.app.PeakabooTabTitle;
+import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
@@ -295,7 +296,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
-		sidebarTabs.setPreferredSize(new Dimension(225, sidebarTabs.getPreferredSize().height));
+		sidebarTabs.setPreferredSize(new Dimension(230, sidebarTabs.getPreferredSize().height));
 		split.add(blankCanvas, BorderLayout.CENTER);
 				
 		split.setBorder(Spacing.bNone());
@@ -396,7 +397,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 
 			@Override
-			public void onSelection(List<JavaDataSourcePlugin> datasources, Consumer<JavaDataSourcePlugin> selected) {
+			public void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected) {
 				DataSourceSelection selection = new DataSourceSelection(PlotPanel.this, datasources, selected);
 				PlotPanel.this.pushLayer(selection);
 			}
@@ -466,41 +467,13 @@ public class PlotPanel extends TabbedLayerPanel {
 			values = controller.view().getValueForChannel(channel);
 		}
 
-		StringBuilder sb = new StringBuilder();
-		String sep = ",  ";
-
 		if (values != null) {
-
-			DecimalFormat fmtObj = new DecimalFormat("#######0.00");
-			
-			sb.append("View: ");
-			sb.append(controller.view().getChannelCompositeMode().show());
-			sb.append(sep);
-			sb.append("Channel: ");
-			sb.append(String.valueOf(channel));
-			sb.append(sep);
-			sb.append("Energy: ");
-			sb.append(fmtObj.format(energy));
-			sb.append(sep);
-			sb.append("Value: ");
-			sb.append(fmtObj.format(values.first));
-			if (! values.first.equals(values.second)) {
-				sb.append(sep);
-				sb.append("Unfiltered Value: ");
-				sb.append(fmtObj.format(values.second));
-			}
-
+			statusBar.setData(controller.view().getChannelCompositeMode(), channel, energy, values.first, values.second);
 		} else {
-			
-			sb.append("View: ");
-			sb.append(controller.view().getChannelCompositeMode().show());
-			sb.append(sep);
-			sb.append("Channel: ");
-			sb.append("-");
-			
+			statusBar.setData(controller.view().getChannelCompositeMode());
 		}
 		
-		statusBar.setChannelText(sb.toString());
+		
 		
 	}
 
@@ -549,7 +522,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionOpenData() {	
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		for (JavaDataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
+		for (DataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);
@@ -617,17 +590,12 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
-
-		try {
-			OutputStream os = new FileOutputStream(file);
-			ExecutorSet<Void> writer = DataSink.write(source, sink, os);
-			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
-			pushLayer(layer);
-			writer.startWorking();
-		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Could not export data", e);
-		}
-
+		var output = new PathOutputFile(file.toPath());
+		ExecutorSet<Void> writer = DataSink.write(source, sink, output);
+		output.close();
+		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
+		pushLayer(layer);
+		writer.startWorking();
 	}
 	
 	public void actionMap() {

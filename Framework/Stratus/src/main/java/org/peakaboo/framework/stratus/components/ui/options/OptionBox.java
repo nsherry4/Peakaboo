@@ -72,15 +72,14 @@ public class OptionBox extends OptionComponent {
 	public void paintBackground(Graphics2D g) {
 	
 		if (block == null) {
-			Shape outline = new RoundRectangle2D.Float(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			g.setColor(bg);
-			g.fill(outline);
+			g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			if (hover && isEnabled()) {
 				g.setColor(new Color(0x08000000, true));
-				g.fill(outline);
+				g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			}
 			g.setColor(borderAlpha);
-			g.draw(outline);
+			g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			
 		} else {
 			int index = block.children().indexOf(this);

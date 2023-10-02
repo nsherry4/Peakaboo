@@ -3,6 +3,7 @@ package org.peakaboo.display.map.modes.overlay;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.display.map.modes.MapModeData;
@@ -46,6 +47,11 @@ public class OverlayModeData implements MapModeData {
 
 	public Map<OverlayColour, OverlayChannel> getData() {
 		return data;
+	}
+
+	@Override
+	public Optional<SelectionInfo> getMapSelectionInfo() {
+		return Optional.empty();
 	}
 
 }

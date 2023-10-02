@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.filter.model.FilterContext;
-import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -63,12 +62,6 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 		return "5f9b89c0-1d6d-4911-93e1-8c073ad0a84f";
 	}
 
-	@Override
-	public FilterType getFilterType()
-	{
-		return FilterType.BACKGROUND;
-	}
-	
 	@Override
 	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
 		int attackStart = pAttackStart.getValue();

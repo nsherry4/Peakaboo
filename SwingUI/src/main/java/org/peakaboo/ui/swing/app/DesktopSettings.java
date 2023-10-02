@@ -38,6 +38,7 @@ public class DesktopSettings extends Settings {
 	 */
 	private static void transferSettings() {
 		File oldFile = new File(DesktopApp.appDir() + "/settings.yaml");
+		if (!oldFile.exists()) return;
 		try {
 			Map<String, Map<String, Boolean>> oldSettings = YamlSerializer.deserializeGeneric(oldFile);
 			Map<String, Boolean> oldPersistent = oldSettings.get("persistent");

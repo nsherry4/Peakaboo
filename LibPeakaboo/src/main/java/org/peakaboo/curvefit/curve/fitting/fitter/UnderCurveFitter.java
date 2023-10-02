@@ -4,7 +4,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.ROCurve;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
-public class UnderCurveFitter implements CurveFitter {
+public class UnderCurveFitter implements CurveFitterPlugin {
 
 
 	@Override

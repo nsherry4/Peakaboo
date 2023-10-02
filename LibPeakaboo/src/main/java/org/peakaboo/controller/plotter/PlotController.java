@@ -25,7 +25,7 @@ import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.curvefit.curve.fitting.DelegatingROFittingSet;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datasource.model.components.scandata.ScanData;
+import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterContext;
@@ -103,6 +103,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		try {
 			return Optional.of(SavedSession.deserialize(yaml));
 		} catch (Exception e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to load saved session", e);
 			return Optional.empty();
 		}
 	}

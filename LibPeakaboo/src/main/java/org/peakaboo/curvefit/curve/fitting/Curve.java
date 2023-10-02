@@ -266,7 +266,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 
 			baseSize += stop - start + 1;
 			
-			intenseRanges.addRange(new Range(start, stop));
+			intenseRanges.addRange(new Range(start, stop+1));
 			
 		}
 		

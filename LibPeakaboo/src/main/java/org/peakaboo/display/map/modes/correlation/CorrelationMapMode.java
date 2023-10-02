@@ -6,7 +6,6 @@ import java.util.List;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.modes.MapMode;
-import org.peakaboo.display.map.modes.MapModes;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
@@ -29,6 +28,8 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListP
 
 public class CorrelationMapMode extends MapMode {
 
+	public static String MODE_NAME = "Correlation";
+	
 	private SpectrumMapPainter correlationMapPainter;
 		
 	@Override
@@ -159,10 +160,12 @@ public class CorrelationMapMode extends MapMode {
 	}
 	
 	@Override
-	public MapModes getMode() {
-		return MapModes.CORRELATION;
+	public String mapModeName() {
+		return MODE_NAME;
 	}
 
+	
+	
 	@Override
 	public void invalidate() {
 		map.needsMapRepaint();

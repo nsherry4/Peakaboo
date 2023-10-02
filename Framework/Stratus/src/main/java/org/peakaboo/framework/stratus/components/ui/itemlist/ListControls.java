@@ -103,7 +103,7 @@ public class ListControls extends ClearPanel {
 	}
 	public void addLeft(Component button, Function<ElementCount, Boolean> ec) {
 		customButtons.put(button, ec);
-		if (button instanceof FluentButton) configureButton((FluentButton) button);
+		if (button instanceof FluentButton fb) configureButton(fb);
 		box.addLeft(button);
 	}
 	
@@ -113,7 +113,7 @@ public class ListControls extends ClearPanel {
 	}
 	public void addRight(Component button, Function<ElementCount, Boolean> ec) {
 		customButtons.put(button, ec);
-		if (button instanceof FluentButton) configureButton((FluentButton) button);
+		if (button instanceof FluentButton fb) configureButton(fb);
 		box.addRight(button);
 	}
 	

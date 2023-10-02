@@ -8,7 +8,7 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -26,7 +26,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * 
  */
 
-public abstract class AbstractFilter implements Serializable, JavaFilterPlugin {
+public abstract class AbstractFilter implements Serializable, FilterPlugin {
 	
 	private List<Value<?>>		parameters;
 	public boolean				enabled;

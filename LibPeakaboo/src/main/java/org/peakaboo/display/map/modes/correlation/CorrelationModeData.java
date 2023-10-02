@@ -1,5 +1,8 @@
 package org.peakaboo.display.map.modes.correlation;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;
@@ -34,19 +37,21 @@ public class CorrelationModeData implements MapModeData {
 	}
 	
 	@Override
-	public String getInfoAtCoord(Coord<Integer> coord) {
-		String noValue = "X: -, Y: -, Value: -";
-		
+	public Optional<CoordInfo> getCoordInfo(Coord<Integer> coord) {
 		if (isPointInBounds(coord)) {
-			return "X: " + (coord.x+1) + ", Y: " + (coord.y+1) + ", Value: " + getValueAtCoord(coord);
+			return Optional.of(new CoordInfo(-1, coord.x+1, coord.y+1, getValueAtCoord(coord)));
 		} else {
-			return noValue;
+			return Optional.empty();
 		}
-		
 	}
 	
 	public Spectrum getData() {
 		return data;
+	}
+
+	@Override
+	public Optional<SelectionInfo> getMapSelectionInfo() {
+		return Optional.of(new SelectionInfo(data, List.of()));
 	}
 	
 	

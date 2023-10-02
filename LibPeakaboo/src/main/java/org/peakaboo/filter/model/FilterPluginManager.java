@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
 import org.peakaboo.filter.plugins.advanced.PeakDetectorFilter;
@@ -31,7 +31,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class FilterPluginManager extends BoltPluginManager<JavaFilterPlugin> {
+public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
 	private static FilterPluginManager SYSTEM;
 	public static void init(File filterDir) {
@@ -50,15 +50,15 @@ public class FilterPluginManager extends BoltPluginManager<JavaFilterPlugin> {
 
 	
 	
-	private BoltJavaBuiltinLoader<JavaFilterPlugin> builtins;
+	private BoltJavaBuiltinLoader<FilterPlugin> builtins;
 	
 	public FilterPluginManager(File filterDir) {
 		super("filter");
 		
-		addLoader(new BoltJarDirectoryLoader<>(this, JavaFilterPlugin.class, filterDir));
-		addLoader(new BoltJarDirectoryLoader<>(this, JavaFilterPlugin.class));
+		addLoader(new BoltJarDirectoryLoader<>(this, FilterPlugin.class, filterDir));
+		addLoader(new BoltJarDirectoryLoader<>(this, FilterPlugin.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, JavaFilterPlugin.class);
+		builtins = new BoltJavaBuiltinLoader<>(this, FilterPlugin.class);
 		registerCustomPlugins();
 		addLoader(builtins);
 	}
@@ -95,7 +95,7 @@ public class FilterPluginManager extends BoltPluginManager<JavaFilterPlugin> {
 	
 	}
 	
-	public synchronized void registerPlugin(Class<? extends JavaFilterPlugin> clazz) {
+	public synchronized void registerPlugin(Class<? extends FilterPlugin> clazz) {
 		builtins.load(clazz);
 		reload();
 	}

@@ -8,7 +8,7 @@ import javax.swing.border.Border;
 
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentAPI;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BORDER_STYLE;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 
 interface FluentButtonAPI<
 		B extends JComponent & FluentButtonAPI<B, C>, 
@@ -32,12 +32,12 @@ interface FluentButtonAPI<
 
 	
 	default B withBordered(boolean bordered) {
-		getComponentConfig().bordered = bordered ? BORDER_STYLE.ALWAYS : BORDER_STYLE.ACTIVE;
+		getComponentConfig().bordered = bordered ? BorderStyle.ALWAYS : BorderStyle.ACTIVE;
 		makeWidget();
 		return getSelf();
 	}
 	
-	default B withBordered(FluentButtonConfig.BORDER_STYLE borderStyle) {
+	default B withBordered(FluentButtonConfig.BorderStyle borderStyle) {
 		getComponentConfig().bordered = borderStyle;
 		makeWidget();
 		return getSelf();

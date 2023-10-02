@@ -9,7 +9,7 @@ public class DummySettingsStore implements SettingsStore {
 
 	@Override
 	public void set(String key, String value) {
-		// NOOP
+		throw new RuntimeException("Cannot set values with Dummy SettingsStore");
 	}
 
 }

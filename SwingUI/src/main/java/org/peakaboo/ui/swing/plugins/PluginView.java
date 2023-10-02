@@ -12,9 +12,9 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import org.apache.batik.ext.swing.GridBagConstants;
-import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
-import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
-import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
+import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
+import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -24,7 +24,7 @@ import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
 import org.peakaboo.framework.stratus.components.panels.TitledPanel;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 class PluginView extends JPanel {
 	
@@ -72,19 +72,19 @@ class PluginView extends JPanel {
 	private ImageIcon getIcon(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
-		if (pluginBaseClass == JavaDataSourcePlugin.class) {
+		if (pluginBaseClass == DataSourcePlugin.class) {
 			return StockIcon.DOCUMENT_IMPORT.toImageIcon(IconSize.ICON);
 		}
 		
-		if (pluginBaseClass == JavaDataSinkPlugin.class) {
+		if (pluginBaseClass == DataSinkPlugin.class) {
 			return StockIcon.DOCUMENT_EXPORT.toImageIcon(IconSize.ICON);
 		}
 		
-		if (pluginBaseClass == JavaFilterPlugin.class) {
+		if (pluginBaseClass == FilterPlugin.class) {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.ICON);
 		}
 		
-		if (pluginBaseClass == JavaMapFilterPlugin.class) {
+		if (pluginBaseClass == MapFilterPlugin.class) {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.ICON);
 		}
 		

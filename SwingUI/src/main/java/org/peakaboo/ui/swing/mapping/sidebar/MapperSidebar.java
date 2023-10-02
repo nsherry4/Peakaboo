@@ -17,6 +17,7 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
+import org.peakaboo.ui.swing.mapping.sidebar.filters.FiltersPanel;
 
 
 
@@ -51,7 +52,7 @@ public class MapperSidebar extends JPanel
 	}
 
 	private JPanel filtersTab() {
-		return new FiltersPanel(controller.getFiltering(), tabPanel.getTabbedInterface().getWindow());
+		return new FiltersPanel(controller.getFiltering());
 	}
 	
 	private JPanel fittingsTab() {

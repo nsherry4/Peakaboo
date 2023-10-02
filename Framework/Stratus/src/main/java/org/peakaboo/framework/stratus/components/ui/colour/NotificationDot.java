@@ -8,8 +8,12 @@ import java.awt.RenderingHints;
 public class NotificationDot extends ColourComponent {
 
 	public NotificationDot() {
+		this(10);
+	}
+	
+	public NotificationDot(int size) {
 		super();
-		this.size = 10;
+		this.size = size;
 	}
 	
 	public void setColour(Color colour) {

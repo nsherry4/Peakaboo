@@ -1,6 +1,7 @@
 package org.peakaboo.dataset;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,18 +14,18 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
-import org.peakaboo.datasource.model.DataSource;
-import org.peakaboo.datasource.model.DataSource.DataSourceReadException;
-import org.peakaboo.datasource.model.components.datasize.DataSize;
-import org.peakaboo.datasource.model.components.datasize.DummyDataSize;
-import org.peakaboo.datasource.model.components.interaction.CallbackInteraction;
-import org.peakaboo.datasource.model.components.metadata.Metadata;
-import org.peakaboo.datasource.model.components.physicalsize.PhysicalSize;
-import org.peakaboo.datasource.model.components.scandata.DummyScanData;
-import org.peakaboo.datasource.model.components.scandata.ScanData;
-import org.peakaboo.datasource.model.components.scandata.analysis.Analysis;
-import org.peakaboo.datasource.model.datafile.DataFile;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.DataSource.DataSourceReadException;
+import org.peakaboo.dataset.source.model.components.datasize.DataSize;
+import org.peakaboo.dataset.source.model.components.datasize.DummyDataSize;
+import org.peakaboo.dataset.source.model.components.interaction.CallbackInteraction;
+import org.peakaboo.dataset.source.model.components.metadata.Metadata;
+import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
+import org.peakaboo.dataset.source.model.components.scandata.DummyScanData;
+import org.peakaboo.dataset.source.model.components.scandata.ScanData;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
+import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
@@ -131,7 +132,7 @@ public class StandardDataSet implements DataSet
 					IntConsumer readScans = reading::workUnitCompleted;
 					
 					dataSource.setInteraction(new CallbackInteraction(openedScans, gotScanCount, readScans, isAborted));
-					dataSource.readDataFiles(paths);
+					dataSource.read(paths);
 	
 
 					if (isAborted.getAsBoolean()) {
@@ -165,8 +166,13 @@ public class StandardDataSet implements DataSet
 					
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
-					
+				
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return new DatasetReadResult(e);
 				} catch (DataSourceReadException e) {
+					return new DatasetReadResult(e);
+				} catch (IOException e) {
 					return new DatasetReadResult(e);
 				} catch (Throwable e) {
 					return new DatasetReadResult(e);

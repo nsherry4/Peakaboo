@@ -215,14 +215,14 @@ public class StringInput implements Iterator<String>, Closeable{
 		
 		isClosed = true;
 		
-		if (backingIterator instanceof Scanner)
+		if (backingIterator instanceof Scanner s)
 		{
-			((Scanner)backingIterator).close();
+			s.close();
 			return;
 		}
-		if (backingIterator instanceof CustomReader)
+		if (backingIterator instanceof CustomReader c)
 		{
-			((CustomReader)backingIterator).close();
+			c.close();
 		}
 	}
 	

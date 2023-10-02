@@ -48,8 +48,7 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 			table.setRowHeight(tswidget.getPreferredSize().height);
 		}
 		
-		if (value instanceof ITransitionSeries){
-			ITransitionSeries ts = (ITransitionSeries)value;
+		if (value instanceof ITransitionSeries ts){
 			tswidget.setName(ts.toString());
 			tswidget.setEnabled(tsEnabled.test(ts));
 			

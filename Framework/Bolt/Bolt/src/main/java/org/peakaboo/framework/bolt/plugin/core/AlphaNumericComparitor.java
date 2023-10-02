@@ -1,6 +1,7 @@
 package org.peakaboo.framework.bolt.plugin.core;
 
 import java.util.Comparator;
+import java.util.function.Function;
 
 /**
  * 
@@ -176,6 +177,21 @@ public class AlphaNumericComparitor implements Comparator<String> {
 		} catch (NumberFormatException e) {
 			return 0;
 		}
+	}
+	
+	public static <T> Comparator<T> stringComparatorFor() {
+		return stringComparatorFor(t -> t.toString());
+	}
+	
+	public static <T> Comparator<T> stringComparatorFor(Function<T, String> converter) {
+		var backer = new AlphaNumericComparitor();
+		return new Comparator<T>() {
+
+			@Override
+			public int compare(T t0, T t1) {
+				return backer.compare(converter.apply(t0), converter.apply(t1));
+			}
+		};
 	}
 
 }

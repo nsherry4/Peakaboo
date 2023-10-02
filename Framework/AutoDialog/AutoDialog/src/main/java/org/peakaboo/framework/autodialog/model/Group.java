@@ -3,8 +3,10 @@ package org.peakaboo.framework.autodialog.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.peakaboo.framework.autodialog.model.style.Style;
@@ -101,24 +103,42 @@ public class Group implements Value<List<Value<?>>> {
 	public void visit(Consumer<Value<?>> visitor) {
 		for (Value<?> value : getValue()) {
 			visitor.accept(value);
-			if (value instanceof Group) {
-				((Group)value).visit(visitor);
+			if (value instanceof Group g) {
+				g.visit(visitor);
 			}
 		}
 	}
 	
 	
+	public void deserializeMap(Map<String, Object> stored) {
+		visit(param -> {
+			var name = param.getName();
+			if ("null".equals(name)) return;
+			if (stored.containsKey(name)) {
+				var storedValue = stored.get(name);
+				if (storedValue instanceof String s && param instanceof Parameter<?> p) {
+					p.deserialize(s);
+				} else if (storedValue instanceof List<?> && param instanceof Group g) {
+					g.deserialize((List<Object>) storedValue);
+				} else {
+					throw new RuntimeException("Structure mismatch");
+				}
+			}
+		});
+	}
+	
+	@Deprecated(since = "6", forRemoval = true)
 	public void deserialize(List<Object> stored) {
 		Iterator<Object> iter = stored.iterator();
-		visit(p -> {
+		visit(param -> {
 			if (!iter.hasNext()) {
 				throw new RuntimeException("Unexpected end of data");
 			}
 			Object item = iter.next();
-			if (item instanceof String && p instanceof Parameter<?>) {
-				((Parameter<?>)p).deserialize((String)item);
-			} else if (item instanceof List<?> && p instanceof Group) {
-				((Group)p).deserialize((List<Object>) item);
+			if (item instanceof String s && param instanceof Parameter<?> p) {
+				p.deserialize(s);
+			} else if (item instanceof List<?> && param instanceof Group g) {
+				g.deserialize((List<Object>) item);
 			} else {
 				throw new RuntimeException("Structure mismatch");
 			}
@@ -126,13 +146,27 @@ public class Group implements Value<List<Value<?>>> {
 		});
 	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public List<Object> serialize() {
 		List<Object> dumped = new ArrayList<>();
-		visit(p -> {
-			if (p instanceof Parameter<?>) {
-				dumped.add(((Parameter<?>) p).serialize());
-			} else if (p instanceof Group) {
-				dumped.add(((Group) p).serialize());
+		visit(param -> {
+			if (param instanceof Parameter<?> p) {
+				dumped.add(p.serialize());
+			} else if (param instanceof Group g) {
+				dumped.add(g.serialize());
+			}
+		});
+		return dumped;
+	}
+	
+	public Map<String, Object> serializeMap() {
+		Map<String, Object> dumped = new HashMap<>();
+		visit(param -> {
+			if (param instanceof Parameter<?> p) {
+				dumped.put(p.getName(), p.serialize());
+			} else if (param instanceof Group) {
+				Group group = (Group) param;
+				dumped.put(group.getName(), group.serialize());
 			}
 		});
 		return dumped;

@@ -3,15 +3,13 @@ package org.peakaboo.framework.stratus.laf.painters.tabs;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.Window;
-import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
 
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
+import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.painters.StatefulPainter;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -56,12 +54,10 @@ public class TabPainter extends StatefulPainter{
 		
 		float pad = 3;
 		float radius = theme.borderRadius();
-		Shape shape = new RoundRectangle2D.Float(pad, pad, width-pad*2, height-pad*2, radius, radius);
-
 
 		if (isFocused() || isSelected() || isMouseOver()) {
 			g.setColor(color);
-			g.fill(shape);
+			g.fillRoundRect((int)pad, (int)pad, (int)(width-pad*2), (int)(height-pad*2), (int)radius, (int)radius);
 		}
 		
 	}

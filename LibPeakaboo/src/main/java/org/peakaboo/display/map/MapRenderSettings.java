@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
-import org.peakaboo.display.map.modes.MapModes;
+import org.peakaboo.display.map.modes.MapModeRegistry;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
 
@@ -28,7 +28,7 @@ public class MapRenderSettings {
 	
 	public boolean showScaleBar = false;
 	
-	public MapModes mode = MapModes.COMPOSITE;
+	public String mode = MapModeRegistry.get().defaultType();
 	
 	
 	public boolean drawCoord = false;

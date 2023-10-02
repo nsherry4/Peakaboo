@@ -3,6 +3,7 @@ package org.peakaboo.ui.swing.mapping.sidebar;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Optional;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,7 +29,7 @@ import org.peakaboo.ui.swing.app.PeakabooIcons;
 public class MapDimensionsPanel extends JPanel {
 
 	//either guess or reset, depending on if we have the original dimensions or not
-	private FluentButton magic; 
+	private FluentButton magic, reset; 
 	private JSpinner widthSpinner, heightSpinner;
 	
 	public MapDimensionsPanel(LayerPanel tabPanel, MappingController controller) {
@@ -83,24 +84,32 @@ public class MapDimensionsPanel extends JPanel {
 		
 		
 		if (!controller.rawDataController.hasOriginalDataDimensions()) {
+
+			c.gridy += 1;
 			
 			magic = makeGuessDimensionsButton(tabPanel, controller, compact);
 			c.gridx = 0;
 			c.gridwidth = 2;
-			c.gridy += 1;
 			c.weightx = 0.0;
-			c.anchor = GridBagConstraints.LINE_END;
+			c.anchor = GridBagConstraints.LINE_START;
 			this.add(magic, c);
+
 			
 		} else {
 			
-			magic = makeResetDimensionsButton(controller);
-			c.gridx = 0;
-			c.gridwidth = 2;
 			c.gridy += 1;
+			
+			magic = makeGuessDimensionsButton(tabPanel, controller, true);
+			c.gridx = 0;
+			c.weightx = 0.0;
+			c.anchor = GridBagConstraints.LINE_START;
+			this.add(magic, c);
+			
+			reset = makeResetDimensionsButton(controller);
+			c.gridx = 1;
 			c.weightx = 0.0;
 			c.anchor = GridBagConstraints.LINE_END;
-			this.add(magic, c);
+			this.add(reset, c);
 			
 		}
 		c.gridwidth = 1;
@@ -117,11 +126,16 @@ public class MapDimensionsPanel extends JPanel {
 	public FluentButton getMagicDimensionsButton() {
 		return magic;
 	}
+
+	public Optional<FluentButton> getResetDimensionsButton() {
+		return Optional.ofNullable(reset);
+	}
+	
 	
 	
 	private FluentButton makeGuessDimensionsButton(LayerPanel tabPanel, MappingController controller, boolean compact) {
 		return new FluentButton(compact ? "Guess" : "Guess Dimensions")
-				.withIcon(PeakabooIcons.AUTO, IconSize.TOOLBAR_SMALL)
+				.withIcon(PeakabooIcons.AUTO, IconSize.BUTTON)
 				.withTooltip("Try to detect the map's dimensions.")
 				.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
 				.withBordered(false)
@@ -157,9 +171,10 @@ public class MapDimensionsPanel extends JPanel {
 	}
 	
 	private FluentButton makeResetDimensionsButton(MappingController controller) {
-		return new FluentButton(StockIcon.ACTION_REFRESH_SYMBOLIC, IconSize.TOOLBAR_SMALL)
+		return new FluentButton(StockIcon.ACTION_REFRESH_SYMBOLIC, IconSize.BUTTON)
 				.withTooltip("Reset the dimensions to those given in the data set.")
-				.withLayout(FluentButtonLayout.IMAGE)
+				.withText("Reset")
+				.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
 				.withBordered(false)
 				.withAction(() -> {
 					heightSpinner.setValue(controller.rawDataController.getOriginalDataHeight());

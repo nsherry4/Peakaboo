@@ -23,7 +23,7 @@ public class ColourChooser extends ClearPanel implements ItemSelectable {
 	public ColourChooser(List<Color> colours, Color selected) {
 		this(colours, selected, 1000);
 	}
-	
+
 	public ColourChooser(List<Color> colours, Color selected, int columns) {
 		this(colours, selected, columns, true);
 	}
@@ -33,6 +33,10 @@ public class ColourChooser extends ClearPanel implements ItemSelectable {
 	}
 	
 	public ColourChooser(List<Color> colours, Color selected, int columns, boolean allowNull) {
+		this(colours, selected, columns, allowNull, new ColourView.Settings(ColourComponent.DEFAULT_SIZE, 0f, ColourView.DEFAULT_PAD));
+	}
+	
+	public ColourChooser(List<Color> colours, Color selected, int columns, boolean allowNull, ColourView.Settings settings) {
 		this.allowNull = allowNull;
 		this.options = colours;
 		circles = new ArrayList<ColourChoice>();
@@ -41,7 +45,7 @@ public class ColourChooser extends ClearPanel implements ItemSelectable {
 		this.setBorder(Spacing.bSmall());
 		
 		for (var c : colours) {
-			ColourChoice widget = new ColourChoice(c);
+			ColourChoice widget = new ColourChoice(c, settings);
 			widget.setDeselectable(allowNull);
 			if (c.equals(selected)) {
 				widget.setSelected(true);

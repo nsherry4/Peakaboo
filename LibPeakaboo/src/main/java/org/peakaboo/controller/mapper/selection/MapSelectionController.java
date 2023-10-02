@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.ModeController;
-import org.peakaboo.datasource.model.internal.SubsetDataSource;
+import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;

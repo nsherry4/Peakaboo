@@ -60,21 +60,17 @@ class HeaderFrameGlassPane extends JPanel implements AWTEventListener, MouseMoti
 		Component source = (Component) oSource;
 		
 		Window sourceWindow;
-		if (source instanceof Window) {
-			sourceWindow = (Window) source;
+		if (source instanceof Window w) {
+			sourceWindow = w;
 		} else {
 			sourceWindow = SwingUtilities.getWindowAncestor(source);
 		}
 		if (!window.equals(sourceWindow)) { return; }
-		
-//		System.out.println(event);
-//		System.out.println(event.getSource());
-//		System.out.println("-----------------");
-		
-		if (event instanceof MouseWheelEvent) {
-			dispatchWheelEvent((MouseWheelEvent)event);
-		} else if (event instanceof MouseEvent) {
-			dispatchEvent((MouseEvent)event);
+				
+		if (event instanceof MouseWheelEvent e) {
+			dispatchWheelEvent(e);
+		} else if (event instanceof MouseEvent e) {
+			dispatchEvent(e);
 		}
 		
 	}

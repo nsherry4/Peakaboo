@@ -6,9 +6,9 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import org.peakaboo.datasink.plugin.JavaDataSinkPlugin;
-import org.peakaboo.datasource.plugin.JavaDataSourcePlugin;
-import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
+import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
+import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
@@ -18,8 +18,7 @@ import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
-import org.peakaboo.framework.stratus.components.stencil.StencilTreeCellRenderer;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 class PluginTreeWidget extends Stencil<Object> {
 
@@ -48,8 +47,7 @@ class PluginTreeWidget extends Stencil<Object> {
         	BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>)object;
         	label.setText(plugin.getName());
         	label.setIcon(getIcon(plugin));	
-    	} else if (object instanceof BoltIssue) {
-    		BoltIssue issue = (BoltIssue) object;
+    	} else if (object instanceof BoltIssue issue) {
     		label.setText(issue.shortSource());
     		label.setIcon(StockIcon.BADGE_ERROR.toImageIcon(IconSize.BUTTON));
     	}
@@ -59,19 +57,19 @@ class PluginTreeWidget extends Stencil<Object> {
 	private ImageIcon getIcon(BoltPluginPrototype<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
-		if (pluginBaseClass == JavaDataSourcePlugin.class) {
+		if (pluginBaseClass == DataSourcePlugin.class) {
 			return StockIcon.DOCUMENT_IMPORT.toImageIcon(IconSize.BUTTON);
 		}
 		
-		if (pluginBaseClass == JavaDataSinkPlugin.class) {
+		if (pluginBaseClass == DataSinkPlugin.class) {
 			return StockIcon.DOCUMENT_EXPORT.toImageIcon(IconSize.BUTTON);
 		}
 		
-		if (pluginBaseClass == JavaFilterPlugin.class) {
+		if (pluginBaseClass == FilterPlugin.class) {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 
-		if (pluginBaseClass == JavaMapFilterPlugin.class) {
+		if (pluginBaseClass == MapFilterPlugin.class) {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 		

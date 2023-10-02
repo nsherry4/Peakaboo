@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.mapping.filter.plugin.JavaMapFilterPlugin;
+import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
-public abstract class AbstractMapFilter implements JavaMapFilterPlugin {
+public abstract class AbstractMapFilter implements MapFilterPlugin {
 
 	private boolean enabled;
 	private List<Value<?>> parameters;

@@ -272,10 +272,11 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "ToolBar:Button[Disabled].textForeground", 		theme.getControlTextDisabled());
 			reg(ret, "ToolBar:Button[Default+Pressed].textForeground", 	theme.getControlText());
 			
-			reg(ret, "ToolBar:Button[Focused+MouseOver].backgroundPainter", 	new LinkedButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
+			reg(ret, "ToolBar:Button.backgroundPainter", 					new LinkedButtonPainter(theme, ButtonState.DEFAULT));
+			reg(ret, "ToolBar:Button[Focused+MouseOver].backgroundPainter", new LinkedButtonPainter(theme, ButtonState.FOCUSED, ButtonState.MOUSEOVER));
 			reg(ret, "ToolBar:Button[Focused+Pressed].backgroundPainter", 	new LinkedButtonPainter(theme, ButtonState.FOCUSED, ButtonState.PRESSED));
 			reg(ret, "ToolBar:Button[Focused].backgroundPainter", 			new LinkedButtonPainter(theme, ButtonState.FOCUSED));
-			reg(ret, "ToolBar:Button[MouseOver].backgroundPainter", 			new LinkedButtonPainter(theme, ButtonState.MOUSEOVER));
+			reg(ret, "ToolBar:Button[MouseOver].backgroundPainter", 		new LinkedButtonPainter(theme, ButtonState.MOUSEOVER));
 			reg(ret, "ToolBar:Button[Pressed].backgroundPainter", 			new LinkedButtonPainter(theme, ButtonState.PRESSED));
 			
 			reg(ret, "ToolBar:Button.contentMargins", new Insets(6, 6, 6, 6));

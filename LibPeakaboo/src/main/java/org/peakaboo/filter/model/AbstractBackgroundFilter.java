@@ -48,8 +48,8 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public FilterType getFilterType() {
-		return FilterType.BACKGROUND;
+	public FilterDescriptor getFilterDescriptor() {
+		return FilterDescriptor.BACKGROUND;
 	}
 	
 	private boolean validate(Parameter<?> p) {

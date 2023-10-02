@@ -202,7 +202,7 @@ public class StratusFilePanels {
 		String title = "File Already Exists";
 		
 		if (filename.exists()) {
-			if (parent instanceof LayerPanel) {
+			if (parent instanceof LayerPanel lp) {
 				
 				new LayerDialog(
 						title, 
@@ -210,9 +210,9 @@ public class StratusFilePanels {
 						StockIcon.BADGE_QUESTION)
 					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
 					.addRight(new FluentButton("Replace").withStateCritical().withAction(() -> onResult.accept(true)))
-					.showIn((LayerPanel) parent);
+					.showIn(lp);
 				
-			} else if (parent instanceof Window) {
+			} else if (parent instanceof Window w) {
 				
 				new LayerDialog(
 						title, 
@@ -220,7 +220,7 @@ public class StratusFilePanels {
 						StockIcon.BADGE_QUESTION)
 					.addLeft(new FluentButton("Cancel").withAction(() -> onResult.accept(false)))
 					.addRight(new FluentButton("Replace").withStateCritical().withAction(() -> onResult.accept(true)))
-					.showInWindow((Window)parent);
+					.showInWindow(w);
 			} else {
 				
 				//??? fallback

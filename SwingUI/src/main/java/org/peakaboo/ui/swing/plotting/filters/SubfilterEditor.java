@@ -1,20 +1,18 @@
 package org.peakaboo.ui.swing.plotting.filters;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.TitledBorder;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.autodialog.view.swing.editors.AbstractSwingEditor;
+import org.peakaboo.framework.autodialog.view.swing.layouts.NarrowSwingLayout;
 import org.peakaboo.framework.stratus.api.Spacing;
 
 
@@ -44,7 +42,7 @@ class SubfilterEditor extends AbstractSwingEditor<Filter> {
 		control.add(filterCombo, BorderLayout.NORTH);
 		subfilterPanel = new JPanel();	
 		subfilterPanel.setLayout(new BorderLayout());
-		subfilterPanel.setBorder(new TitledBorder(""));
+		subfilterPanel.setBorder(Spacing.bNone());
 		control.add(subfilterPanel, BorderLayout.CENTER);
 		
 		setFromParameter();
@@ -94,7 +92,10 @@ class SubfilterEditor extends AbstractSwingEditor<Filter> {
 		subfilter.getParameterGroup().getValueHook().addListener(o -> subfilterInvalidated());
 		
 
-		subfilterView = new SwingAutoPanel(f.getParameterGroup());
+		var group = f.getParameterGroup();
+		var layout = new NarrowSwingLayout(200);
+		layout.initialize(group);
+		subfilterView = new SwingAutoPanel(group, false, layout);
 		
 	
 		

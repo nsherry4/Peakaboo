@@ -16,7 +16,7 @@ import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.filter.plugins.JavaFilterPlugin;
+import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
@@ -94,7 +94,7 @@ class FilterSelectionList extends ClearPanel
 
 				if (leaf instanceof BoltPluginPrototype<?>) {
 					@SuppressWarnings("unchecked")
-					BoltPluginPrototype<? extends JavaFilterPlugin> plugin = (BoltPluginPrototype<? extends JavaFilterPlugin>) leaf;
+					BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) leaf;
 					Filter filter = plugin.create();
 					filter.initialize();
 					controller.addFilter(filter);
@@ -137,7 +137,7 @@ class FilterSelectionTreeModel implements TreeModel {
 
 		if (parent instanceof FilterType) {
 			@SuppressWarnings("unchecked")
-			BoltPluginPrototype<? extends JavaFilterPlugin> plugin = (BoltPluginPrototype<? extends JavaFilterPlugin>) child;
+			BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
 			return FilterPluginManager.system().getPlugins().indexOf(plugin);
 		} else if (parent instanceof String) {
 			FilterType ft = (FilterType) child;
@@ -149,12 +149,9 @@ class FilterSelectionTreeModel implements TreeModel {
 
 	public int getChildCount(Object parent) {
 
-		if (parent instanceof FilterType) {
-
-			FilterType ft = (FilterType) parent;
+		if (parent instanceof FilterType ft) {
 			int typeCount = 0;
-
-			for (BoltPluginPrototype<? extends JavaFilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 			}
 			return typeCount;
@@ -168,14 +165,11 @@ class FilterSelectionTreeModel implements TreeModel {
 
 	public Object getChild(Object parent, int index) {
 
-		if (parent instanceof FilterType) {
-
+		if (parent instanceof FilterType ft) {
 			index++;
-
-			FilterType ft = (FilterType) parent;
 			int typeCount = 0;
 
-			for (BoltPluginPrototype<? extends JavaFilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 				if (typeCount == index) return plugin;
 			}
