@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -64,6 +66,38 @@ public class YamlSerializer {
 	public static <T> T deserializeGeneric(File file) throws IOException {
 		return deserializeGeneric(new String(Files.readAllBytes(file.toPath())));
 	}
+	
+	
+	
+	/**
+	 * Decodes a yaml document to a specific class. Useful for reading yaml documents without !! java class hints 
+	 */
+	public static <T extends Object> T deserialize(String yaml, Class<T> cls) {
+		return deserialize(yaml, cls, true);
+	}
+	/**
+	 * Decodes a yaml document to a specific class. Useful for reading yaml documents without !! java class hints 
+	 */
+	public static <T extends Object> T deserialize(String yaml, Class<T> cls, boolean strict) {
+		var loaderopts = new LoaderOptions();
+		Yaml y = new Yaml(new Constructor(cls, loaderopts));
+		
+		try {
+			return y.load(yaml);
+		} catch (YAMLException e) {
+			throw new DruthersLoadException(e);
+		}
+	}
+	/**
+	 * Decodes a yaml document to a specific class. Useful for reading yaml documents without !! java class hints 
+	 */
+	public static <T extends Object> T deserialize(File file, Class<T> cls) throws IOException {
+		return deserialize(new String(Files.readAllBytes(file.toPath())), cls);
+	}
+	
+	
+	
+	
 	
 	
 	

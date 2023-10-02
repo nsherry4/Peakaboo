@@ -28,6 +28,9 @@ public class BoltConfigBuiltinLoader<T extends BoltConfigPlugin> implements Bolt
 	}
 	
 	public void load(URL resource) {
+		if (resource == null) {
+			throw new NullPointerException("URL to load was null");
+		}
 		custom.add(resource);
 	}
 	

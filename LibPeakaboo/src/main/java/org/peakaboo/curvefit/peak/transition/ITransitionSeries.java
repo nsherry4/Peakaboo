@@ -139,15 +139,14 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 				throw new RuntimeException("Poorly formated TransitionSeries identifier string: " + identifier);
 			}
 			return new PileUpTransitionSeries(tss);
+		} else {
+			try {
+				return new PrimaryTransitionSeries(identifier);
+			} catch (RuntimeException e) {
+				return null;
+			}
 		}
-		String[] parts = identifier.split(":", 2);
-		if (parts.length != 2) {
-			return null;
-		}
-		Element e = Element.valueOf(parts[0]);
-		TransitionShell tst = TransitionShell.fromTypeString(parts[1].trim());
-		
-		return new PrimaryTransitionSeries(e, tst);
+
 	}
 
 	
