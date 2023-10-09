@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
 			<artifactId>kryo</artifactId>
-			<version>4.0.2</version>
+			<version>5.5.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.lz4/lz4-java -->
@@ -56,11 +56,10 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/de.ruedigermoeller/fst -->
-		<!-- Should be updated to 3.x, but it bumps the minimum java version along with it. -->
 		<dependency>
 			<groupId>de.ruedigermoeller</groupId>
 			<artifactId>fst</artifactId>
-			<version>2.57</version>
+			<version>3.0.1</version>
 		</dependency>
 
 
