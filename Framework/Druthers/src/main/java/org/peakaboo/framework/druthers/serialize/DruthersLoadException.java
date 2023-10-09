@@ -6,4 +6,7 @@ public class DruthersLoadException extends RuntimeException {
 	public DruthersLoadException(YAMLException e) {
 		super(e);
 	}
+	public DruthersLoadException(String msg) {
+		super(msg);
+	}
 }

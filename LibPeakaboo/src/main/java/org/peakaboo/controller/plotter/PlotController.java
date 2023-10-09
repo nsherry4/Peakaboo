@@ -101,7 +101,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 	public Optional<SavedSession> readSavedSettings(String yaml) {
 		try {
-			return Optional.of(SavedSession.deserialize(yaml));
+			return Optional.of(SavedSession.deserialize(yaml, SavedSession.class, false));
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.WARNING, "Failed to load saved session", e);
 			return Optional.empty();
@@ -110,7 +110,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 	
 	public void loadSettings(String data, boolean isUndoAction) {
-		SavedSession saved = SavedSession.deserialize(data);
+		SavedSession saved = SavedSession.deserialize(data, SavedSession.class, false);
 		loadSessionSettings(saved, isUndoAction);
 	}
 	
