@@ -17,7 +17,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: 19
+        java-version: 21
         distribution: 'temurin'
         cache: maven
       
@@ -49,7 +49,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: 19
+        java-version: 21
         distribution: 'temurin'
     
     - name: Download Jar
@@ -83,7 +83,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: 19
+        java-version: 21
         distribution: 'temurin'
     
     - name: Download Jar
@@ -117,7 +117,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: 19
+        java-version: 21
         distribution: 'temurin'
     
     - name: Introspect jpackage
@@ -156,7 +156,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: 19
+        java-version: 21
         distribution: 'temurin'
    
     - name: Introspect jpackage
