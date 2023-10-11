@@ -35,4 +35,16 @@ public interface FileFormat {
 	 */
 	String getFormatDescription();
 	
+	/**
+	 * Describe the type of data contained in this data set. This refers to the
+	 * experimental method used to collect this data, not the file format. The value
+	 * will usually be XRF.
+	 * 
+	 * The value is a string for easy future-proofing, but the only recognized
+	 * values are from {@link FileFormatDataType}
+	 */
+	default String getFormatDataType() {
+		return FileFormatDataType.XRF;
+	}
+	
 }
