@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.dataset.source.model.DataSource;
-import org.peakaboo.dataset.source.model.DataSource.DataSourceReadException;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.DummyDataSize;
 import org.peakaboo.dataset.source.model.components.interaction.CallbackInteraction;

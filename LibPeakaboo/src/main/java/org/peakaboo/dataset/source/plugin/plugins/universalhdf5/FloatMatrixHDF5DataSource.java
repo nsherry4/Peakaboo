@@ -10,6 +10,7 @@ import java.util.Map;
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.SimpleDataSize;
 import org.peakaboo.dataset.source.model.datafile.DataFile;

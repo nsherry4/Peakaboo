@@ -18,17 +18,6 @@ public interface DataSource
 {
 	
 	
-	public class DataSourceReadException extends Exception {
-		
-		public DataSourceReadException(String message) {
-			super(message);
-		}
-		
-		public DataSourceReadException(String message, Throwable cause) {
-			super(message, cause);
-		}
-	}
-	
 	/**
 	 * Reads the given files as a whole dataset. This method will be called either 0
 	 * or 1 times throughout the lifetime of this DataSource object.

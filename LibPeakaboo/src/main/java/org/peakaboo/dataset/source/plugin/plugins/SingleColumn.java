@@ -1,18 +1,15 @@
 package org.peakaboo.dataset.source.plugin.plugins;
 
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.SimpleDataSize;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
@@ -21,7 +18,6 @@ import org.peakaboo.dataset.source.model.components.metadata.Metadata;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.PipelineScanData;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
-import org.peakaboo.dataset.source.model.components.scandata.SimpleScanData;
 import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
