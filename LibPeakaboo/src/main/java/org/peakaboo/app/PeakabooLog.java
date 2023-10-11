@@ -24,7 +24,7 @@ import org.peakaboo.app.CustomFormatter.BufferHandler;
 
 public class PeakabooLog {
 
-	private final static String format = "%1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
+	private final static String format = "[" + Version.longVersionNo + "] %1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
 	private final static Map<String, Logger> loggers = new HashMap<>();
 	private static boolean initted = false;
 	private static String logfilename;

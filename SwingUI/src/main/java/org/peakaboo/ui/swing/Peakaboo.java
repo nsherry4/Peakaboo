@@ -162,7 +162,8 @@ public class Peakaboo {
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		CrashHandler.init();
 		
-		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
+		PeakabooLog.get().log(Level.INFO, "Peakaboo is starting up.");
+		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.longVersionNo + " - " + Version.buildDate);
 		
 		CyclopsSurface.init();
 	}
