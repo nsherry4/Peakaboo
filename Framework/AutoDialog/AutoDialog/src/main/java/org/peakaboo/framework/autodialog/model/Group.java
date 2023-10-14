@@ -2,7 +2,6 @@ package org.peakaboo.framework.autodialog.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,17 +10,8 @@ import java.util.function.Consumer;
 
 import org.peakaboo.framework.autodialog.model.style.Style;
 import org.peakaboo.framework.autodialog.model.style.layouts.ColumnLayoutStyle;
-import org.peakaboo.framework.eventful.EventfulType;
 
-public class Group implements Value<List<Value<?>>> {
-
-	private List<Value<?>> values = new ArrayList<>();
-	private Style<List<Value<?>>> style;
-	private String name;
-	private boolean enabled = true; 
-	
-	private EventfulType<List<Value<?>>> valueHook = new EventfulType<>();
-	private EventfulType<Boolean> enabledHook = new EventfulType<>();
+public class Group extends SimpleValue<List<Value<?>>> {
 
 	public Group(String name) {
 		this(name, new ArrayList<>(), new ColumnLayoutStyle());
@@ -39,19 +29,18 @@ public class Group implements Value<List<Value<?>>> {
 		this(name, Arrays.asList(values));
 	}
 	
-	public Group(String name, Collection<Value<?>> values) {
+	public Group(String name, List<Value<?>> values) {
 		this(name, values, new ColumnLayoutStyle());
 	}
 	
-	public Group(String name, Collection<Value<?>> values, Style<List<Value<?>>> style) {
-		this.name = name;
-		this.values = new ArrayList<>(values);
-		getValueHook().updateListeners(this.values);
-		this.style = style;
+	public Group(String name, List<Value<?>> value, Style<List<Value<?>>> style) {
+		// Constructor with a copy of the list to prevent surprises 
+		// from later external modification of the original
+		super(name, style, new ArrayList<>(value));
 		
 		//Add listeners so that we can re-broadcast it as an event for this group
-		for (Value<?> value : values) {
-			value.getValueHook().addListener(o -> getValueHook().updateListeners(this.values));
+		for (var v : this.value) {
+			v.getValueHook().addListener(o -> getValueHook().updateListeners(this.value));
 		}
 		
 	}
@@ -60,45 +49,16 @@ public class Group implements Value<List<Value<?>>> {
 		return "Group: " + getName();
 	}
 
-	@Override
-	public Style<List<Value<?>>> getStyle() {
-		return style;
-	}
 
-	@Override
-	public String getName() {
-		return name;
-	}
+
 
 	@Override
 	public boolean setValue(List<Value<?>> value) {
-		values = value;
+		// Don't emit an event for setting the list of items, only for changing their values 
+		this.value = value;
 		return true;
 	}
 
-	@Override
-	public List<Value<?>> getValue() {
-		return values;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		getEnabledHook().updateListeners(isEnabled());
-	}
-	
-	public EventfulType<List<Value<?>>> getValueHook() {
-		return valueHook;
-	}
-
-	public EventfulType<Boolean> getEnabledHook() {
-		return enabledHook;
-	}
 	
 	public void visit(Consumer<Value<?>> visitor) {
 		for (Value<?> value : getValue()) {

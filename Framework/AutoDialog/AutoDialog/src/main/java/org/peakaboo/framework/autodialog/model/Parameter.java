@@ -7,30 +7,18 @@ import java.util.function.Predicate;
 import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
 import org.peakaboo.framework.autodialog.model.classinfo.ClassInfoDefaults;
 import org.peakaboo.framework.autodialog.model.style.Style;
-import org.peakaboo.framework.eventful.EventfulType;
 
 /**
  * 
- * This class defines a parameter for a filter.
+ * This class defines a parameter -- a {@link Value} with validation and serialization
  * 
- * @author Nathaniel Sherry, 2009-2012
+ * @author Nathaniel Sherry
  */
 
-public class Parameter<T> implements Serializable, Value<T>
-{
-	
-	private String			name;
-	private Style<T>		style;	
-	private boolean			enabled;
+public class Parameter<T> extends SimpleValue<T> implements Serializable {
 
-	private T				value;
 	private Predicate<Parameter<T>> validator;
-	
-	private EventfulType<T>	valueHook = new EventfulType<>();
-	private EventfulType<Boolean> enabledHook = new EventfulType<>();
-	
-	private ClassInfo<T> 	classInfo;
-		
+	private ClassInfo<T> classInfo;
 	
 	public Parameter(String name, Style<T> style, T value) {
 		this(name, style, value, p -> true);
@@ -40,19 +28,16 @@ public class Parameter<T> implements Serializable, Value<T>
 		this(name, style, value, classInfo, p -> true);
 	}
 	
-	public Parameter(String name, Style<T> style, T value, Predicate<Parameter<T>> validator)
-	{
+	public Parameter(String name, Style<T> style, T value, Predicate<Parameter<T>> validator) {
 		this(name, style, value, null, validator);
 	}
 	
-	public Parameter(String name, Style<T> style, T value, ClassInfo<T> classInfo, Predicate<Parameter<T>> validator)
-	{
-		this.style = style;
-		this.name = name;
-		this.enabled = true;
+	public Parameter(String name, Style<T> style, T value, ClassInfo<T> classInfo, Predicate<Parameter<T>> validator) {
+		super(name, style, value);
 		this.validator = validator;
-		
 		this.classInfo = classInfo;
+		
+		
 		//if class info is null, try to guess it
 		if (this.classInfo == null && value == null) {
 			throw new UnsupportedOperationException("Cannot create Parameter with no ClassInfo and a null value");
@@ -60,7 +45,6 @@ public class Parameter<T> implements Serializable, Value<T>
 			//Try to guess the class info for primitives
 			this.classInfo = (ClassInfo<T>) ClassInfoDefaults.guess(value.getClass());
 		}
-		
 		//If guessing failed, throw exception
 		if (this.classInfo == null) {
 			throw new UnsupportedOperationException("Cannot determine ClassInfo information automatically");
@@ -70,7 +54,7 @@ public class Parameter<T> implements Serializable, Value<T>
 		assignValue(value);
 	}
 
-	
+	// 
 	private void assignValue(T value) {
 		if (classInfo != null && value != null && !(classInfo.getValueClass().isInstance(value))) {
 			throw new ClassCastException(value.getClass().getName() + " cannot be cast to " + classInfo.getValueClass().getName());
@@ -92,49 +76,15 @@ public class Parameter<T> implements Serializable, Value<T>
 		getValueHook().updateListeners(value);
 		return success;
 	}
-	
-	@Override
-	public synchronized T getValue() {
-		return value;
-	}
 
-	
-	@Override
-	public Style<T> getStyle() {
-		return style;
-	}
 
-	
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	@Override
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		getEnabledHook().updateListeners(enabled);
-	}
-	
-	public String toString()
-	{
+	// Not for serialization
+	public String toString() {
 		String str =  "Parameter: " + getName();
 		if (value != null) str += ": " + value.toString();
 		return str;
 	}
 
-	public EventfulType<T> getValueHook() {
-		return valueHook;
-	}
-
-	public EventfulType<Boolean> getEnabledHook() {
-		return enabledHook;
-	}
 
 	public Predicate<Parameter<T>> getValidator() {
 		return validator;
