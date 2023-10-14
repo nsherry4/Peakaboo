@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ public abstract class DataLoader {
 	private PlotController controller;
 	private List<DataFile> datafiles;
 	private String dataSourceUUID = null;
-	private List<Object> sessionParameters = null;
+	private Map<String, Object> sessionParameters = null;
 	private File sessionFile = null;
 	
 	//if we're loading a session, we need to do some extra work after loading the dataset
@@ -193,7 +194,7 @@ public abstract class DataLoader {
 			}
 			sessionFile = datafiles.get(0).getAndEnsurePath().toFile();
 			
-			Optional<SavedSession> optSession = controller.readSavedSettings(StringInput.contents(sessionFile));
+			Optional<SavedSession> optSession = PlotController.readSavedSettings(StringInput.contents(sessionFile));
 			
 			if (!optSession.isPresent()) {
 				onSessionFailure();

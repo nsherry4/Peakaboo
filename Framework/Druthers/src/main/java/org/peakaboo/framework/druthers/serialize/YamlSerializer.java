@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
@@ -58,7 +59,25 @@ public class YamlSerializer {
 	public static <T extends Object> T deserialize(String yaml, Class<T> cls, boolean strict, String format) {
 		yaml = deserializeChecks(yaml, strict, format);
 		return deserialize(yaml, buildLoader(cls, strict));
+	}
+	
+	public static <T extends Object> T deserialize(String yaml, boolean strict, Map<String, Class<T>> formats) {
 		
+		String format = null;
+		Class<T> cls = null;
+		if (hasFormat(yaml)) {
+			format = getFormat(yaml);
+			if (!formats.containsKey(format)) {
+				throw new DruthersLoadException("File format '" + format + "' not supported");
+			}
+			cls = formats.get(format);
+		} else if (formats.containsKey(null)) {
+			format = null;
+			cls = formats.get(null);
+		}
+		
+		yaml = deserializeChecks(yaml, strict, format);
+		return deserialize(yaml, buildLoader(cls, strict));
 	}
 	
 	public static <T extends Object> T deserialize(String yaml, Yaml y) {

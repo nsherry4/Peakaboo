@@ -70,16 +70,20 @@ public class Group extends SimpleValue<List<Value<?>>> {
 	}
 	
 	
-	public void deserializeMap(Map<String, Object> stored) {
+	public void deserialize(Map<String, Object> stored) {
 		visit(param -> {
 			var name = param.getName();
+			var slug = param.getSlug();
 			if ("null".equals(name)) return;
-			if (stored.containsKey(name)) {
-				var storedValue = stored.get(name);
+			if (stored.containsKey(name) || stored.containsKey(slug)) {
+				//Prefer the slug over the name since it's more robust to UI changes
+				var storedValue = stored.getOrDefault(slug, stored.get(name));
 				if (storedValue instanceof String s && param instanceof Parameter<?> p) {
 					p.deserialize(s);
 				} else if (storedValue instanceof List<?> && param instanceof Group g) {
 					g.deserialize((List<Object>) storedValue);
+				} else if (storedValue instanceof Map<?, ?> && param instanceof Group g) {
+					g.deserialize((Map<String, Object>) storedValue);
 				} else {
 					throw new RuntimeException("Structure mismatch");
 				}
@@ -99,6 +103,8 @@ public class Group extends SimpleValue<List<Value<?>>> {
 				p.deserialize(s);
 			} else if (item instanceof List<?> && param instanceof Group g) {
 				g.deserialize((List<Object>) item);
+			} else if (item instanceof Map<?, ?> && param instanceof Group g) {
+				g.deserialize((Map<String, Object>) item);
 			} else {
 				throw new RuntimeException("Structure mismatch");
 			}
@@ -106,27 +112,14 @@ public class Group extends SimpleValue<List<Value<?>>> {
 		});
 	}
 	
-	@Deprecated(since = "6", forRemoval = true)
-	public List<Object> serialize() {
-		List<Object> dumped = new ArrayList<>();
-		visit(param -> {
-			if (param instanceof Parameter<?> p) {
-				dumped.add(p.serialize());
-			} else if (param instanceof Group g) {
-				dumped.add(g.serialize());
-			}
-		});
-		return dumped;
-	}
 	
-	public Map<String, Object> serializeMap() {
+	public Map<String, Object> serialize() {
 		Map<String, Object> dumped = new HashMap<>();
-		visit(param -> {
-			if (param instanceof Parameter<?> p) {
-				dumped.put(p.getName(), p.serialize());
-			} else if (param instanceof Group) {
-				Group group = (Group) param;
-				dumped.put(group.getName(), group.serialize());
+		visit(value -> {
+			if (value instanceof Parameter<?> p) {
+				dumped.put(p.getSlug(), p.serialize());
+			} else if (value instanceof Group group) {
+				dumped.put(group.getSlug(), group.serialize());
 			}
 		});
 		return dumped;

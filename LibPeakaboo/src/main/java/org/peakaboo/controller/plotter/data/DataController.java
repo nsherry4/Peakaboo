@@ -2,18 +2,16 @@ package org.peakaboo.controller.plotter.data;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.discards.Discards;
 import org.peakaboo.controller.plotter.data.discards.DiscardsList;
-import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
-import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.EmptyDataSet;
@@ -23,17 +21,12 @@ import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.filter.model.FilterContext;
-import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.eventful.Eventful;
 import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.plural.streams.StreamExecutor;
-import org.peakaboo.mapping.Mapping;
-import org.peakaboo.mapping.rawmap.RawMapSet;
 
 
 /**
@@ -49,7 +42,7 @@ public class DataController extends Eventful
 	private List<DataFile>		dataPaths;
 	protected String			title;
 	private String				dataSourcePluginUUID;
-	private List<Object>		dataSourceParameters;
+	private Map<String, Object>	dataSourceParameters;
 	
 	public DataController(PlotController plotController) {
 		this.plot = plotController;
@@ -57,7 +50,7 @@ public class DataController extends Eventful
 		discards = new DiscardsList(plot);
 		dataPaths = new ArrayList<>();
 		dataSourcePluginUUID = null;
-		dataSourceParameters = new ArrayList<>();
+		dataSourceParameters = new LinkedHashMap<>();
 	}
 
 	
@@ -224,11 +217,11 @@ public class DataController extends Eventful
 	}
 
 
-	public List<Object> getDataSourceParameters() {
+	public Map<String, Object> getDataSourceParameters() {
 		return dataSourceParameters;
 	}
 
-	public void setDataSourceParameters(List<Object> dataSourceParameters) {
+	public void setDataSourceParameters(Map<String, Object> dataSourceParameters) {
 		this.dataSourceParameters = dataSourceParameters;
 	}
 	

@@ -99,7 +99,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 	
 	
-	public Optional<SavedSession> readSavedSettings(String yaml) {
+	public static Optional<SavedSession> readSavedSettings(String yaml) {
 		try {
 			return Optional.of(SavedSession.deserialize(yaml, SavedSession.class, false));
 		} catch (Exception e) {
@@ -110,8 +110,12 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 	
 	public void loadSettings(String data, boolean isUndoAction) {
-		SavedSession saved = SavedSession.deserialize(data, SavedSession.class, false);
-		loadSessionSettings(saved, isUndoAction);
+		Optional<SavedSession> optSaved = readSavedSettings(data);
+		if (optSaved.isEmpty()) {
+			throw new RuntimeException("Settings could not be transferred to new context");
+		} else {
+			loadSessionSettings(optSaved.get(), isUndoAction);
+		}
 	}
 	
 	
