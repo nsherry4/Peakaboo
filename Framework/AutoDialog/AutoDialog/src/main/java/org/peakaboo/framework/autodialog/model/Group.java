@@ -91,6 +91,20 @@ public class Group extends SimpleValue<List<Value<?>>> {
 		});
 	}
 	
+	
+	public Map<String, Object> serialize() {
+		Map<String, Object> dumped = new HashMap<>();
+		visit(value -> {
+			if (value instanceof Parameter<?> p) {
+				dumped.put(p.getSlug(), p.serialize());
+			} else if (value instanceof Group group) {
+				dumped.put(group.getSlug(), group.serialize());
+			}
+		});
+		return dumped;
+	}
+	
+	
 	@Deprecated(since = "6", forRemoval = true)
 	public void deserialize(List<Object> stored) {
 		Iterator<Object> iter = stored.iterator();
@@ -113,13 +127,14 @@ public class Group extends SimpleValue<List<Value<?>>> {
 	}
 	
 	
-	public Map<String, Object> serialize() {
-		Map<String, Object> dumped = new HashMap<>();
-		visit(value -> {
-			if (value instanceof Parameter<?> p) {
-				dumped.put(p.getSlug(), p.serialize());
-			} else if (value instanceof Group group) {
-				dumped.put(group.getSlug(), group.serialize());
+	@Deprecated(since = "6", forRemoval = true)
+	public List<Object> serializeList() {
+		List<Object> dumped = new ArrayList<>();
+		visit(param -> {
+			if (param instanceof Parameter<?> p) {
+				dumped.add(p.serialize());
+			} else if (param instanceof Group g) {
+				dumped.add(g.serialize());
 			}
 		});
 		return dumped;

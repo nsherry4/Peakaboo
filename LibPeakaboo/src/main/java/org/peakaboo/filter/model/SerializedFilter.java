@@ -63,7 +63,7 @@ public class SerializedFilter {
 
 	//Only called by the (de)serializer
 	public Map<String, Object> getSettingsMap() {
-		return filter.getParameterGroup().serializeMap();
+		return filter.getParameterGroup().serialize();
 	}
 
 	//Only called by the (de)serializer
@@ -98,7 +98,7 @@ public class SerializedFilter {
 					 * loaded.
 					 */
 					if (this.settingsMap != null) {
-						filter.getParameterGroup().deserializeMap(this.settingsMap);
+						filter.getParameterGroup().deserialize(this.settingsMap);
 					} else {
 						filter.getParameterGroup().deserialize(this.settings);
 					}

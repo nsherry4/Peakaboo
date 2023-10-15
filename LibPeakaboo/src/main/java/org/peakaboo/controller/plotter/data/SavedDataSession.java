@@ -3,6 +3,7 @@ package org.peakaboo.controller.plotter.data;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.peakaboo.dataset.source.model.datafile.DataFile;
@@ -15,7 +16,7 @@ public class SavedDataSession {
 	public List<Integer> discards = new ArrayList<>();
 	public List<String> files = new ArrayList<>();
 	public String dataSourcePluginUUID = null;
-	public List<Object> dataSourceParameters = null;
+	public Map<String, Object> dataSourceParameters = null;
 	public String title = null;
 	
 	public SavedDataSession storeFrom(DataController controller) {

@@ -1,6 +1,5 @@
 package org.peakaboo.mapping.filter.model;
 
-import java.util.List;
 import java.util.Map;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
@@ -45,7 +44,7 @@ public class SerializedMapFilter {
 	}
 
 	public Map<String, Object> getSettings() {
-		return filter.getParameterGroup().serializeMap();
+		return filter.getParameterGroup().serialize();
 	}
 
 	public void setSettings(Map<String, Object> settings) {
@@ -59,7 +58,7 @@ public class SerializedMapFilter {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
 				filter = plugin.create();
 				filter.initialize();
-				filter.getParameterGroup().deserializeMap(settings);
+				filter.getParameterGroup().deserialize(settings);
 				return filter;
 			}
 		}

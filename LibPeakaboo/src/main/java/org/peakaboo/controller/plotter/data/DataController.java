@@ -239,6 +239,14 @@ public class DataController extends Eventful
 		}
 	}
 	
+	/**
+	 * Returns the user-specified title of the dataset. If the user has not
+	 * specified a custom title, the return value will be null.
+	 */
+	public String getCustomTitle() {
+		return title;
+	}
+	
 	public void setTitle(String title) {
 		this.title = title;
 		updateListeners();
