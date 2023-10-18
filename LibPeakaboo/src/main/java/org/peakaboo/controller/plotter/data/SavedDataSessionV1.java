@@ -11,7 +11,7 @@ import org.peakaboo.dataset.source.model.datafile.DataFiles;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
-public class SavedDataSession {
+public class SavedDataSessionV1 {
 
 	public List<Integer> discards = new ArrayList<>();
 	public List<String> files = new ArrayList<>();
@@ -19,10 +19,13 @@ public class SavedDataSession {
 	public Map<String, Object> dataSourceParameters = null;
 	public String title = null;
 	
-	public SavedDataSession storeFrom(DataController controller) {
+	public SavedDataSessionV1 storeFrom(DataController controller) {
 		this.discards = controller.getDiscards().list();
-		if (!controller.getDataPaths().isEmpty() && controller.getDataPaths().get(0).addressable()) {
-			this.files = controller.getDataPaths().stream().map(p -> p.address().get()).collect(Collectors.toList());	
+		if (!controller.getDataPaths().isEmpty()) {
+			DataFile first = controller.getDataPaths().get(0);
+			if (first != null && first.addressable()) {
+				this.files = controller.getDataPaths().stream().map(p -> p.address().get()).collect(Collectors.toList());
+			}
 		}
 		this.dataSourcePluginUUID = controller.getDataSourcePluginUUID();
 		this.dataSourceParameters = controller.getDataSourceParameters();
@@ -49,10 +52,10 @@ public class SavedDataSession {
 		//controller.setDataSourceParameters(dataSourceParameters);
 	}
 	
-	public List<DataFile> filesAsDataPaths() {
+	List<DataFile> filesAsDataPaths() {
 		EventfulCache<Path> lazyDownload = new EventfulNullableCache<>(DataFiles::createDownloadDirectory);
 		return this.files.stream()
-				.map(s -> DataFiles.construct(s, lazyDownload::getValue))
+				.map(f -> DataFiles.construct(f, lazyDownload::getValue))
 				.collect(Collectors.toList());
 	}
 	

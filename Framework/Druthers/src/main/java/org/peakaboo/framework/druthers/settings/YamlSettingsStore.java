@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.druthers.Druthers;
-import org.peakaboo.framework.druthers.serialize.YamlSerializer;
+import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 
 public class YamlSettingsStore implements SettingsStore {
 
@@ -46,12 +46,12 @@ public class YamlSettingsStore implements SettingsStore {
 		}
 		String yaml = Files.readString(filepath);
 		
-		if (YamlSerializer.hasFormat(yaml)) {
-			values = YamlSerializer.deserialize(yaml, SettingsStoreYaml.class, false, FORMAT).entries;
+		if (DruthersSerializer.hasFormat(yaml)) {
+			values = DruthersSerializer.deserialize(yaml, false, FORMAT, SettingsStoreYaml.class).entries;
 		} else {
 			//This is an older P5 settings file
 			//TODO: remove this in Peakaboo 7
-			values = YamlSerializer.deserialize(yaml, KeyValueStore.class, false);
+			values = DruthersSerializer.deserialize(yaml, false, KeyValueStore.class);
 		}
 		
 	}
@@ -68,7 +68,7 @@ public class YamlSettingsStore implements SettingsStore {
 	}
 	
 	private void write() {
-		String yaml = YamlSerializer.serialize(new SettingsStoreYaml(FORMAT, values));
+		String yaml = DruthersSerializer.serialize(new SettingsStoreYaml(FORMAT, values));
 		try {
 			Files.writeString(filepath, yaml, 
 					StandardOpenOption.CREATE, 

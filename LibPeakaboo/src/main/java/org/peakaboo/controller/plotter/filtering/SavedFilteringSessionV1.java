@@ -9,13 +9,13 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.filter.model.SerializedFilter;
 
-public class SavedFilteringSession {
+public class SavedFilteringSessionV1 {
 	
 	
 	public List<SerializedFilter> filters = new ArrayList<>();
 	
 	
-	public SavedFilteringSession storeFrom(FilteringController controller) {
+	public SavedFilteringSessionV1 storeFrom(FilteringController controller) {
 		for (Filter filter : controller.filteringModel.filters) {
 			this.filters.add(new SerializedFilter(filter));
 		}

@@ -56,6 +56,11 @@ public class URLDataFile implements DataFile {
 	}
 
 	@Override
+	public String getFullyQualifiedFilename() {
+		return url.toExternalForm();
+	}
+	
+	@Override
 	public InputStream getInputStream() throws IOException {
 		return url.openStream();
 	}

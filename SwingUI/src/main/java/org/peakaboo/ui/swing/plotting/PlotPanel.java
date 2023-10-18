@@ -18,8 +18,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,7 +41,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.app.Settings;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
@@ -680,7 +677,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionSaveSession(File file) {
 		try (FileOutputStream os = new FileOutputStream(file)) {
-			os.write(controller.getSavedSettings().serialize().getBytes());
+			os.write(controller.save().serialize().getBytes());
 			controller.history().setSavePoint();
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);

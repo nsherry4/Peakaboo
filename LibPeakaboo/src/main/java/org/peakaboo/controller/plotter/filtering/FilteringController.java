@@ -1,11 +1,14 @@
 package org.peakaboo.controller.plotter.filtering;
 
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.eventful.Eventful;
@@ -147,6 +150,24 @@ public class FilteringController extends Eventful
 	
 	public Map<Filter, ReadOnlySpectrum> getFilterDeltas() {
 		return filteringModel.filterDeltas.getValue();
+	}
+
+	public List<SavedPlugin> save() {
+		return filteringModel.filters.getFilters().stream().map(Filter::save).toList();
+	}
+
+	public void load(List<SavedPlugin> saved) {
+		var filters = filteringModel.filters;
+		filters.clear();
+		for (var s : saved) {
+			var proto = FilterPluginManager.system().getByUUID(s.uuid);
+			if (proto == null) {
+				PeakabooLog.get().warning("Failed to load plugin '" + s.uuid + "'");
+			}
+			var filter = proto.create();
+			filter.getParameterGroup().deserialize(s.settings);
+			filters.add(filter);
+		}
 	}
 
 

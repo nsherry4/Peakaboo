@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.framework.eventful.cache.EventfulCache;
+import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 /**
  * A DataFile is a representation of data that does not necessarily exist on
@@ -33,6 +36,8 @@ public interface DataFile extends AutoCloseable {
 	 * Gets a relative filename for this DataFile.
 	 */
 	String getFilename();
+	
+	String getFullyQualifiedFilename();
 	
 	/**
 	 * Gets the filename without the extension
@@ -63,6 +68,14 @@ public interface DataFile extends AutoCloseable {
 		if (shared.length() > 2) return shared;
 		return datafiles.get(0).getBasename();
 	}
+
+	static List<DataFile> fromFilenames(List<String> filenames) {
+		EventfulCache<Path> lazyDownload = new EventfulNullableCache<>(DataFiles::createDownloadDirectory);
+		return filenames.stream()
+				.map(f -> DataFiles.construct(f, lazyDownload::getValue))
+				.collect(Collectors.toList());
+	}
+	
 	
 	default List<String> toLines() throws IOException {
 		return this.toLines(null);

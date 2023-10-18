@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +24,8 @@ import org.peakaboo.controller.plotter.notification.NotificationController.Notic
 import org.peakaboo.controller.plotter.undo.UndoController;
 import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
+import org.peakaboo.controller.session.v2.SavedAppData;
+import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.DelegatingROFittingSet;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
@@ -32,6 +35,7 @@ import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -94,14 +98,34 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 
 	
-	public SavedSession getSavedSettings() {
-		return SavedSession.storeFrom(this);
+	public SavedSessionV1 getSavedSettings() {
+		return SavedSessionV1.storeFrom(this);
+	}
+	
+	public SavedSession save() {
+		return new SavedSession(
+			dataController.save(), 
+			filteringController.save(), 
+			fittingController.save(), 
+			viewController.getViewModel(), 
+			SavedAppData.current(), 
+			new LinkedHashMap<>()
+		);
+	}
+	
+	public void load(SavedSession saved, boolean isUndoAction) {
+		if (!isUndoAction) undoController.setUndoPoint("Load Session");
+		data().load(saved.data);
+		filtering().load(saved.filters);
+		fitting().load(saved.fittings);
+		view().getViewModel().copy(saved.view);
+		//TODO: Metadata -- somehow tie in tier?
 	}
 	
 	
-	public static Optional<SavedSession> readSavedSettings(String yaml) {
+	public static Optional<SavedSessionV1> readSavedSettings(String yaml) {
 		try {
-			return Optional.of(SavedSession.deserialize(yaml, SavedSession.class, false));
+			return Optional.of(DruthersSerializer.deserialize(yaml, SavedSessionV1.class));
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.WARNING, "Failed to load saved session", e);
 			return Optional.empty();
@@ -110,7 +134,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 	
 	public void loadSettings(String data, boolean isUndoAction) {
-		Optional<SavedSession> optSaved = readSavedSettings(data);
+		Optional<SavedSessionV1> optSaved = readSavedSettings(data);
 		if (optSaved.isEmpty()) {
 			throw new RuntimeException("Settings could not be transferred to new context");
 		} else {
@@ -119,7 +143,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 	
 	
-	public void loadSessionSettings(SavedSession saved, boolean isUndoAction) {
+	public void loadSessionSettings(SavedSessionV1 saved, boolean isUndoAction) {
 		if (!isUndoAction) undoController.setUndoPoint("Load Session");
 		
 		List<String> errors = saved.loadInto(this);

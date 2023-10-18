@@ -3,15 +3,15 @@ package org.peakaboo.curvefit.curve.fitting;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.controller.session.v2.SavedFittingParameters;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
-import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.fitting.EscapeFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.curvefit.peak.transition.TransitionShell;
 
 public class FittingParameters implements ROFittingParameters {
 
@@ -165,6 +165,16 @@ public class FittingParameters implements ROFittingParameters {
 	public void setShowEscapePeaks(boolean showEscapePeaks) {
 		this.showEscapePeaks = showEscapePeaks;
 		invalidate();
+	}
+
+	public SavedFittingParameters save() {
+		return new SavedFittingParameters(
+				calibration.getMinEnergy(), 
+				calibration.getMaxEnergy(), 
+				detectorMaterial.name(), 
+				fwhmBase, 
+				showEscapePeaks
+			);
 	}
 
 }

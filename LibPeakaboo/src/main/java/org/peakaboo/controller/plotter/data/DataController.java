@@ -12,6 +12,8 @@ import java.util.function.Consumer;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.discards.Discards;
 import org.peakaboo.controller.plotter.data.discards.DiscardsList;
+import org.peakaboo.controller.session.v2.SavedData;
+import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.EmptyDataSet;
@@ -250,6 +252,27 @@ public class DataController extends Eventful
 	public void setTitle(String title) {
 		this.title = title;
 		updateListeners();
+	}
+
+
+	public SavedData save() {
+		return new SavedData(
+			discards.list(), 
+			dataPaths.stream().map(df -> df.getFullyQualifiedFilename()).toList(), 
+			new SavedPlugin(getDataSourcePluginUUID(), getDataSourceParameters()), 
+			title
+		);
+	}
+
+
+	public void load(SavedData data) {
+		this.discards.clear();
+		for (int i : data.discards) {
+			this.discards.discard(i);
+		}
+		this.setDataSourcePluginUUID(data.datasource.uuid);
+		this.setDataPaths(DataFile.fromFilenames(data.files));
+		this.setTitle(data.title);
 	}
 	
 }

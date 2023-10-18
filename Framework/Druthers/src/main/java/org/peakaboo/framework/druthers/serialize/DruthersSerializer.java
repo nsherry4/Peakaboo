@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
@@ -16,15 +17,26 @@ import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
-public class YamlSerializer {
+public class DruthersSerializer {
 
 	
 	/**
 	 * Decodes a yaml document to a specific class. 
 	 */
+	@Deprecated
 	public static <T extends Object> T deserialize(String yaml, Class<T> cls) {
-		return deserialize(yaml, cls, true);
+		return deserialize(yaml, false, cls);
 	}
+	
+	
+	/**
+	 * Decodes a yaml document to a specific class. Useful for reading yaml documents without !! java class hints 
+	 */
+	@Deprecated
+	public static <T extends Object> T deserialize(File file, Class<T> cls) throws IOException, DruthersLoadException {
+		return deserialize(new String(Files.readAllBytes(file.toPath())), cls);
+	}
+	
 	
 	/**
 	 * Decodes a yaml document to a specific class. In strict mode:<br/>
@@ -38,8 +50,9 @@ public class YamlSerializer {
 	 * As a general rule, if the app (or plugin) provides the file then use strict
 	 * mode. If the user supplies the file, strongly consider non-strict mode.
 	 */
-	public static <T extends Object> T deserialize(String yaml, Class<T> cls, boolean strict) {
-		return deserialize(yaml, cls, strict, null);
+	@Deprecated
+	public static <T extends Object> T deserialize(String yaml, boolean strict, Class<T> cls) throws DruthersLoadException {
+		return deserialize(yaml, strict, null, cls);
 	}
 	
 	/**
@@ -56,31 +69,53 @@ public class YamlSerializer {
 	 * <br/><br/>
 	 * When given a format String, the "format" field will be compared during loading.
 	 */
-	public static <T extends Object> T deserialize(String yaml, Class<T> cls, boolean strict, String format) {
+	public static <T extends Object> T deserialize(String yaml, boolean strict, String format, Class<T> cls) throws DruthersLoadException {
 		yaml = deserializeChecks(yaml, strict, format);
 		return deserialize(yaml, buildLoader(cls, strict));
 	}
 	
-	public static <T extends Object> T deserialize(String yaml, boolean strict, Map<String, Class<T>> formats) {
+	public record FormatLoader<T> (String format, Class<T> cls, Consumer<T> callback) {
+		void load(String yaml, boolean strict) {
+			T loaded = deserialize(yaml, strict, format, cls);
+			callback.accept(loaded);
+		}
+	};
+	
+	public static boolean deserialize(String yaml, boolean strict, List<FormatLoader<?>> formats) throws DruthersLoadException {
 		
+		//Figure out the format in this file
 		String format = null;
-		Class<T> cls = null;
 		if (hasFormat(yaml)) {
 			format = getFormat(yaml);
-			if (!formats.containsKey(format)) {
-				throw new DruthersLoadException("File format '" + format + "' not supported");
-			}
-			cls = formats.get(format);
-		} else if (formats.containsKey(null)) {
-			format = null;
-			cls = formats.get(null);
+		} else {
+			format = "";
 		}
 		
+		//Use the format to pick a loader
+		FormatLoader<?> loader = null;
+		for (var l : formats) {
+			if (format.equals(l.format)) {
+				loader = l;
+				break;
+			}
+		}
+		
+		//Fail if there's no loader
+		if (loader == null) {
+			return false;
+		}
+		
+		//Remove some v5 !! artifacts and perform some checks
 		yaml = deserializeChecks(yaml, strict, format);
-		return deserialize(yaml, buildLoader(cls, strict));
+		
+		//Get the loader to try loading the file and running its callback
+		loader.load(yaml, strict);
+		
+		//Success
+		return true;
 	}
 	
-	public static <T extends Object> T deserialize(String yaml, Yaml y) {
+	private static <T extends Object> T deserialize(String yaml, Yaml y) {
 		try {
 			T loaded = y.load(yaml);
 			return loaded;
@@ -98,15 +133,10 @@ public class YamlSerializer {
 		return y;
 	}
 	
-	/**
-	 * Decodes a yaml document to a specific class. Useful for reading yaml documents without !! java class hints 
-	 */
-	public static <T extends Object> T deserialize(File file, Class<T> cls) throws IOException {
-		return deserialize(new String(Files.readAllBytes(file.toPath())), cls);
-	}
+
 	
 	
-	private static String deserializeChecks(String yaml, boolean strict, String format) {
+	private static String deserializeChecks(String yaml, boolean strict, String format) throws DruthersLoadException {
 
 		if (!strict) {
 			// Remove old !!org.peakaboo.Class identifiers, these are no longer accepted by the parser
@@ -131,7 +161,7 @@ public class YamlSerializer {
 	private static class Shallow extends HashMap<String, String> {};
 	
 	public static String getFormat(String yaml) {
-		Shallow shallow = deserialize(yaml, Shallow.class, false, null);
+		Shallow shallow = deserialize(yaml, false, null, Shallow.class);
 		String format = shallow.getOrDefault("format", null);
 		if (format != null) {
 			format = format.trim();

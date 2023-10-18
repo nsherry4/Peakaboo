@@ -29,6 +29,11 @@ public class PathDataFile implements DataFile {
 	public String getFilename() {
 		return path.getFileName().toString();
 	}
+	
+	@Override
+	public String getFullyQualifiedFilename() {
+		return path.toString();
+	}
 
 	@Override
 	public InputStream getInputStream() throws IOException {

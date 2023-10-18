@@ -22,7 +22,7 @@ import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.mapper.selection.MapSelectionController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.SavedSession;
+import org.peakaboo.controller.plotter.SavedSessionV1;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.display.map.MapRenderData;
@@ -129,7 +129,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 	}
 	
 	
-	public SavedSession getPlotSavedSettings() {
+	public SavedSessionV1 getPlotSavedSettings() {
 		return plotcontroller.getSavedSettings();
 	}
 	

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.peakaboo.controller.session.v2.SavedFitting;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.table.Element;
@@ -93,6 +94,9 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 	 * identify the TransitionSeries.
 	 */
 	String toIdentifierString();
+	default String getShellement() {
+		return toIdentifierString();
+	}
 
 	/**
 	 * Returns a list of {@link PrimaryTransitionSeries} which compose this TransitionSeries. If this is a primary transition series, it returns itself within a list.
@@ -149,6 +153,9 @@ public interface ITransitionSeries extends Iterable<Transition>, Comparable<ITra
 
 	}
 
-	
+	default SavedFitting save() {
+		return new SavedFitting(getShellement(), this.isVisible());
+	}
+
 	
 }

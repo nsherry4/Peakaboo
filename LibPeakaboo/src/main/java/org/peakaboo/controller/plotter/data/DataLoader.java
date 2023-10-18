@@ -12,7 +12,8 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.SavedSession;
+import org.peakaboo.controller.plotter.SavedSessionV1;
+import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
@@ -23,6 +24,7 @@ import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.util.StringInput;
+import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 
@@ -194,75 +196,151 @@ public abstract class DataLoader {
 			}
 			sessionFile = datafiles.get(0).getAndEnsurePath().toFile();
 			
-			Optional<SavedSession> optSession = PlotController.readSavedSettings(StringInput.contents(sessionFile));
-			
-			if (!optSession.isPresent()) {
-				onSessionFailure();
-				return;
-			}
-			
-			SavedSession session = optSession.get();
-			
-			
-			//chech if the session is from a newer version of Peakaboo, and warn if it is
-			Runnable warnVersion = () -> {
-				if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) < 0) {
-					onSessionNewer();
-				}
-			};
-			
-			List<DataFile> currentPaths = controller.data().getDataPaths();
-			List<DataFile> sessionPaths = session.data.filesAsDataPaths();
-			
-			//Verify all paths exist
-			boolean sessionPathsExist = true;
-			for (DataFile d : sessionPaths) {
-				if (d == null) {
-					sessionPathsExist = false;
-					break;
-				}
-				sessionPathsExist &= d.exists();
-			}
-			
-			//If the data files in the saved session are different, offer to load the data set from the new session
-			if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
+			String contents = StringInput.contents(sessionFile);
+			if (DruthersSerializer.hasFormat(contents)) {
+				DruthersSerializer.deserialize(contents, false, List.of(
+					new DruthersSerializer.FormatLoader<>(
+							SavedSession.FORMAT, 
+							SavedSession.class, 
+							this::loadV2Session
+						)
+				));
 				
-				onSessionHasData(sessionFile, load -> {
-					if (load) {
-						//they said yes, load the new data, and then apply the session
-						//this needs to be done this way b/c loading a new dataset wipes out
-						//things like calibration info
-						this.datafiles = sessionPaths;
-						this.dataSourceUUID = session.data.dataSourcePluginUUID;
-						this.sessionParameters = session.data.dataSourceParameters;
-						sessionCallback = () -> {
-							controller.loadSessionSettings(session, true);	
-							warnVersion.run();
-						};
-						load();
-					} else {
-						//load the settings w/o the data, then set the file paths back to the current values
-						controller.loadSessionSettings(session, true);
-						//they said no, reset the stored paths to the old ones
-						controller.data().setDataPaths(currentPaths);
-						warnVersion.run();
-					}
-					controller.io().setSessionFile(sessionFile);
-				});
-				
-								
 			} else {
-				//just load the session, as there is either no data associated with it, or it's the same data
-				controller.loadSessionSettings(session, true);
-				warnVersion.run();
-				controller.io().setSessionFile(sessionFile);
+				Optional<SavedSessionV1> optSession = PlotController.readSavedSettings(contents);
+				// If we failed to load the session
+				if (!optSession.isPresent()) {
+					onSessionFailure();
+					return;
+				}
+				loadV1Session(optSession.get());
+				
 			}
-			
 
 			
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
 		}
+	}
+	
+	
+	private void loadV2Session(SavedSession session) {
+
+		
+		//chech if the session is from a newer version of Peakaboo, and warn if it is
+		Runnable warnVersion = () -> {
+			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.app.version) < 0) {
+				onSessionNewer();
+			}
+		};
+		
+		List<DataFile> currentPaths = controller.data().getDataPaths();
+		List<DataFile> sessionPaths = DataFile.fromFilenames(session.data.files);
+		
+		//Verify all paths exist
+		boolean sessionPathsExist = true;
+		for (DataFile d : sessionPaths) {
+			if (d == null) {
+				sessionPathsExist = false;
+				break;
+			}
+			sessionPathsExist &= d.exists();
+		}
+		
+		//If the data files in the saved session are different, offer to load the data set from the new session
+		if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
+			
+			onSessionHasData(sessionFile, load -> {
+				if (load) {
+					//they said yes, load the new data, and then apply the session
+					//this needs to be done this way b/c loading a new dataset wipes out
+					//things like calibration info
+					this.datafiles = sessionPaths;
+					this.dataSourceUUID = session.data.datasource.uuid;
+					this.sessionParameters = session.data.datasource.settings;
+					sessionCallback = () -> {
+						controller.load(session, true);
+						warnVersion.run();
+					};
+					load();
+				} else {
+					//load the settings w/o the data, then set the file paths back to the current values
+					controller.load(session, true);
+					//they said no, reset the stored paths to the old ones
+					controller.data().setDataPaths(currentPaths);
+					warnVersion.run();
+				}
+				controller.io().setSessionFile(sessionFile);
+			});
+			
+							
+		} else {
+			//just load the session, as there is either no data associated with it, or it's the same data
+			controller.load(session, true);
+			warnVersion.run();
+			controller.io().setSessionFile(sessionFile);
+		}
+		
+	}
+	
+	private void loadV1Session(SavedSessionV1 session) {
+		
+
+		
+		//chech if the session is from a newer version of Peakaboo, and warn if it is
+		Runnable warnVersion = () -> {
+			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) < 0) {
+				onSessionNewer();
+			}
+		};
+		
+		List<DataFile> currentPaths = controller.data().getDataPaths();
+		List<DataFile> sessionPaths = session.data.filesAsDataPaths();
+		
+		//Verify all paths exist
+		boolean sessionPathsExist = true;
+		for (DataFile d : sessionPaths) {
+			if (d == null) {
+				sessionPathsExist = false;
+				break;
+			}
+			sessionPathsExist &= d.exists();
+		}
+		
+		//If the data files in the saved session are different, offer to load the data set from the new session
+		if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
+			
+			onSessionHasData(sessionFile, load -> {
+				if (load) {
+					//they said yes, load the new data, and then apply the session
+					//this needs to be done this way b/c loading a new dataset wipes out
+					//things like calibration info
+					this.datafiles = sessionPaths;
+					this.dataSourceUUID = session.data.dataSourcePluginUUID;
+					this.sessionParameters = session.data.dataSourceParameters;
+					sessionCallback = () -> {
+						controller.loadSessionSettings(session, true);	
+						warnVersion.run();
+					};
+					load();
+				} else {
+					//load the settings w/o the data, then set the file paths back to the current values
+					controller.loadSessionSettings(session, true);
+					//they said no, reset the stored paths to the old ones
+					controller.data().setDataPaths(currentPaths);
+					warnVersion.run();
+				}
+				controller.io().setSessionFile(sessionFile);
+			});
+			
+							
+		} else {
+			//just load the session, as there is either no data associated with it, or it's the same data
+			controller.loadSessionSettings(session, true);
+			warnVersion.run();
+			controller.io().setSessionFile(sessionFile);
+		}
+		
 	}
 
 	public abstract void onLoading(ExecutorSet<DatasetReadResult> job);

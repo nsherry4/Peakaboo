@@ -17,7 +17,7 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.SerializedTransitionSeries;
 
-public class SavedFittingSession {
+public class SavedFittingSessionV1 {
 
 	public List<SerializedTransitionSeries> fittings;
 	
@@ -45,7 +45,7 @@ public class SavedFittingSession {
 	public boolean showEscapePeaks=true;
 	
 	
-	public SavedFittingSession storeFrom(FittingController controller) {
+	public SavedFittingSessionV1 storeFrom(FittingController controller) {
 		
 		//Save fitting selections
 		fittings = controller.fittingModel.selections.getFittedTransitionSeries()

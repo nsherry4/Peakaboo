@@ -2,16 +2,17 @@ package org.peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.session.v2.SavedFittings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
@@ -532,6 +533,95 @@ public class FittingController extends EventfulType<Boolean>
 		data.highlightedTransitionSeries = getHighlightedTransitionSeries();
 		data.proposedTransitionSeries = getProposedTransitionSeries();
 		data.annotations = getAnnotations();
+	}
+
+	public SavedFittings save() {
+		
+		var fittings = fittingModel.selections.getFittedTransitionSeries().stream().map(ITransitionSeries::save).toList();
+		
+		Map<String, String> savedannos = this.fittingModel.annotations.entrySet().stream().collect(Collectors.toMap(
+				e -> e.getKey().getShellement(), 
+				e -> e.getValue()
+		));
+		
+		
+		this.fittingModel.annotations.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getShellement(), e-> e.getValue()));
+		
+		return new SavedFittings(
+			fittings, 
+			savedannos, 
+			getFittingSolver().getClass().getName(), //TODO: replace this 
+			getCurveFitter().getClass().getName(), //TODO: replace this
+			getFittingFunction().getName(), //TODO: replace this
+			fittingModel.selections.getFittingParameters().save()
+		);
+	}
+
+	public List<String> load(SavedFittings saved) {
+		
+		var errorlist = new ArrayList<String>();
+		
+		fittingModel.selections.clear();
+		clearAnnotations();
+		for (var fitting : saved.fittings) {
+			var ts = PeakTable.SYSTEM.get(fitting.shellement);
+			if (ts == null) { 
+				continue; 
+			}
+			//Add this ts to our list
+			fittingModel.selections.addTransitionSeries(ts);
+			//Check for an annotation. If it exists, add it.
+			if (saved.annotations.containsKey(fitting.shellement)) {
+				setAnnotation(ts, saved.annotations.get(fitting));
+			}
+		}
+		
+		
+		Class<? extends FittingSolver> fittingSolverClass;
+		try {
+			fittingSolverClass = (Class<? extends FittingSolver>) Class.forName(saved.solver);
+			fittingModel.fittingSolver = fittingSolverClass.getDeclaredConstructor().newInstance();
+		} catch (ReflectiveOperationException | RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + saved.solver, e);
+		}
+
+		
+		List<String> errors = new ArrayList<>();
+		
+		
+		//Restore CurveFitter
+		Class<? extends CurveFitterPlugin> curveFitterClass;
+		try {
+			curveFitterClass = (Class<? extends CurveFitterPlugin>) Class.forName(saved.fitter);
+			fittingModel.curveFitter = curveFitterClass.getDeclaredConstructor().newInstance();
+		} catch (ClassNotFoundException e) {
+			String[] parts = saved.fitter.split("\\.");
+			String shortname = parts[parts.length-1];
+			errors.add("Failed to find Curve Fitter " + shortname);
+		} catch (ReflectiveOperationException | RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + saved.fitter, e);
+		}
+		
+		//Restore the fitting function
+		Class<? extends FittingFunction> fittingFunctionClass ;
+		try {
+			fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(saved.model);
+			fittingModel.selections.getFittingParameters().setFittingFunction(fittingFunctionClass);
+			fittingModel.proposals.getFittingParameters().setFittingFunction(fittingFunctionClass);
+		} catch (ClassNotFoundException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + saved.model, e);
+		}
+		
+		
+		//We load all this here instead of a load method in FittingParameters because we track two
+		//of them, one for selections and one for proposed selections.
+		setMinMaxEnergy(saved.calibration.min, saved.calibration.max);
+		setDetectorMaterial(DetectorMaterialType.valueOf(saved.calibration.detectorMaterial));
+		setFWHMBase(saved.calibration.fwhmbase);
+		setShowEscapePeaks(saved.calibration.escapes);
+
+		return errors;
+		
 	}
 	
 	

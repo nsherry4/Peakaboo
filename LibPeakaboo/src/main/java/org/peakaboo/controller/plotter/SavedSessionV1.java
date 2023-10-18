@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.peakaboo.app.Version;
 import org.peakaboo.calibration.SavedCalibrationSession;
-import org.peakaboo.controller.plotter.data.SavedDataSession;
-import org.peakaboo.controller.plotter.filtering.SavedFilteringSession;
-import org.peakaboo.controller.plotter.fitting.SavedFittingSession;
+import org.peakaboo.controller.plotter.data.SavedDataSessionV1;
+import org.peakaboo.controller.plotter.filtering.SavedFilteringSessionV1;
+import org.peakaboo.controller.plotter.fitting.SavedFittingSessionV1;
 import org.peakaboo.controller.plotter.view.SessionViewModel;
 import org.peakaboo.framework.druthers.DruthersStorable;
 
@@ -16,11 +16,11 @@ import org.peakaboo.framework.druthers.DruthersStorable;
  * @author NAS
  *
  */
-public class SavedSession extends DruthersStorable {
+public class SavedSessionV1 implements DruthersStorable {
 
-	public SavedDataSession data;
-	public SavedFilteringSession filtering;
-	public SavedFittingSession fitting;
+	public SavedDataSessionV1 data;
+	public SavedFilteringSessionV1 filtering;
+	public SavedFittingSessionV1 fitting;
 	public SessionViewModel view;
 	public SavedCalibrationSession calibration;
 	public String version = Version.longVersionNo;
@@ -29,19 +29,19 @@ public class SavedSession extends DruthersStorable {
 	/**
 	 * Builds a SavedSession object from the model
 	 */
-	public static SavedSession storeFrom(PlotController plotController) {
+	public static SavedSessionV1 storeFrom(PlotController plotController) {
 		
-		SavedSession saved = new SavedSession();
+		SavedSessionV1 saved = new SavedSessionV1();
 		
 		
 		//store bad scans
-		saved.data = new SavedDataSession().storeFrom(plotController.data());
+		saved.data = new SavedDataSessionV1().storeFrom(plotController.data());
 		
 		//store filters
-		saved.filtering = new SavedFilteringSession().storeFrom(plotController.filtering());
+		saved.filtering = new SavedFilteringSessionV1().storeFrom(plotController.filtering());
 		
 		//store fittings
-		saved.fitting = new SavedFittingSession().storeFrom(plotController.fitting());
+		saved.fitting = new SavedFittingSessionV1().storeFrom(plotController.fitting());
 		
 		//store calibration
 		saved.calibration = plotController.calibration().toSaved();

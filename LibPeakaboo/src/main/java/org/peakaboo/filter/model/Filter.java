@@ -3,6 +3,7 @@ package org.peakaboo.filter.model;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -28,15 +29,14 @@ public interface Filter {
 	FilterDescriptor getFilterDescriptor();
 	
 	/**
+	 * Returns a UUID uniquely identifying this kind of filter -- not unique to this instance.
+	 */
+	String getFilterUUID();
+	
+	/**
 	 * Returns the parameters
 	 */
 	List<Value<?>> getParameters();
-
-	/**
-	 * Sets the parameters
-	 */
-	void setParameters(List<Value<?>> params);
-
 
 	default Group getParameterGroup() {
 		return new Group(getFilterName(), getParameters()); 
@@ -87,6 +87,11 @@ public interface Filter {
 	 */
 	default ReadOnlySpectrum filter(ReadOnlySpectrum data) {
 		return filter(data, Optional.empty());
+	}
+	
+	
+	default SavedPlugin save() {
+		return new SavedPlugin(getFilterUUID(), getParameterGroup().serialize());
 	}
 
 }
