@@ -24,7 +24,7 @@ public class DruthersSerializer {
 	 * Decodes a yaml document to a specific class. 
 	 */
 	@Deprecated
-	public static <T extends Object> T deserialize(String yaml, Class<T> cls) {
+	public static <T extends Object> T deserialize(String yaml, Class<T> cls) throws DruthersLoadException {
 		return deserialize(yaml, false, cls);
 	}
 	
@@ -75,7 +75,7 @@ public class DruthersSerializer {
 	}
 	
 	public record FormatLoader<T> (String format, Class<T> cls, Consumer<T> callback) {
-		void load(String yaml, boolean strict) {
+		void load(String yaml, boolean strict) throws DruthersLoadException {
 			T loaded = deserialize(yaml, strict, format, cls);
 			callback.accept(loaded);
 		}
@@ -115,7 +115,7 @@ public class DruthersSerializer {
 		return true;
 	}
 	
-	private static <T extends Object> T deserialize(String yaml, Yaml y) {
+	private static <T extends Object> T deserialize(String yaml, Yaml y) throws DruthersLoadException {
 		try {
 			T loaded = y.load(yaml);
 			return loaded;
@@ -161,7 +161,13 @@ public class DruthersSerializer {
 	private static class Shallow extends HashMap<String, String> {};
 	
 	public static String getFormat(String yaml) {
-		Shallow shallow = deserialize(yaml, false, null, Shallow.class);
+		Shallow shallow;
+		try {
+			shallow = deserialize(yaml, false, null, Shallow.class);
+		} catch (DruthersLoadException e) {
+			// If we can't read it, it might as well not have a format string
+			return null;
+		}
 		String format = shallow.getOrDefault("format", null);
 		if (format != null) {
 			format = format.trim();

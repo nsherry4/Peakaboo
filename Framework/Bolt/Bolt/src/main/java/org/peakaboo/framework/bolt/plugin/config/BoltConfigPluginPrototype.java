@@ -3,7 +3,6 @@ package org.peakaboo.framework.bolt.plugin.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-import java.util.function.Function;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
@@ -14,13 +13,13 @@ import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements BoltPluginPrototype<T> {
 
-	private Function<String, T> builder;
+	private BoltConfigPluginBuilder<T> builder;
 	private Class<T> pluginClass;
 	private T reference;
 	private BoltConfigContainer<T> container;
 	private BoltPluginManager<T> manager;
 	
-	public BoltConfigPluginPrototype(BoltPluginManager<T> manager, Function<String, T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
+	public BoltConfigPluginPrototype(BoltPluginManager<T> manager, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
 		this.container = container;
@@ -47,8 +46,9 @@ public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements Bo
 			Scanner s = new Scanner(stream).useDelimiter("\\A");
 			if (s.hasNext()) {
 				String config = s.next();
-				plugin = builder.apply(config);
+				plugin = builder.build(config);
 			} else {
+				s.close();
 				throw new IOException("Could not read file contents");
 			}
 			s.close();

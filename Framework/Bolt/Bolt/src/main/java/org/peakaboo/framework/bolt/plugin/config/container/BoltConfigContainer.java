@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.function.Function;
 
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
+import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginBuilder;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
@@ -19,7 +19,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	private BoltPluginSet<T> plugins;
 	private BoltPluginManager<T> manager;
 	
-	public BoltConfigContainer(BoltPluginManager<T> manager, URL url, Class<T> pluginClass, Function<String, T> builder, boolean deletable) {
+	public BoltConfigContainer(BoltPluginManager<T> manager, URL url, Class<T> pluginClass, BoltConfigPluginBuilder<T> builder, boolean deletable) {
 		super(url, deletable);
 		if (url == null) {
 			throw new NullPointerException("URL for config plugin was null");

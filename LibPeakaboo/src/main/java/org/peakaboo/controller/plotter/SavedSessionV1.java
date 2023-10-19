@@ -1,8 +1,11 @@
 package org.peakaboo.controller.plotter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.calibration.SavedCalibrationSession;
 import org.peakaboo.controller.plotter.data.SavedDataSessionV1;
@@ -74,7 +77,11 @@ public class SavedSessionV1 implements DruthersStorable {
 		if (this.calibration == null) {
 			this.calibration = new SavedCalibrationSession();
 		}
-		plotController.calibration().loadSaved(this.calibration);
+		try {
+			plotController.calibration().loadSaved(this.calibration);
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to load detector calibration session", e);
+		}
 		
 		
 		//restore view settings directly, since it's model is serializable
