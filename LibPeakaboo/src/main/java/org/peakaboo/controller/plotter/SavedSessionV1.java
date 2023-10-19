@@ -47,7 +47,7 @@ public class SavedSessionV1 implements DruthersStorable {
 		saved.fitting = new SavedFittingSessionV1().storeFrom(plotController.fitting());
 		
 		//store calibration
-		saved.calibration = plotController.calibration().toSaved();
+		saved.calibration = plotController.calibration().toSavedV1();
 		
 		//store view settings -- this is done differently, since view's session settings is itself serializable
 		saved.view = plotController.view().getViewModel();
@@ -78,7 +78,7 @@ public class SavedSessionV1 implements DruthersStorable {
 			this.calibration = new SavedCalibrationSession();
 		}
 		try {
-			plotController.calibration().loadSaved(this.calibration);
+			plotController.calibration().loadSavedV1(this.calibration);
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load detector calibration session", e);
 		}

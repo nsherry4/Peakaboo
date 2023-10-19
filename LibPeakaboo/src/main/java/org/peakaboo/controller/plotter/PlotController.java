@@ -103,13 +103,20 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 	
 	public SavedSession save() {
+		
+		var extended = new LinkedHashMap<String, Object>();
+		var calibration = calibrationController.save();
+		if (!calibration.isEmpty()) {
+			extended.putAll(calibration);
+		}
+		
 		return new SavedSession(
 			dataController.save(), 
 			filteringController.save(), 
 			fittingController.save(), 
 			viewController.getViewModel(), 
 			SavedAppData.current(), 
-			new LinkedHashMap<>()
+			extended
 		);
 	}
 	
@@ -119,7 +126,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		filtering().load(saved.filters);
 		fitting().load(saved.fittings);
 		view().getViewModel().copy(saved.view);
-		//TODO: Metadata -- somehow tie in tier?
+		calibration().load(saved.extended);
 	}
 	
 	

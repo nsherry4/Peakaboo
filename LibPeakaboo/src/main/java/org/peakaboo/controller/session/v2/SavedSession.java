@@ -18,7 +18,7 @@ public class SavedSession implements DruthersStorable {
 	public SavedFittings fittings;
 	public SessionViewModel view;
 	public SavedAppData app;
-	public Map<String, Object> metadata;
+	public Map<String, Object> extended;
 	
 	public SavedSession() {}
 	
@@ -28,7 +28,7 @@ public class SavedSession implements DruthersStorable {
 			SavedFittings fittings, 
 			SessionViewModel view,
 			SavedAppData app, 
-			LinkedHashMap<String, Object> metadata
+			LinkedHashMap<String, Object> extended
 		) {
 		this.format = FORMAT;
 		this.data = data;
@@ -36,7 +36,7 @@ public class SavedSession implements DruthersStorable {
 		this.fittings = fittings;
 		this.view = view;
 		this.app = app;
-		this.metadata = new LinkedHashMap<>(metadata);
+		this.extended = new LinkedHashMap<>(extended);
 		
 	}
 
