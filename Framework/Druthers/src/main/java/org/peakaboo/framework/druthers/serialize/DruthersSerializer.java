@@ -50,7 +50,6 @@ public class DruthersSerializer {
 	 * As a general rule, if the app (or plugin) provides the file then use strict
 	 * mode. If the user supplies the file, strongly consider non-strict mode.
 	 */
-	@Deprecated
 	public static <T extends Object> T deserialize(String yaml, boolean strict, Class<T> cls) throws DruthersLoadException {
 		return deserialize(yaml, strict, null, cls);
 	}
@@ -190,6 +189,14 @@ public class DruthersSerializer {
 		Yaml y = new Yaml(rep);
 		
 		return y.dumpAs(toSerialize, Tag.MAP, FlowStyle.BLOCK);
+	}
+
+	/**
+	 * Reinterpret a section of a data structure as a different class by serializing
+	 * the given object and deserializing as the given class.
+	 */
+	public static <T> T cast(Object generic, Class<T> cls) throws DruthersLoadException {
+		return deserialize(serialize(generic), false, cls);
 	}
 
 }
