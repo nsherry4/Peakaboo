@@ -1,6 +1,6 @@
 package org.peakaboo.calibration;
 
-public class SavedCalibrationSession {
+public class SavedCalibrationSessionV1 {
 
 	public String profileYaml;
 	public String profileFilename;

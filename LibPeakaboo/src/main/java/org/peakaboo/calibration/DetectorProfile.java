@@ -16,8 +16,8 @@ public interface DetectorProfile {
 
 	boolean isEmpty();
 
-	String save();
-	DetectorProfile load(String yaml) throws IOException;
+	String storeV1();
+	DetectorProfile loadV1(String yaml) throws IOException;
 	
 	public float calibrate(float value, ITransitionSeries ts);
 	default float calibratedSum(FittingResult fittingResult) {

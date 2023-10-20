@@ -7,7 +7,7 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
-import org.peakaboo.calibration.SavedCalibrationSession;
+import org.peakaboo.calibration.SavedCalibrationSessionV1;
 import org.peakaboo.controller.plotter.data.SavedDataSessionV1;
 import org.peakaboo.controller.plotter.filtering.SavedFilteringSessionV1;
 import org.peakaboo.controller.plotter.fitting.SavedFittingSessionV1;
@@ -25,7 +25,7 @@ public class SavedSessionV1 implements DruthersStorable {
 	public SavedFilteringSessionV1 filtering;
 	public SavedFittingSessionV1 fitting;
 	public SessionViewModel view;
-	public SavedCalibrationSession calibration;
+	public SavedCalibrationSessionV1 calibration;
 	public String version = Version.longVersionNo;
 	
 	
@@ -75,7 +75,7 @@ public class SavedSessionV1 implements DruthersStorable {
 		
 		//restore calibration information
 		if (this.calibration == null) {
-			this.calibration = new SavedCalibrationSession();
+			this.calibration = new SavedCalibrationSessionV1();
 		}
 		try {
 			plotController.calibration().loadSavedV1(this.calibration);

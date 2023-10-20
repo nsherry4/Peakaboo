@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.peakaboo.calibration.DetectorProfile;
-import org.peakaboo.calibration.SavedCalibrationSession;
+import org.peakaboo.calibration.SavedCalibrationSessionV1;
 import org.peakaboo.framework.eventful.IEventful;
 
 public interface CalibrationController extends IEventful {
@@ -13,9 +13,9 @@ public interface CalibrationController extends IEventful {
 	DetectorProfile getDetectorProfile();
 
 	@Deprecated(since="6", forRemoval = true)
-	public SavedCalibrationSession toSavedV1();
+	public SavedCalibrationSessionV1 toSavedV1();
 	@Deprecated(since="6", forRemoval = true)
-	public void loadSavedV1(SavedCalibrationSession saved) throws IOException;
+	public void loadSavedV1(SavedCalibrationSessionV1 saved) throws IOException;
 	
 	Map<String, Object> save();
 	void load(Map<String, Object> sessionExtended);

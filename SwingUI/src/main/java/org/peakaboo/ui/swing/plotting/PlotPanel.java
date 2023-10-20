@@ -738,7 +738,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (controller.calibration().hasDetectorProfile()) {
 				e = new ZipEntry("detector-profile.pbdp");
 				zos.putNextEntry(e);
-				String profileYaml = controller.calibration().getDetectorProfile().save();
+				String profileYaml = controller.calibration().getDetectorProfile().storeV1();
 				zos.write(profileYaml.getBytes());
 				zos.closeEntry();
 			}

@@ -40,12 +40,12 @@ public class BasicDetectorProfile implements DetectorProfile {
 	}
 
 	@Override
-	public String save() {
+	public String storeV1() {
 		return "";
 	}
 
 	@Override
-	public DetectorProfile load(String yaml) {
+	public DetectorProfile loadV1(String yaml) {
 		return this;
 	}
 	
