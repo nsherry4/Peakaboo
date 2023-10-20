@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -14,11 +15,33 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
+import org.yaml.snakeyaml.introspector.Property;
+import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
 public class DruthersSerializer {
 
+	private static class DruthersYamlRepresenter extends Representer {
+
+		public DruthersYamlRepresenter(DumperOptions options) {
+			super(options);
+		}
+		
+	    @Override
+	    protected MappingNode representJavaBean(Set<Property> props, Object bean) {
+	        //If we don't have a preferred form for a class set, set it to MAP now. 
+	    	var cls = bean.getClass();
+	    	if (!classTags.containsKey(cls)) {
+	            addClassTag(bean.getClass(), Tag.MAP);
+	        }
+	        MappingNode mapping = super.representJavaBean(props, bean);
+	        return mapping;
+	    }
+		
+		
+	}
+	
 	
 	/**
 	 * Decodes a yaml document to a specific class. 
@@ -185,7 +208,7 @@ public class DruthersSerializer {
 	public static String serialize(Object toSerialize) {
 		DumperOptions options = new DumperOptions();
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
-		var rep = new Representer(options);
+		var rep = new DruthersYamlRepresenter(options);
 		Yaml y = new Yaml(rep);
 		
 		return y.dumpAs(toSerialize, Tag.MAP, FlowStyle.BLOCK);

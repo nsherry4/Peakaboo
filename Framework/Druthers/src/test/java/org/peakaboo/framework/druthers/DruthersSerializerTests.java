@@ -1,6 +1,7 @@
-package druthers;
+package org.peakaboo.framework.druthers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -67,6 +68,17 @@ extended:
 	public void cast() throws DruthersLoadException {
 		YAML1 des = DruthersSerializer.deserialize(YAML1, true, YAML1.class);
 		Extended ext = DruthersSerializer.cast(des.extended, Extended.class);
+		assertEquals(ext.name, "extended");
+	}
+	
+	@DisplayName("Serialize")
+	@Test
+	public void serialize() throws DruthersLoadException {
+		YAML1 des = DruthersSerializer.deserialize(YAML1, true, YAML1.class);
+		String ser = DruthersSerializer.serialize(des);
+		assertFalse(ser.contains("!!"));
+		ser = DruthersSerializer.serialize(Map.of("key", des));
+		assertFalse(ser.contains("!!"));
 	}
 	
 	
