@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.MappingNode;
+import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -26,7 +28,30 @@ public class DruthersSerializer {
 
 		public DruthersYamlRepresenter(DumperOptions options) {
 			super(options);
+			
+			// We do this to prevent SnakeYAML from adding anchors and aliases for empty
+			// maps. From what I understand, SnakeYAML stores refs for maps to prevent
+			// infinite loops while serializing, but empty maps shouldn't have that problem.
+			this.multiRepresenters.put(Map.class, new RepresentMap() {
+				public Node representData(Object data) {
+					//Make the representation by calling super's mehtod
+					Node n = super.representData(data);
+					
+					// If this data really is a map, and the map is empty, then remove this object
+					// from the inventory of already-represented objects
+					if (data instanceof Map mapdata) {
+						if (mapdata.isEmpty()) {
+							representedObjects.remove(data);
+						}
+					}
+					
+					//Return our new node
+					return n;
+				 }
+			});
+			
 		}
+
 		
 	    @Override
 	    protected MappingNode representJavaBean(Set<Property> props, Object bean) {
