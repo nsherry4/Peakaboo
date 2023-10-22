@@ -17,7 +17,10 @@ public interface DetectorProfile {
 	boolean isEmpty();
 
 	String storeV1();
+	@Deprecated
 	DetectorProfile loadV1(String yaml) throws IOException;
+	
+	DetectorProfile load(String yaml) throws IOException;
 	
 	public float calibrate(float value, ITransitionSeries ts);
 	default float calibratedSum(FittingResult fittingResult) {

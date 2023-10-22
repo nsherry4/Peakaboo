@@ -1,6 +1,8 @@
 package org.peakaboo.calibration;
 
 
+import java.io.IOException;
+
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
@@ -46,6 +48,11 @@ public class BasicDetectorProfile implements DetectorProfile {
 
 	@Override
 	public DetectorProfile loadV1(String yaml) {
+		return this;
+	}
+
+	@Override
+	public DetectorProfile load(String yaml) throws IOException {
 		return this;
 	}
 	
