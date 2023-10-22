@@ -198,13 +198,13 @@ public abstract class DataLoader {
 			
 			String contents = StringInput.contents(sessionFile);
 			if (DruthersSerializer.hasFormat(contents)) {
-				DruthersSerializer.deserialize(contents, false, List.of(
+				DruthersSerializer.deserialize(contents, false,
 					new DruthersSerializer.FormatLoader<>(
 							SavedSession.FORMAT, 
 							SavedSession.class, 
 							this::loadV2Session
 						)
-				));
+				);
 				
 			} else {
 				Optional<SavedSessionV1> optSession = PlotController.readSavedSettings(contents);

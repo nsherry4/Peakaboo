@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -128,7 +127,15 @@ public class DruthersSerializer {
 		}
 	};
 	
-	public static boolean deserialize(String yaml, boolean strict, List<FormatLoader<?>> formats) throws DruthersLoadException {
+	/**
+	 * Accepts yaml and a set of {@link FormatLoader}s which provide strategies for
+	 * handling yaml with different `format` IDs. Attempts to match the document's
+	 * `format` to a FormatLoader and implement it's strategy. Each strategy may
+	 * have a different deserialized type, so instead of returning it, each loader
+	 * also supplies a callback {@link Consumer} which will be run on a successful
+	 * load. If there is no successful strategy, a DruthersLoadException is thrown.
+	 */
+	public static void deserialize(String yaml, boolean strict, FormatLoader<?>... formats) throws DruthersLoadException {
 		
 		//Figure out the format in this file
 		String format = null;
@@ -149,7 +156,7 @@ public class DruthersSerializer {
 		
 		//Fail if there's no loader
 		if (loader == null) {
-			return false;
+			throw new DruthersLoadException("Failed to deserialize, could not find loader for '" + format + "'");
 		}
 		
 		//Remove some v5 !! artifacts and perform some checks
@@ -159,7 +166,7 @@ public class DruthersSerializer {
 		loader.load(yaml, strict);
 		
 		//Success
-		return true;
+		return;
 	}
 	
 	private static <T extends Object> T deserialize(String yaml, Yaml y) throws DruthersLoadException {
