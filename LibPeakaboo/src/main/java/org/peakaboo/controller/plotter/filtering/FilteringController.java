@@ -152,6 +152,7 @@ public class FilteringController extends Eventful
 				PeakabooLog.get().warning("Failed to load plugin '" + s.uuid + "'");
 			}
 			var filter = proto.create();
+			filter.initialize();
 			filter.getParameterGroup().deserialize(s.settings);
 			filters.add(filter);
 		}
