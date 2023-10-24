@@ -747,7 +747,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			
 			e = new ZipEntry("session.peakaboo");
 			zos.putNextEntry(e);
-			zos.write(controller.getSavedSettings().serialize().getBytes());
+			zos.write(controller.save().serialize().getBytes());
 			zos.closeEntry();			
 			
 		} catch (IOException e) {
