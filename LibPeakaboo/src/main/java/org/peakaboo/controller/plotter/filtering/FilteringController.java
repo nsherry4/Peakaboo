@@ -147,14 +147,12 @@ public class FilteringController extends Eventful
 		var filters = filteringModel.filters;
 		filters.clear();
 		for (var s : saved) {
-			var proto = FilterPluginManager.system().getByUUID(s.uuid);
-			if (proto == null) {
+			var optFilter = FilterPluginManager.fromSaved(s);
+			if (optFilter.isPresent()) {
+				filters.add(optFilter.get());
+			} else {
 				PeakabooLog.get().warning("Failed to load plugin '" + s.uuid + "'");
 			}
-			var filter = proto.create();
-			filter.initialize();
-			filter.getParameterGroup().deserialize(s.settings);
-			filters.add(filter);
 		}
 	}
 

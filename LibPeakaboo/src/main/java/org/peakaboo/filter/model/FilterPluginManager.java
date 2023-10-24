@@ -1,9 +1,11 @@
 package org.peakaboo.filter.model;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
@@ -30,6 +32,7 @@ import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
+import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 
 public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 
@@ -48,6 +51,26 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 		return SYSTEM;
 	}
 
+	public static Optional<Filter> fromSaved(String saved) {
+		try {
+			SavedPlugin loaded = SavedPlugin.load(saved);
+			return fromSaved(loaded);
+		} catch (DruthersLoadException e) {
+			return Optional.empty();
+		}
+		
+	}
+	
+	public static Optional<Filter> fromSaved(SavedPlugin saved) {
+		var proto = FilterPluginManager.system().getByUUID(saved.uuid);
+		if (proto == null) {
+			return Optional.empty();
+		}
+		var filter = proto.create();
+		filter.initialize();
+		filter.getParameterGroup().deserialize(saved.settings);
+		return Optional.of(filter);
+	}
 	
 	
 	private BoltJavaBuiltinLoader<FilterPlugin> builtins;

@@ -9,10 +9,8 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterPluginManager;
-import org.peakaboo.filter.model.SerializedFilterV1;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
-import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
 import org.peakaboo.framework.autodialog.model.classinfo.SimpleClassInfo;
 import org.peakaboo.framework.autodialog.model.style.CoreStyle;
 import org.peakaboo.framework.autodialog.model.style.SimpleStyle;
@@ -20,7 +18,6 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.yaml.snakeyaml.Yaml;
 
 public class SubFilter extends AbstractFilter {
 
@@ -43,12 +40,10 @@ public class SubFilter extends AbstractFilter {
 		begin = new Parameter<>("Start Index", new IntegerStyle(), 0, this::validate);
 		end = new Parameter<>("Stop Index", new IntegerStyle(), 10, this::validate);
 		
-		Yaml yaml = new Yaml();
-		
-		ClassInfo<Filter> filterClassInfo = new SimpleClassInfo<>(
+		var filterClassInfo = new SimpleClassInfo<Filter>(
 				Filter.class, 
-				f -> yaml.dump(new SerializedFilterV1(f)), 
-				s -> yaml.<SerializedFilterV1>load(s).getFilter());
+				f -> f.save().serialize(), 
+				s -> FilterPluginManager.fromSaved(s).orElse(null));
 		
 		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0), filterClassInfo);
 		filter.setPossibleValues(filters);
