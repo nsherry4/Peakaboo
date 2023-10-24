@@ -1,7 +1,6 @@
 package org.peakaboo.ui.swing.app;
 
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
@@ -36,7 +35,11 @@ public class CrashHandler {
 	private Bugsnag bugsnag;
 	
 	public CrashHandler() {
-		this.bugsnag = new Bugsnag("4b9ef1b9c7b6851433ddaceb7155e2db", /*autosubmit=*/DesktopSettings.isCrashAutoreporting());
+		var devbuild = Version.releaseType != Version.ReleaseType.RELEASE;
+		boolean autosubmit=DesktopSettings.isCrashAutoreporting() || devbuild;
+
+		//Create a new BugSnag instance with our id
+		this.bugsnag = new Bugsnag("4b9ef1b9c7b6851433ddaceb7155e2db", autosubmit);
 		this.bugsnag.setReleaseStage(Version.releaseType.toString());
 		this.bugsnag.setAppVersion(Version.longVersionNo);
 		this.bugsnag.setSendThreads(true);		

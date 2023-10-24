@@ -16,6 +16,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
  * @author NAS
  *
  */
+@Deprecated(since = "6", forRemoval = true)
 public class SerializedFilter {
 
 
@@ -37,9 +38,10 @@ public class SerializedFilter {
 	private Map<String, Object> settingsMap;
 	
 	
-	
+	@Deprecated(since = "6", forRemoval = true)
 	public SerializedFilter() {	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public SerializedFilter(Filter filter) {
 		
 		this.filter = filter;
@@ -48,6 +50,7 @@ public class SerializedFilter {
 
 
 	//Only called by the (de)serializer
+	@Deprecated(since = "6", forRemoval = true)
 	public String getClazz() {
 		//prefer to reference filters by plugin UUID, which it *should* always have
 		if (filter instanceof BoltPlugin) {
@@ -57,11 +60,13 @@ public class SerializedFilter {
 	}
 
 	//Only called by the (de)serializer
+	@Deprecated(since = "6", forRemoval = true)
 	public void setClazz(String clazz) {
 		this.uuidOrClazz = clazz;
 	}
 
 	//Only called by the (de)serializer
+	@Deprecated(since = "6", forRemoval = true)
 	public Map<String, Object> getSettingsMap() {
 		return filter.getParameterGroup().serialize();
 	}
@@ -74,11 +79,13 @@ public class SerializedFilter {
 	}
 
 	//Only called by the (de)serializer
+	@Deprecated(since = "6", forRemoval = true)
 	public void setSettingsMap(Map<String, Object> settings) {
 		this.settingsMap = settings;
 		this.settings = null;
 	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public Filter getFilter() {
 		//If it already exists, just return it, otherwise build a filter
 		if (filter != null) { return filter; }
