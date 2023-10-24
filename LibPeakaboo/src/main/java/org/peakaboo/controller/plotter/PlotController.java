@@ -35,6 +35,7 @@ import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.Plural;
@@ -120,6 +121,22 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		);
 	}
 	
+	/**
+	 * Given a {@link SavedSession} in yaml form, read the saved session and load it's values
+	 */
+	public void load(String yaml, boolean isUndoAction) throws DruthersLoadException {
+		DruthersSerializer.deserialize(yaml, false,
+				new DruthersSerializer.FormatLoader<>(
+						SavedSession.FORMAT, 
+						SavedSession.class, 
+						saved -> load(saved, isUndoAction)
+					)
+			);
+	}
+	
+	/**
+	 * Load the values from this {@link SavedSession} into this controller's model
+	 */
 	public void load(SavedSession saved, boolean isUndoAction) {
 		if (!isUndoAction) undoController.setUndoPoint("Load Session");
 		data().load(saved.data);
@@ -130,6 +147,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 	
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public static Optional<SavedSessionV1> readSavedSettings(String yaml) {
 		try {
 			return Optional.of(DruthersSerializer.deserialize(yaml, SavedSessionV1.class));
@@ -140,17 +158,8 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 
 	
-	public void loadSettings(String data, boolean isUndoAction) {
-		Optional<SavedSessionV1> optSaved = readSavedSettings(data);
-		if (optSaved.isEmpty()) {
-			throw new RuntimeException("Settings could not be transferred to new context");
-		} else {
-			loadSessionSettings(optSaved.get(), isUndoAction);
-		}
-	}
-	
-	
-	public void loadSessionSettings(SavedSessionV1 saved, boolean isUndoAction) {
+	@Deprecated(since = "6", forRemoval = true)
+	public void loadSessionSettingsV1(SavedSessionV1 saved, boolean isUndoAction) {
 		if (!isUndoAction) undoController.setUndoPoint("Load Session");
 		
 		List<String> errors = saved.loadInto(this);

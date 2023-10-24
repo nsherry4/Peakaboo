@@ -185,7 +185,10 @@ public abstract class DataLoader {
 	}
 	
 	
-
+	/**
+	 * Attempt to find and load a saved Peakaboo session from the data files that
+	 * are being loaded. This method will attempt to load either a v1 or v2 session.
+	 */
 	private void loadSession() {
 		try {
 			//We don't want users saving a session loaded from /tmp
@@ -283,6 +286,7 @@ public abstract class DataLoader {
 		
 	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	private void loadV1Session(SavedSessionV1 session) {
 		
 
@@ -319,13 +323,13 @@ public abstract class DataLoader {
 					this.dataSourceUUID = session.data.dataSourcePluginUUID;
 					this.sessionParameters = session.data.dataSourceParameters;
 					sessionCallback = () -> {
-						controller.loadSessionSettings(session, true);	
+						controller.loadSessionSettingsV1(session, true);	
 						warnVersion.run();
 					};
 					load();
 				} else {
 					//load the settings w/o the data, then set the file paths back to the current values
-					controller.loadSessionSettings(session, true);
+					controller.loadSessionSettingsV1(session, true);
 					//they said no, reset the stored paths to the old ones
 					controller.data().setDataPaths(currentPaths);
 					warnVersion.run();
@@ -336,7 +340,7 @@ public abstract class DataLoader {
 							
 		} else {
 			//just load the session, as there is either no data associated with it, or it's the same data
-			controller.loadSessionSettings(session, true);
+			controller.loadSessionSettingsV1(session, true);
 			warnVersion.run();
 			controller.io().setSessionFile(sessionFile);
 		}

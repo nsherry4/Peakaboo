@@ -47,6 +47,7 @@ import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
+import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
@@ -550,13 +551,13 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	
 	
-	public void actionLoadSubsetDataSource(SubsetDataSource sds, String settings) {
+	public void actionLoadSubsetDataSource(SubsetDataSource sds, SavedSession settings) {
 		
 		Mutable<ModalLayer> layer = new Mutable<>();
 		
 		ExecutorSet<Boolean> loader = Plural.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
 			getController().data().setDataSource(sds, exec, execset::isAborted);
-			getController().loadSettings(settings, false);
+			getController().load(settings, false);
 			removeLayer(layer.get());
 			return true;
 		});

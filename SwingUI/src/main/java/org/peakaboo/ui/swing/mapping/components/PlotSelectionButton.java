@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import javax.swing.JFrame;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.controller.plotter.SavedSessionV1;
+import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
@@ -38,7 +38,7 @@ public class PlotSelectionButton extends FluentToolbarButton {
 		}
 		
 		SubsetDataSource sds = controller.getSelection().getSubsetDataSource();
-		SavedSessionV1 settings = controller.getPlotSavedSettings();
+		SavedSession settings = controller.getPlotSavedSettings();
 		
 		//update the bad scan indexes to match the new data source's indexing scheme
 		//TODO: Is there a better way to do this?
@@ -49,7 +49,7 @@ public class PlotSelectionButton extends FluentToolbarButton {
 			);
 	
 		PlotPanel subplot = new PlotPanel(plotter);
-		subplot.actionLoadSubsetDataSource(sds, settings.serialize());
+		subplot.actionLoadSubsetDataSource(sds, settings);
 		plotter.addActiveTab(subplot);
 		//Focus and un-minimize
 		JFrame plotWindow = plotter.getWindow();
