@@ -82,5 +82,22 @@ extended:
 	}
 	
 	
+	@DisplayName("Forward Compat")
+	@Test
+	public void foreward() throws DruthersLoadException {
+		YAML1 des = DruthersSerializer.deserialize("newkey: newvalue\n" + YAML1, false, YAML1.class);
+		assertEquals(des.name, "test");
+		assertEquals(des.list, List.of(1, 3, 5));
+		assertEquals(des.dict, Map.of("a", "A", "b", "B", "c", "C"));
+	}
+	
+	@DisplayName("Backward Compat")
+	@Test
+	public void backward() throws DruthersLoadException {
+		YAML1 des = DruthersSerializer.deserialize(YAML1.replace("name: test\n", ""), false, YAML1.class);
+		assertEquals(des.list, List.of(1, 3, 5));
+		assertEquals(des.dict, Map.of("a", "A", "b", "B", "c", "C"));
+	}
+	
 	
 }

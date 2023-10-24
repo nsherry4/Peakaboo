@@ -182,8 +182,13 @@ public class DruthersSerializer {
 	public static <T extends Object> Yaml buildLoader(Class<T> cls, boolean strict) {
 		var loaderopts = new LoaderOptions();
 		var constructor = new Constructor(cls, loaderopts);
-		constructor.getPropertyUtils().setSkipMissingProperties(strict);
-		Yaml y = new Yaml(constructor);
+		constructor.getPropertyUtils().setSkipMissingProperties(!strict);
+		
+		var dumperopts = new DumperOptions();
+		var representer = new DruthersYamlRepresenter(dumperopts);
+		representer.getPropertyUtils().setSkipMissingProperties(!strict);
+		
+		Yaml y = new Yaml(constructor, representer);
 		return y;
 	}
 	
