@@ -10,6 +10,7 @@ import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.eventful.Eventful;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
@@ -154,6 +155,15 @@ public class FilteringController extends Eventful
 				PeakabooLog.get().warning("Failed to load plugin '" + s.uuid + "'");
 			}
 		}
+	}
+
+	/**
+	 * Ideally this could be monitored by the controller itself, but the
+	 * {@link Group} returned by {@link Filter}s is ephemeral and cannot properly
+	 * track listeners
+	 */
+	public void filtersUpdated() {
+		plot.history().setUndoPoint("Filter Settings", false);
 	}
 
 

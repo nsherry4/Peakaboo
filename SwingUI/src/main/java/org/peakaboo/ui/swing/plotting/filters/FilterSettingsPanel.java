@@ -53,7 +53,10 @@ class FilterSettingsPanel extends ClearPanel {
 			var autopanel = new SwingAutoPanel(group, true, layout);  //SwingLayoutFactory.forGroup(filter.getParameterGroup()).getComponent();
 			autopanel.setBorder(Spacing.bSmall());
 			//Hook up our Parameter's event system to Peakaboo's
-			group.getValueHook().addListener(o -> controller.filteredDataInvalidated());
+			group.getValueHook().addListener(o -> {
+				controller.filtersUpdated();
+				controller.filteredDataInvalidated();
+			});
 			//Wrap for layout
 			component = new ClearPanel(new BorderLayout());
 			component.add(autopanel, BorderLayout.NORTH);
