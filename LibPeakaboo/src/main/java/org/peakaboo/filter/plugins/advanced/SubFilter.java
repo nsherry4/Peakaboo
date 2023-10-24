@@ -9,7 +9,7 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterPluginManager;
-import org.peakaboo.filter.model.SerializedFilter;
+import org.peakaboo.filter.model.SerializedFilterV1;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
 import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
@@ -47,8 +47,8 @@ public class SubFilter extends AbstractFilter {
 		
 		ClassInfo<Filter> filterClassInfo = new SimpleClassInfo<>(
 				Filter.class, 
-				f -> yaml.dump(new SerializedFilter(f)), 
-				s -> yaml.<SerializedFilter>load(s).getFilter());
+				f -> yaml.dump(new SerializedFilterV1(f)), 
+				s -> yaml.<SerializedFilterV1>load(s).getFilter());
 		
 		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0), filterClassInfo);
 		filter.setPossibleValues(filters);

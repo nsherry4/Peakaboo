@@ -33,6 +33,7 @@ public class SavedSessionV1 implements DruthersStorable {
 	/**
 	 * Builds a SavedSession object from the model
 	 */
+	@Deprecated(since = "6", forRemoval = true)
 	public static SavedSessionV1 storeFrom(PlotController plotController) {
 		
 		SavedSessionV1 saved = new SavedSessionV1();

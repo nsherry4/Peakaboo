@@ -17,7 +17,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
  *
  */
 @Deprecated(since = "6", forRemoval = true)
-public class SerializedFilter {
+public class SerializedFilterV1 {
 
 
 	private Filter filter;
@@ -39,10 +39,10 @@ public class SerializedFilter {
 	
 	
 	@Deprecated(since = "6", forRemoval = true)
-	public SerializedFilter() {	}
+	public SerializedFilterV1() {	}
 	
 	@Deprecated(since = "6", forRemoval = true)
-	public SerializedFilter(Filter filter) {
+	public SerializedFilterV1(Filter filter) {
 		
 		this.filter = filter;
 		

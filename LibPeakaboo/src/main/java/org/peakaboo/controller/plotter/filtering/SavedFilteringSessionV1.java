@@ -7,19 +7,19 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
-import org.peakaboo.filter.model.SerializedFilter;
+import org.peakaboo.filter.model.SerializedFilterV1;
 
 @Deprecated(since = "6", forRemoval = true)
 public class SavedFilteringSessionV1 {
 	
 	
-	public List<SerializedFilter> filters = new ArrayList<>();
+	public List<SerializedFilterV1> filters = new ArrayList<>();
 	
 	
 	@Deprecated(since = "6", forRemoval = true)
 	public SavedFilteringSessionV1 storeFrom(FilteringController controller) {
 		for (Filter filter : controller.filteringModel.filters) {
-			this.filters.add(new SerializedFilter(filter));
+			this.filters.add(new SerializedFilterV1(filter));
 		}
 		return this;
 	}
@@ -28,7 +28,7 @@ public class SavedFilteringSessionV1 {
 	public void loadInto(FilteringController controller) {
 		FilterSet filterset = controller.getFilteringModel().filters;
 		filterset.clear();
-		for (SerializedFilter f : this.filters) {
+		for (SerializedFilterV1 f : this.filters) {
 			try {
 				filterset.add(f.getFilter());
 			} catch (Exception e) {
