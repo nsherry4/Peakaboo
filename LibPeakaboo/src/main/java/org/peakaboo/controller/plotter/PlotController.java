@@ -99,6 +99,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public SavedSessionV1 getSavedSettings() {
 		return SavedSessionV1.storeFrom(this);
 	}

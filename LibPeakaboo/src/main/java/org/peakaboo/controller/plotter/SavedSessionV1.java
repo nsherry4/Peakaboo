@@ -19,6 +19,7 @@ import org.peakaboo.framework.druthers.DruthersStorable;
  * @author NAS
  *
  */
+@Deprecated(since = "6", forRemoval = true)
 public class SavedSessionV1 implements DruthersStorable {
 
 	public SavedDataSessionV1 data;
@@ -60,6 +61,7 @@ public class SavedSessionV1 implements DruthersStorable {
 	/**
 	 * applies serialized preferences to the model
 	 */
+	@Deprecated(since = "6", forRemoval = true)
 	public List<String> loadInto(PlotController plotController) {
 		
 		List<String> errors = new ArrayList<>();

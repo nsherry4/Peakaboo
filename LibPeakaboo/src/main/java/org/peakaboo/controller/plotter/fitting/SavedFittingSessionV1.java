@@ -17,6 +17,7 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.SerializedTransitionSeries;
 
+@Deprecated(since = "6", forRemoval = true)
 public class SavedFittingSessionV1 {
 
 	public List<SerializedTransitionSeries> fittings;

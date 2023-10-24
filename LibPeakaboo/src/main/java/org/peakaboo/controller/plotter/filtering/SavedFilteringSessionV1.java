@@ -9,12 +9,14 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.filter.model.SerializedFilter;
 
+@Deprecated(since = "6", forRemoval = true)
 public class SavedFilteringSessionV1 {
 	
 	
 	public List<SerializedFilter> filters = new ArrayList<>();
 	
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public SavedFilteringSessionV1 storeFrom(FilteringController controller) {
 		for (Filter filter : controller.filteringModel.filters) {
 			this.filters.add(new SerializedFilter(filter));
@@ -22,6 +24,7 @@ public class SavedFilteringSessionV1 {
 		return this;
 	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public void loadInto(FilteringController controller) {
 		FilterSet filterset = controller.getFilteringModel().filters;
 		filterset.clear();

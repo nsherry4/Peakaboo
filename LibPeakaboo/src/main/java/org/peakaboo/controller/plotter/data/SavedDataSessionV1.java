@@ -11,6 +11,7 @@ import org.peakaboo.dataset.source.model.datafile.DataFiles;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
+@Deprecated(since = "6", forRemoval = true)
 public class SavedDataSessionV1 {
 
 	public List<Integer> discards = new ArrayList<>();
@@ -33,6 +34,7 @@ public class SavedDataSessionV1 {
 		return this;
 	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	public void loadInto(DataController controller) {
 		controller.getDiscards().clear();
 		for (int i : discards) {
@@ -52,6 +54,7 @@ public class SavedDataSessionV1 {
 		//controller.setDataSourceParameters(dataSourceParameters);
 	}
 	
+	@Deprecated(since = "6", forRemoval = true)
 	List<DataFile> filesAsDataPaths() {
 		EventfulCache<Path> lazyDownload = new EventfulNullableCache<>(DataFiles::createDownloadDirectory);
 		return this.files.stream()
