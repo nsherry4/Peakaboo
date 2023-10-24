@@ -30,7 +30,7 @@ public class ViewController extends Eventful {
 	}
 
 	private void setUndoPoint(String change) {
-		plot.history().setUndoPoint(change);
+		plot.history().setUndoPoint(change, /* distinctChange = */ true);
 	}
 	
 

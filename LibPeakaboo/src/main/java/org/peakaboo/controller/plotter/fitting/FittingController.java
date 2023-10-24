@@ -75,9 +75,14 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel;
 	}
 	
-	private void setUndoPoint(String change)
+	
+	private void setUndoPoint(String change) {
+		this.setUndoPoint(change, true);
+	}
+	
+	private void setUndoPoint(String change, boolean distinctChange)
 	{
-		plot.history().setUndoPoint(change);
+		plot.history().setUndoPoint(change, distinctChange);
 	}
 	
 	
@@ -151,7 +156,7 @@ public class FittingController extends EventfulType<Boolean>
 	
 	public void setAllTransitionSeriesVisibility(boolean show) {
 		fittingModel.selections.setAllTransitionSeriesVisibility(show);
-		setUndoPoint("Fitting Visiblitiy");
+		setUndoPoint("Fittings Visiblitiy");
 		fittingDataInvalidated();
 	}
 
@@ -178,22 +183,6 @@ public class FittingController extends EventfulType<Boolean>
 		
 	}
 
-
-
-	public void moveTransitionSeriesUp(List<ITransitionSeries> tss)
-	{
-		fittingModel.selections.moveTransitionSeriesUp(tss);
-		setUndoPoint("Move Fitting Up");
-		fittingDataInvalidated();
-	}
-	
-
-	public void moveTransitionSeriesDown(List<ITransitionSeries> tss)
-	{
-		fittingModel.selections.moveTransitionSeriesDown(tss);
-		setUndoPoint("Move Fitting Down");
-		fittingDataInvalidated();
-	}
 
 	public void fittingDataInvalidated()
 	{
@@ -322,7 +311,7 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.proposals.getFittingParameters().setDetectorMaterial(getDetectorMaterial());
 
 		
-		setUndoPoint("Calibration");
+		setUndoPoint("Energy Calibration");
 		plot.filtering().filteredDataInvalidated();
 	}
 
@@ -424,7 +413,7 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
 		fittingDataInvalidated();
-		setUndoPoint("Change Peak Shape");
+		setUndoPoint("Change Peak Fitter");
 	}
 	
 	public Class<? extends FittingFunction> getFittingFunction() {

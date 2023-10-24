@@ -95,7 +95,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		calibrationController.addListener(() -> updateListeners(PlotUpdateType.CALIBRATION));
 		ioController.addListener(() -> updateListeners(PlotUpdateType.UI));
 		
-		undoController.setUndoPoint("");
+		undoController.setUndoPoint("", /*distinctChange =*/ true);
 	}
 
 	
@@ -138,7 +138,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 * Load the values from this {@link SavedSession} into this controller's model
 	 */
 	public void load(SavedSession saved, boolean isUndoAction) {
-		if (!isUndoAction) undoController.setUndoPoint("Load Session");
+		if (!isUndoAction) undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
 		data().load(saved.data);
 		filtering().load(saved.filters);
 		fitting().load(saved.fittings);
@@ -160,7 +160,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 	@Deprecated(since = "6", forRemoval = true)
 	public void loadSessionSettingsV1(SavedSessionV1 saved, boolean isUndoAction) {
-		if (!isUndoAction) undoController.setUndoPoint("Load Session");
+		if (!isUndoAction) undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
 		
 		List<String> errors = saved.loadInto(this);
 		

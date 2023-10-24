@@ -35,7 +35,8 @@ public class UndoController extends Eventful
 		
 	}
 
-	public void setUndoPoint(String change) {
+
+	public void setUndoPoint(String change, boolean distinctChange) {
 		if (working) { return; }
 		
 		//save the current state
@@ -60,7 +61,7 @@ public class UndoController extends Eventful
 		 * to make navigating the undo stack easier/faster for the user  
 		 */
 		UndoPoint undoable = new UndoPoint(change, saved);
-		if (currentState != null && currentState.getName().equals(change) && (!change.equals(""))) {
+		if (currentState != null && currentState.getName().equals(change) && (!change.equals("")) && !distinctChange) {
 			//these changes are the same (in sequence) so don't save the last one
 		} else if (currentState != null) {
 			//different changes mean we save the last one
@@ -154,7 +155,7 @@ public class UndoController extends Eventful
 		redoStack.clear();
 		currentState = null;
 		lastSave = null;
-		setUndoPoint("");
+		setUndoPoint("", /*distinctChange =*/ true);
 	}
 	
 	/**

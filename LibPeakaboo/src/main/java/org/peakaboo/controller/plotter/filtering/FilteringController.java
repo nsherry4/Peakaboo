@@ -52,7 +52,7 @@ public class FilteringController extends Eventful
 	public void clearFilters()
 	{
 		filteringModel.filters.clear();
-		plot.history().setUndoPoint("Clear Filters");
+		plot.history().setUndoPoint("Clear Filters", /*distinctChange =*/ true);
 		filteredDataInvalidated();
 	}
 
@@ -61,7 +61,7 @@ public class FilteringController extends Eventful
 	public void addFilter(Filter f)
 	{
 		filteringModel.filters.add(f);
-		plot.history().setUndoPoint("Add Filter");
+		plot.history().setUndoPoint("Add Filter", /*distinctChange =*/ true);
 		filteredDataInvalidated();
 	}
 
@@ -74,14 +74,14 @@ public class FilteringController extends Eventful
 		Filter filter = filteringModel.filters.get(from);
 		filteringModel.filters.remove(from);
 		filteringModel.filters.add(filter, to);
-		plot.history().setUndoPoint("Move Filter");
+		plot.history().setUndoPoint("Move Filter", /*distinctChange =*/ true);
 		filteredDataInvalidated();
 	}
 	
 	public void removeFilter(int index)
 	{
 		filteringModel.filters.remove(index);
-		plot.history().setUndoPoint("Remove Filter");
+		plot.history().setUndoPoint("Remove Filter", /*distinctChange =*/ true);
 		filteredDataInvalidated();
 	}
 
@@ -94,7 +94,7 @@ public class FilteringController extends Eventful
 	public void setFilterEnabled(int index, boolean enabled)
 	{
 		filteringModel.filters.get(index).setEnabled(enabled);
-		plot.history().setUndoPoint("Enable Filter");
+		plot.history().setUndoPoint("Enable Filter", /*distinctChange =*/ true);
 		filteredDataInvalidated();
 	}
 
@@ -103,19 +103,6 @@ public class FilteringController extends Eventful
 		return filteringModel.filters.get(index).isEnabled();
 	}
 
-	public void moveFilterUp(int index)
-	{
-		filteringModel.filters.moveFilterUp(index);
-		plot.history().setUndoPoint("Move Filter Up");
-		filteredDataInvalidated();
-	}
-
-	public void moveFilterDown(int index)
-	{
-		filteringModel.filters.moveFilterDown(index);
-		plot.history().setUndoPoint("Move Filter Down");
-		filteredDataInvalidated();
-	}
 
 	public Filter getActiveFilter(int index)
 	{
