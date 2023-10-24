@@ -16,6 +16,9 @@ public class SimpleValue<T> implements Value<T> {
 	protected EventfulType<Boolean> enabledHook;
 	
 	public SimpleValue(String name, Style<T> style, T value) {
+		if (name == null) throw new IllegalArgumentException("Name cannot be null");
+		if (style == null) throw new IllegalArgumentException("Name cannot be null");
+		
 		this.name = name;
 		this.style = style;
 		this.value = value;
