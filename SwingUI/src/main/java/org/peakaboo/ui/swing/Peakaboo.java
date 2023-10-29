@@ -145,7 +145,7 @@ public class Peakaboo {
 	}
 	
 	private static void uiPerformanceTune() {
-		if (PeakabooConfiguration.memorySize == MemorySize.TINY || PeakabooConfiguration.memorySize == MemorySize.SMALL) {
+		if (PeakabooConfiguration.memorySize == MemorySize.TINY) {
 			LayerPanel.blurLowerLayers = false;
 		}
 	}

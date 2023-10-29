@@ -37,9 +37,9 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 	private int yIndex = -1;
 	private int zIndex = -1;
 	
-	private static final int BLOCK_READ_SIZE = 	PeakabooConfiguration.memorySize == MemorySize.TINY ? 10 : 
-												PeakabooConfiguration.memorySize == MemorySize.SMALL ? 50 : 
-												PeakabooConfiguration.memorySize == MemorySize.MEDIUM ? 200 : 400;
+	private static final int BLOCK_READ_SIZE = 	PeakabooConfiguration.memorySize == MemorySize.TINY ? 20 : 
+												PeakabooConfiguration.memorySize == MemorySize.SMALL ? 100 : 
+												PeakabooConfiguration.memorySize == MemorySize.MEDIUM ? 800 : 3200;
 	
 	public FloatMatrixHDF5DataSource(String axisOrder, String dataPath, String name, String description) {
 		super(dataPath, name, description);

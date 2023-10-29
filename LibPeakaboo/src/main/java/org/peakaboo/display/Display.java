@@ -20,13 +20,13 @@ public class Display {
 		if (bufferSpace > 10 && PeakabooConfiguration.memorySize == MemorySize.TINY) {
 			doBuffer = false;
 		}
-		if (bufferSpace > 20 && PeakabooConfiguration.memorySize == MemorySize.SMALL) {
+		if (bufferSpace > 25 && PeakabooConfiguration.memorySize == MemorySize.SMALL) {
 			doBuffer = false;
 		}
-		if (bufferSpace > 40 && PeakabooConfiguration.memorySize == MemorySize.MEDIUM) {
+		if (bufferSpace > 100 && PeakabooConfiguration.memorySize == MemorySize.MEDIUM) {
 			doBuffer = false;
 		}
-		if (bufferSpace > 250 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
+		if (bufferSpace > 400 && PeakabooConfiguration.memorySize == MemorySize.LARGE) {
 			doBuffer = false;
 		}
 		

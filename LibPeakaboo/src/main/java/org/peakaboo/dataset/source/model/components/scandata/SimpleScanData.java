@@ -72,9 +72,9 @@ public class SimpleScanData extends AbstractScanData {
 		 */
 		if (
 				(PeakabooConfiguration.memorySize == MemorySize.TINY && capacity > 200) || //1.6 - 3.2 MB
-				(PeakabooConfiguration.memorySize == MemorySize.SMALL && capacity > 400) || //3.2 - 6.4 MB
-				(PeakabooConfiguration.memorySize == MemorySize.MEDIUM && capacity > 1000) || //8 - 16 MB
-				(PeakabooConfiguration.memorySize == MemorySize.LARGE && capacity > 20000) //160 - 320 MB
+				(PeakabooConfiguration.memorySize == MemorySize.SMALL && capacity > 800) || //6.4 - 12.8 MB
+				(PeakabooConfiguration.memorySize == MemorySize.MEDIUM && capacity > 4000) || //32 - 64 MB
+				(PeakabooConfiguration.memorySize == MemorySize.LARGE && capacity > 40000) //320 - 640 MB
 			) {
 			return new CompressedLoaderQueue(this, analysis, capacity);
 		} else {
