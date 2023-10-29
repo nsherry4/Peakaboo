@@ -10,6 +10,7 @@ import java.util.EventListener;
  *
  */
 
+@FunctionalInterface
 public interface EventfulTypeListener<T> extends EventListener {
 
 	void change(T message);

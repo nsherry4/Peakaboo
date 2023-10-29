@@ -10,7 +10,6 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSource
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.pipeline.Pipeline;
-import org.peakaboo.framework.plural.pipeline.RunToCompletionStage;
 import org.peakaboo.framework.plural.pipeline.Stage;
 import org.peakaboo.framework.plural.pipeline.ThreadedStage;
 import org.peakaboo.framework.scratch.single.Compressed;
@@ -39,9 +38,9 @@ public class PipelineScanData extends AbstractScanData {
 	public PipelineScanData(String name, Consumer<Spectrum> preprocessor) {
 		super(name);
 				
-		Stage<ScanEntry, ScanEntry> sAnalysis = RunToCompletionStage.visit("Analysis", e -> localanalysis.get().process(e.spectrum()));
+		Stage<ScanEntry, ScanEntry> sAnalysis = Stage.visit("Analysis", e -> localanalysis.get().process(e.spectrum()));
 		
-		Stage<ScanEntry, CompressedEntry> sCompression = RunToCompletionStage.of(
+		Stage<ScanEntry, CompressedEntry> sCompression = Stage.of(
 				"Compression",
 				e -> new CompressedEntry(
 						e.index(), 
@@ -49,7 +48,7 @@ public class PipelineScanData extends AbstractScanData {
 				)
 		);
 		
-		Stage<CompressedEntry, Void> sStore = RunToCompletionStage.sink("Store", e -> {
+		Stage<CompressedEntry, Void> sStore = Stage.sink("Store", e -> {
 			spectra.setCompressed(e.index(), e.compressed());
 		});
 		

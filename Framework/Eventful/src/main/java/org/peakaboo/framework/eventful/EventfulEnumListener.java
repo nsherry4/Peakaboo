@@ -10,6 +10,7 @@ import java.util.EventListener;
  *
  */
 
+@FunctionalInterface
 public interface EventfulEnumListener<T extends Enum<T>> extends EventListener {
 
 	void change(T message);

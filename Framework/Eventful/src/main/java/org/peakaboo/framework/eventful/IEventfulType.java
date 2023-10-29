@@ -1,6 +1,11 @@
 package org.peakaboo.framework.eventful;
 
 
+/**
+ * Something which generates events of type T
+ *
+ * @param <T>
+ */
 
 public interface IEventfulType<T>
 {
