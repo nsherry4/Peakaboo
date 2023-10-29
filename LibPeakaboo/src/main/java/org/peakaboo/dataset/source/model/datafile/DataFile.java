@@ -56,6 +56,7 @@ public interface DataFile extends AutoCloseable {
 			for (int i = 0; i < length; i++) {
 				if (shared.charAt(i) != othername.charAt(i)) {
 					shared = shared.substring(0, i);
+					break; //out of inner loop over shared chars
 				}
 			}
 		}
