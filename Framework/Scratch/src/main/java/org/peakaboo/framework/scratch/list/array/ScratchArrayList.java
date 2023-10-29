@@ -1,7 +1,6 @@
 package org.peakaboo.framework.scratch.list.array;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.peakaboo.framework.scratch.ScratchEncoder;
@@ -41,13 +40,10 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	}
 
 	@Override
-	public T set(int index, T element) {
+	public synchronized T set(int index, T element) {
 		T t = get(index);
 		
-		//backfill to support wish-it-were-sparse
-		while (backing.size() <= index) {
-			backing.add(backing.size(), null);
-		}
+		ensureCapacity(index);
 		
 		//add or set based on if we're extending this list by 1
 		if (backing.size() == index) {
@@ -58,23 +54,42 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 		return t;
 	}
 	
-	public void setCompressed(int index, Compressed<T> compressed) {
+	public synchronized void setCompressed(int index, Compressed<T> compressed) {
 		if (!compressed.getEncoder().equals(encoder)) {
 			throw new RuntimeException("Cannot add Compressed element with different ScratchEncoder");
 		}
+		
+		ensureCapacity(index);
+		
+		//add or set based on if we're extending this list by 1
+		byte[] bytes = compressed.getBytes();
+		if (backing.size() == index) {
+			backing.add(bytes);	
+		} else {
+			backing.set(index, bytes);
+		}
+	}
+
+	/**
+	 * Extends the backing array with nulls to ensure that calls to the set method
+	 * work as expected.
+	 * 
+	 * @param index The index for which a set call on the backer must succeed after
+	 *              this method has completed.
+	 */
+	private synchronized void ensureCapacity(int index) {
 		while (backing.size() <= index) {
 			backing.add(null);
 		}
-		backing.set(index, compressed.getBytes());
 	}
 	
 
 	@Override
-	public void add(int index, T element) {
+	public synchronized void add(int index, T element) {
 		backing.add(index, encoder.encode(element));
 	}
 	
-	public void addCompressed(int index, Compressed<T> compressed) {
+	public synchronized void addCompressed(int index, Compressed<T> compressed) {
 		if (!compressed.getEncoder().equals(encoder)) {
 			throw new RuntimeException("Cannot add Compressed element with different ScratchEncoder");
 		}
@@ -82,7 +97,7 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	}
 	
 	@Override
-	public T remove(int index) {
+	public synchronized T remove(int index) {
 		T t = get(index);
 		backing.remove(index);
 		return t;
@@ -98,7 +113,7 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	///////////////////////////////////////////////////
 
 	@Override
-	public void clear() {
+	public synchronized void clear() {
 		backing.clear();
 	}
 	

@@ -116,7 +116,13 @@ public class SparsedList<T> implements List<T> {
 	}
 
 	public T get(int index) {
-		return backing.get(index);
+		// Because this is a sparse list, reading beyond the allocated range should
+		// return null rather than producing an error
+		if (index >= backing.size()) {
+			return null;
+		} else {
+			return backing.get(index);
+		}
 	}
 
 	public T set(int index, T element) {
