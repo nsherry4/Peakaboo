@@ -18,7 +18,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * 
  * This class is a filter exposing the Moving Average functionality elsewhere in this programme.
  * 
- * @author Nathaniel Sherry, 2009
+ * @author Nathaniel Sherry
  */
 
 
@@ -146,9 +146,10 @@ public final class SpringNoiseFilter extends AbstractFilter {
 	private static void springFilterIteration(Spectrum data, float forceMultiplier, float falloffExp) {
 
 	
-		Spectrum deltas = DerivativeMathFilter.deriv(data);
-		
-		Spectrum forces = new ISpectrum(data.size());
+		float[] deltas = DerivativeMathFilter.deriv(data).backingArray();
+		//Work with the float array directly
+		float[] array = data.backingArray();
+		int size = array.length;
 		
 		//calculate the forces for each point
 		//forces represent how much pull a points neighbours are exerting on it.
@@ -157,27 +158,31 @@ public final class SpringNoiseFilter extends AbstractFilter {
 		//Then, we want to make sure that peaks aren't distorted, so we reduce the force
 		//as the signal gets stronger. This fits with the assumption that weaker signal will be
 		//noisier.
-		float dist, force;
-		for (int i = 0; i < forces.size(); i++)
+		float dist, force, delta=0, lastdelta=0;
+		for (int i = 0; i < size; i++)
 		{
 			
-			if (i == 0) 						force = -deltas.get(0) / 2.0f;
-			else if (i == forces.size() - 1)  	force = deltas.get(deltas.size()-1) / 2.0f;
-			else 								force = (deltas.get(i-1) + (-deltas.get(i))) / 4.0f; 
+			delta = deltas[i];
+			
+			if (i == 0) 			force = -delta * 0.5f; //first
+			else if (i == size - 1) force = delta * 0.5f; //last
+			else 					force = (lastdelta + (-delta)) * 0.25f; //middle 
 
+			lastdelta = delta;
+			
+			
 			//if dist dips below 0 and we use a falloff exp like 1.6, we'd like to get a sensible answer, rather than NaN
-			dist = Math.abs(data.get(i));
+			dist = Math.abs(array[i]);
 			dist = (float) Math.pow(dist, falloffExp);
 			if (dist < 1) dist = 1f;
 			
-			if (force < 0)
-			{
+			if (force < 0) {
 				force = Math.max(force,  (force / dist) * forceMultiplier);
 			} else {
 				force = Math.min(force, (force / dist) * forceMultiplier);
 			}
 			
-			data.set(i, data.get(i) - force);
+			array[i] = array[i] - force;
 			
 		}
 		
