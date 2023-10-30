@@ -16,4 +16,10 @@ public interface IEventfulEnum<T extends Enum<T>>
 
 	void updateListeners(final T message);
 
+
+	void addListener(EventfulListener l);
+
+
+	void removeListener(EventfulListener l);
+
 }

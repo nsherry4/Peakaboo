@@ -21,4 +21,10 @@ public interface IEventfulType<T>
 
 	void updateListeners(final T message);
 
+
+	void addListener(EventfulListener l);
+
+
+	void removeListener(EventfulListener l);
+	
 }
