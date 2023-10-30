@@ -16,8 +16,8 @@ public interface EventfulCache<T> extends IEventfulBeacon {
 	T getValue();
 
 	/**
-	 * Mark this cached value as dependant (eg derived from) the given cached value.
-	 * When the given cached value is invalidated, this value will be invalidated as
+	 * Mark this cached value as dependent on (ie derived from) the given cached value.
+	 * When the upstream cached value is invalidated, this value will be invalidated as
 	 * well. Note that unlike regular listeners, the dependency invalidation is done
 	 * immediately, rather than on the ui event thread.
 	 */
