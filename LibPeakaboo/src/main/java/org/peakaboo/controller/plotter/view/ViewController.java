@@ -6,10 +6,10 @@ import org.peakaboo.controller.plotter.PlotController.PlotSpectra;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
 
-public class ViewController extends Eventful {
+public class ViewController extends EventfulBeacon {
 
 	private SessionViewModel viewModel;
 	private PlotController plot;

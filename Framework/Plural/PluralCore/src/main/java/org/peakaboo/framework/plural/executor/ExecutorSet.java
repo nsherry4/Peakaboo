@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.eventful.EventfulListener;
 
 /**
@@ -14,7 +14,7 @@ import org.peakaboo.framework.eventful.EventfulListener;
  * visualise that set, and an overall description of the job being done. ExecutorSet can return a value from the
  * {@link #execute()} method, or the result can be stored elsewhere by the implementation of
  * {@link #execute()} or by the the final {@link Task} in the list. A TaskList can be executed in a blocking
- * or non-blocking manner. TaskList exteneds {@link Eventful}, and so {@link EventfulSimpleListener}s can be added
+ * or non-blocking manner. TaskList exteneds {@link EventfulBeacon}, and so {@link EventfulSimpleListener}s can be added
  * to listen for changes, and check for completion when executing in a non-blocking manner.
  * 
  * @author Nathaniel Sherry, 2009
@@ -23,7 +23,7 @@ import org.peakaboo.framework.eventful.EventfulListener;
  *            The kind of data that the TaskList will return from its {@link #execute()} method
  */
 
-public abstract class ExecutorSet<T> extends Eventful implements Iterable<PluralExecutor>
+public abstract class ExecutorSet<T> extends EventfulBeacon implements Iterable<PluralExecutor>
 {
 
 	private List<PluralExecutor>	executors;

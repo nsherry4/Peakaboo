@@ -25,7 +25,7 @@ import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -35,7 +35,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
  * DataController wraps a DataSet in a UI-aware layer which integrates with the {@link IPlotController}
  * 
  */
-public class DataController extends Eventful
+public class DataController extends EventfulBeacon
 {
 
 	private DataSet 			dataModel;

@@ -1,6 +1,6 @@
 package org.peakaboo.framework.eventful.cache;
 
-import org.peakaboo.framework.eventful.IEventful;
+import org.peakaboo.framework.eventful.IEventfulBeacon;
 
 /**
  * EventfulCache stores a value along with a way to recalculate that value when
@@ -9,7 +9,7 @@ import org.peakaboo.framework.eventful.IEventful;
  * invalidation and dependency handling; when data involved in the calculation
  * of this cached value changes, this value will automatically be invalidated.
  */
-public interface EventfulCache<T> extends IEventful {
+public interface EventfulCache<T> extends IEventfulBeacon {
 
 	void invalidate();
 

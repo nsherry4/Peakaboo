@@ -2,9 +2,9 @@ package org.peakaboo.framework.eventful.cache;
 
 import java.util.function.Supplier;
 
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
-public abstract class AbstractEventfulCache<T> extends Eventful implements EventfulCache<T> {
+public abstract class AbstractEventfulCache<T> extends EventfulBeacon implements EventfulCache<T> {
 
 	private Supplier<T> supplier;
 	

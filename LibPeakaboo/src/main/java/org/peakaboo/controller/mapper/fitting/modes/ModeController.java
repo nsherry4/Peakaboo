@@ -10,10 +10,10 @@ import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.peakaboo.framework.eventful.IEventful;
+import org.peakaboo.framework.eventful.IEventfulBeacon;
 import org.peakaboo.mapping.filter.model.AreaMap;
 
-public interface ModeController extends IEventful {
+public interface ModeController extends IEventfulBeacon {
 
 	/**
 	 * Returns a list of all transition series included in this map mode

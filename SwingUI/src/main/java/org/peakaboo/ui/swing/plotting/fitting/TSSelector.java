@@ -10,15 +10,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.eventful.EventfulListener;
-import org.peakaboo.framework.eventful.IEventful;
+import org.peakaboo.framework.eventful.IEventfulBeacon;
 
 
-public class TSSelector extends JPanel implements IEventful {
+public class TSSelector extends JPanel implements IEventfulBeacon {
 	
 	//EVENTFUL
-	private Eventful listenee;
+	private EventfulBeacon listenee;
 	
 	public void addListener(EventfulListener l) {
 		listenee.addListener(l);
@@ -46,7 +46,7 @@ public class TSSelector extends JPanel implements IEventful {
 	private ActionListener tsComboListener;
 	
 	public TSSelector() {
-		listenee = new Eventful();
+		listenee = new EventfulBeacon();
 		setLayout(new BorderLayout());
 
 		tsCombo = new JComboBox<>();

@@ -2,7 +2,7 @@ package org.peakaboo.framework.eventful;
 
 
 
-public interface IEventful
+public interface IEventfulBeacon
 {
 
 	void addListener(EventfulListener l);

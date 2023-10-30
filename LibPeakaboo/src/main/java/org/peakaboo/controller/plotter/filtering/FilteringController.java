@@ -12,12 +12,12 @@ import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
 
-public class FilteringController extends Eventful
+public class FilteringController extends EventfulBeacon
 {
 
 	PlotController	plot;

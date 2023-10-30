@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
 
-public class UndoController extends Eventful
+public class UndoController extends EventfulBeacon
 {
 
 	PlotController	plot;

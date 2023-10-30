@@ -4,9 +4,9 @@ import java.util.Map;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.SavedCalibrationSessionV1;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
-public class BasicCalibrationController extends Eventful implements CalibrationController {
+public class BasicCalibrationController extends EventfulBeacon implements CalibrationController {
 
 	private BasicDetectorProfile profile = new BasicDetectorProfile();
 	

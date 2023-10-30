@@ -1,9 +1,9 @@
 package org.peakaboo.framework.plural.executor;
 
-import org.peakaboo.framework.eventful.IEventful;
+import org.peakaboo.framework.eventful.IEventfulBeacon;
 import org.peakaboo.framework.plural.executor.map.implementations.PluralMapExecutor;
 
-public interface PluralExecutor extends IEventful{
+public interface PluralExecutor extends IEventfulBeacon{
 
 	/**
 	 * Gets the name of this Executor

@@ -16,14 +16,14 @@ import java.util.function.Consumer;
  */
 
 
-public class Eventful implements IEventful
+public class EventfulBeacon implements IEventfulBeacon
 {
 
 	protected final List<EventfulListener>	listeners;
 	private Consumer<Runnable> uiThreadRunnerOverride = null;
 	
 
-	public Eventful()
+	public EventfulBeacon()
 	{
 		listeners = new LinkedList<EventfulListener>();
 	}
@@ -40,7 +40,7 @@ public class Eventful implements IEventful
 	public synchronized void removeListener(final EventfulListener l)
 	{
 		getUIThreadRunner().accept(() -> { 
-			synchronized(Eventful.this) { 
+			synchronized(EventfulBeacon.this) { 
 					listeners.remove(l);
 			}
 		});
@@ -50,7 +50,7 @@ public class Eventful implements IEventful
 	public synchronized void removeAllListeners()
 	{
 		getUIThreadRunner().accept(() -> { 
-			synchronized(Eventful.this) { 
+			synchronized(EventfulBeacon.this) { 
 					listeners.clear();
 			}
 		});
@@ -73,7 +73,7 @@ public class Eventful implements IEventful
 	
 	
 	/**
-	 * @see org.peakaboo.framework.eventful.IEventful#updateListeners()
+	 * @see org.peakaboo.framework.eventful.IEventfulBeacon#updateListeners()
 	 */
 	public void updateListeners()
 	{
@@ -81,7 +81,7 @@ public class Eventful implements IEventful
 		if (listeners.size() == 0) return;
 
 		getUIThreadRunner().accept(() -> { 
-			synchronized(Eventful.this) {
+			synchronized(EventfulBeacon.this) {
 				for (EventfulListener l : listeners) {
 					l.change();
 				}
