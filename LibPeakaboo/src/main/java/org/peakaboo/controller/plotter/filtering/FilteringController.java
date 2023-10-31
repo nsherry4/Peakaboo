@@ -40,7 +40,7 @@ public class FilteringController extends EventfulBeacon
 		});
 				
 		filteringModel.filteredPlot.addListener(this::updateListeners);
-		filteringModel.filterDeltas.addUpstreamDependency(filteringModel.filteredPlot);
+		filteringModel.filterDeltas.dependsOn(filteringModel.filteredPlot);
 		//Don't bother with the filterDeltas listener, these two things will only ever be invalidated together.
 		//filteringModel.filterDeltas.addListener(this::updateListeners);
 	}

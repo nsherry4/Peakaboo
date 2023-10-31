@@ -21,7 +21,7 @@ public interface EventfulCache<T> extends IEventfulBeacon {
 	 * well. Note that unlike regular listeners, the dependency invalidation is done
 	 * immediately, rather than on the ui event thread.
 	 */
-	default void addUpstreamDependency(EventfulCache<?> dependency) {
+	default void dependsOn(EventfulCache<?> dependency) {
 		dependency.addDependent(this);
 	}
 

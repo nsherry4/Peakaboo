@@ -62,8 +62,8 @@ public class FittingController extends EventfulType<Boolean>
 			return getFittingSolver().solve(getFittingSelectionResults().getResidual(), fittingModel.proposals, getCurveFitter());
 		});
 		
-		fittingModel.selectionResults.addUpstreamDependency(plot.filtering().getFilteredPlotCache());
-		fittingModel.proposalResults.addUpstreamDependency(fittingModel.selectionResults);
+		fittingModel.selectionResults.dependsOn(plot.filtering().getFilteredPlotCache());
+		fittingModel.proposalResults.dependsOn(fittingModel.selectionResults);
 		
 		fittingModel.proposalResults.addListener(() -> updateListeners(false));
 		
