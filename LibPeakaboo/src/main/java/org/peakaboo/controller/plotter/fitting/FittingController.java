@@ -548,8 +548,6 @@ public class FittingController extends EventfulType<Boolean>
 
 	public List<String> load(SavedFittings saved) {
 		
-		var errorlist = new ArrayList<String>();
-		
 		fittingModel.selections.clear();
 		clearAnnotations();
 		for (var fitting : saved.fittings) {
@@ -561,7 +559,7 @@ public class FittingController extends EventfulType<Boolean>
 			fittingModel.selections.addTransitionSeries(ts);
 			//Check for an annotation. If it exists, add it.
 			if (saved.annotations.containsKey(fitting.shellement)) {
-				setAnnotation(ts, saved.annotations.get(fitting));
+				setAnnotation(ts, saved.annotations.get(fitting.shellement));
 			}
 		}
 		
