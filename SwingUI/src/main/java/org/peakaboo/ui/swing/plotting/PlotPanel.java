@@ -107,6 +107,7 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
@@ -276,7 +277,11 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		});
 		
-		BlankMessagePanel blankCanvas = new BlankMessagePanel("No Data", "You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.");
+		BlankMessagePanel blankCanvas = new BlankMessagePanel(
+				"No Data", 
+				"You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.",
+				IconFactory.getImageIcon(PeakabooIcons.PATH, "icon-symbolic")
+			);
 		new FileDrop(blankCanvas, canvas.getFileDropListener());
 		
 		
