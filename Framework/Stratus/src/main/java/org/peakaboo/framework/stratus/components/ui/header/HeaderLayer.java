@@ -24,7 +24,7 @@ public class HeaderLayer extends ModalLayer {
 	
 	public HeaderLayer(LayerPanel owner, boolean showClose, boolean sizeWithOwner) {
 		super(owner, new HeaderPanel(), sizeWithOwner);	
-		root = (HeaderPanel) super.getComponent();
+		root = (HeaderPanel) super.getContent();
 		
 		//headerbox
 		root.getHeader().setShowClose(showClose);
@@ -40,7 +40,7 @@ public class HeaderLayer extends ModalLayer {
 	
 	public HeaderLayer(LayerPanel owner, HeaderBox header, Component body, boolean sizeWithOwner) {
 		super(owner, new HeaderPanel(header, body), sizeWithOwner);	
-		root = (HeaderPanel) super.getComponent();
+		root = (HeaderPanel) super.getContent();
 		
 		root.getHeader().setOnClose(this::remove);
 		wireEscapeClose();

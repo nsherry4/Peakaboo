@@ -5,15 +5,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
+import java.awt.geom.RoundRectangle2D;
+import java.util.Optional;
 
 import javax.swing.JComponent;
 import javax.swing.plaf.LayerUI;
 
-import org.jdesktop.swingx.image.AbstractFilter;
 import org.jdesktop.swingx.image.FastBlurFilter;
-import org.jdesktop.swingx.util.GraphicsUtilities;
 import org.peakaboo.framework.stratus.api.ManagedImageBuffer;
 
 class LayerBlurUI<T extends Component> extends LayerUI<T> {
@@ -28,7 +26,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	public LayerBlurUI(LayerPanel parent, Component component) {
 		this.parent = parent;
 		this.component = component;
-		mOperation = new FastBlurFilter(1);
+		mOperation = new FastBlurFilter(2);
 		paintBufferer = new ManagedImageBuffer();
 		blurBufferer = new ManagedImageBuffer();
 	}
@@ -36,11 +34,13 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	@Override
 	public void paint(Graphics g, JComponent c) {
 		Layer layer = parent.layerForComponent(this.component);
-			
+		
 		if (!parent.isLayerBlocked(layer)) {
 			super.paint(g, c);
 			
 		} else {
+
+			
 			int w = c.getWidth();
 			int h = c.getHeight();
 	
@@ -61,6 +61,19 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				//Paint the window contents to the first buffer
 				Graphics2D pg = paintBuffer.createGraphics();
 				super.paint(pg, c);
+				
+				//Paint the shadow of the above layer
+				Optional<Layer> optAboveLayer = parent.getBlockingLayer(layer);
+				if (optAboveLayer.isPresent()) {
+					Layer aboveLayer = parent.getBlockingLayer(layer).get();
+					var above = aboveLayer.getOuterComponent();
+					if (above != null) {
+						var shadow = new RoundRectangle2D.Float(above.getX() - 1, above.getY(), above.getWidth() + 2, above.getHeight() + 1, aboveLayer.getCornerRadius(), aboveLayer.getCornerRadius());
+						pg.setColor(new Color(0x55000000, true));
+						pg.fill(shadow);
+					}
+				}
+				
 				pg.dispose();
 				paintBufferer.markPainted();
 				
@@ -70,11 +83,10 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				Graphics2D bg = blurBuffer.createGraphics();
 				
 				//First draw the painter buffer to the blur buffer, blurring (usually)
-				if (LayerPanel.blurLowerLayers) {
-					//mOperation.setSize(w, h);
-					bg.drawImage(paintBuffer, mOperation, 0, 0);
-				} else {
+				if (LayerPanel.lowGraphicsMode) {
 					bg.drawImage(paintBuffer, null, 0, 0);
+				} else {
+					bg.drawImage(paintBuffer, mOperation, 0, 0);
 				}
 				
 				//Then darken the background

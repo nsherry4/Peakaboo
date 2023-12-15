@@ -4,27 +4,33 @@ import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.TexturePaint;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.JComponent;
 import javax.swing.JLayer;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
 
-import org.jdesktop.swingx.border.DropShadowBorder;
+import org.peakaboo.framework.stratus.api.ManagedImageBuffer;
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.layouts.CenteringLayout;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
 public class ModalLayer implements Layer {
+	
 	private JLayer<JComponent> layer;
 	private JComponent component;
 	protected LayerPanel owner;
-	
+	protected JPanel wrap;
 	private ComponentAdapter listener;
 	private boolean sizeWithParent = false;
 	
@@ -52,7 +58,7 @@ public class ModalLayer implements Layer {
 
 
 	@Override
-	public JComponent getComponent() {
+	public JComponent getContent() {
 		return component;
 	}
 
@@ -112,26 +118,62 @@ public class ModalLayer implements Layer {
 	
 	private void setModalPanelComponent(JPanel modalPanel, Component component) {
 		
-		JPanel wrap = new JPanel(new BorderLayout());
+		
+		
+		wrap = new JPanel(new BorderLayout()) {
+		
+			ManagedImageBuffer buffered = new ManagedImageBuffer();
+			
+			@Override
+			public void paint(Graphics g) {
+
+				if (LayerPanel.lowGraphicsMode) {
+					super.paint(g);
+				} else {
+					//Paint into a buffer
+					buffered.resize(this.getWidth(), this.getHeight());
+					buffered.clear();
+					var buffer = buffered.get();
+					var bufg = buffer.createGraphics();
+
+					Graphics2D b2d = (Graphics2D) bufg;
+					b2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+					b2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);	
+					super.paint(b2d);
+					buffered.markPainted();
+					
+					//Set up our graphics context for antialiasing
+					Graphics2D g2d = (Graphics2D) g;
+					g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+					g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);			
+					
+					// Define a clip shape, then take the rendered ui in the buffer, set it as a texture 
+					// and fill that shape. This is the only way to get antialiased corners
+					var clip = new RoundRectangle2D.Float(component.getX(), component.getY(), component.getWidth(), component.getHeight(), getCornerRadius(), getCornerRadius());
+					var bounds = new Rectangle2D.Float(0, 0, buffer.getWidth(), buffer.getHeight());
+					var texture = new TexturePaint(buffer, bounds);
+					g2d.setPaint(texture);
+					g2d.fill(clip);					
+				}
+
+				
+			}
+			
+		};
 		wrap.setOpaque(false);
 		wrap.add(component, BorderLayout.CENTER);
 		
-		Border border;
-		if (LayerPanel.blurLowerLayers) {
-			border = new DropShadowBorder(Color.BLACK, 10, 0.3f, 30, true, true, true, true);
-		} else {
-			border = new MatteBorder(1, 1, 1, 1, Color.BLACK);
-		}
-		wrap.setBorder(border);
 		
 		modalPanel.removeAll();
 		
 		if (sizeWithParent) {
 			modalPanel.setLayout(new BorderLayout());
 			modalPanel.add(wrap, BorderLayout.CENTER);
+			modalPanel.setBorder(Spacing.bLarge());
 		} else {
 			modalPanel.setLayout(new CenteringLayout());
-			modalPanel.add(wrap);			
+			modalPanel.add(wrap);
+			modalPanel.setBorder(Spacing.bNone());
 		}
 		
 	}
@@ -141,8 +183,18 @@ public class ModalLayer implements Layer {
 		return true;
 	}
 	
+	@Override
+	public int getCornerRadius() {
+		return Spacing.huge;
+	}
+	
 	protected void remove() {
 		owner.removeLayer(this);
+	}
+
+	@Override
+	public JComponent getOuterComponent() {
+		return wrap;
 	}
 
 
