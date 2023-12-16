@@ -75,6 +75,9 @@ public class TickMarkAxisPainter extends AxisPainter
 					continue;
 				}
 				float percentAlongAxis = mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
 			
 				float position = (float) Math.ceil(axisXStart + (axisLength * percentAlongAxis));
@@ -130,6 +133,9 @@ public class TickMarkAxisPainter extends AxisPainter
 					continue;
 				}
 				float percentAlongAxis = mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
 				
 				float position = axisXStart + axisLength * percentAlongAxis;
@@ -184,6 +190,9 @@ public class TickMarkAxisPainter extends AxisPainter
 					continue;
 				}
 				float percentAlongAxis = 1f - mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
 				
 				Bounds<Float> drawRangeY = new Bounds<Float>(
@@ -248,6 +257,9 @@ public class TickMarkAxisPainter extends AxisPainter
 					continue;
 				}
 				float percentAlongAxis = 1f - mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
 							
 				Bounds<Float> drawRangeY = new Bounds<Float>(

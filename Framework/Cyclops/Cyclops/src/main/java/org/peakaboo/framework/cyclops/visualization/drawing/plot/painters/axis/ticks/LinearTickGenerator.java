@@ -5,7 +5,7 @@ import java.util.List;
 
 public class LinearTickGenerator implements TickGenerator {
 
-	private static final float[] STEPS = new float[]{1f, 2f, 2.5f, 5f};
+	private static final float[] STEPS = new float[]{1f, 2f, 5f};
 	
 	@Override
 	public List<Integer> getTicks(float maxValue, int maxTicks, boolean includeMinorTicks) {
