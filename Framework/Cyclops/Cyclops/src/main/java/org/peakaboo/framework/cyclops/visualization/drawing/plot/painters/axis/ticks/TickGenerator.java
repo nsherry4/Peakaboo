@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface TickGenerator {
 
-	List<Integer> getTicks(float maxValue, int maxTicks);
+	List<Integer> getTicks(float maxValue, int maxTicks, boolean includeMinorTicks);
 	
 }

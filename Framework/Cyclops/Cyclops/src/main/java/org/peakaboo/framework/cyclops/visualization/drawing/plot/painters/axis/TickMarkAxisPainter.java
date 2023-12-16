@@ -70,7 +70,10 @@ public class TickMarkAxisPainter extends AxisPainter
 
 			
 			var axisLength = axisSize(axesData.xPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = mark.position();
 				String tickText = mark.value();
 			
@@ -122,7 +125,10 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			
 			var axisLength = axisSize(axesData.xPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = mark.position();
 				String tickText = mark.value();
 				
@@ -173,7 +179,10 @@ public class TickMarkAxisPainter extends AxisPainter
 			// be figuring out what numbers we want to draw and then translating them into drawing coords
 			// Maybe the tick mark formatter should do that?
 			var axisLength = axisSize(axesData.yPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = 1f - mark.position();
 				String tickText = mark.value();
 				
@@ -234,7 +243,10 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			
 			var axisLength = axisSize(axesData.yPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = 1f - mark.position();
 				String tickText = mark.value();
 							

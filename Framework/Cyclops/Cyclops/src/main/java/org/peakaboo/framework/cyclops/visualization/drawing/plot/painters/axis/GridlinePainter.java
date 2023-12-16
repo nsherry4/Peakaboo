@@ -23,10 +23,17 @@ public class GridlinePainter extends PlotPainter
 	{
 		
 		p.context.save();
-		p.context.setSource(new PaletteColour(0x20000000));
+		var majorColour = new PaletteColour(0x20000000);
+		var minorColour = new PaletteColour(0x08000000);
 		
-		for (var mark : tick.getTickMarks(p, p.plotSize.y)) {
+		
+		for (var mark : tick.getTickMarks(p, p.plotSize.y, true)) {
 			var yPos = (1f - mark.position()) * p.plotSize.y;
+			if (mark.minor()) {
+				p.context.setSource(minorColour);
+			} else {
+				p.context.setSource(majorColour);
+			}
 			TickMarkAxisPainter.drawTickLine(p.context, 0, yPos, p.plotSize.x, yPos);
 		}
 		

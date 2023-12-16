@@ -8,7 +8,7 @@ public class LinearTickGenerator implements TickGenerator {
 	private static final float[] STEPS = new float[]{1f, 2f, 2.5f, 5f};
 	
 	@Override
-	public List<Integer> getTicks(float maxValue, int maxTicks) {
+	public List<Integer> getTicks(float maxValue, int maxTicks, boolean includeMinorTicks) {
 		int magnitude = (int) Math.ceil(Math.log10(1+maxValue));
 		
 		int stepsDown = 1;

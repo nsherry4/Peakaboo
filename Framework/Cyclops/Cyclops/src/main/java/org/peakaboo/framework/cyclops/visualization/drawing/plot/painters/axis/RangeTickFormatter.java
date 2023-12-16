@@ -8,69 +8,72 @@ import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.ticks.LinearTickGenerator;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.ticks.LogTickGenerator;
 
 public class RangeTickFormatter extends AbstractTickFormatter {
 	
-	private float tickStart, tickEnd, axisEnd;
+	private float scaleMin, scaleMax, maxScaleSignal;
 	private Function<Integer, String> formatter;
+		
 	
-	
-	public RangeTickFormatter(float tickStart, float tickEnd) {
-		this(tickStart, tickEnd, String::valueOf);
+	public RangeTickFormatter(float scaleStart, float scaleEnd) {
+		this(scaleStart, scaleEnd, String::valueOf);
 	}
 	
-	public RangeTickFormatter(float tickStart, float tickEnd, Function<Integer, String> formatter) {
-		this(tickStart, tickEnd, tickEnd, formatter);
+	public RangeTickFormatter(float scaleStart, float scaleEnd, float maxScaleSignal) {
+		this(scaleStart, scaleEnd, maxScaleSignal, String::valueOf);
+	}
+
+	
+	public RangeTickFormatter(float scaleStart, float scaleEnd, Function<Integer, String> formatter) {
+		this(scaleStart, scaleEnd, scaleEnd, formatter);
 	}
 	
-	public RangeTickFormatter(float tickStart, float tickEnd, float axisEnd, Function<Integer, String> formatter) {
-		this.tickStart = tickStart;
-		this.tickEnd = tickEnd;
+	public RangeTickFormatter(float scaleMin, float scaleMax, float maxScaleSignal, Function<Integer, String> formatter) {
+		this.scaleMin = scaleMin;
+		this.scaleMax = scaleMax;
 		this.formatter = formatter;
-		this.axisEnd = axisEnd;
+		this.maxScaleSignal = maxScaleSignal;
 	}
 	
 	
 	@Override
-	public List<TickMark> getTickMarks(PainterData p, float size) {
+	public List<TickMark> getTickMarks(PainterData p, float size, boolean includeMinorTicks) {
 		var marks = new ArrayList<TickMark>();
 		
 		if (this.isEmpty()) return marks;
-		
-		float axisRange = axisEnd - this.tickStart;
-		float tickRange = this.tickEnd - this.tickStart;
 		float maxTicks = this.calcMaxTicks(p, size);
-		int increment = getIncrement(tickRange, maxTicks, 1);
-		if (increment == 0) return marks;
-		int startingValue = (int)(this.tickStart + (Math.abs(this.tickStart) % increment));
-		
-		int currentValue = startingValue;
-		while (currentValue <= this.tickEnd) {
-			var position = (currentValue - this.tickStart)  / axisRange;
-			
-			float tickValue;
-			if (this.isLog()) {
-				tickValue = (float)Math.exp(  (position) * Math.log1p(axisRange)  ) - 1.0f;
-				tickValue = SigDigits.toIntSigDigit(tickValue, 2);					
-			} else {
-				tickValue = currentValue;
-			}
-			
-			var text = this.format((int)tickValue);
-			if (position >= 0 || position <= 1) {
-				marks.add(new TickMark(text, position));
-			}
-			currentValue += increment;
-		}
-		
-		
+	
 		if (!this.isLog()) {
 			marks.clear();
 			
 			var tickGen = new LinearTickGenerator();
-			for (int scaleValue : tickGen.getTicks(axisRange, (int)maxTicks)) {
-				float tickY = (scaleValue / axisRange);
-				marks.add(new TickMark("" + scaleValue, tickY));
+			var minorTicks = tickGen.getTicks(scaleMax, (int)maxTicks, true);
+			var majorTicks = tickGen.getTicks(scaleMax, (int)maxTicks, false);
+			
+			for (int scaleValue : minorTicks) {
+				boolean minor = !majorTicks.contains(scaleValue);
+				
+				float tickY = (scaleValue / scaleMax);
+				marks.add(new TickMark(format(scaleValue), tickY, minor));
+			}
+			
+		} else {
+			marks.clear();
+			
+			var tickGen = new LogTickGenerator();
+			var minorTicks = tickGen.getTicks(scaleMax, (int)maxTicks, true);
+			var majorTicks = tickGen.getTicks(scaleMax, (int)maxTicks, false);
+			
+			for (int scaleValue : minorTicks) {
+				boolean minor = !majorTicks.contains(scaleValue);
+				
+				float logMax = (float) Math.log10(1+scaleMax);
+				float logMin = (float) Math.log10(1+scaleMin);
+				float logValue = (float) Math.log10(1+scaleValue);
+				float tickY = logValue / logMax;
+				var tickmark = new TickMark(format(scaleValue), tickY, minor);
+				marks.add(tickmark);
 			}
 			
 		}
@@ -85,8 +88,8 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 		
 		float height = p.context.getFontHeight();
 		
-		float startWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(this.tickStart, 2)  ));			
-		float endWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.tickEnd, false, this.isPadded()), 2)  ));
+		float startWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(this.scaleMin, 2)  ));			
+		float endWidth = p.context.getTextWidth(this.format(  SigDigits.toIntSigDigit(PlotDrawing.getDataScale(this.scaleMax, false, this.isPadded()), 2)  ));
 		float width = Math.max(startWidth, endWidth);
 		
 		return new TickTextSize(width, height);
@@ -95,7 +98,7 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 	
 	@Override
 	public boolean isEmpty() {
-		return this.tickEnd - this.tickStart <= 0;
+		return this.scaleMax - this.scaleMin <= 0;
 	}
 
 	private String format(int value) {
@@ -118,7 +121,7 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 			return maxTicks;
 		} else {
 			// text isn't rotated out so calculate the maximum width of a text entry here
-			int maxValue = (int) (this.tickEnd);
+			int maxValue = (int) (this.scaleMax);
 			String text = this.formatter.apply(maxValue);
 			float maxWidth = p.context.getTextWidth(text) + 4;
 			if (maxWidth < 1) { maxWidth = 1; }

@@ -33,8 +33,8 @@ public interface TickFormatter {
 	record TickTextSize(float width, float height) {};
 	TickTextSize maxTextSize(PainterData p);
 		
-	record TickMark(String value, float position) {};
-	List<TickMark> getTickMarks(PainterData p, float size);
+	record TickMark(String value, float position, boolean minor) {};
+	List<TickMark> getTickMarks(PainterData p, float size, boolean includeMinorTicks);
 	
 }
 
