@@ -73,7 +73,7 @@ public class Plotter {
 		if (context.getSurfaceDescriptor().isVector()) {
 			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
-			drawToBuffer(data, settings, context, size);
+			drawToSurface(data, settings, context, size);
 		} else if (doBuffer) {
 			
 			Buffer buffer = bufferer.get(context, size.x, size.y);
@@ -83,7 +83,7 @@ public class Plotter {
 				if (buffer == null) {
 					buffer = bufferer.create(context);
 				}
-				drawToBuffer(data, settings, buffer, size);
+				drawToSurface(data, settings, buffer, size);
 				lastSize = new Coord<>(size); 
 			}
 					
@@ -92,7 +92,7 @@ public class Plotter {
 			context.compose(buffer, 0, 0, 1f);
 		} else {
 			lastSize = null;
-			drawToBuffer(data, settings, context, size);
+			drawToSurface(data, settings, context, size);
 		}
 		
 		return plotDrawing;
@@ -101,7 +101,7 @@ public class Plotter {
 	}
 	
 	
-	public PlotDrawing drawToBuffer(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
+	public PlotDrawing drawToSurface(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
 
 		////////////////////////////////////////////////////////////////////
 		// Colour Selections

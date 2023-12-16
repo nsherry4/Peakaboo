@@ -143,6 +143,8 @@ public class PlotDrawing extends Drawing
 	@Override
 	public void draw() {
 		
+		final boolean debugMode = false;
+		
 		if (context == null) return;
 		
 		
@@ -154,7 +156,7 @@ public class PlotDrawing extends Drawing
 	
 			Coord<Bounds<Float>> axisBounds = getPlotOffsetFromBottomLeft();
 			Bounds<Float> availableX = axisBounds.x, availableY = axisBounds.y;
-			plotSize = new Coord<Float>(availableX.end - availableX.start, availableY.end - availableY.start); 
+			plotSize = new Coord<Float>(availableX.end - availableX.start + 1, availableY.end - availableY.start + 1); 
 			if (plotSize.x <= 0 | plotSize.y <= 0) return;
 			
 			// transform to get out past the x axis
@@ -181,6 +183,11 @@ public class PlotDrawing extends Drawing
 	
 			}
 
+			if (debugMode) {
+				context.rectAt(0, 0, plotSize.x, plotSize.y);
+				context.setSource(0x80a40000);
+				context.fill();
+			}
 
 		context.restore();
 
@@ -189,6 +196,7 @@ public class PlotDrawing extends Drawing
 			availableX = new Bounds<Float>(0.0f, dr.imageWidth);
 			availableY = new Bounds<Float>(0.0f, dr.imageHeight);
 			if (axisPainters != null) {
+				
 				
 				Pair<Float, Float> axisSizeX, axisSizeY;
 				
@@ -217,6 +225,20 @@ public class PlotDrawing extends Drawing
 					availableY.end -= axisSizeY.second;
 					
 				}
+				
+				if (debugMode) {
+					
+					context.setSource(0x8000a400);
+					context.rectAt(0, 0, availableX.start, dr.imageHeight);
+					context.fill();
+					
+					context.setSource(0x800000a4);
+					context.rectAt(0, availableY.end, dr.imageWidth, dr.imageHeight - availableY.end);
+					context.fill();
+				
+				}
+				
+				
 				
 			}
 			
