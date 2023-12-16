@@ -7,6 +7,7 @@ import java.util.Collections;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
@@ -16,7 +17,7 @@ import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ButtonBox;
+import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
@@ -31,14 +32,22 @@ import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
 import org.peakaboo.ui.swing.mapping.components.PlotSelectionButton;
 import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
+import org.peakaboo.ui.swing.mapping.sidebar.MapSelectionPanel.MapSelectionComponent;
 
 public class QuickMapPanel extends HeaderLayer {
 
 	private MappingController controller;
 	private MapCanvas canvas;
 	private FluentToolbarButton plotSelection, sizingButton, viewButton;
-	
-	public QuickMapPanel(LayerPanel plotTab, TabbedInterface<TabbedLayerPanel> plotTabs, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
+		
+	public QuickMapPanel(
+			LayerPanel plotTab, 
+			TabbedInterface<TabbedLayerPanel> plotTabs, 
+			int channel, 
+			RawMapSet maps, 
+			Mutable<SavedMapSession> previousMapSession, 
+			PlotController plotcontroller
+	) {
 		super(plotTab, true, true);
 		
 		RawDataController rawDataController = new RawDataController();
@@ -71,10 +80,7 @@ public class QuickMapPanel extends HeaderLayer {
 		controller.getSettings().setShowSpectrum(false);
 		controller.getSettings().setShowTitle(false);
 		
-		
-		
-		
-		
+
 		JPanel body = new JPanel(new BorderLayout());
 		canvas = new MapCanvas(controller, false);
 		canvas.setPreferredSize(new Dimension(600, 300));
@@ -92,19 +98,22 @@ public class QuickMapPanel extends HeaderLayer {
 			sizingButton.withNotificationDot(NotificationDotState.WARNING);
 			sizingButton.withBordered(true);
 		}
-		
-		ButtonBox bbox = new ButtonBox(0, false);
-		bbox.setOpaque(false);
-		bbox.addRight(sizingButton);
-		bbox.addRight(viewButton);
-		
+
+		//Create the selections widget and add a listener to keep it in sync w/ the model
+		MapSelectionComponent selections = new MapSelectionComponent(selected -> controller.getSelection().setSelectionType(selected));
+		controller.addListener(t -> {
+			if (t == MapUpdateType.UI_OPTIONS) {
+				selections.setSelection(controller.getSelection().getSelectionType());
+			}
+		});
+		selections.setSelection(controller.getSelection().getSelectionType());
 		
 		plotSelection = new PlotSelectionButton(IconSize.BUTTON, controller, plotTabs);
-		
-		
+			
+				
 		getHeader().setCentre("QuickMap of Channel " + channel);
-		getHeader().setRight(bbox);
-		getHeader().setLeft(plotSelection);
+		getHeader().setRight(new ComponentStrip(sizingButton, viewButton));
+		getHeader().setLeft(new ComponentStrip(selections, plotSelection));
 		
 		MapSelectionListener selectionListener = new MapSelectionListener(canvas, controller);
 		canvas.addMouseMotionListener(selectionListener);
