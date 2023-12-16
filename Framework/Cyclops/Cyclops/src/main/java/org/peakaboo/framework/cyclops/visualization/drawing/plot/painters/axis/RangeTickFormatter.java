@@ -7,6 +7,7 @@ import java.util.function.Function;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.ticks.LinearTickGenerator;
 
 public class RangeTickFormatter extends AbstractTickFormatter {
 	
@@ -61,6 +62,20 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 			}
 			currentValue += increment;
 		}
+		
+		
+		if (!this.isLog()) {
+			marks.clear();
+			
+			var tickGen = new LinearTickGenerator();
+			for (int scaleValue : tickGen.getTicks(axisRange, (int)maxTicks)) {
+				float tickY = (scaleValue / axisRange);
+				marks.add(new TickMark("" + scaleValue, tickY));
+			}
+			
+		}
+		
+		
 		
 		return marks;
 	}
