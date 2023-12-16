@@ -12,6 +12,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
@@ -58,7 +59,7 @@ public class MapperToolbar extends JToolBar {
 		}
 		
 		
-		examineSubset = new PlotSelectionButton(controller, panel.getParentPlotter());
+		examineSubset = new PlotSelectionButton(IconSize.TOOLBAR_SMALL, controller, panel.getParentPlotter());
 		this.add(examineSubset, c);
 		c.gridx++;
 		examineSubset.setEnabled(false);

@@ -18,6 +18,7 @@ import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ButtonBox;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
@@ -25,6 +26,7 @@ import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.mapping.components.MapSelectionListener;
 import org.peakaboo.ui.swing.mapping.components.MapperToolbar;
 import org.peakaboo.ui.swing.mapping.components.PlotSelectionButton;
@@ -82,6 +84,8 @@ public class QuickMapPanel extends HeaderLayer {
 		
 		
 		viewButton = MapperToolbar.createOptionsButton(controller);
+		viewButton.withIcon(PeakabooIcons.MENU_VIEW, IconSize.BUTTON);
+		viewButton.withButtonSize(FluentButtonSize.LARGE);
 		sizingButton = createSizingButton(plotTab, controller);
 		
 		if (session == null ) {
@@ -95,7 +99,7 @@ public class QuickMapPanel extends HeaderLayer {
 		bbox.addRight(viewButton);
 		
 		
-		plotSelection = new PlotSelectionButton(controller, plotTabs);
+		plotSelection = new PlotSelectionButton(IconSize.BUTTON, controller, plotTabs);
 		
 		
 		getHeader().setCentre("QuickMap of Channel " + channel);
@@ -111,7 +115,8 @@ public class QuickMapPanel extends HeaderLayer {
 	public FluentToolbarButton createSizingButton(LayerPanel panel, MappingController controller) {
 		
 		FluentToolbarButton opts = new FluentToolbarButton();
-		opts.withIcon(StockIcon.MENU_SETTINGS, IconSize.TOOLBAR_SMALL).withTooltip("Map Dimensions Menu");
+		opts.withIcon(StockIcon.OBJECT_FLIP_HORIZONTAL, IconSize.BUTTON).withTooltip("Map Dimensions Menu");
+		opts.withButtonSize(FluentButtonSize.LARGE);
 		JPopupMenu menu = new JPopupMenu();
 		
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);

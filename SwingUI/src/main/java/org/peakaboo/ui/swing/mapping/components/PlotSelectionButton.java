@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
@@ -18,8 +19,8 @@ public class PlotSelectionButton extends FluentToolbarButton {
 	private MappingController controller;
 	private TabbedInterface<TabbedLayerPanel> plotter;
 	
-	public PlotSelectionButton(MappingController controller, TabbedInterface<TabbedLayerPanel> plotter) {
-		super("Plot Selection", PeakabooIcons.PLOT);
+	public PlotSelectionButton(IconSize size, MappingController controller, TabbedInterface<TabbedLayerPanel> plotter) {
+		super("Plot Selection", PeakabooIcons.PLOT, size);
 		this.controller = controller;
 		this.plotter = plotter;
 		this.withSignificance(true).withTooltip("Plot the selection as a new data set");
