@@ -23,6 +23,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	private LayerPanel parent;
 	private Component component;
 	private long lastTime;
+	private Optional<Layer> lastBlocker;
 	
 	public LayerBlurUI(LayerPanel parent, Component component) {
 		this.parent = parent;
@@ -41,6 +42,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 			
 		} else {
 
+			Optional<Layer> blocker = parent.getBlockingLayer(layer);
 			
 			int w = c.getWidth();
 			int h = c.getHeight();
@@ -53,9 +55,18 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 			blurBufferer.resize(w, h);
 			var blurBuffer = blurBufferer.get();
 	
-			//If the buffer needs repainting or the last image ages out, repaint
+			
+			
+			//Calculate if we should repaint or just redraw from buffer
+			boolean doRepaint = false;	
 			long time = System.currentTimeMillis();
-			if (time - lastTime > 500 || !blurBufferer.isPainted()) {
+			int repaintInterval = 500;
+			doRepaint |= (time - lastTime > repaintInterval);
+			doRepaint |= !blurBufferer.isPainted();
+			doRepaint |= !blocker.equals(lastBlocker);
+
+			
+			if (doRepaint) {
 				paintBufferer.clear();
 				var paintBuffer = paintBufferer.get();
 				
@@ -100,7 +111,8 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				blurBufferer.markPainted();
 				
 				//Reset the time of the last buffer update
-				lastTime = time;	
+				lastTime = time;
+				lastBlocker = blocker;
 			}
 			
 			Graphics2D g2 = (Graphics2D) g.create();
@@ -108,6 +120,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 			g2.drawImage(blurBuffer, null, 0, 0);
 			
 			g2.dispose();
+			
 			
 		}
 	}
