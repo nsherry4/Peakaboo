@@ -11,11 +11,12 @@ import java.util.Optional;
 import javax.swing.JComponent;
 import javax.swing.plaf.LayerUI;
 
-import org.jdesktop.swingx.image.FastBlurFilter;
+import org.jdesktop.swingx.image.AbstractFilter;
+import org.jdesktop.swingx.image.StackBlurFilter;
 import org.peakaboo.framework.stratus.api.ManagedImageBuffer;
 
 class LayerBlurUI<T extends Component> extends LayerUI<T> {
-	private FastBlurFilter mOperation;
+	private AbstractFilter mOperation;
 	
 	private ManagedImageBuffer paintBufferer, blurBufferer;
 
@@ -26,7 +27,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	public LayerBlurUI(LayerPanel parent, Component component) {
 		this.parent = parent;
 		this.component = component;
-		mOperation = new FastBlurFilter(2);
+		mOperation = new StackBlurFilter(2, 2);
 		paintBufferer = new ManagedImageBuffer();
 		blurBufferer = new ManagedImageBuffer();
 	}
@@ -68,8 +69,8 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 					Layer aboveLayer = parent.getBlockingLayer(layer).get();
 					var above = aboveLayer.getOuterComponent();
 					if (above != null) {
-						var shadow = new RoundRectangle2D.Float(above.getX() - 1, above.getY(), above.getWidth() + 2, above.getHeight() + 1, aboveLayer.getCornerRadius(), aboveLayer.getCornerRadius());
-						pg.setColor(new Color(0x55000000, true));
+						var shadow = new RoundRectangle2D.Float(above.getX(), above.getY() + 1, above.getWidth(), above.getHeight() + 0.5f, aboveLayer.getCornerRadius(), aboveLayer.getCornerRadius());
+						pg.setColor(new Color(0x66000000, true));
 						pg.fill(shadow);
 					}
 				}
