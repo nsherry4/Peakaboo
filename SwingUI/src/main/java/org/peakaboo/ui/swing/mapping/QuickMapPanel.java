@@ -14,8 +14,10 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ButtonBox;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
@@ -32,7 +34,7 @@ public class QuickMapPanel extends HeaderLayer {
 
 	private MappingController controller;
 	private MapCanvas canvas;
-	private FluentToolbarButton plotSelection;
+	private FluentToolbarButton plotSelection, sizingButton, viewButton;
 	
 	public QuickMapPanel(LayerPanel plotTab, TabbedInterface<TabbedLayerPanel> plotTabs, int channel, RawMapSet maps, Mutable<SavedMapSession> previousMapSession, PlotController plotcontroller) {
 		super(plotTab, true, true);
@@ -79,8 +81,14 @@ public class QuickMapPanel extends HeaderLayer {
 		setBody(body);
 		
 		
-		FluentToolbarButton viewButton = MapperToolbar.createOptionsButton(controller);
-		FluentToolbarButton sizingButton = createSizingButton(plotTab, controller);
+		viewButton = MapperToolbar.createOptionsButton(controller);
+		sizingButton = createSizingButton(plotTab, controller);
+		
+		if (session == null ) {
+			sizingButton.withNotificationDot(NotificationDotState.WARNING);
+			sizingButton.withBordered(true);
+		}
+		
 		ButtonBox bbox = new ButtonBox(0, false);
 		bbox.setOpaque(false);
 		bbox.addRight(sizingButton);
@@ -100,10 +108,10 @@ public class QuickMapPanel extends HeaderLayer {
 		
 	}
 	
-	public static FluentToolbarButton createSizingButton(LayerPanel panel, MappingController controller) {
+	public FluentToolbarButton createSizingButton(LayerPanel panel, MappingController controller) {
 		
 		FluentToolbarButton opts = new FluentToolbarButton();
-		opts.withIcon(StockIcon.MENU_SETTINGS).withTooltip("Map Dimensions Menu");
+		opts.withIcon(StockIcon.MENU_SETTINGS, IconSize.TOOLBAR_SMALL).withTooltip("Map Dimensions Menu");
 		JPopupMenu menu = new JPopupMenu();
 		
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);
@@ -114,6 +122,11 @@ public class QuickMapPanel extends HeaderLayer {
 		menu.add(dimensions);
 		
 		opts.withAction(() -> {
+			
+			//Hide the notification dot, we got the user to take a look
+			sizingButton.withNotificationDot(NotificationDotState.OFF);
+			sizingButton.withBordered(false);
+			
 			int x = (int)(opts.getWidth() - menu.getPreferredSize().getWidth());
 			int y = opts.getHeight();
 			menu.show(opts, x, y);

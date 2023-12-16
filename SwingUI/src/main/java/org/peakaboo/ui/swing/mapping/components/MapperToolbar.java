@@ -12,7 +12,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
