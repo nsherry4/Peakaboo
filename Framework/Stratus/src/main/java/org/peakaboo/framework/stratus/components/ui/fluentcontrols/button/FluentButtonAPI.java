@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentAPI;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 
 interface FluentButtonAPI<
@@ -16,9 +17,6 @@ interface FluentButtonAPI<
 		C extends FluentButtonConfig
 	> extends FluentAPI<B, C> {
 
-	
-
-	
 
 	
 	/**
@@ -65,10 +63,18 @@ interface FluentButtonAPI<
 		return getSelf();
 	}
 	
-	default B withNotificationDot(Color colour) {
+	
+	default B withNotificationDot(NotificationDotState state) {
+		Color colour = switch(state) {
+			case EVENT -> Stratus.getTheme().getPalette().getColour("Blue", "4");
+			case OFF -> null;
+			case OK -> Stratus.getTheme().getPalette().getColour("Green", "4");
+			case PROBLEM -> Stratus.getTheme().getPalette().getColour("Red", "4");
+			case WARNING -> Stratus.getTheme().getPalette().getColour("Orange", "4");
+		};
 		return withNotificationDot(Optional.ofNullable(colour));
 	}
-	
+
 	default B withNotificationDot(Optional<Color> colour) {
 		getComponentConfig().notificationDot = colour;
 		makeWidget();

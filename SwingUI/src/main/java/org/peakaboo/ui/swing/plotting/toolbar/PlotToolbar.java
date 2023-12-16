@@ -11,9 +11,9 @@ import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
@@ -174,7 +174,7 @@ public class PlotToolbar extends JToolBar {
 			energyMenuButton.withNotificationDot(Optional.empty());
 		} else {
 			energyMenuButton.withBordered(BorderStyle.ALWAYS);
-			energyMenuButton.withNotificationDot(Stratus.getTheme().getPalette().getColour("Red", "4"));
+			energyMenuButton.withNotificationDot(NotificationDotState.PROBLEM);
 		}
 		
 		
