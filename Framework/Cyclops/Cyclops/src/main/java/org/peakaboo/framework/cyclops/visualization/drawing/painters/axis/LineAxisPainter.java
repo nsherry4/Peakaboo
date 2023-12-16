@@ -35,24 +35,26 @@ public class LineAxisPainter extends AxisPainter
 	
 			p.context.setAntialias(false);
 			
+			// Don't leave too much space around the plot, hug it tightly by flooring/ceiling it
+			
 			if (top){
-				p.context.moveTo(axesData.xPositionBounds.start, axesData.yPositionBounds.start);
-				p.context.lineTo(axesData.xPositionBounds.end, axesData.yPositionBounds.start);
+				p.context.moveTo(axesData.xPositionBounds.start, (float)Math.ceil(axesData.yPositionBounds.start));
+				p.context.lineTo(axesData.xPositionBounds.end, (float)Math.ceil(axesData.yPositionBounds.start));
 			}
 			
 			if (bottom){
-				p.context.moveTo(axesData.xPositionBounds.start, axesData.yPositionBounds.end);
-				p.context.lineTo(axesData.xPositionBounds.end, axesData.yPositionBounds.end);
+				p.context.moveTo(axesData.xPositionBounds.start, (float)Math.floor(axesData.yPositionBounds.end));
+				p.context.lineTo(axesData.xPositionBounds.end, (float)Math.floor(axesData.yPositionBounds.end));
 			}
 			
 			if (right){
-				p.context.moveTo(axesData.xPositionBounds.end, axesData.yPositionBounds.start);
-				p.context.lineTo(axesData.xPositionBounds.end, axesData.yPositionBounds.end);
+				p.context.moveTo((float)Math.floor(axesData.xPositionBounds.end), axesData.yPositionBounds.start);
+				p.context.lineTo((float)Math.floor(axesData.xPositionBounds.end), axesData.yPositionBounds.end);
 			}
 			
 			if (left){
-				p.context.moveTo(axesData.xPositionBounds.start, axesData.yPositionBounds.start);
-				p.context.lineTo(axesData.xPositionBounds.start, axesData.yPositionBounds.end);
+				p.context.moveTo((float)Math.ceil(axesData.xPositionBounds.start), axesData.yPositionBounds.start);
+				p.context.lineTo((float)Math.ceil(axesData.xPositionBounds.start), axesData.yPositionBounds.end);
 			}
 	
 			p.context.stroke();

@@ -74,7 +74,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				float percentAlongAxis = mark.position();
 				String tickText = mark.value();
 			
-				float position = axisXStart + (axisLength * percentAlongAxis);
+				float position = (float) Math.ceil(axisXStart + (axisLength * percentAlongAxis));
 				drawTickLine(p.context, position, axisYStart, position, axisYStart + tickLength);
 		
 				float tickWidth = p.context.getTextWidth(tickText);
@@ -169,21 +169,29 @@ public class TickMarkAxisPainter extends AxisPainter
 			float axisWidth = getAxisSizeX(p).first;
 			float tickLength = getTickLength(p.dr, tick);
 			
-			
+			//TODO backwards? instead of figuring out what positions to draw at and then asking for a number, we should
+			// be figuring out what numbers we want to draw and then translating them into drawing coords
+			// Maybe the tick mark formatter should do that?
 			var axisLength = axisSize(axesData.yPositionBounds, otherAxisSize);
 			for (var mark : tick.getTickMarks(p, axisLength)) {
 				float percentAlongAxis = 1f - mark.position();
 				String tickText = mark.value();
 				
-				var position = axesData.yPositionBounds.start + otherAxisSize.first + axisLength * percentAlongAxis;
+				Bounds<Float> drawRangeY = new Bounds<Float>(
+						axesData.yPositionBounds.start + otherAxisSize.first, 
+						axesData.yPositionBounds.end - otherAxisSize.second
+					);
+				float drawHeight = drawRangeY.end - drawRangeY.start;
+				float yPosition = (float) Math.floor(drawRangeY.start + percentAlongAxis * drawHeight);
 
-				if (position - p.context.getFontAscent() / 2.0 > 0) {
-					drawTickLine(p.context, axisStart + axisWidth - tickLength, position, axisStart + axisWidth, position);
+				
+				if (yPosition - p.context.getFontAscent() / 2.0 > 0) {
+					drawTickLine(p.context, axisStart + axisWidth - tickLength, yPosition, axisStart + axisWidth, yPosition);
 					float textWidth = p.context.getTextWidth(tickText);
 
 					if (!tick.isTextRotated()) {
 						float tx = axisStart + axisWidth - tickLength*1.5f;
-						float ty = position;
+						float ty = yPosition;
 						float px = -textWidth/2f;
 						float py = 0;
 						p.context.save();
@@ -193,7 +201,7 @@ public class TickMarkAxisPainter extends AxisPainter
 						p.context.restore();
 					} else {
 						float xTextPos = axisStart + axisWidth - tickLength*1.5f - textWidth;
-						float yTextPos = position + p.context.getFontAscent() / 2.0f;
+						float yTextPos = yPosition + p.context.getFontAscent() / 2.0f;
 						p.context.writeText(tickText, xTextPos, yTextPos);
 					}
 							
@@ -229,16 +237,21 @@ public class TickMarkAxisPainter extends AxisPainter
 			for (var mark : tick.getTickMarks(p, axisLength)) {
 				float percentAlongAxis = 1f - mark.position();
 				String tickText = mark.value();
+							
+				Bounds<Float> drawRangeY = new Bounds<Float>(
+						axesData.yPositionBounds.start + otherAxisSize.first, 
+						axesData.yPositionBounds.end - otherAxisSize.second
+					);
+				float drawHeight = drawRangeY.end - drawRangeY.start;
+				float yPosition = (float) Math.floor(drawRangeY.start + percentAlongAxis * drawHeight);
 				
-				var position = axesData.yPositionBounds.start + otherAxisSize.first + axisLength * percentAlongAxis;
-				
-				if (position - p.context.getFontAscent() / 2.0 > 0) {
-					drawTickLine(p.context, axisStart, position, axisStart + tickLength, position);
+				if (yPosition - p.context.getFontAscent() / 2.0 > 0) {
+					drawTickLine(p.context, axisStart, yPosition, axisStart + tickLength, yPosition);
 					float textWidth = p.context.getTextWidth(tickText);
 					
 					if (!tick.isTextRotated()) {
 						float tx = axisStart + axisWidth - tickLength*2.5f;
-						float ty = position;
+						float ty = yPosition;
 						float px = -textWidth/2f;
 						float py = 0;
 						p.context.save();
@@ -247,7 +260,7 @@ public class TickMarkAxisPainter extends AxisPainter
 						p.context.writeText(tickText, px, py);
 						p.context.restore();
 					} else {
-						p.context.writeText(tickText, axisStart + tickLength*1.5f, position + p.context.getFontAscent() / 2.0f);
+						p.context.writeText(tickText, axisStart + tickLength*1.5f, yPosition + p.context.getFontAscent() / 2.0f);
 					}
 				}
 				
