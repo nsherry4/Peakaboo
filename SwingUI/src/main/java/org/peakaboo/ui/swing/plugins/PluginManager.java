@@ -36,7 +36,7 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
@@ -110,8 +110,8 @@ public class PluginManager extends HeaderLayer {
 		browse = new FluentButton(StockIcon.DOCUMENT_OPEN_SYMBOLIC).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
 		download = new FluentButton(StockIcon.GO_DOWN).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
 		
-		ButtonLinker edits = new ButtonLinker(add, remove, reload);
-		ButtonLinker tools = new ButtonLinker(browse, download);
+		ComponentStrip edits = new ComponentStrip(add, remove, reload);
+		ComponentStrip tools = new ComponentStrip(browse, download);
 		
 		getHeader().setLeft(edits);
 		getHeader().setRight(tools);

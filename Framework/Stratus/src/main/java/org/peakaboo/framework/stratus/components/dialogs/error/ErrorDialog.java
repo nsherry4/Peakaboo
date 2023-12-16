@@ -8,14 +8,11 @@ import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import javax.swing.AbstractButton;
-import javax.swing.Box;
+import javax.swing.JComponent;
 
-import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 
@@ -54,8 +51,8 @@ public class ErrorDialog extends HeaderDialog {
 		
 	}
 	
-	private ButtonLinker errorButtons() {
-		var buttons = new ArrayList<AbstractButton>();
+	private ComponentStrip errorButtons() {
+		var buttons = new ArrayList<JComponent>();
 		FluentButton copy = new FluentButton(StockIcon.EDIT_COPY)
 				.withText("Copy")
 				.withTooltip("Copy error to clipboard")
@@ -75,12 +72,12 @@ public class ErrorDialog extends HeaderDialog {
 		}
 		
 
-		ButtonLinker linker = new ButtonLinker(buttons);
+		ComponentStrip linker = new ComponentStrip(buttons);
 		return linker;
 	}
 	
-	private ButtonLinker reportButtons() {
-		var buttons = new ArrayList<AbstractButton>();
+	private ComponentStrip reportButtons() {
+		var buttons = new ArrayList<JComponent>();
 		FluentButton back = new FluentButton(StockIcon.GO_PREVIOUS)
 				.withText("Back")
 				.withTooltip("Back to error message")
@@ -103,7 +100,7 @@ public class ErrorDialog extends HeaderDialog {
 		}
 		
 
-		ButtonLinker linker = new ButtonLinker(buttons);
+		ComponentStrip linker = new ComponentStrip(buttons);
 		return linker;
 	}
 	
