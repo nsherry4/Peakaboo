@@ -283,7 +283,7 @@ public class StratusFileChooser extends JFileChooser {
 				}
 			});
 		var iconview = new FluentToggleButton(StockIcon.VIEW_ICONS)
-				.withTooltip("List View")
+				.withTooltip("Icon View")
 				.withAction(selected -> {
 					if (selected) {
 						iconView = true;
