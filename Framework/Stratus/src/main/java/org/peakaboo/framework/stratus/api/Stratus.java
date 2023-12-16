@@ -24,6 +24,7 @@ public class Stratus {
 
 	public static final String KEY_WINDOW_FOCUSED = "stratus-window-focus";
 	public static final String KEY_BUTTON_BORDER_PAINTED = "stratus-button-border-painted";
+	public static final String KEY_BUTTON_NOTIFICATION_DOT = "stratus-button-notification-dot";
 	
     public enum ButtonState {
     	DISABLED,

@@ -1,23 +1,19 @@
 package org.peakaboo.framework.stratus.laf.painters;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.LinearGradientPaint;
 import java.awt.Paint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
-import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 import javax.swing.JComponent;
 
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
+import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
 //Fills the area of button style controls (no borders, etc)
@@ -140,14 +136,20 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     
     @Override
     public final void paint(Graphics2D g, JComponent object, int width, int height) {
-    	if (!isBorderPainted(object)) {
-    		return;
+    	
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+    	
+    	if (isBorderPainted(object)) {
+    		paint(g, object, width, height, makePalette(object));   		
     	}
     	
-    	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-		
-		paint(g, object, width, height, makePalette(object));
+    	var dot = getNotificationDotColour(object);
+    	if (dot != null && dot.isPresent()) {
+    		int size = 8;
+    		g.setColor(dot.get());
+    		g.fillArc(width-size, height-size, size, size, 0, 360);
+    	}
 		
     }
     
@@ -234,6 +236,22 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     		return painted;
     	} catch (ClassCastException e) {
     		return true;
+    	}
+    }
+    
+    /**
+     * Gets the colour of the notification dot, or null for not displayed
+     */
+    protected Optional<Color> getNotificationDotColour(JComponent component) {
+    	Object prop = component.getClientProperty(Stratus.KEY_BUTTON_NOTIFICATION_DOT);
+    	if (prop == null) { 
+    		return null;
+    	}
+    	try {
+    		Optional<Color> dotColour = (Optional<Color>) prop;
+    		return dotColour;
+    	} catch (ClassCastException e) {
+    		return null;
     	}
     }
     

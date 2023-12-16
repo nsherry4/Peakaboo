@@ -117,6 +117,7 @@ public class FluentButtonConfigurator {
 	public void makeButton() {
 
 		button.putClientProperty(Stratus.KEY_BUTTON_BORDER_PAINTED, config.bordered == BorderStyle.ALWAYS);	
+		button.putClientProperty(Stratus.KEY_BUTTON_NOTIFICATION_DOT, config.notificationDot);
 		
 		FluentButtonLayout mode = config.layout;
 		if (mode == null) {

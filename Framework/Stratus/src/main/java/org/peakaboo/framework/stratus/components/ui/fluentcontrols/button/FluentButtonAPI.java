@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.components.ui.fluentcontrols.button;
 
 import java.awt.Color;
+import java.util.Optional;
 
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
@@ -64,6 +65,17 @@ interface FluentButtonAPI<
 		return getSelf();
 	}
 	
+	default B withNotificationDot(Color colour) {
+		return withNotificationDot(Optional.ofNullable(colour));
+	}
+	
+	default B withNotificationDot(Optional<Color> colour) {
+		getComponentConfig().notificationDot = colour;
+		makeWidget();
+		return getSelf();
+	}
+	
+	
 	default B withStateDefault() {
 		this.setBackground(Stratus.getTheme().getHighlight());
 		this.setForeground(Color.WHITE);
@@ -75,6 +87,8 @@ interface FluentButtonAPI<
 		this.setForeground(Color.WHITE);
 		return getSelf();
 	}
+
+	
 
 	/**
 	 * Sets the Action to display the given popup menu
