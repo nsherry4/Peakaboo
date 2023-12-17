@@ -23,8 +23,8 @@ public class GridlinePainter extends PlotPainter
 	{
 		
 		p.context.save();
-		var majorColour = new PaletteColour(0x20000000);
-		var minorColour = new PaletteColour(0x08000000);
+		var majorColour = new PaletteColour(0x28000000);
+		var minorColour = new PaletteColour(0x10000000);
 		
 		
 		for (var mark : tick.getTickMarks(p, p.plotSize.y, true)) {

@@ -54,5 +54,19 @@ public class SigDigits
 		return text;
 	}
 
+	/** 
+	 * Transforms large numbers into human readable values, eg 100,001 -> 100k 
+	 */
+	public static String humanFormattedNumber(float value) {
+		String[] suffixes = new String[] {"", "k", "M", "B", "T"};
+		for (String suffix : suffixes) {
+			if (value < 1000) {
+				return roundFloatTo(value, 1) + suffix;
+			}
+			value /= 1000f;
+		}
+		return roundFloatTo(value, 1) + "Q";
+	}
+	
 	
 }

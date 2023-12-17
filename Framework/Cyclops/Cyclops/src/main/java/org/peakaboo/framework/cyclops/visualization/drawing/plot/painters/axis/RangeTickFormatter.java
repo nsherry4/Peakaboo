@@ -66,7 +66,7 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 			var minorTicks = tickGen.getTicks(scaleMax, (int)maxTicks, true);
 			var majorTicks = tickGen.getTicks(scaleMax, (int)maxTicks, false);
 
-			float logMax = (float) Math.log10(1+scaleMax);
+			float logMax = (float) Math.log1p(scaleMax);
 			if (Math.abs(scaleMin) > 0.01) {
 				throw new IllegalArgumentException("Cannot use log scale with axes that do not start at zero");
 			}
@@ -74,7 +74,7 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 			for (int scaleValue : minorTicks) {
 				boolean minor = !majorTicks.contains(scaleValue);
 				
-				float logValue = (float) Math.log10(1+scaleValue);
+				float logValue = (float) Math.log1p(scaleValue);
 				float tickY = logValue / logMax;
 				var tickmark = new TickMark(format(scaleValue), tickY, minor);
 				marks.add(tickmark);
