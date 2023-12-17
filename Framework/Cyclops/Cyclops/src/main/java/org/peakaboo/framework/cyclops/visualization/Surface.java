@@ -34,6 +34,11 @@ public interface Surface
 	}
 	
 	/**
+	 * This record holds information for setting up dashed lines
+	 */
+	public record Dash(float[] pattern, float offset) {};
+	
+	/**
 	 * Appends a line -- from the current pen position to the specified x,y coordinate -- to the buffer
 	 * 
 	 * @param x
@@ -204,7 +209,9 @@ public interface Surface
 	
 	void setLineJoin(LineJoin join);
 	void setLineEnd(EndCap cap);
+	void setDashedLine(Dash dash);
 	void setLineStyle(float width, EndCap cap, LineJoin join);
+	void setLineStyle(float width, EndCap cap, LineJoin join, Dash dash);
 
 	/**
 	 * Calculates the width of the given text with the current font settings
@@ -398,5 +405,6 @@ public interface Surface
 	Surface getNewContextForSurface();
 
 	SurfaceDescriptor getSurfaceDescriptor();
+	
 	
 }

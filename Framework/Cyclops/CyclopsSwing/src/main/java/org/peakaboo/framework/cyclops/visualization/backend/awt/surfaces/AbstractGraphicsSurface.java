@@ -69,7 +69,6 @@ public abstract class AbstractGraphicsSurface implements Surface
 		compositeMode = CompositeModes.OVER;
 	}
 
-
 	private GeneralPath newPath()
 	{
 		GeneralPath newpath = new GeneralPath();
@@ -78,117 +77,120 @@ public abstract class AbstractGraphicsSurface implements Surface
 		return newpath;
 	}
 
-
+	@Override
 	public void clip()
 	{
 		graphics.clip(path);
 		path = newPath();
 	}
 
-
+	@Override
 	public void fill()
 	{
 		fillPreserve();
 		path = newPath();
 	}
 
-
+	@Override
 	public void fillPreserve()
 	{
 		path.closePath();
 		graphics.fill(path);
 	}
 
-
+	@Override
 	public void lineTo(float x, float y)
 	{
 		path.lineTo(x, y);
 	}
 	
-
+	@Override
 	public void moveTo(float x, float y)
 	{
 		path.moveTo(x, y);
 	}
 	
-	
+	@Override
 	public void rectAt(float x, float y, float width, float height) {
 		path.append(new Rectangle2D.Float(x, y, width, height), false);
 	}
 	
+	@Override
 	public void roundRectAt(float x, float y, float width, float height, float xradius, float yradius) {
 		path.append(new RoundRectangle2D.Float(x, y, width, height, xradius*2, yradius*2), false);
 	}
 
-
+	@Override
 	public void restore()
 	{
 		graphics = saveStack.pop();
 	}
 
-
+	@Override
 	public void save()
 	{
 		saveStack.push((Graphics2D) graphics.create());
 	}
 	
+	@Override
 	public void restoreFromMarker(int marker)
 	{
 		saveStack.setSize(marker);
 		graphics = saveStack.pop();
 	}
-
+	
+	@Override
 	public int saveWithMarker()
 	{
 		saveStack.push((Graphics2D) graphics.create());
 		return saveStack.size();
 	}
 
-
+	@Override
 	public void setSource(int red, int green, int blue)
 	{
 		graphics.setColor(new Color(red, green, blue));
 	}
 
-
+	@Override
 	public void setSource(int red, int green, int blue, int alpha)
 	{
 		graphics.setColor(new Color(red, green, blue, alpha));
 	}
 
-	
+	@Override
 	public void setSource(float red, float green, float blue)
 	{
 		graphics.setColor(new Color(red, green, blue));
 	}
 
-
+	@Override
 	public void setSource(float red, float green, float blue, float alpha)
 	{
 		graphics.setColor(new Color(red, green, blue, alpha));
 	}
 
-
+	@Override
 	public void setSource(PaletteColour c)
 	{
 		graphics.setColor(new Color(c.getARGB(), true));
 
 	}
 
-
+	@Override
 	public void stroke()
 	{
 		strokePreserve();
 		path = newPath();
 	}
 
-
+	@Override
 	public void strokePreserve()
 	{
 		graphics.draw(path);
 	}
 
-
+	@Override
 	public void setSourceGradient(float x1, float y1, PaletteColour colour1, float x2, float y2, PaletteColour colour2)
 	{
 		GradientPaint gradient = new GradientPaint(x1, y1, new Color(colour1.getARGB(), true), x2,	y2, new Color(colour2.getARGB(), true));
@@ -196,12 +198,13 @@ public abstract class AbstractGraphicsSurface implements Surface
 		graphics.setPaint(gradient);
 	}
 
-
+	@Override
 	public void setLineWidth(float width)
 	{
-		setLineStyle(width, stroke.getEndCap(), stroke.getLineJoin());
+		setLineStyle(width, stroke.getEndCap(), stroke.getLineJoin(), stroke.getDashArray(), stroke.getDashPhase());
 	}
 	
+	@Override
 	public void setLineJoin(LineJoin join)
 	{
 			
@@ -214,9 +217,10 @@ public abstract class AbstractGraphicsSurface implements Surface
 			case ROUND : joinstyle = BasicStroke.JOIN_ROUND; break;
 		}
 		
-		setLineStyle(stroke.getLineWidth(), stroke.getEndCap(), joinstyle);
+		setLineStyle(stroke.getLineWidth(), stroke.getEndCap(), joinstyle, stroke.getDashArray(), stroke.getDashPhase());
 	}
 
+	@Override
 	public void setLineEnd(EndCap cap)
 	{
 				
@@ -229,43 +233,73 @@ public abstract class AbstractGraphicsSurface implements Surface
 			case SQUARE: capstyle = BasicStroke.CAP_SQUARE; break;
 		}
 		
-		setLineStyle(stroke.getLineWidth(), capstyle, stroke.getLineJoin());
+		setLineStyle(stroke.getLineWidth(), capstyle, stroke.getLineJoin(), stroke.getDashArray(), stroke.getDashPhase());
 	}
 	
+	
+	@Override
+	public void setDashedLine(Dash dash) {
+		if (dash == null) {
+			setLineStyle(stroke.getLineWidth(), stroke.getEndCap(), stroke.getLineJoin(), null, 0);
+		} else {
+			setLineStyle(stroke.getLineWidth(), stroke.getEndCap(), stroke.getLineJoin(), dash.pattern(), dash.offset());
+		}
+		
+	}
+	
+
+	@Override
 	public void setLineStyle(float width, EndCap cap, LineJoin join)
+	{
+
+		setLineWidth(width);
+		setLineEnd(cap);
+		setLineJoin(join);
+		setDashedLine(null);
+		
+	}
+
+	@Override
+	public void setLineStyle(float width, EndCap cap, LineJoin join, Dash dash)
 	{
 				
 		setLineWidth(width);
 		setLineEnd(cap);
 		setLineJoin(join);
+		setDashedLine(dash);
 		
 	}
 	
-	private void setLineStyle(float width, int cap, int join)
+	private void setLineStyle(float width, int cap, int join, float[] dashPattern, float dashOffset)
 	{
-		stroke = new BasicStroke(width, cap, join);
+		if (dashPattern == null) {
+			stroke = new BasicStroke(width, cap, join, stroke.getMiterLimit());
+		} else {
+			stroke = new BasicStroke(width, cap, join, stroke.getMiterLimit(), dashPattern, dashOffset);
+		}
 		graphics.setStroke(stroke);
 	}
 
+	@Override
 	public void writeText(String text, float x, float y)
 	{
 		graphics.drawString(text, (int) x, (int) y);
 	}
 
 
-
+	@Override
 	public float getFontHeight()
 	{
 		return graphics.getFontMetrics().getHeight();
 	}
 
-
+	@Override
 	public float getFontLeading()
 	{
 		return graphics.getFontMetrics().getLeading();
 	}
 
-
+	@Override
 	public float getTextWidth(String text)
 	{
 		if (text == null || "".equals(text)) return 0.0f;
@@ -281,32 +315,32 @@ public abstract class AbstractGraphicsSurface implements Surface
 		
 	}
 
-
+	@Override
 	public void scale(float x, float y)
 	{
 		graphics.scale(1.0 / x, 1.0 / y);
 	}
 
-
+	@Override
 	public void translate(float x, float y)
 	{
 		graphics.translate(x, y);
 	}
 
-
+	@Override
 	public void rotate(float radians)
 	{
 		graphics.rotate(radians);
 	}
 
-
+	@Override
 	public float getFontSize()
 	{
 		Font f = graphics.getFont();
 		return f.getSize2D();
 	}
 
-
+	@Override
 	public void setFontSize(float size)
 	{
 		Font f = graphics.getFont();
@@ -314,44 +348,46 @@ public abstract class AbstractGraphicsSurface implements Surface
 		graphics.setFont(f);
 	}
 
-
+	@Override
 	public void useMonoFont()
 	{
 		setFont("Mono");
 	}
 
-
+	@Override
 	public void useSansFont()
 	{
 		setFont("Sans");
 	}
-
+	
+	@Override
 	public void setFont(String name)
 	{
 		Font f = graphics.getFont();
 		graphics.setFont(new Font(name, f.getStyle(), f.getSize()));
 	}
 	
+	@Override
 	public void setFontBold(boolean bold)
 	{
 		Font f = graphics.getFont();
 		graphics.setFont(f.deriveFont(bold ? Font.BOLD : Font.PLAIN));
 	}
 	
-
+	@Override
 	public float getFontAscent()
 	{
 		return graphics.getFontMetrics().getAscent();
 	}
 
-
+	@Override
 	public float getFontDescent()
 	{
 		return graphics.getFontMetrics().getDescent();
 	}
 
 
-
+	@Override
 	public void compose(Buffer buffer, int x, int y, float scale)
 	{
 		BufferedImage image = (BufferedImage) buffer.getImageSource();
@@ -363,13 +399,13 @@ public abstract class AbstractGraphicsSurface implements Surface
 	
 	
 
-
+	@Override
 	public Buffer getImageBuffer(int x, int y)
 	{
 		return new ImageBuffer(x, y);
 	}
 
-
+	@Override
 	public void setAntialias(boolean antialias)
 	{
 		if (antialias)
@@ -378,6 +414,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 	}
 	
+	@Override
 	public void setCompositeMode(CompositeModes mode)
 	{
 		
@@ -403,6 +440,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 		
 	}
 	
+	@Override
 	public CompositeModes getCompositeMode()
 	{
 		return compositeMode;

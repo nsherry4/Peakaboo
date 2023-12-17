@@ -35,7 +35,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		}
 	}
 
-
+	@Override
 	public BufferedImage getImageSource()
 	{
 		commitChanges();
@@ -50,6 +50,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		dirty = false;
 	}
 	
+	@Override
 	public void clear() {
 		if (datasource == null) {
 			init();
@@ -58,6 +59,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		commitChanges();
 	}
 
+	@Override
 	public void setPixelValue(int x, int y, PaletteColour c)
 	{
 		dirty = true;
@@ -65,7 +67,7 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 		setPixelValue(offset, c);
 	}
 
-
+	@Override
 	public void setPixelValue(int offset, PaletteColour c)
 	{
 
