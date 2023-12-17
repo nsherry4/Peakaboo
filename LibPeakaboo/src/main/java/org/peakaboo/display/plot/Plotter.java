@@ -21,6 +21,7 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.Surface.Dash;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
@@ -31,6 +32,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.SpectrumPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter.Config;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter.Orientation;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.RangeTickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
@@ -137,9 +140,12 @@ public class Plotter {
 		////////////////////////////////////////////////////////////////////
 		List<PlotPainter> plotPainters = new ArrayList<>();
 		
-		//draw horizontal grid lines. We do this right up front so they're behind everything else
-		plotPainters.add(new GridlinePainter(tickLeft));
-
+		//draw grid lines. We do this right up front so they're behind everything else
+		plotPainters.add(new GridlinePainter(new Config(Orientation.HORIZONTAL, tickLeft)));
+		var vLineColour = new PaletteColour(0x08000000);
+		plotPainters.add(new GridlinePainter(new Config(Orientation.VERTICAL, tickBottom, vLineColour, vLineColour, new Dash(new float[] {3}, 0))));
+		
+		
 
 		// draw the filtered data
 		plotPainters.add(getPlotPainter(data.filtered, settings.monochrome));
