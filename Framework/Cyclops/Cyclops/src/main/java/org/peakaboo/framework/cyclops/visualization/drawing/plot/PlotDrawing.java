@@ -272,7 +272,7 @@ public class PlotDrawing extends Drawing
 			datascale = dr.maxYIntensity;
 		}
 		if (dr.viewTransform == ViewTransform.LOG) {
-			datascale = (float)Math.log(datascale);
+			datascale = (float)Math.log1p(datascale);
 		}
 		datascale *= 1.15;
 
@@ -282,9 +282,9 @@ public class PlotDrawing extends Drawing
 	public static float getDataScale(float maxValue, boolean log, boolean pad) {
 		float datascale = maxValue;
 		if (pad) {
-			if (log) datascale = (float)Math.log(datascale);
+			if (log) datascale = (float)Math.log1p(datascale);
 			datascale *= 1.15;
-			if (log) datascale = (float)Math.exp(datascale);
+			if (log) datascale = (float)Math.expm1(datascale);
 		}
 		return datascale;
 	}	
@@ -298,7 +298,7 @@ public class PlotDrawing extends Drawing
 			datascale = dr.maxYIntensity;
 		}
 		if (dr.viewTransform == ViewTransform.LOG) {
-			datascale = (float)Math.log(datascale);
+			datascale = (float)Math.log1p(datascale);
 		}
 		datascale *= 1.15;
 
