@@ -105,13 +105,13 @@ public class Plotter {
 	
 	
 	public PlotDrawing drawToSurface(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
-
+		
 		////////////////////////////////////////////////////////////////////
 		// Colour Selections
 		////////////////////////////////////////////////////////////////////
-		PlotPalette fittedPalette = getFittedPalette(settings.monochrome);
-		PlotPalette proposedPalette = getProposedPalette(settings.monochrome);
-		PlotPalette selectedPalette = getSelectedPalette(settings.monochrome);
+		PlotPalette fittedPalette = getFittedPalette(settings);
+		PlotPalette proposedPalette = getProposedPalette(settings);
+		PlotPalette selectedPalette = getSelectedPalette(settings);
 
 		
 				
@@ -148,7 +148,7 @@ public class Plotter {
 		
 
 		// draw the filtered data
-		plotPainters.add(getPlotPainter(data.filtered, settings.monochrome));
+		plotPainters.add(getPlotPainter(data.filtered, settings));
 
 		
 		// draw the original data
@@ -209,7 +209,7 @@ public class Plotter {
 		//Create the DrawingRequest object
 		DrawingRequest dr = createDrawingRequest(data, size, settings, context);
 		
-		clearSurface(context, size);
+		clearSurface(context, settings, size);
 		plotDrawing = new PlotDrawing(context, dr, plotPainters, axisPainters);
 		plotDrawing.draw();
 				
@@ -343,22 +343,26 @@ public class Plotter {
 		return maxIntensity;
 	}
 
-	private void clearSurface(Surface context, Coord<Integer> size) {
+	private void clearSurface(Surface context, PlotSettings settings, Coord<Integer> size) {
 		context.rectAt(0, 0, (float)size.x, (float)size.y);
-		context.setSource(new PaletteColour(0xffffffff));
+		if (settings.darkmode) {
+			context.setSource(new PaletteColour(0xff202020));
+		} else {
+			context.setSource(new PaletteColour(0xffffffff));
+		}
 		context.fill();
 	}
 	
-	private AreaPainter getPlotPainter(ReadOnlySpectrum filtered, boolean monochrome) {
-		PaletteColour fill = new PaletteColour(monochrome ? 0xff606060 : 0xff26a269);
-		PaletteColour stroke = new PaletteColour(monochrome ? 0xff202020 : 0xff1e7e52);
+	private AreaPainter getPlotPainter(ReadOnlySpectrum filtered, PlotSettings settings) {
+		PaletteColour fill = new PaletteColour(settings.monochrome ? 0xff606060 : 0xff26a269);
+		PaletteColour stroke = new PaletteColour(settings.monochrome ? 0xff202020 : 0xff1e7e52);
 		return new AreaPainter(filtered, fill, stroke);
 	}
 
-	private PlotPalette getSelectedPalette(boolean monochrome) {
+	private PlotPalette getSelectedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
 		// Colour/Monochrome colours for highlighted/selected fittings
-		if (monochrome)
+		if (settings.monochrome)
 		{
 			palette.fitFill = new PaletteColour(0x50ffffff);
 			palette.fitStroke = new PaletteColour(0x80ffffff);
@@ -381,9 +385,9 @@ public class Plotter {
 		return palette;
 	}
 
-	private PlotPalette getProposedPalette(boolean monochrome) {
+	private PlotPalette getProposedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
-		if (monochrome)
+		if (settings.monochrome)
 		{
 			palette.fitFill = new PaletteColour(0x50ffffff);
 			palette.fitStroke = new PaletteColour(0x80ffffff);
@@ -406,9 +410,9 @@ public class Plotter {
 		return palette;
 	}
 
-	private PlotPalette getFittedPalette(boolean monochrome) {
+	private PlotPalette getFittedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
-		if (monochrome) {
+		if (settings.monochrome) {
 			palette.fitFill = new PaletteColour(0x50000000);
 			palette.fitStroke = new PaletteColour(0x80000000);
 			palette.sumStroke = new PaletteColour(0xD0000000);

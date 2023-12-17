@@ -4,24 +4,18 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
@@ -54,13 +48,13 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
 import org.peakaboo.framework.stratus.components.ui.options.OptionColours;
 import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar;
-import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
+import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
 import org.peakaboo.ui.swing.app.AccentedTheme;
-import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.DesktopSettings;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
@@ -192,6 +186,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	private OptionBlocksPanel makeAppPanel(PlotController controller) {
 	
 		OptionBlock uxBlock = new OptionBlock();
+		
 		var colours = AccentedTheme.accentColours;
 		Color accentColour = colours.get(DesktopSettings.getAccentColour()); 
 		if (accentColour == null) {
@@ -202,6 +197,14 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withText("Accent Colour", "Requires restart")
 				.withSize(OptionSize.LARGE);
 		uxBlock.add(accent);
+		
+		OptionCheckBox darkmode = new OptionCheckBox(uxBlock)
+				.withText("Dark Mode (Experimental)", "Use a dark user interface theme, requires restart")
+				.withSize(OptionSize.LARGE)
+				.withSelection(DesktopSettings.isDarkMode())
+				.withListener(DesktopSettings::setDarkMode);
+		uxBlock.add(darkmode);
+		
 				
 		
 		OptionBlock startup = new OptionBlock();

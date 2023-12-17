@@ -146,6 +146,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		this.tabs = container;
 		
 		controller = new PlotController(DesktopApp.appDir());
+		controller.view().setDarkMode(DesktopSettings.isDarkMode());
 		
 		initGUI();
 

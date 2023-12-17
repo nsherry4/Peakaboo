@@ -196,6 +196,15 @@ public class ViewController extends EventfulBeacon {
 		updateListeners();
 	}
 	
+	
+	public boolean getDarkMode() {
+		return viewModel.darkMode;
+	}
+
+	public void setDarkMode(boolean dark) {
+		viewModel.darkMode = dark;
+		updateListeners();
+	}
 
 	public PlotSettings getPlotSettings() {
 		
@@ -203,6 +212,7 @@ public class ViewController extends EventfulBeacon {
 		
 		settings.backgroundShowOriginal = getShowRawData();
 		settings.monochrome = getMonochrome();
+		settings.darkmode = getDarkMode();
 		settings.showElementFitIntensities = getShowElementIntensities();
 		settings.showElementFitMarkers = getShowElementMarkers();
 		settings.showIndividualFittings = getShowIndividualSelections();
@@ -211,6 +221,7 @@ public class ViewController extends EventfulBeacon {
 		
 		return settings;
 	}
+
 
 
 

@@ -10,6 +10,7 @@ public class SessionViewModel {
 	public boolean				lockPlotHeight;
 	public boolean				logTransform;
 	public boolean				showTitle;
+	public boolean				darkMode;
 	
 	public SessionViewModel() {
 
@@ -20,6 +21,7 @@ public class SessionViewModel {
 		lockPlotHeight = true;
 		logTransform = true;
 		showTitle = false;
+		darkMode = false;
 		
 	}
 	
@@ -45,6 +47,7 @@ public class SessionViewModel {
 		this.lockPlotHeight = view.lockPlotHeight;
 		this.logTransform = view.logTransform;
 		this.showTitle = view.showTitle;
+		this.darkMode = view.darkMode;
 	}
 	
 }

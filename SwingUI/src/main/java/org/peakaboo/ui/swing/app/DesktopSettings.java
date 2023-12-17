@@ -41,6 +41,15 @@ public class DesktopSettings extends Settings {
 	}
 
 	
+	private static final String DARK_MODE = "org.peakaboo.app.dark-mode";
+	public static boolean isDarkMode() {
+		return provider.getBoolean(DARK_MODE, false);
+	}
+	public static void setDarkMode(boolean verbose) {
+		provider.setBoolean(DARK_MODE, verbose);
+	}
+	
+	
 	private static final String CRASH_AUTOREPORTING = "org.peakaboo.app.crash-autoreport";
 	public static boolean isCrashAutoreporting() {
 		return provider.getBoolean(CRASH_AUTOREPORTING, false);
