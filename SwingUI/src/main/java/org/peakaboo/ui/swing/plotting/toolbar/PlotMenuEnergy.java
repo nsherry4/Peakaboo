@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -97,7 +98,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		energy.addSetting(noiseEnergy, "Noise (eV)");
 		
 		energyGuess = new FluentButton("Guess Calibration")
-				.withIcon(PeakabooIcons.AUTO, IconSize.TOOLBAR_SMALL)
+				.withIcon(PeakabooIcons.AUTO, IconSize.TOOLBAR_SMALL, Stratus.getTheme().getControlText())
 				.withTooltip("Try to detect the correct max energy value by matching fittings to strong signal. Use with care.")
 				.withBordered(false)
 				.withAction(() -> {

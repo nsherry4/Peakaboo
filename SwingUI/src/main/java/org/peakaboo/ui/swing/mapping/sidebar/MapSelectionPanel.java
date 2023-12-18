@@ -11,6 +11,7 @@ import org.peakaboo.controller.mapper.selection.MapSelectionController.Selection
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
@@ -31,26 +32,28 @@ public class MapSelectionPanel extends SettingsPanel {
 		
 		public MapSelectionComponent(Consumer<SelectionType> listener) {
 		
+			var fg = Stratus.getTheme().getControlText();
+			
 			selRect = new FluentToggleButton()
-					.withIcon(PeakabooIcons.SELECT_RECTANGULAR, IconSize.BUTTON)
+					.withIcon(PeakabooIcons.SELECT_RECTANGULAR, IconSize.BUTTON, fg)
 					.withTooltip("Select Rectangle")
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> listener.accept(SelectionType.RECTANGLE));
 			
 			selEllipse = new FluentToggleButton()
-					.withIcon(PeakabooIcons.SELECT_ELLIPSE, IconSize.BUTTON)
+					.withIcon(PeakabooIcons.SELECT_ELLIPSE, IconSize.BUTTON, fg)
 					.withTooltip("Select Ellipse")
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> listener.accept(SelectionType.ELLIPSE));
 			
 			selSimilar = new FluentToggleButton()
-					.withIcon(PeakabooIcons.SELECT_CONTINUOUS_AREA, IconSize.BUTTON)
+					.withIcon(PeakabooIcons.SELECT_CONTINUOUS_AREA, IconSize.BUTTON, fg)
 					.withTooltip("Select By Similarity")
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> listener.accept(SelectionType.SIMILAR));
 			
 			selShape = new FluentToggleButton()
-					.withIcon(PeakabooIcons.SELECT_LASSO, IconSize.BUTTON)
+					.withIcon(PeakabooIcons.SELECT_LASSO, IconSize.BUTTON, fg)
 					.withTooltip("Select Hand-Drawn Shape")
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> listener.accept(SelectionType.SHAPE));
