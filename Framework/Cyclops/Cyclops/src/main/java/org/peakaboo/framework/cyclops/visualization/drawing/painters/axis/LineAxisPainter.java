@@ -3,6 +3,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.painters.axis;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
 /**
@@ -16,7 +17,9 @@ public class LineAxisPainter extends AxisPainter
 
 	private boolean left, right, top, bottom;
 	
-	public LineAxisPainter(boolean left, boolean right, boolean top, boolean bottom)
+	private PaletteColour colour;
+	
+	public LineAxisPainter(PaletteColour colour, boolean left, boolean right, boolean top, boolean bottom)
 	{
 		super();
 		
@@ -24,6 +27,7 @@ public class LineAxisPainter extends AxisPainter
 		this.bottom = bottom;
 		this.left = left;
 		this.right = right;
+		this.colour = colour;
 	}
 
 	@Override
@@ -31,7 +35,7 @@ public class LineAxisPainter extends AxisPainter
 	{
 
 		p.context.save();
-			p.context.setSource(0.0f, 0.0f, 0.0f);
+			p.context.setSource(this.colour);
 	
 			p.context.setAntialias(false);
 			

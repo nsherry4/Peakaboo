@@ -78,13 +78,13 @@ public class CorrelationMapMode extends MapMode {
 		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, paletteList));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 0));
 		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, correlationData.yAxisTitle, "", "", correlationData.xAxisTitle));
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, new PaletteColour(0xff000000), correlationData.yAxisTitle, "", "", correlationData.xAxisTitle));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 2));
 		
 		TickFormatter xTick = new RangeTickFormatter(0, correlationData.xMaxCounts).withTickSize(0.5f);
 		TickFormatter yTick = new RangeTickFormatter(0, correlationData.yMaxCounts).withTickSize(0.5f).withRotate(false);
-		axisPainters.add(new TickMarkAxisPainter(null, xTick, null, yTick));
-		axisPainters.add(new LineAxisPainter(true, false, false, true));
+		axisPainters.add(new TickMarkAxisPainter(new PaletteColour(0xff000000), null, xTick, null, yTick));
+		axisPainters.add(new LineAxisPainter(new PaletteColour(0xff000000), true, false, false, true));
 		
 		map.setAxisPainters(axisPainters);
 		

@@ -112,6 +112,7 @@ public class Plotter {
 		PlotPalette fittedPalette = getFittedPalette(settings);
 		PlotPalette proposedPalette = getProposedPalette(settings);
 		PlotPalette selectedPalette = getSelectedPalette(settings);
+		
 
 		
 				
@@ -141,9 +142,18 @@ public class Plotter {
 		List<PlotPainter> plotPainters = new ArrayList<>();
 		
 		//draw grid lines. We do this right up front so they're behind everything else
-		plotPainters.add(new GridlinePainter(new Config(Orientation.HORIZONTAL, tickLeft)));
-		var vLineColour = new PaletteColour(0x08000000);
-		plotPainters.add(new GridlinePainter(new Config(Orientation.VERTICAL, tickBottom, vLineColour, vLineColour, new Dash(new float[] {3}, 0))));
+		PaletteColour hMajorColour, hMinorColour, vMajorColour;
+		if (settings.darkmode) {
+			hMajorColour = new PaletteColour(0x28ffffff);
+			hMinorColour = new PaletteColour(0x10ffffff);
+			vMajorColour = new PaletteColour(0x08ffffff);
+		} else {
+			hMajorColour = new PaletteColour(0x28000000);
+			hMinorColour = new PaletteColour(0x10000000);
+			vMajorColour = new PaletteColour(0x08000000);
+		}
+		plotPainters.add(new GridlinePainter(new Config(Orientation.HORIZONTAL, tickLeft, hMajorColour, hMinorColour, null)));
+		plotPainters.add(new GridlinePainter(new Config(Orientation.VERTICAL, tickBottom, vMajorColour, vMajorColour, new Dash(new float[] {3}, 0))));
 		
 		
 
@@ -195,10 +205,17 @@ public class Plotter {
 		// Axis Painters
 		////////////////////////////////////////////////////////////////////
 
-		List<AxisPainter> axisPainters = new ArrayList<>();		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, "Relative Intensity", null, settings.title, "Energy (keV)"));
-		axisPainters.add(new TickMarkAxisPainter(tickRight, tickBottom, tickTop, tickLeft));
-		axisPainters.add(new LineAxisPainter(true, true, false, true));
+		PaletteColour cForeground;
+		if (settings.darkmode) {
+			cForeground = new PaletteColour(0xffe0e0e0);
+		} else {
+			cForeground = new PaletteColour(0xff000000);
+		}
+		
+		List<AxisPainter> axisPainters = new ArrayList<>();	
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, cForeground,  "Relative Intensity", null, settings.title, "Energy (keV)"));
+		axisPainters.add(new TickMarkAxisPainter(cForeground, tickRight, tickBottom, tickTop, tickLeft));
+		axisPainters.add(new LineAxisPainter(cForeground, true, true, false, true));
 
 		
 		
@@ -421,13 +438,23 @@ public class Plotter {
 			palette.labelStroke = palette.labelText;
 			palette.markings = palette.fitStroke;
 		} else {
-			palette.fitFill = new PaletteColour(0x50000000);
-			palette.fitStroke = new PaletteColour(0xA0000000);
-			palette.sumStroke = new PaletteColour(0xD0000000);
-			palette.labelText = palette.fitStroke;
-			palette.labelBackground = new PaletteColour(0xffffffff);
-			palette.labelStroke = palette.labelText;
-			palette.markings = palette.fitStroke;
+			if (settings.darkmode) {
+				palette.fitFill = new PaletteColour(0x50ffffff);
+				palette.fitStroke = new PaletteColour(0xA0ffffff);
+				palette.sumStroke = new PaletteColour(0xD0ffffff);
+				palette.labelText = palette.fitStroke;
+				palette.labelBackground = new PaletteColour(0xff000000);
+				palette.labelStroke = palette.labelText;
+				palette.markings = palette.fitStroke;
+			} else {
+				palette.fitFill = new PaletteColour(0x50000000);
+				palette.fitStroke = new PaletteColour(0xA0000000);
+				palette.sumStroke = new PaletteColour(0xD0000000);
+				palette.labelText = palette.fitStroke;
+				palette.labelBackground = new PaletteColour(0xffffffff);
+				palette.labelStroke = palette.labelText;
+				palette.markings = palette.fitStroke;
+			}
 		}
 		return palette;
 	}

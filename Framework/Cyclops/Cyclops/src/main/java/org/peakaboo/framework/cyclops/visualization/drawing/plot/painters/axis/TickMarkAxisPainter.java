@@ -7,14 +7,16 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
 public class TickMarkAxisPainter extends AxisPainter
 {
 	
 	public TickFormatter yRightValueBounds, xBottomValueBounds, xTopValueBounds, yLeftValueBounds;
+	private PaletteColour colour;
 	
-	public TickMarkAxisPainter(TickFormatter rightValueBounds, TickFormatter bottomValueBounds,
+	public TickMarkAxisPainter(PaletteColour colour, TickFormatter rightValueBounds, TickFormatter bottomValueBounds,
 			TickFormatter topValueBounds, TickFormatter leftValueBounds)
 	{
 
@@ -24,6 +26,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		this.yLeftValueBounds = leftValueBounds;
 		this.xBottomValueBounds = bottomValueBounds;
 		this.xTopValueBounds = topValueBounds;
+		this.colour = colour;
 				
 
 	}
@@ -53,7 +56,7 @@ public class TickMarkAxisPainter extends AxisPainter
 	
 		p.context.save();
 				
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 		
 			Pair<Float, Float> otherAxisSize = getAxisSizeX(p);
@@ -112,7 +115,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		
 		p.context.save();
 			
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 			
 			Pair<Float, Float> otherAxisSize = getAxisSizeX(p);
@@ -172,7 +175,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		
 		p.context.save();
 			
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 		
 			Pair<Float, Float> otherAxisSize = getAxisSizeY(p);
@@ -241,7 +244,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		
 		p.context.save();
 			
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 			
 			Pair<Float, Float> otherAxisSize = getAxisSizeY(p);

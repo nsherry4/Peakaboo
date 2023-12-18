@@ -3,10 +3,8 @@ package org.peakaboo.display.map.modes;
 import java.lang.ref.SoftReference;
 import java.util.List;
 
-import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
-import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.Surface;
@@ -84,7 +82,7 @@ public abstract class MapMode {
 		if (!settings.detectorProfile.isEmpty()) {
 			title += " calibrated with " + settings.detectorProfile.getName();	
 		}
-		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, null, null, null, title);
+		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, new PaletteColour(0xff000000), null, null, null, title);
 	}
 	
 	protected SelectionMaskPainter getSelectionPainter(PaletteColour colour, List<Integer> points, int width, int height) {
@@ -151,14 +149,14 @@ public abstract class MapMode {
 		//if we're showing a dataset title, add a title axis painter to put a title on the top
 		if (settings.showDatasetTitle)
 		{
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, settings.datasetTitle, null));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, new PaletteColour(0xff000000), null, null, settings.datasetTitle, null));
 		}
 
 		//if we're map title, add a title axis painter to put a title on the bottom
 		if (settings.showMapTitle)
 		{
 			String mapTitle = settings.mapTitle;
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, null, null, null, mapTitle));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, new PaletteColour(0xff000000), null, null, null, mapTitle));
 		}
 	}
 	
