@@ -42,6 +42,8 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.laf.theme.DuskTheme;
+import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.AccentedTheme;
@@ -184,7 +186,11 @@ public class Peakaboo {
 			if (accent == null) {
 				accent = AccentedTheme.accentColours.get("Blue");
 			}
-			StratusLookAndFeel laf = new StratusLookAndFeel(new AccentedTheme(accent));
+			Theme theme = new AccentedTheme(accent);
+			if (DesktopSettings.isDarkMode()) {
+				theme = new DuskTheme();
+			}
+			StratusLookAndFeel laf = new StratusLookAndFeel(theme);
 			
 					
 			setLaF(laf);

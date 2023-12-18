@@ -85,7 +85,7 @@ public class AboutLayer extends HeaderLayer {
 	public static JPanel aboutPanel(Contents contents) {
 
 		JPanel infopanel = new JPanel(new GridBagLayout());
-		infopanel.setBackground(Color.WHITE);
+		infopanel.setBackground(Stratus.getTheme().getRecessedControl());
 		//infopanel.setBorder(new EmptyBorder(0, 50, Spacing.large, 50));		
 		infopanel.setBorder(Spacing.bHuge());
 		
