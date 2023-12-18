@@ -7,8 +7,6 @@ import static java.util.stream.Collectors.toList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -29,14 +27,15 @@ import javax.swing.table.TableColumn;
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ListControls;
-import org.peakaboo.framework.stratus.components.ui.itemlist.ReorderTransferHandler;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ListControls.ElementCount;
+import org.peakaboo.framework.stratus.components.ui.itemlist.ReorderTransferHandler;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 import org.peakaboo.ui.swing.plotting.fitting.Changeable;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
@@ -72,10 +71,13 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		JPopupMenu addMenu = createAddMenu();
 
-		FluentButton addButton = new FluentButton(StockIcon.EDIT_ADD).withTooltip("Add Fittings");
+		FluentButton addButton = new FluentButton()
+				.withIcon(StockIcon.EDIT_ADD, Stratus.getTheme().getControlText())
+				.withTooltip("Add Fittings");
 		addButton.withAction(() -> addMenu.show(addButton, 0, addButton.getHeight()));
 		
-		FluentButton removeButton = new FluentButton(StockIcon.EDIT_REMOVE)
+		FluentButton removeButton = new FluentButton()
+			.withIcon(StockIcon.EDIT_REMOVE, Stratus.getTheme().getControlText())
 			.withTooltip("Remove Selected Fittings")
 			.withAction(() -> {
 				int[] rows = fitTable.getSelectedRows();
@@ -91,7 +93,8 @@ public class FittingPanel extends ClearPanel implements Changeable
 				owner.changed();
 		});
 		
-		FluentButton clearButton = new FluentButton(StockIcon.EDIT_CLEAR)
+		FluentButton clearButton = new FluentButton()
+			.withIcon(StockIcon.EDIT_CLEAR, Stratus.getTheme().getControlText())
 			.withTooltip("Clear All Fittings")
 			.withAction(() -> {
 				controller.clearTransitionSeries();
@@ -100,12 +103,14 @@ public class FittingPanel extends ClearPanel implements Changeable
 		
 		controls = new ListControls(addButton, removeButton, clearButton);
 		
-		FluentButton selectAll = new FluentButton(StockIcon.SELECTION_ALL)
+		FluentButton selectAll = new FluentButton()
+				.withIcon(StockIcon.SELECTION_ALL, Stratus.getTheme().getControlText())
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select All")
 				.withBordered(false)
 				.withAction(() -> controller.setAllTransitionSeriesVisibility(true));
-		FluentButton selectNone = new FluentButton(StockIcon.SELECTION_NONE)
+		FluentButton selectNone = new FluentButton()
+				.withIcon(StockIcon.SELECTION_NONE, Stratus.getTheme().getControlText())
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select None")
 				.withBordered(false)

@@ -11,6 +11,7 @@ import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
@@ -191,31 +192,36 @@ public class PlotToolbar extends JToolBar {
 
 	private FluentToolbarButton createEnergyMenuButton() {
 		energyMenu = new PlotMenuEnergy(plot, controller);
+		var colour = Stratus.getTheme().getControlText();
 		return new FluentToolbarButton()
-				.withIcon(PeakabooIcons.MENU_ENERGY)
+				.withIcon(PeakabooIcons.MENU_ENERGY, colour)
 				.withTooltip("Energy & Peak Calibration")
 				.withPopupMenuAction(energyMenu, true);
 	}
 	
 	private FluentToolbarButton createMainMenuButton() {
 		mainMenu = new PlotMenuMain(plot, controller);
-		return new FluentToolbarButton(StockIcon.MENU_MAIN)
+		var colour = Stratus.getTheme().getControlText();
+		return new FluentToolbarButton()
+				.withIcon(StockIcon.MENU_MAIN, colour)
 				.withTooltip("Main Menu")
 				.withPopupMenuAction(mainMenu, true);
 	}
 
 	private FluentToolbarButton createViewMenuButton() {
 		viewMenu = new PlotMenuView(plot, controller);
+		var colour = Stratus.getTheme().getControlText();
 		return new FluentToolbarButton()
-				.withIcon(PeakabooIcons.MENU_VIEW)
+				.withIcon(PeakabooIcons.MENU_VIEW, colour)
 				.withTooltip("Plot Display Options")
 				.withPopupMenuAction(viewMenu, true);
 	}
 	
 	
 	private FluentToolbarButton createSettingsMenuButton() {
+		var colour = Stratus.getTheme().getControlText();
 		return new FluentToolbarButton()
-				.withIcon(PeakabooIcons.MENU_SETTINGS)
+				.withIcon(PeakabooIcons.MENU_SETTINGS, colour)
 				.withTooltip("Advanced Settings & Tuneables")
 				.withAction(() -> plot.actionShowAdvancedOptions());
 	}

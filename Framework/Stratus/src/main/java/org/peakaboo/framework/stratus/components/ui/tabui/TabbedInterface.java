@@ -1,6 +1,5 @@
 package org.peakaboo.framework.stratus.components.ui.tabui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -78,7 +78,7 @@ public abstract class TabbedInterface<T extends Component> extends JTabbedPane {
 	
 
 	private void makeNewTabButton() {
-		Icon newmapButton = StockIcon.WINDOW_TAB_NEW.toImageIcon(IconSize.BUTTON);
+		Icon newmapButton = StockIcon.WINDOW_TAB_NEW.toImageIcon(IconSize.BUTTON, Stratus.getTheme().getControlText());
 		this.addTab("", newmapButton, new ClearPanel());	
 	}
 	

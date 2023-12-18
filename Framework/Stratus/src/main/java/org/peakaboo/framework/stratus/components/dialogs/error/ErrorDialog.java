@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 
 import javax.swing.JComponent;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -53,14 +54,16 @@ public class ErrorDialog extends HeaderDialog {
 	
 	private ComponentStrip errorButtons() {
 		var buttons = new ArrayList<JComponent>();
-		FluentButton copy = new FluentButton(StockIcon.EDIT_COPY)
+		FluentButton copy = new FluentButton()
+				.withIcon(StockIcon.EDIT_COPY, Stratus.getTheme().getControlText())
 				.withText("Copy")
 				.withTooltip("Copy error to clipboard")
 				.withAction(this::copyData);
 		buttons.add(copy);
 		
 		if (this.onReport != null) {
-			FluentButton submit = new FluentButton(StockIcon.DOCUMENT_EXPORT_SYMBOLIC)
+			FluentButton submit = new FluentButton()
+					.withIcon(StockIcon.DOCUMENT_EXPORT_SYMBOLIC, Stratus.getTheme().getControlText())
 					.withText("Report")
 					.withTooltip("Send crash report to developers")
 					.withAction(() -> {

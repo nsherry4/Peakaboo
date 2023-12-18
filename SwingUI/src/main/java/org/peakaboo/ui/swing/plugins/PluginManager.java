@@ -102,13 +102,41 @@ public class PluginManager extends HeaderLayer {
 		
 		
 		//header controls
-		add = new FluentButton(StockIcon.EDIT_ADD).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Import Plugins").withAction(this::add);
-		remove = new FluentButton(StockIcon.EDIT_REMOVE).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Remove Plugins").withAction(this::removeSelected);
-		reload = new FluentButton(StockIcon.ACTION_REFRESH_SYMBOLIC).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Reload Plugins").withAction(this::reload);
+		add = new FluentButton()
+				.withIcon(StockIcon.EDIT_ADD, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Import Plugins")
+				.withAction(this::add);
+		
+		remove = new FluentButton()
+				.withIcon(StockIcon.EDIT_REMOVE, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Remove Plugins")
+				.withAction(this::removeSelected);
+		
+		reload = new FluentButton()
+				.withIcon(StockIcon.ACTION_REFRESH_SYMBOLIC, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Reload Plugins")
+				.withAction(this::reload);
+		
 		remove.setEnabled(false);
 		
-		browse = new FluentButton(StockIcon.DOCUMENT_OPEN_SYMBOLIC).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Open Plugins Folder").withAction(this::browse);
-		download = new FluentButton(StockIcon.GO_DOWN).withBordered(false).withButtonSize(FluentButtonSize.LARGE).withTooltip("Get More Plugins").withAction(this::download);
+		browse = new FluentButton()
+				.withIcon(StockIcon.DOCUMENT_OPEN_SYMBOLIC, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Open Plugins Folder")
+				.withAction(this::browse);
+		download = new FluentButton()
+				.withIcon(StockIcon.GO_DOWN, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Get More Plugins")
+				.withAction(this::download);
 		
 		ComponentStrip edits = new ComponentStrip(add, remove, reload);
 		ComponentStrip tools = new ComponentStrip(browse, download);

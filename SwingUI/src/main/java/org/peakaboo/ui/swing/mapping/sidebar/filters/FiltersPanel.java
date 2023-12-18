@@ -19,6 +19,7 @@ import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.api.models.GroupedListTreeModel;
@@ -177,7 +178,7 @@ public class FiltersPanel extends JPanel {
 		
 		
 		
-		FluentButton add = new FluentButton(StockIcon.EDIT_ADD)
+		FluentButton add = new FluentButton().withIcon(StockIcon.EDIT_ADD, Stratus.getTheme().getControlText())
 			.withTooltip("Add Filter")
 			.withAction(() -> layout.show(this, PANEL_ADD));
 		FluentButton remove = new FluentButton(StockIcon.EDIT_REMOVE)

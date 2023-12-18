@@ -14,6 +14,7 @@ import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.autodialog.view.swing.layouts.NarrowSwingLayout;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -75,12 +76,13 @@ class MapFilterSettingsPanel extends ClearPanel {
 			label.setBorder(Spacing.bSmall());
 			
 			var help = new FluentLabel()
-					.withIcon(StockIcon.APP_HELP, IconSize.BUTTON)
+					.withIcon(StockIcon.APP_HELP, IconSize.BUTTON, Stratus.getTheme().getControlText())
 					.withBorder(Spacing.bMedium())
 					.withTooltip(filter.getFilterName() + ": " + filter.getFilterDescription());		
 			help.setFocusable(false);
 			
-			var back = new FluentButton(StockIcon.GO_PREVIOUS)
+			var back = new FluentButton()
+					.withIcon(StockIcon.GO_PREVIOUS, Stratus.getTheme().getControlText())
 					.withTooltip("Return to filter list")
 					.withBordered(false)
 					.withBorder(Spacing.bMedium())

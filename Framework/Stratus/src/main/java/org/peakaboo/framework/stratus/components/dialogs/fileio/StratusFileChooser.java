@@ -263,17 +263,18 @@ public class StratusFileChooser extends JFileChooser {
 	
 	private JPanel getBreadcrumb() {
 		
-		makeDirButton = new FluentButton(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC);
+		makeDirButton = new FluentButton()
+				.withIcon(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC, Stratus.getTheme().getControlText());
 		makeDirButton.setAction(bmkdir.getAction());
 		makeDirButton
 			.withText("")
-			.withIcon(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC, IconSize.BUTTON)
+			.withIcon(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC, Stratus.getTheme().getControlText())
 			.withTooltip("New Folder");
 		//TODO: Why do I need this border to make this button the same size as the others? 
 		makeDirButton.setBorder(new EmptyBorder(7,7,7,7));
 		
 		ButtonGroup viewGroup = new ButtonGroup();
-		var listview = new FluentToggleButton(StockIcon.VIEW_LIST)
+		var listview = new FluentToggleButton().withIcon(StockIcon.VIEW_LIST, Stratus.getTheme().getControlText())
 			.withTooltip("List View")
 			.withAction(selected -> {
 				if (selected) {
