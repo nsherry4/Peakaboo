@@ -1,7 +1,6 @@
 package org.peakaboo.display.plot.painters;
 
 
-import java.awt.Color;
 import java.util.List;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
@@ -33,8 +32,7 @@ public class FittingPainter extends PlotPainter
 	 * Create a new FittingPainter
 	 * 
 	 * @param data the data to draw on the plot
-	 * @param stroke the {@link Color} to stroke the data with
-	 * @param fill the {@link Color} to fill the data with
+	 * @param palette the colours to use
 	 */
 	public FittingPainter(FittingResultSet data, PlotPalette palette)
 	{
@@ -47,8 +45,7 @@ public class FittingPainter extends PlotPainter
 	 * Create a new FittingPainter
 	 * 
 	 * @param data the data to draw on the plot
-	 * @param stroke the {@link Color} to stroke the data with
-	 * @param fill the {@link Color} to fill the data with
+	 * @param palette the colours to use
 	 */
 	public FittingPainter(List<FittingResult> data, PlotPalette palette) {
 		this.data = data;

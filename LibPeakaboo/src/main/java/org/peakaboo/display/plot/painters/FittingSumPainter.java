@@ -1,8 +1,6 @@
 package org.peakaboo.display.plot.painters;
 
 
-import java.awt.Color;
-
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
@@ -32,8 +30,8 @@ public class FittingSumPainter extends PlotPainter
 	 * Create a new FittingSumPainter
 	 * 
 	 * @param data the data to draw on the plot
-	 * @param stroke the {@link Color} to stroke the data with
-	 * @param fill the {@link Color} to fill the data with
+	 * @param palette the colours to use
+	 * @param fill indicates if the shapes drawn should be filled or traced
 	 */
 	public FittingSumPainter(Spectrum data, PlotPalette palette, boolean fill)
 	{
