@@ -82,7 +82,7 @@ public abstract class MapMode {
 		if (!settings.detectorProfile.isEmpty()) {
 			title += " calibrated with " + settings.detectorProfile.getName();	
 		}
-		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, new PaletteColour(0xff000000), null, null, null, title);
+		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, settings.getFg(), null, null, null, title);
 	}
 	
 	protected SelectionMaskPainter getSelectionPainter(PaletteColour colour, List<Integer> points, int width, int height) {
@@ -100,6 +100,7 @@ public abstract class MapMode {
 		return new SpectrumCoordsAxisPainter (
 
 				settings.drawCoord,
+				settings.getFg(),
 				settings.coordLoXHiY,
 				settings.coordHiXHiY,
 				settings.coordLoXLoY,
@@ -126,6 +127,7 @@ public abstract class MapMode {
 		
 		return new SpectrumCoordsAxisPainter (
 			settings.drawCoord,
+			settings.getFg(),
 			settings.coordLoXHiY,
 			settings.coordHiXHiY,
 			settings.coordLoXLoY,
@@ -149,14 +151,14 @@ public abstract class MapMode {
 		//if we're showing a dataset title, add a title axis painter to put a title on the top
 		if (settings.showDatasetTitle)
 		{
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, new PaletteColour(0xff000000), null, null, settings.datasetTitle, null));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, settings.getFg(), null, null, settings.datasetTitle, null));
 		}
 
 		//if we're map title, add a title axis painter to put a title on the bottom
 		if (settings.showMapTitle)
 		{
 			String mapTitle = settings.mapTitle;
-			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, new PaletteColour(0xff000000), null, null, null, mapTitle));
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, settings.getFg(), null, null, null, mapTitle));
 		}
 	}
 	

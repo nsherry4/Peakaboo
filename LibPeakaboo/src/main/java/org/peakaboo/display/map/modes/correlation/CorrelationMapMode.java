@@ -46,7 +46,7 @@ public class CorrelationMapMode extends MapMode {
 		//TODO: move this call to Mapper
 		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
-		backend.setSource(new PaletteColour(0xffffffff));
+		backend.setSource(settings.getBg());
 		backend.fill();
 		
 		dr.uninterpolatedWidth = correlationData.getSize().x;

@@ -8,6 +8,7 @@ import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
 
@@ -21,13 +22,16 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	protected boolean				drawCoords, drawKey, realDimensionsProvided, drawScaleBar;
 	protected int					keyHeight;
 	
-	public AbstractKeyCoordAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+	protected PaletteColour			colour;
+	
+	public AbstractKeyCoordAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawKey, int keyHeight, boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super();
 
 		this.drawCoords = drawCoords;
+		this.colour = colour;
 		this.coordLoXLoY = coordLoXLoY;
 		this.coordHiXLoY = coordHiXLoY;
 		this.coordLoXHiY = coordLoXHiY;
@@ -115,7 +119,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		float lineWidth = getBaseUnitSize(p.dr) * 2.0f;
 		p.context.setLineWidth(lineWidth);
-		p.context.setSource(0.0f, 0.0f, 0.0f);
+		p.context.setSource(colour);
 
 		p.context.setFontSize(getCoordFontSize(p));
 
@@ -143,7 +147,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		if (!drawCoords) return;
 
-		p.context.setSource(0, 0, 0);
+		p.context.setSource(colour);
 
 		Pair<Float, Float> borderX, borderY;
 		borderX = getAxisSizeX(p);

@@ -17,12 +17,13 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	private List<Pair<PaletteColour, String>>	entries;
 
-	public LegendCoordsAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+	public LegendCoordsAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, boolean realDimensionsProvided, boolean drawScaleBar, List<Pair<PaletteColour, String>> entries)
 	{
 		super(
 			drawCoords,
+			colour,
 			coordLoXLoY,
 			coordHiXLoY,
 			coordLoXHiY,
@@ -84,7 +85,7 @@ public class LegendCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			p.context.rectAt(position, textBaseline-keyHeight+p.context.getFontDescent(), keyHeight, keyHeight);
 			p.context.setSource(entry.first);
 			p.context.fillPreserve();
-			p.context.setSource(new PaletteColour(0xff000000));
+			p.context.setSource(colour);
 			p.context.stroke();
 			
 			p.context.writeText(entry.second, position + keyHeight * 1.5f, textBaseline);

@@ -15,6 +15,7 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
@@ -90,7 +91,7 @@ public class QuickMapPanel extends HeaderLayer {
 		
 		
 		viewButton = MapperToolbar.createOptionsButton(controller);
-		viewButton.withIcon(PeakabooIcons.MENU_VIEW, IconSize.BUTTON);
+		viewButton.withIcon(PeakabooIcons.MENU_VIEW, IconSize.BUTTON, Stratus.getTheme().getControlText());
 		viewButton.withButtonSize(FluentButtonSize.LARGE);
 		sizingButton = createSizingButton(plotTab, controller);
 		
@@ -123,9 +124,10 @@ public class QuickMapPanel extends HeaderLayer {
 	
 	public FluentToolbarButton createSizingButton(LayerPanel panel, MappingController controller) {
 		
-		FluentToolbarButton opts = new FluentToolbarButton();
-		opts.withIcon(StockIcon.OBJECT_FLIP_HORIZONTAL, IconSize.BUTTON).withTooltip("Map Dimensions Menu");
-		opts.withButtonSize(FluentButtonSize.LARGE);
+		FluentToolbarButton opts = new FluentToolbarButton()
+				.withIcon(StockIcon.OBJECT_FLIP_HORIZONTAL, IconSize.BUTTON, Stratus.getTheme().getControlText())
+				.withTooltip("Map Dimensions Menu")
+				.withButtonSize(FluentButtonSize.LARGE);
 		JPopupMenu menu = new JPopupMenu();
 		
 		MapDimensionsPanel dimensions = new MapDimensionsPanel(panel, controller, true);

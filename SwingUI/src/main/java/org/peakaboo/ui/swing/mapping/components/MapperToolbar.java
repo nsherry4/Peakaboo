@@ -12,6 +12,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
@@ -96,7 +97,7 @@ public class MapperToolbar extends JToolBar {
 		JPopupMenu menu = new MapMenuView(controller);
 		
 		FluentToolbarButton opts = new FluentToolbarButton()
-				.withIcon(PeakabooIcons.MENU_VIEW)
+				.withIcon(PeakabooIcons.MENU_VIEW, Stratus.getTheme().getControlText())
 				.withTooltip("Map Settings Menu");
 		
 		opts.withAction(() -> {
@@ -110,7 +111,9 @@ public class MapperToolbar extends JToolBar {
 	
 	
 	private FluentToolbarButton createExportMenuButton(MapperPanel panel) {
-		FluentToolbarButton exportMenuButton = new FluentToolbarButton().withIcon(StockIcon.DOCUMENT_EXPORT).withTooltip("Export Maps");
+		FluentToolbarButton exportMenuButton = new FluentToolbarButton()
+				.withIcon(StockIcon.DOCUMENT_EXPORT)
+				.withTooltip("Export Maps");
 		JPopupMenu exportMenu = new MapMenuExport(panel);
 		exportMenuButton.withAction(() -> exportMenu.show(exportMenuButton, 0, exportMenuButton.getHeight()));
 		return exportMenuButton;

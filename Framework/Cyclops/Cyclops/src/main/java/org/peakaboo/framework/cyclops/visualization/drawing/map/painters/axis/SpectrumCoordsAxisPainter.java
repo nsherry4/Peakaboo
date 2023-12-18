@@ -23,15 +23,16 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	private boolean						negativeValues;
 	private List<Pair<Float, String>>	markings;
 	private int 						decimalPoints;
-
 	
-	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+	
+	public SpectrumCoordsAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
 			boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super(
 			drawCoords,
+			colour,
 			coordLoXLoY,
 			coordHiXLoY,
 			coordLoXHiY,
@@ -53,13 +54,14 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	}
 
 
-	public SpectrumCoordsAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+	public SpectrumCoordsAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
 			boolean realDimensionsProvided, boolean drawScaleBar, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
 	{
 		super(
 			drawCoords,
+			colour,
 			coordLoXLoY,
 			coordHiXLoY,
 			coordLoXHiY,
@@ -109,7 +111,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			spectrumPosition += increment;
 
 		}
-		p.context.setSource(0, 0, 0);
+		p.context.setSource(colour);
 
 		final float textBaseline = offsetY + keyHeight + p.context.getFontLeading() + p.context.getFontAscent();
 		float fontSize = p.context.getFontSize();

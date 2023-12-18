@@ -32,9 +32,10 @@ public class CompositeMapMode extends MapMode{
 		
 		CompositeModeData compositedata = (CompositeModeData) data.mapModeData;
 		
+		//clear surface	
 		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
-		backend.setSource(new PaletteColour(0xffffffff));
+		backend.setSource(settings.getBg());
 		backend.fill();
 		
 		AbstractPalette palette				=		new ThermalScalePalette(spectrumSteps, settings.monochrome);
@@ -79,6 +80,8 @@ public class CompositeMapMode extends MapMode{
 		mapPainters.add(contourMapPainter);
 		
 		
+		
+		
 		//Invalid points with no backing data
 		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(
 				new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), 
@@ -93,7 +96,6 @@ public class CompositeMapMode extends MapMode{
 				settings.userDataHeight);
 		mapPainters.add(selectionPainter);
 			
-		
 		map.setPainters(mapPainters);
 		map.draw();
 
