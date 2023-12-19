@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.net.URL;
@@ -236,28 +235,56 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	
 	
 	private Dimension calculateCanvasSize() {
-		//Width
-		double parentWidth = 1.0;
-		if (this.getParent() != null) {
-			parentWidth = this.getParent().getWidth();
+		
+		final float WIDTH_FUDGE_FACTOR = 1.2f;
+		
+		int channels = controller.data().getDataSet().getAnalysis().channelsPerScan();
+		float zoom = controller.view().getZoom();
+
+		//Transform zoom
+		// UI zoom is from 0.1 to 10
+		/**
+		 * We want most of the control for the zoom to be around normal zoom levels, so
+		 * we re-center the zoom value from -1 to 1 and apply an exponential function to
+		 * the zoom value
+		 * 
+		 * We center the zoom value around 0 so that we can apply an inverse multiplier when
+		 * zooming out and so we mirror the curve for zooming in 
+		 */
+		
+		//convert to 0 - 9.9
+		zoom -= 0.1f;
+		//convert to 0 - 1
+		zoom /= 9.9f;
+		//convert to -1 to 1
+		zoom = (zoom * 2f) - 1f;
+		boolean invert = zoom < 0;
+		boolean lockToWidth = zoom <= -0.99f;
+		zoom = Math.abs(zoom);
+		zoom = (float)Math.exp(zoom);
+		
+		if (invert) {
+			zoom = 1f / zoom;
 		}
-
-		int newWidth = (int) (controller.data().getDataSet().getAnalysis().channelsPerScan() * controller.view().getZoom());
-		if (newWidth < parentWidth) newWidth = (int) parentWidth;
-
-		
-		
-		//Height
+			
+		double parentWidth = 1.0;
 		double parentHeight = 1.0;
 		if (this.getParent() != null) {
+			parentWidth = this.getParent().getWidth();
 			parentHeight = this.getParent().getHeight();
 		}
 
-		int newHeight = (int) (200 * controller.view().getZoom());
-		if (newHeight < parentHeight) newHeight = (int) parentHeight;
+		// Height
+		int newHeight = (int) parentHeight;
 		
-		if (controller.view().getLockPlotHeight()) {
-			newHeight = (int) parentHeight;
+		// Width
+		// The width scales at a fraction the rate of height. y=mx+b
+		float heightScale = (0.0008f * newHeight) + 0.5f;
+		
+		int newWidth = (int) (channels * zoom * heightScale * WIDTH_FUDGE_FACTOR);
+		if (newWidth < parentWidth) newWidth = (int) parentWidth;	
+		if (lockToWidth) {
+			newWidth = (int) parentWidth;
 		}
 		
 		//Generate new size

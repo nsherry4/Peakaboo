@@ -176,15 +176,6 @@ public class ViewController extends EventfulBeacon {
 
 		return new Pair<>(scans.filtered.get(channel), scans.raw.get(channel));
 	}
-
-	
-	public boolean getLockPlotHeight() {
-		return viewModel.lockPlotHeight;
-	}
-	public void setLockPlotHeight(boolean lock) {
-		viewModel.lockPlotHeight = lock;
-		updateListeners();
-	}
 	
 	
 	public boolean getShowTitle() {

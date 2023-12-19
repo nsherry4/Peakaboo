@@ -12,7 +12,6 @@ import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.ZoomSlider;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 
 public class PlotZoomControls extends FluentButton {
 	
@@ -35,16 +34,9 @@ public class PlotZoomControls extends FluentButton {
 		
 		zoomSlider = new ZoomSlider(10, 1000, 10, value -> controller.view().setZoom(value / 100f));
 		zoomSlider.setOpaque(false);
-		zoomSlider.setValue(100);
+		zoomSlider.setValue(505);
 		zoomPanel.add(zoomSlider, BorderLayout.CENTER);
 
-		
-		FluentToggleButton lockHorizontal = new FluentToggleButton("").withIcon(StockIcon.MISC_LOCKED, Stratus.getTheme().getControlText())
-				.withTooltip("Lock Vertical Zoom to Window Size")
-				.withSelected(true)
-				.withAction(controller.view()::setLockPlotHeight);
-		zoomPanel.add(lockHorizontal, BorderLayout.EAST);
-		
 		JPopupMenu zoomMenu = new JPopupMenu();
 		zoomMenu.setBorder(Spacing.bNone());
 		zoomMenu.add(zoomPanel);

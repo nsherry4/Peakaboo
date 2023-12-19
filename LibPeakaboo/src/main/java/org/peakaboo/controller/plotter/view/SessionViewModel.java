@@ -7,7 +7,6 @@ public class SessionViewModel {
 	public ChannelCompositeMode	channelComposite;
 	public boolean				backgroundShowOriginal;
 	public float				zoom;
-	public boolean				lockPlotHeight;
 	public boolean				logTransform;
 	public boolean				showTitle;
 	public boolean				darkMode;
@@ -18,7 +17,6 @@ public class SessionViewModel {
 		channelComposite = ChannelCompositeMode.AVERAGE;
 		backgroundShowOriginal = false;
 		zoom = 1.0f;
-		lockPlotHeight = true;
 		logTransform = true;
 		showTitle = false;
 		darkMode = false;
@@ -44,7 +42,6 @@ public class SessionViewModel {
 		this.channelComposite = view.channelComposite;
 		this.backgroundShowOriginal = view.backgroundShowOriginal;
 		this.zoom = view.zoom;
-		this.lockPlotHeight = view.lockPlotHeight;
 		this.logTransform = view.logTransform;
 		this.showTitle = view.showTitle;
 		this.darkMode = view.darkMode;
