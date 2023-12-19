@@ -278,10 +278,24 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		});
 		
+		ImageIcon peakabooLogo;
+		if (DesktopSettings.isDarkMode()) {
+			peakabooLogo = IconFactory.getImageIcon(
+					PeakabooIcons.PATH, 
+					"icon-symbolic", 
+					new Color((0x00ffffff & Stratus.getTheme().getControlText().getRGB()) | 0x20000000, true)
+				);
+		} else {
+			peakabooLogo = IconFactory.getImageIcon(
+					PeakabooIcons.PATH, 
+					"icon-symbolic" 
+				);
+		}
+		
 		BlankMessagePanel blankCanvas = new BlankMessagePanel(
 				"No Data", 
 				"You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.",
-				IconFactory.getImageIcon(PeakabooIcons.PATH, "icon-symbolic")
+				peakabooLogo
 			);
 		new FileDrop(blankCanvas, canvas.getFileDropListener());
 		
