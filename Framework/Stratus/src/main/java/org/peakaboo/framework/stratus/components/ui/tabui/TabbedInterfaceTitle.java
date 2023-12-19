@@ -21,8 +21,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import org.peakaboo.framework.stratus.api.Stratus;
-
 /**
  * Component to be used as tabComponent;
  * Contains a JLabel to show the text and 
@@ -188,12 +186,12 @@ public class TabbedInterfaceTitle extends JPanel {
                 g2.translate(1, 1);
             }
             g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            g2.setColor(Color.BLACK);
             if (getModel().isRollover()) {
             	g2.setColor(new Color(0.64f, 0f, 0f));
-            	g2.fillOval(1, 1, size - 2, size - 2);                
+            	g2.fillOval(1, 1, size - 2, size - 2);
+            	g2.setColor(Color.WHITE);
             }
-
-            g2.setColor(Stratus.getTheme().getControlText());
             
             int delta = 5;
             g2.drawLine(delta, delta, getWidth() - delta - 1, getHeight() - delta - 1);
