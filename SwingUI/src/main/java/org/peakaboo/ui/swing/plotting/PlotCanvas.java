@@ -282,8 +282,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		float heightScale = (0.0004f * newHeight) + 0.75f;
 		
 		int newWidth = (int) (channels * zoom * heightScale * WIDTH_FUDGE_FACTOR);
-		if (newWidth < parentWidth) newWidth = (int) parentWidth;	
-		if (lockToWidth) {
+		if (newWidth < parentWidth || lockToWidth) {
 			newWidth = (int) parentWidth;
 		}
 		
