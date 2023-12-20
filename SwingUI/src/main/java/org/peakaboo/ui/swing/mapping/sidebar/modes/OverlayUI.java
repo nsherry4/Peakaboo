@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.DefaultCellEditor;
@@ -14,14 +15,17 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
-import org.peakaboo.controller.mapper.fitting.modes.CorrelationModeController;
 import org.peakaboo.controller.mapper.fitting.modes.OverlayModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.display.map.modes.correlation.CorrelationMapMode;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.display.map.modes.overlay.OverlayMapMode;
 import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.ui.swing.mapping.colours.ColourComboTableCellRenderer;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilListCellRenderer;
+import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
+import org.peakaboo.framework.stratus.components.ui.colour.ColourStencil;
+import org.peakaboo.framework.stratus.components.ui.colour.ColourView;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
 
@@ -158,17 +162,31 @@ class OverlayUI extends JPanel {
 		
 		
 
+		
+		
+		var colourConfig = new ColourView.Settings(IconSize.TOOLBAR_SMALL.size(), 2, 6);
+		
+		var comboRenderer = new OverlayComboRenderer(new ColourStencil<OverlayColour>(
+				colourConfig,
+				oc -> new Color(oc.toARGB(), true)
+			));
 				
-		ColourComboTableCellRenderer<OverlayColour> colourRenderer = new ColourComboTableCellRenderer<>();
+		var tableRenderer = new OverlayRenderer(new ColourStencil<OverlayColour>(
+				colourConfig,
+				oc -> new Color(oc.toARGB(), true)
+			));
+		
 		JComboBox<OverlayColour> comboBox = new JComboBox<>(OverlayColour.values());
-		comboBox.setRenderer(colourRenderer);
+		comboBox.setRenderer(comboRenderer);
 		TableCellEditor editor = new DefaultCellEditor(comboBox);
 		
+				
 		column = table.getColumnModel().getColumn(2);
-		column.setCellRenderer(colourRenderer);
+		column.setCellRenderer(tableRenderer);
 		column.setCellEditor(editor);
-		column.setPreferredWidth(45);
-		column.setMaxWidth(45);
+		column.setPreferredWidth(60);
+		column.setMaxWidth(60);
+		column.setMinWidth(60);
 		
 		
 		
@@ -179,5 +197,16 @@ class OverlayUI extends JPanel {
 		return scroll;
 
 	}
+	
+	
+	class OverlayRenderer extends StencilTableCellRenderer<OverlayColour> {
+		public OverlayRenderer(Stencil<OverlayColour> widget) {
+			super(widget);
+		}}
+	
+	class OverlayComboRenderer extends StencilListCellRenderer<OverlayColour> {
+		public OverlayComboRenderer(Stencil<OverlayColour> widget) {
+			super(widget);
+		}}
 
 }

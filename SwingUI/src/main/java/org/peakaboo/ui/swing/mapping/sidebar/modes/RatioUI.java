@@ -3,46 +3,31 @@ package org.peakaboo.ui.swing.mapping.sidebar.modes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
 
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
-import org.peakaboo.controller.mapper.fitting.modes.OverlayModeController;
 import org.peakaboo.controller.mapper.fitting.modes.RatioModeController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.display.map.modes.overlay.OverlayMapMode;
 import org.peakaboo.display.map.modes.ratio.RatioColour;
 import org.peakaboo.display.map.modes.ratio.RatioMapMode;
 import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
 import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.colour.ColourChooser;
 import org.peakaboo.framework.stratus.components.ui.colour.ColourView;
 import org.peakaboo.framework.stratus.components.ui.colour.ColourView.Settings;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
-import org.peakaboo.ui.swing.mapping.colours.ColourComboTableCellRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.MapFittingRenderer;
 import org.peakaboo.ui.swing.mapping.sidebar.ScaleModeWidget;
-import org.peakaboo.ui.swing.mapping.sidebar.modes.CorrelationUI.AxisEditor;
-import org.peakaboo.ui.swing.mapping.sidebar.modes.CorrelationUI.AxisRenderer;
-import org.peakaboo.ui.swing.mapping.sidebar.modes.CorrelationUI.AxisWidget;
 
 
 class RatioUI extends JPanel {
