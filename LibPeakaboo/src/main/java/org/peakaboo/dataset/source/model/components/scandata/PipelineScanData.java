@@ -24,9 +24,11 @@ public class PipelineScanData extends AbstractScanData {
 	//We do a separate analysis of each thread, then we merge the results at the end
 	private List<Analysis> analyses = new ArrayList<>();
 	private ThreadLocal<Analysis> localanalysis = ThreadLocal.withInitial(() -> {
-		var a = new DataSourceAnalysis();
-		analyses.add(a);
-		return a;
+		synchronized(analyses) {
+			var a = new DataSourceAnalysis();
+			analyses.add(a);
+			return a;
+		}
 	});
 	private Analysis analysis;
 	
