@@ -54,10 +54,11 @@ public class PipelineScanData extends AbstractScanData {
 		});
 		
 		Stage<ScanEntry, ScanEntry> sPreprocessor;
+		int cores = (int)(Math.ceil(Plural.cores() * 1.25f));
 		if (preprocessor != null) {
-			sPreprocessor = ThreadedStage.visit("Preprocessor", (int)(Plural.cores()*1.5), e -> preprocessor.accept(e.spectrum()));
+			sPreprocessor = ThreadedStage.visit("Preprocessor", cores, e -> preprocessor.accept(e.spectrum()));
 		} else  {
-			sPreprocessor = ThreadedStage.noop("Preprocessor", (int)(Plural.cores()*1.5));
+			sPreprocessor = ThreadedStage.noop("Preprocessor", cores);
 		}
 		
 		
@@ -67,7 +68,11 @@ public class PipelineScanData extends AbstractScanData {
 	}
 	
 	public void submit(int index, Spectrum s) throws InterruptedException {
-		pipeline.accept(new ScanEntry(index, s));
+		pipeline.accept(new SimpleScanEntry(index, s));
+	}
+	
+	public void submit(ScanEntry scan) {
+		pipeline.accept(scan);
 	}
 	
 	public void finish() {

@@ -6,14 +6,11 @@ import java.util.NoSuchElementException;
 
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 
 
 public interface ScanData extends Iterable<ReadOnlySpectrum> {
 	
-	public static record ScanEntry(int index, Spectrum spectrum) {};
-
 	/**
 	 * Retrieves the values from the scan at the given index
 	 * 

@@ -5,8 +5,9 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.dataset.source.model.components.scandata.ScanEntry;
 import org.peakaboo.dataset.source.model.components.scandata.SimpleScanData;
-import org.peakaboo.dataset.source.model.components.scandata.ScanData.ScanEntry;
+import org.peakaboo.dataset.source.model.components.scandata.SimpleScanEntry;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 
@@ -56,7 +57,7 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	
 	@Override
 	public void submit(int index, Spectrum s) throws InterruptedException {
-		ScanEntry struct = new ScanEntry(index, s);
+		ScanEntry struct = new SimpleScanEntry(index, s);
 		queue.put(struct);
 	}
 	
@@ -69,7 +70,7 @@ public class SimpleLoaderQueue implements LoaderQueue {
 	@Override
 	public void finish() throws InterruptedException {
 		if (queue != null) {
-			ScanEntry struct = new ScanEntry(-1, null);
+			ScanEntry struct = new SimpleScanEntry(-1, null);
 			queue.put(struct);
 			thread.join();
 		}

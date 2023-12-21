@@ -2,7 +2,9 @@ package org.peakaboo.dataset.source.plugin.plugins;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +16,11 @@ import org.peakaboo.dataset.source.model.components.metadata.Metadata;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.PipelineScanData;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
+import org.peakaboo.dataset.source.model.components.scandata.ScanEntry;
 import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
+import org.peakaboo.framework.cyclops.SparsedList;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
@@ -27,10 +31,8 @@ import com.univocity.parsers.csv.CsvParserSettings;
 public class PlainText extends AbstractDataSource
 {
 
-	int 	size = 0;
-	int		scanSize = -1;
-
 	private PipelineScanData scandata;
+	private List<Integer> sizes = Collections.synchronizedList( new SparsedList<>(new ArrayList<>()) );
 	
 	
 	//==============================================
@@ -102,7 +104,8 @@ public class PlainText extends AbstractDataSource
 		int index = 0;
 		int readcount = 0;
 		for (String[] row : parser.iterate(instream)) {
-
+			int scanIndex = index++;
+			
 			if (lineEstimate == -1 && filesize.isPresent()) {
 				lineEstimate = ((int)filesize.get().longValue()) / (String.join(" ", row).length());
 				getInteraction().notifyScanCount(lineEstimate);
@@ -110,17 +113,12 @@ public class PlainText extends AbstractDataSource
 			
 			if (getInteraction().checkReadAborted()) { break; }
 			
-			Spectrum scan = parseLine(row, parser.getDetectedFormat().getDelimiter());
 			
-			if (size > 0 && scan.size() != scanSize)  {
-				throw new DataSourceReadException("Spectra sizes are not equal");
-			} else if (size == 0) {
-				scanSize = scan.size();
-			}
+			char delim = parser.getDetectedFormat().getDelimiter();
+			ScanEntry entry = new PlainTextScanEntry(scanIndex, row, delim, sizes);
 			
-			scandata.submit(index++, scan);
-
-			size++;
+			//Record the size to check later
+			scandata.submit(entry);
 			readcount++;
 			
 			if (readcount == 50) {
@@ -133,43 +131,20 @@ public class PlainText extends AbstractDataSource
 		
 		scandata.finish();
 		
-
-	}
-
-
-	private Spectrum parseLine(String[] entries, char delimiter) {
-		int length = entries.length;
-
-		//remove null values from length count if the delimiter is a space
-		if (delimiter == ' ') {
-			for (String entry : entries) {
-				if (entry == null) length--;
+		//Check and make sure all the scans are the same size
+		int channels = -1;
+		for (int size : sizes) {
+			if (channels < 0) {
+				channels = size;
+			}
+			if (channels != size) {
+				throw new DataSourceReadException("Spectra sizes are not equal");
 			}
 		}
 		
-		Spectrum scan = new ISpectrum(length);
-		for (String entry : entries) {
-			try {
-				
-				//null entry means duplicate delimiter (eg "0,,0" or "0  0")
-				//we need different behaviour for spaces than for *actual* 
-				//delimiters
-				if (entry == null) {
-					if (delimiter == ' ') {
-						continue;
-					} else {
-						entry = "0";
-					}
-				}
-				scan.add(Float.parseFloat(entry));
-			} catch (Exception e) {
-				//some kind of error
-				scan.add(0f);
-			}
-		}
-		return scan;
+
 	}
-	
+
 
 	@Override
 	public FileFormat getFileFormat() {
@@ -220,4 +195,79 @@ public class PlainText extends AbstractDataSource
 	
 	
 
+}
+
+class PlainTextScanEntry implements ScanEntry {
+
+	private int index;
+	private String[] entries;
+	private char delimiter;
+	private Spectrum spectrum;
+	private List<Integer> sizes;
+	
+	/**
+	 * Entry for the pipeline which parses the spectrum in the pipeline thread pool when it gets it from this entry
+	 * @param index the index of the scan
+	 * @param entries the channels in this scan
+	 * @param delimiter the plaintext delimiter character
+	 * @param sizes a list of sizes used to track per-entry/row sizes for checking later
+	 */
+	public PlainTextScanEntry(int index, String[] entries, char delimiter, List<Integer> sizes) {
+		this.index = index;
+		this.entries = entries;
+		this.delimiter = delimiter;
+		this.sizes = sizes;
+	}
+
+	//This will be called as part of the pipeline in a thread
+	@Override
+	public Spectrum spectrum() {
+		if (spectrum == null) {
+			//Parse the string entries into a spectrum
+			spectrum = parseLine();
+			//Set the size of this spectrum in the list used to track this for the whole dataset
+			sizes.set(index, spectrum.size());
+		}
+		return spectrum;
+	}
+
+	@Override
+	public int index() {
+		return index;
+	}
+	
+	
+	private Spectrum parseLine() {
+		int length = entries.length;
+
+		//remove null values from length count if the delimiter is a space
+		if (delimiter == ' ') {
+			for (String entry : entries) {
+				if (entry == null) length--;
+			}
+		}
+		
+		Spectrum scan = new ISpectrum(length);
+		for (String entry : entries) {
+			try {
+				
+				//null entry means duplicate delimiter (eg "0,,0" or "0  0")
+				//we need different behaviour for spaces than for *actual* 
+				//delimiters
+				if (entry == null) {
+					if (delimiter == ' ') {
+						continue;
+					} else {
+						entry = "0";
+					}
+				}
+				scan.add(Float.parseFloat(entry));
+			} catch (Exception e) {
+				//some kind of error
+				scan.add(0f);
+			}
+		}
+		return scan;
+	}
+	
 }
