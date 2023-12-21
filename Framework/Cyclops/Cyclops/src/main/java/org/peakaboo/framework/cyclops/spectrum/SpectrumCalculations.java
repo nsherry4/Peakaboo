@@ -238,17 +238,14 @@ public class SpectrumCalculations
 
 		float inverse = 1f/value;
 		Spectrum result = new ISpectrum(source.size());
-		float newvalue;
 		for (int i = 0; i < source.size(); i++)
 		{
-			newvalue = source.get(i) * inverse;
-			result.set(i, newvalue);
+			result.set(i, source.get(i) * inverse);
 		}
 
 		return result;
 
 	}
-
 
 	/**
 	 * Replaces the values in the given list with their equivalences as expressed as divided by value
@@ -260,11 +257,9 @@ public class SpectrumCalculations
 	{
 
 		float inverse = 1f/value;
-		float newvalue;
 		for (int i = 0; i < data.size(); i++)
 		{
-			newvalue = data.get(i) * inverse;
-			data.set(i, newvalue);
+			data.set(i, data.get(i) * inverse);
 		}
 
 	}
