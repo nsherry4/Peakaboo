@@ -3,7 +3,6 @@ package org.peakaboo.framework.cyclops.spectrum;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -237,11 +236,12 @@ public class SpectrumCalculations
 	public static Spectrum divideBy(ReadOnlySpectrum source, final float value)
 	{
 
+		float inverse = 1f/value;
 		Spectrum result = new ISpectrum(source.size());
 		float newvalue;
 		for (int i = 0; i < source.size(); i++)
 		{
-			newvalue = source.get(i) / value;
+			newvalue = source.get(i) * inverse;
 			result.set(i, newvalue);
 		}
 
@@ -259,10 +259,11 @@ public class SpectrumCalculations
 	public static void divideBy_inplace(Spectrum data, final float value)
 	{
 
+		float inverse = 1f/value;
 		float newvalue;
 		for (int i = 0; i < data.size(); i++)
 		{
-			newvalue = data.get(i) / value;
+			newvalue = data.get(i) * inverse;
 			data.set(i, newvalue);
 		}
 
