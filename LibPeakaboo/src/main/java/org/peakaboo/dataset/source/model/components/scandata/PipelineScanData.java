@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
-import org.peakaboo.dataset.source.model.components.scandata.analysis.CombinedAnalysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.plural.Plural;
@@ -73,7 +72,7 @@ public class PipelineScanData extends AbstractScanData {
 	
 	public void finish() {
 		pipeline.finish();
-		this.analysis = new CombinedAnalysis(analyses);
+		this.analysis = DataSourceAnalysis.merge(analyses);
 	}
 
 	@Override
