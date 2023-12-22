@@ -44,8 +44,9 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	//This is the value it's original max intensity, which the fitting is
 	//then divided by
 	private float					normalizationScale;
+
 	//This is the curve created by applying a FittingFunction to the TransitionSeries 
-	Spectrum						normalizedCurve;
+	Spectrum normalizedCurve;
 	private float normalizedSum;
 	private float normalizedMax;
 
@@ -101,69 +102,14 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		return normalizedCurve;
 	}
 	
-	/**
-	 * Returns a scaled fit based on the given scale value
-	 * 
-	 * @param scale
-	 *            amount to scale the fitting by
-	 * @return a scaled fit
-	 */
-	@Override
-	public Spectrum scale(float scale) {
-		return SpectrumCalculations.multiplyBy(normalizedCurve, scale);
+	
+	public float getNormalizedSum() {
+		return normalizedSum;
 	}
 	
-	/**
-	 * Returns the sum of the scaled curve. This is generally faster than calling
-	 * scale() and calculating the sum
-	 */
-	@Override
-	public float scaleSum(float scale) {
-		return normalizedSum * scale;
+	public float getNormalizedMax() {
+		return normalizedMax;
 	}
-	
-	/**
-	 * Returns the max of the scaled curve. This is generally faster than calling
-	 * scale() and calculating the sum
-	 */
-	@Override
-	public float scaleMax(float scale) {
-		return normalizedMax * scale;
-	}
-	
-	/**
-	 * Returns a scaled fit based on the given scale value in the target Spectrum
-	 * 
-	 * @param scale
-	 *            amount to scale the fitting by
-	 * @param target
-	 *            target Spectrum to store results
-	 * @return a scaled fit
-	 */
-	@Override
-	public Spectrum scaleInto(float scale, Spectrum target) {
-		return SpectrumCalculations.multiplyBy_target(normalizedCurve, target, scale);
-	}
-
-
-	@Override
-	public void scaleOnto(float scale, Spectrum target) {
-		// We can take advantage of SIMD instructions here to perform a "fused multiply
-		// add" where the multiply scales the normalizedCurve and then add it to the
-		// target spectrum
-		SpectrumCalculations.fma(normalizedCurve, scale, target, target);
-	}
-	
-
-	@Override
-	public void scaleOnto(float scale, Spectrum target, int firstChannel, int lastChannel) {
-		SpectrumCalculations.fma(normalizedCurve, scale, target, target, firstChannel, lastChannel);
-	}
-
-	public void scaleOnto(float scale, ReadOnlySpectrum source, Spectrum target, int firstChannel, int lastChannel) {
-		SpectrumCalculations.fma(normalizedCurve, scale, source, target, firstChannel, lastChannel);
-	}
-
 
 	/**
 	 * The scale by which the original collection of curves was scaled by to get it into the range of 0.0 - 1.0
@@ -186,20 +132,17 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		return baseSize;
 	}
 	
-	
-	@Override
-	public boolean isOverlapping(Curve other) {
-		return intenseRanges.isTouching(other.intenseRanges);
-		
-	}
-	
+
 	/**
-	 * Returns a RangeSet containing the channels for which this Curve is intense or
+	 * Returns the RangeSet containing the channels for which this Curve is intense or
 	 * significant.
+	 * <br/><br/>
+	 * Note that this is returning the internal range value and not a copy because this
+	 * code is very performance sensitive. Please be careful.
 	 */
 	@Override
 	public RangeSet getIntenseRanges() {
-		return new RangeSet(intenseRanges);
+		return intenseRanges;
 	}
 	
 	/**
@@ -222,12 +165,12 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	
 	@Override
 	public String toString() {
-		return "[" + transitionSeries + "] x " + normalizationScale;
+		return "[" + getTransitionSeries() + "] x " + normalizationScale;
 	}
 
 	@Override
 	public int compareTo(ROCurve o) {
-		return this.transitionSeries.compareTo(o.getTransitionSeries());
+		return this.getTransitionSeries().compareTo(o.getTransitionSeries());
 	}
 	
 
