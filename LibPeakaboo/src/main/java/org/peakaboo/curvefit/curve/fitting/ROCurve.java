@@ -9,7 +9,7 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
-public interface ROCurve {
+public interface ROCurve extends Comparable<ROCurve> {
 
 	ITransitionSeries getTransitionSeries();
 
@@ -44,18 +44,11 @@ public interface ROCurve {
 	 */
 	float getNormalizationScale();
 	
-	
-	/**
-	 * Gets the width in channels of the base of this TransitionSeries.
-	 * For example, L and M series will likely be broader than K
-	 * series
-	 * @return
-	 */
-	int getSizeOfBase();
 
 	
-	
-	int compareTo(ROCurve o);
+	default int compareTo(ROCurve o) {
+		return this.getTransitionSeries().compareTo(o.getTransitionSeries());
+	}
 	
 	
 	/**

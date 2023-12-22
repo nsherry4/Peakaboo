@@ -120,18 +120,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	public float getNormalizationScale() {
 		return normalizationScale;
 	}
-	
-	/**
-	 * Gets the width in channels of the base of this TransitionSeries.
-	 * For example, L and M series will likely be broader than K
-	 * series
-	 * @return
-	 */
-	@Override
-	public int getSizeOfBase() {
-		return baseSize;
-	}
-	
+
 
 	/**
 	 * Returns the RangeSet containing the channels for which this Curve is intense or
@@ -168,11 +157,6 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 		return "[" + getTransitionSeries() + "] x " + normalizationScale;
 	}
 
-	@Override
-	public int compareTo(ROCurve o) {
-		return this.getTransitionSeries().compareTo(o.getTransitionSeries());
-	}
-	
 
 	/**
 	 * Given a TransitionSeries, calculate the range of channels which are important
