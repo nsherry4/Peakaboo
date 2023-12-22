@@ -22,7 +22,6 @@ import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -59,7 +58,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		List<Integer> intenseChannels = getIntenseChannels(curves);
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
 		MultivariateFunction cost = getCostFunction(context, intenseChannels);
-		double[] guess = getInitialGuess(size, curves, fitter, data);
+		double[] guess = getInitialGuess(curves, fitter, data);
 				
 			
 		PointValuePair result = optimizeCostFunction(cost, guess, 0.01d);
@@ -111,7 +110,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected double[] getInitialGuess(int size, List<ROCurve> curves, CurveFitterPlugin fitter, ReadOnlySpectrum data) {
+	protected double[] getInitialGuess(List<ROCurve> curves, CurveFitterPlugin fitter, ReadOnlySpectrum data) {
+		int size = curves.size();
 		double[] guess = new double[size];
 		for (int i = 0; i < size; i++) {
 			ROCurve curve = curves.get(i);

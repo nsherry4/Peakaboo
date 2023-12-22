@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.PointValuePair;
@@ -51,7 +50,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			Collections.shuffle(perm, new Random(12345654321l));
 			
 			
-			double[] guess = getInitialGuess(size, perm, fitter, data);
+			double[] guess = getInitialGuess(perm, fitter, data);
 			EvaluationContext context = new EvaluationContext(data, fittings, perm);
 			MultivariateFunction cost = getCostFunction(context, intenseChannels);
 			PointValuePair result = optimizeCostFunction(cost, guess, 0.02d);
