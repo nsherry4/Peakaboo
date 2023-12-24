@@ -32,7 +32,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 public abstract class DataLoader {
 
-	private PlotController controller;
+	protected PlotController controller;
 	private List<DataFile> datafiles;
 	private String dataSourceUUID = null;
 	private Map<String, Object> sessionParameters = null;

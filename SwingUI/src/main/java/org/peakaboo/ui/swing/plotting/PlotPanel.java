@@ -25,7 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -51,7 +50,6 @@ import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.sink.model.DataSink;
 import org.peakaboo.dataset.sink.model.outputfile.PathOutputFile;
 import org.peakaboo.dataset.source.model.DataSource;
@@ -62,8 +60,6 @@ import org.peakaboo.dataset.source.model.datafile.PathDataFile;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
-import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.util.Mutable;
@@ -95,7 +91,6 @@ import org.peakaboo.framework.stratus.components.panels.TitledPanel;
 import org.peakaboo.framework.stratus.components.ui.colour.ColourChooser;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
-import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.AboutLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
@@ -113,7 +108,6 @@ import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.options.AdvancedOptionsPanel;
-import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import org.peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import org.peakaboo.ui.swing.plotting.guides.FirstRun;
@@ -354,120 +348,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	void load(List<DataFile> files) {
-		
-		DataLoader loader = new DataLoader(controller, files) {
-
-			@Override
-			public void onLoading(ExecutorSet<DatasetReadResult> job) {
-				PlotPanel.this.pushLayer(new ExecutorSetViewLayer(PlotPanel.this, job));
-			}
-			
-			@Override
-			public void onSuccess(List<DataFile> paths, File session) {
-				// set some controls based on the fact that we have just loaded a
-				// new data set
-				canvas.updateCanvasSize();
-			}
-
-			@Override
-			public void onFail(List<DataFile> paths, String message) {
-				new LayerDialog(
-						"Open Failed", 
-						message, 
-						StockIcon.BADGE_ERROR
-					).showIn(PlotPanel.this);
-			}
-
-			@Override
-			public void onParameters(Group parameters, Consumer<Boolean> finished) {
-				HeaderPanel paramPanel = new HeaderPanel();
-				ModalLayer layer = new ModalLayer(PlotPanel.this, paramPanel);
-				
-				
-				paramPanel.getHeader().setCentre("Options");
-				paramPanel.getHeader().setShowClose(false);
-				
-				FluentButton ok = new FluentButton("OK")
-						.withStateDefault()
-						.withAction(() -> {
-							PlotPanel.this.removeLayer(layer);
-							finished.accept(true);
-						});
-				FluentButton cancel = new FluentButton("Cancel")
-						.withAction(() -> {
-							PlotPanel.this.removeLayer(layer);
-							finished.accept(false);
-						});
-				
-				paramPanel.getHeader().setLeft(cancel);
-				paramPanel.getHeader().setRight(ok);
-				
-				
-				SwingAutoPanel sap = new SwingAutoPanel(parameters);
-				sap.setBorder(Spacing.bHuge());
-				paramPanel.setBody(sap);
-				
-				
-				PlotPanel.this.pushLayer(layer);
-			}
-
-
-
-
-			@Override
-			public void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected) {
-				DataSourceSelection selection = new DataSourceSelection(PlotPanel.this, datasources, selected);
-				PlotPanel.this.pushLayer(selection);
-			}
-
-
-
-			@Override
-			public void onSessionNewer() {
-				ToastLayer warning = new ToastLayer(PlotPanel.this, "Session is from a newer version of Peakaboo.\nSome settings may not load correctly.");
-				PlotPanel.this.pushLayer(warning);
-			}
-			
-			@Override
-			public void onSessionHasData(File sessionFile, Consumer<Boolean> load) {
-				FluentButton buttonYes = new FluentButton("Yes")
-						.withStateDefault()
-						.withAction(() -> {
-							controller.io().setBothFromSession(sessionFile);
-							load.accept(true);
-						});
-				
-				FluentButton buttonNo = new FluentButton("No")
-						.withAction(() -> load.accept(false));
-				
-				new LayerDialog(
-						"Open Associated Data Set?", 
-						"This session is associated with another data set.\nDo you want to open that data set now?", 
-						StockIcon.BADGE_QUESTION)
-					.addRight(buttonYes)
-					.addLeft(buttonNo)
-					.showIn(PlotPanel.this);
-				
-				buttonYes.grabFocus();
-			}
-
-			@Override
-			public void onSessionFailure() {
-				new LayerDialog(
-						"Loading Session Failed", 
-						"The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", 
-						StockIcon.BADGE_ERROR).showIn(PlotPanel.this);
-			}
-
-			@Override
-			public void onWarn(String message) {
-				var toast = new ToastLayer(PlotPanel.this, message);
-				PlotPanel.this.pushLayer(toast);
-			}
-			
-		};
-		
-		
+		DataLoader loader = new PlotDataLoader(this, controller, files);
 		loader.load();
 	}
 
@@ -690,7 +571,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (!file.isPresent()) {
 				return;
 			}
-			controller.io().setBothFromSession(file.get());
+			controller.io().setFromSession(file.get());
 			actionSaveSession(file.get());	
 		});
 	}
@@ -841,7 +722,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (!file.isPresent()) {
 				return;
 			}
-			controller.io().setBothFromSession(file.get());
+			controller.io().setFromSession(file.get());
 			load(Collections.singletonList(new PathDataFile(file.get())));
 		});
 
@@ -1065,6 +946,10 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	public boolean hasUnsavedWork() {
 		return controller.history().hasUnsavedWork() && controller.data().hasDataSet();
+	}
+
+	PlotCanvas getCanvas() {
+		return canvas;
 	}
 	
 }

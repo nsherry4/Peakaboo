@@ -37,7 +37,7 @@ public class IOController extends EventfulBeacon {
 		updateListeners();
 	}
 	
-	public void setBothFromSession(File session) {
+	public void setFromSession(File session) {
 		this.sessionFile = session;
 		this.lastFolder = session.getParentFile();
 		updateListeners();
