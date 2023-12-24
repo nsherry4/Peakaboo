@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
@@ -26,8 +26,8 @@ public class PlotData {
 	public DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
 	
 	public FilterSet filters = new FilterSet();
-	public FittingResultSet proposedResults;
-	public FittingResultSet selectionResults;
+	public FittingResultSetView proposedResults;
+	public FittingResultSetView selectionResults;
 	
 	public List<ITransitionSeries> highlightedTransitionSeries = new ArrayList<>();
 	public List<ITransitionSeries> proposedTransitionSeries = new ArrayList<>();

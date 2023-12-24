@@ -9,6 +9,7 @@ import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.BasicCalibrationController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
@@ -60,6 +61,11 @@ public class BasicTierProvider implements TierProvider {
 
 	@Override
 	public Collection<? extends FittingFunction> getFittingFunctions() {
+		return List.of();
+	}
+
+	@Override
+	public Collection<? extends FittingSolver> getFittingSolvers() {
 		return List.of();
 	}
 	

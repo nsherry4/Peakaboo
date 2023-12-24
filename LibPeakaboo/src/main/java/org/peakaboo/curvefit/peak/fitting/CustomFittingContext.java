@@ -1,21 +1,21 @@
 package org.peakaboo.curvefit.peak.fitting;
 
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 
 public class CustomFittingContext implements FittingContext {
 
 	private float energy, height, fwhm;
-	private ROFittingParameters parameters;
+	private FittingParametersView parameters;
 	
-	public CustomFittingContext(ROFittingParameters parameters, float energy) {
+	public CustomFittingContext(FittingParametersView parameters, float energy) {
 		this(parameters, energy, 1f);
 	}
 	
-	public CustomFittingContext(ROFittingParameters parameters, float energy, float height) {
+	public CustomFittingContext(FittingParametersView parameters, float energy, float height) {
 		this(parameters, energy, height, parameters.getFWHM(energy));
 	}
 	
-	public CustomFittingContext(ROFittingParameters parameters, float energy, float height, float fwhm) {
+	public CustomFittingContext(FittingParametersView parameters, float energy, float height, float fwhm) {
 		this.energy = energy;
 		this.height = height;
 		this.fwhm = fwhm;
@@ -38,7 +38,7 @@ public class CustomFittingContext implements FittingContext {
 	}
 
 	@Override
-	public ROFittingParameters getFittingParameters() {
+	public FittingParametersView getFittingParameters() {
 		return parameters;
 	}
 	

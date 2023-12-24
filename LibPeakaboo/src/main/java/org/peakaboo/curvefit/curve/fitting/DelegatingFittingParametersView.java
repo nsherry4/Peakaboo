@@ -5,17 +5,17 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
 
-public class DelegatingROFittingParameters implements ROFittingParameters {
+public class DelegatingFittingParametersView implements FittingParametersView {
 
-	private ROFittingParameters params;
+	private FittingParametersView params;
 	
-	public DelegatingROFittingParameters(ROFittingParameters params) {
+	public DelegatingFittingParametersView(FittingParametersView params) {
 		this.params = params;
 	}
 
 	@Override
-	public ROFittingParameters copy() {
-		return new DelegatingROFittingParameters(params.copy());
+	public FittingParametersView copy() {
+		return new DelegatingFittingParametersView(params.copy());
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package org.peakaboo.curvefit.peak.fitting;
 
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 
 public class DelegatingFittingContext implements FittingContext {
 
@@ -26,7 +26,7 @@ public class DelegatingFittingContext implements FittingContext {
 	}
 
 	@Override
-	public ROFittingParameters getFittingParameters() {
+	public FittingParametersView getFittingParameters() {
 		return backer.getFittingParameters();
 	}
 

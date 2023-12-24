@@ -28,14 +28,13 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
  * @author NAS
  */
 
-public class Curve implements Comparable<ROCurve>, ROCurve
-{
+public class Curve implements CurveView {
 
 	//The {@link TransitionSeries} that this fitting is based on
 	private ITransitionSeries		transitionSeries;
 		
 	//The details of how we generate our fitting curve
-	private ROFittingParameters 		parameters;
+	private FittingParametersView 		parameters;
 	
 	
 	
@@ -71,7 +70,7 @@ public class Curve implements Comparable<ROCurve>, ROCurve
 	 * @param ts the TransitionSeries to fit
 	 * @param parameters the fitting parameters to use to model this curve
 	 */
-	public Curve(ITransitionSeries ts, ROFittingParameters parameters) {
+	public Curve(ITransitionSeries ts, FittingParametersView parameters) {
 
 		this.parameters = parameters;
 		rangeMultiplier = DEFAULT_RANGE_MULT;

@@ -15,10 +15,12 @@ import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizer;
+import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.curve.fitting.ROCurve;
-import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
+import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
@@ -29,31 +31,46 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class OptimizingFittingSolver implements FittingSolver {
 
+	protected double COST_FUNCTION_PRECISION =  0.01d;
+	
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Optimizing";
 	}
 	
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 	
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Matches fits to signal using a least squares algorithm";
 	}
 	
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
 	
+	@Override
+	public String pluginUUID() {
+		return "5d3b18d6-3b79-40f2-9cd2-54249aa376a0";
+	}
 
 	@Override
-	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitterPlugin fitter) {
+	public boolean pluginEnabled() {
+		return true;
+	}
+	
+	@Override
+	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitterPlugin fitter) {
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
 			return getEmptyResult(data, fittings);
 		}
 		
-		List<ROCurve> curves = new ArrayList<>(fittings.getVisibleCurves());
+		List<CurveView> curves = new ArrayList<>(fittings.getVisibleCurves());
 		sortCurves(curves);
 		List<Integer> intenseChannels = getIntenseChannels(curves);
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
@@ -61,7 +78,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		double[] guess = getInitialGuess(curves, fitter, data);
 				
 			
-		PointValuePair result = optimizeCostFunction(cost, guess, 0.01d);
+		PointValuePair result = optimizeCostFunction(cost, guess, COST_FUNCTION_PRECISION);
 
 		
 		double[] scalings = result.getPoint();
@@ -70,7 +87,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected FittingResultSet getEmptyResult(ReadOnlySpectrum data, ROFittingSet fittings) {
+	protected FittingResultSet getEmptyResult(ReadOnlySpectrum data, FittingSetView fittings) {
 		return new FittingResultSet(
 				new ISpectrum(data.size()), 
 				new ISpectrum(data), 
@@ -110,12 +127,12 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected double[] getInitialGuess(List<ROCurve> curves, CurveFitterPlugin fitter, ReadOnlySpectrum data) {
-		int size = curves.size();
-		double[] guess = new double[size];
-		for (int i = 0; i < size; i++) {
-			ROCurve curve = curves.get(i);
-			FittingResult guessFittingResult = fitter.fit(data, curve);
+	protected double[] getInitialGuess(List<CurveView> curves, CurveFitterPlugin fitter, ReadOnlySpectrum data) {
+		int curveCount = curves.size();
+		double[] guess = new double[curveCount];
+		for (int i = 0; i < curveCount; i++) {
+			CurveView curve = curves.get(i);
+			FittingResultView guessFittingResult = fitter.fit(data, curve);
 			
 			//there will usually be some overlap between elements, so
 			//we use 80% of the independently fitted guess.
@@ -129,9 +146,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return guess;
 	}
 	
-	protected List<Integer> getIntenseChannels(List<ROCurve> curves) {
+	protected List<Integer> getIntenseChannels(List<CurveView> curves) {
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
-		for (ROCurve curve : curves) {
+		for (CurveView curve : curves) {
 			intenseChannels.addAll(curve.getIntenseChannels());
 		}
 		List<Integer> asList = new ArrayList<>(intenseChannels);
@@ -169,7 +186,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	/**
 	 * Given a list of curves, sort them by by shell first, and then by element
 	 */
-	protected void sortCurves(List<ROCurve> curves) {
+	protected void sortCurves(List<CurveView> curves) {
 		curves.sort((a, b) -> {
 			TransitionShell as, bs;
 			as = a.getTransitionSeries().getShell();
@@ -201,7 +218,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		int first = channels.get(0);
 		int last = channels.get(channels.size()-1);
-		for (ROCurve curve : context.curves) {
+		for (CurveView curve : context.curves) {
 			float scale = (float) point[index++];
 			curve.scaleOnto(scale, context.total, first, last);						
 		}
@@ -237,12 +254,12 @@ public class OptimizingFittingSolver implements FittingSolver {
 	 * and a context. Scales the context.curves by the weights. Returns a new
 	 * FittingResultSet containing the fitted curves and other totals.
 	 */
-	protected FittingResultSet evaluate(double[] point, EvaluationContext context) {
+	protected FittingResultSetView evaluate(double[] point, EvaluationContext context) {
 		int index = 0;
-		List<FittingResult> fits = new ArrayList<>();
+		List<FittingResultView> fits = new ArrayList<>();
 		Spectrum total = new ISpectrum(context.data.size());
 		Spectrum scaled = new ISpectrum(context.data.size());
-		for (ROCurve curve : context.curves) {
+		for (CurveView curve : context.curves) {
 			float scale = (float) point[index++];
 			curve.scaleInto(scale, scaled);
 			fits.add(new FittingResult(curve, scale));
@@ -253,14 +270,14 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return new FittingResultSet(total, residual, fits, context.fittings.getFittingParameters().copy());
 	}
 	
-	protected class EvaluationContext {
+	public static class EvaluationContext {
 		public ReadOnlySpectrum data;
-		public ROFittingSet fittings;
-		public List<ROCurve> curves;
+		public FittingSetView fittings;
+		public List<CurveView> curves;
 		public Spectrum scratch;
 		public Spectrum total;
 		public Spectrum residual;
-		public EvaluationContext(ReadOnlySpectrum data, ROFittingSet fittings, List<ROCurve> curves) {
+		public EvaluationContext(ReadOnlySpectrum data, FittingSetView fittings, List<CurveView> curves) {
 			this.data = data;
 			this.fittings = fittings;
 			this.curves = curves;

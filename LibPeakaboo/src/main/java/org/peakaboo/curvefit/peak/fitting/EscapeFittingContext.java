@@ -1,17 +1,17 @@
 package org.peakaboo.curvefit.peak.fitting;
 
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
 
 public class EscapeFittingContext implements FittingContext {
 
-	private ROFittingParameters parameters;
+	private FittingParametersView parameters;
 	private float height;
 	private float energy;
 	
-	public EscapeFittingContext(ROFittingParameters parameters, Transition transition, Transition escape, Element element) {
+	public EscapeFittingContext(FittingParametersView parameters, Transition transition, Transition escape, Element element) {
 		this.energy = transition.energyValue - escape.energyValue;
 		this.height = transition.relativeIntensity * escape.relativeIntensity * DetectorMaterial.intensity(element);
 		this.parameters = parameters;
@@ -33,7 +33,7 @@ public class EscapeFittingContext implements FittingContext {
 	}
 
 	@Override
-	public ROFittingParameters getFittingParameters() {
+	public FittingParametersView getFittingParameters() {
 		return parameters;
 	}
 	

@@ -4,8 +4,6 @@ package org.peakaboo.curvefit.curve.fitting;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
@@ -17,7 +15,7 @@ import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
  *
  */
 
-public class FittingSet implements ROFittingSet {
+public class FittingSet implements FittingSetView {
 
 	private EventfulCache<List<Curve>>		curves;
 	private List<ITransitionSeries>			fitTransitionSeries;
@@ -32,13 +30,35 @@ public class FittingSet implements ROFittingSet {
 	}
 
 	/**
-	 * Create a new FittingSet by copying a {@link ROFittingParameters}
+	 * Create a new FittingSet by copying a {@link FittingParametersView}
 	 * object.
 	 */
-	public FittingSet(ROFittingParameters parameters) {
+	public FittingSet(FittingParametersView parameters) {
 		this();
 		this.parameters = new FittingParameters(parameters, this);
 	}
+	
+	@Override
+	public FittingParameters getFittingParameters() {
+		return parameters;
+	}
+	
+		
+	@Override
+	public synchronized List<ITransitionSeries> getFittedTransitionSeries() {
+		// TODO can we just return an unmodifiable list here? All the methods in this
+		// class are synchronized, presumably so that we always get a clear view of the
+		// model, rather than accessing it during an operation from a different thread?
+		return new ArrayList<>(fitTransitionSeries);
+	}
+
+	
+	@Override
+	public List<CurveView> getCurves() {
+		return new ArrayList<>(curves.getValue());
+	}
+	
+	
 	
 	
 	synchronized void invalidateCurves() {
@@ -46,16 +66,6 @@ public class FittingSet implements ROFittingSet {
 	}
 
 
-	@Override
-	public List<ROCurve> getCurves() {
-		return new ArrayList<>(curves.getValue());
-	}
-	
-	@Override
-	public List<ROCurve> getVisibleCurves() {
-		return getCurves().stream().filter(c -> c.getTransitionSeries().isVisible()).collect(Collectors.toList());
-	}
-	
 	public synchronized void addTransitionSeries(ITransitionSeries ts) {
 		if (fitTransitionSeries.contains(ts)) return;
 		fitTransitionSeries.add(ts);
@@ -83,16 +93,10 @@ public class FittingSet implements ROFittingSet {
 		invalidateCurves();
 	}
 	
-	//if this has been set to false, and it is a primary TS, we may see it again, so we don't want this
-	//setting hanging around
+
 	public synchronized void clear() {
 		fitTransitionSeries.clear();
 		invalidateCurves();
-	}
-
-
-	public synchronized boolean isEmpty() {
-		return fitTransitionSeries.isEmpty();
 	}
 
 	
@@ -160,11 +164,6 @@ public class FittingSet implements ROFittingSet {
 		}
 	}
 
-	public synchronized boolean hasTransitionSeries(ITransitionSeries ts) {
-		if (fitTransitionSeries.contains(ts)) return true;
-		return false;
-	}
-
 
 	public synchronized void setTransitionSeriesVisibility(ITransitionSeries ts, boolean show) {
 		for (ITransitionSeries e : fitTransitionSeries) {
@@ -183,32 +182,7 @@ public class FittingSet implements ROFittingSet {
 	}
 	
 
-	public synchronized List<ITransitionSeries> getFittedTransitionSeries() {
-		return new ArrayList<>(fitTransitionSeries);
-	}
 
 
-	public synchronized List<ITransitionSeries> getVisibleTransitionSeries() {
-		List<ITransitionSeries> fittedElements = new ArrayList<>();
-		for (ITransitionSeries e : fitTransitionSeries) {
-			if (e.isVisible()) fittedElements.add(e);
-		}
-		return fittedElements;
-	}
-
-	@Override
-	public FittingParameters getFittingParameters() {
-		return parameters;
-	}
-
-	public Optional<ROCurve> getCurveForTransitionSeries(ITransitionSeries ts) {
-		for (Curve curve: curves.getValue()) {
-			if (ts.equals(curve.getTransitionSeries())) {
-				return Optional.of(curve);
-			}
-		}
-		return Optional.empty();
-	}
-	
 
 }

@@ -3,7 +3,7 @@ package org.peakaboo.display.plot.painters;
 import java.util.List;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
@@ -25,7 +25,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPa
 public class FittingMarkersPainter extends PlotPainter
 {
 
-	private ROFittingParameters parameters;
+	private FittingParametersView parameters;
 	private List<FittingLabel> labels;
 
 	/**
@@ -33,7 +33,7 @@ public class FittingMarkersPainter extends PlotPainter
 	 * @param fitResults the {@link FittingResultSet} for the data being drawn
 	 * @param detectorMaterial the {@link DetectorMaterialType} used to generate the {@link FittingResultSet}
 	 */
-	public FittingMarkersPainter(ROFittingParameters parameters, List<FittingLabel> labels)
+	public FittingMarkersPainter(FittingParametersView parameters, List<FittingLabel> labels)
 	{
 		this.parameters = parameters;
 		this.labels = labels;

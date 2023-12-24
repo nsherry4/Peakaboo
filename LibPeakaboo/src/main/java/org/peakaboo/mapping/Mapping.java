@@ -6,8 +6,8 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.data.DataController;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
@@ -17,8 +17,8 @@ import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -85,9 +85,9 @@ public class Mapping {
 				
 				data = filters.applyFiltersUnsynchronized(data, ctx);
 				
-				FittingResultSet frs = solver.solve(data, ctx.fittings, fitter);
+				FittingResultSetView frs = solver.solve(data, ctx.fittings, fitter);
 				
-				for (FittingResult result : frs.getFits()) {
+				for (FittingResultView result : frs.getFits()) {
 					if (noncontiguous) {
 						int translated = grid.getIndexFromXY(ctx.dataset.getDataSize().getDataCoordinatesAtIndex(index));
 						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), translated);	

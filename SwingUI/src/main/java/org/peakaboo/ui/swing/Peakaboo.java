@@ -26,6 +26,7 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverPluginManager;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
@@ -246,6 +247,7 @@ public class Peakaboo {
 		DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
 		DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
 		CurveFitterPluginManager.init();
+		FittingSolverPluginManager.init();
 		
 		//Any additional plugin types provided per-tier
 		Tier.provider().initializePlugins();

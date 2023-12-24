@@ -5,11 +5,11 @@ import java.util.Optional;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 
-public class DelegatingROFittingSet implements ROFittingSet {
+public class DelegatingFittingSetView implements FittingSetView {
 
-	private ROFittingSet backer;
+	private FittingSetView backer;
 	
-	public DelegatingROFittingSet(ROFittingSet backer) {
+	public DelegatingFittingSetView(FittingSetView backer) {
 		this.backer = backer;
 	}
 
@@ -34,17 +34,17 @@ public class DelegatingROFittingSet implements ROFittingSet {
 	}
 
 	@Override
-	public ROFittingParameters getFittingParameters() {
-		return new DelegatingROFittingParameters(backer.getFittingParameters());
+	public FittingParametersView getFittingParameters() {
+		return new DelegatingFittingParametersView(backer.getFittingParameters());
 	}
 
 	@Override
-	public List<ROCurve> getVisibleCurves() {
+	public List<CurveView> getVisibleCurves() {
 		return backer.getVisibleCurves();
 	}
 
 	@Override
-	public List<ROCurve> getCurves() {
+	public List<CurveView> getCurves() {
 		return backer.getCurves();
 	}
 	
@@ -53,7 +53,7 @@ public class DelegatingROFittingSet implements ROFittingSet {
 		return backer.toString();
 	}
 
-	public Optional<ROCurve> getCurveForTransitionSeries(ITransitionSeries ts) {
+	public Optional<CurveView> getCurveForTransitionSeries(ITransitionSeries ts) {
 		return backer.getCurveForTransitionSeries(ts);
 	}
 

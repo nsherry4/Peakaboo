@@ -7,14 +7,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
@@ -132,7 +132,7 @@ public class AutoEnergyCalibration {
 			//Score each energy value using our observed stream
 			List<Float> scores = stream.map(calibration -> {
 				
-				FittingResultSet results;
+				FittingResultSetView results;
 				fits.get().getFittingParameters().setCalibration(calibration);
 				results = controller.getFittingSolver().solve(spectrum, fits.get(), controller.getCurveFitter());
 				return scoreFitGood(results, spectrum);
@@ -165,7 +165,7 @@ public class AutoEnergyCalibration {
 	}
 	
 	
-	private static float scoreFitFast(ROFittingSet fits, ReadOnlySpectrum spectrum, EnergyCalibration calibration) {
+	private static float scoreFitFast(FittingSetView fits, ReadOnlySpectrum spectrum, EnergyCalibration calibration) {
 		float score = 0;
 
 		FittingScorer scorer = new FastPeakSearchingScorer(spectrum, calibration);		
@@ -178,7 +178,7 @@ public class AutoEnergyCalibration {
 		return score;
 	}
 	
-	public static float scoreFitGood(FittingResultSet results, ReadOnlySpectrum spectrum) {
+	public static float scoreFitGood(FittingResultSetView results, ReadOnlySpectrum spectrum) {
 		float score = 0f;
 
 		Spectrum fit = results.getTotalFit();
@@ -228,7 +228,7 @@ public class AutoEnergyCalibration {
 				if (max <= min) continue;
 				
 				fits.getFittingParameters().setCalibration(min, max, calibration.getDataWidth());
-				FittingResultSet results = controller.getFittingSolver().solve(spectrum, fits, controller.getCurveFitter());
+				FittingResultSetView results = controller.getFittingSolver().solve(spectrum, fits, controller.getCurveFitter());
 				
 				float score = scoreFitGood(results, spectrum);
 				

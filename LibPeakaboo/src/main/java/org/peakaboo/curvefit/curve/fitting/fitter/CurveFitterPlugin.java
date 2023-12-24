@@ -2,7 +2,7 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.ROCurve;
+import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
@@ -22,9 +22,9 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  */
 public interface CurveFitterPlugin extends BoltJavaPlugin {
 
-	FittingResult fit(ReadOnlySpectrum data, ROCurve curve);
+	FittingResult fit(ReadOnlySpectrum data, CurveView curve);
 		
-	default float maxSignal(ReadOnlySpectrum data, ROCurve curve) {
+	default float maxSignal(ReadOnlySpectrum data, CurveView curve) {
 		
 		float maxSignal = Float.MIN_VALUE;
 		boolean hasSignal = false;

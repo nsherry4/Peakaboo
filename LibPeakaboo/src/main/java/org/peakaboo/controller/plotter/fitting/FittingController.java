@@ -14,8 +14,8 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.session.v2.SavedFittings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
@@ -172,7 +172,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public float getTransitionSeriesIntensity(ITransitionSeries ts)
 	{
-		FittingResult result = getFittingResultForTransitionSeries(ts);
+		FittingResultView result = getFittingResultForTransitionSeries(ts);
 		if (result == null) {
 			return 0f;
 		}
@@ -273,13 +273,13 @@ public class FittingController extends EventfulType<Boolean>
 	 */
 	public ITransitionSeries selectTransitionSeriesAtChannel(int channel) {      
         float bestValue = 1f;
-        FittingResult bestFit = null;
+        FittingResultView bestFit = null;
 
         if (getFittingSelectionResults() == null) {
             return null;
         }
         
-		for (FittingResult fit : getFittingSelectionResults()) {
+		for (FittingResultView fit : getFittingSelectionResults()) {
 			if (!fit.getFit().inBounds(channel)) {
 				continue;
 			}
@@ -370,17 +370,17 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.proposals;
 	}
 	
-	public FittingResultSet getFittingProposalResults()
+	public FittingResultSetView getFittingProposalResults()
 	{
 		return fittingModel.proposalResults.getValue();
 	}
 
-	public FittingResultSet getFittingSelectionResults()
+	public FittingResultSetView getFittingSelectionResults()
 	{
 		return fittingModel.selectionResults.getValue();
 	}
 
-	public FittingResult getFittingResultForTransitionSeries(ITransitionSeries ts) {
+	public FittingResultView getFittingResultForTransitionSeries(ITransitionSeries ts) {
 		if (getFittingSelectionResults() == null) return null;
 		return getFittingSelectionResults().getFitForTransitionSeries(ts).orElse(null);
 	}

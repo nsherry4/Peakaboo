@@ -1,19 +1,11 @@
 package org.peakaboo.curvefit.curve.fitting;
 
-import java.util.logging.Level;
-
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.session.v2.SavedFittingParameters;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
-import org.peakaboo.curvefit.peak.fitting.EscapeFittingContext;
-import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
-import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
-import org.peakaboo.curvefit.peak.table.Element;
-import org.peakaboo.curvefit.peak.transition.Transition;
 
-public class FittingParameters implements ROFittingParameters {
+public class FittingParameters implements FittingParametersView {
 
 	private FittingSet fits;
 	
@@ -31,7 +23,7 @@ public class FittingParameters implements ROFittingParameters {
 	 * Constructs a new FittingParameters object from the readonly parameters, but
 	 * with a new {@link FittingSet} to work with
 	 */
-	public FittingParameters(ROFittingParameters params, FittingSet fits) {
+	public FittingParameters(FittingParametersView params, FittingSet fits) {
 		this(params);
 		this.fits = fits;
 	}
@@ -41,7 +33,7 @@ public class FittingParameters implements ROFittingParameters {
 	 * reference to a parent {@link FittingSet} since a readonly params does not
 	 * provide access to that.
 	 */
-	public FittingParameters(ROFittingParameters params) {
+	public FittingParameters(FittingParametersView params) {
 		fwhmBase = params.getFWHMBase();
 		calibration = params.getCalibration();
 		detectorMaterial = params.getDetectorMaterial();
@@ -53,45 +45,22 @@ public class FittingParameters implements ROFittingParameters {
 	 * Complete copy of the given FittingParameters object
 	 */
 	public FittingParameters(FittingParameters params) {
-		this((ROFittingParameters)params);
+		this((FittingParametersView)params);
 		this.fits = params.fits;
 	}
 	
+	@Override
 	public FittingParameters copy() {
 		return new FittingParameters(this);
 	}
 	
-	
-	public FittingFunction forTransition(Transition transition) {
-		FittingContext context = new TransitionFittingContext(this, transition);
-		return buildFunction(context);
-	}
-
-	public FittingFunction forEscape(Transition transition, Transition escape, Element element) {
-		FittingContext context = new EscapeFittingContext(this, transition, escape, element);
-		return buildFunction(context);
-	}
-
-	private FittingFunction buildFunction(FittingContext context) {
-		FittingFunction function;
-		try {
-			function = fittingFunction.newInstance();
-			function.initialize(context);
-			return function;
-		} catch (InstantiationException | IllegalAccessException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to create fitting function, using default", e);
-			return new PseudoVoigtFittingFunction();
-		}
-		
-	}
 	
 	private void invalidate() {
 		if (fits != null) {
 			this.fits.invalidateCurves();
 		}
 	}
-	
-	
+		
 	
 	@Override
 	public float getFWHM(float energy) {
@@ -117,6 +86,7 @@ public class FittingParameters implements ROFittingParameters {
 		return fwhm;
 	}
 
+	@Override
 	public float getFWHMBase() {
 		return fwhmBase;
 	}
@@ -127,6 +97,7 @@ public class FittingParameters implements ROFittingParameters {
 	}
 
 	
+	@Override
 	public EnergyCalibration getCalibration() {
 		return calibration;
 	}
@@ -140,6 +111,7 @@ public class FittingParameters implements ROFittingParameters {
 		invalidate();
 	}
 	
+	@Override
 	public DetectorMaterialType getDetectorMaterial() {
 		return this.detectorMaterial;
 	}
@@ -154,10 +126,12 @@ public class FittingParameters implements ROFittingParameters {
 		invalidate();
 	}
 
+	@Override
 	public Class<? extends FittingFunction> getFittingFunction() {
 		return fittingFunction;
 	}
 
+	@Override
 	public boolean getShowEscapePeaks() {
 		return showEscapePeaks;
 	}

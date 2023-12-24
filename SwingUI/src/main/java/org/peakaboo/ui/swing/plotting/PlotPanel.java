@@ -968,7 +968,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionAddAnnotation(ITransitionSeries selected) {
-		if (!controller.fitting().getFittingSelections().getFittedTransitionSeries().contains(selected)) {
+		if (!controller.fitting().getFittingSelections().hasTransitionSeries(selected)) {
 			return;
 		}
 		

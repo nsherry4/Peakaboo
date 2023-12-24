@@ -9,7 +9,7 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
-public interface ROCurve extends Comparable<ROCurve> {
+public interface CurveView extends Comparable<CurveView> {
 
 	ITransitionSeries getTransitionSeries();
 
@@ -46,7 +46,7 @@ public interface ROCurve extends Comparable<ROCurve> {
 	
 
 	
-	default int compareTo(ROCurve o) {
+	default int compareTo(CurveView o) {
 		return this.getTransitionSeries().compareTo(o.getTransitionSeries());
 	}
 	
@@ -139,7 +139,7 @@ public interface ROCurve extends Comparable<ROCurve> {
 	}
 
 
-	default boolean isOverlapping(ROCurve other) {
+	default boolean isOverlapping(CurveView other) {
 		return getIntenseRanges().isTouching(other.getIntenseRanges());
 	}
 

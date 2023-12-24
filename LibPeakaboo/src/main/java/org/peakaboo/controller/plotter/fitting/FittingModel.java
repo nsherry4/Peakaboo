@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
@@ -28,7 +28,7 @@ public class FittingModel
 	/**
 	 * Results of fitting existing selections
 	 */
-	public EventfulNullableCache<FittingResultSet>		selectionResults;
+	public EventfulNullableCache<FittingResultSetView>		selectionResults;
 	
 	/**
 	 * Proposed TransitionSeries and their Fitting against data after already being fit against current selections
@@ -38,7 +38,7 @@ public class FittingModel
 	/**
 	 * Results of fitting proposed selections.
 	 */
-	public EventfulNullableCache<FittingResultSet>		proposalResults;
+	public EventfulNullableCache<FittingResultSetView>		proposalResults;
 	
 	
 	List<ITransitionSeries> highlighted;

@@ -7,43 +7,57 @@ import java.util.Random;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.PointValuePair;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.curve.fitting.ROCurve;
-import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
+import org.peakaboo.curvefit.curve.fitting.CurveView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "MultiSampling";
 	}
 	
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 	
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Optimizing solver run on several permutations of fittings order";
 	}
 
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
 	
 	@Override
-	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitterPlugin fitter) {
+	public String pluginUUID() {
+		return "87eeb1e0-6c4e-4f80-9cf7-8c19a07423b5";
+	}
+	
+	@Override
+	public boolean pluginEnabled() {
+		return true;
+	}
+	
+	@Override
+	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitterPlugin fitter) {
 		
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
 			return getEmptyResult(data, fittings);
 		}
 		
-		List<ROCurve> curves = fittings.getVisibleCurves();
+		List<CurveView> curves = fittings.getVisibleCurves();
 		sortCurves(curves);
 		List<Integer> intenseChannels = getIntenseChannels(curves);
 		
-		List<ROCurve> perm = new ArrayList<>(curves);
+		List<CurveView> perm = new ArrayList<>(curves);
 		int counter = 0;
 		double[] scalings = new double[size];
 		while (counter <= 10) {
@@ -62,7 +76,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			//guess = permScalings;
 			
 			for (int i = 0; i < scalings.length; i++) {
-				ROCurve c = perm.get(i);
+				CurveView c = perm.get(i);
 				int j = curves.indexOf(c);
 				scalings[j] += permScalings[i];
 			}

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.display.Display;
 import org.peakaboo.display.plot.painters.FittingLabel;
 import org.peakaboo.display.plot.painters.FittingMarkersPainter;
@@ -255,7 +255,7 @@ public class Plotter {
 			}
 			
 			//highlighted fittings
-			FittingResultSet highlightedResults = data.selectionResults.subsetIntersect(data.highlightedTransitionSeries);
+			FittingResultSetView highlightedResults = data.selectionResults.subsetIntersect(data.highlightedTransitionSeries);
 			if (!highlightedResults.isEmpty()) {
 				plotPainters.add(new FittingPainter(highlightedResults, selectedPalette));
 			}
@@ -298,7 +298,7 @@ public class Plotter {
 		
 		List<FittingLabel> fitLabels = new ArrayList<>();
 		if (data.selectionResults != null) {
-			for (FittingResult fit : data.selectionResults.getFits()) {
+			for (FittingResultView fit : data.selectionResults.getFits()) {
 				if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
 					fitLabels.add(new FittingLabel(fit, selectedPalette, data.calibration, data.annotations.get(fit.getTransitionSeries()), showElementFitIntensities));		
 				} else {
@@ -308,7 +308,7 @@ public class Plotter {
 			}
 		}
 		if (data.proposedResults != null) {
-			for (FittingResult fit : data.proposedResults.getFits()) {
+			for (FittingResultView fit : data.proposedResults.getFits()) {
 				fitLabels.add(new FittingLabel(fit, proposedPalette, data.calibration, data.annotations.get(fit.getTransitionSeries()), showElementFitIntensities));
 			}
 		}

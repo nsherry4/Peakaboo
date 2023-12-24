@@ -26,7 +26,7 @@ import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.controller.session.v2.SavedAppData;
 import org.peakaboo.controller.session.v2.SavedSession;
-import org.peakaboo.curvefit.curve.fitting.DelegatingROFittingSet;
+import org.peakaboo.curvefit.curve.fitting.DelegatingFittingSetView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
@@ -262,7 +262,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	public FilterContext getFilterContext() {
 		FilterContext ctx = new FilterContext();
 		ctx.dataset = data().getDataSet();
-		ctx.fittings = new DelegatingROFittingSet(fitting().getFittingSelections());
+		ctx.fittings = new DelegatingFittingSetView(fitting().getFittingSelections());
 		return ctx;
 	}
 	

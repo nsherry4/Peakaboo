@@ -1,7 +1,7 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.ROCurve;
+import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class UnderCurveFitter implements CurveFitterPlugin {
@@ -21,7 +21,7 @@ public class UnderCurveFitter implements CurveFitterPlugin {
 	/**
 	 * Fits this curve against spectrum data
 	 */
-	public FittingResult fit(ReadOnlySpectrum data, ROCurve curve) {
+	public FittingResult fit(ReadOnlySpectrum data, CurveView curve) {
 		float scale = this.getRatioForCurveUnderData(data, curve);
 		FittingResult result = new FittingResult(curve, scale);
 		return result;
@@ -35,7 +35,7 @@ public class UnderCurveFitter implements CurveFitterPlugin {
 	 *            the data to scale the fit to match
 	 * @return a scale value
 	 */
-	private float getRatioForCurveUnderData(ReadOnlySpectrum data, ROCurve curve) {
+	private float getRatioForCurveUnderData(ReadOnlySpectrum data, CurveView curve) {
 			
 		float maxSignal = maxSignal(data, curve);
 		float cutoff;

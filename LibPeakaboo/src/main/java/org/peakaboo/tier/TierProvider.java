@@ -6,6 +6,7 @@ import java.util.List;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
@@ -32,5 +33,6 @@ public interface TierProvider {
 	}
 	public List<TierUIAutoGroup<PlotController>> getAdvancedOptions();
 	public Collection<? extends FittingFunction> getFittingFunctions();
+	public Collection<? extends FittingSolver> getFittingSolvers();
 	
 }

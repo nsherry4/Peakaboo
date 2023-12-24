@@ -374,13 +374,15 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 
 	private OptionBlocksPanel makeOverlapPanel(PlotController controller) {
 
-		List<FittingSolver> solvers = List.of(
+		List<FittingSolver> solvers = new ArrayList<>(List.of(
 				new GreedyFittingSolver(), 
 				new OptimizingFittingSolver(), 
 				new MultisamplingOptimizingFittingSolver()
-			);
+			));
 		
-		OptionBlock overlap = makeRadioBlock(solvers, 
+		solvers.addAll(Tier.provider().getFittingSolvers());
+		
+		OptionBlock overlap = makeRadioBlockForPlugins(solvers, 
 				() -> controller.fitting().getFittingSolver(),
 				controller.fitting()::setFittingSolver
 			);
