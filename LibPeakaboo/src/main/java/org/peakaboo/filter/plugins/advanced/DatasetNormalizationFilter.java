@@ -3,7 +3,6 @@ package org.peakaboo.filter.plugins.advanced;
 import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -65,7 +64,7 @@ public class DatasetNormalizationFilter extends AbstractFilter {
 	@Override
 	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
 		FilterContext context = requireContext(ctx);
-		float max = context.dataset.getAnalysis().maximumIntensity();
+		float max = context.dataset().getAnalysis().maximumIntensity();
 		float height = pHeight.getValue();
 		float ratio = max / height;
 		if (ratio == 0f) return new ISpectrum(data.size());

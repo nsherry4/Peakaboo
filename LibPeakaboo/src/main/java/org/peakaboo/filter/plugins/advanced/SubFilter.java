@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.Filter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterPluginManager;
 import org.peakaboo.framework.autodialog.model.Parameter;

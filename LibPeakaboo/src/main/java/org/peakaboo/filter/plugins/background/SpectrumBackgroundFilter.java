@@ -14,7 +14,6 @@ import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.datafile.PathDataFile;
 import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;

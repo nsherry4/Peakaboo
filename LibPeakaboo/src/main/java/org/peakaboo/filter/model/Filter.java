@@ -4,12 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.controller.session.v2.SavedPlugin;
+import org.peakaboo.curvefit.curve.fitting.FittingSetView;
+import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public interface Filter {
 
+	public static record FilterContext(DataSet dataset, FittingSetView fittings) {};
+	
 	boolean isEnabled();
 	void setEnabled(boolean enabled);
 	

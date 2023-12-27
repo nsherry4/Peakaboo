@@ -5,7 +5,6 @@ package org.peakaboo.filter.plugins.background;
 import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;

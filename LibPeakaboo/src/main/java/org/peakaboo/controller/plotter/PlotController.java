@@ -31,7 +31,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.filter.model.Filter;
-import org.peakaboo.filter.model.FilterContext;
+import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -260,9 +260,10 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 
 	public FilterContext getFilterContext() {
-		FilterContext ctx = new FilterContext();
-		ctx.dataset = data().getDataSet();
-		ctx.fittings = new DelegatingFittingSetView(fitting().getFittingSelections());
+		FilterContext ctx = new FilterContext(
+				data().getDataSet(), 
+				new DelegatingFittingSetView(fitting().getFittingSelections())
+			);
 		return ctx;
 	}
 	

@@ -9,12 +9,13 @@ import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
+import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.model.FilterContext;
+import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
@@ -57,14 +58,19 @@ public class Mapping {
 			FittingSolver solver,
 			FilterContext ctx
 		) {
+
+		DataSet dataset = ctx.dataset();
+		FittingSetView fittings = ctx.fittings();
 		
-		List<ITransitionSeries> transitionSeries = ctx.fittings.getVisibleTransitionSeries();
+		List<ITransitionSeries> transitionSeries = fittings.getVisibleTransitionSeries();
 
 		
-		int mapsize = ctx.dataset.getScanData().scanCount();
+
+		
+		int mapsize = dataset.getScanData().scanCount();
 		//Handle non-contiguous datasets
-		boolean noncontiguous = !ctx.dataset.getDataSource().isRectangular() && ctx.dataset.getDataSource().getDataSize().isPresent();
-		Coord<Integer> dimensions = ctx.dataset.getDataSize().getDataDimensions();
+		boolean noncontiguous = !dataset.getDataSource().isRectangular() && dataset.getDataSource().getDataSize().isPresent();
+		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
 		
 		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
 		if (noncontiguous) {
@@ -74,22 +80,22 @@ public class Mapping {
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
 		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
-		streamer.setTask(new Range(0, ctx.dataset.getScanData().scanCount()), stream -> {
+		streamer.setTask(new Range(0, dataset.getScanData().scanCount()), stream -> {
 			
 			long t1 = System.currentTimeMillis();
 			
 			stream.forEach(index -> {
 				
-				ReadOnlySpectrum data = ctx.dataset.getScanData().get(index);
+				ReadOnlySpectrum data = dataset.getScanData().get(index);
 				if (data == null) return;
 				
 				data = filters.applyFiltersUnsynchronized(data, ctx);
 				
-				FittingResultSetView frs = solver.solve(data, ctx.fittings, fitter);
+				FittingResultSetView frs = solver.solve(data, fittings, fitter);
 				
 				for (FittingResultView result : frs.getFits()) {
 					if (noncontiguous) {
-						int translated = grid.getIndexFromXY(ctx.dataset.getDataSize().getDataCoordinatesAtIndex(index));
+						int translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
 						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), translated);	
 					} else {
 						maps.putIntensityInMapAtPoint(result.getFitSum(), result.getTransitionSeries(), index);

@@ -7,7 +7,6 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
@@ -130,7 +129,7 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 			
 			
 			float energy = ts.getStrongestTransition().energyValue;
-			int channel = context.fittings.getFittingParameters().getCalibration().channelFromEnergy(energy);
+			int channel = context.fittings().getFittingParameters().getCalibration().channelFromEnergy(energy);
 			startChannel = Math.max(channel-5, 0);
 			endChannel = Math.min(channel+5, data.size()-1);
 			int frange = (endChannel - startChannel) + 1;
