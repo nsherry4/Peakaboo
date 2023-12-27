@@ -41,7 +41,7 @@ public abstract class AbstractMapFilter implements MapFilterPlugin {
 	}
 	
 	protected void addParameter(Parameter<?> param) {
-		parameters.add(param);
+		getParameters().add(param);
 	}
 	
 	protected void addParameter(Parameter<?>... params)	{
@@ -50,15 +50,7 @@ public abstract class AbstractMapFilter implements MapFilterPlugin {
 	
 
 	
-	@Override
-	public String pluginName() {
-		return getFilterName();
-	}
 
-	@Override
-	public String pluginDescription() {
-		return getFilterDescription();
-	}
 
 
 }
