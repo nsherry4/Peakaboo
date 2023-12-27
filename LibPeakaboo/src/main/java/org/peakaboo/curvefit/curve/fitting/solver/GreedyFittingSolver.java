@@ -48,8 +48,11 @@ public class GreedyFittingSolver implements FittingSolver {
 	 * Fit this FittingSet against spectrum data
 	 */
 	@Override
-	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitter fitter) {
+	public FittingResultSetView solve(FittingSolverContext ctx) {
 
+		ReadOnlySpectrum data = ctx.data();
+		FittingSetView fittings = ctx.fittings();
+		CurveFitter fitter = ctx.fitter();
 		
 		Spectrum resultTotalFit = new ISpectrum(data.size());
 		List<FittingResultView> resultFits = new ArrayList<>();

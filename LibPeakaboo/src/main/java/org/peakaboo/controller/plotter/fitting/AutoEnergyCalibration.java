@@ -10,6 +10,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -134,7 +135,7 @@ public class AutoEnergyCalibration {
 				
 				FittingResultSetView results;
 				fits.get().getFittingParameters().setCalibration(calibration);
-				results = controller.getFittingSolver().solve(spectrum, fits.get(), controller.getCurveFitter());
+				results = controller.getFittingSolver().solve(new FittingSolverContext(spectrum, fits.get(), controller.getCurveFitter()));
 				return scoreFitGood(results, spectrum);
 				
 			}).collect(Collectors.toList());
@@ -228,7 +229,8 @@ public class AutoEnergyCalibration {
 				if (max <= min) continue;
 				
 				fits.getFittingParameters().setCalibration(min, max, calibration.getDataWidth());
-				FittingResultSetView results = controller.getFittingSolver().solve(spectrum, fits, controller.getCurveFitter());
+				var ctx = new FittingSolverContext(spectrum, fits, controller.getCurveFitter());
+				FittingResultSetView results = controller.getFittingSolver().solve(ctx);
 				
 				float score = scoreFitGood(results, spectrum);
 				

@@ -16,6 +16,8 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  */
 public interface FittingSolver extends BoltJavaPlugin {
 
-	FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitter fitter);
+	public static record FittingSolverContext (ReadOnlySpectrum data, FittingSetView fittings, CurveFitter fitter) {};
+	
+	FittingResultSetView solve(FittingSolverContext ctx);
 	
 }

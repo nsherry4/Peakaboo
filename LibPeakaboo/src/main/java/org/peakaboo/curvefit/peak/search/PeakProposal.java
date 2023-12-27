@@ -9,12 +9,13 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
@@ -238,8 +239,8 @@ public class PeakProposal {
 		if (currentTSisUsed) proposed.remove(currentTS);
 		
 		//recalculate
-		FittingResultSetView fitResults = solver.solve(data, fits, fitter);
-		FittingResultSetView proposedResults = solver.solve(fitResults.getResidual(), proposed, fitter);
+		FittingResultSetView fitResults = solver.solve(new FittingSolverContext(data, fits, fitter));
+		FittingResultSetView proposedResults = solver.solve(new FittingSolverContext(fitResults.getResidual(), proposed, fitter));
 		
 		
 		final ReadOnlySpectrum residualSpectrum = proposedResults.getResidual();

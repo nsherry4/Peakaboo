@@ -41,7 +41,11 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 	}
 
 	@Override
-	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitter fitter) {
+	public FittingResultSetView solve(FittingSolverContext ctx) {
+		
+		ReadOnlySpectrum data = ctx.data();
+		FittingSetView fittings = ctx.fittings();
+		CurveFitter fitter = ctx.fitter();
 		
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {

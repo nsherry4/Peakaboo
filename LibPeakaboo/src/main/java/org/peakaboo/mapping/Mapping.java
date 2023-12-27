@@ -12,6 +12,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
@@ -91,7 +92,7 @@ public class Mapping {
 				
 				data = filters.applyFiltersUnsynchronized(data, ctx);
 				
-				FittingResultSetView frs = solver.solve(data, fittings, fitter);
+				FittingResultSetView frs = solver.solve(new FittingSolverContext(data, fittings, fitter));
 				
 				for (FittingResultView result : frs.getFits()) {
 					if (noncontiguous) {

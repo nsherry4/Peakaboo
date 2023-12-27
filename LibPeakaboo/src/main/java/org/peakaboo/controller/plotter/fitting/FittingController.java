@@ -19,6 +19,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
@@ -52,14 +53,16 @@ public class FittingController extends EventfulType<Boolean>
 			if (data == null) {
 				return null;
 			}
-			return getFittingSolver().solve(data, fittingModel.selections, getCurveFitter());
+			var ctx = new FittingSolverContext(data, fittingModel.selections, getCurveFitter());
+			return getFittingSolver().solve(ctx);
 		});
 		
 		fittingModel.proposalResults = new EventfulNullableCache<>(() -> {
 			if (plot.currentScan() == null) {
 				return null;
 			}
-			return getFittingSolver().solve(getFittingSelectionResults().getResidual(), fittingModel.proposals, getCurveFitter());
+			var ctx = new FittingSolverContext(getFittingSelectionResults().getResidual(), fittingModel.proposals, getCurveFitter());
+			return getFittingSolver().solve(ctx);
 		});
 		
 		fittingModel.selectionResults.dependsOn(plot.filtering().getFilteredPlotCache());
