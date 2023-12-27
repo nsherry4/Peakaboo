@@ -22,6 +22,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -127,7 +128,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		double[] guess = new double[curveCount];
 		for (int i = 0; i < curveCount; i++) {
 			CurveView curve = curves.get(i);
-			FittingResultView guessFittingResult = fitter.fit(data, curve);
+			FittingResultView guessFittingResult = fitter.fit(new CurveFitterContext(data, curve));
 			
 			//there will usually be some overlap between elements, so
 			//we use 80% of the independently fitted guess.

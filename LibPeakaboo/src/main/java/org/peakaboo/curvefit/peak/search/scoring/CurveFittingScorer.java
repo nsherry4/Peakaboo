@@ -4,6 +4,7 @@ import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
@@ -25,7 +26,7 @@ public class CurveFittingScorer implements FittingScorer {
 	public float score(ITransitionSeries ts) {
 		
 		curve.get().setTransitionSeries(ts);
-		FittingResultView result = fitter.fit(data, curve.get());
+		FittingResultView result = fitter.fit(new CurveFitterContext(data, curve.get()));
 		float score = result.getCurveScale() / max;
 		score = (float) Math.sqrt(score);
 		return score;

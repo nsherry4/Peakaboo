@@ -20,21 +20,21 @@ public class OptimizingCurveFitter implements CurveFitter {
 	protected float overfitPenalty = 5f;
 	
 	@Override
-	public FittingResult fit(ReadOnlySpectrum data, CurveView curve) {
-		float scale = this.findScale(data, curve);
-		FittingResult result = new FittingResult(curve, scale);
+	public FittingResult fit(CurveFitterContext ctx) {
+		float scale = this.findScale(ctx);
+		FittingResult result = new FittingResult(ctx.curve(), scale);
 		return result;
 	}
 	
 	
 	
-	private float findScale(ReadOnlySpectrum data, CurveView curve) {
+	private float findScale(CurveFitterContext ctx) {
 
-		UnivariateFunction score = scoringFunction(data, curve);
+		UnivariateFunction score = scoringFunction(ctx.data(), ctx.curve());
 		
 		double guess = 0;
-		for (int channel : curve.getIntenseChannelList()) {
-			guess = Math.max(guess, data.get(channel));
+		for (int channel : ctx.curve().getIntenseChannelList()) {
+			guess = Math.max(guess, ctx.data().get(channel));
 		}
 		
 		UnivariateOptimizer optimizer = new BrentOptimizer(0.0001, 0.00001);

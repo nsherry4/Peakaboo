@@ -11,6 +11,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -61,7 +62,7 @@ public class GreedyFittingSolver implements FittingSolver {
 		for (CurveView curve : fittings.getCurves()) {
 			if (!curve.getTransitionSeries().isVisible()) { continue; }
 			
-			FittingResult result = fitter.fit(remainder, curve);
+			FittingResult result = fitter.fit(new CurveFitterContext(remainder, curve));
 			curve.scaleInto(result.getCurveScale(), scaled);
 			SpectrumCalculations.subtractLists_inplace(remainder, scaled, 0.0f);
 			

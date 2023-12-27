@@ -1,10 +1,9 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import org.peakaboo.curvefit.curve.fitting.Curve;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
-import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -22,18 +21,20 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  */
 public interface CurveFitter extends BoltJavaPlugin {
 
-	FittingResult fit(ReadOnlySpectrum data, CurveView curve);
-		
-	default float maxSignal(ReadOnlySpectrum data, CurveView curve) {
+	public static record CurveFitterContext (ReadOnlySpectrum data, CurveView curve) {};
+	
+	FittingResult fit(CurveFitterContext ctx);
+	
+	default float maxSignal(CurveFitterContext ctx) {
 		
 		float maxSignal = Float.MIN_VALUE;
 		boolean hasSignal = false;
 		float currentSignal;
 		
 		//look at every point in the ranges covered by transitions, find the max intensity
-		for (Integer i : curve.getIntenseChannelList()) {
-			if (i < 0 || i >= data.size()) continue;
-			currentSignal = data.get(i);
+		for (Integer i : ctx.curve.getIntenseChannelList()) {
+			if (i < 0 || i >= ctx.data.size()) continue;
+			currentSignal = ctx.data.get(i);
 			if (currentSignal > maxSignal) maxSignal = currentSignal;
 			hasSignal = true;
 		}

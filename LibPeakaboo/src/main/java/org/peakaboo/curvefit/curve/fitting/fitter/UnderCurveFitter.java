@@ -1,6 +1,5 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
-import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
@@ -21,9 +20,9 @@ public class UnderCurveFitter implements CurveFitter {
 	/**
 	 * Fits this curve against spectrum data
 	 */
-	public FittingResult fit(ReadOnlySpectrum data, CurveView curve) {
-		float scale = this.getRatioForCurveUnderData(data, curve);
-		FittingResult result = new FittingResult(curve, scale);
+	public FittingResult fit(CurveFitterContext ctx) {
+		float scale = this.getRatioForCurveUnderData(ctx);
+		FittingResult result = new FittingResult(ctx.curve(), scale);
 		return result;
 	}
 	
@@ -35,9 +34,9 @@ public class UnderCurveFitter implements CurveFitter {
 	 *            the data to scale the fit to match
 	 * @return a scale value
 	 */
-	private float getRatioForCurveUnderData(ReadOnlySpectrum data, CurveView curve) {
+	private float getRatioForCurveUnderData(CurveFitterContext ctx) {
 			
-		float maxSignal = maxSignal(data, curve);
+		float maxSignal = maxSignal(ctx);
 		float cutoff;
 		
 		// calculate cut-off point where we do not consider any signal weaker than this when trying to fit
@@ -54,13 +53,13 @@ public class UnderCurveFitter implements CurveFitter {
 
 		
 		//look at every point in the ranges covered by transitions
-		ReadOnlySpectrum curveSignal = curve.get();
-		for (Integer i : curve.getIntenseChannelList()) {
-			if (i < 0 || i >= data.size()) continue;
+		ReadOnlySpectrum curveSignal = ctx.curve().get();
+		for (Integer i : ctx.curve().getIntenseChannelList()) {
+			if (i < 0 || i >= ctx.data().size()) continue;
 			
 			float curveChannelSignal = curveSignal.get(i);
 			if (curveChannelSignal >= cutoff) {
-				thisFactor = data.get(i) / curveChannelSignal;
+				thisFactor = ctx.data().get(i) / curveChannelSignal;
 				if (thisFactor < smallestFactor && !Float.isNaN(thisFactor)) {
 					smallestFactor = thisFactor;
 					ratiosConsidered = true;
