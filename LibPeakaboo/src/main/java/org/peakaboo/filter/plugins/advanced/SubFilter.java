@@ -122,7 +122,7 @@ public class SubFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "f44086fd-7b30-4ad9-a86f-761ed6a601c8";
 	}
 	

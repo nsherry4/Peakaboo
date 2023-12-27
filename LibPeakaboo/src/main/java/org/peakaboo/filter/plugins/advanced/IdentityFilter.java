@@ -49,7 +49,7 @@ public class IdentityFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "da022b2e-08e1-479c-ac3a-91ab3e1dd116";
 	}
 

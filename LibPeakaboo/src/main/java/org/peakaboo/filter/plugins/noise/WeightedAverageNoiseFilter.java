@@ -73,7 +73,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "24231bee-5442-493b-b95d-1592a7d70bfd";
 	}
 	

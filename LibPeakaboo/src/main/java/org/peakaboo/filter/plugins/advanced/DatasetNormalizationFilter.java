@@ -57,7 +57,7 @@ public class DatasetNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "16ae4c64-95ae-469e-a584-b9613afd0452";
 	}
 

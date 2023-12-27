@@ -105,7 +105,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "cf3b0cd5-ab62-4d2c-9d93-fafaf3ab6400";
 	}
 

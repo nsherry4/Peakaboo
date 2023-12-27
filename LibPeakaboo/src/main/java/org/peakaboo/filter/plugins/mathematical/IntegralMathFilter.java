@@ -66,7 +66,7 @@ public class IntegralMathFilter extends AbstractFilter
 
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "c49d30f9-481a-41cb-ab32-23f4207e07bb";
 	}
 	

@@ -185,7 +185,7 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "b9ec2709-e2d4-4700-9ac9-7d0f5b816f5f";
 	}
 	

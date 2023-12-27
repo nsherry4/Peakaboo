@@ -57,7 +57,7 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "5f9b89c0-1d6d-4911-93e1-8c073ad0a84f";
 	}
 

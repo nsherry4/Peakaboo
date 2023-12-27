@@ -58,7 +58,7 @@ public class MultiplicationMathFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "014cd405-0f41-4a24-9b66-10381cdf5a8c";
 	}
 	

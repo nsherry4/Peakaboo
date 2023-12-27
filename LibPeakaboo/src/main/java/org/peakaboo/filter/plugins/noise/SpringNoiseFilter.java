@@ -100,7 +100,7 @@ public final class SpringNoiseFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "e4a0065a-d42d-4a69-b021-b3df051d292d";
 	}
 	

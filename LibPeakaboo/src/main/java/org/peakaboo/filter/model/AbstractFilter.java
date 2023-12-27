@@ -20,7 +20,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * settings.
  * 
  * 
- * @author Nathaniel Sherry, 2009-2012
+ * @author Nathaniel Sherry
  * 
  */
 
@@ -33,17 +33,6 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin {
 	//==============================================
 	// PLUGIN METHODS
 	//==============================================	
-
-	@Override
-	public String pluginName() {
-		return getFilterName();
-	}
-
-	@Override
-	public String pluginDescription() {
-		return getFilterDescription();
-	}
-	
 	
 	public AbstractFilter() {
 		this.parameters = new ArrayList<>();

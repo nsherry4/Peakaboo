@@ -23,7 +23,7 @@ public class LowStatisticsNoiseFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "c47f0fa9-ce68-4224-b190-2ee452049ee1";
 	}
 	

@@ -39,7 +39,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "0cb3b1d9-1ab6-46c0-adb7-72634c6ee595";
 	}
 	

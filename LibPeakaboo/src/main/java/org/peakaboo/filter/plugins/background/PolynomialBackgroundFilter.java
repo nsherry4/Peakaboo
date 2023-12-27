@@ -180,7 +180,7 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter {
 	}
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "e9bfddb8-a8f0-490c-b01f-e2202581e809";
 	}
 	

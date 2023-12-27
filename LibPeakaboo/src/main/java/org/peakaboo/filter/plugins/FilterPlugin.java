@@ -5,8 +5,16 @@ import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 
 public interface FilterPlugin extends Filter, BoltJavaPlugin {
 
-	default String getFilterUUID() {
-		return this.pluginUUID();
+	default String pluginUUID() {
+		return this.getFilterUUID();
+	}
+	
+	default String pluginName() {
+		return getFilterName();
+	}
+
+	default String pluginDescription() {
+		return getFilterDescription();
 	}
 	
 }

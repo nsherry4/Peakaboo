@@ -57,7 +57,7 @@ public class SubtractionMathFilter extends AbstractFilter
 
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "06557ce2-5587-4e73-abdb-f2d5dbb16f81";
 	}
 	

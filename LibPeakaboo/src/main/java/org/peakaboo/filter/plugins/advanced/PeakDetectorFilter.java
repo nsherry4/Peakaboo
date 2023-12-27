@@ -51,7 +51,7 @@ public class PeakDetectorFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "d2a59db0-66a5-4ff0-aac6-a9b8206098ca";
 	}
 

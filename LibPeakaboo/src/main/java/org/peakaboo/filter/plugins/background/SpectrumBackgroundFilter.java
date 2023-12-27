@@ -59,7 +59,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "33ed30e7-65fb-4972-80e8-95dce2811b05";
 	}
 
