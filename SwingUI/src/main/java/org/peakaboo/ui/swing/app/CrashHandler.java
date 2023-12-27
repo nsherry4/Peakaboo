@@ -5,13 +5,13 @@ import java.util.function.Consumer;
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
-import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
-import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.stratus.components.dialogs.error.ErrorDialog;
 import org.peakaboo.framework.stratus.components.dialogs.error.ErrorDialog.Feedback;
-import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 
 import com.bugsnag.Bugsnag;
@@ -56,10 +56,10 @@ public class CrashHandler {
 				report.addToTab("Peakaboo", "build-date", Version.buildDate);
 				report.addToTab("Peakaboo", "tier", Tier.provider().tierName());
 				
-				report.addToTab("Plugins", "filters", FilterPluginManager.system().infodump());
-				report.addToTab("Plugins", "datasources", DataSourcePluginManager.system().infodump());
-				report.addToTab("Plugins", "datasinks", DataSinkPluginManager.system().infodump());
-				report.addToTab("Plugins", "mapfilters", MapFilterPluginManager.system().infodump());						
+				report.addToTab("Plugins", "filters", FilterRegistry.system().infodump());
+				report.addToTab("Plugins", "datasources", DataSourceRegistry.system().infodump());
+				report.addToTab("Plugins", "datasinks", DataSinkRegistry.system().infodump());
+				report.addToTab("Plugins", "mapfilters", MapFilterRegistry.system().infodump());						
 
 				if (feedback != null) {
 					report.addToTab("User", "notes", feedback.notes());

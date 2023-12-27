@@ -59,7 +59,7 @@ import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.model.datafile.PathDataFile;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.util.Mutable;
@@ -421,7 +421,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionOpenData() {	
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		for (DataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
+		for (DataSourcePlugin p : DataSourceRegistry.system().newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);

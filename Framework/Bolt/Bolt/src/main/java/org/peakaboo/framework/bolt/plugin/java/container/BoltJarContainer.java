@@ -11,7 +11,7 @@ import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltBrokenJarIssue;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltEmptyJarIssue;
@@ -19,9 +19,9 @@ import org.peakaboo.framework.bolt.plugin.java.issue.BoltEmptyJarIssue;
 public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContainer<T> {
 
 	private URL url;
-	private BoltPluginManager<T> manager;
+	private BoltPluginRegistry<T> manager;
 	
-	public BoltJarContainer(BoltPluginManager<T> manager, Class<T> targetClass, URL url) {
+	public BoltJarContainer(BoltPluginRegistry<T> manager, Class<T> targetClass, URL url) {
 		super(manager, targetClass);
 		this.url = url;
 		this.manager = manager;
@@ -142,7 +142,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 	}
 
 	@Override
-	public BoltPluginManager<T> getManager() {
+	public BoltPluginRegistry<T> getManager() {
 		return this.manager;
 	}
 

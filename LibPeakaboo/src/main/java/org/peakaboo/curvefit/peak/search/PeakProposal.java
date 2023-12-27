@@ -13,7 +13,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
@@ -46,7 +46,7 @@ public class PeakProposal {
 			final ReadOnlySpectrum data,
 			PeakSearcher searcher,
 			FittingSetView fits,
-			CurveFitterPlugin fitter,
+			CurveFitter fitter,
 			FittingSolver solver
 		) {
 		
@@ -201,7 +201,7 @@ public class PeakProposal {
 			final ReadOnlySpectrum data, 
 			FittingSetView fits,
 			FittingSet proposed,
-			CurveFitterPlugin fitter,
+			CurveFitter fitter,
 			FittingSolver solver,
 			final int channel, 
 			ITransitionSeries currentTS,

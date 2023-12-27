@@ -22,11 +22,11 @@ import javax.swing.tree.TreeModel;
 
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
-import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
@@ -46,7 +46,7 @@ import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.Fluent
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
-import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.app.DesktopApp;
@@ -236,12 +236,12 @@ public class PluginManager extends HeaderLayer {
 		boolean handled = false;
 		
 		try {
-			handled |= addFileToManager(file, DataSourcePluginManager.system());
-			handled |= addFileToManager(file, DataSinkPluginManager.system());
-			handled |= addFileToManager(file, FilterPluginManager.system());
-			handled |= addFileToManager(file, MapFilterPluginManager.system());
+			handled |= addFileToManager(file, DataSourceRegistry.system());
+			handled |= addFileToManager(file, DataSinkRegistry.system());
+			handled |= addFileToManager(file, FilterRegistry.system());
+			handled |= addFileToManager(file, MapFilterRegistry.system());
 			
-			for (BoltPluginManager<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+			for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
 				handled |= addFileToManager(file, manager);
 			}
 			
@@ -269,7 +269,7 @@ public class PluginManager extends HeaderLayer {
 	/**
 	 * Try adding a jar to a specific plugin manager. Return true if the given manager accepted the jar
 	 */
-	private boolean addFileToManager(File file, BoltPluginManager<? extends BoltPlugin> manager) throws BoltImportException {
+	private boolean addFileToManager(File file, BoltPluginRegistry<? extends BoltPlugin> manager) throws BoltImportException {
 		
 		if (!manager.isImportable(file)) {
 			return false;
@@ -290,12 +290,12 @@ public class PluginManager extends HeaderLayer {
 	
 	
 	public void reload() {
-		DataSourcePluginManager.system().reload();
-		DataSinkPluginManager.system().reload();
-		FilterPluginManager.system().reload();
-		MapFilterPluginManager.system().reload();
+		DataSourceRegistry.system().reload();
+		DataSinkRegistry.system().reload();
+		FilterRegistry.system().reload();
+		MapFilterRegistry.system().reload();
 		
-		for (BoltPluginManager<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+		for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
 			manager.reload();
 		}
 		
@@ -317,7 +317,7 @@ public class PluginManager extends HeaderLayer {
 		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
 	}
 	
-	private DefaultMutableTreeNode createPluginManagerRootNode(BoltPluginManager<?> manager) {
+	private DefaultMutableTreeNode createPluginManagerRootNode(BoltPluginRegistry<?> manager) {
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(manager);
 		for (BoltPluginPrototype<?> source :  manager.getPlugins()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
@@ -334,20 +334,20 @@ public class PluginManager extends HeaderLayer {
 		
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
 		
-		DefaultMutableTreeNode sourcesNode = createPluginManagerRootNode(DataSourcePluginManager.system());
+		DefaultMutableTreeNode sourcesNode = createPluginManagerRootNode(DataSourceRegistry.system());
 		plugins.add(sourcesNode);
 		
-		DefaultMutableTreeNode sinksNode = createPluginManagerRootNode(DataSinkPluginManager.system());
+		DefaultMutableTreeNode sinksNode = createPluginManagerRootNode(DataSinkRegistry.system());
 		plugins.add(sinksNode);
 		
-		DefaultMutableTreeNode filtersNode = createPluginManagerRootNode(FilterPluginManager.system());
+		DefaultMutableTreeNode filtersNode = createPluginManagerRootNode(FilterRegistry.system());
 		plugins.add(filtersNode);
 		
-		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterPluginManager.system());
+		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterRegistry.system());
 		plugins.add(mapFiltersNode);
 
 		
-		for (BoltPluginManager<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+		for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(manager);
 			plugins.add(node);
 			
@@ -377,7 +377,7 @@ public class PluginManager extends HeaderLayer {
 				remove.setEnabled(false);
 			} else if (!node.isLeaf()) {
 				
-				BoltPluginManager<? extends BoltPlugin> manager = (BoltPluginManager<? extends BoltPlugin>) node.getUserObject();
+				BoltPluginRegistry<? extends BoltPlugin> manager = (BoltPluginRegistry<? extends BoltPlugin>) node.getUserObject();
 				String interfaceDesc = manager.getInterfaceDescription();
 				details.add(new BlankMessagePanel(manager.getInterfaceName(), interfaceDesc), BorderLayout.CENTER);
 				remove.setEnabled(false);

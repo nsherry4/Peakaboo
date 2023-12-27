@@ -3,23 +3,23 @@ package org.peakaboo.curvefit.curve.fitting.solver;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class FittingSolverPluginManager extends BoltPluginManager<FittingSolver> {
+public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> {
 
 	
-	private static FittingSolverPluginManager SYSTEM;
+	private static FittingSolverRegistry SYSTEM;
 	public static void init() {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new FittingSolverPluginManager();
+				SYSTEM = new FittingSolverRegistry();
 			}
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load fitting solver plugins", e);
 		}
 	}
-	public static FittingSolverPluginManager system() {
+	public static FittingSolverRegistry system() {
 		return SYSTEM;
 	}
 	
@@ -27,7 +27,7 @@ public class FittingSolverPluginManager extends BoltPluginManager<FittingSolver>
 	
 	private BoltJavaBuiltinLoader<FittingSolver> builtins;
 	
-	public FittingSolverPluginManager() {
+	public FittingSolverRegistry() {
 		super("fittingsolver");
 		
 		builtins = new BoltJavaBuiltinLoader<>(this, FittingSolver.class);

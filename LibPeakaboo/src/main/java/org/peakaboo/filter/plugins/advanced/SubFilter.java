@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterDescriptor;
-import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
 import org.peakaboo.framework.autodialog.model.classinfo.SimpleClassInfo;
@@ -26,7 +26,7 @@ public class SubFilter extends AbstractFilter {
 		
 	@Override
 	public void initialize() {
-		List<Filter> filters = FilterPluginManager.system().newInstances().stream()
+		List<Filter> filters = FilterRegistry.system().newInstances().stream()
 				.filter(f -> f.pluginEnabled() && f.canFilterSubset())
 				.collect(Collectors.toList());
 		filters.add(0, new IdentityFilter());
@@ -42,7 +42,7 @@ public class SubFilter extends AbstractFilter {
 		var filterClassInfo = new SimpleClassInfo<Filter>(
 				Filter.class, 
 				f -> f.save().serialize(), 
-				s -> FilterPluginManager.fromSaved(s).orElse(null));
+				s -> FilterRegistry.fromSaved(s).orElse(null));
 		
 		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0), filterClassInfo);
 		filter.setPossibleValues(filters);

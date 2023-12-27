@@ -29,25 +29,25 @@ import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 
-public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
+public class FilterRegistry extends BoltPluginRegistry<FilterPlugin> {
 
-	private static FilterPluginManager SYSTEM;
+	private static FilterRegistry SYSTEM;
 	public static void init(File filterDir) {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new FilterPluginManager(filterDir);
+				SYSTEM = new FilterRegistry(filterDir);
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load filter plugins", e);
 		}
 	}
-	public static FilterPluginManager system() {
+	public static FilterRegistry system() {
 		return SYSTEM;
 	}
 
@@ -62,7 +62,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	}
 	
 	public static Optional<Filter> fromSaved(SavedPlugin saved) {
-		var proto = FilterPluginManager.system().getByUUID(saved.uuid);
+		var proto = FilterRegistry.system().getByUUID(saved.uuid);
 		if (proto == null) {
 			return Optional.empty();
 		}
@@ -75,7 +75,7 @@ public class FilterPluginManager extends BoltPluginManager<FilterPlugin> {
 	
 	private BoltJavaBuiltinLoader<FilterPlugin> builtins;
 	
-	public FilterPluginManager(File filterDir) {
+	public FilterRegistry(File filterDir) {
 		super("filter");
 		
 		addLoader(new BoltJarDirectoryLoader<>(this, FilterPlugin.class, filterDir));

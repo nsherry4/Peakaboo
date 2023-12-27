@@ -21,7 +21,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
@@ -59,7 +59,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	}
 
 	@Override
-	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitterPlugin fitter) {
+	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitter fitter) {
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {
 			return getEmptyResult(data, fittings);
@@ -122,7 +122,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected double[] getInitialGuess(List<CurveView> curves, CurveFitterPlugin fitter, ReadOnlySpectrum data) {
+	protected double[] getInitialGuess(List<CurveView> curves, CurveFitter fitter, ReadOnlySpectrum data) {
 		int curveCount = curves.size();
 		double[] guess = new double[curveCount];
 		for (int i = 0; i < curveCount; i++) {

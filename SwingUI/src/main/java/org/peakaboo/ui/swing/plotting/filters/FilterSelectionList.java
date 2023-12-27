@@ -14,7 +14,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
-import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
@@ -138,7 +138,7 @@ class FilterSelectionTreeModel implements TreeModel {
 		if (parent instanceof FilterType) {
 			@SuppressWarnings("unchecked")
 			BoltPluginPrototype<? extends FilterPlugin> plugin = (BoltPluginPrototype<? extends FilterPlugin>) child;
-			return FilterPluginManager.system().getPlugins().indexOf(plugin);
+			return FilterRegistry.system().getPlugins().indexOf(plugin);
 		} else if (parent instanceof String) {
 			FilterType ft = (FilterType) child;
 			return ft.ordinal();
@@ -151,7 +151,7 @@ class FilterSelectionTreeModel implements TreeModel {
 
 		if (parent instanceof FilterType ft) {
 			int typeCount = 0;
-			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterRegistry.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 			}
 			return typeCount;
@@ -169,7 +169,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			index++;
 			int typeCount = 0;
 
-			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterPluginManager.system().getPlugins()) {
+			for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterRegistry.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 				if (typeCount == index) return plugin;
 			}

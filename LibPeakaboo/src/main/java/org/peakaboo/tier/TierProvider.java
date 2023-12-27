@@ -9,7 +9,7 @@ import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 
 //Interface for a factory class that creates pro/non-pro implementations of interfaces
 
@@ -20,7 +20,7 @@ public interface TierProvider {
 	
 	public void initializePlugins();
 	
-	public List<BoltPluginManager<? extends BoltPlugin>> getPluginManagers();
+	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers();
 
 	public <V, C> List<TierUIAction<V, C>> uiComponents(String location);
 

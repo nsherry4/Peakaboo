@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginBuilder;
 import org.peakaboo.framework.bolt.plugin.config.container.BoltConfigContainer;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltLoader;
 
@@ -16,12 +16,12 @@ public class BoltConfigBuiltinLoader<T extends BoltConfigPlugin> implements Bolt
 
 	private List<URL> custom = new ArrayList<>();
 	
-	private BoltPluginManager<T> manager;
+	private BoltPluginRegistry<T> manager;
 	private Class<T> targetClass;
 	private BoltConfigPluginBuilder<T> builder;
 	
 	
-	public BoltConfigBuiltinLoader(BoltPluginManager<T> manager, Class<T> targetClass, BoltConfigPluginBuilder<T> builder) {
+	public BoltConfigBuiltinLoader(BoltPluginRegistry<T> manager, Class<T> targetClass, BoltConfigPluginBuilder<T> builder) {
 		this.manager = manager;
 		this.targetClass = targetClass;
 		this.builder = builder;

@@ -10,7 +10,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -47,7 +47,7 @@ public class GreedyFittingSolver implements FittingSolver {
 	 * Fit this FittingSet against spectrum data
 	 */
 	@Override
-	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitterPlugin fitter) {
+	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitter fitter) {
 
 		
 		Spectrum resultTotalFit = new ISpectrum(data.size());

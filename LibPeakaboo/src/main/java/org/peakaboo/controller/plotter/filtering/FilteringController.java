@@ -8,7 +8,7 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.filter.model.Filter;
-import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -148,7 +148,7 @@ public class FilteringController extends EventfulBeacon
 		var filters = filteringModel.filters;
 		filters.clear();
 		for (var s : saved) {
-			var optFilter = FilterPluginManager.fromSaved(s);
+			var optFilter = FilterRegistry.fromSaved(s);
 			if (optFilter.isPresent()) {
 				filters.add(optFilter.get());
 			} else {

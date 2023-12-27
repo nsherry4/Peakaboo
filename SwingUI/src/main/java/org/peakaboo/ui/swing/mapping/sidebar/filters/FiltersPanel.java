@@ -30,7 +30,7 @@ import org.peakaboo.framework.stratus.components.ui.itemlist.ListControls;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ReorderTransferHandler;
 import org.peakaboo.framework.stratus.components.ui.itemlist.SelectionListControls;
 import org.peakaboo.mapping.filter.model.MapFilter;
-import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 public class FiltersPanel extends JPanel {
@@ -203,7 +203,7 @@ public class FiltersPanel extends JPanel {
 	private JPanel buildAddPanel() {
 		
 		//model and tree
-		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterPluginManager.system().getPlugins();
+		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterRegistry.system().getPlugins();
 		GroupedListTreeModel<BoltPluginPrototype<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
 				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);

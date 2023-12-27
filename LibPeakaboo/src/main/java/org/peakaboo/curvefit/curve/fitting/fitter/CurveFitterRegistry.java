@@ -4,34 +4,34 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class CurveFitterPluginManager extends BoltPluginManager<CurveFitterPlugin> {
+public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> {
 
 	
-	private static CurveFitterPluginManager SYSTEM;
+	private static CurveFitterRegistry SYSTEM;
 	public static void init() {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new CurveFitterPluginManager();
+				SYSTEM = new CurveFitterRegistry();
 			}
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load curve fit plugins", e);
 		}
 	}
-	public static CurveFitterPluginManager system() {
+	public static CurveFitterRegistry system() {
 		return SYSTEM;
 	}
 	
 	//--------------------------------
 	
-	private BoltJavaBuiltinLoader<CurveFitterPlugin> builtins;
+	private BoltJavaBuiltinLoader<CurveFitter> builtins;
 	
-	public CurveFitterPluginManager() {
+	public CurveFitterRegistry() {
 		super("curvefit");
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, CurveFitterPlugin.class);
+		builtins = new BoltJavaBuiltinLoader<>(this, CurveFitter.class);
 		builtins.load(UnderCurveFitter.class);
 		builtins.load(OptimizingCurveFitter.class);
 		builtins.load(LeastSquaresCurveFitter.class);

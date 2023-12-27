@@ -17,7 +17,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
@@ -420,12 +420,12 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
-	public CurveFitterPlugin getCurveFitter() {
+	public CurveFitter getCurveFitter() {
 		return fittingModel.curveFitter;
 	}
 	
 	
-	public void setCurveFitter(CurveFitterPlugin curveFitter) {
+	public void setCurveFitter(CurveFitter curveFitter) {
 		this.fittingModel.curveFitter = curveFitter;
 		fittingDataInvalidated();
 	}
@@ -577,9 +577,9 @@ public class FittingController extends EventfulType<Boolean>
 		
 		
 		//Restore CurveFitter
-		Class<? extends CurveFitterPlugin> curveFitterClass;
+		Class<? extends CurveFitter> curveFitterClass;
 		try {
-			curveFitterClass = (Class<? extends CurveFitterPlugin>) Class.forName(saved.fitter);
+			curveFitterClass = (Class<? extends CurveFitter>) Class.forName(saved.fitter);
 			fittingModel.curveFitter = curveFitterClass.getDeclaredConstructor().newInstance();
 		} catch (ClassNotFoundException e) {
 			String[] parts = saved.fitter.split("\\.");

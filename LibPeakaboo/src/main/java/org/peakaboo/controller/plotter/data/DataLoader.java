@@ -20,7 +20,7 @@ import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.plugin.DataSourceLookup;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.util.StringInput;
@@ -125,7 +125,7 @@ public abstract class DataLoader {
 		 */
 		List<DataSourcePlugin> formats = new ArrayList<>();
 		if (dataSourceUUID != null) {
-			var plugin = DataSourcePluginManager.system().getByUUID(dataSourceUUID);
+			var plugin = DataSourceRegistry.system().getByUUID(dataSourceUUID);
 			if (plugin != null) { 
 				formats.add(plugin.create());
 			} else {
@@ -133,7 +133,7 @@ public abstract class DataLoader {
 			}
 		}
 		if (formats.isEmpty()) {
-			List<DataSourcePlugin> candidates =  DataSourcePluginManager.system().newInstances();
+			List<DataSourcePlugin> candidates =  DataSourceRegistry.system().newInstances();
 			formats = DataSourceLookup.findDataSourcesForFiles(datafiles, candidates);
 		}
 		

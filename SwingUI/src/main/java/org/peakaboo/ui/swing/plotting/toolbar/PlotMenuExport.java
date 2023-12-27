@@ -9,7 +9,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
-import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
+import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
@@ -62,7 +62,7 @@ public class PlotMenuExport extends JPopupMenu {
 	public static JMenu makeExportSinks(PlotPanel plot) {
 		JMenu exportSinks = new JMenu("Raw Data");
 		
-		for (BoltPluginPrototype<? extends DataSinkPlugin> plugin : DataSinkPluginManager.system().getPlugins()) {
+		for (BoltPluginPrototype<? extends DataSinkPlugin> plugin : DataSinkRegistry.system().getPlugins()) {
 			exportSinks.add(new FluentMenuItem()
 					.withText(plugin.getName())
 					.withAction(() -> plot.actionExportData(plugin.create()))

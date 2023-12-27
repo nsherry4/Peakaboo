@@ -15,7 +15,7 @@ import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
-public class OptimizingCurveFitter implements CurveFitterPlugin {
+public class OptimizingCurveFitter implements CurveFitter {
 
 	protected float overfitPenalty = 5f;
 	

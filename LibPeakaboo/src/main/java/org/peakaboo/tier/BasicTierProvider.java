@@ -12,7 +12,7 @@ import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 
 public class BasicTierProvider implements TierProvider {
 	
@@ -25,7 +25,7 @@ public class BasicTierProvider implements TierProvider {
 		//nothing to do
 	}
 	
-	public List<BoltPluginManager<? extends BoltPlugin>> getPluginManagers() {
+	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers() {
 		return new ArrayList<>();
 	}
 

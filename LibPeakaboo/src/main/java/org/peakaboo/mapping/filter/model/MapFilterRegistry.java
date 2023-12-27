@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
@@ -30,27 +30,27 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate270MapFilte
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate90MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
 
-public class MapFilterPluginManager extends BoltPluginManager<MapFilterPlugin> {
+public class MapFilterRegistry extends BoltPluginRegistry<MapFilterPlugin> {
 
-	private static MapFilterPluginManager SYSTEM;
+	private static MapFilterRegistry SYSTEM;
 	public static void init(File filterDir) {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new MapFilterPluginManager(filterDir);
+				SYSTEM = new MapFilterRegistry(filterDir);
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load map filter plugins", e);
 		}
 	}
-	public static MapFilterPluginManager system() {
+	public static MapFilterRegistry system() {
 		return SYSTEM;
 	}
 	
 	
 	private BoltJavaBuiltinLoader<MapFilterPlugin> builtins;
 	
-	private MapFilterPluginManager(File directories) {
+	private MapFilterRegistry(File directories) {
 		super("mapfilter");
 		
 		addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class, directories));

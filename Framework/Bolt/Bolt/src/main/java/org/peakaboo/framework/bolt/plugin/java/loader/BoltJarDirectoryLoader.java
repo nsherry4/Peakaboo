@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
@@ -15,15 +15,15 @@ public class BoltJarDirectoryLoader<T extends BoltJavaPlugin> extends BoltDirect
 
 	
 	private Class<T> targetClass;
-	private BoltPluginManager<T> manager;
+	private BoltPluginRegistry<T> manager;
 	
-	public BoltJarDirectoryLoader(BoltPluginManager<T> manager, Class<T> targetClass) {
+	public BoltJarDirectoryLoader(BoltPluginRegistry<T> manager, Class<T> targetClass) {
 		super(BoltDirectoryLoader.getLocalDirectory(BoltJarDirectoryLoader.class), false);
 		this.targetClass = targetClass;
 		this.manager = manager;
 	}
 	
-	public BoltJarDirectoryLoader(BoltPluginManager<T> manager, Class<T> targetClass, File directory) {
+	public BoltJarDirectoryLoader(BoltPluginRegistry<T> manager, Class<T> targetClass, File directory) {
 		super(directory, true);
 		this.targetClass = targetClass;
 		this.manager = manager;

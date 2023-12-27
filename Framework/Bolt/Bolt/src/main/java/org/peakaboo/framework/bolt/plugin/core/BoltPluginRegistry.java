@@ -22,7 +22,7 @@ import org.peakaboo.framework.bolt.plugin.core.loader.BoltManagedLoader;
  *
  * @param <P>
  */
-public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPluginCollection<P> {
+public abstract class BoltPluginRegistry<P extends BoltPlugin> implements BoltPluginCollection<P> {
 
 	private boolean loaded = false;
 	private List<BoltContainer<P>> containers = new ArrayList<>();
@@ -30,7 +30,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 	private List<BoltLoader<P>> loaders = new ArrayList<>();
 	private String name;
 
-	public BoltPluginManager(String name) {
+	public BoltPluginRegistry(String name) {
 		this.name = name;
 	}
 	
@@ -68,7 +68,7 @@ public abstract class BoltPluginManager<P extends BoltPlugin> implements BoltPlu
 	}
 	
 	
-	public BoltPluginManager<P> getManager() {
+	public BoltPluginRegistry<P> getManager() {
 		return this;
 	}
 	

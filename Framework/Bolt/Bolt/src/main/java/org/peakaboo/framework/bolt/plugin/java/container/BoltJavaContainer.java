@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
@@ -19,9 +19,9 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 
 	protected Class<T> targetClass;
 	protected BoltPluginSet<T> plugins;
-	private BoltPluginManager<T> manager;
+	private BoltPluginRegistry<T> manager;
 	
-	public BoltJavaContainer(BoltPluginManager<T> manager, Class<T> targetClass) {
+	public BoltJavaContainer(BoltPluginRegistry<T> manager, Class<T> targetClass) {
 		this.targetClass = targetClass;
 		this.plugins = new BoltPluginSet<>(manager);
 		this.manager = manager;

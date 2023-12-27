@@ -7,31 +7,31 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.dataset.source.plugin.plugins.SingleColumn;
 import org.peakaboo.dataset.source.plugin.plugins.universalhdf5.UniversalHDF5DataSource;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class DataSourcePluginManager extends BoltPluginManager<DataSourcePlugin> {
+public class DataSourceRegistry extends BoltPluginRegistry<DataSourcePlugin> {
 
-	private static DataSourcePluginManager SYSTEM;
+	private static DataSourceRegistry SYSTEM;
 	public static synchronized void init(File dataSourceDir) {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new DataSourcePluginManager(dataSourceDir);
+				SYSTEM = new DataSourceRegistry(dataSourceDir);
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load data source plugins", e);
 		}
 	}
-	public static DataSourcePluginManager system() {
+	public static DataSourceRegistry system() {
 		return SYSTEM;
 	}
 	
 	
 	private BoltJavaBuiltinLoader<DataSourcePlugin> builtins;
 	
-	public DataSourcePluginManager(File dataSourceDir) {
+	public DataSourceRegistry(File dataSourceDir) {
 		super("datasource");
 		
 		addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class, dataSourceDir));

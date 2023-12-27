@@ -20,7 +20,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * @author NAS
  *
  */
-public interface CurveFitterPlugin extends BoltJavaPlugin {
+public interface CurveFitter extends BoltJavaPlugin {
 
 	FittingResult fit(ReadOnlySpectrum data, CurveView curve);
 		

@@ -16,9 +16,9 @@ public class BoltPluginSet<T extends BoltPlugin> implements BoltPluginCollection
 	private ArrayList<BoltPluginPrototype<? extends T>> plugins = new ArrayList<>();
 	private ArrayList<BoltIssue<? extends T>> issues = new ArrayList<>();
 	
-	private BoltPluginManager<T> manager;
+	private BoltPluginRegistry<T> manager;
 	
-	public BoltPluginSet(BoltPluginManager<T> manager) {
+	public BoltPluginSet(BoltPluginRegistry<T> manager) {
 		this.manager = manager;
 	}
 	
@@ -72,7 +72,7 @@ public class BoltPluginSet<T extends BoltPlugin> implements BoltPluginCollection
 	}
 
 	@Override
-	public BoltPluginManager<T> getManager() {
+	public BoltPluginRegistry<T> getManager() {
 		return manager;
 	}
 	

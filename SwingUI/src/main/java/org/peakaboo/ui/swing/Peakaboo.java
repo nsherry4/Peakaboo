@@ -25,13 +25,13 @@ import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
-import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverPluginManager;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
-import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
-import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
 import org.peakaboo.framework.eventful.EventfulConfig;
@@ -45,7 +45,7 @@ import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.laf.theme.DuskTheme;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
-import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.AccentedTheme;
 import org.peakaboo.ui.swing.app.CrashHandler;
@@ -242,12 +242,12 @@ public class Peakaboo {
 	}
 	
 	private static void initPluginSystem() {
-		FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
-		MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
-		DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
-		DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
-		CurveFitterPluginManager.init();
-		FittingSolverPluginManager.init();
+		FilterRegistry.init(DesktopApp.appDir("Plugins/Filter"));
+		MapFilterRegistry.init(DesktopApp.appDir("Plugins/MapFilter"));
+		DataSourceRegistry.init(DesktopApp.appDir("Plugins/DataSource"));
+		DataSinkRegistry.init(DesktopApp.appDir("Plugins/DataSink"));
+		CurveFitterRegistry.init();
+		FittingSolverRegistry.init();
 		
 		//Any additional plugin types provided per-tier
 		Tier.provider().initializePlugins();
