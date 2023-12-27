@@ -54,6 +54,7 @@ import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.dataset.io.PathDataOutputAdapter;
 import org.peakaboo.dataset.sink.model.DataSink;
+import org.peakaboo.dataset.sink.model.DataSink.DataSinkContext;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.metadata.Metadata;
@@ -490,7 +491,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
 		var output = new PathDataOutputAdapter(file.toPath());
-		ExecutorSet<Void> writer = DataSink.write(source, sink, output);
+		ExecutorSet<Void> writer = DataSink.write(sink, new DataSinkContext(source, output));
 		output.close();
 		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
 		pushLayer(layer);

@@ -23,9 +23,11 @@ public class CSV extends AbstractDataSink {
 	}
 	
 	@Override
-	public void write(DataSource source, DataOutputAdapter output) throws IOException, DataSinkWriteException {
+	public void write(DataSinkContext ctx) throws IOException, DataSinkWriteException {
+		DataOutputAdapter destination = ctx.destination();
+		DataSource source = ctx.source();
 		
-		Writer writer = new OutputStreamWriter(output.getOutputStream());
+		Writer writer = new OutputStreamWriter(destination.getOutputStream());
 				
 		int counter = 0;
 		for (ReadOnlySpectrum s : source.getScanData()) {
@@ -45,7 +47,7 @@ public class CSV extends AbstractDataSink {
 		writer.close();
 		
 		try {
-			output.close();
+			destination.close();
 		} catch (Exception e) {
 			throw new DataSinkWriteException("Failed to close output stream", e);
 		}
