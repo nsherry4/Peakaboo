@@ -1,4 +1,4 @@
-package org.peakaboo.dataset.source.model.datafile;
+package org.peakaboo.dataset.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,19 +9,19 @@ import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class PathDataFile implements DataFile {
+public class PathDataInputAdapter implements DataInputAdapter {
 	
 	private Path path;
 	
-	public PathDataFile(String filename) {
+	public PathDataInputAdapter(String filename) {
 		this(new File(filename));
 	}
 	
-	public PathDataFile(File file) {
+	public PathDataInputAdapter(File file) {
 		this.path = file.toPath();
 	}
 	
-	public PathDataFile(Path path) {
+	public PathDataInputAdapter(Path path) {
 		this.path = path;
 	}
 
@@ -67,13 +67,13 @@ public class PathDataFile implements DataFile {
 	@Override
 	public boolean equals(Object other) {
 		//This line isn't needed, right? Java will just call the other method?
-		if (other instanceof PathDataFile) {
-			return equals((PathDataFile) other);
+		if (other instanceof PathDataInputAdapter) {
+			return equals((PathDataInputAdapter) other);
 		}
 		return false;
 	}
 	
-	public boolean equals(PathDataFile other) {
+	public boolean equals(PathDataInputAdapter other) {
 		if (other == null) { return false; }
 		return this.path.equals(other.path);
 	}
@@ -106,11 +106,11 @@ public class PathDataFile implements DataFile {
 		return address.startsWith("/") || address.startsWith("file://");
 	}
 	
-	public static PathDataFile fromAddress(String address, Supplier<Path> tempDir) {
+	public static PathDataInputAdapter fromAddress(String address, Supplier<Path> tempDir) {
 		if (address.startsWith("file://")) {
 			address = address.substring(7);
 		}
-		return new PathDataFile(address);
+		return new PathDataInputAdapter(address);
 	}
 	
 

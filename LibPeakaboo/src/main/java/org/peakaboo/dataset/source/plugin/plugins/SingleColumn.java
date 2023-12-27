@@ -9,6 +9,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.SimpleDataSize;
@@ -18,7 +19,6 @@ import org.peakaboo.dataset.source.model.components.metadata.Metadata;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.PipelineScanData;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.SparsedList;
@@ -32,7 +32,7 @@ public class SingleColumn extends AbstractDataSource {
 	PipelineScanData scandata;
 	SimpleDataSize datasize;
 	@Override
-	public Optional<Group> getParameters(List<DataFile> paths) {
+	public Optional<Group> getParameters(List<DataInputAdapter> paths) {
 		return Optional.empty();
 	}
 
@@ -71,13 +71,13 @@ public class SingleColumn extends AbstractDataSource {
 			}
 			
 			@Override
-			public FileFormatCompatibility compatibility(List<DataFile> filenames) {
+			public FileFormatCompatibility compatibility(List<DataInputAdapter> filenames) {
 				try {
 					//exactly 1 file
 					if (filenames.size() != 1) {
 						return FileFormatCompatibility.NO;
 					}
-					DataFile filename = filenames.get(0);
+					DataInputAdapter filename = filenames.get(0);
 					
 					//no larger than 1MB
 					if (filename.size().orElse(0l) > 1048576l) {
@@ -107,12 +107,12 @@ public class SingleColumn extends AbstractDataSource {
 	}
 
 	@Override
-	public void read(List<DataFile> files) throws DataSourceReadException, IOException, InterruptedException {
+	public void read(List<DataInputAdapter> files) throws DataSourceReadException, IOException, InterruptedException {
 		//exactly 1 file
 		if (files.size() != 1) {
 			throw new IllegalArgumentException("This DataSource expects a single file");
 		}
-		DataFile file = files.get(0);
+		DataInputAdapter file = files.get(0);
 		
 		//no larger than 1MB
 		if (file.size().orElse(0l) > 1048576l) {

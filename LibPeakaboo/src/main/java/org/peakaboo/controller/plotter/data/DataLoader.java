@@ -16,8 +16,8 @@ import org.peakaboo.controller.plotter.SavedSessionV1;
 import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.plugin.DataSourceLookup;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
@@ -33,7 +33,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 public abstract class DataLoader {
 
 	protected PlotController controller;
-	private List<DataFile> datafiles;
+	private List<DataInputAdapter> datafiles;
 	private String dataSourceUUID = null;
 	private Map<String, Object> sessionParameters = null;
 	private File sessionFile = null;
@@ -41,7 +41,7 @@ public abstract class DataLoader {
 	//if we're loading a session, we need to do some extra work after loading the dataset
 	private Runnable sessionCallback = () -> {}; 
 	
-	public DataLoader(PlotController controller, List<DataFile> datafiles) {
+	public DataLoader(PlotController controller, List<DataInputAdapter> datafiles) {
 		this.controller = controller;
 		this.datafiles = datafiles;
 	}
@@ -237,12 +237,12 @@ public abstract class DataLoader {
 			}
 		};
 		
-		List<DataFile> currentPaths = controller.data().getDataPaths();
-		List<DataFile> sessionPaths = DataFile.fromFilenames(session.data.files);
+		List<DataInputAdapter> currentPaths = controller.data().getDataPaths();
+		List<DataInputAdapter> sessionPaths = DataInputAdapter.fromFilenames(session.data.files);
 		
 		//Verify all paths exist
 		boolean sessionPathsExist = true;
-		for (DataFile d : sessionPaths) {
+		for (DataInputAdapter d : sessionPaths) {
 			if (d == null) {
 				sessionPathsExist = false;
 				break;
@@ -298,12 +298,12 @@ public abstract class DataLoader {
 			}
 		};
 		
-		List<DataFile> currentPaths = controller.data().getDataPaths();
-		List<DataFile> sessionPaths = session.data.filesAsDataPaths();
+		List<DataInputAdapter> currentPaths = controller.data().getDataPaths();
+		List<DataInputAdapter> sessionPaths = session.data.filesAsDataPaths();
 		
 		//Verify all paths exist
 		boolean sessionPathsExist = true;
-		for (DataFile d : sessionPaths) {
+		for (DataInputAdapter d : sessionPaths) {
 			if (d == null) {
 				sessionPathsExist = false;
 				break;
@@ -348,9 +348,9 @@ public abstract class DataLoader {
 	}
 
 	public abstract void onLoading(ExecutorSet<DatasetReadResult> job);
-	public abstract void onSuccess(List<DataFile> paths, File session);
+	public abstract void onSuccess(List<DataInputAdapter> paths, File session);
 	public abstract void onWarn(String message);
-	public abstract void onFail(List<DataFile> paths, String message);
+	public abstract void onFail(List<DataInputAdapter> paths, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
 	public abstract void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected);
 	

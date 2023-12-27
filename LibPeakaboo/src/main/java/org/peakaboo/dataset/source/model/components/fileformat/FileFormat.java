@@ -3,7 +3,7 @@ package org.peakaboo.dataset.source.model.components.fileformat;
 import java.io.IOException;
 import java.util.List;
 
-import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.io.DataInputAdapter;
 
 public interface FileFormat {
 
@@ -22,7 +22,7 @@ public interface FileFormat {
 	 * Determines if this DataSource can read the given files as a whole 
 	 * dataset, and returns info on how certain it is
 	 */
-	FileFormatCompatibility compatibility(List<DataFile> filenames) throws IOException;
+	FileFormatCompatibility compatibility(List<DataInputAdapter> filenames) throws IOException;
 
 	/**
 	 * Returns a name for this DataSource Plugin

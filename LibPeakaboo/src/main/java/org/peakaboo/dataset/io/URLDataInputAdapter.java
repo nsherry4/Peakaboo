@@ -1,4 +1,4 @@
-package org.peakaboo.dataset.source.model.datafile;
+package org.peakaboo.dataset.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.yaml.snakeyaml.Yaml;
 
-public class URLDataFile implements DataFile {
+public class URLDataInputAdapter implements DataInputAdapter {
 
 	private static final String URL_DATAFILE_PROTO = "urldatafile://";
 	private URL url;
@@ -32,7 +32,7 @@ public class URLDataFile implements DataFile {
 	 * @param url the URI of the remote resource (which should be downloadable)
 	 * @param name the name of file described by the uri, including the file extension
 	 */
-	public URLDataFile(URL url, Path downloadDir, String name) {
+	public URLDataInputAdapter(URL url, Path downloadDir, String name) {
 		this.url = url;
 		this.name = name;
 		this.downloadDir = downloadDir;
@@ -117,13 +117,13 @@ public class URLDataFile implements DataFile {
 	@Override
 	public boolean equals(Object other) {
 		//This line isn't required, right? Java will just call the other equals method when given a URLDataFile?
-		if (other instanceof URLDataFile) {
-			return this.equals((URLDataFile)other);
+		if (other instanceof URLDataInputAdapter) {
+			return this.equals((URLDataInputAdapter)other);
 		}
 		return false;
 	}
 	
-	public boolean equals(URLDataFile other) {
+	public boolean equals(URLDataInputAdapter other) {
 		if (other == null) { return false; }
 		if (!this.url.toString().equals(other.url.toString())) { return false; }
 		if (!this.name.equals(other.name)) { return false; } 
@@ -158,7 +158,7 @@ public class URLDataFile implements DataFile {
 		return URL_DATAFILE_PROTO + b64;
 	}
 	
-	private static URLDataFile deserialize(String s, Path downloadDir) {
+	private static URLDataInputAdapter deserialize(String s, Path downloadDir) {
 		String b64 = s.substring(URL_DATAFILE_PROTO.length());
 		String yaml = new String(Base64.getDecoder().decode(b64.getBytes()));
 		Map<String, String> values = new Yaml().load(yaml);
@@ -171,14 +171,14 @@ public class URLDataFile implements DataFile {
 			throw new RuntimeException(e);
 		}
 		String name = values.get("name");
-		return new URLDataFile(url, downloadDir, name);
+		return new URLDataInputAdapter(url, downloadDir, name);
 	}
 
 	public static boolean addressValid(String address) {
 		return address.startsWith(URL_DATAFILE_PROTO);
 	}
 	
-	public static URLDataFile fromAddress(String address, Supplier<Path> tempDir) {
+	public static URLDataInputAdapter fromAddress(String address, Supplier<Path> tempDir) {
 		return deserialize(address, tempDir.get());
 	}
 

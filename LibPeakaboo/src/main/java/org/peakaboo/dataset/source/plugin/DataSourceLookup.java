@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormatCompatibility;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 
 public class DataSourceLookup {
 
-	public static List<DataSourcePlugin> findDataSourcesForFiles(List<DataFile> datafiles, List<DataSourcePlugin> dsps) {	
+	public static List<DataSourcePlugin> findDataSourcesForFiles(List<DataInputAdapter> datafiles, List<DataSourcePlugin> dsps) {	
 		
 		List<DataSourcePlugin> maybeByFilename = new ArrayList<>();
 		List<DataSourcePlugin> maybeByContents = new ArrayList<>();

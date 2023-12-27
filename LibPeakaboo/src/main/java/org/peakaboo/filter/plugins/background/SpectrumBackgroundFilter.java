@@ -9,9 +9,9 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.StandardDataSet;
+import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
-import org.peakaboo.dataset.source.model.datafile.PathDataFile;
 import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -90,7 +90,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 			//try loading the file
 			DataSource source = new PlainText();
 			Path path = new File(spectrumFile.getValue()).toPath();
-			source.read(Collections.singletonList(new PathDataFile(path)));
+			source.read(Collections.singletonList(new PathDataInputAdapter(path)));
 			DataSet bgDataSet = new StandardDataSet(source);
 			spectrum = bgDataSet.getAnalysis().averagePlot();
 		} catch (Exception e) {

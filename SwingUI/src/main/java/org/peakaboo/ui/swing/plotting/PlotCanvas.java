@@ -22,7 +22,7 @@ import javax.swing.SwingUtilities;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.dataset.source.model.datafile.PathDataFile;
+import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
@@ -187,7 +187,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	}
 	
 	void filesDropped(File[] files) {
-		plotPanel.load(Arrays.asList(files).stream().map(PathDataFile::new).collect(Collectors.toList()));
+		plotPanel.load(Arrays.asList(files).stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 	}
 	
 	void urlsDropped(URL[] urls) {
@@ -195,7 +195,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
 				if (!optfiles.isPresent()) { return; }
-				plotPanel.load(optfiles.get().stream().map(PathDataFile::new).collect(Collectors.toList()));
+				plotPanel.load(optfiles.get().stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 			});
 
 			TaskMonitorPanel.onLayerPanel(monitor, plotPanel);

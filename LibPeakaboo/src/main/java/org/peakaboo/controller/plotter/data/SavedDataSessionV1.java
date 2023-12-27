@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.peakaboo.dataset.source.model.datafile.DataFile;
-import org.peakaboo.dataset.source.model.datafile.DataFiles;
+import org.peakaboo.dataset.io.DataInputAdapter;
+import org.peakaboo.dataset.io.DataInputAdapters;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
@@ -23,7 +23,7 @@ public class SavedDataSessionV1 {
 	public SavedDataSessionV1 storeFrom(DataController controller) {
 		this.discards = controller.getDiscards().list();
 		if (!controller.getDataPaths().isEmpty()) {
-			DataFile first = controller.getDataPaths().get(0);
+			DataInputAdapter first = controller.getDataPaths().get(0);
 			if (first != null && first.addressable()) {
 				this.files = controller.getDataPaths().stream().map(p -> p.address().get()).collect(Collectors.toList());
 			}
@@ -55,10 +55,10 @@ public class SavedDataSessionV1 {
 	}
 	
 	@Deprecated(since = "6", forRemoval = true)
-	List<DataFile> filesAsDataPaths() {
-		EventfulCache<Path> lazyDownload = new EventfulNullableCache<>(DataFiles::createDownloadDirectory);
+	List<DataInputAdapter> filesAsDataPaths() {
+		EventfulCache<Path> lazyDownload = new EventfulNullableCache<>(DataInputAdapters::createDownloadDirectory);
 		return this.files.stream()
-				.map(f -> DataFiles.construct(f, lazyDownload::getValue))
+				.map(f -> DataInputAdapters.construct(f, lazyDownload::getValue))
 				.collect(Collectors.toList());
 	}
 	

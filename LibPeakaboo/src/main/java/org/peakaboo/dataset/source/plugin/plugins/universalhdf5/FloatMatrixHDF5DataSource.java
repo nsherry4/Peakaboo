@@ -9,11 +9,11 @@ import java.util.Map;
 
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.SimpleDataSize;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
@@ -65,13 +65,13 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 	}
 
 	@Override
-	public void read(List<DataFile> paths) throws DataSourceReadException, IOException, InterruptedException {
+	public void read(List<DataInputAdapter> paths) throws DataSourceReadException, IOException, InterruptedException {
 		readAxisOrder();
 		super.read(paths);
 	}
 	
 	@Override
-	protected void readFile(DataFile path, int filenum) throws DataSourceReadException, IOException, InterruptedException {
+	protected void readFile(DataInputAdapter path, int filenum) throws DataSourceReadException, IOException, InterruptedException {
 		if (filenum > 0) {
 			throw new IllegalArgumentException(getFileFormat().getFormatName() + " requires exactly 1 file");
 		}
@@ -218,18 +218,18 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 	
 	
 	@Override
-	protected final DataSize getDataSize(List<DataFile> paths, HDF5DataSetInformation datasetInfo) {
-		DataFile path = paths.get(0);
+	protected final DataSize getDataSize(List<DataInputAdapter> paths, HDF5DataSetInformation datasetInfo) {
+		DataInputAdapter path = paths.get(0);
 		return getDataSize(path, datasetInfo);
 	}
-	protected DataSize getDataSize(DataFile path, HDF5DataSetInformation datasetInfo) {
+	protected DataSize getDataSize(DataInputAdapter path, HDF5DataSetInformation datasetInfo) {
 		SimpleDataSize size = new SimpleDataSize();
 		size.setDataHeight(yIndex == -1 ? 1 : (int) datasetInfo.getDimensions()[yIndex]);
 		size.setDataWidth((int) datasetInfo.getDimensions()[xIndex]);
 		return size;
 	}
 	
-	protected static IHDF5Reader getReader(DataFile path) throws IOException {
+	protected static IHDF5Reader getReader(DataInputAdapter path) throws IOException {
 		return HDF5Factory.openForReading(path.getAndEnsurePath().toFile());
 	}
 	

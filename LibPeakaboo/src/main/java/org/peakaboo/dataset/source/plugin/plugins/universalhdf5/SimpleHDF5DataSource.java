@@ -6,13 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.metadata.Metadata;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.PipelineScanData;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
@@ -52,7 +52,7 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 	}
 	
 	@Override
-	public Optional<Group> getParameters(List<DataFile> files) throws DataSourceReadException, IOException {
+	public Optional<Group> getParameters(List<DataInputAdapter> files) throws DataSourceReadException, IOException {
 		return Optional.empty();
 	}
 
@@ -73,7 +73,7 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 
 
 	@Override
-	public void read(List<DataFile> datafiles) throws DataSourceReadException, IOException, InterruptedException {
+	public void read(List<DataInputAdapter> datafiles) throws DataSourceReadException, IOException, InterruptedException {
 		String datasetName = getDatasetTitle(datafiles);
 		scandata = new PipelineScanData(datasetName);
 		
@@ -87,7 +87,7 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 		Comparator<String> comparitor = new AlphaNumericComparitor(); 
 		datafiles.sort((a, b) -> comparitor.compare(a.getFilename(), b.getFilename()));
 		int filenum = 0;
-		for (DataFile datafile : datafiles) {
+		for (DataInputAdapter datafile : datafiles) {
 			readFile(datafile, filenum++);
 			if (getInteraction().checkReadAborted()) {
 				scandata.finish();
@@ -115,21 +115,21 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 		return Optional.of(dataSize);
 	}
 	
-	protected String getDatasetTitle(List<DataFile> paths) {
-		return DataFile.getTitle(paths);
+	protected String getDatasetTitle(List<DataInputAdapter> paths) {
+		return DataInputAdapter.getTitle(paths);
 	}
 	
-	protected IHDF5SimpleReader getMetadataReader(List<DataFile> paths) throws IOException {
-		DataFile firstPath = paths.get(0);
+	protected IHDF5SimpleReader getMetadataReader(List<DataInputAdapter> paths) throws IOException {
+		DataInputAdapter firstPath = paths.get(0);
 		IHDF5SimpleReader reader = HDF5Factory.openForReading(firstPath.getAndEnsurePath().toFile());
 		return reader;
 	}
 	
-	protected abstract void readFile(DataFile path, int filenum) throws DataSourceReadException, IOException, InterruptedException;
-	protected abstract DataSize getDataSize(List<DataFile> paths, HDF5DataSetInformation datasetInfo);
+	protected abstract void readFile(DataInputAdapter path, int filenum) throws DataSourceReadException, IOException, InterruptedException;
+	protected abstract DataSize getDataSize(List<DataInputAdapter> paths, HDF5DataSetInformation datasetInfo);
 	
 	//TODO: make this mandatory (abstract) -- no default implementation
-	protected List<String> getDataPaths(List<DataFile> paths) {
+	protected List<String> getDataPaths(List<DataInputAdapter> paths) {
 		if (dataPathPreset != null) {
 			return Collections.singletonList(dataPathPreset);
 		}

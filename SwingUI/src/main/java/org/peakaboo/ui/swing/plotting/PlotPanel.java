@@ -50,13 +50,13 @@ import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
+import org.peakaboo.dataset.io.DataInputAdapter;
+import org.peakaboo.dataset.io.PathDataInputAdapter;
+import org.peakaboo.dataset.io.PathDataOutputAdapter;
 import org.peakaboo.dataset.sink.model.DataSink;
-import org.peakaboo.dataset.sink.model.outputfile.PathOutputFile;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.metadata.Metadata;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
-import org.peakaboo.dataset.source.model.datafile.PathDataFile;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
@@ -347,7 +347,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		return titleString.toString();
 	}
 
-	void load(List<DataFile> files) {
+	void load(List<DataInputAdapter> files) {
 		DataLoader loader = new PlotDataLoader(this, controller, files);
 		loader.load();
 	}
@@ -436,7 +436,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			controller.io().setLastFolder(files.get().get(0).getParentFile());
 			
 			List<File> filelist = files.get();
-			load(filelist.stream().map(PathDataFile::new).collect(Collectors.toList()));
+			load(filelist.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 			
 		});
 		
@@ -489,7 +489,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
-		var output = new PathOutputFile(file.toPath());
+		var output = new PathDataOutputAdapter(file.toPath());
 		ExecutorSet<Void> writer = DataSink.write(source, sink, output);
 		output.close();
 		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
@@ -723,7 +723,7 @@ public class PlotPanel extends TabbedLayerPanel {
 				return;
 			}
 			controller.io().setFromSession(file.get());
-			load(Collections.singletonList(new PathDataFile(file.get())));
+			load(Collections.singletonList(new PathDataInputAdapter(file.get())));
 		});
 
 	}

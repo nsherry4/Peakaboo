@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
@@ -15,7 +16,6 @@ import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
@@ -175,7 +175,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 
 
 	@Override
-	public void read(List<DataFile> datafiles) throws DataSourceReadException {
+	public void read(List<DataInputAdapter> datafiles) throws DataSourceReadException {
 		throw new UnsupportedOperationException("Cannot read in derived DataSource");
 	}
 
@@ -199,7 +199,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	}
 
 	@Override
-	public Optional<Group> getParameters(List<DataFile> datafiles) {
+	public Optional<Group> getParameters(List<DataInputAdapter> datafiles) {
 		return Optional.empty();
 	}
 

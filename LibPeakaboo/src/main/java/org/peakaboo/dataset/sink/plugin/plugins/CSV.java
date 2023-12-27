@@ -5,7 +5,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.stream.Collectors;
 
-import org.peakaboo.dataset.sink.model.outputfile.OutputFile;
+import org.peakaboo.dataset.io.DataOutputAdapter;
 import org.peakaboo.dataset.sink.plugin.AbstractDataSink;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
@@ -23,7 +23,7 @@ public class CSV extends AbstractDataSink {
 	}
 	
 	@Override
-	public void write(DataSource source, OutputFile output) throws IOException, DataSinkWriteException {
+	public void write(DataSource source, DataOutputAdapter output) throws IOException, DataSinkWriteException {
 		
 		Writer writer = new OutputStreamWriter(output.getOutputStream());
 				

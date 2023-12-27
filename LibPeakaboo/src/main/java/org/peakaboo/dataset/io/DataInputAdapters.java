@@ -1,4 +1,4 @@
-package org.peakaboo.dataset.source.model.datafile;
+package org.peakaboo.dataset.io;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,23 +9,23 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class DataFiles {
+public class DataInputAdapters {
 
-	private DataFiles() {
+	private DataInputAdapters() {
 		// Not Constructable
 	}
 	
-	private static Map<Predicate<String>, BiFunction<String, Supplier<Path>, DataFile>> addressConstructors = new HashMap<>();
+	private static Map<Predicate<String>, BiFunction<String, Supplier<Path>, DataInputAdapter>> addressConstructors = new HashMap<>();
 	static {
-		registerProtocolConstructor(PathDataFile::addressValid, PathDataFile::fromAddress);
-		registerProtocolConstructor(URLDataFile::addressValid, URLDataFile::fromAddress);
+		registerProtocolConstructor(PathDataInputAdapter::addressValid, PathDataInputAdapter::fromAddress);
+		registerProtocolConstructor(URLDataInputAdapter::addressValid, URLDataInputAdapter::fromAddress);
 	}
 	
-	public static void registerProtocolConstructor(Predicate<String> matcher, BiFunction<String, Supplier<Path>, DataFile> constructor) {
+	public static void registerProtocolConstructor(Predicate<String> matcher, BiFunction<String, Supplier<Path>, DataInputAdapter> constructor) {
 		addressConstructors.put(matcher, constructor);
 	}
 	
-	public static DataFile construct(String address, Supplier<Path> downloadDir) {
+	public static DataInputAdapter construct(String address, Supplier<Path> downloadDir) {
 		for (Predicate<String> matcher : addressConstructors.keySet()) {
 			if (matcher.test(address)) {
 				return addressConstructors.get(matcher).apply(address, downloadDir);
@@ -42,5 +42,6 @@ public class DataFiles {
 			throw new RuntimeException(e);
 		}
 	}
+
 	
 }

@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.interaction.Interaction;
 import org.peakaboo.dataset.source.model.components.metadata.Metadata;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
 
@@ -25,7 +25,7 @@ public interface DataSource
 	 * @throws DataSourceReadException
 	 * @throws IOException
 	 */
-	void read(List<DataFile> datafiles) throws DataSourceReadException, IOException, InterruptedException;
+	void read(List<DataInputAdapter> datafiles) throws DataSourceReadException, IOException, InterruptedException;
 	
 	
 	default boolean isRectangular() {
@@ -34,14 +34,14 @@ public interface DataSource
 
 	/**
 	 * Called before {@link DataSource#read(List)} with the same {@link List} of
-	 * {@link DataFile}s. This gives the DataSource a chance to request more information
+	 * {@link DataInputAdapter}s. This gives the DataSource a chance to request more information
 	 * about how the selected files shoudl be read.
 	 * 
 	 * @param datafiles the list of files which will be read
 	 * @return the {@link Value} {@link Group} to be responded to, or
 	 *         {@link Optional#empty()} if there are no parameters.
 	 */
-	Optional<Group> getParameters(List<DataFile> datafiles) throws DataSourceReadException, IOException;
+	Optional<Group> getParameters(List<DataInputAdapter> datafiles) throws DataSourceReadException, IOException;
 
 	
 	Optional<Metadata> getMetadata();

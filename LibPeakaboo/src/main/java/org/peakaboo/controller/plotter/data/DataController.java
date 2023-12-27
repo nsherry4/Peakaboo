@@ -18,9 +18,9 @@ import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.dataset.StandardDataSet;
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.framework.cyclops.Coord;
@@ -41,7 +41,7 @@ public class DataController extends EventfulBeacon
 	private DataSet 			dataModel;
 	private PlotController		plot;
 	private Discards			discards;
-	private List<DataFile>		dataPaths;
+	private List<DataInputAdapter>		dataPaths;
 	protected String			title;
 	private String				dataSourcePluginUUID;
 	private Map<String, Object>	dataSourceParameters;
@@ -67,7 +67,7 @@ public class DataController extends EventfulBeacon
 	
 
 	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset (
-			List<DataFile> paths, 
+			List<DataInputAdapter> paths, 
 			DataSourcePlugin dsp, 
 			Consumer<DatasetReadResult> onResult) {
 
@@ -209,12 +209,12 @@ public class DataController extends EventfulBeacon
 	}
 
 
-	public List<DataFile> getDataPaths() {
+	public List<DataInputAdapter> getDataPaths() {
 		return dataPaths;
 	}
 
 
-	public void setDataPaths(List<DataFile> dataPaths) {
+	public void setDataPaths(List<DataInputAdapter> dataPaths) {
 		this.dataPaths = dataPaths;
 	}
 
@@ -271,7 +271,7 @@ public class DataController extends EventfulBeacon
 			this.discards.discard(i);
 		}
 		this.setDataSourcePluginUUID(data.datasource.uuid);
-		this.setDataPaths(DataFile.fromFilenames(data.files));
+		this.setDataPaths(DataInputAdapter.fromFilenames(data.files));
 		this.setTitle(data.title);
 	}
 	

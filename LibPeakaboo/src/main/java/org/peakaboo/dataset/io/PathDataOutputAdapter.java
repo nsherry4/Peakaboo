@@ -1,4 +1,4 @@
-package org.peakaboo.dataset.sink.model.outputfile;
+package org.peakaboo.dataset.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,11 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-public class PathOutputFile implements OutputFile {
+public class PathDataOutputAdapter implements DataOutputAdapter {
 
 	private Path path;
 	
-	public PathOutputFile(Path path) {
+	public PathDataOutputAdapter(Path path) {
 		this.path = path;
 	}
 	

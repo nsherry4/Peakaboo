@@ -5,9 +5,9 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.dataset.io.DataOutputAdapter;
 import org.peakaboo.dataset.sink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.dataset.sink.model.components.interaction.Interaction;
-import org.peakaboo.dataset.sink.model.outputfile.OutputFile;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -30,7 +30,7 @@ public interface DataSink {
 	 * Writes the contents of the given {@link DataSource} to the destination
 	 * {@link OutputStream} in this DataSink's format.
 	 */
-	void write(DataSource source, OutputFile destination) throws IOException, DataSinkWriteException;
+	void write(DataSource source, DataOutputAdapter destination) throws IOException, DataSinkWriteException;
 		
 	String getFormatExtension();
 
@@ -48,7 +48,7 @@ public interface DataSink {
 
 	void setInteraction(Interaction interaction);
 
-	static ExecutorSet<Void> write(DataSource source, DataSink sink, OutputFile output) {
+	static ExecutorSet<Void> write(DataSource source, DataSink sink, DataOutputAdapter output) {
 		
 		CallbackInteraction interaction = new CallbackInteraction();
 
