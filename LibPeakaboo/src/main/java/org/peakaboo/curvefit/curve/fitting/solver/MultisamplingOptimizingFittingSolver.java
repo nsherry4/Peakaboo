@@ -39,12 +39,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 	public String pluginUUID() {
 		return "87eeb1e0-6c4e-4f80-9cf7-8c19a07423b5";
 	}
-	
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-	
+
 	@Override
 	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitterPlugin fitter) {
 		

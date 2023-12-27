@@ -102,10 +102,6 @@ public class DenoiseMapFilter extends AbstractMapFilter {
 		return true;
 	}
 
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
 
 	@Override
 	public String pluginVersion() {

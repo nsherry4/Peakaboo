@@ -47,11 +47,6 @@ public class DerivativeMathFilter extends AbstractFilter {
 		return FilterDescriptor.MATHEMATICAL;
 	}
 
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-	
 	
 	@Override
 	public boolean canFilterSubset() {

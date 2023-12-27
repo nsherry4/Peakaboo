@@ -6,12 +6,7 @@ import org.peakaboo.dataset.source.model.components.interaction.SimpleInteractio
 public abstract class AbstractDataSource implements DataSourcePlugin {
 
 	private Interaction interaction = new SimpleInteraction();
-	
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-	
+
 	
 	@Override
 	public void setInteraction(Interaction interaction) {

@@ -18,11 +18,6 @@ public abstract class AbstractDataSink implements DataSinkPlugin {
 	}
 
 	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
-	@Override
 	public String pluginName() {
 		return getFormatName();
 	}

@@ -94,12 +94,6 @@ public final class WaveletNoiseFilter extends AbstractFilter
 
 		return result;
 	}
-	
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
 
 	@Override
 	public boolean canFilterSubset() {

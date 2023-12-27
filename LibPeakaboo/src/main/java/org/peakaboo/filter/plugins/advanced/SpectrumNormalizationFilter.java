@@ -160,11 +160,6 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	}
 
 
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
 	private boolean validate(Parameter<?> p) {
 		String mode = pMode.getValue();
 		int startChannel = pStartChannel.getValue();

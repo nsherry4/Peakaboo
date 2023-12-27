@@ -5,8 +5,6 @@ import java.util.List;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
-import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
-import org.peakaboo.framework.autodialog.model.classinfo.ClassInfoDefaults;
 import org.peakaboo.framework.autodialog.model.classinfo.EnumClassInfo;
 import org.peakaboo.framework.autodialog.model.style.editors.DropDownStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
@@ -69,11 +67,6 @@ public class ElementMultiplyFilter extends AbstractMapFilter {
 
 	@Override
 	public boolean isReplottable() {
-		return true;
-	}
-
-	@Override
-	public boolean pluginEnabled() {
 		return true;
 	}
 

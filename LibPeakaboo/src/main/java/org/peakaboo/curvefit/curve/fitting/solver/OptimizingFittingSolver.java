@@ -59,11 +59,6 @@ public class OptimizingFittingSolver implements FittingSolver {
 	}
 
 	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-	
-	@Override
 	public FittingResultSetView solve(ReadOnlySpectrum data, FittingSetView fittings, CurveFitterPlugin fitter) {
 		int size = fittings.getVisibleCurves().size();
 		if (size == 0) {

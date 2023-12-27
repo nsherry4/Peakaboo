@@ -115,12 +115,6 @@ public final class FourierNoiseFilter extends AbstractFilter {
 	}
 
 	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
-
-	@Override
 	public boolean canFilterSubset() {
 		return false;
 	}

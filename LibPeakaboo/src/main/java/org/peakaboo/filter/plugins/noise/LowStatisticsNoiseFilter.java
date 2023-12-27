@@ -16,11 +16,7 @@ public class LowStatisticsNoiseFilter extends AbstractFilter {
 
 	Parameter<Integer> pWindowSize;
 	Parameter<Float> pMaxSignal, pCentrepointFactor, pMaxSlope;
-	
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
+
 
 	@Override
 	public String pluginVersion() {

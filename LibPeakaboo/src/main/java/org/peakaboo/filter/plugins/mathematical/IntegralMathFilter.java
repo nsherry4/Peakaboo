@@ -50,13 +50,6 @@ public class IntegralMathFilter extends AbstractFilter
 
 	
 	@Override
-	public boolean pluginEnabled()
-	{
-		return true;
-	}
-	
-	
-	@Override
 	public boolean canFilterSubset() {
 		return true;
 	}

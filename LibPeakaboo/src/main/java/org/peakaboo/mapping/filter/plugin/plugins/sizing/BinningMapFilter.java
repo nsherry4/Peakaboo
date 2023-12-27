@@ -85,11 +85,6 @@ public class BinningMapFilter extends AbstractMapFilter {
 				source.getRealDimensions()
 			);
 	}
-	
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
 
 	@Override
 	public String pluginVersion() {

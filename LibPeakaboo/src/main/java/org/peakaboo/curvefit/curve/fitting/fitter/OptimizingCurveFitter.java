@@ -9,12 +9,11 @@ import org.apache.commons.math3.optim.univariate.SearchInterval;
 import org.apache.commons.math3.optim.univariate.UnivariateObjectiveFunction;
 import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
 import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class OptimizingCurveFitter implements CurveFitterPlugin {
 
@@ -105,11 +104,6 @@ public class OptimizingCurveFitter implements CurveFitterPlugin {
 	@Override
 	public String pluginDescription() {
 		return "Least squares curve fitting weighted against overfitting";
-	}
-
-	@Override
-	public boolean pluginEnabled() {
-		return true;
 	}
 
 	@Override

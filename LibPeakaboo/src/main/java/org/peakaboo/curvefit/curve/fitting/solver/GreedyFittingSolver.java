@@ -42,12 +42,7 @@ public class GreedyFittingSolver implements FittingSolver {
 	public String pluginUUID() {
 		return "648ed04b-83fa-4582-8d25-b67c4770e4ed";
 	}
-	
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-	
+
 	/**
 	 * Fit this FittingSet against spectrum data
 	 */

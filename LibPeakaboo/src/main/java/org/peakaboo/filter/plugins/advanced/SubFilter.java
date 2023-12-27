@@ -103,11 +103,6 @@ public class SubFilter extends AbstractFilter {
 		}
 	}
 
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
 	private boolean validate(Parameter<?> p) {
 		
 		int start = begin.getValue();

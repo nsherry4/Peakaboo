@@ -43,11 +43,6 @@ public class NormalizationMapFilter extends AbstractMapFilter {
 	}
 
 	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
-	@Override
 	public String pluginVersion() {
 		return "1.0";
 	}

@@ -10,7 +10,9 @@ public interface BoltPlugin {
 	 * a plugin returns false for this method, it will not be exposed 
 	 * to the software using the plugins.
 	 */
-	boolean pluginEnabled();
+	default boolean pluginEnabled() {
+		return true;
+	}
 
 	/**
 	 * A short, descriptive name for this plugin.

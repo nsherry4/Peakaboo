@@ -1,7 +1,7 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
+import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 
 public class UnderCurveFitter implements CurveFitterPlugin {
@@ -77,11 +77,6 @@ public class UnderCurveFitter implements CurveFitterPlugin {
 	@Override
 	public String pluginDescription() {
 		return "Fits curves by signal's weakest channel, never overfitting";
-	}
-
-	@Override
-	public boolean pluginEnabled() {
-		return true;
 	}
 
 	@Override

@@ -53,11 +53,6 @@ public class DatasetNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
-	@Override
 	public String pluginVersion() {
 		return "0.1";
 	}

@@ -13,11 +13,6 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 public class CSV extends AbstractDataSink {
 
 	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
-	@Override
 	public String pluginVersion() {
 		return "1.0";
 	}
