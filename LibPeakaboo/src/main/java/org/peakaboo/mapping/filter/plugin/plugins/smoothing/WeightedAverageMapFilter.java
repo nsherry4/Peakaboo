@@ -45,7 +45,9 @@ public class WeightedAverageMapFilter extends AbstractMapFilter{
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
 		ReadOnlySpectrum data = source.getData();
 		Spectrum filtered = new ISpectrum(data.size());
 		GridPerspective<Float> grid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);

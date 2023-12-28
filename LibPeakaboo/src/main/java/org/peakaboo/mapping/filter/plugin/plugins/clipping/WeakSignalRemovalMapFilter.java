@@ -38,7 +38,9 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
 		
 		ReadOnlySpectrum oldmap = source.getData();
 		float max = oldmap.max();

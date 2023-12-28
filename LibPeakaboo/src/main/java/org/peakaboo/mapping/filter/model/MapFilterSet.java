@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.peakaboo.mapping.filter.model.MapFilter.MapFilterContext;
+
 public class MapFilterSet implements Iterable<MapFilter> {
 
 	private List<MapFilter> filters;
@@ -77,7 +79,7 @@ public class MapFilterSet implements Iterable<MapFilter> {
 		
 		for (MapFilter filter : filters) {
 			if (filter.isEnabled()) {
-				map = filter.filter(map);
+				map = filter.filter(new MapFilterContext(map));
 			}
 		}
 		

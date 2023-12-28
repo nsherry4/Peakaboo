@@ -31,7 +31,8 @@ public class VFlipMapFilter extends AbstractMapFilter {
 	public void initialize() {}
 
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
 		
 		ReadOnlySpectrum sourceData = source.getData();
 		Spectrum target = new ISpectrum(sourceData.size());

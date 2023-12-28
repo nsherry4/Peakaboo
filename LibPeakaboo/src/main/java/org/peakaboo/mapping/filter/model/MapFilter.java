@@ -8,6 +8,12 @@ import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 
 public interface MapFilter {
 
+	public static record MapFilterContext(AreaMap map) {};
+	
+	
+	AreaMap filter(MapFilterContext ctx);
+	
+	
 	boolean isEnabled();
 	void setEnabled(boolean enabled);
 	
@@ -47,9 +53,6 @@ public interface MapFilter {
 	 */
 	void initialize();
 
-	
-	AreaMap filter(AreaMap map);
-	
 	/**
 	 * Returns true if and only if this MapFilter does not change the relationship between map pixels and the originating set of spectra;
 	 */

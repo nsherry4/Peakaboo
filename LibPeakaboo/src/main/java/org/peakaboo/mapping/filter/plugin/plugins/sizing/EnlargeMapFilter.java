@@ -33,7 +33,8 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 	}
 
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
 		
 		GridPerspective<Float> interpGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		Spectrum mapdata = new ISpectrum(source.getData());

@@ -37,7 +37,8 @@ public class DeskewMapFilter extends AbstractMapFilter {
 	}
 
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
 		float skewWidth = (float) (Math.tan(angle.getValue()/57.29578f) * source.getSize().y);
 		int newWidth = (int) Math.ceil(Math.abs(skewWidth) + source.getSize().x); 
 

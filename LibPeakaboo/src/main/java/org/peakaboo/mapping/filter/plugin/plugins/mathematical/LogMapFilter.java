@@ -28,7 +28,9 @@ public class LogMapFilter extends AbstractMapFilter {
 	public void initialize() {}
 
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
 		ReadOnlySpectrum data = source.getData();
 		Spectrum logged = new ISpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {

@@ -18,6 +18,7 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
+import org.peakaboo.mapping.filter.model.MapFilter.MapFilterContext;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrectionMapFilter;
 
 public class CorrelationModeController extends SimpleModeController {
@@ -147,7 +148,7 @@ public class CorrelationModeController extends SimpleModeController {
 			SignalOutlierCorrectionMapFilter filter = new SignalOutlierCorrectionMapFilter();
 			filter.initialize();
 			AreaMap filterContainer = new AreaMap(correlation, Collections.emptyList(), new Coord<>(100, 100), null);
-			filterContainer = filter.filter(filterContainer);
+			filterContainer = filter.filter(new MapFilterContext(filterContainer));
 			correlation = (Spectrum) filterContainer.getData();
 		}
 

@@ -44,8 +44,9 @@ public class BinningMapFilter extends AbstractMapFilter {
 	}
 
 	@Override
-	public AreaMap filter(AreaMap map) {
-
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap map = ctx.map();
+		
 		int count = 0;
 		while (count < reps.getValue())
 		{

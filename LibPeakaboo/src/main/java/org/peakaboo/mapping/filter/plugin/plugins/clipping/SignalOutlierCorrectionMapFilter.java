@@ -38,7 +38,9 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
 		
 		float[] sorted = source.getData().backingArrayCopy();
 		Arrays.sort(sorted);
