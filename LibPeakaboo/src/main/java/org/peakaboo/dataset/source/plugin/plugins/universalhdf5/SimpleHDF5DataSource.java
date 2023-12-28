@@ -73,7 +73,9 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 
 
 	@Override
-	public void read(List<DataInputAdapter> datafiles) throws DataSourceReadException, IOException, InterruptedException {
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
+		List<DataInputAdapter> datafiles = ctx.inputs();
+		
 		String datasetName = getDatasetTitle(datafiles);
 		scandata = new PipelineScanData(datasetName);
 		

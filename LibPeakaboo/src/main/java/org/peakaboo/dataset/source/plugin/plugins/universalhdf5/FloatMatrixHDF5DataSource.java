@@ -65,9 +65,9 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 	}
 
 	@Override
-	public void read(List<DataInputAdapter> paths) throws DataSourceReadException, IOException, InterruptedException {
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
 		readAxisOrder();
-		super.read(paths);
+		super.read(ctx);
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package org.peakaboo.dataset.source.model.internal;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 
 	@Override
-	public void read(List<DataInputAdapter> files) throws DataSourceReadException {
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
 		throw new UnsupportedOperationException();
 	}
 

@@ -58,8 +58,9 @@ public class DelegatingDataSource implements DataSource {
 	}
 
 
-	public void read(List<DataInputAdapter> files) throws DataSourceReadException, IOException, InterruptedException {
-		backer.read(files);
+	@Override
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
+		backer.read(ctx);
 	}
 
 	@Override

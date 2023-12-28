@@ -70,8 +70,8 @@ public class PlainText extends AbstractDataSource
 	//==============================================
 
 	@Override
-	public void read(List<DataInputAdapter> files) throws DataSourceReadException, IOException, InterruptedException
-	{
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
+		List<DataInputAdapter> files = ctx.inputs();
 		
 		if (files == null) throw new UnsupportedOperationException();
 		if (files.size() == 0) throw new UnsupportedOperationException();

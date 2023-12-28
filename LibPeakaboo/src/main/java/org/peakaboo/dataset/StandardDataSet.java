@@ -7,15 +7,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.IntConsumer;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.DataSource.DataSourceContext;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.DummyDataSize;
@@ -132,7 +131,7 @@ public class StandardDataSet implements DataSet
 					IntConsumer readScans = reading::workUnitCompleted;
 					
 					dataSource.setInteraction(new CallbackInteraction(openedScans, gotScanCount, readScans, isAborted));
-					dataSource.read(paths);
+					dataSource.read(new DataSourceContext(paths));
 	
 
 					if (isAborted.getAsBoolean()) {

@@ -14,9 +14,9 @@ import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
 
-public interface DataSource
-{
+public interface DataSource {
 	
+	public static record DataSourceContext(List<DataInputAdapter> inputs) {}
 	
 	/**
 	 * Reads the given files as a whole dataset. This method will be called either 0
@@ -25,7 +25,7 @@ public interface DataSource
 	 * @throws DataSourceReadException
 	 * @throws IOException
 	 */
-	void read(List<DataInputAdapter> datafiles) throws DataSourceReadException, IOException, InterruptedException;
+	void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException;
 	
 	
 	default boolean isRectangular() {

@@ -107,7 +107,9 @@ public class SingleColumn extends AbstractDataSource {
 	}
 
 	@Override
-	public void read(List<DataInputAdapter> files) throws DataSourceReadException, IOException, InterruptedException {
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
+		List<DataInputAdapter> files = ctx.inputs();
+		
 		//exactly 1 file
 		if (files.size() != 1) {
 			throw new IllegalArgumentException("This DataSource expects a single file");
