@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
@@ -27,6 +26,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.UIResource;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.components.StratusComboBoxUI;
@@ -163,20 +163,11 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 //		//Fonts
 		if (DISABLE_FONT_HINTING) {
 			
-			try {	
-				GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-				Font f;
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansUnhinted.ttf"));
-				ge.registerFont(f);
-				
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansBoldUnhinted.ttf"));
-				ge.registerFont(f);
-				
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansObliqueUnhinted.ttf"));
-				ge.registerFont(f);
-				
-				f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream("/stratus/fonts/dejavu/DejaVuSansBoldObliqueUnhinted.ttf"));
-				ge.registerFont(f);
+			try {
+				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansUnhinted.ttf");
+				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansBoldUnhinted.ttf");
+				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansObliqueUnhinted.ttf");
+				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansBoldObliqueUnhinted.ttf");
 			} catch (FontFormatException | IOException e) {
 				Logger.getLogger("Stratus").log(Level.WARNING, "Failed to configure font", e);
 			}

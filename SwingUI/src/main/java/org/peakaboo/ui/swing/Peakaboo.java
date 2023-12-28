@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing;
 
 import java.awt.Color;
+import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -192,6 +193,13 @@ public class Peakaboo {
 				theme = new DuskTheme();
 			}
 			StratusLookAndFeel laf = new StratusLookAndFeel(theme);
+			
+			//Load Peakaboo's font
+			try {
+				Stratus.registerFont("/org/peakaboo/ui/swing/fonts/springsteel-lig.otf");
+			} catch (FontFormatException | IOException e) {
+				PeakabooLog.get().log(Level.WARNING, "", e);
+			}
 			
 					
 			setLaF(laf);

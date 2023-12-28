@@ -402,7 +402,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		contents.description = "XRF Analysis Software";
 		contents.linkAction = () -> DesktopApp.browser("http://peakaboo.org");
 		contents.linktext = "Website";
-		contents.copyright = "2009-2022 by The University of Western Ontario and The Canadian Light Source Inc.";
+		contents.copyright = "2009-2024 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/credits.txt"));
 		contents.logo = logo;
@@ -410,6 +410,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		contents.longVersion = Version.longVersionNo;
 		contents.releaseDescription = Version.releaseDescription;
 		contents.date = Version.buildDate;
+		contents.titleStyle = "font-family: Springsteel-Light; font-size: 350%;";
 		
 		AboutLayer about = new AboutLayer(this, contents);
 		this.pushLayer(about);

@@ -38,6 +38,7 @@ public class AboutLayer extends HeaderLayer {
 		public String date;
 		public String linktext;
 		public Runnable linkAction;
+		public String titleStyle;
 	}
 	
 	public AboutLayer(LayerPanel owner, Contents contents) {
@@ -55,7 +56,7 @@ public class AboutLayer extends HeaderLayer {
 		
 		
 		Component body = tb.getBody();
-		body.setPreferredSize(new Dimension(610, 280));
+		body.setPreferredSize(new Dimension(700, 330));
 		getHeader().setCentre(tb.getTabStrip());
 		setBody(body);
 		
@@ -117,8 +118,8 @@ public class AboutLayer extends HeaderLayer {
 		JLabel title = new JLabel();
 		title.setFont(title.getFont().deriveFont(Font.PLAIN));
 		title.setText(
-			"<html><div style='text-align: left; width: 250px;'>" +
-				"<span style='font-size: 250%;'>" + contents.name + " " + contents.version + "</span>" +
+			"<html><div style='text-align: left; width: 340px;'>" +
+				"<span style='font-size: 250%;" + contents.titleStyle + "'>" + contents.name + " " + contents.version + "</span>" +
 				(("".equals(contents.releaseDescription)) ? "" : "<br><font color=\"#c00000\">" + contents.releaseDescription + "</font>") +  
 			"</div></html>");
 		
@@ -129,7 +130,7 @@ public class AboutLayer extends HeaderLayer {
 		JLabel text = new JLabel();
 		text.setFont(text.getFont().deriveFont(Font.PLAIN));
 		text.setText(
-			"<html><div style='text-align: left; width: 250px;'>" +
+			"<html><div style='text-align: left; width: 300px;'>" +
 				"<br>" +
 				"<br>" +
 				contents.description + 
