@@ -93,30 +93,45 @@ public class Version {
 
 
 	public static boolean hasNewVersion() {
+		String[] addresses = new String[] {
+				"https://peakaboo.org/appdata/org.peakaboo/version",
+				"https://raw.githubusercontent.com/nsherry4/Peakaboo/master/version"
+		};
+		
+		for (String address : addresses) {
+			try {
+				return hasNewVersion(new URL(address));
+			} catch (IOException e) {
+				//Ignore a single failure
+			}
+		}
+		
+		PeakabooLog.get().log(Level.WARNING, "Could not check for new version from any known url");
+		return false;
+		
+	}
+	
+	private static boolean hasNewVersion(URL url) throws IOException {
 		
 		String thisVersion = longVersionNo;
 		String otherVersion = "";
 		
-		try {
-			URL website = new URL("https://raw.githubusercontent.com/nsherry4/Peakaboo/master/version");
-			URLConnection conn = website.openConnection();
-			conn.setConnectTimeout(5000);
-			conn.setReadTimeout(5000);
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			String inputLine;
-	        while ((inputLine = in.readLine()) != null) {
-	        	otherVersion += inputLine + "\n";
-	        }
-	        otherVersion = otherVersion.trim();
-	        in.close();
-	        
-			AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
-			return cmp.compare(thisVersion, otherVersion) < 0;
-		} catch (IOException e) {
-			PeakabooLog.get().log(Level.WARNING, "Could not check for new version", e);
-			return false;
-		}
+
+		URLConnection conn = url.openConnection();
+		conn.setConnectTimeout(5000);
+		conn.setReadTimeout(5000);
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+        	otherVersion += inputLine + "\n";
+        }
+        otherVersion = otherVersion.trim();
+        in.close();
+        
+		AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
+		return cmp.compare(thisVersion, otherVersion) < 0;
+
 	}
 	
 	
