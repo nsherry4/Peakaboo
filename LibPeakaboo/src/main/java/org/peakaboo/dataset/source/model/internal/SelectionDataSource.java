@@ -21,7 +21,7 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.util.Mutable;
 
 /**
@@ -109,7 +109,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 
 	
 	@Override
-	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
+	public SpectrumView get(int index) throws IndexOutOfBoundsException {
 		return backer.getScanData().get(getBackingIndex(index));
 	}
 

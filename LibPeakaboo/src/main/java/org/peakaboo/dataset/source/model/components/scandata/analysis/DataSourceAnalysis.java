@@ -2,8 +2,8 @@ package org.peakaboo.dataset.source.model.components.scandata.analysis;
 
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -21,14 +21,14 @@ public class DataSourceAnalysis implements Analysis {
 	
 	public void init(int channelCount) {
 		this.channelCount = channelCount;
-		summedSpectrum = new ISpectrum(channelCount);
+		summedSpectrum = new ArraySpectrum(channelCount);
 		summedScanCount = 0;
-		maximumSpectrum = new ISpectrum(channelCount);
+		maximumSpectrum = new ArraySpectrum(channelCount);
 		maxValue = 0;
 	}
 
 	@Override
-	public void process(ReadOnlySpectrum spectrum) {
+	public void process(SpectrumView spectrum) {
 		if (spectrum == null) { return; }
 		
 		// if this is the first (non-null) spectrum that we're seeing, use it to detect
@@ -45,7 +45,7 @@ public class DataSourceAnalysis implements Analysis {
 
 	@Override
 	public Spectrum maximumPlot() {
-		return new ISpectrum(maximumSpectrum);
+		return new ArraySpectrum(maximumSpectrum);
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class DataSourceAnalysis implements Analysis {
 	}
 
 	@Override
-	public ReadOnlySpectrum summedPlot() {
-		return new ISpectrum(summedSpectrum);
+	public SpectrumView summedPlot() {
+		return new ArraySpectrum(summedSpectrum);
 	}
 
 	@Override

@@ -28,7 +28,7 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
@@ -44,7 +44,7 @@ public class PeakProposal {
 
 	
 	public static ExecutorSet<List<ITransitionSeries>> search(
-			final ReadOnlySpectrum data,
+			final SpectrumView data,
 			PeakSearcher searcher,
 			FittingSetView fits,
 			CurveFitter fitter,
@@ -199,7 +199,7 @@ public class PeakProposal {
 	 * @return an ordered list of {@link ITransitionSeries} which are good fits for the given data at the given channel
 	 */
 	public static List<Pair<ITransitionSeries, Float>> fromChannel(
-			final ReadOnlySpectrum data, 
+			final SpectrumView data, 
 			FittingSetView fits,
 			FittingSet proposed,
 			CurveFitter fitter,
@@ -243,7 +243,7 @@ public class PeakProposal {
 		FittingResultSetView proposedResults = solver.solve(new FittingSolverContext(fitResults.getResidual(), proposed, fitter));
 		
 		
-		final ReadOnlySpectrum residualSpectrum = proposedResults.getResidual();
+		final SpectrumView residualSpectrum = proposedResults.getResidual();
 		
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		

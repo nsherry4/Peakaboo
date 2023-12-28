@@ -18,8 +18,8 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.ListStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 
@@ -92,14 +92,14 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {	
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {	
 		
 		//Apply noise reduction
 		SavitskyGolayNoiseFilter filter = new SavitskyGolayNoiseFilter();
 		filter.initialize();
 		//Parameter<Integer> filterRange = (Parameter<Integer>) filter.getParameters().get(0);
 		//filterRange.setValue(10);
-		ReadOnlySpectrum filteredData = data;
+		SpectrumView filteredData = data;
 		for (int i = 0; i < pSmooth.getValue().ordinal()*2; i++) {
 			filteredData = filter.filter(filteredData, ctx);
 		}
@@ -138,7 +138,7 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 		}
 
 		float ratio = currentIntensity / desiredIntensity;
-		if (ratio == 0f) return new ISpectrum(data.size());
+		if (ratio == 0f) return new ArraySpectrum(data.size());
 		return SpectrumCalculations.divideBy(data, ratio);
 
 	}

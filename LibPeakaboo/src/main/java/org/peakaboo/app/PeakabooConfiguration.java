@@ -1,6 +1,6 @@
 package org.peakaboo.app;
 
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.encoders.CompoundEncoder;
@@ -9,7 +9,7 @@ import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class PeakabooConfiguration {
 
-	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(Serializers.fstUnsafe(ISpectrum.class), Compressors.lz4fast());
+	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(Serializers.fstUnsafe(ArraySpectrum.class), Compressors.lz4fast());
 
 	
 	public static final MemorySize memorySize = calcMemoryFootprint();

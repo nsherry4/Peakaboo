@@ -22,7 +22,7 @@ import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.SparsedList;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class SingleColumn extends AbstractDataSource {
@@ -150,7 +150,7 @@ public class SingleColumn extends AbstractDataSource {
 			throw new DataSourceReadException("Invalid file format, expected 1 or 2 entries per line, found " + parts.length);
 		}
 		
-		Spectrum s = new ISpectrum(floats);
+		Spectrum s = new ArraySpectrum(floats);
 		scandata.submit(0, s);
 		
 		scandata.finish();

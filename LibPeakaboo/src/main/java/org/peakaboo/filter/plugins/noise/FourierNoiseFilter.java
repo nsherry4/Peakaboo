@@ -12,8 +12,8 @@ import org.peakaboo.framework.autodialog.model.SelectionParameter;
 import org.peakaboo.framework.autodialog.model.classinfo.EnumClassInfo;
 import org.peakaboo.framework.autodialog.model.style.editors.DropDownStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 import JSci.maths.Complex;
@@ -101,7 +101,7 @@ public final class FourierNoiseFilter extends AbstractFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		
 		data = FFT.lowPassFilter(
 			data,
@@ -159,7 +159,7 @@ class FFT {
 	}
 
 	
-	public static Complex[] dataToFFT(ReadOnlySpectrum data) {
+	public static Complex[] dataToFFT(SpectrumView data) {
 		
 		// Fast Fourier Transform
 
@@ -182,7 +182,7 @@ class FFT {
 
 
 		// get the data into a list of doubles for returning
-		Spectrum result = new ISpectrum(fft.length);
+		Spectrum result = new ArraySpectrum(fft.length);
 		for (int i = 0; i < fft.length; i++) {
 			result.set(  i, Math.max(  0f, (float)(fft[i].real())  )  );
 		}
@@ -206,7 +206,7 @@ class FFT {
 	 *            high-frequency noise
 	 * @return a Fast Fourier Transformation Low-Pass filtered data set
 	 */
-	public static Spectrum lowPassFilter(ReadOnlySpectrum data, FilterStyle style, float startWavelength,
+	public static Spectrum lowPassFilter(SpectrumView data, FilterStyle style, float startWavelength,
 			float endWavelength)
 	{
 
@@ -249,7 +249,7 @@ class FFT {
 	}
 
 
-	private static Spectrum doFFTFilter(ReadOnlySpectrum data, FilterStyle style, int start, int stop) {
+	private static Spectrum doFFTFilter(SpectrumView data, FilterStyle style, int start, int stop) {
 
 		// FFT
 		Complex[] transformedData = dataToFFT(data);
@@ -270,7 +270,7 @@ class FFT {
 
 
 		// get the data into a list of doubles for returning
-		Spectrum result = new ISpectrum(data.size());
+		Spectrum result = new ArraySpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			result.set(  i, Math.max(0f, (float)transformedData[i].real())  );
 		}

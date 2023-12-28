@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public interface ReadOnlySpectrum extends Serializable, Iterable<Float> {
+public interface SpectrumView extends Serializable, Iterable<Float> {
 
 	/**
 	 * Gets the value of the entry at index i
@@ -29,11 +29,11 @@ public interface ReadOnlySpectrum extends Serializable, Iterable<Float> {
 	float[] backingArrayCopy();
 
 	/**
-	 * Returns a new Spectrum containing a copy of the data for a subsection of this spectrum.
+	 * Returns a new SpectrumView containing a copy of the data for a subsection of this spectrum.
 	 * @param start
 	 * @param stop
 	 */
-	ReadOnlySpectrum subSpectrum(int start, int stop);
+	SpectrumView subSpectrum(int start, int stop);
 
 	/**
 	 * Return a stream accessing the backing array. Note that stream processing tends to be 

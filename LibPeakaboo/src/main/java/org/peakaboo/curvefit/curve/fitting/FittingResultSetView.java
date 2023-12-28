@@ -6,15 +6,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public interface FittingResultSetView extends Iterable<FittingResultView> {
 
 	Spectrum getTotalFit();
 
-	ReadOnlySpectrum getResidual();
+	SpectrumView getResidual();
 
 	List<FittingResultView> getFits();
 
@@ -33,8 +33,8 @@ public interface FittingResultSetView extends Iterable<FittingResultView> {
 	default FittingResultSetView subsetIntersect(List<ITransitionSeries> tss) {
 		
 		FittingResultSet subset = new FittingResultSet(this.getTotalFit().size());
-		subset.totalFit = new ISpectrum(this.getTotalFit());
-		subset.residual = new ISpectrum(this.getResidual());
+		subset.totalFit = new ArraySpectrum(this.getTotalFit());
+		subset.residual = new ArraySpectrum(this.getResidual());
 		subset.parameters = this.getParameters().copy();
 		subset.fits = this.getFits().stream().filter(f -> tss.contains(f.getTransitionSeries())).collect(Collectors.toList());
 		
@@ -53,8 +53,8 @@ public interface FittingResultSetView extends Iterable<FittingResultView> {
 	default FittingResultSetView subsetDifference(List<ITransitionSeries> tss) {
 		
 		FittingResultSet subset = new FittingResultSet(this.getTotalFit().size());
-		subset.totalFit = new ISpectrum(this.getTotalFit());
-		subset.residual = new ISpectrum(this.getResidual());
+		subset.totalFit = new ArraySpectrum(this.getTotalFit());
+		subset.residual = new ArraySpectrum(this.getResidual());
 		subset.parameters = this.getParameters().copy();
 		subset.fits = this.getFits().stream().filter(f -> !tss.contains(f.getTransitionSeries())).collect(Collectors.toList());
 		

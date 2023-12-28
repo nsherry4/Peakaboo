@@ -15,7 +15,7 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.correlation.CorrelationModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter.MapFilterContext;
@@ -98,7 +98,7 @@ public class CorrelationModeController extends SimpleModeController {
 		
 		int bincount = bins.getCount();
 		GridPerspective<Float> grid = new GridPerspective<>(bincount, bincount, 0f);
-		Spectrum correlation = new ISpectrum(bincount*bincount);
+		Spectrum correlation = new ArraySpectrum(bincount*bincount);
 		
 		//we track which points on the original (spatial) maps each bin in the correlation map
 		//comes from so that selections can be mapped back to them

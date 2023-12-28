@@ -3,7 +3,7 @@ package org.peakaboo.framework.cyclops;
 
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 
@@ -82,7 +82,7 @@ public class GridPerspective<T> implements Cloneable
 		return value;
 	}
 
-	public Float get(ReadOnlySpectrum spec, int x, int y)
+	public Float get(SpectrumView spec, int x, int y)
 	{
 		int index = y * width + x;
 
@@ -128,7 +128,7 @@ public class GridPerspective<T> implements Cloneable
 	public interface GridVisitor<S> {
 		void visit(int index, int x, int y, S value);
 	}
-	public void visit(ReadOnlySpectrum list, GridVisitor<Float> visitor) {
+	public void visit(SpectrumView list, GridVisitor<Float> visitor) {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
 				visitor.visit(this.getIndexFromXY(x, y), x, y, get(list, x, y));
@@ -143,7 +143,7 @@ public class GridPerspective<T> implements Cloneable
 		}
 	}
 	
-	public void visitRow(int row, ReadOnlySpectrum list, GridVisitor<Float> visitor) {
+	public void visitRow(int row, SpectrumView list, GridVisitor<Float> visitor) {
 		for (int x = 0; x < width; x++) {
 			visitor.visit(this.getIndexFromXY(x, row), x, row, get(list, x, row));
 		}
@@ -154,7 +154,7 @@ public class GridPerspective<T> implements Cloneable
 		}
 	}
 	
-	public void visitColumn(int col, ReadOnlySpectrum list, GridVisitor<Float> visitor) {
+	public void visitColumn(int col, SpectrumView list, GridVisitor<Float> visitor) {
 		for (int y = 0; y < height; y++) {
 			visitor.visit(this.getIndexFromXY(col, y), col, y, get(list, col, y));
 		}

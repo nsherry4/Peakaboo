@@ -2,7 +2,7 @@ package org.peakaboo.dataset.source.model;
 
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.Settings;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.DiskStrategy;
 import org.peakaboo.framework.scratch.ScratchEncoder;
@@ -26,7 +26,7 @@ import org.peakaboo.framework.scratch.list.ScratchLists;
  * list will be created instead.
  * <br/><br/>
  * Note that this class depends on the specific implementation of Spectrum
- * being {@link ISpectrum} 
+ * being {@link ArraySpectrum} 
  * @author Nathaniel Sherry, 2011-2012
  *
  */

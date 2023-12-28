@@ -25,8 +25,8 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -62,7 +62,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	@Override
 	public FittingResultSetView solve(FittingSolverContext ctx) {
 		
-		ReadOnlySpectrum data = ctx.data();
+		SpectrumView data = ctx.data();
 		FittingSetView fittings = ctx.fittings();
 		CurveFitter fitter = ctx.fitter();	
 		
@@ -88,10 +88,10 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected FittingResultSet getEmptyResult(ReadOnlySpectrum data, FittingSetView fittings) {
+	protected FittingResultSet getEmptyResult(SpectrumView data, FittingSetView fittings) {
 		return new FittingResultSet(
-				new ISpectrum(data.size()), 
-				new ISpectrum(data), 
+				new ArraySpectrum(data.size()), 
+				new ArraySpectrum(data), 
 				Collections.emptyList(), 
 				fittings.getFittingParameters().copy()
 			);
@@ -128,7 +128,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected double[] getInitialGuess(List<CurveView> curves, CurveFitter fitter, ReadOnlySpectrum data) {
+	protected double[] getInitialGuess(List<CurveView> curves, CurveFitter fitter, SpectrumView data) {
 		int curveCount = curves.size();
 		double[] guess = new double[curveCount];
 		for (int i = 0; i < curveCount; i++) {
@@ -258,8 +258,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 	protected FittingResultSetView evaluate(double[] point, EvaluationContext context) {
 		int index = 0;
 		List<FittingResultView> fits = new ArrayList<>();
-		Spectrum total = new ISpectrum(context.data.size());
-		Spectrum scaled = new ISpectrum(context.data.size());
+		Spectrum total = new ArraySpectrum(context.data.size());
+		Spectrum scaled = new ArraySpectrum(context.data.size());
 		for (CurveView curve : context.curves) {
 			float scale = (float) point[index++];
 			curve.scaleInto(scale, scaled);
@@ -272,19 +272,19 @@ public class OptimizingFittingSolver implements FittingSolver {
 	}
 	
 	public static class EvaluationContext {
-		public ReadOnlySpectrum data;
+		public SpectrumView data;
 		public FittingSetView fittings;
 		public List<CurveView> curves;
 		public Spectrum scratch;
 		public Spectrum total;
 		public Spectrum residual;
-		public EvaluationContext(ReadOnlySpectrum data, FittingSetView fittings, List<CurveView> curves) {
+		public EvaluationContext(SpectrumView data, FittingSetView fittings, List<CurveView> curves) {
 			this.data = data;
 			this.fittings = fittings;
 			this.curves = curves;
-			this.scratch = new ISpectrum(data.size());
-			this.total = new ISpectrum(data.size());
-			this.residual = new ISpectrum(data.size());
+			this.scratch = new ArraySpectrum(data.size());
+			this.total = new ArraySpectrum(data.size());
+			this.residual = new ArraySpectrum(data.size());
 		}
 	}
 	

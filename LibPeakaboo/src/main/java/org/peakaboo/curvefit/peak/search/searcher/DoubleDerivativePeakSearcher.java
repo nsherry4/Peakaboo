@@ -6,15 +6,15 @@ import java.util.List;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class DoubleDerivativePeakSearcher implements PeakSearcher {
 
 	@Override
-	public List<Integer> search(ReadOnlySpectrum rawdata) {
+	public List<Integer> search(SpectrumView rawdata) {
 		
 		Filter filter = new WeightedAverageNoiseFilter();
 		filter.initialize();
@@ -22,12 +22,12 @@ public class DoubleDerivativePeakSearcher implements PeakSearcher {
 		width.setValue(new Integer(8));
 		
 		//aggressive smoothing to get just the most significant peaks
-		ReadOnlySpectrum smoothed = new ISpectrum(rawdata);
+		SpectrumView smoothed = new ArraySpectrum(rawdata);
 		
 		for (int i = 0; i < 3; i++) {
 			smoothed = filter.filter(smoothed);
 		}
-		ReadOnlySpectrum data = smoothed;
+		SpectrumView data = smoothed;
 				
 		//first and second derivatives.
 		Spectrum d1 = SpectrumCalculations.derivative(data);
@@ -95,13 +95,13 @@ public class DoubleDerivativePeakSearcher implements PeakSearcher {
 		
 	}
 	
-	private float scorePeak(int channel, ReadOnlySpectrum data, float dataMax, ReadOnlySpectrum d2, float d2Max) {
+	private float scorePeak(int channel, SpectrumView data, float dataMax, SpectrumView d2, float d2Max) {
 		float dataPercent = data.get(channel) / dataMax; 
 		float d2Percent = (-d2.get(channel)) / d2Max;
 		return (dataPercent + d2Percent) / 2f;
 	}
 	
-	private float score(int channel, ReadOnlySpectrum data, float dataMax, ReadOnlySpectrum d2, float d2Max) {
+	private float score(int channel, SpectrumView data, float dataMax, SpectrumView d2, float d2Max) {
 		int range = 1;
 		while (range < 20) {
 			
@@ -133,12 +133,12 @@ public class DoubleDerivativePeakSearcher implements PeakSearcher {
 		float bdelta = (bpost - bpre) / (float)(range * 2);
 				
 		//generate a peak with linear background removed
-		Spectrum peak = new ISpectrum(data.subSpectrum(channel - range, channel + range));
+		Spectrum peak = new ArraySpectrum(data.subSpectrum(channel - range, channel + range));
 		for (int i = 0; i < range*2+1; i++) {
 			peak.set(i, peak.get(i) - bpre - bdelta*i);
 		}
 				
-		Spectrum d2sub = new ISpectrum(d2.subSpectrum(channel - range, channel + range));
+		Spectrum d2sub = new ArraySpectrum(d2.subSpectrum(channel - range, channel + range));
 		
 		return scorePeak(range, peak, dataMax, d2sub, d2Max);
 		

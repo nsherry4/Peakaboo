@@ -9,8 +9,8 @@ import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
@@ -148,7 +148,7 @@ public class PlotDrawing extends Drawing
 		if (context == null) return;
 		
 		
-		dataHeights = new ISpectrum(dr.dataWidth, 0.0f);
+		dataHeights = new ArraySpectrum(dr.dataWidth, 0.0f);
 
 		context.setLineWidth(getPenWidth(getBaseUnitSize(dr), dr));
 		
@@ -289,7 +289,7 @@ public class PlotDrawing extends Drawing
 		return datascale;
 	}	
 	
-	public static float getDataScale(DrawingRequest dr, ReadOnlySpectrum data) {
+	public static float getDataScale(DrawingRequest dr, SpectrumView data) {
 		
 		float datascale;
 		if (dr.maxYIntensity == -1){

@@ -16,7 +16,7 @@ import org.peakaboo.display.plot.painters.FittingSumPainter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
@@ -163,7 +163,7 @@ public class Plotter {
 		
 		// draw the original data
 		if (data.raw != null && settings.backgroundShowOriginal) {
-			ReadOnlySpectrum originalData = data.raw;
+			SpectrumView originalData = data.raw;
 			plotPainters.add(new OriginalDataPainter(originalData, settings.monochrome));
 		}
 		
@@ -370,7 +370,7 @@ public class Plotter {
 		context.fill();
 	}
 	
-	private AreaPainter getPlotPainter(ReadOnlySpectrum filtered, PlotSettings settings) {
+	private AreaPainter getPlotPainter(SpectrumView filtered, PlotSettings settings) {
 		PaletteColour fill = new PaletteColour(settings.monochrome ? 0xff606060 : 0xff26a269);
 		PaletteColour stroke = new PaletteColour(settings.monochrome ? 0xff202020 : 0xff1e7e52);
 		return new AreaPainter(filtered, fill, stroke);

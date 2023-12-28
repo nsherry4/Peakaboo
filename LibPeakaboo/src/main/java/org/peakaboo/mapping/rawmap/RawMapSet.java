@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -169,7 +169,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap> {
 	
 	
 	public Spectrum getSummedRawMap(DetectorProfile profile) {
-		Spectrum s = new ISpectrum(maps.get(0).size());
+		Spectrum s = new ArraySpectrum(maps.get(0).size());
 		for (RawMap map : maps) {
 			SpectrumCalculations.addLists_inplace(s, map.getData(profile));
 		}

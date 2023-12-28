@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -51,8 +51,8 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 		
 		float cap = sorted[index];
 		
-		ReadOnlySpectrum olddata = source.getData();
-		Spectrum newdata = new ISpectrum(olddata.size());
+		SpectrumView olddata = source.getData();
+		Spectrum newdata = new ArraySpectrum(olddata.size());
 		for (int i = 0; i < olddata.size(); i++) {
 			newdata.set(i, Math.min(cap, olddata.get(i)));
 		}

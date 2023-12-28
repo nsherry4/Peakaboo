@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.RangeSet;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -13,7 +13,7 @@ public interface CurveView extends Comparable<CurveView> {
 
 	ITransitionSeries getTransitionSeries();
 
-	ReadOnlySpectrum get();
+	SpectrumView get();
 	
 	float getNormalizedSum();
 	float getNormalizedMax();
@@ -134,7 +134,7 @@ public interface CurveView extends Comparable<CurveView> {
 	 * @param lastChannel
 	 *            last channel to perform the operation on
 	 */
-	default void scaleOnto(float scale, ReadOnlySpectrum source, Spectrum target, int firstChannel, int lastChannel) {
+	default void scaleOnto(float scale, SpectrumView source, Spectrum target, int firstChannel, int lastChannel) {
 		SpectrumCalculations.fma(get(), scale, source, target, firstChannel, lastChannel);
 	}
 

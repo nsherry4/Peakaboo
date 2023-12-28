@@ -2,8 +2,8 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters;
 
 
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.visualization.Surface;
@@ -39,7 +39,7 @@ public abstract class PlotPainter extends Painter{
 	 * @param p the {@link PainterData} structure containing objects and information needed to draw to the plot
 	 * @param data the data series to trace
 	 */
-	protected void traceData(PainterData p, ReadOnlySpectrum data)
+	protected void traceData(PainterData p, SpectrumView data)
 	{
 		traceData(p, data, TraceType.CONNECTED);
 	}
@@ -50,7 +50,7 @@ public abstract class PlotPainter extends Painter{
 	 * @param data the data series to trace
 	 * @param connected should the data points be drawn as part of a connected series, or should each point be shown as an individual line
 	 */
-	protected void traceData(PainterData p, ReadOnlySpectrum data, TraceType traceType)
+	protected void traceData(PainterData p, SpectrumView data, TraceType traceType)
 	{
 		traceData(p.context, p.dr, p.plotSize, p.dataHeights, traceType, data);
 	}
@@ -64,7 +64,7 @@ public abstract class PlotPainter extends Painter{
 	 * @param connected should the data points be drawn as part of a connected series, or should each point be shown as an individual line
 	 * @param data the data series to trace
 	 */
-	protected void traceData(Surface context, DrawingRequest dr, Coord<Float> plotSize, Spectrum dataHeights, TraceType traceType, ReadOnlySpectrum data)
+	protected void traceData(Surface context, DrawingRequest dr, Coord<Float> plotSize, Spectrum dataHeights, TraceType traceType, SpectrumView data)
 	{
 
 
@@ -133,10 +133,10 @@ public abstract class PlotPainter extends Painter{
 	
 	
 	
-	protected Spectrum transformDataForPlot(DrawingRequest dr, ReadOnlySpectrum data)
+	protected Spectrum transformDataForPlot(DrawingRequest dr, SpectrumView data)
 	{
 
-		Spectrum transformedData = new ISpectrum(data);
+		Spectrum transformedData = new ArraySpectrum(data);
 		if (dr.viewTransform == ViewTransform.LOG) transformedData = SpectrumCalculations.logList(transformedData);
 		float dataMax = PlotDrawing.getDataScale(dr, data);
 		transformedData = SpectrumCalculations.divideBy(transformedData, dataMax);

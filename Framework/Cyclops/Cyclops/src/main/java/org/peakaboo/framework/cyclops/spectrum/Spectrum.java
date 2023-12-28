@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public interface Spectrum extends ReadOnlySpectrum {
+public interface Spectrum extends SpectrumView {
 
 	/**
 	 * Copies the values from the given spectrum into this one. 
 	 * Values copied will be in the range of 0 .. min(size(), s.size()) exclusive
 	 * @param s
 	 */
-	void copy(ReadOnlySpectrum s);
+	void copy(SpectrumView s);
 
 	/**
 	 * Copies the values from the given spectrum into this one. 
@@ -26,7 +26,7 @@ public interface Spectrum extends ReadOnlySpectrum {
 	 * new values added to it. These values are added in order, just 
 	 * as with {@link List#add(Object)}. The add method will return true
 	 * if any new value was added to the spectrum, or false if there was
-	 * no more space available. Calling {@link ISpectrum#set(int, float)}
+	 * no more space available. Calling {@link ArraySpectrum#set(int, float)}
 	 * does not have any effect on the add method
 	 * @param value
 	 */
@@ -69,7 +69,7 @@ public interface Spectrum extends ReadOnlySpectrum {
 	 * Converts a list of integers (points) to a spectrum with matching indices set to a given value
 	 */
 	static Spectrum fromPoints(List<Integer> points, int size, float value) {
-		Spectrum mask = new ISpectrum(size);
+		Spectrum mask = new ArraySpectrum(size);
 		for (int i = 0; i < size; i++) {
 			if (points.contains(i)) {
 				mask.add(value);
@@ -83,7 +83,7 @@ public interface Spectrum extends ReadOnlySpectrum {
 	/**
 	 * Converts a spectrum to a list of integers (points) with entries for each non-zero element
 	 */
-	static List<Integer> toPoints(ReadOnlySpectrum spectrum) {
+	static List<Integer> toPoints(SpectrumView spectrum) {
 		List<Integer> points = new ArrayList<>();
 		for (int i = 0; i < spectrum.size(); i++) {
 			if (spectrum.get(i) != 0) {

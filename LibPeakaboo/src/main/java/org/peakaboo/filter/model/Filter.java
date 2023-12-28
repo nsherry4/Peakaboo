@@ -8,7 +8,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public interface Filter {
 
@@ -74,12 +74,12 @@ public interface Filter {
 		return ctx.get();
 	}
 	
-	ReadOnlySpectrum filter(ReadOnlySpectrum data, Optional<FilterContext> ctx);
+	SpectrumView filter(SpectrumView data, Optional<FilterContext> ctx);
 	
 	/**
 	 * Convenience method to wrap the {@link FilterContext} in an {@link Optional}
 	 */
-	default ReadOnlySpectrum filter(ReadOnlySpectrum data, FilterContext ctx) {
+	default SpectrumView filter(SpectrumView data, FilterContext ctx) {
 		return filter(data, Optional.of(ctx));
 	}
 	
@@ -89,7 +89,7 @@ public interface Filter {
 	 * an exception can be done with the convenience method
 	 * {@link Filter#requireContext(Optional)}
 	 */
-	default ReadOnlySpectrum filter(ReadOnlySpectrum data) {
+	default SpectrumView filter(SpectrumView data) {
 		return filter(data, Optional.empty());
 	}
 	

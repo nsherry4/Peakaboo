@@ -12,13 +12,13 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class PlotData {
 
-	public ReadOnlySpectrum raw;
-	public ReadOnlySpectrum filtered;
-	public Map<Filter, ReadOnlySpectrum> deltas;
+	public SpectrumView raw;
+	public SpectrumView filtered;
+	public Map<Filter, SpectrumView> deltas;
 	public boolean consistentScale = true;
 	public DataSet dataset;
 	

@@ -17,15 +17,15 @@ import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 
 	private Parameter<String> spectrumFile;
 	private String loadedFile = null;
-	private ReadOnlySpectrum spectrum;
+	private SpectrumView spectrum;
 		
 	@Override
 	public String getFilterName() {
@@ -65,9 +65,9 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
+	protected SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent) {
 		if (loadedFile == null || spectrum == null) {
-			return new ISpectrum(data.size());
+			return new ArraySpectrum(data.size());
 		} else {
 			//load it lazily on first use
 			loadBackground(data);
@@ -75,7 +75,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 		}
 	}
 	
-	private synchronized void loadBackground(ReadOnlySpectrum data) {
+	private synchronized void loadBackground(SpectrumView data) {
 		
 		if (loadedFile == null) { return; }
 		if (loadedFile.equals(spectrumFile.getValue())) { return; }
@@ -83,7 +83,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 			
 		//If they haven't given a file yet
 		if (spectrumFile.getValue().length() == 0) {
-			spectrum = new ISpectrum(data.size());
+			spectrum = new ArraySpectrum(data.size());
 			return;
 		}
 		
@@ -97,7 +97,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 			spectrum = bgDataSet.getAnalysis().averagePlot();
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load background from dataset", e);
-			spectrum = new ISpectrum(data.size());
+			spectrum = new ArraySpectrum(data.size());
 		}
 		//now that we've loaded it (or failed), set the loadedFile so we don't constantly re-load it
 		loadedFile = spectrumFile.getValue();

@@ -11,7 +11,7 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
@@ -128,15 +128,15 @@ public class FilteringController extends EventfulBeacon
 		return filteringModel.filters;
 	}
 
-	public ReadOnlySpectrum getFilteredPlot() {
+	public SpectrumView getFilteredPlot() {
 		return filteringModel.filteredPlot.getValue();
 	}
 	
-	public EventfulCache<ReadOnlySpectrum> getFilteredPlotCache() {
+	public EventfulCache<SpectrumView> getFilteredPlotCache() {
 		return filteringModel.filteredPlot;
 	}
 	
-	public Map<Filter, ReadOnlySpectrum> getFilterDeltas() {
+	public Map<Filter, SpectrumView> getFilterDeltas() {
 		return filteringModel.filterDeltas.getValue();
 	}
 

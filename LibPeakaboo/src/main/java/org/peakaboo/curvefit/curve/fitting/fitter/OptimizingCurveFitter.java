@@ -11,8 +11,8 @@ import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
 import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class OptimizingCurveFitter implements CurveFitter {
@@ -54,11 +54,11 @@ public class OptimizingCurveFitter implements CurveFitter {
 		
 	}
 	
-	protected UnivariateFunction scoringFunction(ReadOnlySpectrum data, CurveView curve) {
+	protected UnivariateFunction scoringFunction(SpectrumView data, CurveView curve) {
 		return new UnivariateFunction() {
 			
-			Spectrum scaled = new ISpectrum(data.size());
-			Spectrum residual = new ISpectrum(data.size());
+			Spectrum scaled = new ArraySpectrum(data.size());
+			Spectrum residual = new ArraySpectrum(data.size());
 			
 			@Override
 			public double value(double scale) {

@@ -8,8 +8,8 @@ import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 import JSci.maths.wavelet.daubechies2.FastDaubechies2;
@@ -85,7 +85,7 @@ public final class WaveletNoiseFilter extends AbstractFilter
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		Spectrum result;
 		int passCount= passes.getValue();
 
@@ -107,10 +107,10 @@ public final class WaveletNoiseFilter extends AbstractFilter
 	 * @param passesToRemove the number of sections to be removed, starting with the largest, highest-frequency section
 	 * @return a Wavelet Low-Pass filtered dataset
 	 */
-	public static Spectrum fwtLowPassFilter(ReadOnlySpectrum data, int passesToRemove)
+	public static Spectrum fwtLowPassFilter(SpectrumView data, int passesToRemove)
 	{
 
-		Spectrum result = new ISpectrum(data.size());
+		Spectrum result = new ArraySpectrum(data.size());
 
 		float[] resultAsArray = data.backingArrayCopy();
 

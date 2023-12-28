@@ -16,7 +16,7 @@ import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutorSet;
@@ -65,7 +65,7 @@ public class AutoEnergyCalibration {
 	 * and uses the transition series to quickly find any potential good 
 	 * energy calibration values. 
 	 */
-	private static StreamExecutor<List<EnergyCalibration>> roughOptions(List<Supplier<EnergyCalibration>> energies, ReadOnlySpectrum spectrum, List<ITransitionSeries> tsList, int dataWidth) {
+	private static StreamExecutor<List<EnergyCalibration>> roughOptions(List<Supplier<EnergyCalibration>> energies, SpectrumView spectrum, List<ITransitionSeries> tsList, int dataWidth) {
 		
 		
 		
@@ -118,7 +118,7 @@ public class AutoEnergyCalibration {
 	 */
 	private static StreamExecutor<EnergyCalibration> chooseFromRoughOptions(
 			Supplier<List<EnergyCalibration>> energies, 
-			ReadOnlySpectrum spectrum, 
+			SpectrumView spectrum, 
 			List<ITransitionSeries> tsList,
 			FittingController controller,
 			int dataWidth
@@ -166,7 +166,7 @@ public class AutoEnergyCalibration {
 	}
 	
 	
-	private static float scoreFitFast(FittingSetView fits, ReadOnlySpectrum spectrum, EnergyCalibration calibration) {
+	private static float scoreFitFast(FittingSetView fits, SpectrumView spectrum, EnergyCalibration calibration) {
 		float score = 0;
 
 		FittingScorer scorer = new FastPeakSearchingScorer(spectrum, calibration);		
@@ -179,7 +179,7 @@ public class AutoEnergyCalibration {
 		return score;
 	}
 	
-	public static float scoreFitGood(FittingResultSetView results, ReadOnlySpectrum spectrum) {
+	public static float scoreFitGood(FittingResultSetView results, SpectrumView spectrum) {
 		float score = 0f;
 
 		Spectrum fit = results.getTotalFit();
@@ -204,7 +204,7 @@ public class AutoEnergyCalibration {
 	
 	private static EnergyCalibration fineTune(
 			EnergyCalibration calibration, 
-			ReadOnlySpectrum spectrum, 
+			SpectrumView spectrum, 
 			List<ITransitionSeries> tsList, 
 			FittingController controller,
 			float window
@@ -247,7 +247,7 @@ public class AutoEnergyCalibration {
 	
 	
 	public static StreamExecutorSet<EnergyCalibration> propose(
-			ReadOnlySpectrum spectrum, 
+			SpectrumView spectrum, 
 			List<ITransitionSeries> tsList, 
 			FittingController controller, 
 			int dataWidth

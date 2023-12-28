@@ -3,8 +3,8 @@ package org.peakaboo.mapping.filter.plugin.plugins.transforming;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -33,8 +33,8 @@ public class HFlipMapFilter extends AbstractMapFilter {
 	@Override
 	public AreaMap filter(MapFilterContext ctx) {
 		AreaMap source = ctx.map();
-		ReadOnlySpectrum sourceData = source.getData();
-		Spectrum target = new ISpectrum(sourceData.size());
+		SpectrumView sourceData = source.getData();
+		Spectrum target = new ArraySpectrum(sourceData.size());
 		GridPerspective<Float> grid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		
 		int maxx = source.getSize().x-1;

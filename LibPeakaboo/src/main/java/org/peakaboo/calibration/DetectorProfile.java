@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public interface DetectorProfile {
 
@@ -28,7 +28,7 @@ public interface DetectorProfile {
 		float rawfit = fittingResult.getFitSum();
 		return calibrate(rawfit, ts);
 	}
-	public ReadOnlySpectrum calibrateMap(ReadOnlySpectrum data, ITransitionSeries ts);
+	public SpectrumView calibrateMap(SpectrumView data, ITransitionSeries ts);
 	
 	
 

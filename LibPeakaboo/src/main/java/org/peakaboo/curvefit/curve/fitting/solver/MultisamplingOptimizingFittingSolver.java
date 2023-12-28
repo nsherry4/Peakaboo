@@ -11,7 +11,7 @@ import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 
@@ -43,7 +43,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 	@Override
 	public FittingResultSetView solve(FittingSolverContext ctx) {
 		
-		ReadOnlySpectrum data = ctx.data();
+		SpectrumView data = ctx.data();
 		FittingSetView fittings = ctx.fittings();
 		CurveFitter fitter = ctx.fitter();
 		

@@ -21,7 +21,7 @@ import org.peakaboo.dataset.source.model.components.scandata.ScanEntry;
 import org.peakaboo.dataset.source.plugin.AbstractDataSource;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.SparsedList;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 import com.univocity.parsers.csv.CsvParser;
@@ -247,7 +247,7 @@ class PlainTextScanEntry implements ScanEntry {
 			}
 		}
 		
-		Spectrum scan = new ISpectrum(length);
+		Spectrum scan = new ArraySpectrum(length);
 		for (String entry : entries) {
 			try {
 				

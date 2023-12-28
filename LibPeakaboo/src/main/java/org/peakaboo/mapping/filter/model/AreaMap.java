@@ -8,14 +8,14 @@ import java.util.List;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class AreaMap {
 
-	private ReadOnlySpectrum data;
+	private SpectrumView data;
 	private Coord<Integer> size;
 	//list is immutable
 	private List<Element> elements;
@@ -23,10 +23,10 @@ public class AreaMap {
 	private Coord<Bounds<Number>> realDimensions;
 	
 	
-	public AreaMap(ReadOnlySpectrum data, Element e, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
+	public AreaMap(SpectrumView data, Element e, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
 		this(data, Collections.singletonList(e), size, realDims);
 	}
-	public AreaMap(ReadOnlySpectrum data, List<Element> elements, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
+	public AreaMap(SpectrumView data, List<Element> elements, Coord<Integer> size, Coord<Bounds<Number>> realDims) {
 		this.data = data;
 		this.size = size;
 		this.realDimensions = realDims;
@@ -37,22 +37,22 @@ public class AreaMap {
 	/**
 	 * Copy constructor which keeps the metadata but replaces the actual map data
 	 */
-	public AreaMap(ReadOnlySpectrum data, AreaMap other) {
+	public AreaMap(SpectrumView data, AreaMap other) {
 		this(other);
-		this.data = new ISpectrum(data);
+		this.data = new ArraySpectrum(data);
 	}
 	
 	/**
 	 * Complate copy constructor
 	 */
 	public AreaMap(AreaMap other) {
-		this.data = new ISpectrum(other.data);
+		this.data = new ArraySpectrum(other.data);
 		this.size = other.size;
 		this.realDimensions = other.realDimensions;
 		this.elements = other.elements;
 	}
 	
-	public ReadOnlySpectrum getData() {
+	public SpectrumView getData() {
 		return data;
 	}
 
@@ -94,7 +94,7 @@ public class AreaMap {
 	public static Spectrum sumSpectrum(Iterable<AreaMap> maps) {
 		if (!maps.iterator().hasNext()) { return null; }
 		Coord<Integer> size = maps.iterator().next().getSize();
-		Spectrum target = new ISpectrum(size.x * size.y);
+		Spectrum target = new ArraySpectrum(size.x * size.y);
 		for (AreaMap map : maps) {
 			SpectrumCalculations.addLists_inplace(target, map.getData());
 		}

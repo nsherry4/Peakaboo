@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class SquareSnipBackgroundFilter extends AbstractBackgroundFilter {
@@ -39,13 +39,13 @@ public class SquareSnipBackgroundFilter extends AbstractBackgroundFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
+	protected SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent) {
 		int window = pHalfWindow.getValue();
 		int iterations = pIterations.getValue();
 		
 		//create 2 buffers to bounce the data back and forth between
-		Spectrum buffer1 = new ISpectrum(data);
-		Spectrum buffer2 = new ISpectrum(data);
+		Spectrum buffer1 = new ArraySpectrum(data);
+		Spectrum buffer2 = new ArraySpectrum(data);
 		
 		for (int i = 0; i < buffer1.size(); i++) {
 			float v = Math.max(0, buffer1.get(i));

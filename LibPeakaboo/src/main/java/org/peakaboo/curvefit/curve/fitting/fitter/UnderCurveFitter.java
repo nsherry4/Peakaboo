@@ -1,7 +1,7 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class UnderCurveFitter implements CurveFitter {
 
@@ -53,7 +53,7 @@ public class UnderCurveFitter implements CurveFitter {
 
 		
 		//look at every point in the ranges covered by transitions
-		ReadOnlySpectrum curveSignal = ctx.curve().get();
+		SpectrumView curveSignal = ctx.curve().get();
 		for (Integer i : ctx.curve().getIntenseChannelList()) {
 			if (i < 0 || i >= ctx.data().size()) continue;
 			

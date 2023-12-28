@@ -13,8 +13,8 @@ import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.SeparatorStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 //From Handbook of X-Ray Spectrometry
@@ -110,7 +110,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		return fastSavitskyGolayFilter(data, reach.getValue(), ignore.getValue() ? max.getValue() : Float.MAX_VALUE);
 	}
 
@@ -138,15 +138,15 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	}
 	
 
-	public Spectrum fastSavitskyGolayFilter(ReadOnlySpectrum data, int reach, float max) {
+	public Spectrum fastSavitskyGolayFilter(SpectrumView data, int reach, float max) {
 
 		float[] coefs = getCoeffs();
 		if (coefs == null) {
 			PeakabooLog.get().log(Level.WARNING, "Failed to load Savitsky Golay coefficients");
-			return new ISpectrum(data);
+			return new ArraySpectrum(data);
 		}
 		
-		Spectrum out = new ISpectrum(data.size());
+		Spectrum out = new ArraySpectrum(data.size());
 		
 		for (int i = 0; i < data.size(); i++) {
 

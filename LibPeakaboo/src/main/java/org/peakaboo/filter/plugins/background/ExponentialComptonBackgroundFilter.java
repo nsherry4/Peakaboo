@@ -5,8 +5,8 @@ import java.util.Optional;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -62,13 +62,13 @@ public class ExponentialComptonBackgroundFilter extends AbstractBackgroundFilter
 	}
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
+	protected SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent) {
 		int attackStart = pAttackStart.getValue();
 		int attackEnd = pAttackEnd.getValue();
 		int decayStart = pDecayStart.getValue();
 		int decayEnd = pDecayEnd.getValue();
 		
-		Spectrum output = new ISpectrum(data);
+		Spectrum output = new ArraySpectrum(data);
 		for (int i = 0; i < data.size(); i++) {
 			//before curve
 			if (i < attackStart) { output.set(i, 0); }

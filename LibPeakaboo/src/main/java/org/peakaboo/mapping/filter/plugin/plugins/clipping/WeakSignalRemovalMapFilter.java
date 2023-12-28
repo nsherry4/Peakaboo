@@ -2,8 +2,8 @@ package org.peakaboo.mapping.filter.plugin.plugins.clipping;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -42,10 +42,10 @@ public class WeakSignalRemovalMapFilter extends AbstractMapFilter {
 		AreaMap source = ctx.map();
 		
 		
-		ReadOnlySpectrum oldmap = source.getData();
+		SpectrumView oldmap = source.getData();
 		float max = oldmap.max();
 		float cutoff = max * percent.getValue() / 100f;
-		Spectrum newmap = new ISpectrum(oldmap.size());
+		Spectrum newmap = new ArraySpectrum(oldmap.size());
 		for (int i = 0; i < newmap.size(); i++) {
 			float value = oldmap.get(i);
 			if (value < cutoff) { continue; }

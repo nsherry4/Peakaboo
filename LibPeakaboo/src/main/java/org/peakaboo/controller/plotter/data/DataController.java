@@ -24,7 +24,7 @@ import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
@@ -175,23 +175,23 @@ public class DataController extends EventfulBeacon
 	}
 	
 	
-	public Iterator<ReadOnlySpectrum> getScanIterator() {
+	public Iterator<SpectrumView> getScanIterator() {
 		
-		return new Iterator<ReadOnlySpectrum>() {
+		return new Iterator<SpectrumView>() {
 
 			int nextIndex = dataModel.getScanData().firstNonNullScanIndex();
-			ReadOnlySpectrum next = dataModel.getScanData().get(nextIndex);
+			SpectrumView next = dataModel.getScanData().get(nextIndex);
 			
 			
 			public boolean hasNext() {
 				return next != null;
 			}
 
-			public ReadOnlySpectrum next() {
+			public SpectrumView next() {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
 				}
-				ReadOnlySpectrum current = next;
+				SpectrumView current = next;
 				nextIndex = dataModel.getScanData().firstNonNullScanIndex(nextIndex+1);
 				if (nextIndex == -1) {
 					next = null;

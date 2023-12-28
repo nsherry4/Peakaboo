@@ -6,7 +6,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 /**
@@ -16,7 +16,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  */
 public interface FittingSolver extends BoltJavaPlugin {
 
-	public static record FittingSolverContext (ReadOnlySpectrum data, FittingSetView fittings, CurveFitter fitter) {};
+	public static record FittingSolverContext (SpectrumView data, FittingSetView fittings, CurveFitter fitter) {};
 	
 	FittingResultSetView solve(FittingSolverContext ctx);
 	

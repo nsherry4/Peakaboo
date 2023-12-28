@@ -28,7 +28,7 @@ import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.plot.PlotData;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
@@ -49,7 +49,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 		
 		fittingModel.selectionResults = new EventfulNullableCache<>(() -> {
-			ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
+			SpectrumView data = plot.filtering().getFilteredPlot();
 			if (data == null) {
 				return null;
 			}
@@ -446,7 +446,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public ExecutorSet<List<ITransitionSeries>> autodetectPeaks() {
 		PeakSearcher searcher = new DoubleDerivativePeakSearcher();
-		ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
+		SpectrumView data = plot.filtering().getFilteredPlot();
 		ExecutorSet<List<ITransitionSeries>> exec = PeakProposal.search(
 				data, 
 				searcher, 

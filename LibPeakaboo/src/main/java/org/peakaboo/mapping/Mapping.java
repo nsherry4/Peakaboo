@@ -21,8 +21,8 @@ import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.plural.Plural;
@@ -87,7 +87,7 @@ public class Mapping {
 			
 			stream.forEach(index -> {
 				
-				ReadOnlySpectrum data = dataset.getScanData().get(index);
+				SpectrumView data = dataset.getScanData().get(index);
 				if (data == null) return;
 				
 				data = filters.applyFiltersUnsynchronized(data, ctx);
@@ -135,7 +135,7 @@ public class Mapping {
 		}
 		int finalMapsize = mapsize;
 		
-		Spectrum map = new ISpectrum(finalMapsize);
+		Spectrum map = new ArraySpectrum(finalMapsize);
 		EachIndexExecutor maptask = new PluralEachIndexExecutor(dataset.getScanData().scanCount(), index -> {
 			int translated = index;
 			if (noncontiguous) {

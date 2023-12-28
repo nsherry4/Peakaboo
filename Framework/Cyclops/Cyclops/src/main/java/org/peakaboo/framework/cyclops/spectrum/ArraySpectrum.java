@@ -17,7 +17,7 @@ import java.util.stream.StreamSupport;
 
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 
-public class ISpectrum implements Spectrum
+public class ArraySpectrum implements Spectrum
 {
 
 	private float	data[];
@@ -28,7 +28,7 @@ public class ISpectrum implements Spectrum
 	/**
 	 * Public constructor for (de)serialization purposes only.
 	 */
-	public ISpectrum()
+	public ArraySpectrum()
 	{
 		
 	}
@@ -37,7 +37,7 @@ public class ISpectrum implements Spectrum
 	 * Creates a new Spectrum with the given size
 	 * @param size
 	 */
-	public ISpectrum(int size)
+	public ArraySpectrum(int size)
 	{
 		this.data = new float[size];
 		this.size = size;		
@@ -49,7 +49,7 @@ public class ISpectrum implements Spectrum
 	 * @param size
 	 * @param initialize
 	 */
-	public ISpectrum(int size, float initialize)
+	public ArraySpectrum(int size, float initialize)
 	{
 		this.data = new float[size];
 		this.size = size;
@@ -63,7 +63,7 @@ public class ISpectrum implements Spectrum
 	 * Creates a new Spectrum based on a copy of the given array
 	 * @param fromArray
 	 */
-	public ISpectrum(float[] fromArray)
+	public ArraySpectrum(float[] fromArray)
 	{
 		this(fromArray, true);
 	}
@@ -74,7 +74,7 @@ public class ISpectrum implements Spectrum
 	 * @param fromArray
 	 * @param copy
 	 */
-    public ISpectrum(float[] fromArray, boolean copy)
+    public ArraySpectrum(float[] fromArray, boolean copy)
     {
     	if(copy) {
     		this.data = Arrays.copyOf(fromArray, fromArray.length);
@@ -93,7 +93,7 @@ public class ISpectrum implements Spectrum
 	 * The values in the given array will be converted to floats.
 	 * @param fromArray
 	 */
-	public ISpectrum(double[] fromArray)
+	public ArraySpectrum(double[] fromArray)
 	{
         this.data = new float[fromArray.length];
         this.size = fromArray.length;
@@ -109,7 +109,7 @@ public class ISpectrum implements Spectrum
 	 * Creates a new Spectrum based on the values in the given list.
 	 * @param fromList
 	 */
-	public ISpectrum(List<Float> fromList)
+	public ArraySpectrum(List<Float> fromList)
 	{
 		this.data = new float[fromList.size()];
 		this.size = fromList.size();
@@ -127,9 +127,9 @@ public class ISpectrum implements Spectrum
 	 * Creates a new spectrum copied from the given spectrum
 	 * @param copy
 	 */
-	public ISpectrum(ReadOnlySpectrum copy)
+	public ArraySpectrum(SpectrumView copy)
 	{
-		if (copy instanceof ISpectrum source) {
+		if (copy instanceof ArraySpectrum source) {
 			this.data = source.backingArrayCopy();
 			this.size = source.size;
 			this.maxIndex = source.maxIndex;
@@ -144,7 +144,7 @@ public class ISpectrum implements Spectrum
 	 * @param s
 	 */
 	@Override
-	public void copy(ReadOnlySpectrum s)
+	public void copy(SpectrumView s)
 	{
 		copy(s.backingArrayCopy());
 	}
@@ -177,7 +177,7 @@ public class ISpectrum implements Spectrum
 	 * new values added to it. These values are added in order, just 
 	 * as with {@link List#add(Object)}. The add method will return true
 	 * if any new value was added to the spectrum, or false if there was
-	 * no more space available. Calling {@link ISpectrum#set(int, float)}
+	 * no more space available. Calling {@link ArraySpectrum#set(int, float)}
 	 * does not have any effect on the add method
 	 * @param value
 	 */
@@ -244,11 +244,11 @@ public class ISpectrum implements Spectrum
 	 * @param stop
 	 */
 	@Override
-	public ISpectrum subSpectrum(int start, int stop)
+	public ArraySpectrum subSpectrum(int start, int stop)
 	{
 		
 		int length = stop - start + 1;
-		ISpectrum target = new ISpectrum(length);
+		ArraySpectrum target = new ArraySpectrum(length);
 		System.arraycopy(data, start, target.data, 0, length);
 		target.maxIndex = length-1;
 		
@@ -318,7 +318,7 @@ public class ISpectrum implements Spectrum
 	}
 	
 
-	public static Function<ISpectrum, byte[]> getEncoder()
+	public static Function<ArraySpectrum, byte[]> getEncoder()
 	{
 
 		//Function to serialize a spectrum
@@ -342,7 +342,7 @@ public class ISpectrum implements Spectrum
 		};
 	}
 
-	public static Function<byte[], ISpectrum> getDecoder(){
+	public static Function<byte[], ArraySpectrum> getDecoder(){
 
 		//Function to deserialize a spectrum
 
@@ -352,7 +352,7 @@ public class ISpectrum implements Spectrum
 			try
 			{
 				ois = new ObjectInputStream(bais);
-				ISpectrum s = (ISpectrum) ois.readObject();
+				ArraySpectrum s = (ArraySpectrum) ois.readObject();
 				ois.close();
 				return s;
 			}
@@ -389,7 +389,7 @@ public class ISpectrum implements Spectrum
 	@Override
 	public boolean equals(Object oother)
 	{
-		if (oother instanceof ISpectrum other) {
+		if (oother instanceof ArraySpectrum other) {
 			if (other.size() != size()) return false;
 			for (int i = 0; i < size(); i++) {
 				if (other.get(i) != get(i)) return false;

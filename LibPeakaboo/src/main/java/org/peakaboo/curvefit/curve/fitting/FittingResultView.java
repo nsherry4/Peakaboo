@@ -1,11 +1,11 @@
 package org.peakaboo.curvefit.curve.fitting;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public interface FittingResultView {
 
-	ReadOnlySpectrum getFit();
+	SpectrumView getFit();
 
 	CurveView getCurve();
 

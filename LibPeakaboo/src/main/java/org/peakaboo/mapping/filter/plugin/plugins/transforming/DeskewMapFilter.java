@@ -4,8 +4,8 @@ import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -44,8 +44,8 @@ public class DeskewMapFilter extends AbstractMapFilter {
 
 		GridPerspective<Float> ingrid  = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		GridPerspective<Float> outgrid = new GridPerspective<Float>(newWidth, source.getSize().y, 0f);
-		ReadOnlySpectrum input = source.getData();
-		Spectrum output = new ISpectrum(source.getSize().y * newWidth);
+		SpectrumView input = source.getData();
+		Spectrum output = new ArraySpectrum(source.getSize().y * newWidth);
 		
 		outgrid.visit(output, (pi, px, py, value) -> {
 			//how far along is this row

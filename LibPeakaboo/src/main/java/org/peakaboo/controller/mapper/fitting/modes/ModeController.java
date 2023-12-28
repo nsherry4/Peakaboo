@@ -8,7 +8,7 @@ import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.eventful.IEventfulBeacon;
 import org.peakaboo.mapping.filter.model.AreaMap;
@@ -99,7 +99,7 @@ public interface ModeController extends IEventfulBeacon {
 		
 		//merge the maps into a single composite map
 		if (!filtereds.iterator().hasNext()) {
-			return new ISpectrum(x * y);
+			return new ArraySpectrum(x * y);
 		}
 		return AreaMap.sumSpectrum(filtereds);
 	}

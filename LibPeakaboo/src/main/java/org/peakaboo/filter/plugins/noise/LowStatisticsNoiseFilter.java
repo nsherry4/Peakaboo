@@ -7,8 +7,8 @@ import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class LowStatisticsNoiseFilter extends AbstractFilter {
@@ -30,15 +30,15 @@ public class LowStatisticsNoiseFilter extends AbstractFilter {
 	@Override
 	// TODO: Technically, the window size should be a multiple of the FWHM here,
 	// but we don't have access to that information. Maybe..?
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
-		Spectrum out = new ISpectrum(data.size());
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
+		Spectrum out = new ArraySpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			out.set(i, filterChannel(i, data));
 		}
 		return out;
 	}
 	
-	private float filterChannel(int i, ReadOnlySpectrum data) {
+	private float filterChannel(int i, SpectrumView data) {
 		int window = pWindowSize.getValue();
 		float maxSignal = pMaxSignal.getValue();
 		float centrepointFactor = pCentrepointFactor.getValue();
@@ -71,7 +71,7 @@ public class LowStatisticsNoiseFilter extends AbstractFilter {
 	}
 	
 	
-	private float sumWindow(int start, int stop, ReadOnlySpectrum data) {
+	private float sumWindow(int start, int stop, SpectrumView data) {
 		float sum = 0;
 		for (int i = start; i <= stop; i++) {
 			sum += data.get(i);

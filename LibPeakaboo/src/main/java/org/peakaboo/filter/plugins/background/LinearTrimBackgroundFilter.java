@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -54,7 +54,7 @@ public final class LinearTrimBackgroundFilter extends AbstractBackgroundFilter
 
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent)
+	protected SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent)
 	{
 
 		return SpectrumCalculations.multiplyBy(
@@ -113,14 +113,14 @@ public final class LinearTrimBackgroundFilter extends AbstractBackgroundFilter
 	 * @param iterations the number of iterations of this algorithm to run.
 	 * @return
 	 */
-	public static Spectrum calcBackgroundLinearTrim(final ReadOnlySpectrum scan, int lineSize, int iterations)
+	public static Spectrum calcBackgroundLinearTrim(final SpectrumView scan, int lineSize, int iterations)
 	{
 		
 		
-		Spectrum result1 = new ISpectrum(scan);
-		Spectrum result2 = new ISpectrum(scan.size());
+		Spectrum result1 = new ArraySpectrum(scan);
+		Spectrum result2 = new ArraySpectrum(scan.size());
 		Spectrum temp;
-		Spectrum lineSegment = new ISpectrum(scan.size());
+		Spectrum lineSegment = new ArraySpectrum(scan.size());
 		
 		for (int i = 0; i < iterations; i++)
 		{

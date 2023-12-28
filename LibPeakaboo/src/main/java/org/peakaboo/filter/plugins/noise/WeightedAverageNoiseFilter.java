@@ -6,8 +6,8 @@ import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class WeightedAverageNoiseFilter extends AbstractFilter {
@@ -56,7 +56,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		data = weightedMovingAverage(data, reach.getValue());
 		return data;
 	}
@@ -87,7 +87,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 	 *            the distance from the centrepoint to an edge of the set of numbers being averaged
 	 * @return a moving-average smoothed data set
 	 */
-	public static Spectrum weightedMovingAverage(ReadOnlySpectrum data, int windowSpan) {
+	public static Spectrum weightedMovingAverage(SpectrumView data, int windowSpan) {
 
 		/*
 		 * for a windowSpan n, the center-point's weight will be 2^n. 
@@ -105,7 +105,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 		weights[windowSpan] = (float) Math.pow(2, windowSpan);
 			
 				
-		Spectrum smoothed = new ISpectrum(data.size());
+		Spectrum smoothed = new ArraySpectrum(data.size());
 		
 		int start, stop;
 		float totalWeight;

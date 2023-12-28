@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
@@ -45,7 +45,7 @@ public abstract class ManagedHDF5DataSource extends SimpleHDF5DataSource {
 			int channel = channelAtIndex(filenum, i, info);
 			
 			if (!scans.containsKey(scan)) {
-				scans.put(scan, new ISpectrum(spectrumSize));
+				scans.put(scan, new ArraySpectrum(spectrumSize));
 			}
 			Spectrum spectrum = scans.get(scan);
 			spectrum.set(channel, data[i]);

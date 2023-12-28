@@ -7,7 +7,7 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSource
 import org.peakaboo.dataset.source.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import org.peakaboo.dataset.source.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.dataset.source.model.components.scandata.loaderqueue.SimpleLoaderQueue;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.single.Compressed;
 
@@ -30,7 +30,7 @@ public class SimpleScanData extends AbstractScanData {
 	 * @param spectrum a float array to add
 	 */
 	public void add(float[] spectrum) {
-		add(new ISpectrum(spectrum));
+		add(new ArraySpectrum(spectrum));
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class SimpleScanData extends AbstractScanData {
 	 * @param spectrum a float array to set as
 	 */
 	public void set(int index, float[] spectrum) {
-		set(index, new ISpectrum(spectrum));
+		set(index, new ArraySpectrum(spectrum));
 	}
 	
 	/**

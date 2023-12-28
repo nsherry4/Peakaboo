@@ -6,8 +6,8 @@ import java.util.List;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 
@@ -34,7 +34,7 @@ public class Interpolation {
 	public static Pair<GridPerspective<Float>, Spectrum> interpolateGridLinear(GridPerspective<Float> grid, Spectrum list){
 		
 		GridPerspective<Float> upGrid = new GridPerspective<>(grid.width * 2 - 1, grid.height * 2 - 1, 0.0f);
-		Spectrum upList = new ISpectrum(upGrid.width * upGrid.height, 0.0f);
+		Spectrum upList = new ArraySpectrum(upGrid.width * upGrid.height, 0.0f);
 		
 		
 		//copy over the original data into a spaced out pattern
@@ -92,8 +92,8 @@ public class Interpolation {
 	public static AreaMap interpolateBadPoints(AreaMap map, List<Integer> badPoints) {
 
 		GridPerspective<Float> grid = new GridPerspective<Float>(map.getSize().x, map.getSize().y, 0f);
-		ReadOnlySpectrum input = map.getData();
-		Spectrum output = new ISpectrum(input);
+		SpectrumView input = map.getData();
+		Spectrum output = new ArraySpectrum(input);
 		
 		interpolateBadPoints(grid, output, badPoints);
 		

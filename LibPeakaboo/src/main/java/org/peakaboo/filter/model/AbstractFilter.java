@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 /**
@@ -58,15 +58,15 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin {
 	 * Filter the given {@link Spectrum} and return the modified result
 	 * @param data the Spectrum to filter
 	 */
-	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx);
+	protected abstract SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx);
 		
 	
 
 	@Override
-	public ReadOnlySpectrum filter(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	public SpectrumView filter(SpectrumView data, Optional<FilterContext> ctx) {
 		
 		try{
-			ReadOnlySpectrum newdata = filterApplyTo(data, ctx);
+			SpectrumView newdata = filterApplyTo(data, ctx);
 			if (newdata != null) return newdata;
 			return data;
 		}

@@ -12,8 +12,8 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -50,16 +50,16 @@ public class GreedyFittingSolver implements FittingSolver {
 	@Override
 	public FittingResultSetView solve(FittingSolverContext ctx) {
 
-		ReadOnlySpectrum data = ctx.data();
+		SpectrumView data = ctx.data();
 		FittingSetView fittings = ctx.fittings();
 		CurveFitter fitter = ctx.fitter();
 		
-		Spectrum resultTotalFit = new ISpectrum(data.size());
+		Spectrum resultTotalFit = new ArraySpectrum(data.size());
 		List<FittingResultView> resultFits = new ArrayList<>();
 		FittingParametersView resultParameters = fittings.getFittingParameters().copy();
 		
-		Spectrum remainder = new ISpectrum(data);
-		Spectrum scaled = new ISpectrum(data.size());
+		Spectrum remainder = new ArraySpectrum(data);
+		Spectrum scaled = new ArraySpectrum(data.size());
 		
 		// calculate the curves
 		for (CurveView curve : fittings.getCurves()) {

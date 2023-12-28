@@ -1,18 +1,18 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot;
 
 
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class OriginalDataPainter extends LinePainter
 {
 	
-	public OriginalDataPainter(ReadOnlySpectrum data, boolean isMonochrome)
+	public OriginalDataPainter(SpectrumView data, boolean isMonochrome)
 	{
 		super(data, getColour(isMonochrome));
 	}
-	public OriginalDataPainter(ReadOnlySpectrum data)
+	public OriginalDataPainter(SpectrumView data)
 	{
 		super(data, getColour(false));
 	}

@@ -4,7 +4,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * Prefers pileup peaks which are a small percent of the 
@@ -14,10 +14,10 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
  */
 public class PileupSourceScorer implements FittingScorer {
 
-	private ReadOnlySpectrum data;
+	private SpectrumView data;
 	private EnergyCalibration calibration;
 	
-	public PileupSourceScorer(ReadOnlySpectrum data, EnergyCalibration calibration) {
+	public PileupSourceScorer(SpectrumView data, EnergyCalibration calibration) {
 		this.data = data;
 		this.calibration = calibration;
 	}

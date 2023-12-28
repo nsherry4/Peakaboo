@@ -2,7 +2,7 @@ package org.peakaboo.curvefit.curve.fitting;
 
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * 
@@ -16,7 +16,7 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 public class FittingResult implements FittingResultView
 {
 
-	private ReadOnlySpectrum		fit = null;
+	private SpectrumView		fit = null;
 	private CurveView	curve;
 
 	private float					curveScale;
@@ -33,7 +33,7 @@ public class FittingResult implements FittingResultView
 
 
 	@Override
-	public ReadOnlySpectrum getFit() {
+	public SpectrumView getFit() {
 		if (fit == null) {
 			fit = getCurve().scale(getCurveScale());
 		}

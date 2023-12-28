@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
@@ -105,9 +105,9 @@ public abstract class MapPainter extends Painter
 	
 	public abstract void drawMap(PainterData p, float cellSize, float rawCellSize);
 	
-	protected Spectrum transformDataForMap(DrawingRequest dr, ReadOnlySpectrum data)
+	protected Spectrum transformDataForMap(DrawingRequest dr, SpectrumView data)
 	{
-		Spectrum transformedData = new ISpectrum(data);
+		Spectrum transformedData = new ArraySpectrum(data);
 		
 		//log transform
 		if (dr.viewTransform == ViewTransform.LOG) transformedData = SpectrumCalculations.logList(transformedData);
@@ -123,7 +123,7 @@ public abstract class MapPainter extends Painter
 			int width = dr.dataWidth;
 			int height = dr.dataHeight;
 			
-			Spectrum flip = new ISpectrum(transformedData.size());
+			Spectrum flip = new ArraySpectrum(transformedData.size());
 			float[] transformedDataArray = transformedData.backingArray();
 			float[] flipArray = flip.backingArray();
 			for (int y = 0; y < height; y++) {

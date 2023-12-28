@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.dataset.io.DataOutputAdapter;
 import org.peakaboo.dataset.sink.plugin.AbstractDataSink;
 import org.peakaboo.dataset.source.model.DataSource;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class CSV extends AbstractDataSink {
 
@@ -30,7 +30,7 @@ public class CSV extends AbstractDataSink {
 		Writer writer = new OutputStreamWriter(destination.getOutputStream());
 				
 		int counter = 0;
-		for (ReadOnlySpectrum s : source.getScanData()) {
+		for (SpectrumView s : source.getScanData()) {
 			String spectrum = s.stream().map(f -> Float.toString(f)).collect(Collectors.joining(", "));
 			writer.write(spectrum);
 			writer.write("\n");

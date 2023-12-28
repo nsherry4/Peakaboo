@@ -5,7 +5,7 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.Interpolation;
 import org.peakaboo.mapping.filter.model.AreaMap;
@@ -37,7 +37,7 @@ public class EnlargeMapFilter extends AbstractMapFilter {
 		AreaMap source = ctx.map();
 		
 		GridPerspective<Float> interpGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
-		Spectrum mapdata = new ISpectrum(source.getData());
+		Spectrum mapdata = new ArraySpectrum(source.getData());
 		
 		Pair<GridPerspective<Float>, Spectrum> interpolationResult;
 		int count = 0;

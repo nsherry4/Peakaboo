@@ -3,7 +3,7 @@ package org.peakaboo.dataset.source.model.components.scandata;
 import org.peakaboo.dataset.source.model.PeakabooLists;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.list.ScratchList;
 
@@ -21,7 +21,7 @@ public abstract class AbstractScanData implements ScanData {
 	}
 	
 	@Override
-	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
+	public SpectrumView get(int index) throws IndexOutOfBoundsException {
 		return spectra.get(index); //return read-only
 	}
 	

@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -54,7 +54,7 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent)
+	protected SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent)
 	{		
 		return SpectrumCalculations.multiplyBy(
 				calcBackgroundBrukner(data, width.getValue(), iterations.getValue()), (percent/100.0f)
@@ -108,7 +108,7 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 	 * @param repetitions the number of iterations of the smoothing/minvalue step to perform
 	 * @return the calculated background
 	 */
-	public static Spectrum calcBackgroundBrukner(ReadOnlySpectrum data, int windowSize, int repetitions)
+	public static Spectrum calcBackgroundBrukner(SpectrumView data, int windowSize, int repetitions)
 	{
 
 		// FIRST STEP
@@ -117,7 +117,7 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 		float diff = iAvg - iMin;
 		final float cutoff = iAvg + 2 * diff;
 
-		Spectrum result = new ISpectrum(data); 
+		Spectrum result = new ArraySpectrum(data); 
 
 		//initially cap the data at the given cutoff
 		for (int i = 0; i < result.size(); i++)
@@ -125,7 +125,7 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 			if (result.get(i) > cutoff) result.set(i, cutoff);
 		}
 		
-		Spectrum result2 = new ISpectrum(result.size());
+		Spectrum result2 = new ArraySpectrum(result.size());
 
 		int i = 0;
 		while (repetitions > 0)

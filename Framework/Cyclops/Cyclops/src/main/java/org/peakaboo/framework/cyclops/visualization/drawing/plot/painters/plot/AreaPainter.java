@@ -1,7 +1,7 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot;
 
 
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.SpectrumPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
@@ -12,7 +12,7 @@ public class AreaPainter extends SpectrumPainter
 
 	private PaletteColour fillColour, strokeColour;
 
-	public AreaPainter(ReadOnlySpectrum data, PaletteColour fill, PaletteColour stroke)
+	public AreaPainter(SpectrumView data, PaletteColour fill, PaletteColour stroke)
 	{
 		super(data);
 		fillColour = fill;
@@ -20,7 +20,7 @@ public class AreaPainter extends SpectrumPainter
 	}
 
 	
-	public AreaPainter(ReadOnlySpectrum data)
+	public AreaPainter(SpectrumView data)
 	{
 		super(data);
 		fillColour = new PaletteColour(0xff7f7f7f);

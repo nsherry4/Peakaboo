@@ -14,8 +14,8 @@ import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.RangeSet;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -97,7 +97,7 @@ public class Curve implements CurveView {
 	}
 	
 	@Override
-	public ReadOnlySpectrum get() {
+	public SpectrumView get() {
 		return normalizedCurve;
 	}
 	
@@ -219,7 +219,7 @@ public class Curve implements CurveView {
 			throw new RuntimeException("DataWidth cannot be 0");
 		}
 		
-		Spectrum fit = new ISpectrum(calibration.getDataWidth());
+		Spectrum fit = new ArraySpectrum(calibration.getDataWidth());
 		List<FittingFunction> functions = new ArrayList<FittingFunction>();
 		
 

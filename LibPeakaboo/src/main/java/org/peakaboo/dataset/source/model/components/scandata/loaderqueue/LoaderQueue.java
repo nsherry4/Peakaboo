@@ -2,7 +2,7 @@ package org.peakaboo.dataset.source.model.components.scandata.loaderqueue;
 
 import java.util.function.Consumer;
 
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public interface LoaderQueue {
@@ -12,11 +12,11 @@ public interface LoaderQueue {
 	void setPreprocessor(Consumer<Spectrum> preprocessor);
 	
 	default void submit(float[] s) throws InterruptedException {
-		submit(new ISpectrum(s));
+		submit(new ArraySpectrum(s));
 	}
 
 	default void submit(int index, float[] s) throws InterruptedException {
-		submit(index, new ISpectrum(s));
+		submit(index, new ArraySpectrum(s));
 	}
 	
 	/**

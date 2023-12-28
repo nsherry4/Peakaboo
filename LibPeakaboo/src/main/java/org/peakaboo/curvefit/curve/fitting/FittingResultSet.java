@@ -4,8 +4,8 @@ package org.peakaboo.curvefit.curve.fitting;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 /**
@@ -21,20 +21,20 @@ public class FittingResultSet implements FittingResultSetView
 {
 
 	protected Spectrum totalFit;
-	protected ReadOnlySpectrum residual;
+	protected SpectrumView residual;
 	protected List<FittingResultView> fits;
 	protected FittingParametersView parameters;
 	
 	public FittingResultSet(int size)
 	{
 		fits = new ArrayList<>();
-		totalFit = new ISpectrum(size);
-		residual = new ISpectrum(size);
+		totalFit = new ArraySpectrum(size);
+		residual = new ArraySpectrum(size);
 	}
 
 	public FittingResultSet(
 			Spectrum totalFit, 
-			ReadOnlySpectrum residual, 
+			SpectrumView residual, 
 			List<FittingResultView> fits, 
 			FittingParametersView parameters) {
 		this.totalFit = totalFit;
@@ -50,7 +50,7 @@ public class FittingResultSet implements FittingResultSetView
 	}
 
 	@Override
-	public ReadOnlySpectrum getResidual() {
+	public SpectrumView getResidual() {
 		return residual;
 	}
 

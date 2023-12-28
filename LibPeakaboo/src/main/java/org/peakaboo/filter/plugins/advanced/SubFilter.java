@@ -14,8 +14,8 @@ import org.peakaboo.framework.autodialog.model.classinfo.SimpleClassInfo;
 import org.peakaboo.framework.autodialog.model.style.CoreStyle;
 import org.peakaboo.framework.autodialog.model.style.SimpleStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class SubFilter extends AbstractFilter {
@@ -58,7 +58,7 @@ public class SubFilter extends AbstractFilter {
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		
 		int start = begin.getValue();
 		int stop = end.getValue();
@@ -66,8 +66,8 @@ public class SubFilter extends AbstractFilter {
 		if (start >= data.size()) start = data.size()-1;
 		if (stop >= data.size()) stop = data.size()-1;
 		
-		Spectrum result = new ISpectrum(data);
-		ReadOnlySpectrum subspectrum = data.subSpectrum(start, stop);
+		Spectrum result = new ArraySpectrum(data);
+		SpectrumView subspectrum = data.subSpectrum(start, stop);
 		
 		subspectrum = filter.getValue().filter(subspectrum, ctx);
 		

@@ -4,8 +4,8 @@ import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -60,10 +60,10 @@ public class BinningMapFilter extends AbstractMapFilter {
 	private AreaMap bin(AreaMap source) {
 		
 		GridPerspective<Float> originalGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
-		ReadOnlySpectrum originalData = source.getData();
+		SpectrumView originalData = source.getData();
 		
 		GridPerspective<Float> binnedGrid = new GridPerspective<Float>(source.getSize().x/2, source.getSize().y/2, 0f);
-		Spectrum binnedData = new ISpectrum(binnedGrid.size());
+		Spectrum binnedData = new ArraySpectrum(binnedGrid.size());
 		
 		for (int y = 0; y < binnedGrid.height; y++) {
 			for (int x = 0; x < binnedGrid.width; x++) {

@@ -34,7 +34,7 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.SigDigits;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -187,13 +187,13 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 * raw data supplied by the data controller.
 	 * @return a Spectrum which contains a scan
 	 */
-	public ReadOnlySpectrum currentScan()
+	public SpectrumView currentScan()
 	{
 		if (!dataController.hasDataSet()) {
 			return null;
 		}
 		
-		ReadOnlySpectrum originalData = null;
+		SpectrumView originalData = null;
 		
 		if (viewController.getChannelCompositeMode() == ChannelCompositeMode.AVERAGE) {
 			originalData = dataController.getDataSet().getAnalysis().averagePlot();
@@ -234,15 +234,15 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 	
 	public static class PlotSpectra {
-		public ReadOnlySpectrum raw;
-		public ReadOnlySpectrum filtered;
-		public Map<Filter, ReadOnlySpectrum> deltas;
+		public SpectrumView raw;
+		public SpectrumView filtered;
+		public Map<Filter, SpectrumView> deltas;
 	}
 	
 	public PlotSpectra getDataForPlot()
 	{
 
-		ReadOnlySpectrum originalData = null;
+		SpectrumView originalData = null;
 	
 		if (!dataController.hasDataSet() || currentScan() == null) return null;
 
@@ -284,7 +284,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 	
 	public void writeFitleredSpectrumToCSV(File saveFile) {
-		ReadOnlySpectrum spectrum = currentScan();
+		SpectrumView spectrum = currentScan();
 		FilterSet filters = filtering().getActiveFilters();
 		spectrum = filters.applyFiltersUnsynchronized(spectrum, getFilterContext());
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
@@ -304,7 +304,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 			try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
 				int count = 0;
-				for (ReadOnlySpectrum spectrum : data) {
+				for (SpectrumView spectrum : data) {
 					spectrum = filters.applyFiltersUnsynchronized(spectrum, getFilterContext());
 					writer.write(spectrum.toString(", ") + "\n");
 

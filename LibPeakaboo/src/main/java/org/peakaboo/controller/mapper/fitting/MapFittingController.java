@@ -14,7 +14,7 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.display.map.modes.MapModeData.CoordInfo;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -194,10 +194,10 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 		if (sum == null) {
 			int y = map.getFiltering().getFilteredDataHeight();
 			int x = map.getFiltering().getFilteredDataWidth();
-			return new ISpectrum(x * y);
+			return new ArraySpectrum(x * y);
 		}
 		
-		return new ISpectrum(sum.getData());
+		return new ArraySpectrum(sum.getData());
 		
 	}
 

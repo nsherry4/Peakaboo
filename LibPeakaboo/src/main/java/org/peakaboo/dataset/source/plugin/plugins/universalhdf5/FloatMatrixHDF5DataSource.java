@@ -14,7 +14,7 @@ import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.SimpleDataSize;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -119,7 +119,7 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 				//Initialize aggregate spectra, we will read from each data path and sum the results into the aggregate
 				List<Spectrum> aggs = new ArrayList<>();
 				for (int i = 0; i < blocksize; i++) {
-					aggs.add(new ISpectrum(channels));
+					aggs.add(new ArraySpectrum(channels));
 				}
 				
 				//read scan
@@ -198,7 +198,7 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 		List<Spectrum> spectra = new ArrayList<>();
 		for (int i = 0; i < array.length; i+=channels) {
 			float[] spectrumData = Arrays.copyOfRange(array, i, i+channels);
-			Spectrum spectrum = new ISpectrum(spectrumData, false);
+			Spectrum spectrum = new ArraySpectrum(spectrumData, false);
 			spectra.add(spectrum);
 		}
 		return spectra;
@@ -239,7 +239,7 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 	protected void readMatrixMetadata(IHDF5Reader reader, int channels) {};
 	
 	protected Spectrum getDeadtimes(String dataPath, IHDF5Reader reader) {
-		return new ISpectrum(dataSize.size(), 0f);
+		return new ArraySpectrum(dataSize.size(), 0f);
 	}
 	protected String getAxisOrder() {
 		return axisOrder;
