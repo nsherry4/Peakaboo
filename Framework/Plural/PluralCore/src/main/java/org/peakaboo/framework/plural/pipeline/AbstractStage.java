@@ -7,6 +7,7 @@ public abstract class AbstractStage<S, T> implements Stage<S, T> {
 	protected Function<S, T> function;
 	private Stage<T, ?> next;
 	protected String name;
+	private int counter = 0;
 
 	public AbstractStage(String name, Function<S, T> function) {
 		this.name = name;
@@ -16,6 +17,7 @@ public abstract class AbstractStage<S, T> implements Stage<S, T> {
 	@Override
 	public void accept(S input) {
 		//Always apply the function, it may have side-effects
+		counter++;
 		T output = function.apply(input);
 		if (next() == null) return;
 		next().accept(output);
@@ -37,6 +39,10 @@ public abstract class AbstractStage<S, T> implements Stage<S, T> {
 		return next;
 	}
 
+	@Override
+	public int getCount() {
+		return counter;
+	}
 	
 	
 }

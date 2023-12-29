@@ -22,4 +22,10 @@ public interface Operator<A, Z> {
 	 * should be shut down in order.
 	 */
 	void finish();
+
+
+	/**
+	 * Returns a count of how many items this {@link Operator} has processed.
+	 */
+	int getCount();
 }

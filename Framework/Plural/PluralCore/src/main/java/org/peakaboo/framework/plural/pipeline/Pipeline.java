@@ -6,6 +6,7 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 
 	private Stage<A, ?> first;
 	private Stage<?, Z> last;
+	private int counter = 0;
 	
 	Pipeline(Stage<A, ?> first, Stage<?, Z> last) {
 		this.first = first;
@@ -20,6 +21,7 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 	
 	@Override
 	public void accept(A item) {
+		counter++;
 		first.accept(item);
 	}
 
@@ -40,6 +42,11 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 	@Override
 	public void finish() {
 		visit(Stage::finish);
+	}
+
+	@Override
+	public int getCount() {
+		return counter;
 	}
 
 	
