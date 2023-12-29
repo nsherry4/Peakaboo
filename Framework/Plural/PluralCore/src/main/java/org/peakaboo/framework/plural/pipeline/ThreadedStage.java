@@ -45,11 +45,16 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 			}
 		});
 		
+		this.setState(State.OPERATING);
 		
 	}
 
 	@Override
 	public void accept(S input) {
+		if (this.getState() != State.OPERATING) {
+			// Discard jobs when not in an operating state
+			return;
+		}
 		this.pool.execute(() -> {
 			super.accept(input);
 		});
@@ -57,6 +62,10 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 
 	@Override
 	public void finish() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return;
+		}
 		this.pool.shutdown();
 		try {
 			this.pool.awaitTermination(5, TimeUnit.MINUTES);
@@ -66,6 +75,21 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 		}
 	}
 	
+	@Override
+	public void abort() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return;
+		}
+		this.pool.shutdownNow();
+		try {
+			this.pool.awaitTermination(5, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	
 	public static <S, T> Stage<S, T> of(String name, int threads, Function<S, T> function) {
 		return new ThreadedStage<>(name, threads, function);

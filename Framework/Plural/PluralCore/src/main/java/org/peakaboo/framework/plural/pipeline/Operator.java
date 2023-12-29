@@ -2,6 +2,13 @@ package org.peakaboo.framework.plural.pipeline;
 
 public interface Operator<A, Z> {
 	
+	public enum State {
+		STARTING,
+		OPERATING,
+		COMPLETED,
+		ABORTED
+	}
+	
 	/**
 	 * Accepts a new input item from the previous stage of the pipeline. Specific
 	 * implementations may optionally performs causes a side-effect, transforms the
@@ -22,10 +29,18 @@ public interface Operator<A, Z> {
 	 * should be shut down in order.
 	 */
 	void finish();
+	
+	/**
+	 * Shuts down this operator immediately, discarding any existing jobs. For
+	 * composite operators, each component should be aborted in order.
+	 */
+	void abort();
 
 
 	/**
 	 * Returns a count of how many items this {@link Operator} has processed.
 	 */
 	int getCount();
+	
+	State getState();
 }

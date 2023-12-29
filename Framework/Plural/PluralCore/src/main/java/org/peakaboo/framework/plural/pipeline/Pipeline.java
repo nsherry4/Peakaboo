@@ -7,10 +7,17 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 	private Stage<A, ?> first;
 	private Stage<?, Z> last;
 	private int counter = 0;
+	private State state = State.STARTING;
+	
+	public Pipeline(Stage<A, Z> single) {
+		this.first = single;
+		this.last = single;
+	}
 	
 	Pipeline(Stage<A, ?> first, Stage<?, Z> last) {
 		this.first = first;
 		this.last = last;
+		this.state = State.OPERATING;
 	}
 	
 	@Override
@@ -41,6 +48,11 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 	
 	@Override
 	public void finish() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return;
+		}
+		this.state = State.COMPLETED;
 		visit(Stage::finish);
 	}
 
@@ -49,6 +61,20 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 		return counter;
 	}
 
+	@Override
+	public void abort() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return;
+		}
+		this.state = State.ABORTED;
+		visit(Stage::abort);
+	}
+
+	@Override
+	public State getState() {
+		return state;
+	}
 	
 	
 }
