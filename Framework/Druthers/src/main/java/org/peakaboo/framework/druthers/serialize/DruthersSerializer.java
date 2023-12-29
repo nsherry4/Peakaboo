@@ -70,7 +70,7 @@ public class DruthersSerializer {
 	/**
 	 * Decodes a yaml document to a specific class. 
 	 */
-	@Deprecated
+	@Deprecated(since="6", forRemoval = true)
 	public static <T extends Object> T deserialize(String yaml, Class<T> cls) throws DruthersLoadException {
 		return deserialize(yaml, false, cls);
 	}
@@ -79,7 +79,7 @@ public class DruthersSerializer {
 	/**
 	 * Decodes a yaml document to a specific class. Useful for reading yaml documents without !! java class hints 
 	 */
-	@Deprecated
+	@Deprecated(since="6", forRemoval = true)
 	public static <T extends Object> T deserialize(File file, Class<T> cls) throws IOException, DruthersLoadException {
 		return deserialize(new String(Files.readAllBytes(file.toPath())), cls);
 	}

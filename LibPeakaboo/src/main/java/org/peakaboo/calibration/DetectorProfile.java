@@ -16,8 +16,9 @@ public interface DetectorProfile {
 
 	boolean isEmpty();
 
+	@Deprecated(since="6", forRemoval = true)
 	String storeV1();
-	@Deprecated
+	@Deprecated(since="6", forRemoval = true)
 	DetectorProfile loadV1(String yaml) throws IOException;
 	
 	DetectorProfile load(String yaml) throws IOException;
