@@ -2,48 +2,55 @@ package org.peakaboo.framework.plural.pipeline;
 
 import java.util.function.Function;
 
-public abstract class AbstractStage<S, T> implements Stage<S, T> {
+public abstract class AbstractStage<S, T> extends AbstractOperator<S, T> implements Stage<S, T> {
 
 	protected Function<S, T> function;
 	private Stage<T, ?> next;
-	protected String name;
-	private int counter = 0;
-	private State state = State.STARTING;
+	private String name;
+
 	
 	public AbstractStage(String name, Function<S, T> function) {
 		this.name = name;
 		this.function = function;
 	}
 	
-	protected void setState(State state) {
-		
-		if (this.state == State.ABORTED || this.state == State.COMPLETED) {
-			// Don't allow changing on stop states
-			return;
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void accept(S input) {
+		if (waitUntilOperating()) {
+			//Always apply the function, it may have side-effects
+			counter++;
+			T output = function.apply(input);
+			if (next() == null) return;
+			next().accept(output);
+		} else {
+			if (getState() == State.COMPLETED) {
+				// Jobs shouldn't be received after a clean shutdown.
+				throw new IllegalStateException("Stage '" + getName() + "' is already closed.");
+			}
 		}
-		if (this.state == State.OPERATING && state == State.STARTING) {
-			// Don't allow moving back to starting state
-			return;
-		}
-		this.state = state;
 	}
 	
 	@Override
-	public State getState() {
-		return state;
-	}
-		
-	@Override
-	public void accept(S input) {
-		if (this.state != State.OPERATING) {
-			// Discard jobs when not in an operating state
-			throw new IllegalStateException("Pipeline cannot accept jobs while in state " + this.getState());
+	public boolean finish() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return false;
 		}
-		//Always apply the function, it may have side-effects
-		counter++;
-		T output = function.apply(input);
-		if (next() == null) return;
-		next().accept(output);
+		return setState(State.COMPLETED);
+	}
+	
+	@Override
+	public boolean abort() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return false;
+		}
+		return setState(State.ABORTED);
 	}
 	
 	@Override
@@ -62,10 +69,5 @@ public abstract class AbstractStage<S, T> implements Stage<S, T> {
 		return next;
 	}
 
-	@Override
-	public int getCount() {
-		return counter;
-	}
-	
 
 }

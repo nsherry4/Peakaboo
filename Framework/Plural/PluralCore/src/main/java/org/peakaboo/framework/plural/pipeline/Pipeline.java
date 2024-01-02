@@ -2,12 +2,10 @@ package org.peakaboo.framework.plural.pipeline;
 
 import java.util.function.Consumer;
 
-public class Pipeline<A, Z> implements Operator<A, Z> {
+public class Pipeline<A, Z> extends AbstractOperator<A, Z> implements Operator<A, Z> {
 
 	private Stage<A, ?> first;
 	private Stage<?, Z> last;
-	private int counter = 0;
-	private State state = State.STARTING;
 	
 	public Pipeline(Stage<A, Z> single) {
 		this.first = single;
@@ -17,7 +15,7 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 	Pipeline(Stage<A, ?> first, Stage<?, Z> last) {
 		this.first = first;
 		this.last = last;
-		this.state = State.OPERATING;
+		setState(State.OPERATING);
 	}
 	
 	@Override
@@ -28,6 +26,8 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 	
 	@Override
 	public void accept(A item) {
+		// The pipeline itself does not act like a stage, checking for state before
+		// submitting, that will be handled by the stages themselves
 		counter++;
 		first.accept(item);
 	}
@@ -47,33 +47,31 @@ public class Pipeline<A, Z> implements Operator<A, Z> {
 	}
 	
 	@Override
-	public void finish() {
+	public boolean finish() {
 		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
 			// Once we've moved past the operating stage, don't accept any new shutdown requests
-			return;
+			return false;
 		}
-		this.state = State.COMPLETED;
+		boolean success = setState(State.COMPLETED);
 		visit(Stage::finish);
+		return success;
 	}
 
-	@Override
-	public int getCount() {
-		return counter;
-	}
 
 	@Override
-	public void abort() {
+	public boolean abort() {
 		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
 			// Once we've moved past the operating stage, don't accept any new shutdown requests
-			return;
+			return false;
 		}
-		this.state = State.ABORTED;
+		boolean success = setState(State.ABORTED);
 		visit(Stage::abort);
+		return success;
 	}
 
 	@Override
-	public State getState() {
-		return state;
+	public String getName() {
+		return "Pipeline from " + first.getName() + " to " + last.getName();
 	}
 	
 	

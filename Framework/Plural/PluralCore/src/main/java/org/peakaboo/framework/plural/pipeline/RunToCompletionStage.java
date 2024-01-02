@@ -17,24 +17,6 @@ public class RunToCompletionStage<S, T> extends AbstractStage<S, T> {
 		setState(State.OPERATING);
 	}
 
-	@Override
-	public void finish() {
-		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
-			// Once we've moved past the operating stage, don't accept any new shutdown requests
-			return;
-		}
-		setState(State.COMPLETED);
-	}
-	
-	@Override
-	public void abort() {
-		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
-			// Once we've moved past the operating stage, don't accept any new shutdown requests
-			return;
-		}
-		setState(State.ABORTED);
-	}
-	
 	public static <S, T> Stage<S, T> of(String name, Function<S, T> function) {
 		return new RunToCompletionStage<>(name, function);
 	}

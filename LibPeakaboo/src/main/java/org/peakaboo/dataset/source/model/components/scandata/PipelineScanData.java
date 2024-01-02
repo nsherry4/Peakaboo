@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.DummyAnalysis;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.pipeline.Pipeline;
@@ -38,33 +39,32 @@ public class PipelineScanData extends AbstractScanData {
 	
 	public PipelineScanData(String name, Consumer<Spectrum> preprocessor) {
 		super(name);
-				
-		Stage<ScanEntry, ScanEntry> sAnalysis = Stage.visit("Analysis", e -> localanalysis.get().process(e.spectrum()));
-		
-		Stage<ScanEntry, CompressedEntry> sCompression = Stage.of(
-				"Compression",
-				e -> new CompressedEntry(
-						e.index(), 
-						Compressed.create(e.spectrum(), spectra.getEncoder())
-				)
-		);
-		
-		Stage<CompressedEntry, Void> sStore = Stage.sink("Store", e -> {
-			spectra.setCompressed(e.index(), e.compressed());
-		});
-		
-		Stage<ScanEntry, ScanEntry> sPreprocessor;
 		int cores = (int)(Math.ceil(Plural.cores() * 1.25f));
-		if (preprocessor != null) {
-			sPreprocessor = ThreadedStage.visit("Preprocessor", cores, e -> preprocessor.accept(e.spectrum()));
-		} else  {
-			sPreprocessor = ThreadedStage.noop("Preprocessor", cores);
-		}
 		
-		
-		pipeline = sPreprocessor.then(sAnalysis).then(sCompression).then(sStore);
+		Stage<ScanEntry, Void> processor = ThreadedStage.of("Processing Scans", cores, scan -> {
+			
+			Spectrum spectrum = scan.spectrum();
+			int index = scan.index();
+			
+			if (preprocessor != null) {
+				preprocessor.accept(spectrum);
+			}
+			
+			localanalysis.get().process(spectrum);
+			
+			CompressedEntry compressed = new CompressedEntry(
+				index, 
+				Compressed.create(spectrum, spectra.getEncoder())
+			);
+			
+			spectra.setCompressed(index, compressed.compressed());
+			
+			return null;
+			
+		});
+			
+		pipeline = new Pipeline<ScanEntry, Void>(processor);
 
-		
 	}
 	
 	public void submit(int index, Spectrum s) throws InterruptedException {
@@ -80,6 +80,14 @@ public class PipelineScanData extends AbstractScanData {
 		this.analysis = DataSourceAnalysis.merge(analyses);
 	}
 
+	public void abort() {
+		pipeline.abort();
+		// Ideally this will never be queried, but better to not leave this as null
+		this.analysis = new DummyAnalysis();
+		
+	}
+	
+	
 	@Override
 	public Analysis getAnalysis() {
 		return this.analysis;

@@ -92,7 +92,7 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 		for (DataInputAdapter datafile : datafiles) {
 			readFile(datafile, filenum++);
 			if (getInteraction().checkReadAborted()) {
-				scandata.finish();
+				scandata.abort();
 				return;
 			}
 		}

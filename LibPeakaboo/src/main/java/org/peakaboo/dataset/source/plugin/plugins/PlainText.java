@@ -111,7 +111,10 @@ public class PlainText extends AbstractDataSource
 				getInteraction().notifyScanCount(lineEstimate);
 			}
 			
-			if (getInteraction().checkReadAborted()) { break; }
+			if (getInteraction().checkReadAborted()) {
+				scandata.abort();
+				break; 
+			}
 			
 			
 			char delim = parser.getDetectedFormat().getDelimiter();

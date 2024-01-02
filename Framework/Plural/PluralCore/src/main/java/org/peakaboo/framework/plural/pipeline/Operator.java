@@ -26,15 +26,17 @@ public interface Operator<A, Z> {
 	/**
 	 * Shuts down this operator in an orderly manner, rejecting any new inputs
 	 * offered after shutdown has started. For composite operators, each component
-	 * should be shut down in order.
+	 * should be shut down in order. Returns true on successful state change, false
+	 * otherwise.
 	 */
-	void finish();
+	boolean finish();
 	
 	/**
 	 * Shuts down this operator immediately, discarding any existing jobs. For
-	 * composite operators, each component should be aborted in order.
+	 * composite operators, each component should be aborted in order. Returns true
+	 * on successful state change, false otherwise.
 	 */
-	void abort();
+	boolean abort();
 
 
 	/**
@@ -43,4 +45,7 @@ public interface Operator<A, Z> {
 	int getCount();
 	
 	State getState();
+
+
+	String getName();
 }
