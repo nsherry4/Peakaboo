@@ -39,7 +39,7 @@ public class MapRenderSettings {
 	public boolean physicalCoord = false;
 	
 	public boolean showSpectrum = false;
-	public int spectrumHeight = 15;
+	public int spectrumHeight = 10;
 	public String spectrumTitle = "";
 		
 	public List<Integer> selectedPoints = new ArrayList<>();
