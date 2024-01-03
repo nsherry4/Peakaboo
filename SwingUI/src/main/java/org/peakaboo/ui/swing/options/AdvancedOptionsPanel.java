@@ -52,7 +52,7 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
-import org.peakaboo.ui.swing.app.AccentedTheme;
+import org.peakaboo.ui.swing.app.AccentedBrightTheme;
 import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
@@ -187,7 +187,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 		OptionBlock uxBlock = new OptionBlock();
 		
-		var colours = AccentedTheme.accentColours;
+		var colours = AccentedBrightTheme.accentColours;
 		Color accentColour = colours.get(DesktopSettings.getAccentColour()); 
 		if (accentColour == null) {
 			accentColour = colours.get("Blue");

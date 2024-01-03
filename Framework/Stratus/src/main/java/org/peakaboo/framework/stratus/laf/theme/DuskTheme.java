@@ -8,10 +8,10 @@ import org.peakaboo.framework.stratus.laf.palettes.BrightPalette;
 
 public class DuskTheme implements Theme {
 
-	protected ColourPalette palette = new BrightPalette();
+	protected static final ColourPalette PALETTE = new BrightPalette();
 	
-	private Color highlight = new Color(0x498ed8);
-	private Color highlightText = new Color(0xffffff);
+	protected Color highlight = PALETTE.getColour("Blue", "3");
+	private Color highlightText = PALETTE.getColour("Light", "1");
 	
 	private Color control = new Color(0x404040);
 	private Color controlText = new Color(0xd0d0d0);
@@ -39,7 +39,7 @@ public class DuskTheme implements Theme {
 	
 	@Override
 	public ColourPalette getPalette() {
-		return palette;
+		return PALETTE;
 	}
 	
 	@Override
