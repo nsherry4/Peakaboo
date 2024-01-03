@@ -55,6 +55,10 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 	@Override
 	public void accept(S input) {
 		if (waitUntilOperating()) {
+			if (getState() == State.QUIESCING) {
+				// Jobs shouldn't be received once this stage has been told to begin shutting down
+				throw new IllegalStateException("Stage '" + getName() + "' is already quiescing.");
+			}
 			this.pool.execute(() -> {
 				super.accept(input);
 			});
@@ -68,14 +72,26 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 
 	@Override
 	public boolean finish() {
-		boolean result = super.finish();
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return false;
+		}
+		
+		// Set the state to quiescing to keep us from placing any more jobs in the queue
+		// for the thread pool
+		setState(State.QUIESCING);
+		
+		// Instruct the thread pool to shut down and then wait for it to finish any jobs
 		this.pool.shutdown();
 		try {
 			this.pool.awaitTermination(5, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
 			Plural.logger().log(Level.WARNING, "Failed to shut down pipeline threads", e);
 		}
-		return result;
+		
+		// Finally set the state to completed, which will also prevent the superclass's
+		// accept method from processing anything out of the thread queue 
+		return setState(State.COMPLETED);
 	}
 	
 	@Override

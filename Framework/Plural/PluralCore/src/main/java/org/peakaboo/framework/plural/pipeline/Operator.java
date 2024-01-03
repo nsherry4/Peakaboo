@@ -3,10 +3,11 @@ package org.peakaboo.framework.plural.pipeline;
 public interface Operator<A, Z> {
 	
 	public enum State {
-		STARTING,
-		OPERATING,
-		COMPLETED,
-		ABORTED
+		STARTING, // Not accepting input yet.
+		OPERATING, // Accepting input and procuding output
+		QUIESCING, // No longer accepting input
+		COMPLETED, // No longer procuding output
+		ABORTED // Abnormal stop. No longer performing any work
 	}
 	
 	/**

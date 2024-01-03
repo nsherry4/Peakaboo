@@ -52,9 +52,9 @@ public class Pipeline<A, Z> extends AbstractOperator<A, Z> implements Operator<A
 			// Once we've moved past the operating stage, don't accept any new shutdown requests
 			return false;
 		}
-		boolean success = setState(State.COMPLETED);
+		setState(State.QUIESCING);
 		visit(Stage::finish);
-		return success;
+		return setState(State.COMPLETED);
 	}
 
 

@@ -1,5 +1,7 @@
 package org.peakaboo.framework.plural.pipeline;
 
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.plural.Plural;
@@ -11,21 +13,22 @@ public abstract class AbstractOperator<A, Z> implements Operator<A, Z> {
 	
 	public AbstractOperator() {}
 	
+	public static final Map<State, List<State>> TRANSITIONS = Map.of(
+			State.STARTING, List.of(State.OPERATING),
+			State.OPERATING, List.of(State.ABORTED, State.QUIESCING, State.COMPLETED),
+			State.QUIESCING, List.of(State.COMPLETED)
+	);
+	
 	protected boolean setState(State state) {
 		
+		// Allow a state to transition to itself, and with minimal overhead
 		if (this.state == state) {
-			// Skip this, there is no change, but we report it as a success since the
-			// current state matches the desired state
 			return true;
 		}
-		if (this.state == State.ABORTED || this.state == State.COMPLETED) {
-			// Don't allow changing on stop states
+		if (! TRANSITIONS.get(this.state).contains(state)) {
 			return false;
 		}
-		if (this.state == State.OPERATING && state == State.STARTING) {
-			// Don't allow moving back to starting state
-			return false;
-		}
+		
 		this.state = state;
 		return true;
 	}
@@ -70,6 +73,7 @@ public abstract class AbstractOperator<A, Z> implements Operator<A, Z> {
 					}
 					break;
 				case OPERATING:
+				case QUIESCING:
 					return true;
 				}
 			}
