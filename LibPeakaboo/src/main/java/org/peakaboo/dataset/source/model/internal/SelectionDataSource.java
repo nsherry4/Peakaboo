@@ -23,6 +23,7 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.tier.Tier;
 
 /**
  * Represents a random selection of data points from another DataSource
@@ -69,7 +70,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		}
 		
 		//we don't reanalyze in the constructor for performance reasons
-		this.analysis = new DataSourceAnalysis();
+		this.analysis = Tier.provider().getDataSourceAnalysis();
 		this.analysis.init(backer.getScanData().getAnalysis().channelsPerScan());
 		
 		

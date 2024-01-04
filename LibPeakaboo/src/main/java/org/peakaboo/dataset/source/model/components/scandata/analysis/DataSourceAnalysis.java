@@ -3,9 +3,9 @@ package org.peakaboo.dataset.source.model.components.scandata.analysis;
 import java.util.List;
 
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class DataSourceAnalysis implements Analysis {
 
@@ -44,7 +44,7 @@ public class DataSourceAnalysis implements Analysis {
 	}
 
 	@Override
-	public Spectrum maximumPlot() {
+	public SpectrumView maximumPlot() {
 		return new ArraySpectrum(maximumSpectrum);
 	}
 
@@ -54,7 +54,7 @@ public class DataSourceAnalysis implements Analysis {
 	}
 
 	@Override
-	public Spectrum averagePlot() {
+	public SpectrumView averagePlot() {
 		return SpectrumCalculations.divideBy(summedSpectrum, summedScanCount);
 	}
 
@@ -74,7 +74,7 @@ public class DataSourceAnalysis implements Analysis {
 	}
 
 
-	public static Analysis merge(List<Analysis> analyses) {
+	public static DataSourceAnalysis merge(List<Analysis> analyses) {
 		DataSourceAnalysis result = new DataSourceAnalysis();
 		result.init(analyses.get(0).channelsPerScan());
 		for (var analysis : analyses) {

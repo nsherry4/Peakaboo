@@ -2,8 +2,8 @@ package org.peakaboo.dataset.source.model.components.scandata;
 
 
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
-import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
+import org.peakaboo.tier.Tier;
 
 public class DummyScanData implements ScanData {
 
@@ -50,7 +50,7 @@ public class DummyScanData implements ScanData {
 
 	@Override
 	public Analysis getAnalysis() {
-		return new DataSourceAnalysis();
+		return Tier.provider().getDataSourceAnalysis();
 	}
 
 }

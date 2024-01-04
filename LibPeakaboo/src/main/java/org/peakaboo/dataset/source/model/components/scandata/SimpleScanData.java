@@ -3,13 +3,13 @@ package org.peakaboo.dataset.source.model.components.scandata;
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
-import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.dataset.source.model.components.scandata.loaderqueue.CompressedLoaderQueue;
 import org.peakaboo.dataset.source.model.components.scandata.loaderqueue.LoaderQueue;
 import org.peakaboo.dataset.source.model.components.scandata.loaderqueue.SimpleLoaderQueue;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.single.Compressed;
+import org.peakaboo.tier.Tier;
 
 public class SimpleScanData extends AbstractScanData {
 
@@ -17,7 +17,7 @@ public class SimpleScanData extends AbstractScanData {
 	
 	public SimpleScanData(String name) {
 		super(name);
-		this.analysis = new DataSourceAnalysis();
+		this.analysis = Tier.provider().getDataSourceAnalysis();
 	}
 
 	public void add(Spectrum spectrum) {

@@ -8,6 +8,8 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 
@@ -34,5 +36,8 @@ public interface TierProvider {
 	public List<TierUIAutoGroup<PlotController>> getAdvancedOptions();
 	public Collection<? extends FittingFunction> getFittingFunctions();
 	public Collection<? extends FittingSolver> getFittingSolvers();
+	
+	public DataSourceAnalysis getDataSourceAnalysis(List<Analysis> analyses);
+	public DataSourceAnalysis getDataSourceAnalysis();
 	
 }

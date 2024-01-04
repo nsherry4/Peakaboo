@@ -6,13 +6,13 @@ import java.util.function.Consumer;
 
 import org.peakaboo.app.Settings;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
-import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DummyAnalysis;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.plural.pipeline.Pipeline;
 import org.peakaboo.framework.plural.pipeline.Stage;
 import org.peakaboo.framework.plural.pipeline.ThreadedStage;
 import org.peakaboo.framework.scratch.single.Compressed;
+import org.peakaboo.tier.Tier;
 
 public class PipelineScanData extends AbstractScanData {
 
@@ -25,7 +25,7 @@ public class PipelineScanData extends AbstractScanData {
 	private List<Analysis> analyses = new ArrayList<>();
 	private ThreadLocal<Analysis> localanalysis = ThreadLocal.withInitial(() -> {
 		synchronized(analyses) {
-			var a = new DataSourceAnalysis();
+			var a = Tier.provider().getDataSourceAnalysis();
 			analyses.add(a);
 			return a;
 		}
@@ -77,7 +77,7 @@ public class PipelineScanData extends AbstractScanData {
 	
 	public void finish() {
 		pipeline.finish();
-		this.analysis = DataSourceAnalysis.merge(analyses);
+		this.analysis = Tier.provider().getDataSourceAnalysis(analyses);
 	}
 
 	public void abort() {
