@@ -24,6 +24,7 @@ import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.Settings;
 import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
@@ -147,7 +148,7 @@ public class Peakaboo {
 			PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
 		}
 	}
-	
+
 	private static void uiPerformanceTune() {
 		if (PeakabooConfiguration.memorySize == MemorySize.TINY) {
 			LayerPanel.lowGraphicsMode = true;
@@ -170,10 +171,13 @@ public class Peakaboo {
 		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.longVersionNo + " - " + Version.buildDate);
 		
 		CyclopsSurface.init();
+		
+		//Configure the system thread pool to follow the Peakaboo user setting for thread count
+		System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + Settings.getThreadCount());
 	}
 	
 	public static void run() {
-		
+
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 
 		//with all the other tasks, since this is usually the longest 
@@ -201,7 +205,7 @@ public class Peakaboo {
 				PeakabooLog.get().log(Level.WARNING, "", e);
 			}
 			
-					
+			
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();

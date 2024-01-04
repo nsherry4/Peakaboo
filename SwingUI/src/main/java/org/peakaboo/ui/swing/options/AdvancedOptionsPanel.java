@@ -46,6 +46,7 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
 import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
 import org.peakaboo.framework.stratus.components.ui.options.OptionColours;
+import org.peakaboo.framework.stratus.components.ui.options.OptionCustomComponent;
 import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
@@ -118,17 +119,19 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		entries.get(entries.size()-1).trailingSeparator = true;
 		
 		
-		String KEY_PERFORMANCE = "Performance";
-		OptionBlocksPanel perfPanel = makePerformancePanel(controller);
-		body.add(wrapSettingsInfo(perfPanel, SETTING_PER_USER), KEY_PERFORMANCE);
-		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
-		entries.add(perfEntry);
-		
 		String KEY_APP = "Appearance";
 		OptionBlocksPanel appPanel = makeAppPanel(controller);
 		body.add(wrapSettingsInfo(appPanel, SETTING_PER_USER), KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
+		
+		
+		String KEY_PERFORMANCE = "Performance";
+		OptionBlocksPanel perfPanel = makePerformancePanel(controller);
+		body.add(wrapSettingsInfo(perfPanel, SETTING_PER_USER), KEY_PERFORMANCE);
+		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
+		entries.add(perfEntry);
+
 		
 		String KEY_ERRORS = "Errors";
 		OptionBlocksPanel errorsPanel = makeErrorsPanel(controller);
@@ -155,13 +158,23 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private OptionBlocksPanel makePerformancePanel(PlotController controller) {
 		OptionBlock datasets = new OptionBlock();
+		
+		
+		OptionBlock multithreading = new OptionBlock();
+		OptionCustomComponent corecount = new OptionThreadCount(multithreading, Settings::getThreadCount, Settings::setThreadCount)
+				.withText("Parallel Processing Threads", "Take advantage of multi-core processors")
+				.withSize(OptionSize.LARGE);
+		multithreading.add(corecount);
+		
+		
 		OptionCheckBox diskbacked = new OptionCheckBox(datasets)
 				.withText("Disk Backing", "Stores datasets in a compressed temp file on disk, lowers memory use")
 				.withSize(OptionSize.LARGE)
 				.withSelection(Settings.isDiskstore())
 				.withListener(Settings::setDiskstore);
 		datasets.add(diskbacked);
-				
+
+		
 		OptionBlock heapBlock = new OptionBlock();
 		ButtonGroup heapGroup = new ButtonGroup();
 		OptionRadioButton heapPercent = new OptionHeapSize(heapBlock, heapGroup, Settings::getHeapSizePercent, Settings::setHeapSizePercent)
@@ -180,7 +193,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				
 		
 		
-		return new OptionBlocksPanel(datasets, heapBlock);
+		return new OptionBlocksPanel(multithreading, datasets, heapBlock);
 	}
 	
 	private OptionBlocksPanel makeAppPanel(PlotController controller) {

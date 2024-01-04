@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.peakaboo.app.Settings;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DummyAnalysis;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.pipeline.Pipeline;
 import org.peakaboo.framework.plural.pipeline.Stage;
 import org.peakaboo.framework.plural.pipeline.ThreadedStage;
@@ -39,7 +39,7 @@ public class PipelineScanData extends AbstractScanData {
 	
 	public PipelineScanData(String name, Consumer<Spectrum> preprocessor) {
 		super(name);
-		int cores = (int)(Math.ceil(Plural.cores() * 1.25f));
+		int cores = Settings.getThreadCount();
 		
 		Stage<ScanEntry, Void> processor = ThreadedStage.of("Processing Scans", cores, scan -> {
 			

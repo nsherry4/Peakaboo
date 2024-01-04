@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import org.peakaboo.framework.druthers.settings.DummySettingsStore;
 import org.peakaboo.framework.druthers.settings.SettingsStore;
 import org.peakaboo.framework.druthers.settings.YamlSettingsStore;
+import org.peakaboo.framework.plural.Plural;
 
 public class Settings {
 
@@ -50,6 +51,16 @@ public class Settings {
 		PeakabooLog.reloadSettings();
 	}
 	
+	
+	
+	private static final String THREAD_COUNT = "org.peakaboo.app.threadcount";
+	public static int getThreadCount() {
+		return provider.getInt(THREAD_COUNT, Plural.cores());
+	}
+	public static void setThreadCount(int threadcount) {
+		provider.setInt(THREAD_COUNT, threadcount);
+	}
+	
 
 	private static final String HEAP_SIZE_MB = "org.peakaboo.app.heapsize-megabytes";
 	public static int getHeapSizeMegabytes() {
@@ -83,7 +94,7 @@ public class Settings {
 		provider.setBoolean(HEAP_SIZE_IS_PERCENT, isPercent);
 		writeHeapConfig();
 	}
-	
+
 	
 	private static void writeHeapConfig() {
 		int size;
