@@ -1,5 +1,6 @@
 package org.peakaboo.controller.plotter.filtering;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,10 +40,20 @@ public class FilteringController extends EventfulBeacon
 			return filteringModel.filters.calculateDeltas(plot.currentScan(), plot.getFilterContext());
 		});
 				
+		filteringModel.filteredOtherPlots = new EventfulNullableCache<>(() -> {
+			
+			Map<String, SpectrumView> filteredOthers = new HashMap<>();
+			plot.currentOtherScans().forEach((key, spectrum) -> {
+				var filtered = filteringModel.filters.applyFilters(spectrum, plot.getFilterContext());
+				filteredOthers.put(key, filtered);
+			});
+			return filteredOthers;
+		});
+
 		filteringModel.filteredPlot.addListener(this::updateListeners);
 		filteringModel.filterDeltas.dependsOn(filteringModel.filteredPlot);
-		//Don't bother with the filterDeltas listener, these two things will only ever be invalidated together.
-		//filteringModel.filterDeltas.addListener(this::updateListeners);
+		filteringModel.filteredOtherPlots.dependsOn(filteringModel.filteredPlot);
+
 	}
 
 	public FilteringModel getFilteringModel()
@@ -138,6 +149,10 @@ public class FilteringController extends EventfulBeacon
 	
 	public Map<Filter, SpectrumView> getFilterDeltas() {
 		return filteringModel.filterDeltas.getValue();
+	}
+	
+	public Map<String, SpectrumView> getFilteredOtherPlots() {
+		return filteringModel.filteredOtherPlots.getValue();
 	}
 
 	public List<SavedPlugin> save() {

@@ -23,10 +23,6 @@ public class PlotData {
 			Map<String, SpectrumView> store
 		) {
 		
-		public PlotDataSpectra(SpectrumView raw, SpectrumView filtered, Map<Filter, SpectrumView> deltas) {
-			this(raw, filtered, deltas, new HashMap<>());
-		}
-		
 	};
 			
 	

@@ -14,5 +14,6 @@ public class FilteringModel {
 	
 	EventfulCache<SpectrumView> filteredPlot;
 	EventfulCache<Map<Filter, SpectrumView>> filterDeltas;
+	EventfulCache<Map<String, SpectrumView>> filteredOtherPlots;
 
 }

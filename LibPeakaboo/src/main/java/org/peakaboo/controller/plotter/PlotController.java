@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -199,6 +200,18 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 	}
 	
+	/**
+	 * Returns a string to spectrum mapping of all additional scans which should be
+	 * processed along with the current scan from
+	 * {@link PlotController#currentScan()}
+	 */
+	public Map<String, SpectrumView> currentOtherScans() {
+		//TODO find a way to get these from the channel composite mode instead of using this example for testing
+		return Map.of("asdf", currentScan());
+		//return new HashMap<>();
+	}
+	
+	
 
 	/**
 	 * Returns a PlotData object, which contains settins for the plot to be displayed with
@@ -223,7 +236,8 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		return new PlotDataSpectra(
 				currentScan(), 
 				filteringController.getFilteredPlot(),
-				filteringController.getFilterDeltas()
+				filteringController.getFilterDeltas(),
+				filteringController.getFilteredOtherPlots()
 			);
 	}
 	
