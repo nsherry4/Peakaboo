@@ -32,6 +32,7 @@ import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
 
 
@@ -58,7 +59,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		this.setFocusable(true);
 
 		this.controller = controller;
-		this.plotter = new Plotter();
+		this.plotter = Tier.provider().createPlotter();
 		this.setMinimumSize(new Dimension(100, 100));
 
 		addControllerListener();

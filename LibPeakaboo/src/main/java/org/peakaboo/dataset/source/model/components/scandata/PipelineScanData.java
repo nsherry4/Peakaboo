@@ -25,7 +25,7 @@ public class PipelineScanData extends AbstractScanData {
 	private List<Analysis> analyses = new ArrayList<>();
 	private ThreadLocal<Analysis> localanalysis = ThreadLocal.withInitial(() -> {
 		synchronized(analyses) {
-			var a = Tier.provider().getDataSourceAnalysis();
+			var a = Tier.provider().createDataSourceAnalysis();
 			analyses.add(a);
 			return a;
 		}
@@ -77,7 +77,7 @@ public class PipelineScanData extends AbstractScanData {
 	
 	public void finish() {
 		pipeline.finish();
-		this.analysis = Tier.provider().getDataSourceAnalysis(analyses);
+		this.analysis = Tier.provider().createDataSourceAnalysis(analyses);
 	}
 
 	public void abort() {

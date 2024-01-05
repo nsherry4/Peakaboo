@@ -17,7 +17,7 @@ public class SimpleScanData extends AbstractScanData {
 	
 	public SimpleScanData(String name) {
 		super(name);
-		this.analysis = Tier.provider().getDataSourceAnalysis();
+		this.analysis = Tier.provider().createDataSourceAnalysis();
 	}
 
 	public void add(Spectrum spectrum) {

@@ -16,8 +16,8 @@ import org.peakaboo.display.plot.painters.FittingSumPainter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
@@ -37,10 +37,10 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.G
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.RangeTickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.StackedAreaPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class Plotter {
@@ -158,7 +158,7 @@ public class Plotter {
 		
 
 		// draw the filtered data
-		plotPainters.add(getPlotPainter(data.filtered, settings));
+		plotPainters.add(getPlotPainter(data, settings));
 
 		
 		// draw the original data
@@ -167,6 +167,7 @@ public class Plotter {
 			plotPainters.add(new OriginalDataPainter(originalData, settings.monochrome));
 		}
 		
+			
 		
 		//Filter previews
 		for (Filter f : data.filters) {
@@ -370,13 +371,13 @@ public class Plotter {
 		context.fill();
 	}
 	
-	private AreaPainter getPlotPainter(SpectrumView filtered, PlotSettings settings) {
+	protected SpectrumPainter getPlotPainter(PlotData data, PlotSettings settings) {
 		PaletteColour fill = new PaletteColour(settings.monochrome ? 0xff606060 : 0xff26a269);
 		PaletteColour stroke = new PaletteColour(settings.monochrome ? 0xff202020 : 0xff1e7e52);
-		return new AreaPainter(filtered, fill, stroke);
+		return new StackedAreaPainter(data.filtered, fill, stroke);
 	}
 
-	private PlotPalette getSelectedPalette(PlotSettings settings) {
+	private static PlotPalette getSelectedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
 		// Colour/Monochrome colours for highlighted/selected fittings
 		if (settings.monochrome)
@@ -402,7 +403,7 @@ public class Plotter {
 		return palette;
 	}
 
-	private PlotPalette getProposedPalette(PlotSettings settings) {
+	private static PlotPalette getProposedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
 		if (settings.monochrome)
 		{
@@ -427,7 +428,7 @@ public class Plotter {
 		return palette;
 	}
 
-	private PlotPalette getFittedPalette(PlotSettings settings) {
+	private static PlotPalette getFittedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
 		if (settings.monochrome) {
 			palette.fitFill = new PaletteColour(0x50000000);

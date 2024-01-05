@@ -50,7 +50,7 @@ public class DummyScanData implements ScanData {
 
 	@Override
 	public Analysis getAnalysis() {
-		return Tier.provider().getDataSourceAnalysis();
+		return Tier.provider().createDataSourceAnalysis();
 	}
 
 }

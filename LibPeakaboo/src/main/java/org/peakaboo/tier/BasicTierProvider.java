@@ -13,6 +13,7 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 
@@ -72,13 +73,18 @@ public class BasicTierProvider implements TierProvider {
 	}
 
 	@Override
-	public DataSourceAnalysis getDataSourceAnalysis(List<Analysis> analyses) {
+	public DataSourceAnalysis createDataSourceAnalysis(List<Analysis> analyses) {
 		return DataSourceAnalysis.merge(analyses);
 	}
 
 	@Override
-	public DataSourceAnalysis getDataSourceAnalysis() {
+	public DataSourceAnalysis createDataSourceAnalysis() {
 		return new DataSourceAnalysis();
+	}
+
+	@Override
+	public Plotter createPlotter() {
+		return new Plotter();
 	}
 	
 	

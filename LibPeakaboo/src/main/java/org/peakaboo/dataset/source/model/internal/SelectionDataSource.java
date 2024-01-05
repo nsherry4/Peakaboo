@@ -70,7 +70,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		}
 		
 		//we don't reanalyze in the constructor for performance reasons
-		this.analysis = Tier.provider().getDataSourceAnalysis();
+		this.analysis = Tier.provider().createDataSourceAnalysis();
 		this.analysis.init(backer.getScanData().getAnalysis().channelsPerScan());
 		
 		
