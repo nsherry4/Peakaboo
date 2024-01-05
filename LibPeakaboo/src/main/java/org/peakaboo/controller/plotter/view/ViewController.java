@@ -2,6 +2,7 @@ package org.peakaboo.controller.plotter.view;
 
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
 import org.peakaboo.display.plot.PlotSettings;
@@ -64,15 +65,15 @@ public class ViewController extends EventfulBeacon {
 		return viewModel.logTransform;
 	}
 
-	public void setChannelCompositeMode(ChannelCompositeMode mode) {
-		viewModel.channelComposite = mode;
-		setUndoPoint(mode.show());
+	public void setChannelViewMode(ChannelViewMode mode) {
+		viewModel.channelView = mode;
+		setUndoPoint(mode.longName());
 		plot.filtering().filteredDataInvalidated();
 	}
 	
 
-	public ChannelCompositeMode getChannelCompositeMode() {
-		return viewModel.channelComposite;
+	public ChannelViewMode getChannelViewMode() {
+		return viewModel.channelView;
 	}
 
 	public void setScanNumber(int number) {

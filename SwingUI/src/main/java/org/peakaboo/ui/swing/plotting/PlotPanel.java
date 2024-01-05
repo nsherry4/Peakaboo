@@ -368,9 +368,9 @@ public class PlotPanel extends TabbedLayerPanel {
 		}
 
 		if (values != null) {
-			statusBar.setData(controller.view().getChannelCompositeMode(), channel, energy, values.first, values.second);
+			statusBar.setData(controller.view().getChannelViewMode(), channel, energy, values.first, values.second);
 		} else {
-			statusBar.setData(controller.view().getChannelCompositeMode());
+			statusBar.setData(controller.view().getChannelViewMode());
 		}
 		
 		

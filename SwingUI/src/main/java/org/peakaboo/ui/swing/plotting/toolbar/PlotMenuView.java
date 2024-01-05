@@ -2,15 +2,19 @@ package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentCheckMenuItem;
+import org.peakaboo.controller.plotter.view.mode.AverageViewMode;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
+import org.peakaboo.controller.plotter.view.mode.MaximumViewMode;
+import org.peakaboo.controller.plotter.view.mode.SingleViewMode;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
 import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
@@ -20,6 +24,7 @@ import org.peakaboo.ui.swing.plotting.PlotPanel;
 public class PlotMenuView extends JPopupMenu {
 
 	private OptionRadioButton oInd, oAvg, oMax;
+	private Map<ChannelViewMode, OptionRadioButton> scanmodes = new LinkedHashMap<>();
 	private OptionCheckBox oLog, oConsist, oFit, oMarks, oIntens, oMono, oRaw, oTitle;
 	
 	private PlotController controller;
@@ -31,34 +36,56 @@ public class PlotMenuView extends JPopupMenu {
 		OptionBlock compositeBlock = new OptionBlock().withDividers(false);
 		ButtonGroup compositeGroup = new ButtonGroup();
 		
+		ChannelViewMode viewSingle = new SingleViewMode();
 		oInd = new OptionRadioButton(compositeBlock, compositeGroup)
-				.withTitle(ChannelCompositeMode.NONE.show())
-				.withTooltip("Shows one spectrum at a time")
+				.withTitle(viewSingle.longName())
+				.withTooltip(viewSingle.description())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), plot)
-				.withSelection(controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE)
-				.withListener(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.NONE));
+				.withSelection(controller.view().getChannelViewMode().equals(viewSingle))
+				.withListener(() -> controller.view().setChannelViewMode(viewSingle));
 		compositeBlock.add(oInd);
 		compositeGroup.add(oInd.getButton());
+		scanmodes.put(viewSingle, oInd);
 		
+		ChannelViewMode viewAverage = new AverageViewMode();
 		oAvg = new OptionRadioButton(compositeBlock, compositeGroup)
-				.withTitle(ChannelCompositeMode.AVERAGE.show())
-				.withTooltip("Shows an average of all spectra")
+				.withTitle(viewAverage.longName())
+				.withTooltip(viewAverage.description())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), plot)
-				.withSelection(controller.view().getChannelCompositeMode() == ChannelCompositeMode.AVERAGE)
-				.withListener(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.AVERAGE));
+				.withSelection(controller.view().getChannelViewMode().equals(viewAverage))
+				.withListener(() -> controller.view().setChannelViewMode(viewAverage));
 		compositeBlock.add(oAvg);
 		compositeGroup.add(oAvg.getButton());
+		scanmodes.put(viewAverage, oAvg);
 		
+		ChannelViewMode viewMax = new MaximumViewMode();
 		oMax = new OptionRadioButton(compositeBlock, compositeGroup)
-				.withTitle(ChannelCompositeMode.MAXIMUM.show())
-				.withTooltip("Shows the maximum counts per channel across all spectra")
+				.withTitle(viewMax.longName())
+				.withTooltip(viewMax.description())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), plot)
-				.withSelection(controller.view().getChannelCompositeMode() == ChannelCompositeMode.MAXIMUM)
-				.withListener(() -> controller.view().setChannelCompositeMode(ChannelCompositeMode.MAXIMUM));
+				.withSelection(controller.view().getChannelViewMode().equals(viewMax))
+				.withListener(() -> controller.view().setChannelViewMode(viewMax));
 		compositeBlock.add(oMax);
 		compositeGroup.add(oMax.getButton());
+		scanmodes.put(viewMax, oMax);
 		
-
+		
+		for (var proto : ChannelViewModeRegistry.system().getPlugins()) {
+			var viewmode = proto.create();
+			if (scanmodes.keySet().contains(viewmode)) { continue; }
+			
+			var oMode = new OptionRadioButton(compositeBlock, compositeGroup)
+					.withTitle(viewmode.longName())
+					.withTooltip(viewmode.description())
+					.withSelection(controller.view().getChannelViewMode().equals(viewmode))
+					.withListener(() -> controller.view().setChannelViewMode(viewmode));
+			compositeBlock.add(oMode);
+			compositeGroup.add(oMode.getButton());
+			scanmodes.put(viewmode, oMode);
+			
+		}
+		
+		
 		
 		
 		OptionBlock scaleBlock = new OptionBlock().withDividers(false).withBorder(false);
@@ -155,20 +182,8 @@ public class PlotMenuView extends JPopupMenu {
 		oFit.setSelected(controller.view().getShowIndividualSelections());
 		oConsist.setSelected(controller.view().getConsistentScale());
 
-		switch (controller.view().getChannelCompositeMode())
-		{
+		scanmodes.get(controller.view().getChannelViewMode()).setSelected(true);
 
-			case NONE:
-				oInd.setSelected(true);
-				break;
-			case AVERAGE:
-				oAvg.setSelected(true);
-				break;
-			case MAXIMUM:
-				oMax.setSelected(true);
-				break;
-		}
-		
 	}
 	
 	public void setWidgetState(boolean hasData) {

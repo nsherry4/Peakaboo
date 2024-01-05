@@ -186,18 +186,11 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 * raw data supplied by the data controller.
 	 * @return a Spectrum which contains a scan
 	 */
-	public SpectrumView currentScan()
-	{
+	public SpectrumView currentScan() {
 		if (!dataController.hasDataSet()) {
 			return null;
 		}
-
-		return switch(viewController.getChannelCompositeMode()) {
-			case AVERAGE -> dataController.getDataSet().getAnalysis().averagePlot();
-			case MAXIMUM -> dataController.getDataSet().getAnalysis().maximumPlot();
-			case NONE -> dataController.getDataSet().getScanData().get(viewController.getScanNumber());
-		};
-
+		return viewController.getChannelViewMode().primaryScan(dataController, viewController);
 	}
 	
 	/**
@@ -206,9 +199,10 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 * {@link PlotController#currentScan()}
 	 */
 	public Map<String, SpectrumView> currentOtherScans() {
-		//TODO find a way to get these from the channel composite mode instead of using this example for testing
-		return Map.of("asdf", currentScan());
-		//return new HashMap<>();
+		if (!dataController.hasDataSet()) {
+			return null;
+		}
+		return viewController.getChannelViewMode().otherScans(dataController, viewController);
 	}
 	
 	
