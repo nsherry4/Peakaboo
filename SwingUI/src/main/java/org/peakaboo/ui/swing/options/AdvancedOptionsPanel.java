@@ -162,7 +162,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		OptionBlock multithreading = new OptionBlock();
 		OptionCustomComponent corecount = new OptionThreadCount(multithreading, Settings::getThreadCount, Settings::setThreadCount)
-				.withText("Parallel Processing Threads", "Take advantage of multi-core processors")
+				.withText("Parallel Processing Threads", "Take advantage of multi-core processors, requires restart")
 				.withSize(OptionSize.LARGE);
 		multithreading.add(corecount);
 		

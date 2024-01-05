@@ -32,17 +32,18 @@ public class PlotFrame extends LiveFrame
 
 	
 	private TabbedInterface<TabbedLayerPanel> tabControl;
-	
+	private String title;
 	
 	public PlotFrame() {
 	
 		tabControl = createTabControl();
-
+		title = Tier.provider().appName();
+		
 		addWindowListener(new TabWindowListener(this, tabControl));
 		
 		setPreferredSize(new Dimension(1200, 569));
 		setIconImage(IconFactory.getImage(Tier.provider().iconPath(), Version.logo));
-		setTitle(Tier.provider().appName());
+		setTitle(title);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		tabControl.init();
 		
@@ -74,7 +75,8 @@ public class PlotFrame extends LiveFrame
 
 			@Override
 			protected void titleChanged(String title) {
-				//NOOP
+				setTitle(PlotFrame.this.title + " — " + title);
+				
 			}
 
 			@Override

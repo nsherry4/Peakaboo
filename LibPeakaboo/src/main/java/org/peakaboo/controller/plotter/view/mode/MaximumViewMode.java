@@ -20,7 +20,7 @@ public class MaximumViewMode implements ChannelViewMode {
 
 	@Override
 	public String description() {
-		return "Shows the maximum counts per channel across all spectra";
+		return "Maximum count per channel from all spectra";
 	}
 
 	@Override
