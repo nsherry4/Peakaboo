@@ -61,12 +61,12 @@ public class Plotter {
 		}
 		
 
-		if (data.filtered == null) {
+		if (data.spectra.filtered() == null) {
 			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, data (filtered) was null");
 			plotDrawing = null;
 			return null;
 		}
-		spectrumSize = data.filtered.size();
+		spectrumSize = data.spectra.filtered().size();
 
 		
 		
@@ -162,8 +162,8 @@ public class Plotter {
 
 		
 		// draw the original data
-		if (data.raw != null && settings.backgroundShowOriginal) {
-			SpectrumView originalData = data.raw;
+		if (data.spectra.raw() != null && settings.backgroundShowOriginal) {
+			SpectrumView originalData = data.spectra.raw();
 			plotPainters.add(new OriginalDataPainter(originalData, settings.monochrome));
 		}
 		
@@ -317,7 +317,7 @@ public class Plotter {
 	}
 
 	private PlotPainter createFilterPreviewPainter(PlotData data, Filter f) {
-		return new SpectrumPainter(data.deltas.get(f)) {
+		return new SpectrumPainter(data.spectra.deltas().get(f)) {
 
 			@Override
 			public void drawElement(PainterData p)
@@ -351,11 +351,11 @@ public class Plotter {
 	private float getMaxIntensity(PlotData data) {
 		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
-		float maxIntensity = Math.max(data.dataset.getAnalysis().maximumIntensity(), data.filtered.max());
+		float maxIntensity = Math.max(data.dataset.getAnalysis().maximumIntensity(), data.spectra.filtered().max());
 		
 		//when not using the consistent scale, scale each spectra against itself
 		if (!data.consistentScale) {
-			maxIntensity = data.filtered.max();
+			maxIntensity = data.spectra.filtered().max();
 		}
 		
 		return maxIntensity;
@@ -374,7 +374,7 @@ public class Plotter {
 	protected SpectrumPainter getPlotPainter(PlotData data, PlotSettings settings) {
 		PaletteColour fill = new PaletteColour(settings.monochrome ? 0xff606060 : 0xff26a269);
 		PaletteColour stroke = new PaletteColour(settings.monochrome ? 0xff202020 : 0xff1e7e52);
-		return new StackedAreaPainter(data.filtered, fill, stroke);
+		return new StackedAreaPainter(data.spectra.filtered(), fill, stroke);
 	}
 
 	private static PlotPalette getSelectedPalette(PlotSettings settings) {

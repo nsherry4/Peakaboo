@@ -16,9 +16,22 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class PlotData {
 
-	public SpectrumView raw;
-	public SpectrumView filtered;
-	public Map<Filter, SpectrumView> deltas;
+	public static record PlotDataSpectra(
+			SpectrumView raw,
+			SpectrumView filtered,
+			Map<Filter, SpectrumView> deltas,
+			Map<String, SpectrumView> store
+		) {
+		
+		public PlotDataSpectra(SpectrumView raw, SpectrumView filtered, Map<Filter, SpectrumView> deltas) {
+			this(raw, filtered, deltas, new HashMap<>());
+		}
+		
+	};
+			
+	
+	public PlotDataSpectra spectra;
+	
 	public boolean consistentScale = true;
 	public DataSet dataset;
 	
@@ -35,3 +48,4 @@ public class PlotData {
 	public Map<ITransitionSeries, String> annotations = new HashMap<>();
 	
 }
+

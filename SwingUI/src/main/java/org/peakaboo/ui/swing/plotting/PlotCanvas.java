@@ -363,7 +363,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		try {
 			
 			PlotData data = controller.getPlotData();
-			if (data.filtered == null) {
+			if (data.spectra.filtered() == null) {
 				//No Data
 				return;
 			}

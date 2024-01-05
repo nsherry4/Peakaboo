@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -22,7 +21,6 @@ import org.peakaboo.controller.plotter.io.IOController;
 import org.peakaboo.controller.plotter.notification.NotificationController;
 import org.peakaboo.controller.plotter.notification.NotificationController.Notice;
 import org.peakaboo.controller.plotter.undo.UndoController;
-import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.controller.session.v2.SavedAppData;
 import org.peakaboo.controller.session.v2.SavedSession;
@@ -30,7 +28,7 @@ import org.peakaboo.curvefit.curve.fitting.DelegatingFittingSetView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
-import org.peakaboo.filter.model.Filter;
+import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.SigDigits;
@@ -192,19 +190,13 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		if (!dataController.hasDataSet()) {
 			return null;
 		}
-		
-		SpectrumView originalData = null;
-		
-		if (viewController.getChannelCompositeMode() == ChannelCompositeMode.AVERAGE) {
-			originalData = dataController.getDataSet().getAnalysis().averagePlot();
-		} else if (viewController.getChannelCompositeMode()  == ChannelCompositeMode.MAXIMUM) {
-			originalData = dataController.getDataSet().getAnalysis().maximumPlot();
-		} else {
-			originalData = dataController.getDataSet().getScanData().get(viewController.getScanNumber());
-		}
-		
-		return originalData;
-		
+
+		return switch(viewController.getChannelCompositeMode()) {
+			case AVERAGE -> dataController.getDataSet().getAnalysis().averagePlot();
+			case MAXIMUM -> dataController.getDataSet().getAnalysis().maximumPlot();
+			case NONE -> dataController.getDataSet().getScanData().get(viewController.getScanNumber());
+		};
+
 	}
 	
 
@@ -214,48 +206,25 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	public PlotData getPlotData() {
 		
 		PlotData data = new PlotData();
-		PlotSpectra dataForPlot = getDataForPlot();
+		PlotDataSpectra spectra = getPlotDataSpectra();
 		
-		fitting().populatePlotData(data);	
+		fitting().populatePlotData(data);
 		data.consistentScale = view().getConsistentScale();
 		data.dataset = data().getDataSet();
 		data.filters = filtering().getActiveFilters();
-		
-		if (dataForPlot != null) {
-			data.filtered = dataForPlot.filtered;
-			data.raw = dataForPlot.raw;
-			data.deltas = dataForPlot.deltas;
-		}
+		data.spectra = spectra;
 
-		
-		
 		return data;
 	}
-	
-	
-	public static class PlotSpectra {
-		public SpectrumView raw;
-		public SpectrumView filtered;
-		public Map<Filter, SpectrumView> deltas;
-	}
-	
-	public PlotSpectra getDataForPlot()
-	{
 
-		SpectrumView originalData = null;
-	
+	public PlotDataSpectra getPlotDataSpectra()	{
 		if (!dataController.hasDataSet() || currentScan() == null) return null;
 
-		
-		// get the original data
-		originalData = currentScan();
-		
-		PlotSpectra spectra = new PlotSpectra();
-		spectra.raw = originalData;
-		spectra.filtered = filteringController.getFilteredPlot();
-		spectra.deltas = filteringController.getFilterDeltas();
-		
-		return spectra;
+		return new PlotDataSpectra(
+				currentScan(), 
+				filteringController.getFilteredPlot(),
+				filteringController.getFilterDeltas()
+			);
 	}
 	
 
