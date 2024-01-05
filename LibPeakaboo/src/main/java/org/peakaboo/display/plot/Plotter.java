@@ -382,7 +382,7 @@ public class Plotter {
 		// Colour/Monochrome colours for highlighted/selected fittings
 		if (settings.monochrome)
 		{
-			palette.fitFill = new PaletteColour(0x50ffffff);
+			palette.fitFill = new PaletteColour(0x60ffffff);
 			palette.fitStroke = new PaletteColour(0x80ffffff);
 			palette.sumStroke = new PaletteColour(0xFF777777);
 			palette.labelText = new PaletteColour(0xffffffff);
@@ -407,7 +407,7 @@ public class Plotter {
 		PlotPalette palette = new PlotPalette();
 		if (settings.monochrome)
 		{
-			palette.fitFill = new PaletteColour(0x50ffffff);
+			palette.fitFill = new PaletteColour(0x40ffffff);
 			palette.fitStroke = new PaletteColour(0x80ffffff);
 			palette.sumStroke = new PaletteColour(0xD0ffffff);
 			palette.labelText = new PaletteColour(0xFF777777);
@@ -431,7 +431,7 @@ public class Plotter {
 	private static PlotPalette getFittedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
 		if (settings.monochrome) {
-			palette.fitFill = new PaletteColour(0x50000000);
+			palette.fitFill = new PaletteColour(0x40000000);
 			palette.fitStroke = new PaletteColour(0x80000000);
 			palette.sumStroke = new PaletteColour(0xD0000000);
 			palette.labelText = new PaletteColour(0xFF000000);
@@ -440,7 +440,7 @@ public class Plotter {
 			palette.markings = palette.fitStroke;
 		} else {
 			if (settings.darkmode) {
-				palette.fitFill = new PaletteColour(0x50ffffff);
+				palette.fitFill = new PaletteColour(0x40ffffff);
 				palette.fitStroke = new PaletteColour(0xA0ffffff);
 				palette.sumStroke = new PaletteColour(0xD0ffffff);
 				palette.labelText = palette.fitStroke;
@@ -448,7 +448,7 @@ public class Plotter {
 				palette.labelStroke = palette.labelText;
 				palette.markings = palette.fitStroke;
 			} else {
-				palette.fitFill = new PaletteColour(0x50000000);
+				palette.fitFill = new PaletteColour(0x40000000);
 				palette.fitStroke = new PaletteColour(0xA0000000);
 				palette.sumStroke = new PaletteColour(0xD0000000);
 				palette.labelText = palette.fitStroke;
