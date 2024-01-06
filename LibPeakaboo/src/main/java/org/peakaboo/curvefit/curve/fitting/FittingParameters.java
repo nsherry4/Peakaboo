@@ -30,7 +30,7 @@ public class FittingParameters implements FittingParametersView {
 	
 	/**
 	 * Constructs a new "dead" or "unwired" FittingParameters object without a
-	 * reference to a parent {@link FittingSet} since a readonly params does not
+	 * reference to a parent {@link FittingSet} since a params view does not
 	 * provide access to that.
 	 */
 	public FittingParameters(FittingParametersView params) {

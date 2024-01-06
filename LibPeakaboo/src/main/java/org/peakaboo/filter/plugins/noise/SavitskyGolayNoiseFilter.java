@@ -14,8 +14,8 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.SeparatorStyle;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 //From Handbook of X-Ray Spectrometry
 public class SavitskyGolayNoiseFilter extends AbstractFilter {
@@ -51,7 +51,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 		
 		reach = new Parameter<>("Half-Window Size", new IntegerStyle(), 4, this::validate);
 		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 3, this::validate);
-		Parameter<?> sep = new Parameter<>(null, new SeparatorStyle(), 0);
+		Parameter<?> sep = new Parameter<>("separator", new SeparatorStyle(), 0);
 		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false, this::validate);
 		max = new Parameter<>("Smoothing Cutoff: (counts)", new RealStyle(), 4.0f, this::validate);
 		max.setEnabled(false);
