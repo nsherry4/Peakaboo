@@ -33,7 +33,12 @@ public class SessionViewModel {
 		return this.channelView.pluginUUID();
 	}
 	public void setChannelView(String modeUUID) {
-		this.channelView = ChannelViewModeRegistry.system().getByUUID(modeUUID).create();
+		var proto = ChannelViewModeRegistry.system().getByUUID(modeUUID);
+		if (proto != null) {
+			this.channelView = proto.create();
+		} else {
+			this.channelView = new AverageViewMode();
+		}
 	}
 	
 	public ChannelViewMode channelView() {
