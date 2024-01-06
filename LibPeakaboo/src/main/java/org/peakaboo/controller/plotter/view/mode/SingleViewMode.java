@@ -10,17 +10,17 @@ public class SingleViewMode implements ChannelViewMode {
 	
 	@Override
 	public String shortName() {
-		return "Individual";
+		return "Single";
 	}
 
 	@Override
 	public String longName() {
-		return "Individual Spectrum";
+		return "Single Spectrum";
 	}
 
 	@Override
 	public String description() {
-		return "One spectrum at a time";
+		return "A single spectrum at a time";
 	}
 
 	@Override
