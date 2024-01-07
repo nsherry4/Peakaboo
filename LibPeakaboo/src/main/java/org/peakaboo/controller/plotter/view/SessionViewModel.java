@@ -3,6 +3,7 @@ package org.peakaboo.controller.plotter.view;
 import org.peakaboo.controller.plotter.view.mode.AverageViewMode;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 
 public class SessionViewModel {
 
@@ -29,8 +30,16 @@ public class SessionViewModel {
 	// TODO replace these methods with better plugin serialization? There are no
 	// parameters to serialize with this, which makes it easier to do by UUID for
 	// now.
-	public String getChannelView() {
-		return this.channelView.pluginUUID();
+	public SavedPlugin getChannelView() {
+		return new SavedPlugin(this.channelView);
+	}
+	public void setChannelView(SavedPlugin plugin) {
+		var proto = ChannelViewModeRegistry.system().getByUUID(plugin.uuid);
+		if (proto != null) {
+			this.channelView = proto.create();
+		} else {
+			this.channelView = new AverageViewMode();
+		}
 	}
 	public void setChannelView(String modeUUID) {
 		var proto = ChannelViewModeRegistry.system().getByUUID(modeUUID);
