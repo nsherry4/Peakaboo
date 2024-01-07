@@ -4,8 +4,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> {

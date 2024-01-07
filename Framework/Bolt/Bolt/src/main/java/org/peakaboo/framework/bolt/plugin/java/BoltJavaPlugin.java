@@ -16,7 +16,8 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 
 public interface BoltJavaPlugin extends BoltPlugin {
 
-
-	
+	default SavedPlugin save() {
+		return new SavedPlugin(this);
+	}	
 	
 }

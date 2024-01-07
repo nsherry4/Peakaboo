@@ -1,10 +1,9 @@
-package org.peakaboo.controller.session.v2;
+package org.peakaboo.framework.bolt.plugin.java;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.druthers.DruthersStorable;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;

@@ -3,7 +3,6 @@ package org.peakaboo.filter.model;
 import java.util.List;
 import java.util.Map;
 
-import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 
@@ -90,7 +89,7 @@ public class SerializedFilterV1 {
 		//If it already exists, just return it, otherwise build a filter
 		if (filter != null) { return filter; }
 			
-		for (BoltPluginPrototype<? extends FilterPlugin> plugin : FilterRegistry.system().getPlugins()) {
+		for (BoltPluginPrototype<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
 			if (
 				plugin.getUUID().equals(uuidOrClazz) || 
 				plugin.getImplementationClass().getName().equals(uuidOrClazz)

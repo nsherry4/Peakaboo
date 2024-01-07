@@ -3,14 +3,16 @@ package org.peakaboo.filter.model;
 import java.util.List;
 import java.util.Optional;
 
-import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
+import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
-public interface Filter {
+public interface Filter extends BoltJavaPlugin {
+
 
 	public static record FilterContext(DataSet dataset, FittingSetView fittings) {};
 	
@@ -93,9 +95,21 @@ public interface Filter {
 		return filter(data, Optional.empty());
 	}
 	
+	default String pluginUUID() {
+		return this.getFilterUUID();
+	}
+	
+	default String pluginName() {
+		return getFilterName();
+	}
+
+	default String pluginDescription() {
+		return getFilterDescription();
+	}
+	
 	
 	default SavedPlugin save() {
 		return new SavedPlugin(getFilterUUID(), getFilterName(), getParameterGroup().serialize());
 	}
-
+	
 }

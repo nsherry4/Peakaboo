@@ -1,6 +1,5 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
-import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
@@ -42,9 +41,5 @@ public interface CurveFitter extends BoltJavaPlugin {
 		if (! hasSignal) return 0.0f;
 		return maxSignal;
 	}
-	
-	default SavedPlugin save() {
-		return new SavedPlugin(this);
-	}
-	
+
 }

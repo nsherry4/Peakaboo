@@ -1,6 +1,5 @@
 package org.peakaboo.curvefit.curve.fitting.solver;
 
-import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
@@ -20,9 +19,5 @@ public interface FittingSolver extends BoltJavaPlugin {
 	public static record FittingSolverContext (SpectrumView data, FittingSetView fittings, CurveFitter fitter) {};
 	
 	FittingResultSetView solve(FittingSolverContext ctx);
-	
-	default SavedPlugin save() {
-		return new SavedPlugin(this);
-	}
 	
 }

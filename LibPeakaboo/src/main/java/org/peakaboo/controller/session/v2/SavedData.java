@@ -2,6 +2,8 @@ package org.peakaboo.controller.session.v2;
 
 import java.util.List;
 
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+
 public class SavedData{
 
 	public List<Integer> discards;

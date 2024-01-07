@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 import org.apache.batik.ext.swing.GridBagConstants;
 import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.filter.plugins.FilterPlugin;
+import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -80,7 +80,7 @@ class PluginView extends JPanel {
 			return StockIcon.DOCUMENT_EXPORT.toImageIcon(IconSize.ICON);
 		}
 		
-		if (pluginBaseClass == FilterPlugin.class) {
+		if (pluginBaseClass == Filter.class) {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.ICON);
 		}
 		

@@ -3,6 +3,8 @@ package org.peakaboo.controller.session.v2;
 import java.util.List;
 import java.util.Map;
 
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+
 public class SavedFittings {
 	
 	public List<SavedFitting> fittings;

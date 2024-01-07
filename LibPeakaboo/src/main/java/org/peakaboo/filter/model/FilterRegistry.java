@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.controller.session.v2.SavedPlugin;
-import org.peakaboo.filter.plugins.FilterPlugin;
 import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
 import org.peakaboo.filter.plugins.advanced.PeakDetectorFilter;
@@ -30,11 +28,12 @@ import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 
-public class FilterRegistry extends BoltPluginRegistry<FilterPlugin> {
+public class FilterRegistry extends BoltPluginRegistry<Filter> {
 
 	private static FilterRegistry SYSTEM;
 	public static void init(File filterDir) {
@@ -73,15 +72,15 @@ public class FilterRegistry extends BoltPluginRegistry<FilterPlugin> {
 	}
 	
 	
-	private BoltJavaBuiltinLoader<FilterPlugin> builtins;
+	private BoltJavaBuiltinLoader<Filter> builtins;
 	
 	public FilterRegistry(File filterDir) {
 		super("filter");
 		
-		addLoader(new BoltJarDirectoryLoader<>(this, FilterPlugin.class, filterDir));
-		addLoader(new BoltJarDirectoryLoader<>(this, FilterPlugin.class));
+		addLoader(new BoltJarDirectoryLoader<>(this, Filter.class, filterDir));
+		addLoader(new BoltJarDirectoryLoader<>(this, Filter.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, FilterPlugin.class);
+		builtins = new BoltJavaBuiltinLoader<>(this, Filter.class);
 		registerCustomPlugins();
 		addLoader(builtins);
 	}
@@ -118,7 +117,7 @@ public class FilterRegistry extends BoltPluginRegistry<FilterPlugin> {
 	
 	}
 	
-	public synchronized void registerPlugin(Class<? extends FilterPlugin> clazz) {
+	public synchronized void registerPlugin(Class<? extends Filter> clazz) {
 		builtins.load(clazz);
 		reload();
 	}

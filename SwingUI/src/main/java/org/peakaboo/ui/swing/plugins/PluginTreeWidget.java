@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 
 import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.filter.plugins.FilterPlugin;
+import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
@@ -65,7 +65,7 @@ class PluginTreeWidget extends Stencil<Object> {
 			return StockIcon.DOCUMENT_EXPORT.toImageIcon(IconSize.BUTTON);
 		}
 		
-		if (pluginBaseClass == FilterPlugin.class) {
+		if (pluginBaseClass == Filter.class) {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 
