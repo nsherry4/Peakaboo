@@ -27,7 +27,7 @@ public class SavedDataSessionV1 {
 		for (int i : discards) {
 			controller.getDiscards().discard(i);
 		}
-		controller.setDataSourcePlugin(new SavedPlugin(this.dataSourcePluginUUID, "Data Source", dataSourceParameters));
+		controller.setDataSourcePlugin(new SavedPlugin(this.dataSourcePluginUUID, "Data Source", "", dataSourceParameters));
 		controller.setDataPaths(this.filesAsDataPaths());
 		controller.setTitle(this.title);
 

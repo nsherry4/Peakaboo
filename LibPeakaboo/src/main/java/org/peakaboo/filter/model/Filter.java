@@ -109,7 +109,7 @@ public interface Filter extends BoltJavaPlugin {
 	
 	
 	default SavedPlugin save() {
-		return new SavedPlugin(getFilterUUID(), getFilterName(), getParameterGroup().serialize());
+		return new SavedPlugin(this, getParameterGroup().serialize());
 	}
 	
 }

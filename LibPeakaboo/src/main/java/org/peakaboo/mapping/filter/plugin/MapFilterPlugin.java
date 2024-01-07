@@ -15,6 +15,6 @@ public interface MapFilterPlugin extends MapFilter, BoltJavaPlugin {
 	}
 
 	default SavedPlugin save() {
-		return new SavedPlugin(pluginUUID(), pluginName(), getParameterGroup().serialize());
+		return new SavedPlugin(this, getParameterGroup().serialize());
 	}
 }

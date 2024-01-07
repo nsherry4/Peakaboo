@@ -13,25 +13,37 @@ public class SavedPlugin implements DruthersStorable {
 	public String uuid;
 	public String name;
 	public Map<String, Object> settings;
+	public String version = "";
 	
 	public SavedPlugin() {}
 	
-	public SavedPlugin(String uuid, String name) {
-		this(uuid, name, new HashMap<>());
+	// Standard constructors
+	public SavedPlugin(String uuid, String name, String version) {
+		this(uuid, name, version, new HashMap<>());
 	}
-	
-	public SavedPlugin(String uuid, String name, Map<String, Object> settings) {
+	public SavedPlugin(String uuid, String name, String version, Map<String, Object> settings) {
 		this.uuid = uuid;
 		this.settings = settings == null ? new LinkedHashMap<>() : new LinkedHashMap<>(settings);
 		this.name = name;
+		this.version = version;
 	}
+	
+	// Copy constructors
 	public SavedPlugin(SavedPlugin other) {
-		this(other.uuid, other.name, other.settings);	
+		this(other.uuid, other.name, other.version, other.settings);	
 	}
-
+	public SavedPlugin(SavedPlugin other, Map<String, Object> settings) {
+		this(other.uuid, other.name, other.version, settings);	
+	}
+	
+	// Plugin-serializing constructors
 	public SavedPlugin(BoltPlugin plugin) {
-		this(plugin.pluginUUID(), plugin.pluginName(), new HashMap<>());
+		this(plugin.pluginUUID(), plugin.pluginName(), plugin.pluginVersion(), new HashMap<>());
 	}
+	public SavedPlugin(BoltPlugin plugin, Map<String, Object> settings) {
+		this(plugin.pluginUUID(), plugin.pluginName(), plugin.pluginVersion(), settings);
+	}
+	
 	
 	public static SavedPlugin load(String yaml) throws DruthersLoadException {
 		return DruthersSerializer.deserialize(yaml, false, SavedPlugin.class);

@@ -173,7 +173,7 @@ public abstract class DataLoader {
 			onParameters(dsGroup, accepted -> {
 				if (accepted) {
 					//user accepted, save a copy of the new parameters
-					this.dataSource = new SavedPlugin(this.dataSource.uuid, this.dataSource.name, dsGroup.serialize());
+					this.dataSource = new SavedPlugin(this.dataSource, dsGroup.serialize());
 					loadWithDataSource(dsp);
 				}
 			});
@@ -317,7 +317,7 @@ public abstract class DataLoader {
 					//this needs to be done this way b/c loading a new dataset wipes out
 					//things like calibration info
 					this.datafiles = sessionPaths;
-					this.dataSource = new SavedPlugin(session.data.dataSourcePluginUUID, "Data Source", session.data.dataSourceParameters);
+					this.dataSource = new SavedPlugin(session.data.dataSourcePluginUUID, "Data Source", "", session.data.dataSourceParameters);
 					sessionCallback = () -> {
 						controller.loadSessionSettingsV1(session, true);	
 						warnVersion.run();

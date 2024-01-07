@@ -9,8 +9,8 @@ import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 public interface DataSourcePlugin extends DataSource, BoltJavaPlugin {
 	
 	default SavedPlugin save() {
-		// DataSource settings must be stashed and added by loader
-		return new SavedPlugin(pluginUUID(), pluginName(), new HashMap<>());
+		// DataSource settings must be remembered and added to this by data loader
+		return new SavedPlugin(this, new HashMap<>());
 	}
 	
 }
