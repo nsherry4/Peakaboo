@@ -573,7 +573,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 		// Load the Fitting Solver
 		try {
-			FittingSolverRegistry.fromSaved(saved.solver).ifPresentOrElse(solver -> {
+			FittingSolverRegistry.system().fromSaved(saved.solver).ifPresentOrElse(solver -> {
 				fittingModel.fittingSolver = solver;	
 			}, () -> {
 				errors.add("Failed to load Fitting Solver: " + saved.solver.name);
@@ -585,7 +585,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 		//Load the Curve Fitter
 		try {
-			CurveFitterRegistry.fromSaved(saved.fitter).ifPresentOrElse(fitter -> {
+			CurveFitterRegistry.system().fromSaved(saved.fitter).ifPresentOrElse(fitter -> {
 				fittingModel.curveFitter = fitter;
 			}, () -> {
 				errors.add("Failed to load Curve Fitter: " + saved.fitter.name);

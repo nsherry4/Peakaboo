@@ -163,7 +163,7 @@ public class FilteringController extends EventfulBeacon
 		var filters = filteringModel.filters;
 		filters.clear();
 		for (var s : saved) {
-			var optFilter = FilterRegistry.fromSaved(s);
+			var optFilter = FilterRegistry.system().fromSaved(s);
 			if (optFilter.isPresent()) {
 				filters.add(optFilter.get());
 			} else {

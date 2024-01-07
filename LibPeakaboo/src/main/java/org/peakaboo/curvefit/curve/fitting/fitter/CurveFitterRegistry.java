@@ -1,11 +1,9 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
-import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> {
@@ -50,14 +48,6 @@ public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> {
 	public String getInterfaceDescription() {
 		return "Curve fitters match curves for individual Transition Series to real signal";
 	}
-	
-	public static Optional<CurveFitter> fromSaved(SavedPlugin saved) {
-		var proto = CurveFitterRegistry.system().getByUUID(saved.uuid);
-		if (proto == null) {
-			return Optional.empty();
-		}
-		var fitter = proto.create();
-		return Optional.of(fitter);
-	}
+
 
 }

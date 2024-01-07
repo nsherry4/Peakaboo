@@ -15,8 +15,8 @@ import org.peakaboo.framework.autodialog.model.style.CoreStyle;
 import org.peakaboo.framework.autodialog.model.style.SimpleStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class SubFilter extends AbstractFilter {
 
@@ -42,7 +42,7 @@ public class SubFilter extends AbstractFilter {
 		var filterClassInfo = new SimpleClassInfo<Filter>(
 				Filter.class, 
 				f -> f.save().serialize(), 
-				s -> FilterRegistry.fromSaved(s).orElse(null));
+				s -> FilterRegistry.system().fromSaved(s).orElse(null));
 		
 		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0), filterClassInfo);
 		filter.setPossibleValues(filters);

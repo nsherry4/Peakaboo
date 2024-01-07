@@ -2,9 +2,7 @@ package org.peakaboo.controller.plotter.data;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -43,16 +41,14 @@ public class DataController extends EventfulBeacon
 	private Discards			discards;
 	private List<DataInputAdapter>		dataPaths;
 	protected String			title;
-	private String				dataSourcePluginUUID;
-	private Map<String, Object>	dataSourceParameters;
+	private SavedPlugin 		dataSourcePlugin;
 	
 	public DataController(PlotController plotController) {
 		this.plot = plotController;
 		dataModel = new EmptyDataSet();
 		discards = new DiscardsList(plot);
 		dataPaths = new ArrayList<>();
-		dataSourcePluginUUID = null;
-		dataSourceParameters = new LinkedHashMap<>();
+		dataSourcePlugin = null;
 	}
 
 	
@@ -93,7 +89,7 @@ public class DataController extends EventfulBeacon
 					
 					if (dataset.getAnalysis().channelsPerScan() > 0) {
 						setDataSetProvider(dataset);
-						setDataSourcePluginUUID(dsp.pluginUUID());
+						setDataSourcePlugin(dsp.save());
 					}
 					onResult.accept(result);
 					return;
@@ -150,14 +146,7 @@ public class DataController extends EventfulBeacon
 
 	}
 	
-	public String getDataSourcePluginUUID() {
-		return this.dataSourcePluginUUID;
-	}
-	
-	public void setDataSourcePluginUUID(String uuid) {
-		this.dataSourcePluginUUID = uuid;
-	}
-	
+
 	
 	public void setDataSource(DataSource ds, AbstractExecutor<Void> progress, BooleanSupplier isAborted) {
 		StandardDataSet dataset = new StandardDataSet(ds, progress, isAborted);
@@ -217,16 +206,19 @@ public class DataController extends EventfulBeacon
 	public void setDataPaths(List<DataInputAdapter> dataPaths) {
 		this.dataPaths = dataPaths;
 	}
-
-
-	public Map<String, Object> getDataSourceParameters() {
-		return dataSourceParameters;
-	}
-
-	public void setDataSourceParameters(Map<String, Object> dataSourceParameters) {
-		this.dataSourceParameters = dataSourceParameters;
-	}
+    
 	
+	
+	
+	public SavedPlugin getDataSourcePlugin() {
+		return dataSourcePlugin;
+	}
+
+
+	public void setDataSourcePlugin(SavedPlugin dataSourcePlugin) {
+		this.dataSourcePlugin = dataSourcePlugin;
+	}
+
 
 	/**
 	 * Returns the human readable title for this dataset. If the dataset has been
@@ -259,8 +251,7 @@ public class DataController extends EventfulBeacon
 		return new SavedData(
 			discards.list(), 
 			dataPaths.stream().map(df -> df.getFullyQualifiedFilename()).toList(), 
-			// TODO Fix this generic plugin name
-			new SavedPlugin(getDataSourcePluginUUID(), "Data Source", getDataSourceParameters()), 
+			dataSourcePlugin, 
 			title
 		);
 	}
@@ -271,7 +262,7 @@ public class DataController extends EventfulBeacon
 		for (int i : data.discards) {
 			this.discards.discard(i);
 		}
-		this.setDataSourcePluginUUID(data.datasource.uuid);
+		this.setDataSourcePlugin(data.datasource);
 		this.setDataPaths(DataInputAdapter.fromFilenames(data.files));
 		this.setTitle(data.title);
 	}

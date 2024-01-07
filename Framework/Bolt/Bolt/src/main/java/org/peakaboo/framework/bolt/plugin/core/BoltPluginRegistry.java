@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
@@ -13,6 +14,7 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltOldContainerIssue;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltLoader;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltManagedLoader;
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 
 
 /**
@@ -67,6 +69,15 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements BoltPl
 		}
 	}
 	
+	
+	public Optional<P> fromSaved(SavedPlugin saved) {
+		var proto = this.getByUUID(saved.uuid);
+		if (proto == null) {
+			return Optional.empty();
+		}
+		var solver = proto.create();
+		return Optional.of(solver);
+	}
 	
 	public BoltPluginRegistry<P> getManager() {
 		return this;

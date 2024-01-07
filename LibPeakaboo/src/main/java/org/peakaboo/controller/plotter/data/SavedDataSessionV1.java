@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.io.DataInputAdapters;
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 
@@ -28,8 +29,8 @@ public class SavedDataSessionV1 {
 				this.files = controller.getDataPaths().stream().map(p -> p.address().get()).collect(Collectors.toList());
 			}
 		}
-		this.dataSourcePluginUUID = controller.getDataSourcePluginUUID();
-		this.dataSourceParameters = controller.getDataSourceParameters();
+		this.dataSourcePluginUUID = controller.getDataSourcePlugin().uuid;
+		this.dataSourceParameters = controller.getDataSourcePlugin().settings;
 		this.title = controller.title;
 		return this;
 	}
@@ -40,7 +41,7 @@ public class SavedDataSessionV1 {
 		for (int i : discards) {
 			controller.getDiscards().discard(i);
 		}
-		controller.setDataSourcePluginUUID(this.dataSourcePluginUUID);
+		controller.setDataSourcePlugin(new SavedPlugin(this.dataSourcePluginUUID, "Data Source", dataSourceParameters));
 		controller.setDataPaths(this.filesAsDataPaths());
 		controller.setTitle(this.title);
 

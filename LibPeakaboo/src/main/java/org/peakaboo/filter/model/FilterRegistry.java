@@ -50,7 +50,7 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 		return SYSTEM;
 	}
 
-	public static Optional<Filter> fromSaved(String saved) {
+	public Optional<Filter> fromSaved(String saved) {
 		try {
 			SavedPlugin loaded = SavedPlugin.load(saved);
 			return fromSaved(loaded);
@@ -60,7 +60,8 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 		
 	}
 	
-	public static Optional<Filter> fromSaved(SavedPlugin saved) {
+	@Override
+	public Optional<Filter> fromSaved(SavedPlugin saved) {
 		var proto = FilterRegistry.system().getByUUID(saved.uuid);
 		if (proto == null) {
 			return Optional.empty();

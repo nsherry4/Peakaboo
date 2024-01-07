@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -23,6 +22,7 @@ import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
+import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 import org.peakaboo.framework.cyclops.util.StringInput;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -34,8 +34,7 @@ public abstract class DataLoader {
 
 	protected PlotController controller;
 	private List<DataInputAdapter> datafiles;
-	private String dataSourceUUID = null;
-	private Map<String, Object> sessionParameters = null;
+	private SavedPlugin dataSource = null;
 	private File sessionFile = null;
 	
 	//if we're loading a session, we need to do some extra work after loading the dataset
@@ -68,7 +67,7 @@ public abstract class DataLoader {
 	
 	private void onDataSourceLoadSuccess() {
 		sessionCallback.run();
-		controller.data().setDataSourceParameters(sessionParameters);
+		controller.data().setDataSourcePlugin(dataSource);
 		controller.data().setDataPaths(datafiles);
 		
 		//Try and set the last-used folder for local UIs to refer to
@@ -119,15 +118,14 @@ public abstract class DataLoader {
 		}
 		
 		/*
-		 * look up the data source to use to open this data with we should prefer a
-		 * plugin specified by uuid (eg from a reloaded session). If there is no plugin
+		 * look up the data source to use to open this data with. If there is no plugin
 		 * specified, we look up all formats
 		 */
 		List<DataSourcePlugin> formats = new ArrayList<>();
-		if (dataSourceUUID != null) {
-			var plugin = DataSourceRegistry.system().getByUUID(dataSourceUUID);
-			if (plugin != null) { 
-				formats.add(plugin.create());
+		if (dataSource != null) {
+			var plugin = DataSourceRegistry.system().fromSaved(dataSource);
+			if (plugin.isPresent()) {
+				formats.add(plugin.get());
 			} else {
 				onWarn("Could not find data source plugin requested by saved session.");
 			}
@@ -164,9 +162,9 @@ public abstract class DataLoader {
 			 * if we've alredy loaded a set of parameters from a session we're opening then
 			 * we transfer those values into the values for the data source's Parameters
 			 */
-			if (sessionParameters != null) {
+			if (dataSource.settings != null) {
 				try {
-					dsGroup.deserialize(sessionParameters);
+					dsGroup.deserialize(dataSource.settings);
 				} catch (RuntimeException e) {
 					PeakabooLog.get().log(Level.WARNING, "Failed to load saved Data Source parameters", e);
 				}
@@ -175,7 +173,7 @@ public abstract class DataLoader {
 			onParameters(dsGroup, accepted -> {
 				if (accepted) {
 					//user accepted, save a copy of the new parameters
-					sessionParameters = dsGroup.serialize();
+					this.dataSource = new SavedPlugin(this.dataSource.uuid, this.dataSource.name, dsGroup.serialize());
 					loadWithDataSource(dsp);
 				}
 			});
@@ -259,8 +257,7 @@ public abstract class DataLoader {
 					//this needs to be done this way b/c loading a new dataset wipes out
 					//things like calibration info
 					this.datafiles = sessionPaths;
-					this.dataSourceUUID = session.data.datasource.uuid;
-					this.sessionParameters = session.data.datasource.settings;
+					this.dataSource = session.data.datasource;
 					sessionCallback = () -> {
 						controller.load(session, true);
 						warnVersion.run();
@@ -320,8 +317,7 @@ public abstract class DataLoader {
 					//this needs to be done this way b/c loading a new dataset wipes out
 					//things like calibration info
 					this.datafiles = sessionPaths;
-					this.dataSourceUUID = session.data.dataSourcePluginUUID;
-					this.sessionParameters = session.data.dataSourceParameters;
+					this.dataSource = new SavedPlugin(session.data.dataSourcePluginUUID, "Data Source", session.data.dataSourceParameters);
 					sessionCallback = () -> {
 						controller.loadSessionSettingsV1(session, true);	
 						warnVersion.run();
