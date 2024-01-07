@@ -178,6 +178,7 @@ public abstract class DataLoader {
 				}
 			});
 		} else {
+			this.dataSource = new SavedPlugin(dsp);
 			loadWithDataSource(dsp);
 		}
 	}
