@@ -24,12 +24,14 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverCon
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
 import org.peakaboo.curvefit.peak.search.searcher.DoubleDerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.plot.PlotData;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -414,14 +416,14 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Change Peak Shape");
 	}
 
-	public void setFittingFunction(Class<? extends FittingFunction> cls) {
+	public void setFittingFunction(BoltPluginPrototype<? extends FittingFunction> cls) {
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
 		fittingDataInvalidated();
 		setUndoPoint("Change Peak Fitter");
 	}
 	
-	public Class<? extends FittingFunction> getFittingFunction() {
+	public BoltPluginPrototype<? extends FittingFunction> getFittingFunction() {
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
@@ -546,7 +548,7 @@ public class FittingController extends EventfulType<Boolean>
 			savedannos, 
 			getFittingSolver().save(), 
 			getCurveFitter().save(),
-			getFittingFunction().getName(), //TODO: replace this
+			getFittingFunction().save(),
 			fittingModel.selections.getFittingParameters().save()
 		);
 	}
@@ -595,13 +597,16 @@ public class FittingController extends EventfulType<Boolean>
 		}
 		
 		//Restore the fitting function
-		Class<? extends FittingFunction> fittingFunctionClass ;
 		try {
-			fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(saved.model);
-			fittingModel.selections.getFittingParameters().setFittingFunction(fittingFunctionClass);
-			fittingModel.proposals.getFittingParameters().setFittingFunction(fittingFunctionClass);
-		} catch (ClassNotFoundException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + saved.model, e);
+			BoltPluginPrototype<? extends FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
+			if (oProto == null) {
+				errors.add("Failed to load Fitting Function: " + saved.model.name);
+				oProto = FittingFunctionRegistry.system().preset();
+			}
+			fittingModel.selections.getFittingParameters().setFittingFunction(oProto);
+			fittingModel.proposals.getFittingParameters().setFittingFunction(oProto);
+		} catch (RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + saved.model.name, e);
 		}
 		
 		

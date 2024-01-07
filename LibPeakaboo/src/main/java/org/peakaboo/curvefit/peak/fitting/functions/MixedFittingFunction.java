@@ -34,18 +34,28 @@ public class MixedFittingFunction implements FittingFunction {
 	}
 	
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Mixed (Do not use directly)";
 	}
 
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 	
 	@Override
-	public String description() {
-		return "Weighted average of " + f1.name() + " and " + f2.name() + " functions";
+	public String pluginDescription() {
+		return "Weighted average of " + f1.pluginName() + " and " + f2.pluginName() + " functions";
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public String pluginUUID() {
+		return "82b1d64a-8b9e-4b71-aacb-99d33961b0de";
 	}
 	
 	

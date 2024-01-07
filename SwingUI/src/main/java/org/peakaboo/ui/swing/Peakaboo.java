@@ -30,6 +30,7 @@ import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
@@ -262,6 +263,7 @@ public class Peakaboo {
 		CurveFitterRegistry.init();
 		FittingSolverRegistry.init();
 		ChannelViewModeRegistry.init();
+		FittingFunctionRegistry.init();
 		
 		//Any additional plugin types provided per-tier
 		Tier.provider().initializePlugins();

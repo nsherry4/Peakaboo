@@ -14,8 +14,10 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.SerializedTransitionSeries;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 
 @Deprecated(since = "6", forRemoval = true)
 public class SavedFittingSessionV1 {
@@ -67,7 +69,7 @@ public class SavedFittingSessionV1 {
 		fitter = controller.getCurveFitter().getClass().getName();
 		
 		//Save the fitting function
-		function = controller.getFittingFunction().getName();
+		function = controller.getFittingFunction().create().getClass().getName();
 		
 		//Save energy calibration
 		minEnergy = controller.getMinEnergy();
@@ -130,11 +132,13 @@ public class SavedFittingSessionV1 {
 		}
 		
 		//Restore the fitting function
-		Class<? extends FittingFunction> fittingFunctionClass ;
 		try {
-			fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(function);
-			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fittingFunctionClass);
-			controller.fittingModel.proposals.getFittingParameters().setFittingFunction(fittingFunctionClass);
+			var fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(function);
+			BoltPluginPrototype<? extends FittingFunction> fitfnProto = FittingFunctionRegistry.system()
+					.getPrototypeForClass(fittingFunctionClass)
+					.orElse(FittingFunctionRegistry.system().preset());
+			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fitfnProto);
+			controller.fittingModel.proposals.getFittingParameters().setFittingFunction(fitfnProto);
 		} catch (ClassNotFoundException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + function, e);
 		}

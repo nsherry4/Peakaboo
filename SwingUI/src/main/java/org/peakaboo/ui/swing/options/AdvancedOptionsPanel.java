@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,20 +21,16 @@ import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
-import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
-import org.peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
@@ -298,6 +293,18 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 	
+	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
+
+		FittingController fits = controller.fitting();
+		Supplier<BoltPluginPrototype<? extends FittingFunction>> getter = fits::getFittingFunction;
+		Consumer<BoltPluginPrototype<? extends FittingFunction>> setter = fits::setFittingFunction;
+		List<BoltPluginPrototype<? extends FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
+		
+		OptionBlock fitBlock = this.makeRadioBlockForFitFns(fitters, getter, setter);
+
+		return new OptionBlocksPanel(fitBlock);
+	}
+	
 	private <T extends BoltPlugin> OptionBlock makeRadioBlockForPlugins(List<T> instances, Supplier<T> getter, Consumer<T> setter) {
 		
 		OptionBlock block = new OptionBlock();
@@ -309,6 +316,27 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 					.withText(solver.pluginName(), solver.pluginDescription())
 					.withSelection(solver.getClass() == getter.get().getClass())
 					.withListener(() -> setter.accept(solver))
+					.withSize(OptionSize.LARGE);
+			
+			block.add(radio);
+			
+		}
+		
+		return block;
+		
+	}
+	
+	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<BoltPluginPrototype<? extends FittingFunction>> fitters, Supplier<BoltPluginPrototype<? extends FittingFunction>> getter, Consumer<BoltPluginPrototype<? extends FittingFunction>> setter) {
+		
+		OptionBlock block = new OptionBlock();
+		ButtonGroup group = new ButtonGroup();
+		
+		for (var proto : fitters) {
+			
+			OptionRadioButton radio = new OptionRadioButton(block, group)
+					.withText(proto.getName(), proto.getDescription())
+					.withSelection(proto.getUUID().equals(getter.get().getUUID()))
+					.withListener(() -> setter.accept(proto))
 					.withSize(OptionSize.LARGE);
 			
 			block.add(radio);
@@ -340,40 +368,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 
-	
-	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
 
-		
-		
-		List<FittingFunction> fitters = new ArrayList<>(List.of(
-				new PseudoVoigtFittingFunction(),
-				new ConvolvingVoigtFittingFunction(),
-				new GaussianFittingFunction(),
-				new LorentzFittingFunction()
-			));
-		
-		fitters.addAll(Tier.provider().getFittingFunctions());
-		
-		
-		FittingController fitter = controller.fitting();
-		//TODO: maybe change this so that the settings just stores the fitting function instance instead of the class?
-		OptionBlock peakBlock = makeRadioBlock(fitters, 
-				() -> {
-					try {
-						return fitter.getFittingFunction().getDeclaredConstructor().newInstance();
-					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return null;
-				}, 
-				i -> fitter.setFittingFunction(i.getClass())
-			);
-		return new OptionBlocksPanel(peakBlock);
-				
-	}
-	
 	private ClearPanel wrapSettingsInfo(JComponent panel, String info) {
 		var label = new JLabel(info, SwingConstants.CENTER);
 		label.setForeground(Stratus.getTheme().getPalette().getColour("Dark", "1"));
@@ -387,13 +382,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 
 	private OptionBlocksPanel makeOverlapPanel(PlotController controller) {
 
-		List<FittingSolver> solvers = new ArrayList<>(List.of(
-				new GreedyFittingSolver(), 
-				new OptimizingFittingSolver(), 
-				new MultisamplingOptimizingFittingSolver()
-			));
-		
-		solvers.addAll(Tier.provider().getFittingSolvers());
+		List<FittingSolver> solvers = FittingSolverRegistry.system().newInstances();
 		
 		OptionBlock overlap = makeRadioBlockForPlugins(solvers, 
 				() -> controller.fitting().getFittingSolver(),

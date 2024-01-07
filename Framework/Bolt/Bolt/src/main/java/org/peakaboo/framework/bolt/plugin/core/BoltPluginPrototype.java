@@ -86,5 +86,13 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 		}
 	}
 	
+	/**
+	 * Returns a SavedPlugin object describing the plugin represented by this
+	 * prototype. The SavedPlugin will be based on a freshly created instance of the
+	 * plugin.
+	 */
+	default SavedPlugin save() {
+		return new SavedPlugin(create());
+	}	
 	
 }

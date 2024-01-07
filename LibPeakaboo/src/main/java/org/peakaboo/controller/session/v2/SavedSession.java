@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.peakaboo.controller.plotter.view.SessionViewModel;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.druthers.DruthersStorable;
 
 

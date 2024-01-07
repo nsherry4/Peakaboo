@@ -28,7 +28,7 @@ import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;

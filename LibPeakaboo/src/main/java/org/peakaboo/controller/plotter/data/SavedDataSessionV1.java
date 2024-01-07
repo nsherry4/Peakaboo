@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.io.DataInputAdapters;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
 

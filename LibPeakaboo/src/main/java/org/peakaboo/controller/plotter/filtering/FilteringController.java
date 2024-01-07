@@ -11,7 +11,7 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.eventful.cache.EventfulCache;

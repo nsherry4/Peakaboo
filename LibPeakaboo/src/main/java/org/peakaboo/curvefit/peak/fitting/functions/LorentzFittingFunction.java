@@ -59,19 +59,28 @@ public class LorentzFittingFunction implements FittingFunction {
 	}
 	
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Lorentz";
 	}
 
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 	
 	@Override
-	public String description() {
-		//TODO: explain purpose
+	public String pluginDescription() {
 		return "Cauchy–Lorentz distribution function";
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public String pluginUUID() {
+		return "fd0101b7-6ae3-48ea-825b-bd8d51df29eb";
 	}
 	
 

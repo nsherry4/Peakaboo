@@ -22,7 +22,7 @@ import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.cyclops.util.StringInput;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.plural.executor.ExecutorSet;

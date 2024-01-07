@@ -54,19 +54,28 @@ public class GaussianFittingFunction implements FittingFunction {
 
 
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Gaussian";
 	}
 
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 	
 	@Override
-	public String description() {
-		//TODO: explain purpose
+	public String pluginDescription() {
 		return "Gaussian (normal) distribution function";
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public String pluginUUID() {
+		return "56e042ea-e006-4228-8e4d-22f7cf1930ea";
 	}
 	
 	

@@ -1,6 +1,5 @@
 package org.peakaboo.curvefit.peak.fitting.functions;
 
-import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 
@@ -34,18 +33,28 @@ public class PseudoVoigtFittingFunction implements FittingFunction {
 	}
 
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Pseudo-Voigt";
 	}
 
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Sum of Gaussian and Lorentz functions approximating a Voigt function";
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public String pluginUUID() {
+		return "0cecebeb-30ff-4374-8c3a-c091669a83a6";
 	}
 	
 }

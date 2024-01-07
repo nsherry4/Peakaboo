@@ -11,6 +11,7 @@ import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 
 public interface FittingParametersView {
 
@@ -36,7 +37,7 @@ public interface FittingParametersView {
 
 	DetectorMaterialType getDetectorMaterial();
 
-	Class<? extends FittingFunction> getFittingFunction();
+	BoltPluginPrototype<? extends FittingFunction> getFittingFunction();
 
 	boolean getShowEscapePeaks();
 
@@ -52,16 +53,14 @@ public interface FittingParametersView {
 	}
 	
 	public static FittingFunction buildFunction(FittingParametersView params, FittingContext context) {
-		FittingFunction function;
-		try {
-			function = params.getFittingFunction().newInstance();
-			function.initialize(context);
-			return function;
-		} catch (InstantiationException | IllegalAccessException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to create fitting function, using default", e);
-			return new PseudoVoigtFittingFunction();
+		FittingFunction function = params.getFittingFunction().create();
+		if (function == null) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to create fitting function, using default");
+			function = new PseudoVoigtFittingFunction();
 		}
-		
+		function.initialize(context);
+		return function;
+
 	}
 
 }

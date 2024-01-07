@@ -1,4 +1,4 @@
-package org.peakaboo.framework.bolt.plugin.java;
+package org.peakaboo.framework.bolt.plugin.core;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -8,7 +8,6 @@ import org.peakaboo.framework.druthers.DruthersStorable;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 
-//TODO include the name here, but that will require carrying the name through the controller from file load time to session save time
 public class SavedPlugin implements DruthersStorable {
 	
 	public String uuid;
@@ -30,7 +29,7 @@ public class SavedPlugin implements DruthersStorable {
 		this(other.uuid, other.name, other.settings);	
 	}
 
-	public SavedPlugin(BoltJavaPlugin plugin) {
+	public SavedPlugin(BoltPlugin plugin) {
 		this(plugin.pluginUUID(), plugin.pluginName(), new HashMap<>());
 	}
 	

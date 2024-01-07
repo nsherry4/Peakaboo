@@ -14,7 +14,6 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltOldContainerIssue;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltLoader;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltManagedLoader;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 
 
 /**
@@ -95,6 +94,18 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements BoltPl
 		load();
 		return plugins.getPlugins();
 	}
+	
+	public final synchronized Optional<BoltPluginPrototype<? extends P>> getPrototypeForClass(Class<? extends P> cls) {
+		load();
+		for (var plugin : plugins.getPlugins()) {
+			if (plugin.create().getClass().equals(cls)) {
+				return Optional.of(plugin);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	
 	
 	public List<BoltIssue<? extends P>> getIssues() {
 		/*

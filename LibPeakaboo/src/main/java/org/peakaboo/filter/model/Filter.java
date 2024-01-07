@@ -7,8 +7,8 @@ import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public interface Filter extends BoltJavaPlugin {

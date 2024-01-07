@@ -3,8 +3,8 @@ package org.peakaboo.framework.bolt.plugin.java;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 public class BoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPluginPrototype<T> {
@@ -114,5 +114,5 @@ public class BoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPl
 		return registry;
 	}
 	
-	
+
 }

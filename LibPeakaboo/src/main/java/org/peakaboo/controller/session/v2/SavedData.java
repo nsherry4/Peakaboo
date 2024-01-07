@@ -2,7 +2,7 @@ package org.peakaboo.controller.session.v2;
 
 import java.util.List;
 
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 
 public class SavedData{
 

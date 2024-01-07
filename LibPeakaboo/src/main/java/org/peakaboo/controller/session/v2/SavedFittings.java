@@ -3,7 +3,7 @@ package org.peakaboo.controller.session.v2;
 import java.util.List;
 import java.util.Map;
 
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 
 public class SavedFittings {
 	
@@ -11,7 +11,7 @@ public class SavedFittings {
 	public Map<String, String> annotations;
 	public SavedPlugin solver; //FittingSolver
 	public SavedPlugin fitter; //CurveFitter
-	public String model; //FittingFunction
+	public SavedPlugin model; //FittingFunction
 	public SavedFittingParameters calibration;
 	
 	public SavedFittings() {}
@@ -21,7 +21,7 @@ public class SavedFittings {
 			Map<String, String> annotations,
 			SavedPlugin solver,
 			SavedPlugin fitter,
-			String model,
+			SavedPlugin model,
 			SavedFittingParameters calibration
 		) {
 		this.fittings = fittings;

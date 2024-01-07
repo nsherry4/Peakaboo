@@ -1,7 +1,6 @@
 package org.peakaboo.tier;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
@@ -9,8 +8,6 @@ import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.BasicCalibrationController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
-import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.display.plot.Plotter;
@@ -59,16 +56,6 @@ public class BasicTierProvider implements TierProvider {
 
 	@Override
 	public List<TierUIAutoGroup<PlotController>> getAdvancedOptions() {
-		return List.of();
-	}
-
-	@Override
-	public Collection<? extends FittingFunction> getFittingFunctions() {
-		return List.of();
-	}
-
-	@Override
-	public Collection<? extends FittingSolver> getFittingSolvers() {
 		return List.of();
 	}
 

@@ -3,8 +3,8 @@ package org.peakaboo.dataset.source.plugin;
 import java.util.HashMap;
 
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
-import org.peakaboo.framework.bolt.plugin.java.SavedPlugin;
 
 public interface DataSourcePlugin extends DataSource, BoltJavaPlugin {
 	
