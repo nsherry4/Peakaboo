@@ -7,8 +7,8 @@ public class SavedFittings {
 	
 	public List<SavedFitting> fittings;
 	public Map<String, String> annotations;
-	public String solver; //FittingSolver
-	public String fitter; //CurveFitter
+	public SavedPlugin solver; //FittingSolver
+	public SavedPlugin fitter; //CurveFitter
 	public String model; //FittingFunction
 	public SavedFittingParameters calibration;
 	
@@ -17,8 +17,8 @@ public class SavedFittings {
 	public SavedFittings(
 			List<SavedFitting> fittings,
 			Map<String, String> annotations,
-			String solver,
-			String fitter,
+			SavedPlugin solver,
+			SavedPlugin fitter,
 			String model,
 			SavedFittingParameters calibration
 		) {

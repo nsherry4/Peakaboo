@@ -259,7 +259,8 @@ public class DataController extends EventfulBeacon
 		return new SavedData(
 			discards.list(), 
 			dataPaths.stream().map(df -> df.getFullyQualifiedFilename()).toList(), 
-			new SavedPlugin(getDataSourcePluginUUID(), getDataSourceParameters()), 
+			// TODO Fix this generic plugin name
+			new SavedPlugin(getDataSourcePluginUUID(), "Data Source", getDataSourceParameters()), 
 			title
 		);
 	}

@@ -1,8 +1,10 @@
 package org.peakaboo.curvefit.curve.fitting.solver;
 
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
@@ -47,6 +49,16 @@ public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> {
 	@Override
 	public String getInterfaceDescription() {
 		return "Fitting solvers determine how to match signal with curves for overlapping Transition Series";
+	}
+	
+	
+	public static Optional<FittingSolver> fromSaved(SavedPlugin saved) {
+		var proto = FittingSolverRegistry.system().getByUUID(saved.uuid);
+		if (proto == null) {
+			return Optional.empty();
+		}
+		var solver = proto.create();
+		return Optional.of(solver);
 	}
 
 }

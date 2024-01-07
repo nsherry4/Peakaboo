@@ -18,8 +18,10 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
@@ -538,12 +540,12 @@ public class FittingController extends EventfulType<Boolean>
 		
 		
 		this.fittingModel.annotations.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getShellement(), e-> e.getValue()));
-		
+
 		return new SavedFittings(
 			fittings, 
 			savedannos, 
-			getFittingSolver().getClass().getName(), //TODO: replace this 
-			getCurveFitter().getClass().getName(), //TODO: replace this
+			getFittingSolver().save(), 
+			getCurveFitter().save(),
 			getFittingFunction().getName(), //TODO: replace this
 			fittingModel.selections.getFittingParameters().save()
 		);
@@ -567,29 +569,29 @@ public class FittingController extends EventfulType<Boolean>
 		}
 		
 		
-		Class<? extends FittingSolver> fittingSolverClass;
+		List<String> errors = new ArrayList<>();
+		
+		// Load the Fitting Solver
 		try {
-			fittingSolverClass = (Class<? extends FittingSolver>) Class.forName(saved.solver);
-			fittingModel.fittingSolver = fittingSolverClass.getDeclaredConstructor().newInstance();
-		} catch (ReflectiveOperationException | RuntimeException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + saved.solver, e);
+			FittingSolverRegistry.fromSaved(saved.solver).ifPresentOrElse(solver -> {
+				fittingModel.fittingSolver = solver;	
+			}, () -> {
+				errors.add("Failed to load Fitting Solver: " + saved.solver.name);
+			});
+		} catch (RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + saved.solver.name, e);
 		}
 
 		
-		List<String> errors = new ArrayList<>();
-		
-		
-		//Restore CurveFitter
-		Class<? extends CurveFitter> curveFitterClass;
+		//Load the Curve Fitter
 		try {
-			curveFitterClass = (Class<? extends CurveFitter>) Class.forName(saved.fitter);
-			fittingModel.curveFitter = curveFitterClass.getDeclaredConstructor().newInstance();
-		} catch (ClassNotFoundException e) {
-			String[] parts = saved.fitter.split("\\.");
-			String shortname = parts[parts.length-1];
-			errors.add("Failed to find Curve Fitter " + shortname);
-		} catch (ReflectiveOperationException | RuntimeException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + saved.fitter, e);
+			CurveFitterRegistry.fromSaved(saved.fitter).ifPresentOrElse(fitter -> {
+				fittingModel.curveFitter = fitter;
+			}, () -> {
+				errors.add("Failed to load Curve Fitter: " + saved.fitter.name);
+			});
+		} catch (RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + saved.fitter.name, e);
 		}
 		
 		//Restore the fitting function

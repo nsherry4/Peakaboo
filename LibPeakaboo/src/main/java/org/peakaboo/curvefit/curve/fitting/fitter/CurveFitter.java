@@ -1,12 +1,13 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
+import org.peakaboo.controller.session.v2.SavedPlugin;
 import org.peakaboo.curvefit.curve.fitting.Curve;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * Defines a method by which a single {@link Curve} is fitted against a
@@ -40,6 +41,10 @@ public interface CurveFitter extends BoltJavaPlugin {
 		}
 		if (! hasSignal) return 0.0f;
 		return maxSignal;
+	}
+	
+	default SavedPlugin save() {
+		return new SavedPlugin(this);
 	}
 	
 }

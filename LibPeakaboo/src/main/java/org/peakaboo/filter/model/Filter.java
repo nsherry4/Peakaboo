@@ -95,7 +95,7 @@ public interface Filter {
 	
 	
 	default SavedPlugin save() {
-		return new SavedPlugin(getFilterUUID(), getParameterGroup().serialize());
+		return new SavedPlugin(getFilterUUID(), getFilterName(), getParameterGroup().serialize());
 	}
 
 }
