@@ -97,12 +97,6 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		undoController.setUndoPoint("", /*distinctChange =*/ true);
 	}
 
-	
-	@Deprecated(since = "6", forRemoval = true)
-	public SavedSessionV1 getSavedSettings() {
-		return SavedSessionV1.storeFrom(this);
-	}
-	
 	public SavedSession save() {
 		
 		var extended = new LinkedHashMap<String, Object>();

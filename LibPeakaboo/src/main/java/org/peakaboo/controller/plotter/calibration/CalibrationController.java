@@ -13,8 +13,6 @@ public interface CalibrationController extends IEventfulBeacon {
 	DetectorProfile getDetectorProfile();
 
 	@Deprecated(since="6", forRemoval = true)
-	public SavedCalibrationSessionV1 toSavedV1();
-	@Deprecated(since="6", forRemoval = true)
 	public void loadSavedV1(SavedCalibrationSessionV1 saved) throws IOException;
 	
 	Map<String, Object> save();

@@ -1,9 +1,6 @@
 package org.peakaboo.controller.plotter.fitting;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,45 +44,7 @@ public class SavedFittingSessionV1 {
 	
 	public boolean showEscapePeaks=true;
 	
-	
-	public SavedFittingSessionV1 storeFrom(FittingController controller) {
 		
-		//Save fitting selections
-		fittings = controller.fittingModel.selections.getFittedTransitionSeries()
-				.stream()
-				.map(SerializedTransitionSeries::new)
-				.collect(toList());
-		
-		annotations = new HashMap<>();
-		for (ITransitionSeries ts : controller.getAnnotations().keySet()) {
-			SerializedTransitionSeries sts = new SerializedTransitionSeries(ts);
-			annotations.put(sts, controller.getAnnotation(ts));
-		}
-		
-		//Save multi-curve fitting solver name
-		solver = controller.getFittingSolver().getClass().getName();
-		
-		//Save single-curve fitter
-		fitter = controller.getCurveFitter().getClass().getName();
-		
-		//Save the fitting function
-		function = controller.getFittingFunction().create().getClass().getName();
-		
-		//Save energy calibration
-		minEnergy = controller.getMinEnergy();
-		maxEnergy = controller.getMaxEnergy();
-		
-		//Save escape peak type
-		escape = controller.getDetectorMaterial();
-		
-		//Save peak model base width
-		fwhmBase = controller.getFWHMBase();
-		
-		showEscapePeaks = controller.getShowEscapePeaks();
-		
-		return this;
-	}
-	
 	public List<String> loadInto(FittingController controller) {
 	
 		List<String> errors = new ArrayList<>();

@@ -29,36 +29,6 @@ public class SavedSessionV1 implements DruthersStorable {
 	public SavedCalibrationSessionV1 calibration;
 	public String version = Version.longVersionNo;
 	
-	
-	/**
-	 * Builds a SavedSession object from the model
-	 */
-	@Deprecated(since = "6", forRemoval = true)
-	public static SavedSessionV1 storeFrom(PlotController plotController) {
-		
-		SavedSessionV1 saved = new SavedSessionV1();
-		
-		
-		//store bad scans
-		saved.data = new SavedDataSessionV1().storeFrom(plotController.data());
-		
-		//store filters
-		saved.filtering = new SavedFilteringSessionV1().storeFrom(plotController.filtering());
-		
-		//store fittings
-		saved.fitting = new SavedFittingSessionV1().storeFrom(plotController.fitting());
-		
-		//store calibration
-		saved.calibration = plotController.calibration().toSavedV1();
-		
-		//store view settings -- this is done differently, since view's session settings is itself serializable
-		saved.view = plotController.view().getViewModel();
-		
-		
-
-		return saved;
-	}
-	
 	/**
 	 * applies serialized preferences to the model
 	 */

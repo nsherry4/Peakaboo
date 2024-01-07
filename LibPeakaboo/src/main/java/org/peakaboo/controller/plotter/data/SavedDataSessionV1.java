@@ -20,21 +20,7 @@ public class SavedDataSessionV1 {
 	public String dataSourcePluginUUID = null;
 	public Map<String, Object> dataSourceParameters = null;
 	public String title = null;
-	
-	public SavedDataSessionV1 storeFrom(DataController controller) {
-		this.discards = controller.getDiscards().list();
-		if (!controller.getDataPaths().isEmpty()) {
-			DataInputAdapter first = controller.getDataPaths().get(0);
-			if (first != null && first.addressable()) {
-				this.files = controller.getDataPaths().stream().map(p -> p.address().get()).collect(Collectors.toList());
-			}
-		}
-		this.dataSourcePluginUUID = controller.getDataSourcePlugin().uuid;
-		this.dataSourceParameters = controller.getDataSourcePlugin().settings;
-		this.title = controller.title;
-		return this;
-	}
-	
+
 	@Deprecated(since = "6", forRemoval = true)
 	public void loadInto(DataController controller) {
 		controller.getDiscards().clear();

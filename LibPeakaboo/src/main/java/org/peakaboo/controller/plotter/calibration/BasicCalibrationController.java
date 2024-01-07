@@ -21,11 +21,6 @@ public class BasicCalibrationController extends EventfulBeacon implements Calibr
 	}
 
 	@Override
-	public SavedCalibrationSessionV1 toSavedV1() {
-		return null;
-	}
-
-	@Override
 	public void loadSavedV1(SavedCalibrationSessionV1 saved) {
 		//Nothing to do
 	}
