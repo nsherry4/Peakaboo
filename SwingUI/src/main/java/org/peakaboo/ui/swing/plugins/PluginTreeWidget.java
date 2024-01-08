@@ -72,7 +72,7 @@ class PluginTreeWidget extends Stencil<Object> {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 		
-		return IconFactory.getImageIcon(plugin.getRegistry().getAssetPath() + "/icons/", plugin.getRegistry().getName(), IconSize.BUTTON);
+		return IconFactory.getImageIcon(plugin.getRegistry().getAssetPath() + "/icons/", plugin.getRegistry().getSlug(), IconSize.BUTTON);
 		
 	}
 

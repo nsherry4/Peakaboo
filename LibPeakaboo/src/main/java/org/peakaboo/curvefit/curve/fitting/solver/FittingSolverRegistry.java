@@ -25,12 +25,10 @@ public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> {
 	
 	//--------------------------------
 	
-	private BoltJavaBuiltinLoader<FittingSolver> builtins;
-	
 	public FittingSolverRegistry() {
 		super("fittingsolver");
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, FittingSolver.class);
+		var builtins = new BoltJavaBuiltinLoader<>(this, FittingSolver.class);
 		builtins.load(GreedyFittingSolver.class);
 		builtins.load(OptimizingFittingSolver.class);
 		builtins.load(MultisamplingOptimizingFittingSolver.class);

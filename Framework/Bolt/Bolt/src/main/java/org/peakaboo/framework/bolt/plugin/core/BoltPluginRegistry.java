@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
@@ -29,16 +28,11 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 	private List<BoltContainer<P>> containers = new ArrayList<>();
 	private BoltPluginSet<P> plugins = new BoltPluginSet<>(this);
 	private List<BoltLoader<P>> loaders = new ArrayList<>();
-	private String name;
+	private String slug;
 	
 	
-	public BoltPluginRegistry(String name) {
-		this.name = name;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void addLoader(BoltLoader<? extends P> loader) {
-		loaders.add((BoltLoader<P>) loader);
+	public BoltPluginRegistry(String slug) {
+		this.slug = slug;
 	}
 	
 	@Override
@@ -72,29 +66,14 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 		}
 	}
 	
-	
-	public Optional<P> fromSaved(SavedPlugin saved) {
-		var proto = this.getByUUID(saved.uuid);
-		if (proto == null) {
-			return Optional.empty();
-		}
-		var solver = proto.create();
-		return Optional.of(solver);
-	}
-	
-
-	public PluginRegistry<P> getManager() {
-		return this;
-	}
-	
 	@Override
-	public String getName() {
-		return name;
+	public String getSlug() {
+		return slug;
 	}
 	
 	@Override
 	public String getAssetPath() {
-		return "/" + name;
+		return "/" + getSlug();
 	}
 	
 	@Override
@@ -102,18 +81,6 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 		load();
 		return plugins.getPlugins();
 	}
-	
-	public final synchronized Optional<BoltPluginPrototype<? extends P>> getPrototypeForClass(Class<? extends P> cls) {
-		load();
-		for (var plugin : plugins.getPlugins()) {
-			if (plugin.create().getClass().equals(cls)) {
-				return Optional.of(plugin);
-			}
-		}
-		return Optional.empty();
-	}
-	
-	
 	
 	@Override
 	public List<BoltIssue<? extends P>> getIssues() {
@@ -129,7 +96,8 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 		allIssues.addAll(findIssues());
 		return allIssues;
 	}
-	
+
+
 	private List<BoltIssue<? extends P>> findIssues() {
 		List<BoltIssue<? extends P>> found = new ArrayList<>();
 
@@ -155,14 +123,21 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 		return found;
 	}
 
-
 	
-	public boolean isImportable(File file) {
-		BoltManagedLoader<P> loader = importer(file);
-		if (loader == null) { return false; }
-		return true;
+	@Override
+	@SuppressWarnings("unchecked")
+	public void addLoader(BoltLoader<? extends P> loader) {
+		loaders.add((BoltLoader<P>) loader);
 	}
 	
+	private List<BoltManagedLoader<P>> managedLoaders() {
+		return loaders.stream()
+				.filter(l -> (l instanceof BoltManagedLoader))
+				.map(l -> (BoltManagedLoader<P>)l)
+				.collect(Collectors.toList());
+	}
+	
+
 	
 	public List<Map<String, Object>> infodump() {
 		return this.getPlugins().stream().map(p -> new HashMap<String, Object>() {{
@@ -177,6 +152,13 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 		}}).collect(Collectors.toList());
 	}
 
+	
+	public boolean isImportable(File file) {
+		BoltManagedLoader<P> loader = importer(file);
+		if (loader == null) { return false; }
+		return true;
+	}
+	
 	//TODO
 	public BoltContainer<P> importOrUpgradeFile(File file) throws BoltImportException {
 	
@@ -195,17 +177,6 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 		return container;
 
 	}
-
-	
-	private List<BoltManagedLoader<P>> managedLoaders() {
-		return loaders.stream()
-				.filter(l -> (l instanceof BoltManagedLoader))
-				.map(l -> (BoltManagedLoader<P>)l)
-				.collect(Collectors.toList());
-	}
-	
-	
-	
 	
 	/**
 	 * These are the loaders which can import the file and are able to load a
@@ -228,16 +199,7 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 		return candidates.get(0);
 	}
 	
-	
-	/**
-	 * Provides a name for the kind of plugins managed by this manager
-	 * @return
-	 */
-	public abstract String getInterfaceName();
-	/**
-	 * Provides a description for the kind of plugins managed by this manager
-	 */
-	public abstract String getInterfaceDescription();
+
 
 
 	

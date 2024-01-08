@@ -25,12 +25,10 @@ public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> {
 	
 	//--------------------------------
 	
-	private BoltJavaBuiltinLoader<CurveFitter> builtins;
-	
 	public CurveFitterRegistry() {
 		super("curvefit");
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, CurveFitter.class);
+		var builtins = new BoltJavaBuiltinLoader<>(this, CurveFitter.class);
 		builtins.load(UnderCurveFitter.class);
 		builtins.load(OptimizingCurveFitter.class);
 		builtins.load(LeastSquaresCurveFitter.class);

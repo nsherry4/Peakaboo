@@ -30,12 +30,10 @@ public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction>
 	
 	//--------------------------------
 	
-	private BoltJavaBuiltinLoader<FittingFunction> builtins;
-	
 	public FittingFunctionRegistry() {
 		super("fitting-function");
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, FittingFunction.class);
+		var builtins = new BoltJavaBuiltinLoader<>(this, FittingFunction.class);
 		builtins.load(PseudoVoigtFittingFunction.class);
 		builtins.load(ConvolvingVoigtFittingFunction.class);
 		builtins.load(GaussianFittingFunction.class);

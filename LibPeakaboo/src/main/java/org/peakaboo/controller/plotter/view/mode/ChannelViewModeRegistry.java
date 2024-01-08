@@ -25,12 +25,10 @@ public class ChannelViewModeRegistry extends BoltPluginRegistry<ChannelViewMode>
 	
 	//--------------------------------
 	
-	private BoltJavaBuiltinLoader<ChannelViewMode> builtins;
-	
 	public ChannelViewModeRegistry() {
 		super("channelview");
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, ChannelViewMode.class);
+		var builtins = new BoltJavaBuiltinLoader<>(this, ChannelViewMode.class);
 		builtins.load(AverageViewMode.class);
 		builtins.load(MaximumViewMode.class);
 		builtins.load(SingleViewMode.class);

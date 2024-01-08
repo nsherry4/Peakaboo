@@ -25,9 +25,8 @@ public class DataSinkRegistry extends BoltPluginRegistry<DataSinkPlugin> {
 	public static DataSinkRegistry system() {
 		return SYSTEM;
 	}
-
 	
-	private BoltJavaBuiltinLoader<DataSinkPlugin> builtins;
+	//--------------------------------
 	
 	public DataSinkRegistry(File dataSinkDir) {
 		super("datasink");
@@ -35,20 +34,10 @@ public class DataSinkRegistry extends BoltPluginRegistry<DataSinkPlugin> {
 		addLoader(new BoltJarDirectoryLoader<>(this, DataSinkPlugin.class, dataSinkDir));
 		addLoader(new BoltJarDirectoryLoader<>(this, DataSinkPlugin.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, DataSinkPlugin.class);
-		registerCustomPlugins();
+		var builtins = new BoltJavaBuiltinLoader<>(this, DataSinkPlugin.class);
+		builtins.load(CSV.class);
 		addLoader(builtins);
 	}
-	
-	private void registerCustomPlugins() {
-		builtins.load(CSV.class);
-	}
-
-	public synchronized void registerPlugin(Class<? extends DataSinkPlugin> clazz) {
-		builtins.load(clazz);
-		reload();
-	}
-
 	
 	@Override
 	public String getInterfaceDescription() {

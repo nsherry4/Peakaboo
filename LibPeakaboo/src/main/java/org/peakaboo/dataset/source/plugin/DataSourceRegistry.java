@@ -28,8 +28,7 @@ public class DataSourceRegistry extends BoltPluginRegistry<DataSourcePlugin> {
 		return SYSTEM;
 	}
 	
-	
-	private BoltJavaBuiltinLoader<DataSourcePlugin> builtins;
+	//--------------------------------
 	
 	public DataSourceRegistry(File dataSourceDir) {
 		super("datasource");
@@ -37,23 +36,12 @@ public class DataSourceRegistry extends BoltPluginRegistry<DataSourcePlugin> {
 		addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class, dataSourceDir));
 		addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, DataSourcePlugin.class);
-		registerCustomPlugins();
-		addLoader(builtins);
-	}
-	
-	private void registerCustomPlugins() {
+		var builtins = new BoltJavaBuiltinLoader<>(this, DataSourcePlugin.class);
 		builtins.load(PlainText.class);
 		builtins.load(SingleColumn.class);
 		builtins.load(UniversalHDF5DataSource.class);
+		addLoader(builtins);
 	}
-	
-	public void registerPlugin(Class<? extends DataSourcePlugin> clazz) {
-		builtins.load(clazz);
-		reload();
-	}
-
-
 	
 	@Override
 	public String getInterfaceDescription() {

@@ -47,8 +47,7 @@ public class MapFilterRegistry extends BoltPluginRegistry<MapFilterPlugin> {
 		return SYSTEM;
 	}
 	
-	
-	private BoltJavaBuiltinLoader<MapFilterPlugin> builtins;
+	//--------------------------------
 	
 	private MapFilterRegistry(File directories) {
 		super("mapfilter");
@@ -56,12 +55,10 @@ public class MapFilterRegistry extends BoltPluginRegistry<MapFilterPlugin> {
 		addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class, directories));
 		addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, MapFilterPlugin.class);
-		registerCustomPlugins();
-		addLoader(builtins);
-	}
-
-	private void registerCustomPlugins() {
+		
+		
+		var builtins = new BoltJavaBuiltinLoader<>(this, MapFilterPlugin.class);
+		
 		builtins.load(BinningMapFilter.class);
 		builtins.load(EnlargeMapFilter.class);
 		
@@ -89,14 +86,9 @@ public class MapFilterRegistry extends BoltPluginRegistry<MapFilterPlugin> {
 		builtins.load(Rotate270MapFilter.class);
 		
 		builtins.load(DeskewMapFilter.class);
+		
+		addLoader(builtins);
 	}
-
-	
-	public void registerPlugin(Class<? extends MapFilterPlugin> clazz) {
-		builtins.load(clazz);
-		reload();
-	}
-
 
 	@Override
 	public String getInterfaceName() {

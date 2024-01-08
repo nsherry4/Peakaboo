@@ -49,7 +49,9 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 	public static FilterRegistry system() {
 		return SYSTEM;
 	}
-
+	
+	//--------------------------------
+	
 	public Optional<Filter> fromSaved(String saved) {
 		try {
 			SavedPlugin loaded = SavedPlugin.load(saved);
@@ -71,23 +73,16 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 		filter.getParameterGroup().deserialize(saved.settings);
 		return Optional.of(filter);
 	}
-	
-	
-	private BoltJavaBuiltinLoader<Filter> builtins;
-	
+		
 	public FilterRegistry(File filterDir) {
 		super("filter");
 		
 		addLoader(new BoltJarDirectoryLoader<>(this, Filter.class, filterDir));
 		addLoader(new BoltJarDirectoryLoader<>(this, Filter.class));
 		
-		builtins = new BoltJavaBuiltinLoader<>(this, Filter.class);
-		registerCustomPlugins();
-		addLoader(builtins);
-	}
-	
-	private void registerCustomPlugins() {
-
+		
+		var builtins = new BoltJavaBuiltinLoader<>(this, Filter.class);
+		
 		builtins.load(IdentityFilter.class);
 		builtins.load(SubFilter.class);
 		builtins.load(SpectrumNormalizationFilter.class);
@@ -115,12 +110,8 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 		builtins.load(LowStatisticsNoiseFilter.class);
 		
 		builtins.load(PeakDetectorFilter.class);
-	
-	}
-	
-	public synchronized void registerPlugin(Class<? extends Filter> clazz) {
-		builtins.load(clazz);
-		reload();
+		
+		addLoader(builtins);
 	}
 
 	@Override
