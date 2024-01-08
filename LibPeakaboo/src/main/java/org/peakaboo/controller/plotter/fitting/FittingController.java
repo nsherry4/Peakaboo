@@ -420,7 +420,7 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
 		fittingDataInvalidated();
-		setUndoPoint("Change Peak Fitter");
+		setUndoPoint("Change Peak Model");
 	}
 	
 	public BoltPluginPrototype<? extends FittingFunction> getFittingFunction() {
@@ -435,6 +435,7 @@ public class FittingController extends EventfulType<Boolean>
 	public void setCurveFitter(CurveFitter curveFitter) {
 		this.fittingModel.curveFitter = curveFitter;
 		fittingDataInvalidated();
+		setUndoPoint("Change Curve Fitter");
 	}
 
 
@@ -446,6 +447,7 @@ public class FittingController extends EventfulType<Boolean>
 	public void setFittingSolver(FittingSolver fittingSolver) {
 		this.fittingModel.fittingSolver = fittingSolver;
 		fittingDataInvalidated();
+		setUndoPoint("Change Overlap Solver");
 	}
 
 	public ExecutorSet<List<ITransitionSeries>> autodetectPeaks() {
