@@ -13,7 +13,6 @@ public class SessionViewModel {
 	public float				zoom;
 	public boolean				logTransform;
 	public boolean				showTitle;
-	public boolean				darkMode;
 	
 	public SessionViewModel() {
 
@@ -23,7 +22,6 @@ public class SessionViewModel {
 		zoom = 1.0f;
 		logTransform = true;
 		showTitle = false;
-		darkMode = false;
 		
 	}
 
@@ -61,7 +59,6 @@ public class SessionViewModel {
 		this.zoom = view.zoom;
 		this.logTransform = view.logTransform;
 		this.showTitle = view.showTitle;
-		this.darkMode = view.darkMode;
 	}
 	
 }

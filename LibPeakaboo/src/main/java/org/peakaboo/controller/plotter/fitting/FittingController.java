@@ -313,7 +313,7 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.selections.getFittingParameters().setCalibration(min, max, scanSize);
 		fittingModel.proposals.getFittingParameters().setCalibration(min, max, scanSize);
 
-		//TODO: Why is this here? Are we just resetting it to be sure they stay in sync?
+		//Keep the other settings in sync
 		fittingModel.selections.getFittingParameters().setDetectorMaterial(getDetectorMaterial());
 		fittingModel.proposals.getFittingParameters().setDetectorMaterial(getDetectorMaterial());
 

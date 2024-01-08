@@ -14,6 +14,8 @@ public class ViewController extends EventfulBeacon {
 
 	private SessionViewModel viewModel;
 	private PlotController plot;
+	// Don't save dark mode in the session view model or else it'll end up in the session files.
+	private boolean darkMode = false;
 	
 	private static final String SETTING_MONOCHROME = "org.peakaboo.controller.plotter.view.monochrome";
 	private static final String SETTING_CONSTSCALE = "org.peakaboo.controller.plotter.view.constantscale";
@@ -190,11 +192,11 @@ public class ViewController extends EventfulBeacon {
 	
 	
 	public boolean getDarkMode() {
-		return viewModel.darkMode;
+		return this.darkMode;
 	}
 
 	public void setDarkMode(boolean dark) {
-		viewModel.darkMode = dark;
+		this.darkMode = dark;
 		updateListeners();
 	}
 
