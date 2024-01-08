@@ -27,7 +27,7 @@ public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<Bol
 		return insts;
 	}
 	
-	BoltPluginRegistry<T> getManager();
+	PluginRegistry<T> getManager();
 	
 	default BoltPluginPrototype<? extends T> getByUUID(String uuid) {
 		for (BoltPluginPrototype<? extends T> plugin : getPlugins()) {

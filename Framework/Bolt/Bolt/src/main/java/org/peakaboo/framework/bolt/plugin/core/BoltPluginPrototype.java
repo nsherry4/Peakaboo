@@ -50,7 +50,7 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 
 	BoltContainer<T> getContainer();
 
-	BoltPluginRegistry<T> getRegistry();
+	PluginRegistry<T> getRegistry();
 	
 	/**
 	 * Returns true if (and only if) the UUID of the other plugin matches 

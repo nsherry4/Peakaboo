@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltLoader;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
@@ -15,9 +15,9 @@ public class BoltJavaBuiltinLoader<T extends BoltJavaPlugin> implements BoltLoad
 	private List<Class<? extends T>> custom = new ArrayList<>();
 	
 	private Class<T> targetClass;
-	private BoltPluginRegistry<T> manager;
+	private PluginRegistry<T> manager;
 	
-	public BoltJavaBuiltinLoader(BoltPluginRegistry<T> manager, Class<T> targetClass) {
+	public BoltJavaBuiltinLoader(PluginRegistry<T> manager, Class<T> targetClass) {
 		this.targetClass = targetClass;
 	}
 	

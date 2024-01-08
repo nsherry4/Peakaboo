@@ -1,14 +1,14 @@
 package org.peakaboo.framework.bolt.plugin.java.container;
 
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 
 public class BoltClassContainer<T extends BoltJavaPlugin> extends BoltJavaContainer<T> {
 		
 	protected Class<? extends T> implClass;
-	private BoltPluginRegistry<T> manager;
+	private PluginRegistry<T> manager;
 	
-	public BoltClassContainer(BoltPluginRegistry<T> manager, Class<T> targetClass, Class<? extends T> implClass) {
+	public BoltClassContainer(PluginRegistry<T> manager, Class<T> targetClass, Class<? extends T> implClass) {
 		super(manager, targetClass);
 		this.implClass = implClass;
 		add(implClass);
@@ -35,7 +35,7 @@ public class BoltClassContainer<T extends BoltJavaPlugin> extends BoltJavaContai
 	}
 
 	@Override
-	public BoltPluginRegistry<T> getManager() {
+	public PluginRegistry<T> getManager() {
 		return this.manager;
 	}
 	

@@ -10,8 +10,8 @@ import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
@@ -39,8 +39,7 @@ class PluginTreeWidget extends Stencil<Object> {
 	protected void onSetValue(Object object, boolean selected) {
 		this.label.setForeground(getForeground());
 		
-    	if (object instanceof BoltPluginRegistry) {
-    		BoltPluginRegistry<?> manager = (BoltPluginRegistry<?>) object;
+    	if (object instanceof BoltPluginRegistry manager) {
         	label.setText(manager.getInterfaceName());
         	label.setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
     	} else if (object instanceof BoltPluginPrototype) {

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginBuilder;
 import org.peakaboo.framework.bolt.plugin.config.container.BoltConfigContainer;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltDirectoryLoader;
 
@@ -18,9 +18,9 @@ public class BoltConfigDirectoryLoader<T extends BoltConfigPlugin> extends BoltD
 	private String ext;
 	private BoltConfigPluginBuilder<T> builder;
 	private Class<T> targetClass;
-	private BoltPluginRegistry<T> manager;
+	private PluginRegistry<T> manager;
 
-	public BoltConfigDirectoryLoader(BoltPluginRegistry<T> manager, Class<T> targetClass, File directory, String ext, BoltConfigPluginBuilder<T> builder) {
+	public BoltConfigDirectoryLoader(PluginRegistry<T> manager, Class<T> targetClass, File directory, String ext, BoltConfigPluginBuilder<T> builder) {
 		super(directory, true);
 		this.ext = ext;
 		this.targetClass = targetClass;

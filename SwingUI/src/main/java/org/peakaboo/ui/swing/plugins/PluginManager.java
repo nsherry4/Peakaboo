@@ -26,8 +26,9 @@ import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
@@ -290,12 +291,15 @@ public class PluginManager extends HeaderLayer {
 	
 	
 	public void reload() {
+		
+		// We only refresh the registries which we show in this UI
 		DataSourceRegistry.system().reload();
 		DataSinkRegistry.system().reload();
 		FilterRegistry.system().reload();
 		MapFilterRegistry.system().reload();
 		
-		for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+		
+		for (var manager : Tier.provider().getPluginManagers()) {
 			manager.reload();
 		}
 		
@@ -317,7 +321,7 @@ public class PluginManager extends HeaderLayer {
 		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
 	}
 	
-	private DefaultMutableTreeNode createPluginManagerRootNode(BoltPluginRegistry<?> manager) {
+	private DefaultMutableTreeNode createPluginManagerRootNode(PluginRegistry<? extends BoltPlugin> manager) {
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(manager);
 		for (BoltPluginPrototype<?> source :  manager.getPlugins()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
@@ -347,7 +351,7 @@ public class PluginManager extends HeaderLayer {
 		plugins.add(mapFiltersNode);
 
 		
-		for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+		for (var manager : Tier.provider().getPluginManagers()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(manager);
 			plugins.add(node);
 			

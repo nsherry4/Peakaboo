@@ -34,8 +34,7 @@ public class ChannelViewModeRegistry extends BoltPluginRegistry<ChannelViewMode>
 		builtins.load(AverageViewMode.class);
 		builtins.load(MaximumViewMode.class);
 		builtins.load(SingleViewMode.class);
-		
-		addLoader(builtins);
+		this.addLoader(builtins);
 		
 	}
 

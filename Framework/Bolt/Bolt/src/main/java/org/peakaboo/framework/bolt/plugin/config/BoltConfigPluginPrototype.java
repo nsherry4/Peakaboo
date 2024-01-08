@@ -7,8 +7,8 @@ import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.bolt.plugin.config.container.BoltConfigContainer;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements BoltPluginPrototype<T> {
@@ -17,9 +17,9 @@ public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements Bo
 	private Class<T> pluginClass;
 	private T reference;
 	private BoltConfigContainer<T> container;
-	private BoltPluginRegistry<T> registry;
+	private PluginRegistry<T> registry;
 	
-	public BoltConfigPluginPrototype(BoltPluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
+	public BoltConfigPluginPrototype(PluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
 		this.container = container;
@@ -114,7 +114,7 @@ public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements Bo
 	}
 
 	@Override
-	public BoltPluginRegistry<T> getRegistry() {
+	public PluginRegistry<T> getRegistry() {
 		return this.registry;
 	}
 

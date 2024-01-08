@@ -8,18 +8,18 @@ import java.util.List;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginBuilder;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginPrototype;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltURLContainer;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 
 public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLContainer<T>{
 
 	private BoltPluginSet<T> plugins;
-	private BoltPluginRegistry<T> manager;
+	private PluginRegistry<T> manager;
 	
-	public BoltConfigContainer(BoltPluginRegistry<T> manager, URL url, Class<T> pluginClass, BoltConfigPluginBuilder<T> builder, boolean deletable) {
+	public BoltConfigContainer(PluginRegistry<T> manager, URL url, Class<T> pluginClass, BoltConfigPluginBuilder<T> builder, boolean deletable) {
 		super(url, deletable);
 		if (url == null) {
 			throw new NullPointerException("URL for config plugin was null");
@@ -47,7 +47,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	}
 
 	@Override
-	public BoltPluginRegistry<T> getManager() {
+	public PluginRegistry<T> getManager() {
 		return this.manager;
 	}
 	
