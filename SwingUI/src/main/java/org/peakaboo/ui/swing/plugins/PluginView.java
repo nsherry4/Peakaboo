@@ -16,7 +16,7 @@ import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.StratusText;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
@@ -28,7 +28,7 @@ import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 class PluginView extends JPanel {
 	
-	public PluginView(BoltPluginPrototype<? extends BoltPlugin> plugin) {
+	public PluginView(PluginDescriptor<? extends BoltPlugin> plugin) {
 		super(new GridBagLayout());
 		setBorder(Spacing.bHuge());
 
@@ -69,7 +69,7 @@ class PluginView extends JPanel {
 		
 	}
 
-	private ImageIcon getIcon(BoltPluginPrototype<? extends BoltPlugin> plugin) {
+	private ImageIcon getIcon(PluginDescriptor<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == DataSourcePlugin.class) {

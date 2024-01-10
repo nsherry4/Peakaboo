@@ -12,11 +12,11 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
  * Interface for exposing a set of {@link BoltPlugin}s and {@link BoltIssue}s
  * in a read-only way.
  */
-public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<BoltPluginPrototype<? extends T>> {
+public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginDescriptor<? extends T>> {
 
-	List<BoltPluginPrototype<? extends T>> getPlugins();
+	List<PluginDescriptor<? extends T>> getPlugins();
 	
-	default Iterator<BoltPluginPrototype<? extends T>> iterator() {
+	default Iterator<PluginDescriptor<? extends T>> iterator() {
 		return getPlugins().iterator();
 	}
 	
@@ -30,8 +30,8 @@ public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<Bol
 	
 	PluginRegistry<T> getManager();
 	
-	default BoltPluginPrototype<? extends T> getByUUID(String uuid) {
-		for (BoltPluginPrototype<? extends T> plugin : getPlugins()) {
+	default PluginDescriptor<? extends T> getByUUID(String uuid) {
+		for (PluginDescriptor<? extends T> plugin : getPlugins()) {
 			if (plugin.getUUID().equals(uuid)) {
 				return plugin;
 			}
@@ -39,7 +39,7 @@ public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<Bol
 		return null;
 	}
 	
-	default Optional<BoltPluginPrototype<? extends T>> getByClass(Class<? extends T> cls) {
+	default Optional<PluginDescriptor<? extends T>> getByClass(Class<? extends T> cls) {
 		synchronized(this) {
 			for (var plugin : getPlugins()) {
 				if (plugin.getReferenceInstance().getClass().equals(cls)) {
@@ -72,7 +72,7 @@ public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<Bol
 	 * @param other the other collection to compare against
 	 * @return true if this collection is a proper upgrade for the other, false otherwise
 	 */
-	default boolean isUpgradeFor(BoltPluginCollection<? extends T> other) {
+	default boolean isUpgradeFor(PluginCollection<? extends T> other) {
 		//get all the UUIDs from the other plugin set
 		List<String> otherUUIDs = other.getPlugins().stream().map(p -> p.getUUID()).collect(Collectors.toList());
 				

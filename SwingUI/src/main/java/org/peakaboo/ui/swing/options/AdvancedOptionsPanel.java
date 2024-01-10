@@ -30,7 +30,7 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
@@ -296,9 +296,9 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
 
 		FittingController fits = controller.fitting();
-		Supplier<BoltPluginPrototype<? extends FittingFunction>> getter = fits::getFittingFunction;
-		Consumer<BoltPluginPrototype<? extends FittingFunction>> setter = fits::setFittingFunction;
-		List<BoltPluginPrototype<? extends FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
+		Supplier<PluginDescriptor<? extends FittingFunction>> getter = fits::getFittingFunction;
+		Consumer<PluginDescriptor<? extends FittingFunction>> setter = fits::setFittingFunction;
+		List<PluginDescriptor<? extends FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
 		
 		OptionBlock fitBlock = this.makeRadioBlockForFitFns(fitters, getter, setter);
 
@@ -326,7 +326,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 	
-	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<BoltPluginPrototype<? extends FittingFunction>> fitters, Supplier<BoltPluginPrototype<? extends FittingFunction>> getter, Consumer<BoltPluginPrototype<? extends FittingFunction>> setter) {
+	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<PluginDescriptor<? extends FittingFunction>> fitters, Supplier<PluginDescriptor<? extends FittingFunction>> getter, Consumer<PluginDescriptor<? extends FittingFunction>> setter) {
 		
 		OptionBlock block = new OptionBlock();
 		ButtonGroup group = new ButtonGroup();

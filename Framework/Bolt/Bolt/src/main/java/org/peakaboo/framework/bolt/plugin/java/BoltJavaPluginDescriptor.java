@@ -3,11 +3,11 @@ package org.peakaboo.framework.bolt.plugin.java;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
-public class BoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPluginPrototype<T> {
+public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements PluginDescriptor<T> {
 
 	private Class<T> pluginClass;
 	private Class<? extends T> implClass;
@@ -15,7 +15,7 @@ public class BoltJavaPluginPrototype<T extends BoltJavaPlugin> implements BoltPl
 	private T instance;
 	private PluginRegistry<T> registry;
 	
-	public BoltJavaPluginPrototype(PluginRegistry<T> registry, Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container) {
+	public BoltJavaPluginDescriptor(PluginRegistry<T> registry, Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container) {
 		this.pluginClass = pluginClass;
 		this.implClass = implClass;
 		this.container = container;

@@ -10,7 +10,7 @@ import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -42,8 +42,8 @@ class PluginTreeWidget extends Stencil<Object> {
     	if (object instanceof BoltPluginRegistry manager) {
         	label.setText(manager.getInterfaceName());
         	label.setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
-    	} else if (object instanceof BoltPluginPrototype) {
-        	BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>)object;
+    	} else if (object instanceof PluginDescriptor) {
+        	PluginDescriptor<? extends BoltPlugin> plugin = (PluginDescriptor<? extends BoltPlugin>)object;
         	label.setText(plugin.getName());
         	label.setIcon(getIcon(plugin));	
     	} else if (object instanceof BoltIssue issue) {
@@ -53,7 +53,7 @@ class PluginTreeWidget extends Stencil<Object> {
 		
 	}
 	
-	private ImageIcon getIcon(BoltPluginPrototype<? extends BoltPlugin> plugin) {
+	private ImageIcon getIcon(PluginDescriptor<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == DataSourcePlugin.class) {

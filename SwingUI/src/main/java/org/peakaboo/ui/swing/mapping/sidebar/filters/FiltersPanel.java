@@ -17,7 +17,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
@@ -203,8 +203,8 @@ public class FiltersPanel extends JPanel {
 	private JPanel buildAddPanel() {
 		
 		//model and tree
-		List<BoltPluginPrototype<? extends MapFilterPlugin>> plugins = MapFilterRegistry.system().getPlugins();
-		GroupedListTreeModel<BoltPluginPrototype<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
+		List<PluginDescriptor<? extends MapFilterPlugin>> plugins = MapFilterRegistry.system().getPlugins();
+		GroupedListTreeModel<PluginDescriptor<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
 				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);
 		tree.setRootVisible(false);
@@ -224,9 +224,9 @@ public class FiltersPanel extends JPanel {
 			@Override
 			protected void approve() {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-				BoltPluginPrototype<? extends MapFilterPlugin> proto = null;
+				PluginDescriptor<? extends MapFilterPlugin> proto = null;
 				try {
-					proto = (BoltPluginPrototype<? extends MapFilterPlugin>) node.getUserObject();	
+					proto = (PluginDescriptor<? extends MapFilterPlugin>) node.getUserObject();	
 				} catch (ClassCastException e) {}
 				
 				if (proto != null) { 

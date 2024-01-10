@@ -14,7 +14,7 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.SerializedTransitionSeries;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 @Deprecated(since = "6", forRemoval = true)
 public class SavedFittingSessionV1 {
@@ -93,7 +93,7 @@ public class SavedFittingSessionV1 {
 		//Restore the fitting function
 		try {
 			var fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(function);
-			BoltPluginPrototype<? extends FittingFunction> fitfnProto = FittingFunctionRegistry.system()
+			PluginDescriptor<? extends FittingFunction> fitfnProto = FittingFunctionRegistry.system()
 					.getByClass(fittingFunctionClass)
 					.orElse(FittingFunctionRegistry.system().getPreset());
 			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fitfnProto);

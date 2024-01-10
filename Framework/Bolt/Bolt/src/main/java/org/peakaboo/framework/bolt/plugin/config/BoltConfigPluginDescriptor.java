@@ -7,11 +7,11 @@ import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.bolt.plugin.config.container.BoltConfigContainer;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
-public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements BoltPluginPrototype<T> {
+public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements PluginDescriptor<T> {
 
 	private BoltConfigPluginBuilder<T> builder;
 	private Class<T> pluginClass;
@@ -19,7 +19,7 @@ public class BoltConfigPluginPrototype<T extends BoltConfigPlugin> implements Bo
 	private BoltConfigContainer<T> container;
 	private PluginRegistry<T> registry;
 	
-	public BoltConfigPluginPrototype(PluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
+	public BoltConfigPluginDescriptor(PluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
 		this.container = container;

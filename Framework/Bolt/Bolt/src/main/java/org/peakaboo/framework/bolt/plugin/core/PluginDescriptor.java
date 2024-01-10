@@ -3,12 +3,12 @@ package org.peakaboo.framework.bolt.plugin.core;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 /**
- * A BoltPluginPrototype wraps a single plugin and allows it to be managed and introspected.
+ * A {@link PluginDescriptor} wraps a single plugin and allows it to be introspected and new instances created.
  * @author NAS
  *
  * @param <T>
  */
-public interface BoltPluginPrototype<T extends BoltPlugin> {
+public interface PluginDescriptor<T extends BoltPlugin> {
 
 	Class<? extends T> getImplementationClass();
 
@@ -58,7 +58,7 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 	 * @param other the plugin to test against
 	 * @return true if this plugin's version is newer or the same, false if this plugin version is older, or if the UUIDs don't match
 	 */
-	default boolean isUpgradeFor(BoltPluginPrototype<?> other) {
+	default boolean isUpgradeFor(PluginDescriptor<?> other) {
 		if (!getUUID().equals(other.getUUID())) {
 			return false;
 		}
@@ -72,7 +72,7 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 		}
 	}
 	
-	default boolean isNewerThan(BoltPluginPrototype<?> other) {
+	default boolean isNewerThan(PluginDescriptor<?> other) {
 		if (!getUUID().equals(other.getUUID())) {
 			return false;
 		}
@@ -88,8 +88,8 @@ public interface BoltPluginPrototype<T extends BoltPlugin> {
 	
 	/**
 	 * Returns a SavedPlugin object describing the plugin represented by this
-	 * prototype. The SavedPlugin will be based on a freshly created instance of the
-	 * plugin.
+	 * {@link PluginDescriptor}. The SavedPlugin will be based on a freshly created
+	 * instance of the plugin.
 	 */
 	default SavedPlugin save() {
 		return new SavedPlugin(create());

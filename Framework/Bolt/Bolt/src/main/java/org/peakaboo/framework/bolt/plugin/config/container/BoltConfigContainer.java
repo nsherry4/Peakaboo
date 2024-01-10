@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginBuilder;
-import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginPrototype;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginDescriptor;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltURLContainer;
@@ -28,7 +28,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 		this.manager = manager;
 		
 		plugins = new BoltPluginSet<>(manager);
-		BoltConfigPluginPrototype<T> plugin = new BoltConfigPluginPrototype<>(this.manager, builder, pluginClass, this);
+		BoltConfigPluginDescriptor<T> plugin = new BoltConfigPluginDescriptor<>(this.manager, builder, pluginClass, this);
 		plugins.addPlugin(plugin);
 	}
 	
@@ -37,7 +37,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	}
 
 	@Override
-	public List<BoltPluginPrototype<? extends T>> getPlugins() {
+	public List<PluginDescriptor<? extends T>> getPlugins() {
 		return plugins.getPlugins();
 	}
 

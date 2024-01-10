@@ -17,7 +17,7 @@ import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
@@ -92,9 +92,9 @@ class FilterSelectionList extends ClearPanel
 				
 				Object leaf = path.getLastPathComponent();
 
-				if (leaf instanceof BoltPluginPrototype<?>) {
+				if (leaf instanceof PluginDescriptor<?>) {
 					@SuppressWarnings("unchecked")
-					BoltPluginPrototype<? extends Filter> plugin = (BoltPluginPrototype<? extends Filter>) leaf;
+					PluginDescriptor<? extends Filter> plugin = (PluginDescriptor<? extends Filter>) leaf;
 					Filter filter = plugin.create();
 					filter.initialize();
 					controller.addFilter(filter);
@@ -122,7 +122,7 @@ class FilterSelectionTreeModel implements TreeModel {
 	}
 
 	public boolean isLeaf(Object node) {
-		if (node instanceof BoltPluginPrototype<?>) {
+		if (node instanceof PluginDescriptor<?>) {
 			return true;
 		}
 		return false;
@@ -137,7 +137,7 @@ class FilterSelectionTreeModel implements TreeModel {
 
 		if (parent instanceof FilterType) {
 			@SuppressWarnings("unchecked")
-			BoltPluginPrototype<? extends Filter> plugin = (BoltPluginPrototype<? extends Filter>) child;
+			PluginDescriptor<? extends Filter> plugin = (PluginDescriptor<? extends Filter>) child;
 			return FilterRegistry.system().getPlugins().indexOf(plugin);
 		} else if (parent instanceof String) {
 			FilterType ft = (FilterType) child;
@@ -151,7 +151,7 @@ class FilterSelectionTreeModel implements TreeModel {
 
 		if (parent instanceof FilterType ft) {
 			int typeCount = 0;
-			for (BoltPluginPrototype<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
+			for (PluginDescriptor<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 			}
 			return typeCount;
@@ -169,7 +169,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			index++;
 			int typeCount = 0;
 
-			for (BoltPluginPrototype<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
+			for (PluginDescriptor<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 				if (typeCount == index) return plugin;
 			}

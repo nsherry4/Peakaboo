@@ -31,7 +31,7 @@ import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.plot.PlotData;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -416,14 +416,14 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Change Peak Shape");
 	}
 
-	public void setFittingFunction(BoltPluginPrototype<? extends FittingFunction> cls) {
+	public void setFittingFunction(PluginDescriptor<? extends FittingFunction> cls) {
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
 		fittingDataInvalidated();
 		setUndoPoint("Change Peak Model");
 	}
 	
-	public BoltPluginPrototype<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
@@ -600,7 +600,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 		//Restore the fitting function
 		try {
-			BoltPluginPrototype<? extends FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
+			PluginDescriptor<? extends FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
 			if (oProto == null) {
 				errors.add("Failed to load Fitting Function: " + saved.model.name);
 				oProto = FittingFunctionRegistry.system().getPreset();

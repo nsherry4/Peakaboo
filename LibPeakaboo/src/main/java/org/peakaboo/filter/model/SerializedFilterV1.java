@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 /**
  * SerializedFilter holds a reference to a filter, and provides getters/setters for
@@ -89,7 +89,7 @@ public class SerializedFilterV1 {
 		//If it already exists, just return it, otherwise build a filter
 		if (filter != null) { return filter; }
 			
-		for (BoltPluginPrototype<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
+		for (PluginDescriptor<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
 			if (
 				plugin.getUUID().equals(uuidOrClazz) || 
 				plugin.getImplementationClass().getName().equals(uuidOrClazz)

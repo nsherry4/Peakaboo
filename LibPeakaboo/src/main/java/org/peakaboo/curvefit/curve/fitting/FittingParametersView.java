@@ -11,7 +11,7 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 public interface FittingParametersView {
 
@@ -37,7 +37,7 @@ public interface FittingParametersView {
 
 	DetectorMaterialType getDetectorMaterial();
 
-	BoltPluginPrototype<? extends FittingFunction> getFittingFunction();
+	PluginDescriptor<? extends FittingFunction> getFittingFunction();
 
 	boolean getShowEscapePeaks();
 

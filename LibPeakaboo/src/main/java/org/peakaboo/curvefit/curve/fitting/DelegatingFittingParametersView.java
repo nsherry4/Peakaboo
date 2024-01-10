@@ -4,7 +4,7 @@ import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 public class DelegatingFittingParametersView implements FittingParametersView {
 
@@ -50,7 +50,7 @@ public class DelegatingFittingParametersView implements FittingParametersView {
 	}
 
 	@Override
-	public BoltPluginPrototype<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
 		return params.getFittingFunction();
 	}
 

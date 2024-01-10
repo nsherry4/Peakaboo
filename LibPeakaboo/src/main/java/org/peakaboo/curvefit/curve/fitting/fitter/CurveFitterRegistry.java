@@ -3,7 +3,7 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
@@ -49,7 +49,7 @@ public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> impleme
 		return "Curve fitters match curves for individual Transition Series to real signal";
 	}
 	@Override
-	public BoltPluginPrototype<? extends CurveFitter> getPreset() {
+	public PluginDescriptor<? extends CurveFitter> getPreset() {
 		return this.getByClass(UnderCurveFitter.class).orElseThrow();
 	}
 

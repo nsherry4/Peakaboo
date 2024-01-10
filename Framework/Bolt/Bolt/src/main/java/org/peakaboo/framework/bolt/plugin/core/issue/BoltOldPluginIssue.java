@@ -1,16 +1,16 @@
 package org.peakaboo.framework.bolt.plugin.core.issue;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 /**
  * This plugin is out of date
  */
 public class BoltOldPluginIssue<T extends BoltPlugin> implements BoltPluginIssue<T> {
 
-	protected BoltPluginPrototype<? extends T> proto;
+	protected PluginDescriptor<? extends T> proto;
 	
-	public BoltOldPluginIssue(BoltPluginPrototype<? extends T> proto) {
+	public BoltOldPluginIssue(PluginDescriptor<? extends T> proto) {
 		this.proto = proto;
 	}
 	

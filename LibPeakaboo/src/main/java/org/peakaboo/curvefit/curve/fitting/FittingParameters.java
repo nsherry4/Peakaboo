@@ -4,7 +4,7 @@ import org.peakaboo.controller.session.v2.SavedFittingParameters;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 public class FittingParameters implements FittingParametersView {
 
@@ -13,7 +13,7 @@ public class FittingParameters implements FittingParametersView {
 	private float fwhmBase = 0.080f;
 	private EnergyCalibration calibration = new EnergyCalibration(0, 0, 0);
 	private DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
-	private BoltPluginPrototype<? extends FittingFunction> fittingFunction = FittingFunctionRegistry.system().getPreset();
+	private PluginDescriptor<? extends FittingFunction> fittingFunction = FittingFunctionRegistry.system().getPreset();
 	private boolean showEscapePeaks = true;
 
 	FittingParameters(FittingSet fits) {
@@ -122,13 +122,13 @@ public class FittingParameters implements FittingParametersView {
 		invalidate();
 	}
 	
-	public void setFittingFunction(BoltPluginPrototype<? extends FittingFunction> proto) {
+	public void setFittingFunction(PluginDescriptor<? extends FittingFunction> proto) {
 		this.fittingFunction = proto;
 		invalidate();
 	}
 
 	@Override
-	public BoltPluginPrototype<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
 		return fittingFunction;
 	}
 

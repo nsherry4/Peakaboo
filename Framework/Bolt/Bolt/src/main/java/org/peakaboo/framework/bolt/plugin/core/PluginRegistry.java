@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltLoader;
 
-public interface PluginRegistry <P extends BoltPlugin> extends BoltPluginCollection<P> {
+public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<P> {
 
 	/**
 	 * Gets a string containing only letters, numbers and dashes. This string identifies the type of plugins

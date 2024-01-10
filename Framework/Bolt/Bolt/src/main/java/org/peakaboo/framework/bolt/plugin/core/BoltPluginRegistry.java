@@ -77,7 +77,7 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 	}
 	
 	@Override
-	public final synchronized List<BoltPluginPrototype<? extends P>> getPlugins() {
+	public final synchronized List<PluginDescriptor<? extends P>> getPlugins() {
 		load();
 		return plugins.getPlugins();
 	}
@@ -108,9 +108,9 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 			//we're not responsible for detecting empty containers
 			if (container.isEmpty()) { continue; }
 						
-			for (BoltPluginPrototype<? extends P> plugin : container.getPlugins()) {
+			for (PluginDescriptor<? extends P> plugin : container.getPlugins()) {
 				//look up the newest version of this plugin by UUID
-				BoltPluginPrototype<? extends P> newest = getByUUID(plugin.getUUID());
+				PluginDescriptor<? extends P> newest = getByUUID(plugin.getUUID());
 				if (newest.isNewerThan(plugin)) {
 					outdated = true;
 				}

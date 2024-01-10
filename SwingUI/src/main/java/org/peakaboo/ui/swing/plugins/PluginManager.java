@@ -26,7 +26,7 @@ import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
@@ -160,28 +160,28 @@ public class PluginManager extends HeaderLayer {
 	}
 	
 
-	private BoltPluginPrototype<? extends BoltPlugin> selectedPlugin() {
+	private PluginDescriptor<? extends BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
 		if (node == null) {
 			return null;
 		}
-		if (!(node.getUserObject() instanceof BoltPluginPrototype<?>)) {
+		if (!(node.getUserObject() instanceof PluginDescriptor<?>)) {
 			return null;
 		}
 		
-		BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>) node.getUserObject();
+		PluginDescriptor<? extends BoltPlugin> plugin = (PluginDescriptor<? extends BoltPlugin>) node.getUserObject();
 		return plugin;
 	}
 	
 	private void removeSelected() {	
-		BoltPluginPrototype<? extends BoltPlugin> plugin = selectedPlugin();
+		PluginDescriptor<? extends BoltPlugin> plugin = selectedPlugin();
 		if (plugin != null) {
 			remove(plugin);	
 		}
 	}
 	
-	private void remove(BoltPluginPrototype<? extends BoltPlugin> plugin) {
+	private void remove(PluginDescriptor<? extends BoltPlugin> plugin) {
 		/*
 		 * This is a little tricky. There's no rule that says that each plugin is in 
 		 * it's own jar file. We need to confirm with the user that they want to 
@@ -218,7 +218,7 @@ public class PluginManager extends HeaderLayer {
 		buff.append("<ul>");
 		for (Object o : stuff) {
 			String name = o.toString();
-			if (o instanceof BoltPluginPrototype<?> plugin) {
+			if (o instanceof PluginDescriptor<?> plugin) {
 				name = plugin.getName() + " (v" + plugin.getVersion() + ")";
 			}
 			buff.append("<li>" + name + "</li>");
@@ -323,7 +323,7 @@ public class PluginManager extends HeaderLayer {
 	
 	private DefaultMutableTreeNode createPluginManagerRootNode(PluginRegistry<? extends BoltPlugin> manager) {
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(manager);
-		for (BoltPluginPrototype<?> source :  manager.getPlugins()) {
+		for (PluginDescriptor<?> source :  manager.getPlugins()) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(source);
 			sourcesNode.add(node);
 		}
@@ -355,7 +355,7 @@ public class PluginManager extends HeaderLayer {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(manager);
 			plugins.add(node);
 			
-			for (BoltPluginPrototype<?> source :  manager.getPlugins()) {
+			for (PluginDescriptor<?> source :  manager.getPlugins()) {
 				DefaultMutableTreeNode subnode = new DefaultMutableTreeNode(source);
 				node.add(subnode);
 			}
@@ -387,8 +387,8 @@ public class PluginManager extends HeaderLayer {
 				remove.setEnabled(false);
 			} else {
 				Object o = node.getUserObject();
-				if (o instanceof BoltPluginPrototype<?>) {
-					details.add(new PluginView((BoltPluginPrototype<? extends BoltPlugin>) o), BorderLayout.CENTER);
+				if (o instanceof PluginDescriptor<?>) {
+					details.add(new PluginView((PluginDescriptor<? extends BoltPlugin>) o), BorderLayout.CENTER);
 					remove.setEnabled(selectedPlugin().getContainer().isDeletable());
 				} else if (o instanceof BoltIssue) {
 					details.add(new IssueView((BoltIssue<? extends BoltPlugin>) o, this));
