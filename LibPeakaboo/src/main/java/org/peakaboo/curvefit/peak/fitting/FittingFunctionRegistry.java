@@ -55,7 +55,7 @@ public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction>
 	}
 	@Override
 	public BoltPluginPrototype<? extends FittingFunction> getPreset() {
-		return this.getPrototypeForClass(PseudoVoigtFittingFunction.class).orElseThrow();
+		return this.getByClass(PseudoVoigtFittingFunction.class).orElseThrow();
 	}
 	
 }

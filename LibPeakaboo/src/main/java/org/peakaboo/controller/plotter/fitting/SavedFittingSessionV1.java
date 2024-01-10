@@ -94,7 +94,7 @@ public class SavedFittingSessionV1 {
 		try {
 			var fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(function);
 			BoltPluginPrototype<? extends FittingFunction> fitfnProto = FittingFunctionRegistry.system()
-					.getPrototypeForClass(fittingFunctionClass)
+					.getByClass(fittingFunctionClass)
 					.orElse(FittingFunctionRegistry.system().getPreset());
 			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fitfnProto);
 			controller.fittingModel.proposals.getFittingParameters().setFittingFunction(fitfnProto);

@@ -3,6 +3,7 @@ package org.peakaboo.framework.bolt.plugin.core;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
@@ -36,6 +37,17 @@ public interface BoltPluginCollection<T extends BoltPlugin> extends Iterable<Bol
 			}
 		}
 		return null;
+	}
+	
+	default Optional<BoltPluginPrototype<? extends T>> getByClass(Class<? extends T> cls) {
+		synchronized(this) {
+			for (var plugin : getPlugins()) {
+				if (plugin.getReferenceInstance().getClass().equals(cls)) {
+					return Optional.of(plugin);
+				}
+			}
+			return Optional.empty();
+		}
 	}
 	
 	default boolean hasUUID(String uuid) {

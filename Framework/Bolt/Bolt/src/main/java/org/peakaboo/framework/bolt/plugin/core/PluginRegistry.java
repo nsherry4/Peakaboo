@@ -57,18 +57,4 @@ public interface PluginRegistry <P extends BoltPlugin> extends BoltPluginCollect
 		return this;
 	}
 	
-	default Optional<BoltPluginPrototype<? extends P>> getPrototypeForClass(Class<? extends P> cls) {
-		synchronized(this) {
-			for (var plugin : getPlugins()) {
-				if (plugin.getReferenceInstance().getClass().equals(cls)) {
-					return Optional.of(plugin);
-				}
-			}
-			return Optional.empty();
-		}
-	}
-
-
-	
-	
 }

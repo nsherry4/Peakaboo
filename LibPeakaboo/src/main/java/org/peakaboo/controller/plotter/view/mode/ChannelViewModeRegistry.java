@@ -49,7 +49,7 @@ public class ChannelViewModeRegistry extends BoltPluginRegistry<ChannelViewMode>
 	}
 	@Override
 	public BoltPluginPrototype<? extends ChannelViewMode> getPreset() {
-		return this.getPrototypeForClass(AverageViewMode.class).orElseThrow();
+		return this.getByClass(AverageViewMode.class).orElseThrow();
 	}
 
 	

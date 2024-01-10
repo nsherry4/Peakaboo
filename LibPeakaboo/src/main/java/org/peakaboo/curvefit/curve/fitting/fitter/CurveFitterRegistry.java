@@ -50,7 +50,7 @@ public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> impleme
 	}
 	@Override
 	public BoltPluginPrototype<? extends CurveFitter> getPreset() {
-		return this.getPrototypeForClass(UnderCurveFitter.class).orElseThrow();
+		return this.getByClass(UnderCurveFitter.class).orElseThrow();
 	}
 
 

@@ -50,7 +50,7 @@ public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> imp
 	}
 	@Override
 	public BoltPluginPrototype<? extends FittingSolver> getPreset() {
-		return this.getPrototypeForClass(GreedyFittingSolver.class).orElseThrow();
+		return this.getByClass(GreedyFittingSolver.class).orElseThrow();
 	}
 	
 
