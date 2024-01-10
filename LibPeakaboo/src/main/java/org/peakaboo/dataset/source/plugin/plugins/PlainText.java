@@ -154,7 +154,7 @@ public class PlainText extends AbstractDataSource
 		return new SimpleFileFormat(
 				true, 
 				"Peakaboo Plain Text", 
-				"Peakaboo Plain Text format is a simple XRF format comprised of rows of space-separated numbers.", 
+				"Comma, tab, or space separated values, one spectra per line", 
 				Arrays.asList("txt", "dat", "csv", "tsv"));
 	}
 

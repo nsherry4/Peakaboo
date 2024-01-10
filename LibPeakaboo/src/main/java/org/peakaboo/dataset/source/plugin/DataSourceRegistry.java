@@ -39,6 +39,10 @@ public class DataSourceRegistry extends BoltPluginRegistry<DataSourcePlugin> {
 		builtins.load(PlainText.class);
 		builtins.load(SingleColumn.class);
 		builtins.load(UniversalHDF5DataSource.class);
+
+		// Used to test how Peakaboo handles conflicting data sources. This should normally be commented out
+		//builtins.load(YesToEverything.class, PluginDescriptor.WEIGHT_HIGHEST);
+		
 		addLoader(builtins);
 	}
 	
