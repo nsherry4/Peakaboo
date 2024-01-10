@@ -18,12 +18,14 @@ public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements P
 	private T reference;
 	private BoltConfigContainer<T> container;
 	private PluginRegistry<T> registry;
+	private int weight = PluginDescriptor.WEIGHT_MEDIUM;
 	
-	public BoltConfigPluginDescriptor(PluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container) {
+	public BoltConfigPluginDescriptor(PluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container, int weight) {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
 		this.container = container;
 		this.registry = registry;
+		this.weight = weight;
 		this.reference = create();
 	}
 	
@@ -116,6 +118,11 @@ public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements P
 	@Override
 	public PluginRegistry<T> getRegistry() {
 		return this.registry;
+	}
+
+	@Override
+	public int getWeight() {
+		return weight;
 	}
 
 }

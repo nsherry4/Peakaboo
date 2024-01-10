@@ -8,8 +8,8 @@ import java.util.List;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginBuilder;
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginDescriptor;
-import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltURLContainer;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
@@ -28,7 +28,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 		this.manager = manager;
 		
 		plugins = new BoltPluginSet<>(manager);
-		BoltConfigPluginDescriptor<T> plugin = new BoltConfigPluginDescriptor<>(this.manager, builder, pluginClass, this);
+		BoltConfigPluginDescriptor<T> plugin = new BoltConfigPluginDescriptor<>(this.manager, builder, pluginClass, this, PluginDescriptor.WEIGHT_MEDIUM);
 		plugins.addPlugin(plugin);
 	}
 	

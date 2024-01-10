@@ -34,7 +34,6 @@ public class DataSourceRegistry extends BoltPluginRegistry<DataSourcePlugin> {
 		super("datasource");
 		
 		addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class, dataSourceDir));
-		addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class));
 		
 		var builtins = new BoltJavaBuiltinLoader<>(this, DataSourcePlugin.class);
 		builtins.load(PlainText.class);

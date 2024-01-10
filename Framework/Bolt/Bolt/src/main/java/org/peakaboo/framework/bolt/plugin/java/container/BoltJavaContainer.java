@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
@@ -37,7 +37,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 		return plugins.getIssues();
 	}
 
-	protected void add(Class<? extends T> loadedClass) {
+	protected void add(Class<? extends T> loadedClass, int weight) {
 
 		try 
 		{
@@ -46,7 +46,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 				return; 
 			} 
 			
-			PluginDescriptor<T> plugin = new BoltJavaPluginDescriptor<>(this.manager, targetClass, loadedClass, this);
+			PluginDescriptor<T> plugin = new BoltJavaPluginDescriptor<>(this.manager, targetClass, loadedClass, this, weight);
 			
 			if (plugin.isEnabled()) {
 				plugins.addPlugin(plugin);

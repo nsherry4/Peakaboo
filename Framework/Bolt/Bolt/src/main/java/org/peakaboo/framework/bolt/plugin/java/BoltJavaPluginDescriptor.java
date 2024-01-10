@@ -14,12 +14,14 @@ public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements Plugi
 	private BoltContainer<T> container;
 	private T instance;
 	private PluginRegistry<T> registry;
+	private int weight = PluginDescriptor.WEIGHT_MEDIUM;
 	
-	public BoltJavaPluginDescriptor(PluginRegistry<T> registry, Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container) {
+	public BoltJavaPluginDescriptor(PluginRegistry<T> registry, Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container, int weight) {
 		this.pluginClass = pluginClass;
 		this.implClass = implClass;
 		this.container = container;
 		this.registry = registry;
+		this.weight = weight;
 		instance = create();
 	}
 	
@@ -112,6 +114,11 @@ public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements Plugi
 	@Override
 	public PluginRegistry<T> getRegistry() {
 		return registry;
+	}
+
+	@Override
+	public int getWeight() {
+		return weight;
 	}
 	
 

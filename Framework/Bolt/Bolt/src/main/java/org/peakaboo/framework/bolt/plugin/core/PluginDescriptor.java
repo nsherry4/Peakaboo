@@ -44,6 +44,19 @@ public interface PluginDescriptor<T extends BoltPlugin> {
 	String getVersion();
 	
 	/**
+	 * Weight values are used to sort plugins. A higher value is a higher
+	 * precedence. Values should range from 0 to 100 inclusive
+	 */
+	int getWeight();
+	static final int WEIGHT_LOWEST = 2;
+	static final int WEIGHT_LOWER = 10;
+	static final int WEIGHT_LOW = 25;
+	static final int WEIGHT_MEDIUM = 50;
+	static final int WEIGHT_HIGH = 75;
+	static final int WEIGHT_HIGHER = 90;
+	static final int WEIGHT_HIGHEST = 98;
+	
+	/**
 	 * A UUID uniquely identifying the plugin.
 	 */
 	String getUUID();

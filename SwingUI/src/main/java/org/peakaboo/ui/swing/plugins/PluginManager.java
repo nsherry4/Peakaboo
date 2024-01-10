@@ -26,8 +26,8 @@ import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
@@ -350,16 +350,10 @@ public class PluginManager extends HeaderLayer {
 		DefaultMutableTreeNode mapFiltersNode = createPluginManagerRootNode(MapFilterRegistry.system());
 		plugins.add(mapFiltersNode);
 
-		
+				
 		for (var manager : Tier.provider().getPluginManagers()) {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(manager);
-			plugins.add(node);
-			
-			for (PluginDescriptor<?> source :  manager.getPlugins()) {
-				DefaultMutableTreeNode subnode = new DefaultMutableTreeNode(source);
-				node.add(subnode);
-			}
-			
+			DefaultMutableTreeNode customNode = createPluginManagerRootNode(manager);
+			plugins.add(customNode);		
 		}
 				
 		

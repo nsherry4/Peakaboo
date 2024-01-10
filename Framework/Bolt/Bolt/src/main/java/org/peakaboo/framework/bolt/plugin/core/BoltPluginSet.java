@@ -13,6 +13,7 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltOldPluginIssue;
  */
 public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> {
 
+	//Anything modifying this plugins list should call sort() afterwards
 	private ArrayList<PluginDescriptor<? extends T>> plugins = new ArrayList<>();
 	private ArrayList<BoltIssue<? extends T>> issues = new ArrayList<>();
 	
@@ -22,6 +23,7 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 		this.manager = manager;
 	}
 	
+	@Override
 	public List<PluginDescriptor<? extends T>> getPlugins() {
 		return Collections.unmodifiableList(plugins);
 	}
@@ -42,10 +44,12 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 					addIssue(new BoltOldPluginIssue<>(existingPlugin));
 				}
 				plugins.add(plugin);
+				sort();
 			}
 			
 		} else {
-			plugins.add(plugin);	
+			plugins.add(plugin);
+			sort();
 		}
 		
 	}
@@ -74,6 +78,13 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 	@Override
 	public PluginRegistry<T> getManager() {
 		return manager;
+	}
+	
+	private void sort() {
+		plugins.sort((a, b) -> {
+			//Reversed order on purpose to sort higher numbers first
+			return Integer.compare(b.getWeight(), a.getWeight());
+		});
 	}
 	
 
