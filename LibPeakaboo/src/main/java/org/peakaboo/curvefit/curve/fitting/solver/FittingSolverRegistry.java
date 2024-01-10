@@ -3,10 +3,12 @@ package org.peakaboo.curvefit.curve.fitting.solver;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> {
+public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> implements PluginPreset<FittingSolver> {
 
 	
 	private static FittingSolverRegistry SYSTEM;
@@ -45,6 +47,10 @@ public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> {
 	@Override
 	public String getInterfaceDescription() {
 		return "Fitting solvers determine how to match signal with curves for overlapping Transition Series";
+	}
+	@Override
+	public BoltPluginPrototype<? extends FittingSolver> getPreset() {
+		return this.getPrototypeForClass(GreedyFittingSolver.class).orElseThrow();
 	}
 	
 

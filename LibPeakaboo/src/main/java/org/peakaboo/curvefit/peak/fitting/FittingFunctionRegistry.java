@@ -9,9 +9,10 @@ import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction> {
+public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction> implements PluginPreset<FittingFunction> {
 
 
 	private static FittingFunctionRegistry SYSTEM;
@@ -42,10 +43,6 @@ public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction>
 		addLoader(builtins);
 		
 	}
-	
-	public BoltPluginPrototype<? extends FittingFunction> preset() {
-		return this.getPrototypeForClass(PseudoVoigtFittingFunction.class).orElseThrow();
-	}
 
 	@Override
 	public String getInterfaceName() {
@@ -55,6 +52,10 @@ public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction>
 	@Override
 	public String getInterfaceDescription() {
 		return "Fitting functions describe an ideal shape for a peak";
+	}
+	@Override
+	public BoltPluginPrototype<? extends FittingFunction> getPreset() {
+		return this.getPrototypeForClass(PseudoVoigtFittingFunction.class).orElseThrow();
 	}
 	
 }

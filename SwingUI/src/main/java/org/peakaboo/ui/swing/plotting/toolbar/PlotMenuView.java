@@ -10,7 +10,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.view.mode.AverageViewMode;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
 import org.peakaboo.controller.plotter.view.mode.MaximumViewMode;
@@ -47,7 +46,7 @@ public class PlotMenuView extends JPopupMenu {
 		compositeGroup.add(oInd.getButton());
 		scanmodes.put(viewSingle, oInd);
 		
-		ChannelViewMode viewAverage = new AverageViewMode();
+		ChannelViewMode viewAverage = ChannelViewModeRegistry.system().getPresetInstance();
 		oAvg = new OptionRadioButton(compositeBlock, compositeGroup)
 				.withTitle(viewAverage.longName())
 				.withTooltip(viewAverage.description())

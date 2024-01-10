@@ -8,7 +8,7 @@ import java.util.Map;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
@@ -65,7 +65,7 @@ public class FittingModel
 		selectionResults = null;
 		proposalResults = null;
 		highlighted = new ArrayList<>();
-		curveFitter = new UnderCurveFitter();
+		curveFitter = CurveFitterRegistry.system().getPresetInstance();
 		fittingSolver = new GreedyFittingSolver();
 		annotations = new HashMap<>();
 	}

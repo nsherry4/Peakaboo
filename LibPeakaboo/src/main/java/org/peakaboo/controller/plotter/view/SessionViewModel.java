@@ -1,6 +1,5 @@
 package org.peakaboo.controller.plotter.view;
 
-import org.peakaboo.controller.plotter.view.mode.AverageViewMode;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
@@ -17,7 +16,7 @@ public class SessionViewModel {
 	public SessionViewModel() {
 
 		scanNumber = 0;
-		channelView = new AverageViewMode();
+		channelView = ChannelViewModeRegistry.system().getPresetInstance();
 		backgroundShowOriginal = false;
 		zoom = 1.0f;
 		logTransform = true;
@@ -36,7 +35,7 @@ public class SessionViewModel {
 		if (proto != null) {
 			this.channelView = proto.create();
 		} else {
-			this.channelView = new AverageViewMode();
+			this.channelView = ChannelViewModeRegistry.system().getPresetInstance();
 		}
 	}
 	public void setChannelView(String modeUUID) {
@@ -44,7 +43,7 @@ public class SessionViewModel {
 		if (proto != null) {
 			this.channelView = proto.create();
 		} else {
-			this.channelView = new AverageViewMode();
+			this.channelView = ChannelViewModeRegistry.system().getPresetInstance();
 		}
 	}
 	

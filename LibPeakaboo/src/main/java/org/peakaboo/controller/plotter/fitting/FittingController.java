@@ -603,7 +603,7 @@ public class FittingController extends EventfulType<Boolean>
 			BoltPluginPrototype<? extends FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
 			if (oProto == null) {
 				errors.add("Failed to load Fitting Function: " + saved.model.name);
-				oProto = FittingFunctionRegistry.system().preset();
+				oProto = FittingFunctionRegistry.system().getPreset();
 			}
 			fittingModel.selections.getFittingParameters().setFittingFunction(oProto);
 			fittingModel.proposals.getFittingParameters().setFittingFunction(oProto);

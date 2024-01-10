@@ -95,7 +95,7 @@ public class SavedFittingSessionV1 {
 			var fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(function);
 			BoltPluginPrototype<? extends FittingFunction> fitfnProto = FittingFunctionRegistry.system()
 					.getPrototypeForClass(fittingFunctionClass)
-					.orElse(FittingFunctionRegistry.system().preset());
+					.orElse(FittingFunctionRegistry.system().getPreset());
 			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fitfnProto);
 			controller.fittingModel.proposals.getFittingParameters().setFittingFunction(fitfnProto);
 		} catch (ClassNotFoundException e) {

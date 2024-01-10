@@ -7,8 +7,8 @@ import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.EscapeFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
-import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
@@ -56,7 +56,7 @@ public interface FittingParametersView {
 		FittingFunction function = params.getFittingFunction().create();
 		if (function == null) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to create fitting function, using default");
-			function = new PseudoVoigtFittingFunction();
+			function = FittingFunctionRegistry.system().getPresetInstance();
 		}
 		function.initialize(context);
 		return function;

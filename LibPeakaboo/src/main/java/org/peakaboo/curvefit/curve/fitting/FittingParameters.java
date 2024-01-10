@@ -13,7 +13,7 @@ public class FittingParameters implements FittingParametersView {
 	private float fwhmBase = 0.080f;
 	private EnergyCalibration calibration = new EnergyCalibration(0, 0, 0);
 	private DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
-	private BoltPluginPrototype<? extends FittingFunction> fittingFunction = FittingFunctionRegistry.system().preset();
+	private BoltPluginPrototype<? extends FittingFunction> fittingFunction = FittingFunctionRegistry.system().getPreset();
 	private boolean showEscapePeaks = true;
 
 	FittingParameters(FittingSet fits) {
