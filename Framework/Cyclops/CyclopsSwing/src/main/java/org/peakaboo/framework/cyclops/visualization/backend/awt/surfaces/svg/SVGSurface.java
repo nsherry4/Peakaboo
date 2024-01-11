@@ -19,16 +19,19 @@ class SVGSurface extends AbstractGraphicsSurface implements ExportableSurface {
 		svgGraphics = g;
 	}
 
+	@Override
 	public void write(OutputStream out) throws IOException
 	{
 		svgGraphics.stream(new OutputStreamWriter(out));
 		
 	}
 
+	@Override
 	public Surface getNewContextForSurface() {
 		return new SVGSurface((SVGGraphics2D)svgGraphics.create(), descriptor);
 	}
 
+	@Override
 	public boolean isVectorSurface() {
 		return true;
 	}

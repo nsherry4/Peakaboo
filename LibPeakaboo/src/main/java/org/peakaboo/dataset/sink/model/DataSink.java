@@ -5,16 +5,16 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.dataset.io.DataOutputAdapter;
 import org.peakaboo.dataset.sink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.dataset.sink.model.components.interaction.Interaction;
-import org.peakaboo.dataset.sink.model.outputfile.OutputFile;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 public interface DataSink {
 
-	public class DataSinkWriteException extends Exception {
+	public static class DataSinkWriteException extends Exception {
 		
 		public DataSinkWriteException(String message) {
 			super(message);
@@ -25,12 +25,13 @@ public interface DataSink {
 		}
 	}
 	
+	public static record DataSinkContext (DataSource source, DataOutputAdapter destination) {};
 
 	/**
 	 * Writes the contents of the given {@link DataSource} to the destination
 	 * {@link OutputStream} in this DataSink's format.
 	 */
-	void write(DataSource source, OutputFile destination) throws IOException, DataSinkWriteException;
+	void write(DataSinkContext ctx) throws IOException, DataSinkWriteException;
 		
 	String getFormatExtension();
 
@@ -48,18 +49,18 @@ public interface DataSink {
 
 	void setInteraction(Interaction interaction);
 
-	static ExecutorSet<Void> write(DataSource source, DataSink sink, OutputFile output) {
+	static ExecutorSet<Void> write(DataSink sink, DataSinkContext ctx) {
 		
 		CallbackInteraction interaction = new CallbackInteraction();
 
 		return Plural.build("Writing Data Set", "Writing Scans", (execset, exec) -> {
 			interaction.setCallbackAbortRequested(() -> execset.isAborted() || execset.isAbortRequested());
 			interaction.setCallbackScansWritten(exec::workUnitCompleted);
-			exec.setWorkUnits(source.getScanData().scanCount());
+			exec.setWorkUnits(ctx.source.getScanData().scanCount());
 			
 			try {
 				sink.setInteraction(interaction);
-				sink.write(source, output);
+				sink.write(ctx);
 				if (interaction.isAbortedRequested()) {
 					execset.aborted();
 				}

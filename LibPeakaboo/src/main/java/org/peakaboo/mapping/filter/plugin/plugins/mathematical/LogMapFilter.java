@@ -1,7 +1,7 @@
 package org.peakaboo.mapping.filter.plugin.plugins.mathematical;
 
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -28,9 +28,11 @@ public class LogMapFilter extends AbstractMapFilter {
 	public void initialize() {}
 
 	@Override
-	public AreaMap filter(AreaMap source) {
-		ReadOnlySpectrum data = source.getData();
-		Spectrum logged = new ISpectrum(data.size());
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
+		SpectrumView data = source.getData();
+		Spectrum logged = new ArraySpectrum(data.size());
 		for (int i = 0; i < data.size(); i++) {
 			logged.set(i, (float) Math.log1p(data.get(i)));
 		}
@@ -39,11 +41,6 @@ public class LogMapFilter extends AbstractMapFilter {
 
 	@Override
 	public boolean isReplottable() {
-		return true;
-	}
-
-	@Override
-	public boolean pluginEnabled() {
 		return true;
 	}
 

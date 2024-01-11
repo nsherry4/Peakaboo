@@ -6,19 +6,28 @@ import java.util.List;
 import java.util.Map;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class PlotData {
 
-	public ReadOnlySpectrum raw;
-	public ReadOnlySpectrum filtered;
-	public Map<Filter, ReadOnlySpectrum> deltas;
+	public static record PlotDataSpectra(
+			SpectrumView raw,
+			SpectrumView filtered,
+			Map<Filter, SpectrumView> deltas,
+			Map<String, SpectrumView> store
+		) {
+		
+	};
+			
+	
+	public PlotDataSpectra spectra;
+	
 	public boolean consistentScale = true;
 	public DataSet dataset;
 	
@@ -26,8 +35,8 @@ public class PlotData {
 	public DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
 	
 	public FilterSet filters = new FilterSet();
-	public FittingResultSet proposedResults;
-	public FittingResultSet selectionResults;
+	public FittingResultSetView proposedResults;
+	public FittingResultSetView selectionResults;
 	
 	public List<ITransitionSeries> highlightedTransitionSeries = new ArrayList<>();
 	public List<ITransitionSeries> proposedTransitionSeries = new ArrayList<>();
@@ -35,3 +44,4 @@ public class PlotData {
 	public Map<ITransitionSeries, String> annotations = new HashMap<>();
 	
 }
+

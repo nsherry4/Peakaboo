@@ -2,31 +2,37 @@ package org.peakaboo.controller.plotter.fitting;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.session.v2.SavedFittings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.search.PeakProposal;
 import org.peakaboo.curvefit.peak.search.searcher.DoubleDerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.plot.PlotData;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
@@ -47,22 +53,24 @@ public class FittingController extends EventfulType<Boolean>
 		
 		
 		fittingModel.selectionResults = new EventfulNullableCache<>(() -> {
-			ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
+			SpectrumView data = plot.filtering().getFilteredPlot();
 			if (data == null) {
 				return null;
 			}
-			return getFittingSolver().solve(data, fittingModel.selections, getCurveFitter());
+			var ctx = new FittingSolverContext(data, fittingModel.selections, getCurveFitter());
+			return getFittingSolver().solve(ctx);
 		});
 		
 		fittingModel.proposalResults = new EventfulNullableCache<>(() -> {
 			if (plot.currentScan() == null) {
 				return null;
 			}
-			return getFittingSolver().solve(getFittingSelectionResults().getResidual(), fittingModel.proposals, getCurveFitter());
+			var ctx = new FittingSolverContext(getFittingSelectionResults().getResidual(), fittingModel.proposals, getCurveFitter());
+			return getFittingSolver().solve(ctx);
 		});
 		
-		fittingModel.selectionResults.addUpstreamDependency(plot.filtering().getFilteredPlotCache());
-		fittingModel.proposalResults.addUpstreamDependency(fittingModel.selectionResults);
+		fittingModel.selectionResults.dependsOn(plot.filtering().getFilteredPlotCache());
+		fittingModel.proposalResults.dependsOn(fittingModel.selectionResults);
 		
 		fittingModel.proposalResults.addListener(() -> updateListeners(false));
 		
@@ -74,9 +82,14 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel;
 	}
 	
-	private void setUndoPoint(String change)
+	
+	private void setUndoPoint(String change) {
+		this.setUndoPoint(change, true);
+	}
+	
+	private void setUndoPoint(String change, boolean distinctChange)
 	{
-		plot.history().setUndoPoint(change);
+		plot.history().setUndoPoint(change, distinctChange);
 	}
 	
 	
@@ -150,7 +163,7 @@ public class FittingController extends EventfulType<Boolean>
 	
 	public void setAllTransitionSeriesVisibility(boolean show) {
 		fittingModel.selections.setAllTransitionSeriesVisibility(show);
-		setUndoPoint("Fitting Visiblitiy");
+		setUndoPoint("Fittings Visiblitiy");
 		fittingDataInvalidated();
 	}
 
@@ -166,7 +179,7 @@ public class FittingController extends EventfulType<Boolean>
 
 	public float getTransitionSeriesIntensity(ITransitionSeries ts)
 	{
-		FittingResult result = getFittingResultForTransitionSeries(ts);
+		FittingResultView result = getFittingResultForTransitionSeries(ts);
 		if (result == null) {
 			return 0f;
 		}
@@ -177,22 +190,6 @@ public class FittingController extends EventfulType<Boolean>
 		
 	}
 
-
-
-	public void moveTransitionSeriesUp(List<ITransitionSeries> tss)
-	{
-		fittingModel.selections.moveTransitionSeriesUp(tss);
-		setUndoPoint("Move Fitting Up");
-		fittingDataInvalidated();
-	}
-	
-
-	public void moveTransitionSeriesDown(List<ITransitionSeries> tss)
-	{
-		fittingModel.selections.moveTransitionSeriesDown(tss);
-		setUndoPoint("Move Fitting Down");
-		fittingDataInvalidated();
-	}
 
 	public void fittingDataInvalidated()
 	{
@@ -283,13 +280,13 @@ public class FittingController extends EventfulType<Boolean>
 	 */
 	public ITransitionSeries selectTransitionSeriesAtChannel(int channel) {      
         float bestValue = 1f;
-        FittingResult bestFit = null;
+        FittingResultView bestFit = null;
 
         if (getFittingSelectionResults() == null) {
             return null;
         }
         
-		for (FittingResult fit : getFittingSelectionResults()) {
+		for (FittingResultView fit : getFittingSelectionResults()) {
 			if (!fit.getFit().inBounds(channel)) {
 				continue;
 			}
@@ -316,12 +313,12 @@ public class FittingController extends EventfulType<Boolean>
 		fittingModel.selections.getFittingParameters().setCalibration(min, max, scanSize);
 		fittingModel.proposals.getFittingParameters().setCalibration(min, max, scanSize);
 
-		//TODO: Why is this here? Are we just resetting it to be sure they stay in sync?
+		//Keep the other settings in sync
 		fittingModel.selections.getFittingParameters().setDetectorMaterial(getDetectorMaterial());
 		fittingModel.proposals.getFittingParameters().setDetectorMaterial(getDetectorMaterial());
 
 		
-		setUndoPoint("Calibration");
+		setUndoPoint("Energy Calibration");
 		plot.filtering().filteredDataInvalidated();
 	}
 
@@ -380,17 +377,17 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.proposals;
 	}
 	
-	public FittingResultSet getFittingProposalResults()
+	public FittingResultSetView getFittingProposalResults()
 	{
 		return fittingModel.proposalResults.getValue();
 	}
 
-	public FittingResultSet getFittingSelectionResults()
+	public FittingResultSetView getFittingSelectionResults()
 	{
 		return fittingModel.selectionResults.getValue();
 	}
 
-	public FittingResult getFittingResultForTransitionSeries(ITransitionSeries ts) {
+	public FittingResultView getFittingResultForTransitionSeries(ITransitionSeries ts) {
 		if (getFittingSelectionResults() == null) return null;
 		return getFittingSelectionResults().getFitForTransitionSeries(ts).orElse(null);
 	}
@@ -419,25 +416,26 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Change Peak Shape");
 	}
 
-	public void setFittingFunction(Class<? extends FittingFunction> cls) {
+	public void setFittingFunction(PluginDescriptor<? extends FittingFunction> cls) {
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
 		fittingDataInvalidated();
-		setUndoPoint("Change Peak Shape");
+		setUndoPoint("Change Peak Model");
 	}
 	
-	public Class<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
-	public CurveFitterPlugin getCurveFitter() {
+	public CurveFitter getCurveFitter() {
 		return fittingModel.curveFitter;
 	}
 	
 	
-	public void setCurveFitter(CurveFitterPlugin curveFitter) {
+	public void setCurveFitter(CurveFitter curveFitter) {
 		this.fittingModel.curveFitter = curveFitter;
 		fittingDataInvalidated();
+		setUndoPoint("Change Curve Fitter");
 	}
 
 
@@ -449,11 +447,12 @@ public class FittingController extends EventfulType<Boolean>
 	public void setFittingSolver(FittingSolver fittingSolver) {
 		this.fittingModel.fittingSolver = fittingSolver;
 		fittingDataInvalidated();
+		setUndoPoint("Change Overlap Solver");
 	}
 
 	public ExecutorSet<List<ITransitionSeries>> autodetectPeaks() {
 		PeakSearcher searcher = new DoubleDerivativePeakSearcher();
-		ReadOnlySpectrum data = plot.filtering().getFilteredPlot();
+		SpectrumView data = plot.filtering().getFilteredPlot();
 		ExecutorSet<List<ITransitionSeries>> exec = PeakProposal.search(
 				data, 
 				searcher, 
@@ -532,6 +531,96 @@ public class FittingController extends EventfulType<Boolean>
 		data.highlightedTransitionSeries = getHighlightedTransitionSeries();
 		data.proposedTransitionSeries = getProposedTransitionSeries();
 		data.annotations = getAnnotations();
+	}
+
+	public SavedFittings save() {
+		
+		var fittings = fittingModel.selections.getFittedTransitionSeries().stream().map(ITransitionSeries::save).toList();
+		
+		Map<String, String> savedannos = this.fittingModel.annotations.entrySet().stream().collect(Collectors.toMap(
+				e -> e.getKey().getShellement(), 
+				e -> e.getValue()
+		));
+		
+		
+		this.fittingModel.annotations.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getShellement(), e-> e.getValue()));
+
+		return new SavedFittings(
+			fittings, 
+			savedannos, 
+			getFittingSolver().save(), 
+			getCurveFitter().save(),
+			getFittingFunction().save(),
+			fittingModel.selections.getFittingParameters().save()
+		);
+	}
+
+	public List<String> load(SavedFittings saved) {
+		
+		fittingModel.selections.clear();
+		clearAnnotations();
+		for (var fitting : saved.fittings) {
+			var ts = PeakTable.SYSTEM.get(fitting.shellement);
+			if (ts == null) { 
+				continue; 
+			}
+			//Add this ts to our list
+			fittingModel.selections.addTransitionSeries(ts);
+			//Check for an annotation. If it exists, add it.
+			if (saved.annotations.containsKey(fitting.shellement)) {
+				setAnnotation(ts, saved.annotations.get(fitting.shellement));
+			}
+		}
+		
+		
+		List<String> errors = new ArrayList<>();
+		
+		// Load the Fitting Solver
+		try {
+			FittingSolverRegistry.system().fromSaved(saved.solver).ifPresentOrElse(solver -> {
+				fittingModel.fittingSolver = solver;	
+			}, () -> {
+				errors.add("Failed to load Fitting Solver: " + saved.solver.name);
+			});
+		} catch (RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + saved.solver.name, e);
+		}
+
+		
+		//Load the Curve Fitter
+		try {
+			CurveFitterRegistry.system().fromSaved(saved.fitter).ifPresentOrElse(fitter -> {
+				fittingModel.curveFitter = fitter;
+			}, () -> {
+				errors.add("Failed to load Curve Fitter: " + saved.fitter.name);
+			});
+		} catch (RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + saved.fitter.name, e);
+		}
+		
+		//Restore the fitting function
+		try {
+			PluginDescriptor<? extends FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
+			if (oProto == null) {
+				errors.add("Failed to load Fitting Function: " + saved.model.name);
+				oProto = FittingFunctionRegistry.system().getPreset();
+			}
+			fittingModel.selections.getFittingParameters().setFittingFunction(oProto);
+			fittingModel.proposals.getFittingParameters().setFittingFunction(oProto);
+		} catch (RuntimeException e) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + saved.model.name, e);
+		}
+		
+		
+		//We load all this here instead of a load method in FittingParameters because we track two
+		//of them, one for selections and one for proposed selections.
+		setMinMaxEnergy(saved.calibration.min, saved.calibration.max);
+		setDetectorMaterial(DetectorMaterialType.valueOf(saved.calibration.detectorMaterial));
+		setFWHMBase(saved.calibration.fwhmbase);
+		setShowEscapePeaks(saved.calibration.escapes);
+
+		return errors;
+		
 	}
 	
 	

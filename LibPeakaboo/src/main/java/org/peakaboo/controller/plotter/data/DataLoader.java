@@ -11,17 +11,20 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.SavedSession;
+import org.peakaboo.controller.plotter.SavedSessionV1;
+import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
-import org.peakaboo.dataset.source.model.DataSource.DataSourceReadException;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.io.DataInputAdapter;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.plugin.DataSourceLookup;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.cyclops.util.StringInput;
+import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 
@@ -29,16 +32,15 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 public abstract class DataLoader {
 
-	private PlotController controller;
-	private List<DataFile> datafiles;
-	private String dataSourceUUID = null;
-	private List<Object> sessionParameters = null;
+	protected PlotController controller;
+	private List<DataInputAdapter> datafiles;
+	private SavedPlugin dataSource = null;
 	private File sessionFile = null;
 	
 	//if we're loading a session, we need to do some extra work after loading the dataset
 	private Runnable sessionCallback = () -> {}; 
 	
-	public DataLoader(PlotController controller, List<DataFile> datafiles) {
+	public DataLoader(PlotController controller, List<DataInputAdapter> datafiles) {
 		this.controller = controller;
 		this.datafiles = datafiles;
 	}
@@ -65,7 +67,7 @@ public abstract class DataLoader {
 	
 	private void onDataSourceLoadSuccess() {
 		sessionCallback.run();
-		controller.data().setDataSourceParameters(sessionParameters);
+		controller.data().setDataSourcePlugin(dataSource);
 		controller.data().setDataPaths(datafiles);
 		
 		//Try and set the last-used folder for local UIs to refer to
@@ -116,21 +118,20 @@ public abstract class DataLoader {
 		}
 		
 		/*
-		 * look up the data source to use to open this data with we should prefer a
-		 * plugin specified by uuid (eg from a reloaded session). If there is no plugin
+		 * look up the data source to use to open this data with. If there is no plugin
 		 * specified, we look up all formats
 		 */
 		List<DataSourcePlugin> formats = new ArrayList<>();
-		if (dataSourceUUID != null) {
-			var plugin = DataSourcePluginManager.system().getByUUID(dataSourceUUID);
-			if (plugin != null) { 
-				formats.add(plugin.create());
+		if (dataSource != null) {
+			var plugin = DataSourceRegistry.system().fromSaved(dataSource);
+			if (plugin.isPresent()) {
+				formats.add(plugin.get());
 			} else {
 				onWarn("Could not find data source plugin requested by saved session.");
 			}
 		}
 		if (formats.isEmpty()) {
-			List<DataSourcePlugin> candidates =  DataSourcePluginManager.system().newInstances();
+			List<DataSourcePlugin> candidates =  DataSourceRegistry.system().newInstances();
 			formats = DataSourceLookup.findDataSourcesForFiles(datafiles, candidates);
 		}
 		
@@ -161,9 +162,9 @@ public abstract class DataLoader {
 			 * if we've alredy loaded a set of parameters from a session we're opening then
 			 * we transfer those values into the values for the data source's Parameters
 			 */
-			if (sessionParameters != null) {
+			if (dataSource.settings != null) {
 				try {
-					dsGroup.deserialize(sessionParameters);
+					dsGroup.deserialize(dataSource.settings);
 				} catch (RuntimeException e) {
 					PeakabooLog.get().log(Level.WARNING, "Failed to load saved Data Source parameters", e);
 				}
@@ -172,17 +173,21 @@ public abstract class DataLoader {
 			onParameters(dsGroup, accepted -> {
 				if (accepted) {
 					//user accepted, save a copy of the new parameters
-					sessionParameters = dsGroup.serialize();
+					this.dataSource = new SavedPlugin(this.dataSource, dsGroup.serialize());
 					loadWithDataSource(dsp);
 				}
 			});
 		} else {
+			this.dataSource = new SavedPlugin(dsp);
 			loadWithDataSource(dsp);
 		}
 	}
 	
 	
-
+	/**
+	 * Attempt to find and load a saved Peakaboo session from the data files that
+	 * are being loaded. This method will attempt to load either a v1 or v2 session.
+	 */
 	private void loadSession() {
 		try {
 			//We don't want users saving a session loaded from /tmp
@@ -193,81 +198,156 @@ public abstract class DataLoader {
 			}
 			sessionFile = datafiles.get(0).getAndEnsurePath().toFile();
 			
-			Optional<SavedSession> optSession = controller.readSavedSettings(StringInput.contents(sessionFile));
-			
-			if (!optSession.isPresent()) {
-				onSessionFailure();
-				return;
-			}
-			
-			SavedSession session = optSession.get();
-			
-			
-			//chech if the session is from a newer version of Peakaboo, and warn if it is
-			Runnable warnVersion = () -> {
-				if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) < 0) {
-					onSessionNewer();
-				}
-			};
-			
-			List<DataFile> currentPaths = controller.data().getDataPaths();
-			List<DataFile> sessionPaths = session.data.filesAsDataPaths();
-			
-			//Verify all paths exist
-			boolean sessionPathsExist = true;
-			for (DataFile d : sessionPaths) {
-				if (d == null) {
-					sessionPathsExist = false;
-					break;
-				}
-				sessionPathsExist &= d.exists();
-			}
-			
-			//If the data files in the saved session are different, offer to load the data set from the new session
-			if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
+			String contents = StringInput.contents(sessionFile);
+			if (DruthersSerializer.hasFormat(contents)) {
+				DruthersSerializer.deserialize(contents, false,
+					new DruthersSerializer.FormatLoader<>(
+							SavedSession.FORMAT, 
+							SavedSession.class, 
+							this::loadV2Session
+						)
+				);
 				
-				onSessionHasData(sessionFile, load -> {
-					if (load) {
-						//they said yes, load the new data, and then apply the session
-						//this needs to be done this way b/c loading a new dataset wipes out
-						//things like calibration info
-						this.datafiles = sessionPaths;
-						this.dataSourceUUID = session.data.dataSourcePluginUUID;
-						this.sessionParameters = session.data.dataSourceParameters;
-						sessionCallback = () -> {
-							controller.loadSessionSettings(session, true);	
-							warnVersion.run();
-						};
-						load();
-					} else {
-						//load the settings w/o the data, then set the file paths back to the current values
-						controller.loadSessionSettings(session, true);
-						//they said no, reset the stored paths to the old ones
-						controller.data().setDataPaths(currentPaths);
-						warnVersion.run();
-					}
-					controller.io().setSessionFile(sessionFile);
-				});
-				
-								
 			} else {
-				//just load the session, as there is either no data associated with it, or it's the same data
-				controller.loadSessionSettings(session, true);
-				warnVersion.run();
-				controller.io().setSessionFile(sessionFile);
+				Optional<SavedSessionV1> optSession = PlotController.readSavedSettings(contents);
+				// If we failed to load the session
+				if (!optSession.isPresent()) {
+					onSessionFailure();
+					return;
+				}
+				loadV1Session(optSession.get());
+				
 			}
-			
 
 			
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
 		}
 	}
+	
+	
+	private void loadV2Session(SavedSession session) {
+
+		
+		//chech if the session is from a newer version of Peakaboo, and warn if it is
+		Runnable warnVersion = () -> {
+			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.app.version) < 0) {
+				onSessionNewer();
+			}
+		};
+		
+		List<DataInputAdapter> currentPaths = controller.data().getDataPaths();
+		List<DataInputAdapter> sessionPaths = DataInputAdapter.fromFilenames(session.data.files);
+		
+		//Verify all paths exist
+		boolean sessionPathsExist = true;
+		for (DataInputAdapter d : sessionPaths) {
+			if (d == null) {
+				sessionPathsExist = false;
+				break;
+			}
+			sessionPathsExist &= d.exists();
+		}
+		
+		//If the data files in the saved session are different, offer to load the data set from the new session
+		if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
+			
+			onSessionHasData(sessionFile, load -> {
+				if (load) {
+					//they said yes, load the new data, and then apply the session
+					//this needs to be done this way b/c loading a new dataset wipes out
+					//things like calibration info
+					this.datafiles = sessionPaths;
+					this.dataSource = session.data.datasource;
+					sessionCallback = () -> {
+						controller.load(session, true);
+						warnVersion.run();
+					};
+					load();
+				} else {
+					//load the settings w/o the data, then set the file paths back to the current values
+					controller.load(session, true);
+					//they said no, reset the stored paths to the old ones
+					controller.data().setDataPaths(currentPaths);
+					warnVersion.run();
+				}
+				controller.io().setSessionFile(sessionFile);
+			});
+			
+							
+		} else {
+			//just load the session, as there is either no data associated with it, or it's the same data
+			controller.load(session, true);
+			warnVersion.run();
+			controller.io().setSessionFile(sessionFile);
+		}
+		
+	}
+	
+	@Deprecated(since = "6", forRemoval = true)
+	private void loadV1Session(SavedSessionV1 session) {
+		
+
+		
+		//chech if the session is from a newer version of Peakaboo, and warn if it is
+		Runnable warnVersion = () -> {
+			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) < 0) {
+				onSessionNewer();
+			}
+		};
+		
+		List<DataInputAdapter> currentPaths = controller.data().getDataPaths();
+		List<DataInputAdapter> sessionPaths = session.data.filesAsDataPaths();
+		
+		//Verify all paths exist
+		boolean sessionPathsExist = true;
+		for (DataInputAdapter d : sessionPaths) {
+			if (d == null) {
+				sessionPathsExist = false;
+				break;
+			}
+			sessionPathsExist &= d.exists();
+		}
+		
+		//If the data files in the saved session are different, offer to load the data set from the new session
+		if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
+			
+			onSessionHasData(sessionFile, load -> {
+				if (load) {
+					//they said yes, load the new data, and then apply the session
+					//this needs to be done this way b/c loading a new dataset wipes out
+					//things like calibration info
+					this.datafiles = sessionPaths;
+					this.dataSource = new SavedPlugin(session.data.dataSourcePluginUUID, "Data Source", "", session.data.dataSourceParameters);
+					sessionCallback = () -> {
+						controller.loadSessionSettingsV1(session, true);	
+						warnVersion.run();
+					};
+					load();
+				} else {
+					//load the settings w/o the data, then set the file paths back to the current values
+					controller.loadSessionSettingsV1(session, true);
+					//they said no, reset the stored paths to the old ones
+					controller.data().setDataPaths(currentPaths);
+					warnVersion.run();
+				}
+				controller.io().setSessionFile(sessionFile);
+			});
+			
+							
+		} else {
+			//just load the session, as there is either no data associated with it, or it's the same data
+			controller.loadSessionSettingsV1(session, true);
+			warnVersion.run();
+			controller.io().setSessionFile(sessionFile);
+		}
+		
+	}
 
 	public abstract void onLoading(ExecutorSet<DatasetReadResult> job);
-	public abstract void onSuccess(List<DataFile> paths, File session);
+	public abstract void onSuccess(List<DataInputAdapter> paths, File session);
 	public abstract void onWarn(String message);
-	public abstract void onFail(List<DataFile> paths, String message);
+	public abstract void onFail(List<DataInputAdapter> paths, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
 	public abstract void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected);
 	

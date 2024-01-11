@@ -1,11 +1,9 @@
 package org.peakaboo.curvefit.peak.fitting.functions;
 
-import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
+import org.peakaboo.curvefit.peak.fitting.CustomFittingContext;
 import org.peakaboo.curvefit.peak.fitting.DelegatingFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
-import org.peakaboo.curvefit.peak.fitting.CustomFittingContext;
-import org.peakaboo.curvefit.peak.transition.Transition;
 
 public class ConvolvingVoigtFittingFunction implements FittingFunction {
 
@@ -93,18 +91,28 @@ public class ConvolvingVoigtFittingFunction implements FittingFunction {
 	
 	
 	@Override
-	public String name() {
+	public String pluginName() {
 		return "Voigt";
 	}
 
 	@Override
 	public String toString() {
-		return name() + " (Beta)";
+		return pluginName() + " (Beta)";
 	}
 	
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Convolution of Gaussian and Lorentz functions, accurate but slow";
+	}
+
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public String pluginUUID() {
+		return "2e2fde68-ba40-4c54-a07b-498c74310f15";
 	}
 	
 	

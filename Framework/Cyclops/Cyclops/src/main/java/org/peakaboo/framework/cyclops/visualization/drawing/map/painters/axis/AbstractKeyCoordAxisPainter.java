@@ -8,6 +8,7 @@ import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
 
@@ -16,18 +17,21 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 	protected Coord<Number>			coordLoXLoY, coordHiXLoY, coordLoXHiY, coordHiXHiY;
 	protected SISize				coordinateUnits;
-	protected static Coord<Float>	coordPadding	= new Coord<Float>(3.0f, 3.0f);
+	protected static Coord<Float>	coordPadding	= new Coord<Float>(2.0f, 2.0f);
 
 	protected boolean				drawCoords, drawKey, realDimensionsProvided, drawScaleBar;
 	protected int					keyHeight;
 	
-	public AbstractKeyCoordAxisPainter(boolean drawCoords, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+	protected PaletteColour			colour;
+	
+	public AbstractKeyCoordAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawKey, int keyHeight, boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super();
 
 		this.drawCoords = drawCoords;
+		this.colour = colour;
 		this.coordLoXLoY = coordLoXLoY;
 		this.coordHiXLoY = coordHiXLoY;
 		this.coordLoXHiY = coordLoXHiY;
@@ -115,7 +119,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		float lineWidth = getBaseUnitSize(p.dr) * 2.0f;
 		p.context.setLineWidth(lineWidth);
-		p.context.setSource(0.0f, 0.0f, 0.0f);
+		p.context.setSource(colour);
 
 		p.context.setFontSize(getCoordFontSize(p));
 
@@ -143,7 +147,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		if (!drawCoords) return;
 
-		p.context.setSource(0, 0, 0);
+		p.context.setSource(colour);
 
 		Pair<Float, Float> borderX, borderY;
 		borderX = getAxisSizeX(p);
@@ -151,27 +155,27 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		float mapLoX, mapLoY, mapHiX, mapHiY;
 		if (p.dr.screenOrientation) {
-			mapLoX = axesData.xPositionBounds.start;
+			mapLoX = axesData.xPositionBounds.start + borderX.first;
 			mapLoY = axesData.yPositionBounds.start;
 			mapHiX = axesData.xPositionBounds.end - borderX.second;
 			mapHiY = axesData.yPositionBounds.end - borderY.second;
 		} else {
-			mapLoX = axesData.xPositionBounds.start;
+			mapLoX = axesData.xPositionBounds.start + borderX.first;
 			mapHiY = axesData.yPositionBounds.start; 
 			mapHiX = axesData.xPositionBounds.end - borderX.second;
 			mapLoY = axesData.yPositionBounds.end - borderY.second;
 		}
 		
 
-		drawCoordinatePair(p, coordLoXLoY, borders, mapLoX, mapLoY);
-		drawCoordinatePair(p, coordHiXLoY, borders, mapHiX, mapLoY);
+		drawCoordinatePair(p, coordLoXLoY, borders, mapLoX, mapLoY, true);
+		drawCoordinatePair(p, coordHiXLoY, borders, mapHiX, mapLoY, false);
 
-		drawCoordinatePair(p, coordLoXHiY, borders, mapLoX, mapHiY);
-		drawCoordinatePair(p, coordHiXHiY, borders, mapHiX, mapHiY);
+		drawCoordinatePair(p, coordLoXHiY, borders, mapLoX, mapHiY, true);
+		drawCoordinatePair(p, coordHiXHiY, borders, mapHiX, mapHiY, false);
 	}
 
 
-	private void drawCoordinatePair(PainterData p, Coord<Number> pair, Coord<Float> border, float x, float y)
+	private void drawCoordinatePair(PainterData p, Coord<Number> pair, Coord<Float> border, float x, float y, boolean forwards)
 	{
 		p.context.save();
 
@@ -183,14 +187,16 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		p.context.setFontSize(getCoordFontSize(p));
 
-		text = pair.x.toString() + units + ",";
-		textX = x + border.x - coordPadding.x - p.context.getTextWidth(text);
+		text = pair.x.toString() + units + "," + pair.y.toString() + units;
+		// We don't apply coordPadding here because it's really not meant to push the
+		// text further horizontally towards the center of the image than it needs to be
+		// to line up with the edge of the map.
+		if (forwards) {
+			textX = x;
+		} else {
+			textX = x - p.context.getTextWidth(text);
+		}
 		textY = y + coordPadding.y + p.context.getFontAscent();
-		p.context.writeText(text, textX, textY);
-
-		text = pair.y.toString() + units;
-		textX = x + border.x - coordPadding.x - p.context.getTextWidth(text + ",");
-		textY = y + coordPadding.y + p.context.getFontHeight() + p.context.getFontAscent();
 		p.context.writeText(text, textX, textY);
 
 		p.context.restore();
@@ -227,36 +233,13 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		String units = coordinateUnits == null ? "" : " " + coordinateUnits;
 
 		context.setFontSize(context.getFontSize() - 2);
+		
+		// Y
+		y = context.getFontHeight();
 
 		// X
-
-		cx = context.getTextWidth(coordLoXLoY.x.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		cx = context.getTextWidth(coordHiXLoY.x.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		cx = context.getTextWidth(coordLoXHiY.x.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		cx = context.getTextWidth(coordHiXHiY.x.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		cx = context.getTextWidth(coordLoXLoY.y.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		cx = context.getTextWidth(coordHiXLoY.y.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		cx = context.getTextWidth(coordLoXHiY.y.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		cx = context.getTextWidth(coordHiXHiY.y.toString() + units + ",");
-		if (cx > x) x = cx;
-
-		// Y
-		y = context.getFontHeight() * 2 - context.getFontLeading() - context.getFontDescent();
-
+		x = y;
+		
 		context.restore();
 
 		return new Coord<Float>(x + (coordPadding.x * 2.0f), y + (coordPadding.y * 2.0f));

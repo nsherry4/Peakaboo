@@ -1,6 +1,6 @@
 package org.peakaboo.curvefit.peak.fitting;
 
-import org.peakaboo.framework.autodialog.model.SelfDescribing;
+import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 
 /**
  * 
@@ -10,7 +10,7 @@ import org.peakaboo.framework.autodialog.model.SelfDescribing;
  *
  */
 
-public interface FittingFunction extends SelfDescribing {
+public interface FittingFunction extends BoltJavaPlugin {
 
 	
 	/**

@@ -1,7 +1,7 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot;
 
 
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.SpectrumPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
@@ -11,13 +11,13 @@ public class LinePainter extends SpectrumPainter
 
 	protected PaletteColour colour;
 		
-	public LinePainter(ReadOnlySpectrum data, PaletteColour colour)
+	public LinePainter(SpectrumView data, PaletteColour colour)
 	{
 		super(data);
 		this.colour = colour;
 	}
 	
-	public LinePainter(ReadOnlySpectrum data)
+	public LinePainter(SpectrumView data)
 	{
 		super(data);
 		this.colour = new PaletteColour(0xff000000);

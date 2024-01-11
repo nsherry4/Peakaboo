@@ -1,11 +1,14 @@
 package org.peakaboo.dataset.source.model.internal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.interaction.Interaction;
@@ -14,13 +17,13 @@ import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.tier.Tier;
 
 /**
  * Represents a random selection of data points from another DataSource
@@ -67,7 +70,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		}
 		
 		//we don't reanalyze in the constructor for performance reasons
-		this.analysis = new DataSourceAnalysis();
+		this.analysis = Tier.provider().createDataSourceAnalysis();
 		this.analysis.init(backer.getScanData().getAnalysis().channelsPerScan());
 		
 		
@@ -107,7 +110,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 
 	
 	@Override
-	public ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException {
+	public SpectrumView get(int index) throws IndexOutOfBoundsException {
 		return backer.getScanData().get(getBackingIndex(index));
 	}
 
@@ -174,7 +177,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 
 
 	@Override
-	public void read(List<DataFile> datafiles) throws DataSourceReadException {
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
 		throw new UnsupportedOperationException("Cannot read in derived DataSource");
 	}
 
@@ -198,7 +201,7 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 	}
 
 	@Override
-	public Optional<Group> getParameters(List<DataFile> datafiles) {
+	public Optional<Group> getParameters(List<DataInputAdapter> datafiles) {
 		return Optional.empty();
 	}
 

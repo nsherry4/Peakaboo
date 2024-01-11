@@ -7,7 +7,7 @@ import org.peakaboo.controller.mapper.fitting.modes.RatioModeController.Ratios;
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class RatioModeData implements MapModeData {
@@ -52,7 +52,7 @@ public class RatioModeData implements MapModeData {
 				unselectable.add(i);
 			}
 		}
-		var ratios = new ISpectrum(data.first);
+		var ratios = new ArraySpectrum(data.first);
 		return Optional.of(new SelectionInfo(ratios, unselectable));
 	}
 	

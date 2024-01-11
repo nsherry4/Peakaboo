@@ -9,7 +9,7 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -39,7 +39,7 @@ public class RatioModeController extends SimpleModeController {
 			SpectrumCalculations.normalize_inplace(side2Data);
 		}
 				
-		Spectrum ratioData = new ISpectrum(side1Data.size());
+		Spectrum ratioData = new ArraySpectrum(side1Data.size());
 		
 		
 		for (int i = 0; i < ratioData.size(); i++) {
@@ -64,7 +64,7 @@ public class RatioModeController extends SimpleModeController {
 			ratioData.set(i, value);
 		}
 		
-		Spectrum invalidPoints = new ISpectrum(ratioData.size(), 0f);
+		Spectrum invalidPoints = new ArraySpectrum(ratioData.size(), 0f);
 		for (int i = 0; i < ratioData.size(); i++) {
 			if (  Float.isNaN(ratioData.get(i))  ) {
 				invalidPoints.set(i, 1f);

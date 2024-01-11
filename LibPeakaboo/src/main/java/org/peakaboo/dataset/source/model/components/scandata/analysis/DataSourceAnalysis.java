@@ -1,9 +1,11 @@
 package org.peakaboo.dataset.source.model.components.scandata.analysis;
 
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import java.util.List;
+
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class DataSourceAnalysis implements Analysis {
 
@@ -19,14 +21,14 @@ public class DataSourceAnalysis implements Analysis {
 	
 	public void init(int channelCount) {
 		this.channelCount = channelCount;
-		summedSpectrum = new ISpectrum(channelCount);
+		summedSpectrum = new ArraySpectrum(channelCount);
 		summedScanCount = 0;
-		maximumSpectrum = new ISpectrum(channelCount);
+		maximumSpectrum = new ArraySpectrum(channelCount);
 		maxValue = 0;
 	}
 
 	@Override
-	public void process(ReadOnlySpectrum spectrum) {
+	public void process(SpectrumView spectrum) {
 		if (spectrum == null) { return; }
 		
 		// if this is the first (non-null) spectrum that we're seeing, use it to detect
@@ -42,8 +44,8 @@ public class DataSourceAnalysis implements Analysis {
 	}
 
 	@Override
-	public Spectrum maximumPlot() {
-		return new ISpectrum(maximumSpectrum);
+	public SpectrumView maximumPlot() {
+		return new ArraySpectrum(maximumSpectrum);
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class DataSourceAnalysis implements Analysis {
 	}
 
 	@Override
-	public Spectrum averagePlot() {
+	public SpectrumView averagePlot() {
 		return SpectrumCalculations.divideBy(summedSpectrum, summedScanCount);
 	}
 
@@ -62,13 +64,26 @@ public class DataSourceAnalysis implements Analysis {
 	}
 
 	@Override
-	public ReadOnlySpectrum summedPlot() {
-		return new ISpectrum(summedSpectrum);
+	public SpectrumView summedPlot() {
+		return new ArraySpectrum(summedSpectrum);
 	}
 
 	@Override
 	public int scanCount() {
 		return summedScanCount;
+	}
+
+
+	public static DataSourceAnalysis merge(List<Analysis> analyses) {
+		DataSourceAnalysis result = new DataSourceAnalysis();
+		result.init(analyses.get(0).channelsPerScan());
+		for (var analysis : analyses) {
+			SpectrumCalculations.addLists_inplace(result.summedSpectrum, analysis.summedPlot());
+			SpectrumCalculations.maxLists_inplace(result.maximumSpectrum, analysis.maximumPlot());
+			result.summedScanCount += analysis.scanCount();
+			result.maxValue = Math.max(result.maxValue, analysis.maximumIntensity());
+		}
+		return result;
 	}
 
 }

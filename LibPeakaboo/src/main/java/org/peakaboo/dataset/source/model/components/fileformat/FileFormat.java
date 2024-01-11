@@ -3,7 +3,7 @@ package org.peakaboo.dataset.source.model.components.fileformat;
 import java.io.IOException;
 import java.util.List;
 
-import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.io.DataInputAdapter;
 
 public interface FileFormat {
 
@@ -22,7 +22,7 @@ public interface FileFormat {
 	 * Determines if this DataSource can read the given files as a whole 
 	 * dataset, and returns info on how certain it is
 	 */
-	FileFormatCompatibility compatibility(List<DataFile> filenames) throws IOException;
+	FileFormatCompatibility compatibility(List<DataInputAdapter> filenames) throws IOException;
 
 	/**
 	 * Returns a name for this DataSource Plugin
@@ -34,5 +34,17 @@ public interface FileFormat {
 	 * Returns a description for this DataSource Plugin
 	 */
 	String getFormatDescription();
+	
+	/**
+	 * Describe the type of data contained in this data set. This refers to the
+	 * experimental method used to collect this data, not the file format. The value
+	 * will usually be XRF.
+	 * 
+	 * The value is a string for easy future-proofing, but the only recognized
+	 * values are from {@link FileFormatDataType}
+	 */
+	default String getFormatDataType() {
+		return FileFormatDataType.XRF;
+	}
 	
 }

@@ -1,6 +1,6 @@
 package org.peakaboo.curvefit.peak.fitting;
 
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 
 public interface FittingContext {
 
@@ -10,6 +10,6 @@ public interface FittingContext {
 
 	float getFWHM();
 	
-	ROFittingParameters getFittingParameters();
+	FittingParametersView getFittingParameters();
 	
 }

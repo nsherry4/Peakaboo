@@ -1,6 +1,6 @@
 package org.peakaboo.framework.eventful.cache;
 
-import org.peakaboo.framework.eventful.IEventful;
+import org.peakaboo.framework.eventful.IEventfulBeacon;
 
 /**
  * EventfulCache stores a value along with a way to recalculate that value when
@@ -9,19 +9,19 @@ import org.peakaboo.framework.eventful.IEventful;
  * invalidation and dependency handling; when data involved in the calculation
  * of this cached value changes, this value will automatically be invalidated.
  */
-public interface EventfulCache<T> extends IEventful {
+public interface EventfulCache<T> extends IEventfulBeacon {
 
 	void invalidate();
 
 	T getValue();
 
 	/**
-	 * Mark this cached value as dependant (eg derived from) the given cached value.
-	 * When the given cached value is invalidated, this value will be invalidated as
+	 * Mark this cached value as dependent on (ie derived from) the given cached value.
+	 * When the upstream cached value is invalidated, this value will be invalidated as
 	 * well. Note that unlike regular listeners, the dependency invalidation is done
 	 * immediately, rather than on the ui event thread.
 	 */
-	default void addUpstreamDependency(EventfulCache<?> dependency) {
+	default void dependsOn(EventfulCache<?> dependency) {
 		dependency.addDependent(this);
 	}
 

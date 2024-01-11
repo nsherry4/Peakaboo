@@ -6,7 +6,7 @@ import org.peakaboo.controller.mapper.fitting.SavedMapFittingSession;
 import org.peakaboo.controller.mapper.settings.SavedMapSettingsController;
 import org.peakaboo.framework.druthers.DruthersStorable;
 
-public class SavedMapSession extends DruthersStorable {
+public class SavedMapSession implements DruthersStorable {
 
 	public SavedMapDimensionsSession dimensions;
 	public SavedMapSettingsController settings;

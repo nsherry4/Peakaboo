@@ -1,19 +1,14 @@
 package org.peakaboo.display.plot.painters;
 
-import java.awt.Color;
 import java.util.List;
 
-import org.peakaboo.curvefit.curve.fitting.FittingParameters;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
@@ -30,16 +25,15 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPa
 public class FittingMarkersPainter extends PlotPainter
 {
 
-	private ROFittingParameters parameters;
+	private FittingParametersView parameters;
 	private List<FittingLabel> labels;
 
 	/**
 	 * Create a FittingMarkersPainter
 	 * @param fitResults the {@link FittingResultSet} for the data being drawn
 	 * @param detectorMaterial the {@link DetectorMaterialType} used to generate the {@link FittingResultSet}
-	 * @param c the {@link Color} to use when drawing the markings
 	 */
-	public FittingMarkersPainter(ROFittingParameters parameters, List<FittingLabel> labels)
+	public FittingMarkersPainter(FittingParametersView parameters, List<FittingLabel> labels)
 	{
 		this.parameters = parameters;
 		this.labels = labels;

@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeListener;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
@@ -35,13 +36,13 @@ public class ZoomSlider extends JPanel {
 		
 		
 		out = new FluentButton()
-				.withIcon(StockIcon.ZOOM_OUT)
+				.withIcon(StockIcon.ZOOM_OUT, Stratus.getTheme().getControlText())
 				.withTooltip("Zoom Out")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false)
 				.withAction(() -> zoomSlider.setValue(zoomSlider.getValue() - step));
 		in = new FluentButton()
-				.withIcon(StockIcon.ZOOM_IN)
+				.withIcon(StockIcon.ZOOM_IN, Stratus.getTheme().getControlText())
 				.withTooltip("Zoom In")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false)

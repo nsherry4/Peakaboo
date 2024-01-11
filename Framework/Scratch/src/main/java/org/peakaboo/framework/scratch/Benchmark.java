@@ -27,12 +27,14 @@ public class Benchmark {
 	}
 
 	private static void spectrum() throws IOException {
+		final int SPECTRUM_SIZE = 4096;
+		final int SPECTRUM_COUNT = 10000;
 		Random r = new Random();
 		clazz = float[].class;
 		float[] s = null;
-		for (int i = 0; i < 10000; i++) {
-			s = new float[2048];
-			for (int j = 0; j < 2048; j++) {
+		for (int i = 0; i < SPECTRUM_COUNT; i++) {
+			s = new float[SPECTRUM_SIZE];
+			for (int j = 0; j < SPECTRUM_SIZE; j++) {
 				s[j] = j/10; //some repetition
 			}
 			data.add(s);

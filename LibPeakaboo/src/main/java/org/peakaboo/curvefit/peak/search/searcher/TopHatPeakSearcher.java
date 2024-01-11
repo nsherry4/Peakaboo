@@ -6,8 +6,8 @@ import java.util.List;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -33,7 +33,7 @@ public class TopHatPeakSearcher implements PeakSearcher {
 	}
 	
 	@Override
-	public List<Integer> search(ReadOnlySpectrum data) {
+	public List<Integer> search(SpectrumView data) {
 		
 		Spectrum tophat = tophat(data);
 		Spectrum d1 = SpectrumCalculations.derivative(tophat);
@@ -68,7 +68,7 @@ public class TopHatPeakSearcher implements PeakSearcher {
 		
 	}
 
-	public Spectrum tophat(ReadOnlySpectrum data) {
+	public Spectrum tophat(SpectrumView data) {
 		
 
 		Filter filter = new WeightedAverageNoiseFilter();
@@ -77,14 +77,14 @@ public class TopHatPeakSearcher implements PeakSearcher {
 		width.setValue(new Integer(10));
 		
 		//aggressive smoothing to get just the most significant peaks
-		ReadOnlySpectrum smoothed = new ISpectrum(data);
+		SpectrumView smoothed = new ArraySpectrum(data);
 		
 		for (int i = 0; i < 3; i++) {
 			smoothed = filter.filter(smoothed);
 		}
 		
 		
-		Spectrum tophat = new ISpectrum(smoothed.size());
+		Spectrum tophat = new ArraySpectrum(smoothed.size());
 		
 		int range = halfW + fullV;
 		for (int i = 0; i < smoothed.size(); i++) {
@@ -101,7 +101,7 @@ public class TopHatPeakSearcher implements PeakSearcher {
 		
 
 		
-		return new ISpectrum(tophat);
+		return new ArraySpectrum(tophat);
 	}
 	
 }

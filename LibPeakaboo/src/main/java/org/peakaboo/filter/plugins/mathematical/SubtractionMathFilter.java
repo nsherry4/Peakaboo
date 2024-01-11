@@ -4,11 +4,10 @@ package org.peakaboo.filter.plugins.mathematical;
 import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 
@@ -29,7 +28,7 @@ public class SubtractionMathFilter extends AbstractFilter
 	}
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		return SpectrumCalculations.subtractFromList(data, amount.getValue().floatValue());
 	}
 
@@ -51,13 +50,6 @@ public class SubtractionMathFilter extends AbstractFilter
 		return FilterDescriptor.MATHEMATICAL;
 	}
 
-
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-	
-	
 	@Override
 	public boolean canFilterSubset() {
 		return true;
@@ -65,7 +57,7 @@ public class SubtractionMathFilter extends AbstractFilter
 
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "06557ce2-5587-4e73-abdb-f2d5dbb16f81";
 	}
 	

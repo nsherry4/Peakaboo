@@ -1,20 +1,15 @@
 package org.peakaboo.ui.swing.plotting.statusbar;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.LayoutManager;
 import java.text.DecimalFormat;
 
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -66,7 +61,7 @@ public class PlotStatusBar extends ClearPanel {
 		this.setBorder(new MatteBorder(1, 0, 0, 0, Stratus.getTheme().getWidgetBorder()));
 		
 		
-		this.setData(controller.view().getChannelCompositeMode());
+		this.setData(controller.view().getChannelViewMode());
 
 	}
 	
@@ -79,7 +74,7 @@ public class PlotStatusBar extends ClearPanel {
 	}
 
 
-	public void setData(ChannelCompositeMode viewmode, int channel, float energy, float value, float rawvalue) {
+	public void setData(ChannelViewMode viewmode, int channel, float energy, float value, float rawvalue) {
 		pView.setValue(viewmode.shortName());
 		
 		pChannel.setValue(channel);
@@ -99,7 +94,7 @@ public class PlotStatusBar extends ClearPanel {
 		}
 	}
 		
-	public void setData(ChannelCompositeMode viewmode) {
+	public void setData(ChannelViewMode viewmode) {
 		pView.setValue(viewmode.shortName());
 		
 		if (pChannel.isVisible()) pChannel.setVisible(false);

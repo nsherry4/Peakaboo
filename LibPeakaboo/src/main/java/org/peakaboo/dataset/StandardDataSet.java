@@ -7,15 +7,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 import java.util.function.IntConsumer;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
-import org.peakaboo.dataset.source.model.DataSource.DataSourceReadException;
+import org.peakaboo.dataset.source.model.DataSource.DataSourceContext;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.DummyDataSize;
 import org.peakaboo.dataset.source.model.components.interaction.CallbackInteraction;
@@ -24,7 +24,6 @@ import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.DummyScanData;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.Coord;
@@ -81,7 +80,7 @@ public class StandardDataSet implements DataSet
 	 * @param paths the files to read as a {@link DataSource}
 	 * @return {@link ExecutorSet} which, when completed, returns a Boolean indicating success
 	 */
-	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset(final List<DataFile> paths, final DataSource dataSource)
+	public ExecutorSet<DatasetReadResult> asyncReadFileListAsDataset(final List<DataInputAdapter> paths, final DataSource dataSource)
 	{
 
 		// sort the filenames alphanumerically. Files like "point2" should appear before "point10"
@@ -132,7 +131,7 @@ public class StandardDataSet implements DataSet
 					IntConsumer readScans = reading::workUnitCompleted;
 					
 					dataSource.setInteraction(new CallbackInteraction(openedScans, gotScanCount, readScans, isAborted));
-					dataSource.read(paths);
+					dataSource.read(new DataSourceContext(paths));
 	
 
 					if (isAborted.getAsBoolean()) {

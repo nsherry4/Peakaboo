@@ -3,7 +3,7 @@ package org.peakaboo.curvefit.peak.search.scoring;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * Scores a TransitionSeries based on a rough calculation of
@@ -13,10 +13,10 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
  */
 public class FastSignalMatchScorer implements FittingScorer{
 
-	private ReadOnlySpectrum data;
+	private SpectrumView data;
 	private EnergyCalibration calibration;
 	
-	public FastSignalMatchScorer(ReadOnlySpectrum data, EnergyCalibration calibration) {
+	public FastSignalMatchScorer(SpectrumView data, EnergyCalibration calibration) {
 		this.data = data;
 		this.calibration = calibration;
 	}

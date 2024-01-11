@@ -14,11 +14,16 @@ public abstract class ColourView extends ColourComponent {
 
 	public static final int DEFAULT_PAD = 2;
 
-	public static record Settings (int size, float stroke, int pad) {};
+	public static record Settings (int size, float stroke, int pad) {
+
+		public static Settings defaults() {
+			return new Settings(DEFAULT_SIZE, 0f, DEFAULT_PAD);
+		}};
+		
 	protected Settings settings;
 	
 	public ColourView(Color colour) {
-		this(colour, new Settings(DEFAULT_SIZE, 0f, DEFAULT_PAD));
+		this(colour, Settings.defaults());
 	}
 	
 	public ColourView(Color colour, Settings settings) {
@@ -58,5 +63,6 @@ public abstract class ColourView extends ColourComponent {
 		g.dispose();
 		
 	}
+	
 	
 }

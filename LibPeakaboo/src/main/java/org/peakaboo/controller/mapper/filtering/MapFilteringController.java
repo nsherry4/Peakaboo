@@ -17,8 +17,8 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.util.ListOps;
@@ -219,7 +219,7 @@ class CachedMaps {
 			ITransitionSeries ts = rawmap.transitionSeries;
 			EventfulSoftCache<AreaMap> mapcache = new EventfulSoftCache<>(() -> {
 				//turn a rawmap into an AreaMap with the detector profile applied
-				ReadOnlySpectrum calibrated = rawmaps.getMap(ts).getData(profile);
+				SpectrumView calibrated = rawmaps.getMap(ts).getData(profile);
 				AreaMap areamap = new AreaMap(calibrated, ts.getElement(), size, controller.rawDataController.getRealDimensions());
 				//interpolate points marked by the user as bad. We do this 
 				//before filtering so that we don't need to worry about filters
@@ -252,7 +252,7 @@ class CachedMaps {
 		
 		//calculate the sum total map, replacing it with an empty map if there's nothing to sum
 		if (maps.size() > 0) {
-			Spectrum total = new ISpectrum(size.x * size.y);
+			Spectrum total = new ArraySpectrum(size.x * size.y);
 			AreaMap map = null;
 			Set<Element> elements = new LinkedHashSet<>();
 			//we do it this way so that we only have to hold one in memory at a time
@@ -264,7 +264,7 @@ class CachedMaps {
 			}
 			sum = new AreaMap(total, new ArrayList<>(elements), map.getSize(), map.getRealDimensions());
 		} else {
-			sum = new AreaMap(new ISpectrum(size.x * size.y), Collections.emptyList(), size, null);
+			sum = new AreaMap(new ArraySpectrum(size.x * size.y), Collections.emptyList(), size, null);
 			sum = filters.apply(sum);
 		}
 		

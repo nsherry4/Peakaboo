@@ -3,8 +3,8 @@ package org.peakaboo.mapping.filter.plugin.plugins.transforming;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -32,12 +32,12 @@ public class Rotate90MapFilter extends AbstractMapFilter {
 	public void initialize() {}
 
 	@Override
-	public AreaMap filter(AreaMap source) {
-		
-		ReadOnlySpectrum sourceData = source.getData();
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		SpectrumView sourceData = source.getData();
 		GridPerspective<Float> sourceGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		
-		Spectrum target = new ISpectrum(sourceData.size());
+		Spectrum target = new ArraySpectrum(sourceData.size());
 		GridPerspective<Float> targetGrid = new GridPerspective<Float>(source.getSize().y, source.getSize().x, 0f);
 		
 		int maxy = source.getSize().y-1;
@@ -59,11 +59,6 @@ public class Rotate90MapFilter extends AbstractMapFilter {
 		}
 		
 		return new AreaMap(target, source.getElements(), new Coord<>(oldsize.y, oldsize.x), newDim);
-	}
-
-	@Override
-	public boolean pluginEnabled() {
-		return true;
 	}
 
 	@Override

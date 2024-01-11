@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.display.Display;
 import org.peakaboo.display.plot.painters.FittingLabel;
 import org.peakaboo.display.plot.painters.FittingMarkersPainter;
@@ -16,11 +16,12 @@ import org.peakaboo.display.plot.painters.FittingSumPainter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
+import org.peakaboo.framework.cyclops.visualization.Surface.Dash;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
@@ -31,13 +32,15 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.PlotDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.SpectrumPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter.Config;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.GridlinePainter.Orientation;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.RangeTickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.AreaPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.OriginalDataPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
+import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.StackedAreaPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class Plotter {
@@ -58,12 +61,12 @@ public class Plotter {
 		}
 		
 
-		if (data.filtered == null) {
+		if (data.spectra.filtered() == null) {
 			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, data (filtered) was null");
 			plotDrawing = null;
 			return null;
 		}
-		spectrumSize = data.filtered.size();
+		spectrumSize = data.spectra.filtered().size();
 
 		
 		
@@ -73,7 +76,7 @@ public class Plotter {
 		if (context.getSurfaceDescriptor().isVector()) {
 			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
-			drawToBuffer(data, settings, context, size);
+			drawToSurface(data, settings, context, size);
 		} else if (doBuffer) {
 			
 			Buffer buffer = bufferer.get(context, size.x, size.y);
@@ -83,7 +86,7 @@ public class Plotter {
 				if (buffer == null) {
 					buffer = bufferer.create(context);
 				}
-				drawToBuffer(data, settings, buffer, size);
+				drawToSurface(data, settings, buffer, size);
 				lastSize = new Coord<>(size); 
 			}
 					
@@ -92,7 +95,7 @@ public class Plotter {
 			context.compose(buffer, 0, 0, 1f);
 		} else {
 			lastSize = null;
-			drawToBuffer(data, settings, context, size);
+			drawToSurface(data, settings, context, size);
 		}
 		
 		return plotDrawing;
@@ -101,30 +104,32 @@ public class Plotter {
 	}
 	
 	
-	public PlotDrawing drawToBuffer(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
-
+	public PlotDrawing drawToSurface(PlotData data, PlotSettings settings, Surface context, Coord<Integer> size) {
+		
 		////////////////////////////////////////////////////////////////////
 		// Colour Selections
 		////////////////////////////////////////////////////////////////////
-		PlotPalette fittedPalette = getFittedPalette(settings.monochrome);
-		PlotPalette proposedPalette = getProposedPalette(settings.monochrome);
-		PlotPalette selectedPalette = getSelectedPalette(settings.monochrome);
+		PlotPalette fittedPalette = getFittedPalette(settings);
+		PlotPalette proposedPalette = getProposedPalette(settings);
+		PlotPalette selectedPalette = getSelectedPalette(settings);
+		
 
 		
 				
 		////////////////////////////////////////////////////////////////////
 		// Common Values Setup
 		////////////////////////////////////////////////////////////////////
-		//The max intensity is different than the plot's maximum displayable value, since it leaves a bit of padding room at the top
-		float plotMaxValue = PlotDrawing.getDataScale(getMaxIntensity(data), settings.logTransform, true);
+		//The max signal intensity is different than the plot's maximum displayable value, since it leaves a bit of padding room at the top
+		float plotMaxSignal = getMaxIntensity(data);
+		float plotMaxValue = PlotDrawing.getDataScale(plotMaxSignal, settings.logTransform, true);
 		
-		TickFormatter tickRight = new RangeTickFormatter(0.0f, plotMaxValue)
+		TickFormatter tickRight = new RangeTickFormatter(0.0f, plotMaxValue, plotMaxSignal)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);
 		TickFormatter tickBottom = new RangeTickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()).withRotate(false);
 		TickFormatter tickTop = null;
-		TickFormatter tickLeft = new RangeTickFormatter(0.0f, plotMaxValue)
+		TickFormatter tickLeft = new RangeTickFormatter(0.0f, plotMaxValue, plotMaxSignal)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);
@@ -136,20 +141,33 @@ public class Plotter {
 		////////////////////////////////////////////////////////////////////
 		List<PlotPainter> plotPainters = new ArrayList<>();
 		
-		//draw horizontal grid lines. We do this right up front so they're behind everything else
-		plotPainters.add(new GridlinePainter(tickLeft));
-
+		//draw grid lines. We do this right up front so they're behind everything else
+		PaletteColour hMajorColour, hMinorColour, vMajorColour;
+		if (settings.darkmode) {
+			hMajorColour = new PaletteColour(0x28ffffff);
+			hMinorColour = new PaletteColour(0x10ffffff);
+			vMajorColour = new PaletteColour(0x08ffffff);
+		} else {
+			hMajorColour = new PaletteColour(0x28000000);
+			hMinorColour = new PaletteColour(0x10000000);
+			vMajorColour = new PaletteColour(0x08000000);
+		}
+		plotPainters.add(new GridlinePainter(new Config(Orientation.HORIZONTAL, tickLeft, hMajorColour, hMinorColour, null)));
+		plotPainters.add(new GridlinePainter(new Config(Orientation.VERTICAL, tickBottom, vMajorColour, vMajorColour, new Dash(new float[] {3}, 0))));
+		
+		
 
 		// draw the filtered data
-		plotPainters.add(getPlotPainter(data.filtered, settings.monochrome));
+		plotPainters.add(getPlotPainter(data, settings));
 
 		
 		// draw the original data
-		if (data.raw != null && settings.backgroundShowOriginal) {
-			ReadOnlySpectrum originalData = data.raw;
+		if (data.spectra.raw() != null && settings.backgroundShowOriginal) {
+			SpectrumView originalData = data.spectra.raw();
 			plotPainters.add(new OriginalDataPainter(originalData, settings.monochrome));
 		}
 		
+			
 		
 		//Filter previews
 		for (Filter f : data.filters) {
@@ -188,10 +206,17 @@ public class Plotter {
 		// Axis Painters
 		////////////////////////////////////////////////////////////////////
 
-		List<AxisPainter> axisPainters = new ArrayList<>();		
-		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, "Relative Intensity", null, settings.title, "Energy (keV)"));
-		axisPainters.add(new TickMarkAxisPainter(tickRight, tickBottom, tickTop, tickLeft));
-		axisPainters.add(new LineAxisPainter(true, true, false, true));
+		PaletteColour cForeground;
+		if (settings.darkmode) {
+			cForeground = new PaletteColour(0xffe0e0e0);
+		} else {
+			cForeground = new PaletteColour(0xff000000);
+		}
+		
+		List<AxisPainter> axisPainters = new ArrayList<>();	
+		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, cForeground,  "Relative Intensity", null, settings.title, "Energy (keV)"));
+		axisPainters.add(new TickMarkAxisPainter(cForeground, tickRight, tickBottom, tickTop, tickLeft));
+		axisPainters.add(new LineAxisPainter(cForeground, true, true, false, true));
 
 		
 		
@@ -202,7 +227,7 @@ public class Plotter {
 		//Create the DrawingRequest object
 		DrawingRequest dr = createDrawingRequest(data, size, settings, context);
 		
-		clearSurface(context, size);
+		clearSurface(context, settings, size);
 		plotDrawing = new PlotDrawing(context, dr, plotPainters, axisPainters);
 		plotDrawing.draw();
 				
@@ -231,7 +256,7 @@ public class Plotter {
 			}
 			
 			//highlighted fittings
-			FittingResultSet highlightedResults = data.selectionResults.subsetIntersect(data.highlightedTransitionSeries);
+			FittingResultSetView highlightedResults = data.selectionResults.subsetIntersect(data.highlightedTransitionSeries);
 			if (!highlightedResults.isEmpty()) {
 				plotPainters.add(new FittingPainter(highlightedResults, selectedPalette));
 			}
@@ -274,7 +299,7 @@ public class Plotter {
 		
 		List<FittingLabel> fitLabels = new ArrayList<>();
 		if (data.selectionResults != null) {
-			for (FittingResult fit : data.selectionResults.getFits()) {
+			for (FittingResultView fit : data.selectionResults.getFits()) {
 				if (data.highlightedTransitionSeries.contains(fit.getTransitionSeries())) {
 					fitLabels.add(new FittingLabel(fit, selectedPalette, data.calibration, data.annotations.get(fit.getTransitionSeries()), showElementFitIntensities));		
 				} else {
@@ -284,7 +309,7 @@ public class Plotter {
 			}
 		}
 		if (data.proposedResults != null) {
-			for (FittingResult fit : data.proposedResults.getFits()) {
+			for (FittingResultView fit : data.proposedResults.getFits()) {
 				fitLabels.add(new FittingLabel(fit, proposedPalette, data.calibration, data.annotations.get(fit.getTransitionSeries()), showElementFitIntensities));
 			}
 		}
@@ -292,7 +317,7 @@ public class Plotter {
 	}
 
 	private PlotPainter createFilterPreviewPainter(PlotData data, Filter f) {
-		return new SpectrumPainter(data.deltas.get(f)) {
+		return new SpectrumPainter(data.spectra.deltas().get(f)) {
 
 			@Override
 			public void drawElement(PainterData p)
@@ -326,34 +351,38 @@ public class Plotter {
 	private float getMaxIntensity(PlotData data) {
 		//if the filtered data somehow becomes taller than the maximum value from the raw data, we don't want to clip it.
 		//but if the fitlered data gets weaker, we still want to scale it to the original data, so that its shrinking is obvious
-		float maxIntensity = Math.max(data.dataset.getAnalysis().maximumIntensity(), data.filtered.max());
+		float maxIntensity = Math.max(data.dataset.getAnalysis().maximumIntensity(), data.spectra.filtered().max());
 		
 		//when not using the consistent scale, scale each spectra against itself
 		if (!data.consistentScale) {
-			maxIntensity = data.filtered.max();
+			maxIntensity = data.spectra.filtered().max();
 		}
 		
 		return maxIntensity;
 	}
 
-	private void clearSurface(Surface context, Coord<Integer> size) {
+	private void clearSurface(Surface context, PlotSettings settings, Coord<Integer> size) {
 		context.rectAt(0, 0, (float)size.x, (float)size.y);
-		context.setSource(new PaletteColour(0xffffffff));
+		if (settings.darkmode) {
+			context.setSource(new PaletteColour(0xff202020));
+		} else {
+			context.setSource(new PaletteColour(0xffffffff));
+		}
 		context.fill();
 	}
 	
-	private AreaPainter getPlotPainter(ReadOnlySpectrum filtered, boolean monochrome) {
-		PaletteColour fill = new PaletteColour(monochrome ? 0xff606060 : 0xff26a269);
-		PaletteColour stroke = new PaletteColour(monochrome ? 0xff202020 : 0xff1e7e52);
-		return new AreaPainter(filtered, fill, stroke);
+	protected SpectrumPainter getPlotPainter(PlotData data, PlotSettings settings) {
+		PaletteColour fill = new PaletteColour(settings.monochrome ? 0xff606060 : 0xff26a269);
+		PaletteColour stroke = new PaletteColour(settings.monochrome ? 0xff202020 : 0xff1e7e52);
+		return new StackedAreaPainter(data.spectra.filtered(), fill, stroke);
 	}
 
-	private PlotPalette getSelectedPalette(boolean monochrome) {
+	private static PlotPalette getSelectedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
 		// Colour/Monochrome colours for highlighted/selected fittings
-		if (monochrome)
+		if (settings.monochrome)
 		{
-			palette.fitFill = new PaletteColour(0x50ffffff);
+			palette.fitFill = new PaletteColour(0x60ffffff);
 			palette.fitStroke = new PaletteColour(0x80ffffff);
 			palette.sumStroke = new PaletteColour(0xFF777777);
 			palette.labelText = new PaletteColour(0xffffffff);
@@ -374,11 +403,11 @@ public class Plotter {
 		return palette;
 	}
 
-	private PlotPalette getProposedPalette(boolean monochrome) {
+	private static PlotPalette getProposedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
-		if (monochrome)
+		if (settings.monochrome)
 		{
-			palette.fitFill = new PaletteColour(0x50ffffff);
+			palette.fitFill = new PaletteColour(0x40ffffff);
 			palette.fitStroke = new PaletteColour(0x80ffffff);
 			palette.sumStroke = new PaletteColour(0xD0ffffff);
 			palette.labelText = new PaletteColour(0xFF777777);
@@ -399,10 +428,10 @@ public class Plotter {
 		return palette;
 	}
 
-	private PlotPalette getFittedPalette(boolean monochrome) {
+	private static PlotPalette getFittedPalette(PlotSettings settings) {
 		PlotPalette palette = new PlotPalette();
-		if (monochrome) {
-			palette.fitFill = new PaletteColour(0x50000000);
+		if (settings.monochrome) {
+			palette.fitFill = new PaletteColour(0x40000000);
 			palette.fitStroke = new PaletteColour(0x80000000);
 			palette.sumStroke = new PaletteColour(0xD0000000);
 			palette.labelText = new PaletteColour(0xFF000000);
@@ -410,13 +439,23 @@ public class Plotter {
 			palette.labelStroke = palette.labelText;
 			palette.markings = palette.fitStroke;
 		} else {
-			palette.fitFill = new PaletteColour(0x50000000);
-			palette.fitStroke = new PaletteColour(0xA0000000);
-			palette.sumStroke = new PaletteColour(0xD0000000);
-			palette.labelText = palette.fitStroke;
-			palette.labelBackground = new PaletteColour(0xffffffff);
-			palette.labelStroke = palette.labelText;
-			palette.markings = palette.fitStroke;
+			if (settings.darkmode) {
+				palette.fitFill = new PaletteColour(0x40ffffff);
+				palette.fitStroke = new PaletteColour(0xA0ffffff);
+				palette.sumStroke = new PaletteColour(0xD0ffffff);
+				palette.labelText = palette.fitStroke;
+				palette.labelBackground = new PaletteColour(0xff000000);
+				palette.labelStroke = palette.labelText;
+				palette.markings = palette.fitStroke;
+			} else {
+				palette.fitFill = new PaletteColour(0x40000000);
+				palette.fitStroke = new PaletteColour(0xA0000000);
+				palette.sumStroke = new PaletteColour(0xD0000000);
+				palette.labelText = palette.fitStroke;
+				palette.labelBackground = new PaletteColour(0xffffffff);
+				palette.labelStroke = palette.labelText;
+				palette.markings = palette.fitStroke;
+			}
 		}
 		return palette;
 	}

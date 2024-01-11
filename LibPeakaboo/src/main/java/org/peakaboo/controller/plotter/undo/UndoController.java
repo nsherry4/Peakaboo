@@ -3,12 +3,15 @@ package org.peakaboo.controller.plotter.undo;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.logging.Level;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
 
-public class UndoController extends Eventful
+public class UndoController extends EventfulBeacon
 {
 
 	PlotController	plot;
@@ -32,11 +35,12 @@ public class UndoController extends Eventful
 		
 	}
 
-	public void setUndoPoint(String change) {
+
+	public void setUndoPoint(String change, boolean distinctChange) {
 		if (working) { return; }
 		
 		//save the current state
-		String saved = plot.getSavedSettings().serialize();
+		String saved = plot.save().serialize();
 
 		if (currentState != null)
 		{
@@ -57,7 +61,7 @@ public class UndoController extends Eventful
 		 * to make navigating the undo stack easier/faster for the user  
 		 */
 		UndoPoint undoable = new UndoPoint(change, saved);
-		if (currentState != null && currentState.getName().equals(change) && (!change.equals(""))) {
+		if (currentState != null && currentState.getName().equals(change) && (!change.equals("")) && !distinctChange) {
 			//these changes are the same (in sequence) so don't save the last one
 		} else if (currentState != null) {
 			//different changes mean we save the last one
@@ -97,7 +101,9 @@ public class UndoController extends Eventful
 			working = true;
 			if (currentState != null) { redoStack.push(currentState); }
 			currentState = undoStack.pop();
-			plot.loadSettings(currentState.getState(), true);
+			plot.load(currentState.getState(), true);
+		} catch (DruthersLoadException e) {
+			PeakabooLog.get().log(Level.WARNING, "Could not load application state from undo history", e);
 		} finally {
 			working = false;
 		}
@@ -116,7 +122,9 @@ public class UndoController extends Eventful
 			working = true;
 			if (currentState != null) { undoStack.push(currentState); }
 			currentState = redoStack.pop();
-			plot.loadSettings(currentState.getState(), true);
+			plot.load(currentState.getState(), true);
+		} catch (DruthersLoadException e) {
+			PeakabooLog.get().log(Level.WARNING, "Could not load application state from undo history", e);
 		} finally {
 			working = false;
 		}
@@ -147,7 +155,7 @@ public class UndoController extends Eventful
 		redoStack.clear();
 		currentState = null;
 		lastSave = null;
-		setUndoPoint("");
+		setUndoPoint("", /*distinctChange =*/ true);
 	}
 	
 	/**

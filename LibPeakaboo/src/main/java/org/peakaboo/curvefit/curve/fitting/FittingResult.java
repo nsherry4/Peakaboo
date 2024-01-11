@@ -2,7 +2,7 @@ package org.peakaboo.curvefit.curve.fitting;
 
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * 
@@ -13,18 +13,18 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
  * 
  */
 
-public class FittingResult
+public class FittingResult implements FittingResultView
 {
 
-	private ReadOnlySpectrum		fit = null;
-	private ROCurve	curve;
+	private SpectrumView		fit = null;
+	private CurveView	curve;
 
 	private float					curveScale;
 	private float					normalizationScale;
 	
 	private ITransitionSeries		transitionSeries;
 
-	public FittingResult(ROCurve curve, float curveScale)	{
+	public FittingResult(CurveView curve, float curveScale)	{
 		this.curve = curve;
 		this.curveScale = curveScale;
 		this.normalizationScale = curve.getNormalizationScale();
@@ -32,46 +32,32 @@ public class FittingResult
 	}
 
 
-	public ReadOnlySpectrum getFit() {
+	@Override
+	public SpectrumView getFit() {
 		if (fit == null) {
-			fit = curve.scale(curveScale);
+			fit = getCurve().scale(getCurveScale());
 		}
 		return fit;
 	}
-
-	public float getFitSum() {
-		return curve.scaleSum(curveScale);
-	}
-
-	public float getFitMax() {
-		return curve.scaleMax(curveScale);
-	}
 	
-	public int getFitChannels() {
-		return curve.get().size();
-	}
-	
-	public ROCurve getCurve() {
-		return curve;
-	}
-
-
+	@Override
 	public float getCurveScale() {
 		return curveScale;
 	}
 	
+	@Override
+	public CurveView getCurve() {
+		return curve;
+	}
+	
+	@Override
 	public float getNormalizationScale() {
 		return normalizationScale;
 	}
 	
-	public float getTotalScale() {
-		return curveScale / normalizationScale;
-	}
-	
+	@Override
 	public ITransitionSeries getTransitionSeries() {
 		return transitionSeries;
 	}
 	
-	
-
 }

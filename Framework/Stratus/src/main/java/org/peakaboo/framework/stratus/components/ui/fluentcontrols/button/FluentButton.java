@@ -14,6 +14,14 @@ public class FluentButton extends JButton implements FluentButtonAPI<FluentButto
 	
 	private FluentButtonConfigurator configurator;
 	
+	public static enum NotificationDotState {
+		OFF,
+		PROBLEM,
+		WARNING,
+		EVENT,
+		OK,
+	}
+	
 
 	public FluentButton() {
 		init();

@@ -29,8 +29,13 @@ public class ContentLayer implements Layer {
 	}
 
 	@Override
-	public JPanel getComponent() {
+	public JPanel getContent() {
 		return contentPanel;
+	}
+	
+	@Override
+	public JComponent getOuterComponent() {
+		return getContent();
 	}
 
 	@Override

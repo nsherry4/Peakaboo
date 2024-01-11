@@ -7,7 +7,6 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
@@ -19,9 +18,9 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.ListStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 
 public class SpectrumNormalizationFilter extends AbstractFilter {
@@ -46,7 +45,7 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	private static final String MODE_RANGE = "Channel Range";
 	private static final String MODE_MAX = "Strongest Channel";
 	private static final String MODE_SUM = "All Channels";
-	private static final String MODE_FIT = "Element";
+	private static final String MODE_FIT = "Element Fitting";
 
 	@Override
 	public String pluginVersion() {
@@ -56,32 +55,32 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	@Override
 	public void initialize() {
 		
-		pMode = new SelectionParameter<>("Mode", new ListStyle<String>(), MODE_FIT, this::validate);
+		pMode = new SelectionParameter<>("Mode", new ListStyle<String>(), MODE_SUM, this::validate);
 		pMode.setPossibleValues(MODE_FIT, MODE_RANGE, MODE_MAX, MODE_SUM);
 		addParameter(pMode);
 
-		pHeight = new Parameter<>("Normalized Intensity", new RealStyle(), 10f, this::validate);
+		pHeight = new Parameter<>("Target Intensity", new RealStyle(), 10f, this::validate);
 		addParameter(pHeight);
 		
-		pSmooth = new SelectionParameter<>("Noise Reduction", new ListStyle<>(), SmoothingIntensity.Low, new EnumClassInfo<>(SmoothingIntensity.class), this::validate);
+		pSmooth = new SelectionParameter<>("Denoise", new ListStyle<>(), SmoothingIntensity.Low, new EnumClassInfo<>(SmoothingIntensity.class), this::validate);
 		pSmooth.setPossibleValues(SmoothingIntensity.values());
 		addParameter(pSmooth);
 		
 		pStartChannel = new Parameter<>("Start Channel", new IntegerStyle(), 1, this::validate);
 		pEndChannel = new Parameter<>("End Channel", new IntegerStyle(), 10, this::validate);
-		gChannelRange = new Group("Channel Range", new FramedLayoutStyle(true), pStartChannel, pEndChannel);
+		gChannelRange = new Group("Channel Range", new FramedLayoutStyle(true, false), pStartChannel, pEndChannel);
 		addParameter(gChannelRange);
 		
 		
-		pElement = new SelectionParameter<>("Fiting Element", new ListStyle<>(), Element.Ar, new EnumClassInfo<>(Element.class), this::validate);
+		pElement = new SelectionParameter<>("Element", new ListStyle<>(), Element.Ar, new EnumClassInfo<>(Element.class), this::validate);
 		pElement.setPossibleValues(Element.values());
 		pElement.setEnabled(false);
 		
-		pShell = new SelectionParameter<>("Fitting Shell", new ListStyle<>(), TransitionShell.K, new EnumClassInfo<>(TransitionShell.class), this::validate);
+		pShell = new SelectionParameter<>("Shell", new ListStyle<>(), TransitionShell.K, new EnumClassInfo<>(TransitionShell.class), this::validate);
 		pShell.setPossibleValues(TransitionShell.K, TransitionShell.L, TransitionShell.M);
 		pShell.setEnabled(false);
 
-		gElement = new Group("Element Selection", new FramedLayoutStyle(true), pElement, pShell);
+		gElement = new Group("Fitting Selection", new FramedLayoutStyle(true, false), pElement, pShell);
 		addParameter(gElement);
 		
 		validate(null);
@@ -93,14 +92,14 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {	
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {	
 		
 		//Apply noise reduction
 		SavitskyGolayNoiseFilter filter = new SavitskyGolayNoiseFilter();
 		filter.initialize();
 		//Parameter<Integer> filterRange = (Parameter<Integer>) filter.getParameters().get(0);
 		//filterRange.setValue(10);
-		ReadOnlySpectrum filteredData = data;
+		SpectrumView filteredData = data;
 		for (int i = 0; i < pSmooth.getValue().ordinal()*2; i++) {
 			filteredData = filter.filter(filteredData, ctx);
 		}
@@ -128,18 +127,22 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 			ITransitionSeries ts = PeakTable.SYSTEM.get(pElement.getValue(), pShell.getValue());
 			FilterContext context = requireContext(ctx);
 			
-			
-			float energy = ts.getStrongestTransition().energyValue;
-			int channel = context.fittings.getFittingParameters().getCalibration().channelFromEnergy(energy);
-			startChannel = Math.max(channel-5, 0);
-			endChannel = Math.min(channel+5, data.size()-1);
-			int frange = (endChannel - startChannel) + 1;
-			currentIntensity = filteredData.subSpectrum(startChannel, endChannel).sum() / frange;
-			
+			var calibration = context.fittings().getFittingParameters().getCalibration();
+			if (calibration.isZero()) {
+				//Can't filter, return original data
+				return data;
+			} else {
+				float energy = ts.getStrongestTransition().energyValue;
+				int channel = context.fittings().getFittingParameters().getCalibration().channelFromEnergy(energy);
+				startChannel = Math.max(channel-5, 0);
+				endChannel = Math.min(channel+5, data.size()-1);
+				int frange = (endChannel - startChannel) + 1;
+				currentIntensity = filteredData.subSpectrum(startChannel, endChannel).sum() / frange;
+			}
 		}
 
 		float ratio = currentIntensity / desiredIntensity;
-		if (ratio == 0f) return new ISpectrum(data.size());
+		if (ratio == 0f) return new ArraySpectrum(data.size());
 		return SpectrumCalculations.divideBy(data, ratio);
 
 	}
@@ -159,11 +162,6 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 		return new FilterDescriptor(FilterType.ADVANCED, "Normalized");
 	}
 
-
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
 
 	private boolean validate(Parameter<?> p) {
 		String mode = pMode.getValue();
@@ -191,7 +189,7 @@ public class SpectrumNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "b9ec2709-e2d4-4700-9ac9-7d0f5b816f5f";
 	}
 	

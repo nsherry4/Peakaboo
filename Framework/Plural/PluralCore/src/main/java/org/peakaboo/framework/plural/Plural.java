@@ -163,11 +163,6 @@ public class Plural {
 	}
 	
 	
-	public static void eachIndex(int size, Consumer<Integer> each)
-	{
-		new PluralEachIndexExecutor(size, each).executeBlocking();
-	}
-	
 	public static void eachIndex(int size, Consumer<Integer> each, int threads)
 	{
 		new PluralEachIndexExecutor(size, each, threads).executeBlocking();

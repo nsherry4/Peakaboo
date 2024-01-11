@@ -1,9 +1,5 @@
 package org.peakaboo.ui.swing.mapping.components;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.border.MatteBorder;
@@ -13,7 +9,6 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.layouts.CenteringLayout;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.ZoomSlider;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -60,7 +55,7 @@ public class MapStatusBar extends JPanel {
 		JPopupMenu zoomMenu = new JPopupMenu();
 		zoomMenu.setBorder(Spacing.bNone());
 		zoomMenu.add(zoom);
-		FluentButton zoomButton = new FluentButton(StockIcon.FIND)
+		FluentButton zoomButton = new FluentButton().withIcon(StockIcon.FIND, Stratus.getTheme().getControlText())
 				.withTooltip("Zoom")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(false);

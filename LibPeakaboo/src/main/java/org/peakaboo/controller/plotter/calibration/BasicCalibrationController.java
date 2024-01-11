@@ -1,10 +1,12 @@
 package org.peakaboo.controller.plotter.calibration;
 
-import org.peakaboo.calibration.BasicDetectorProfile;
-import org.peakaboo.calibration.SavedCalibrationSession;
-import org.peakaboo.framework.eventful.Eventful;
+import java.util.Map;
 
-public class BasicCalibrationController extends Eventful implements CalibrationController {
+import org.peakaboo.calibration.BasicDetectorProfile;
+import org.peakaboo.calibration.SavedCalibrationSessionV1;
+import org.peakaboo.framework.eventful.EventfulBeacon;
+
+public class BasicCalibrationController extends EventfulBeacon implements CalibrationController {
 
 	private BasicDetectorProfile profile = new BasicDetectorProfile();
 	
@@ -19,13 +21,18 @@ public class BasicCalibrationController extends Eventful implements CalibrationC
 	}
 
 	@Override
-	public SavedCalibrationSession toSaved() {
-		return null;
+	public void loadSavedV1(SavedCalibrationSessionV1 saved) {
+		//Nothing to do
 	}
 
 	@Override
-	public void loadSaved(SavedCalibrationSession saved) {
-		//Nothing to do
+	public Map<String, Object> save() {
+		return Map.of();
+	}
+
+	@Override
+	public void load(Map<String, Object> sessionExtended) {
+		// NOOP
 	}
 
 }

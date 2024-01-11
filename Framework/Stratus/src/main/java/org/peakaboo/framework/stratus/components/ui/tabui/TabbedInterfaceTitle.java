@@ -191,7 +191,6 @@ public class TabbedInterfaceTitle extends JPanel {
             	g2.setColor(new Color(0.64f, 0f, 0f));
             	g2.fillOval(1, 1, size - 2, size - 2);
             	g2.setColor(Color.WHITE);
-                
             }
             
             int delta = 5;

@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
+import org.peakaboo.controller.plotter.view.mode.SingleViewMode;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -63,7 +63,7 @@ public class PlotScanNumber extends ClearPanel {
 	void setWidgetState(boolean hasData) {
 		
 		if (hasData) {
-			if (controller.view().getChannelCompositeMode() == ChannelCompositeMode.NONE) {
+			if (controller.view().getChannelViewMode().equals(new SingleViewMode())) {
 				scanNo.setValue(controller.view().getScanNumber() + 1);
 				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.view().getScanNumber()));
 				this.setEnabled(true);

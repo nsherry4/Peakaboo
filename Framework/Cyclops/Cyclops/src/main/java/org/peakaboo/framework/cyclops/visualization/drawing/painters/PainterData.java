@@ -2,8 +2,8 @@ package org.peakaboo.framework.cyclops.visualization.drawing.painters;
 
 
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
@@ -25,7 +25,7 @@ public class PainterData
 	public DrawingRequest dr;
 	public Coord<Float> plotSize;
 	public Spectrum dataHeights;
-	public ReadOnlySpectrum originalHeights; //TODO: maybe dataHeights, decorationHeights?
+	public SpectrumView originalHeights; //TODO: maybe dataHeights, decorationHeights?
 	
 	
 	public PainterData(Surface context, DrawingRequest dr, Coord<Float> plotSize, Spectrum dataHeights)
@@ -34,7 +34,7 @@ public class PainterData
 		this.dr = dr;
 		this.plotSize = plotSize;
 		this.dataHeights = dataHeights;
-		this.originalHeights = new ISpectrum(dataHeights);
+		this.originalHeights = new ArraySpectrum(dataHeights);
 	}
 	
 	public double getChannelXValue(double channel)

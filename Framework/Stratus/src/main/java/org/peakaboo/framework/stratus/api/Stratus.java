@@ -1,6 +1,8 @@
 package org.peakaboo.framework.stratus.api;
 
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -8,6 +10,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.JComponent;
@@ -18,12 +21,14 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.components.dialogs.SplashScreen;
+import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
 public class Stratus {
 
 	public static final String KEY_WINDOW_FOCUSED = "stratus-window-focus";
 	public static final String KEY_BUTTON_BORDER_PAINTED = "stratus-button-border-painted";
+	public static final String KEY_BUTTON_NOTIFICATION_DOT = "stratus-button-notification-dot";
 	
     public enum ButtonState {
     	DISABLED,
@@ -139,5 +144,11 @@ public class Stratus {
 		return scroller;
 	}		
 	
+	public static Font registerFont(String path) throws FontFormatException, IOException {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Font f = Font.createFont(Font.TRUETYPE_FONT, StratusLookAndFeel.class.getResourceAsStream(path));
+		ge.registerFont(f);
+		return f;
+	}
 	
 }

@@ -5,19 +5,19 @@ import java.util.List;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class DerivativePeakSearcher implements PeakSearcher {
 
 	@Override
-	public List<Integer> search(ReadOnlySpectrum data) {
+	public List<Integer> search(SpectrumView data) {
 
 		//smooth it
 		Filter filter = new WeightedAverageNoiseFilter();
 		filter.initialize();
-		ReadOnlySpectrum filtered = data;
+		SpectrumView filtered = data;
 		filtered = filter.filter(filtered);
 		filtered = filter.filter(filtered);
 		filtered = filter.filter(filtered);

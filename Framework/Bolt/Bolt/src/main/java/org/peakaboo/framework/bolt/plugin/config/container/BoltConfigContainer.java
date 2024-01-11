@@ -4,22 +4,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.function.Function;
 
 import org.peakaboo.framework.bolt.plugin.config.BoltConfigPlugin;
-import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginPrototype;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginBuilder;
+import org.peakaboo.framework.bolt.plugin.config.BoltConfigPluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltURLContainer;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 
 public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLContainer<T>{
 
 	private BoltPluginSet<T> plugins;
-	private BoltPluginManager<T> manager;
+	private PluginRegistry<T> manager;
 	
-	public BoltConfigContainer(BoltPluginManager<T> manager, URL url, Class<T> pluginClass, Function<String, T> builder, boolean deletable) {
+	public BoltConfigContainer(PluginRegistry<T> manager, URL url, Class<T> pluginClass, BoltConfigPluginBuilder<T> builder, boolean deletable) {
 		super(url, deletable);
 		if (url == null) {
 			throw new NullPointerException("URL for config plugin was null");
@@ -28,7 +28,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 		this.manager = manager;
 		
 		plugins = new BoltPluginSet<>(manager);
-		BoltConfigPluginPrototype<T> plugin = new BoltConfigPluginPrototype<>(this.manager, builder, pluginClass, this);
+		BoltConfigPluginDescriptor<T> plugin = new BoltConfigPluginDescriptor<>(this.manager, builder, pluginClass, this, PluginDescriptor.WEIGHT_MEDIUM);
 		plugins.addPlugin(plugin);
 	}
 	
@@ -37,7 +37,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	}
 
 	@Override
-	public List<BoltPluginPrototype<? extends T>> getPlugins() {
+	public List<PluginDescriptor<? extends T>> getPlugins() {
 		return plugins.getPlugins();
 	}
 
@@ -47,7 +47,7 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	}
 
 	@Override
-	public BoltPluginManager<T> getManager() {
+	public PluginRegistry<T> getManager() {
 		return this.manager;
 	}
 	

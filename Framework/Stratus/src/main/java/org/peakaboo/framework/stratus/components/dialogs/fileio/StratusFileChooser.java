@@ -9,7 +9,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.File;
+import java.util.List;
+import java.util.logging.Level;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,14 +30,18 @@ import javax.swing.plaf.basic.BasicFileChooserUI;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.StratusLog;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.stencil.StencilListCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.filechooser.breadcrumb.FileBreadCrumb;
 import org.peakaboo.framework.stratus.components.ui.filechooser.places.Places;
 import org.peakaboo.framework.stratus.components.ui.filechooser.places.PlacesPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -58,6 +65,7 @@ public class StratusFileChooser extends JFileChooser {
 	//Callbacks
 	private Runnable onAccept, onCancel;
 	
+	private boolean iconView = false;
 	
 	private Places places = Places.forPlatform();
 
@@ -72,7 +80,7 @@ public class StratusFileChooser extends JFileChooser {
 	
 	@Override
 	public ImageIcon getIcon(File file) {
-		return StockIcon.fromMimeType(file).toImageIcon(IconSize.TOOLBAR_SMALL);
+		return StockIcon.fromMimeType(file).toImageIcon(iconView ? IconSize.ICON : IconSize.TOOLBAR_SMALL);
 	}
 	
 	private void dosetup() {
@@ -95,6 +103,7 @@ public class StratusFileChooser extends JFileChooser {
 			this.setPreferredSize(new Dimension(850, 400));
 						
 		} catch (ClassCastException e) {
+			StratusLog.get().log(Level.SEVERE, "Failed to show file chooser", e);
 			return;
 		}
 	}
@@ -162,6 +171,8 @@ public class StratusFileChooser extends JFileChooser {
 		filelist.setSelectionBackground(getBackground());
 		var r = new StencilListCellRenderer<>(new ListFileWidget(filelist));
 		filelist.setCellRenderer(r);
+		filelist.setLayoutOrientation(JList.VERTICAL_WRAP);
+		
 		
 		details = (JPanel) getComponent(3);
 		details.setBorder(Spacing.bMedium());
@@ -249,17 +260,50 @@ public class StratusFileChooser extends JFileChooser {
 		return placesWidget;
 	}
 
+	
 	private JPanel getBreadcrumb() {
 		
-		makeDirButton = new FluentButton(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC);
+		makeDirButton = new FluentButton()
+				.withIcon(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC, Stratus.getTheme().getControlText());
 		makeDirButton.setAction(bmkdir.getAction());
-		makeDirButton.withText("").withIcon(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC);
+		makeDirButton
+			.withText("")
+			.withIcon(StockIcon.PLACE_FOLDER_NEW_SYMBOLIC, Stratus.getTheme().getControlText())
+			.withTooltip("New Folder");
+		//TODO: Why do I need this border to make this button the same size as the others? 
+		makeDirButton.setBorder(new EmptyBorder(7,7,7,7));
+		
+		ButtonGroup viewGroup = new ButtonGroup();
+		var listview = new FluentToggleButton().withIcon(StockIcon.VIEW_LIST, Stratus.getTheme().getControlText())
+			.withTooltip("List View")
+			.withAction(selected -> {
+				if (selected) {
+					iconView = false;
+					filelist.setLayoutOrientation(JList.VERTICAL_WRAP);
+					StratusFileChooser.this.invalidate();
+				}
+			});
+		var iconview = new FluentToggleButton(StockIcon.VIEW_ICONS)
+				.withTooltip("Icon View")
+				.withAction(selected -> {
+					if (selected) {
+						iconView = true;
+						filelist.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+						StratusFileChooser.this.invalidate();
+					}
+				});
+		listview.setSelected(true);
+		viewGroup.add(listview);
+		viewGroup.add(iconview);
+		ButtonLinker viewButtons = new ButtonLinker(listview, iconview);
+		
+		ComponentStrip allButtons = new ComponentStrip(List.of(viewButtons, makeDirButton), false, Spacing.iNone(), Spacing.small);
 		
 		FileBreadCrumb breadcrumb = new FileBreadCrumb(this, places);
 		JPanel box = new JPanel(new BorderLayout(Spacing.small, Spacing.small));
 		box.setBorder(new EmptyBorder(0, Spacing.medium, 0, Spacing.medium));
 		box.add(breadcrumb, BorderLayout.CENTER);
-		box.add(makeDirButton, BorderLayout.LINE_END);
+		box.add(allButtons, BorderLayout.LINE_END);
 		box.setOpaque(false);
 		return box;
 	}
@@ -288,10 +332,32 @@ public class StratusFileChooser extends JFileChooser {
 		@Override
 		protected void onSetValue(File file, boolean selected) {
 			StratusFileChooser chooser = StratusFileChooser.this;
-			
+					
 			label.setText(chooser.getName(file));
 			label.setIcon(chooser.getIcon(file));
 			label.setForeground(this.getForeground());
+			if (iconView) {
+				
+				label.setHorizontalTextPosition(JLabel.CENTER);
+				label.setVerticalTextPosition(JLabel.BOTTOM);
+				label.setHorizontalAlignment(JLabel.CENTER);
+				
+				int size = 96;
+				label.setMaximumSize(new Dimension(size, size));
+				label.setPreferredSize(new Dimension(size, size));
+				label.setMinimumSize(new Dimension(size, size));
+				
+			} else {
+				
+				label.setHorizontalTextPosition(JLabel.RIGHT);
+				label.setVerticalTextPosition(JLabel.CENTER);
+				label.setHorizontalAlignment(JLabel.CENTER);
+				
+				//undo the set sizes
+				label.setMaximumSize(null);
+				label.setPreferredSize(null);
+				label.setMinimumSize(null);
+			}
 							
 			this.setOpaque(selected);
 			this.setBackground(selected ? selBg : bg);

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
-import org.peakaboo.curvefit.curve.fitting.fitter.UnderCurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
@@ -28,7 +28,7 @@ public class FittingModel
 	/**
 	 * Results of fitting existing selections
 	 */
-	public EventfulNullableCache<FittingResultSet>		selectionResults;
+	public EventfulNullableCache<FittingResultSetView>		selectionResults;
 	
 	/**
 	 * Proposed TransitionSeries and their Fitting against data after already being fit against current selections
@@ -38,7 +38,7 @@ public class FittingModel
 	/**
 	 * Results of fitting proposed selections.
 	 */
-	public EventfulNullableCache<FittingResultSet>		proposalResults;
+	public EventfulNullableCache<FittingResultSetView>		proposalResults;
 	
 	
 	List<ITransitionSeries> highlighted;
@@ -46,9 +46,9 @@ public class FittingModel
 	Map<ITransitionSeries, String> annotations;
 	
 	/**
-	 * {@link CurveFitterPlugin} to use for all fitting of single curves to data
+	 * {@link CurveFitter} to use for all fitting of single curves to data
 	 */
-	public CurveFitterPlugin curveFitter;
+	public CurveFitter curveFitter;
 	
 	/**
 	 * {@link FittingSolver} to use for solving for the intensities of competing curves
@@ -65,7 +65,7 @@ public class FittingModel
 		selectionResults = null;
 		proposalResults = null;
 		highlighted = new ArrayList<>();
-		curveFitter = new UnderCurveFitter();
+		curveFitter = CurveFitterRegistry.system().getPresetInstance();
 		fittingSolver = new GreedyFittingSolver();
 		annotations = new HashMap<>();
 	}

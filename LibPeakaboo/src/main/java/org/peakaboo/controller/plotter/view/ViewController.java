@@ -2,17 +2,20 @@ package org.peakaboo.controller.plotter.view;
 
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.PlotController.PlotSpectra;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
 
-public class ViewController extends Eventful {
+public class ViewController extends EventfulBeacon {
 
 	private SessionViewModel viewModel;
 	private PlotController plot;
+	// Don't save dark mode in the session view model or else it'll end up in the session files.
+	private boolean darkMode = false;
 	
 	private static final String SETTING_MONOCHROME = "org.peakaboo.controller.plotter.view.monochrome";
 	private static final String SETTING_CONSTSCALE = "org.peakaboo.controller.plotter.view.constantscale";
@@ -30,7 +33,7 @@ public class ViewController extends Eventful {
 	}
 
 	private void setUndoPoint(String change) {
-		plot.history().setUndoPoint(change);
+		plot.history().setUndoPoint(change, /* distinctChange = */ true);
 	}
 	
 
@@ -64,15 +67,15 @@ public class ViewController extends Eventful {
 		return viewModel.logTransform;
 	}
 
-	public void setChannelCompositeMode(ChannelCompositeMode mode) {
-		viewModel.channelComposite = mode;
-		setUndoPoint(mode.show());
+	public void setChannelViewMode(ChannelViewMode mode) {
+		viewModel.channelView = mode;
+		setUndoPoint(mode.longName());
 		plot.filtering().filteredDataInvalidated();
 	}
 	
 
-	public ChannelCompositeMode getChannelCompositeMode() {
-		return viewModel.channelComposite;
+	public ChannelViewMode getChannelViewMode() {
+		return viewModel.channelView;
 	}
 
 	public void setScanNumber(int number) {
@@ -171,19 +174,10 @@ public class ViewController extends Eventful {
 		if (channel == -1) return null;
 		if (channel >= plot.data().getDataSet().getAnalysis().channelsPerScan()) return null;
 
-		PlotSpectra scans = plot.getDataForPlot();
+		PlotDataSpectra scans = plot.getPlotDataSpectra();
 		if (scans == null) return new Pair<>(0.0f, 0.0f);
 
-		return new Pair<>(scans.filtered.get(channel), scans.raw.get(channel));
-	}
-
-	
-	public boolean getLockPlotHeight() {
-		return viewModel.lockPlotHeight;
-	}
-	public void setLockPlotHeight(boolean lock) {
-		viewModel.lockPlotHeight = lock;
-		updateListeners();
+		return new Pair<>(scans.filtered().get(channel), scans.raw().get(channel));
 	}
 	
 	
@@ -196,6 +190,15 @@ public class ViewController extends Eventful {
 		updateListeners();
 	}
 	
+	
+	public boolean getDarkMode() {
+		return this.darkMode;
+	}
+
+	public void setDarkMode(boolean dark) {
+		this.darkMode = dark;
+		updateListeners();
+	}
 
 	public PlotSettings getPlotSettings() {
 		
@@ -203,6 +206,7 @@ public class ViewController extends Eventful {
 		
 		settings.backgroundShowOriginal = getShowRawData();
 		settings.monochrome = getMonochrome();
+		settings.darkmode = getDarkMode();
 		settings.showElementFitIntensities = getShowElementIntensities();
 		settings.showElementFitMarkers = getShowElementMarkers();
 		settings.showIndividualFittings = getShowIndividualSelections();
@@ -211,6 +215,7 @@ public class ViewController extends Eventful {
 		
 		return settings;
 	}
+
 
 
 

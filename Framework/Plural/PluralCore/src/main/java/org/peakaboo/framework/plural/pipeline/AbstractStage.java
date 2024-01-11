@@ -2,23 +2,55 @@ package org.peakaboo.framework.plural.pipeline;
 
 import java.util.function.Function;
 
-public abstract class AbstractStage<S, T> implements Stage<S, T> {
+public abstract class AbstractStage<S, T> extends AbstractOperator<S, T> implements Stage<S, T> {
 
 	protected Function<S, T> function;
 	private Stage<T, ?> next;
-	protected String name;
+	private String name;
 
+	
 	public AbstractStage(String name, Function<S, T> function) {
 		this.name = name;
 		this.function = function;
 	}
 	
 	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
 	public void accept(S input) {
-		//Always apply the function, it may have side-effects
-		T output = function.apply(input);
-		if (next() == null) return;
-		next().accept(output);
+		if (waitUntilOperating()) {
+			//Always apply the function, it may have side-effects
+			counter++;
+			T output = function.apply(input);
+			if (next() == null) return;
+			next().accept(output);
+		} else {
+			if (getState() == State.COMPLETED) {
+				// Jobs shouldn't be received after a clean shutdown.
+				throw new IllegalStateException("Stage '" + getName() + "' is already closed.");
+			}
+		}
+	}
+	
+	@Override
+	public boolean finish() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return false;
+		}
+		return setState(State.COMPLETED);
+	}
+	
+	@Override
+	public boolean abort() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return false;
+		}
+		return setState(State.ABORTED);
 	}
 	
 	@Override
@@ -37,6 +69,5 @@ public abstract class AbstractStage<S, T> implements Stage<S, T> {
 		return next;
 	}
 
-	
-	
+
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.peakaboo.dataset.source.model.datafile.DataFile;
+import org.peakaboo.dataset.io.DataInputAdapter;
 
 public class SimpleFileFormat implements FileFormat {
 
@@ -29,7 +29,7 @@ public class SimpleFileFormat implements FileFormat {
 		return Collections.unmodifiableList(extensions);
 	}
 
-	public FileFormatCompatibility compatibility(DataFile datafile) {
+	public FileFormatCompatibility compatibility(DataInputAdapter datafile) {
 		boolean match = extensions.stream()
 					.map(ext -> datafile.getFilename().toLowerCase().endsWith(ext.toLowerCase()))
 					.reduce(false, (a, b) -> a || b);
@@ -38,7 +38,7 @@ public class SimpleFileFormat implements FileFormat {
 	}
 
 	@Override
-	public FileFormatCompatibility compatibility(List<DataFile> datafile) {
+	public FileFormatCompatibility compatibility(List<DataInputAdapter> datafile) {
 		if (singleFile && datafile.size() > 1) { return FileFormatCompatibility.NO; }
 		if (datafile.isEmpty()) { return FileFormatCompatibility.NO; }
 		boolean match = datafile.stream().map(f -> this.compatibility(f) != FileFormatCompatibility.NO).reduce(true, (a, b) -> a && b);

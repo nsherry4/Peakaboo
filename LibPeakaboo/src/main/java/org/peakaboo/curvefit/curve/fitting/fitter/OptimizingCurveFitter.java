@@ -9,33 +9,32 @@ import org.apache.commons.math3.optim.univariate.SearchInterval;
 import org.apache.commons.math3.optim.univariate.UnivariateObjectiveFunction;
 import org.apache.commons.math3.optim.univariate.UnivariateOptimizer;
 import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
+import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.ROCurve;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
-public class OptimizingCurveFitter implements CurveFitterPlugin {
+public class OptimizingCurveFitter implements CurveFitter {
 
 	protected float overfitPenalty = 5f;
 	
 	@Override
-	public FittingResult fit(ReadOnlySpectrum data, ROCurve curve) {
-		float scale = this.findScale(data, curve);
-		FittingResult result = new FittingResult(curve, scale);
+	public FittingResult fit(CurveFitterContext ctx) {
+		float scale = this.findScale(ctx);
+		FittingResult result = new FittingResult(ctx.curve(), scale);
 		return result;
 	}
 	
 	
 	
-	private float findScale(ReadOnlySpectrum data, ROCurve curve) {
+	private float findScale(CurveFitterContext ctx) {
 
-		UnivariateFunction score = scoringFunction(data, curve);
+		UnivariateFunction score = scoringFunction(ctx.data(), ctx.curve());
 		
 		double guess = 0;
-		for (int channel : curve.getIntenseChannelList()) {
-			guess = Math.max(guess, data.get(channel));
+		for (int channel : ctx.curve().getIntenseChannelList()) {
+			guess = Math.max(guess, ctx.data().get(channel));
 		}
 		
 		UnivariateOptimizer optimizer = new BrentOptimizer(0.0001, 0.00001);
@@ -55,11 +54,11 @@ public class OptimizingCurveFitter implements CurveFitterPlugin {
 		
 	}
 	
-	protected UnivariateFunction scoringFunction(ReadOnlySpectrum data, ROCurve curve) {
+	protected UnivariateFunction scoringFunction(SpectrumView data, CurveView curve) {
 		return new UnivariateFunction() {
 			
-			Spectrum scaled = new ISpectrum(data.size());
-			Spectrum residual = new ISpectrum(data.size());
+			Spectrum scaled = new ArraySpectrum(data.size());
+			Spectrum residual = new ArraySpectrum(data.size());
 			
 			@Override
 			public double value(double scale) {
@@ -105,11 +104,6 @@ public class OptimizingCurveFitter implements CurveFitterPlugin {
 	@Override
 	public String pluginDescription() {
 		return "Least squares curve fitting weighted against overfitting";
-	}
-
-	@Override
-	public boolean pluginEnabled() {
-		return true;
 	}
 
 	@Override

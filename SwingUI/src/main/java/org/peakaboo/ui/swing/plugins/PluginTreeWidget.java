@@ -8,10 +8,10 @@ import javax.swing.JLabel;
 
 import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.filter.plugins.FilterPlugin;
+import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
@@ -39,12 +39,11 @@ class PluginTreeWidget extends Stencil<Object> {
 	protected void onSetValue(Object object, boolean selected) {
 		this.label.setForeground(getForeground());
 		
-    	if (object instanceof BoltPluginManager) {
-    		BoltPluginManager<?> manager = (BoltPluginManager<?>) object;
+    	if (object instanceof BoltPluginRegistry manager) {
         	label.setText(manager.getInterfaceName());
         	label.setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
-    	} else if (object instanceof BoltPluginPrototype) {
-        	BoltPluginPrototype<? extends BoltPlugin> plugin = (BoltPluginPrototype<? extends BoltPlugin>)object;
+    	} else if (object instanceof PluginDescriptor) {
+        	PluginDescriptor<? extends BoltPlugin> plugin = (PluginDescriptor<? extends BoltPlugin>)object;
         	label.setText(plugin.getName());
         	label.setIcon(getIcon(plugin));	
     	} else if (object instanceof BoltIssue issue) {
@@ -54,7 +53,7 @@ class PluginTreeWidget extends Stencil<Object> {
 		
 	}
 	
-	private ImageIcon getIcon(BoltPluginPrototype<? extends BoltPlugin> plugin) {
+	private ImageIcon getIcon(PluginDescriptor<? extends BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == DataSourcePlugin.class) {
@@ -65,7 +64,7 @@ class PluginTreeWidget extends Stencil<Object> {
 			return StockIcon.DOCUMENT_EXPORT.toImageIcon(IconSize.BUTTON);
 		}
 		
-		if (pluginBaseClass == FilterPlugin.class) {
+		if (pluginBaseClass == Filter.class) {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 
@@ -73,7 +72,7 @@ class PluginTreeWidget extends Stencil<Object> {
 			return StockIcon.MISC_PLUGIN.toImageIcon(IconSize.BUTTON);
 		}
 		
-		return IconFactory.getImageIcon(plugin.getManager().getAssetPath() + "/icons/", plugin.getManager().getName(), IconSize.BUTTON);
+		return IconFactory.getImageIcon(plugin.getRegistry().getAssetPath() + "/icons/", plugin.getRegistry().getSlug(), IconSize.BUTTON);
 		
 	}
 

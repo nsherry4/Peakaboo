@@ -1,6 +1,11 @@
 package org.peakaboo.framework.eventful;
 
 
+/**
+ * Something which generates events of type T
+ *
+ * @param <T>
+ */
 
 public interface IEventfulType<T>
 {
@@ -16,4 +21,10 @@ public interface IEventfulType<T>
 
 	void updateListeners(final T message);
 
+
+	void addListener(EventfulListener l);
+
+
+	void removeListener(EventfulListener l);
+	
 }

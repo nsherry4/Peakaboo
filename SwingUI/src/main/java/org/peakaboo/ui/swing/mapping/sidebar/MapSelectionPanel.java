@@ -11,6 +11,7 @@ import org.peakaboo.controller.mapper.selection.MapSelectionController.Selection
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
@@ -22,63 +23,87 @@ public class MapSelectionPanel extends SettingsPanel {
 
 	private MappingController controller;
 	private SelectionType currentSelectionType;
-	private ButtonLinker linker;
+	private MapSelectionComponent selections;
+	
+	public static class MapSelectionComponent extends ButtonLinker {
+		
+		private FluentToggleButton selRect, selEllipse, selSimilar, selShape;
+		private ButtonGroup selGroup;
+		
+		public MapSelectionComponent(Consumer<SelectionType> listener) {
+		
+			var fg = Stratus.getTheme().getControlText();
+			
+			selRect = new FluentToggleButton()
+					.withIcon(PeakabooIcons.SELECT_RECTANGULAR, IconSize.BUTTON, fg)
+					.withTooltip("Select Rectangle")
+					.withButtonSize(FluentButtonSize.COMPACT)
+					.withAction(() -> listener.accept(SelectionType.RECTANGLE));
+			
+			selEllipse = new FluentToggleButton()
+					.withIcon(PeakabooIcons.SELECT_ELLIPSE, IconSize.BUTTON, fg)
+					.withTooltip("Select Ellipse")
+					.withButtonSize(FluentButtonSize.COMPACT)
+					.withAction(() -> listener.accept(SelectionType.ELLIPSE));
+			
+			selSimilar = new FluentToggleButton()
+					.withIcon(PeakabooIcons.SELECT_CONTINUOUS_AREA, IconSize.BUTTON, fg)
+					.withTooltip("Select By Similarity")
+					.withButtonSize(FluentButtonSize.COMPACT)
+					.withAction(() -> listener.accept(SelectionType.SIMILAR));
+			
+			selShape = new FluentToggleButton()
+					.withIcon(PeakabooIcons.SELECT_LASSO, IconSize.BUTTON, fg)
+					.withTooltip("Select Hand-Drawn Shape")
+					.withButtonSize(FluentButtonSize.COMPACT)
+					.withAction(() -> listener.accept(SelectionType.SHAPE));
+			
+			selGroup = new ButtonGroup();
+			selGroup.add(selRect);
+			selGroup.add(selEllipse);
+			selGroup.add(selSimilar);
+			selGroup.add(selShape);
+			
+			addButton(selRect);
+			addButton(selEllipse);
+			addButton(selSimilar);
+			addButton(selShape);
+			
+						
+		}
+		
+		public void setSelection(SelectionType selection) {
+			
+			var button = switch(selection) {
+				case ELLIPSE -> selEllipse;
+				case RECTANGLE -> selRect;
+				case SIMILAR -> selSimilar;
+				case SHAPE -> selShape;
+			};
+					
+			selGroup.setSelected(button.getModel(), true);
+			
+		}
+		
+	}
 	
 	public MapSelectionPanel(MappingController controller) {
 		this.controller = controller;
 		setName("Selection");
 		
+		selections = new MapSelectionComponent(selected -> controller.getSelection().setSelectionType(selected));
 		
-		
-		FluentToggleButton selRect = new FluentToggleButton()
-				.withIcon(PeakabooIcons.SELECT_RECTANGULAR, IconSize.BUTTON)
-				.withTooltip("Select Rectangle")
-				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.RECTANGLE));
-		FluentToggleButton selEllipse = new FluentToggleButton()
-				.withIcon(PeakabooIcons.SELECT_ELLIPSE, IconSize.BUTTON)
-				.withTooltip("Select Ellipse")
-				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.ELLIPSE));
-		FluentToggleButton selSimilar = new FluentToggleButton()
-				.withIcon(PeakabooIcons.SELECT_CONTINUOUS_AREA, IconSize.BUTTON)
-				.withTooltip("Select By Similarity")
-				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SIMILAR));
-		FluentToggleButton selShape = new FluentToggleButton()
-				.withIcon(PeakabooIcons.SELECT_LASSO, IconSize.BUTTON)
-				.withTooltip("Select Hand-Drawn Shape")
-				.withButtonSize(FluentButtonSize.COMPACT)
-				.withAction(() -> controller.getSelection().setSelectionType(SelectionType.SHAPE));
-		ButtonGroup selGroup = new ButtonGroup();
-		selGroup.add(selRect);
-		selGroup.add(selEllipse);
-		selGroup.add(selSimilar);
-		selGroup.add(selShape);
+
 		Consumer<SelectionType> onSelChange = s -> {
 			if (currentSelectionType == s) {
 				return;
 			}
 			currentSelectionType = s;
 			
-			switch (s) {
-			case ELLIPSE:
-				selGroup.setSelected(selEllipse.getModel(), true);
-				break;
-			case RECTANGLE:
-				selGroup.setSelected(selRect.getModel(), true);
-				break;
-			case SIMILAR:
-				selGroup.setSelected(selSimilar.getModel(), true);
-				break;			
-			case SHAPE:
-				selGroup.setSelected(selShape.getModel(), true);
-				break;
-			}
+			selections.setSelection(s);
 			
 			make();
 		};
-		linker = new ButtonLinker(selRect, selEllipse, selSimilar, selShape);
 				
 		controller.addListener(t -> {
 			boolean enabled = controller.getFiltering().isReplottable();
@@ -95,7 +120,7 @@ public class MapSelectionPanel extends SettingsPanel {
 	
 	private void make() {
 		clearSettings();
-		addSetting(linker);
+		addSetting(selections);
 		Optional<Group> parameters = controller.getSelection().getParameters();
 		if (parameters.isPresent()) {
 			SwingAutoPanel panel = new SwingAutoPanel(parameters.get());

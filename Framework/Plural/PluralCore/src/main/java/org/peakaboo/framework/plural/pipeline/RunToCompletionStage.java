@@ -10,15 +10,13 @@ import java.util.function.Function;
 
 public class RunToCompletionStage<S, T> extends AbstractStage<S, T> {
 
+	
+	
 	public RunToCompletionStage(String name, Function<S, T> function) {
 		super(name, function);
+		setState(State.OPERATING);
 	}
 
-	@Override
-	public void finish() {
-		// NOOP
-	}
-	
 	public static <S, T> Stage<S, T> of(String name, Function<S, T> function) {
 		return new RunToCompletionStage<>(name, function);
 	}
@@ -36,5 +34,7 @@ public class RunToCompletionStage<S, T> extends AbstractStage<S, T> {
 			return null;
 		});
 	}
+
+
 
 }

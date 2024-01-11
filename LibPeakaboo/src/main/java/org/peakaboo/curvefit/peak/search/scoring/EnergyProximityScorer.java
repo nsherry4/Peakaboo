@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 
@@ -20,9 +20,9 @@ import org.peakaboo.curvefit.peak.transition.Transition;
 public class EnergyProximityScorer implements FittingScorer {
 
 	private float energy;
-	private ROFittingParameters parameters;
+	private FittingParametersView parameters;
 	
-	public EnergyProximityScorer(float energy, ROFittingParameters parameters) {
+	public EnergyProximityScorer(float energy, FittingParametersView parameters) {
 		this.energy = energy;
 		this.parameters = parameters;
 	}

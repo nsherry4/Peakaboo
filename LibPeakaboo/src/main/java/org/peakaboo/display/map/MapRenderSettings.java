@@ -8,6 +8,7 @@ import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.display.map.modes.MapModeRegistry;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
 public class MapRenderSettings {
@@ -23,6 +24,7 @@ public class MapRenderSettings {
 	
 	public MapScaleMode scalemode = MapScaleMode.ABSOLUTE;
 	public boolean monochrome = false;
+	public boolean darkmode = false;
 	public boolean contours = false;
 	public int contourSteps = 15;
 	
@@ -37,7 +39,7 @@ public class MapRenderSettings {
 	public boolean physicalCoord = false;
 	
 	public boolean showSpectrum = false;
-	public int spectrumHeight = 15;
+	public int spectrumHeight = 10;
 	public String spectrumTitle = "";
 		
 	public List<Integer> selectedPoints = new ArrayList<>();
@@ -45,7 +47,21 @@ public class MapRenderSettings {
 	public DetectorProfile detectorProfile = new BasicDetectorProfile();
 
 	
-	
-	
+	public PaletteColour getFg() {
+		if (darkmode) {
+			return new PaletteColour(0xffe0e0e0);
+		} else {
+			return new PaletteColour(0xff000000);
+		}
+	}
+
+	public PaletteColour getBg() {
+		if (darkmode) {
+			return new PaletteColour(0xff202020);
+		} else {
+			return new PaletteColour(0xffffffff);
+		}
+	}
+
 	
 }

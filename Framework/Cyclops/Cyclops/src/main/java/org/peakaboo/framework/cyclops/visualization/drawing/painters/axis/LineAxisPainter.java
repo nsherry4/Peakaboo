@@ -3,6 +3,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.painters.axis;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
 /**
@@ -16,7 +17,9 @@ public class LineAxisPainter extends AxisPainter
 
 	private boolean left, right, top, bottom;
 	
-	public LineAxisPainter(boolean left, boolean right, boolean top, boolean bottom)
+	private PaletteColour colour;
+	
+	public LineAxisPainter(PaletteColour colour, boolean left, boolean right, boolean top, boolean bottom)
 	{
 		super();
 		
@@ -24,6 +27,7 @@ public class LineAxisPainter extends AxisPainter
 		this.bottom = bottom;
 		this.left = left;
 		this.right = right;
+		this.colour = colour;
 	}
 
 	@Override
@@ -31,28 +35,30 @@ public class LineAxisPainter extends AxisPainter
 	{
 
 		p.context.save();
-			p.context.setSource(0.0f, 0.0f, 0.0f);
+			p.context.setSource(this.colour);
 	
 			p.context.setAntialias(false);
 			
+			// Don't leave too much space around the plot, hug it tightly by flooring/ceiling it
+			
 			if (top){
-				p.context.moveTo(axesData.xPositionBounds.start, axesData.yPositionBounds.start);
-				p.context.lineTo(axesData.xPositionBounds.end, axesData.yPositionBounds.start);
+				p.context.moveTo(axesData.xPositionBounds.start, (float)Math.ceil(axesData.yPositionBounds.start));
+				p.context.lineTo(axesData.xPositionBounds.end, (float)Math.ceil(axesData.yPositionBounds.start));
 			}
 			
 			if (bottom){
-				p.context.moveTo(axesData.xPositionBounds.start, axesData.yPositionBounds.end);
-				p.context.lineTo(axesData.xPositionBounds.end, axesData.yPositionBounds.end);
+				p.context.moveTo(axesData.xPositionBounds.start, (float)Math.floor(axesData.yPositionBounds.end));
+				p.context.lineTo(axesData.xPositionBounds.end, (float)Math.floor(axesData.yPositionBounds.end));
 			}
 			
 			if (right){
-				p.context.moveTo(axesData.xPositionBounds.end, axesData.yPositionBounds.start);
-				p.context.lineTo(axesData.xPositionBounds.end, axesData.yPositionBounds.end);
+				p.context.moveTo((float)Math.floor(axesData.xPositionBounds.end), axesData.yPositionBounds.start);
+				p.context.lineTo((float)Math.floor(axesData.xPositionBounds.end), axesData.yPositionBounds.end);
 			}
 			
 			if (left){
-				p.context.moveTo(axesData.xPositionBounds.start, axesData.yPositionBounds.start);
-				p.context.lineTo(axesData.xPositionBounds.start, axesData.yPositionBounds.end);
+				p.context.moveTo((float)Math.ceil(axesData.xPositionBounds.start), axesData.yPositionBounds.start);
+				p.context.lineTo((float)Math.ceil(axesData.xPositionBounds.start), axesData.yPositionBounds.end);
 			}
 	
 			p.context.stroke();

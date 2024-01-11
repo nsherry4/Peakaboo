@@ -3,8 +3,8 @@ package org.peakaboo.mapping.filter.plugin.plugins.smoothing;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -40,9 +40,11 @@ public class DenoiseMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap source) {
-		ReadOnlySpectrum data = source.getData();
-		Spectrum filtered = new ISpectrum(data);
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
+		SpectrumView data = source.getData();
+		Spectrum filtered = new ArraySpectrum(data);
 		GridPerspective<Float> grid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 		
 		float threshold = paramThreshold.getValue();
@@ -102,10 +104,6 @@ public class DenoiseMapFilter extends AbstractMapFilter {
 		return true;
 	}
 
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
 
 	@Override
 	public String pluginVersion() {

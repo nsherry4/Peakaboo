@@ -3,10 +3,10 @@ package org.peakaboo.curvefit.peak.search.scoring;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * Scores a TransitionSeries based on how well a rough, 
@@ -17,12 +17,12 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
  */
 public class FastFittingScorer implements FittingScorer {
 
-	private ReadOnlySpectrum data;
-	private ROFittingParameters parameters;
+	private SpectrumView data;
+	private FittingParametersView parameters;
 	private float energy;
 	
 	
-	public FastFittingScorer(float energy, ReadOnlySpectrum data, ROFittingParameters parameters) {
+	public FastFittingScorer(float energy, SpectrumView data, FittingParametersView parameters) {
 		this.data = data;
 		this.parameters = parameters;
 		this.energy = energy;

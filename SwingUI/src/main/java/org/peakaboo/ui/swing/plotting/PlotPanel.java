@@ -18,8 +18,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,7 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -43,29 +40,27 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.app.Settings;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
+import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.dataset.DatasetReadResult;
+import org.peakaboo.dataset.io.DataInputAdapter;
+import org.peakaboo.dataset.io.PathDataInputAdapter;
+import org.peakaboo.dataset.io.PathDataOutputAdapter;
 import org.peakaboo.dataset.sink.model.DataSink;
-import org.peakaboo.dataset.sink.model.outputfile.PathOutputFile;
+import org.peakaboo.dataset.sink.model.DataSink.DataSinkContext;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.metadata.Metadata;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
-import org.peakaboo.dataset.source.model.datafile.PathDataFile;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
-import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.util.Mutable;
@@ -97,7 +92,6 @@ import org.peakaboo.framework.stratus.components.panels.TitledPanel;
 import org.peakaboo.framework.stratus.components.ui.colour.ColourChooser;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
-import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.AboutLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
@@ -109,12 +103,12 @@ import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
 import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.options.AdvancedOptionsPanel;
-import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 import org.peakaboo.ui.swing.plotting.filters.FiltersetViewer;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import org.peakaboo.ui.swing.plotting.guides.FirstRun;
@@ -147,6 +141,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		this.tabs = container;
 		
 		controller = new PlotController(DesktopApp.appDir());
+		controller.view().setDarkMode(DesktopSettings.isDarkMode());
 		
 		initGUI();
 
@@ -278,7 +273,25 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		});
 		
-		BlankMessagePanel blankCanvas = new BlankMessagePanel("No Data", "You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.");
+		ImageIcon peakabooLogo;
+		if (DesktopSettings.isDarkMode()) {
+			peakabooLogo = IconFactory.getImageIcon(
+					PeakabooIcons.PATH, 
+					"icon-symbolic", 
+					new Color((0x00ffffff & Stratus.getTheme().getControlText().getRGB()) | 0x20000000, true)
+				);
+		} else {
+			peakabooLogo = IconFactory.getImageIcon(
+					PeakabooIcons.PATH, 
+					"icon-symbolic" 
+				);
+		}
+		
+		BlankMessagePanel blankCanvas = new BlankMessagePanel(
+				"No Data", 
+				"You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.",
+				peakabooLogo
+			);
 		new FileDrop(blankCanvas, canvas.getFileDropListener());
 		
 		
@@ -335,121 +348,8 @@ public class PlotPanel extends TabbedLayerPanel {
 		return titleString.toString();
 	}
 
-	void load(List<DataFile> files) {
-		
-		DataLoader loader = new DataLoader(controller, files) {
-
-			@Override
-			public void onLoading(ExecutorSet<DatasetReadResult> job) {
-				PlotPanel.this.pushLayer(new ExecutorSetViewLayer(PlotPanel.this, job));
-			}
-			
-			@Override
-			public void onSuccess(List<DataFile> paths, File session) {
-				// set some controls based on the fact that we have just loaded a
-				// new data set
-				canvas.updateCanvasSize();
-			}
-
-			@Override
-			public void onFail(List<DataFile> paths, String message) {
-				new LayerDialog(
-						"Open Failed", 
-						message, 
-						StockIcon.BADGE_ERROR
-					).showIn(PlotPanel.this);
-			}
-
-			@Override
-			public void onParameters(Group parameters, Consumer<Boolean> finished) {
-				HeaderPanel paramPanel = new HeaderPanel();
-				ModalLayer layer = new ModalLayer(PlotPanel.this, paramPanel);
-				
-				
-				paramPanel.getHeader().setCentre("Options");
-				paramPanel.getHeader().setShowClose(false);
-				
-				FluentButton ok = new FluentButton("OK")
-						.withStateDefault()
-						.withAction(() -> {
-							PlotPanel.this.removeLayer(layer);
-							finished.accept(true);
-						});
-				FluentButton cancel = new FluentButton("Cancel")
-						.withAction(() -> {
-							PlotPanel.this.removeLayer(layer);
-							finished.accept(false);
-						});
-				
-				paramPanel.getHeader().setLeft(cancel);
-				paramPanel.getHeader().setRight(ok);
-				
-				
-				SwingAutoPanel sap = new SwingAutoPanel(parameters);
-				sap.setBorder(Spacing.bHuge());
-				paramPanel.setBody(sap);
-				
-				
-				PlotPanel.this.pushLayer(layer);
-			}
-
-
-
-
-			@Override
-			public void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected) {
-				DataSourceSelection selection = new DataSourceSelection(PlotPanel.this, datasources, selected);
-				PlotPanel.this.pushLayer(selection);
-			}
-
-
-
-			@Override
-			public void onSessionNewer() {
-				ToastLayer warning = new ToastLayer(PlotPanel.this, "Session is from a newer version of Peakaboo.\nSome settings may not load correctly.");
-				PlotPanel.this.pushLayer(warning);
-			}
-			
-			@Override
-			public void onSessionHasData(File sessionFile, Consumer<Boolean> load) {
-				FluentButton buttonYes = new FluentButton("Yes")
-						.withStateDefault()
-						.withAction(() -> {
-							controller.io().setBothFromSession(sessionFile);
-							load.accept(true);
-						});
-				
-				FluentButton buttonNo = new FluentButton("No")
-						.withAction(() -> load.accept(false));
-				
-				new LayerDialog(
-						"Open Associated Data Set?", 
-						"This session is associated with another data set.\nDo you want to open that data set now?", 
-						StockIcon.BADGE_QUESTION)
-					.addRight(buttonYes)
-					.addLeft(buttonNo)
-					.showIn(PlotPanel.this);
-				
-				buttonYes.grabFocus();
-			}
-
-			@Override
-			public void onSessionFailure() {
-				new LayerDialog(
-						"Loading Session Failed", 
-						"The selected session file could not be read.\nIt may be corrupted, or from too old a version of Peakaboo.", 
-						StockIcon.BADGE_ERROR).showIn(PlotPanel.this);
-			}
-
-			@Override
-			public void onWarn(String message) {
-				var toast = new ToastLayer(PlotPanel.this, message);
-				PlotPanel.this.pushLayer(toast);
-			}
-			
-		};
-		
-		
+	void load(List<DataInputAdapter> files) {
+		DataLoader loader = new PlotDataLoader(this, controller, files);
 		loader.load();
 	}
 
@@ -468,9 +368,9 @@ public class PlotPanel extends TabbedLayerPanel {
 		}
 
 		if (values != null) {
-			statusBar.setData(controller.view().getChannelCompositeMode(), channel, energy, values.first, values.second);
+			statusBar.setData(controller.view().getChannelViewMode(), channel, energy, values.first, values.second);
 		} else {
-			statusBar.setData(controller.view().getChannelCompositeMode());
+			statusBar.setData(controller.view().getChannelViewMode());
 		}
 		
 		
@@ -502,7 +402,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		contents.description = "XRF Analysis Software";
 		contents.linkAction = () -> DesktopApp.browser("http://peakaboo.org");
 		contents.linktext = "Website";
-		contents.copyright = "2009-2022 by The University of Western Ontario and The Canadian Light Source Inc.";
+		contents.copyright = "2009-2024 by The University of Western Ontario and The Canadian Light Source Inc.";
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/credits.txt"));
 		contents.logo = logo;
@@ -510,6 +410,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		contents.longVersion = Version.longVersionNo;
 		contents.releaseDescription = Version.releaseDescription;
 		contents.date = Version.buildDate;
+		contents.titleStyle = "font-family: Springsteel-Light; font-size: 350%;";
 		
 		AboutLayer about = new AboutLayer(this, contents);
 		this.pushLayer(about);
@@ -522,7 +423,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionOpenData() {	
 		List<SimpleFileExtension> exts = new ArrayList<>();
-		for (DataSourcePlugin p : DataSourcePluginManager.system().newInstances()) {
+		for (DataSourcePlugin p : DataSourceRegistry.system().newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);
@@ -537,7 +438,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			controller.io().setLastFolder(files.get().get(0).getParentFile());
 			
 			List<File> filelist = files.get();
-			load(filelist.stream().map(PathDataFile::new).collect(Collectors.toList()));
+			load(filelist.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 			
 		});
 		
@@ -553,13 +454,13 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	
 	
-	public void actionLoadSubsetDataSource(SubsetDataSource sds, String settings) {
+	public void actionLoadSubsetDataSource(SubsetDataSource sds, SavedSession settings) {
 		
 		Mutable<ModalLayer> layer = new Mutable<>();
 		
 		ExecutorSet<Boolean> loader = Plural.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
 			getController().data().setDataSource(sds, exec, execset::isAborted);
-			getController().loadSettings(settings, false);
+			getController().load(settings, false);
 			removeLayer(layer.get());
 			return true;
 		});
@@ -590,8 +491,8 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
-		var output = new PathOutputFile(file.toPath());
-		ExecutorSet<Void> writer = DataSink.write(source, sink, output);
+		var output = new PathDataOutputAdapter(file.toPath());
+		ExecutorSet<Void> writer = DataSink.write(sink, new DataSinkContext(source, output));
 		output.close();
 		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
 		pushLayer(layer);
@@ -672,7 +573,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (!file.isPresent()) {
 				return;
 			}
-			controller.io().setBothFromSession(file.get());
+			controller.io().setFromSession(file.get());
 			actionSaveSession(file.get());	
 		});
 	}
@@ -680,7 +581,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionSaveSession(File file) {
 		try (FileOutputStream os = new FileOutputStream(file)) {
-			os.write(controller.getSavedSettings().serialize().getBytes());
+			os.write(controller.save().serialize().getBytes());
 			controller.history().setSavePoint();
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
@@ -741,7 +642,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (controller.calibration().hasDetectorProfile()) {
 				e = new ZipEntry("detector-profile.pbdp");
 				zos.putNextEntry(e);
-				String profileYaml = controller.calibration().getDetectorProfile().save();
+				String profileYaml = controller.calibration().getDetectorProfile().storeV1();
 				zos.write(profileYaml.getBytes());
 				zos.closeEntry();
 			}
@@ -749,7 +650,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			
 			e = new ZipEntry("session.peakaboo");
 			zos.putNextEntry(e);
-			zos.write(controller.getSavedSettings().serialize().getBytes());
+			zos.write(controller.save().serialize().getBytes());
 			zos.closeEntry();			
 			
 		} catch (IOException e) {
@@ -823,8 +724,8 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (!file.isPresent()) {
 				return;
 			}
-			controller.io().setBothFromSession(file.get());
-			load(Collections.singletonList(new PathDataFile(file.get())));
+			controller.io().setFromSession(file.get());
+			load(Collections.singletonList(new PathDataInputAdapter(file.get())));
 		});
 
 	}
@@ -950,7 +851,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionAddAnnotation(ITransitionSeries selected) {
-		if (!controller.fitting().getFittingSelections().getFittedTransitionSeries().contains(selected)) {
+		if (!controller.fitting().getFittingSelections().hasTransitionSeries(selected)) {
 			return;
 		}
 		
@@ -1047,6 +948,10 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	public boolean hasUnsavedWork() {
 		return controller.history().hasUnsavedWork() && controller.data().hasDataSet();
+	}
+
+	PlotCanvas getCanvas() {
+		return canvas;
 	}
 	
 }

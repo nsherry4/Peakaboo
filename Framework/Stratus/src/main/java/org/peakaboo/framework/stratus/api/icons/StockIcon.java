@@ -103,6 +103,9 @@ public enum StockIcon implements IconSet {
 	PLACE_FOLDER_SYMBOLIC,
 	PLACE_FOLDER_NEW_SYMBOLIC,
 
+	VIEW_ICONS,
+	VIEW_LIST,
+	
 	WINDOW_CLOSE,
 	WINDOW_TAB_NEW,
 	

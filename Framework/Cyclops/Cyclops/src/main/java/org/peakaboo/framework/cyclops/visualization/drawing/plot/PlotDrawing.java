@@ -9,8 +9,8 @@ import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
@@ -143,10 +143,12 @@ public class PlotDrawing extends Drawing
 	@Override
 	public void draw() {
 		
+		final boolean debugMode = false;
+		
 		if (context == null) return;
 		
 		
-		dataHeights = new ISpectrum(dr.dataWidth, 0.0f);
+		dataHeights = new ArraySpectrum(dr.dataWidth, 0.0f);
 
 		context.setLineWidth(getPenWidth(getBaseUnitSize(dr), dr));
 		
@@ -154,7 +156,7 @@ public class PlotDrawing extends Drawing
 	
 			Coord<Bounds<Float>> axisBounds = getPlotOffsetFromBottomLeft();
 			Bounds<Float> availableX = axisBounds.x, availableY = axisBounds.y;
-			plotSize = new Coord<Float>(availableX.end - availableX.start, availableY.end - availableY.start); 
+			plotSize = new Coord<Float>(availableX.end - availableX.start + 1, availableY.end - availableY.start + 1); 
 			if (plotSize.x <= 0 | plotSize.y <= 0) return;
 			
 			// transform to get out past the x axis
@@ -181,6 +183,11 @@ public class PlotDrawing extends Drawing
 	
 			}
 
+			if (debugMode) {
+				context.rectAt(0, 0, plotSize.x, plotSize.y);
+				context.setSource(0x80a40000);
+				context.fill();
+			}
 
 		context.restore();
 
@@ -189,6 +196,7 @@ public class PlotDrawing extends Drawing
 			availableX = new Bounds<Float>(0.0f, dr.imageWidth);
 			availableY = new Bounds<Float>(0.0f, dr.imageHeight);
 			if (axisPainters != null) {
+				
 				
 				Pair<Float, Float> axisSizeX, axisSizeY;
 				
@@ -217,6 +225,20 @@ public class PlotDrawing extends Drawing
 					availableY.end -= axisSizeY.second;
 					
 				}
+				
+				if (debugMode) {
+					
+					context.setSource(0x8000a400);
+					context.rectAt(0, 0, availableX.start, dr.imageHeight);
+					context.fill();
+					
+					context.setSource(0x800000a4);
+					context.rectAt(0, availableY.end, dr.imageWidth, dr.imageHeight - availableY.end);
+					context.fill();
+				
+				}
+				
+				
 				
 			}
 			
@@ -250,7 +272,7 @@ public class PlotDrawing extends Drawing
 			datascale = dr.maxYIntensity;
 		}
 		if (dr.viewTransform == ViewTransform.LOG) {
-			datascale = (float)Math.log(datascale);
+			datascale = (float)Math.log1p(datascale);
 		}
 		datascale *= 1.15;
 
@@ -260,14 +282,14 @@ public class PlotDrawing extends Drawing
 	public static float getDataScale(float maxValue, boolean log, boolean pad) {
 		float datascale = maxValue;
 		if (pad) {
-			if (log) datascale = (float)Math.log(datascale);
+			if (log) datascale = (float)Math.log1p(datascale);
 			datascale *= 1.15;
-			if (log) datascale = (float)Math.exp(datascale);
+			if (log) datascale = (float)Math.expm1(datascale);
 		}
 		return datascale;
 	}	
 	
-	public static float getDataScale(DrawingRequest dr, ReadOnlySpectrum data) {
+	public static float getDataScale(DrawingRequest dr, SpectrumView data) {
 		
 		float datascale;
 		if (dr.maxYIntensity == -1){
@@ -276,7 +298,7 @@ public class PlotDrawing extends Drawing
 			datascale = dr.maxYIntensity;
 		}
 		if (dr.viewTransform == ViewTransform.LOG) {
-			datascale = (float)Math.log(datascale);
+			datascale = (float)Math.log1p(datascale);
 		}
 		datascale *= 1.15;
 

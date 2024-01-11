@@ -6,21 +6,17 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.Filter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
-import org.peakaboo.filter.model.FilterPluginManager;
-import org.peakaboo.filter.model.SerializedFilter;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
-import org.peakaboo.framework.autodialog.model.classinfo.ClassInfo;
 import org.peakaboo.framework.autodialog.model.classinfo.SimpleClassInfo;
 import org.peakaboo.framework.autodialog.model.style.CoreStyle;
 import org.peakaboo.framework.autodialog.model.style.SimpleStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
-import org.yaml.snakeyaml.Yaml;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class SubFilter extends AbstractFilter {
 
@@ -30,7 +26,7 @@ public class SubFilter extends AbstractFilter {
 		
 	@Override
 	public void initialize() {
-		List<Filter> filters = FilterPluginManager.system().newInstances().stream()
+		List<Filter> filters = FilterRegistry.system().newInstances().stream()
 				.filter(f -> f.pluginEnabled() && f.canFilterSubset())
 				.collect(Collectors.toList());
 		filters.add(0, new IdentityFilter());
@@ -43,12 +39,10 @@ public class SubFilter extends AbstractFilter {
 		begin = new Parameter<>("Start Index", new IntegerStyle(), 0, this::validate);
 		end = new Parameter<>("Stop Index", new IntegerStyle(), 10, this::validate);
 		
-		Yaml yaml = new Yaml();
-		
-		ClassInfo<Filter> filterClassInfo = new SimpleClassInfo<>(
+		var filterClassInfo = new SimpleClassInfo<Filter>(
 				Filter.class, 
-				f -> yaml.dump(new SerializedFilter(f)), 
-				s -> yaml.<SerializedFilter>load(s).getFilter());
+				f -> f.save().serialize(), 
+				s -> FilterRegistry.system().fromSaved(s).orElse(null));
 		
 		filter = new SelectionParameter<>("Filter", new SimpleStyle<>("sub-filter", CoreStyle.LIST), filters.get(0), filterClassInfo);
 		filter.setPossibleValues(filters);
@@ -64,7 +58,7 @@ public class SubFilter extends AbstractFilter {
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		
 		int start = begin.getValue();
 		int stop = end.getValue();
@@ -72,8 +66,8 @@ public class SubFilter extends AbstractFilter {
 		if (start >= data.size()) start = data.size()-1;
 		if (stop >= data.size()) stop = data.size()-1;
 		
-		Spectrum result = new ISpectrum(data);
-		ReadOnlySpectrum subspectrum = data.subSpectrum(start, stop);
+		Spectrum result = new ArraySpectrum(data);
+		SpectrumView subspectrum = data.subSpectrum(start, stop);
 		
 		subspectrum = filter.getValue().filter(subspectrum, ctx);
 		
@@ -108,11 +102,6 @@ public class SubFilter extends AbstractFilter {
 		}
 	}
 
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
 	private boolean validate(Parameter<?> p) {
 		
 		int start = begin.getValue();
@@ -133,7 +122,7 @@ public class SubFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "f44086fd-7b30-4ad9-a86f-761ed6a601c8";
 	}
 	

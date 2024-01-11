@@ -3,6 +3,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.painters.axis;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 /**
  * Draws titles for all 4 axes. Can be used to draw a title for the whole {@link Drawing} as well.
@@ -15,11 +16,12 @@ public class TitleAxisPainter extends AxisPainter
 
 	private String leftTitle, rightTitle, topTitle, bottomTitle;
 	private float titleScale;
+	private PaletteColour colour;
 	
 	public static float SCALE_TITLE = 1.83f;
 	public static float SCALE_TEXT = 1.0f;
 	
-	public TitleAxisPainter(float titleScale, String leftTitle, String rightTitle, String topTitle, String bottomTitle)
+	public TitleAxisPainter(float titleScale, PaletteColour colour, String leftTitle, String rightTitle, String topTitle, String bottomTitle)
 	{
 		
 		super();
@@ -30,6 +32,7 @@ public class TitleAxisPainter extends AxisPainter
 		this.bottomTitle = bottomTitle;
 		
 		this.titleScale = titleScale;
+		this.colour = colour;
 		
 	}
 
@@ -44,7 +47,7 @@ public class TitleAxisPainter extends AxisPainter
 		 ==============================================*/
 		p.context.save();
 			
-			p.context.setSource(0.0f, 0.0f, 0.0f);
+			p.context.setSource(this.colour);
 	
 			
 			float titleWidth, plotWidth, centrepoint, titleFitting;
@@ -98,7 +101,7 @@ public class TitleAxisPainter extends AxisPainter
 		if (leftTitle != null) {
 			p.context.save();
 				
-				p.context.setSource(0.0f, 0.0f, 0.0f);
+				p.context.setSource(this.colour);
 				p.context.useSansFont();
 				p.context.setFontSize(FONTSIZE_TEXT * titleScale);
 		
@@ -137,7 +140,7 @@ public class TitleAxisPainter extends AxisPainter
 			p.context.save();
 		
 				
-				p.context.setSource(0.0f, 0.0f, 0.0f);
+				p.context.setSource(this.colour);
 				p.context.useSansFont();
 				p.context.setFontSize(FONTSIZE_TEXT * titleScale);
 		

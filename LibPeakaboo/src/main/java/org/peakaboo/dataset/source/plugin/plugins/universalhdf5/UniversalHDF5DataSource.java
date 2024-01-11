@@ -8,11 +8,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormatCompatibility;
 import org.peakaboo.dataset.source.model.components.fileformat.SimpleFileFormat;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
@@ -56,7 +57,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 	}
 	
 	
-	private void initialize(List<DataFile> paths) throws IOException {
+	private void initialize(List<DataInputAdapter> paths) throws IOException {
 		IHDF5SimpleReader mdreader = super.getMetadataReader(paths);
 		List<String> datasetPaths = listDatasets(mdreader);
 		
@@ -254,7 +255,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 	public FileFormat getFileFormat() {
 		return new SimpleFileFormat(false, DS_NAME, DS_DESC, new String[] {"h5", "hdf5"}) {
 			@Override
-			public FileFormatCompatibility compatibility(List<DataFile> filenames) {
+			public FileFormatCompatibility compatibility(List<DataInputAdapter> filenames) {
 				FileFormatCompatibility fromSuper = super.compatibility(filenames);
 				if (fromSuper == FileFormatCompatibility.NO) { return fromSuper; }
 				
@@ -273,7 +274,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 	}
 	
 	@Override
-	public Optional<Group> getParameters(List<DataFile> paths) throws DataSourceReadException, IOException {
+	public Optional<Group> getParameters(List<DataInputAdapter> paths) throws DataSourceReadException, IOException {
 		initialize(paths);
 		return Optional.of(topGroup);
 	}
@@ -290,7 +291,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 
 	
 	//During `read`, this will be called to get the final list of HDF5 paths (not files) to read
-	protected List<String> getDataPaths(List<DataFile> paths) {
+	protected List<String> getDataPaths(List<DataInputAdapter> paths) {
 		return Collections.singletonList(path.getValue());
 	}
 	

@@ -35,6 +35,10 @@ public class IconFactory {
 	public static ImageIcon getImageIcon(String path, String imageName, IconSize size) {
 		return getImageIcon(path, imageName, size, null);
 	}
+
+	public static ImageIcon getImageIcon(String path, String imageName, Color colour) {
+		return getImageIcon(path, imageName, null, colour);
+	}
 	
 	public static ImageIcon getImageIcon(String path, String imageName, IconSize size, Color colour) {
 	
@@ -99,7 +103,8 @@ public class IconFactory {
 		//Go through pixel by pixel and update all the rgb elements to match the given colour, leaving alpha alone
 		int[] argb = new int[4];
 		WritableRaster raster = bi.getRaster();
-		
+
+		int a = c.getAlpha();
 		int r = c.getRed();
 		int g = c.getGreen();
 		int b = c.getBlue();
@@ -110,6 +115,7 @@ public class IconFactory {
 				argb[0] = r;
 				argb[1] = g;
 				argb[2] = b;
+				argb[3] = (argb[3] * a) >> 8;
 				raster.setPixel(x, y, argb);
 			}
 		}

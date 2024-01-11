@@ -16,8 +16,9 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
@@ -67,15 +68,17 @@ public class MapFittingPanel extends ClearPanel
 		
 		
 		
-		FluentButton selectAll = new FluentButton(StockIcon.SELECTION_ALL)
+		FluentButton selectAll = new FluentButton().withIcon(StockIcon.SELECTION_ALL, Stratus.getTheme().getControlText())
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select All")
+				.withBordered(false)
 				.withAction(() -> controller.getActiveMode().setAllVisible(true));
-		FluentButton selectNone = new FluentButton(StockIcon.SELECTION_NONE)
+		FluentButton selectNone = new FluentButton().withIcon(StockIcon.SELECTION_NONE, Stratus.getTheme().getControlText())
 				.withButtonSize(FluentButtonSize.COMPACT)
 				.withTooltip("Select None")
+				.withBordered(false)
 				.withAction(() -> controller.getActiveMode().setAllVisible(false));
-		ButtonLinker linker = new ButtonLinker(selectNone, selectAll);
+		ComponentStrip linker = new ComponentStrip(selectNone, selectAll);
 		linker.setBorder(new EmptyBorder(0, Spacing.small, 0, 0));
 		modeSelectPanel.add(linker, BorderLayout.EAST);
 		

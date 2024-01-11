@@ -26,7 +26,7 @@ public class DiscardsList implements Discards {
 		discards.add(scanNo);
 		
 		plot.filtering().filteredDataInvalidated();
-		plot.history().setUndoPoint("Marking Scan Bad");
+		plot.history().setUndoPoint("Marking Scan #" + (scanNo+1) + " Bad", /*distinctChange =*/ true);
 		
 	}
 
@@ -35,7 +35,7 @@ public class DiscardsList implements Discards {
 		if (isDiscarded(scanNo)) {
 			discards.remove(new Integer(scanNo));
 			plot.filtering().filteredDataInvalidated();
-			plot.history().setUndoPoint("Marking Scan Good");
+			plot.history().setUndoPoint("Marking Scan #" + (scanNo+1) + " Good", /*distinctChange =*/ true);
 		}
 	}
 

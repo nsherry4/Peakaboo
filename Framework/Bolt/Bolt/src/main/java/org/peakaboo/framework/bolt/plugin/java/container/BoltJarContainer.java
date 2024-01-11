@@ -11,7 +11,8 @@ import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltBrokenJarIssue;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltEmptyJarIssue;
@@ -19,9 +20,9 @@ import org.peakaboo.framework.bolt.plugin.java.issue.BoltEmptyJarIssue;
 public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContainer<T> {
 
 	private URL url;
-	private BoltPluginManager<T> manager;
+	private PluginRegistry<T> manager;
 	
-	public BoltJarContainer(BoltPluginManager<T> manager, Class<T> targetClass, URL url) {
+	public BoltJarContainer(PluginRegistry<T> manager, Class<T> targetClass, URL url) {
 		super(manager, targetClass);
 		this.url = url;
 		this.manager = manager;
@@ -66,7 +67,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 					}
 					
 					empty = false;
-					add((Class<? extends T>) t.getClass());
+					add((Class<? extends T>) t.getClass(), PluginDescriptor.WEIGHT_MEDIUM);
 					
 				} catch (Throwable e) {
 					plugins.addIssue(new BoltBrokenJarIssue<>(this, "Failed to load plugins"));
@@ -142,7 +143,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 	}
 
 	@Override
-	public BoltPluginManager<T> getManager() {
+	public PluginRegistry<T> getManager() {
 		return this.manager;
 	}
 

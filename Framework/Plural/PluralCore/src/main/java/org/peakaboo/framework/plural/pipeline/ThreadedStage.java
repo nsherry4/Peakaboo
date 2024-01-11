@@ -7,6 +7,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
+
+import org.peakaboo.framework.plural.Plural;
 
 public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 
@@ -45,27 +48,64 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 			}
 		});
 		
+		this.setState(State.OPERATING);
 		
 	}
 
 	@Override
 	public void accept(S input) {
-		this.pool.execute(() -> {
-			super.accept(input);
-		});
+		if (waitUntilOperating()) {
+			if (getState() == State.QUIESCING) {
+				// Jobs shouldn't be received once this stage has been told to begin shutting down
+				throw new IllegalStateException("Stage '" + getName() + "' is already quiescing.");
+			}
+			this.pool.execute(() -> {
+				super.accept(input);
+			});
+		} else {
+			if (getState() == State.COMPLETED) {
+				// Jobs shouldn't be received after a clean shutdown.
+				throw new IllegalStateException("Stage '" + getName() + "' is already closed.");
+			}
+		}
 	}
 
 	@Override
-	public void finish() {
+	public boolean finish() {
+		if (this.getState() != State.OPERATING && this.getState() != State.STARTING) {
+			// Once we've moved past the operating stage, don't accept any new shutdown requests
+			return false;
+		}
+		
+		// Set the state to quiescing to keep us from placing any more jobs in the queue
+		// for the thread pool
+		setState(State.QUIESCING);
+		
+		// Instruct the thread pool to shut down and then wait for it to finish any jobs
 		this.pool.shutdown();
 		try {
 			this.pool.awaitTermination(5, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Plural.logger().log(Level.WARNING, "Failed to shut down pipeline threads", e);
 		}
+		
+		// Finally set the state to completed, which will also prevent the superclass's
+		// accept method from processing anything out of the thread queue 
+		return setState(State.COMPLETED);
 	}
 	
+	@Override
+	public boolean abort() {
+		boolean result = super.abort();
+		this.pool.shutdownNow();
+		try {
+			this.pool.awaitTermination(5, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			Plural.logger().log(Level.WARNING, "Failed to abort pipeline threads", e);
+		}
+		return result;
+	}
+
 	
 	public static <S, T> Stage<S, T> of(String name, int threads, Function<S, T> function) {
 		return new ThreadedStage<>(name, threads, function);

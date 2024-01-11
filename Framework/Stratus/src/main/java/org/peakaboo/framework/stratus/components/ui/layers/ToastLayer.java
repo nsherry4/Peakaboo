@@ -187,8 +187,13 @@ public class ToastLayer implements Layer {
 	}
 	
 	@Override
-	public JPanel getComponent() {
+	public JPanel getContent() {
 		return toast;
+	}
+	
+	@Override
+	public JComponent getOuterComponent() {
+		return getContent();
 	}
 
 	@Override
@@ -208,6 +213,8 @@ public class ToastLayer implements Layer {
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
+
+
 	
 	
 

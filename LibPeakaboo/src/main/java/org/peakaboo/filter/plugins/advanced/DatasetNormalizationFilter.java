@@ -3,13 +3,12 @@ package org.peakaboo.filter.plugins.advanced;
 import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.filter.model.FilterType;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class DatasetNormalizationFilter extends AbstractFilter {
@@ -53,27 +52,22 @@ public class DatasetNormalizationFilter extends AbstractFilter {
 	}
 
 	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-
-	@Override
 	public String pluginVersion() {
 		return "0.1";
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "16ae4c64-95ae-469e-a584-b9613afd0452";
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		FilterContext context = requireContext(ctx);
-		float max = context.dataset.getAnalysis().maximumIntensity();
+		float max = context.dataset().getAnalysis().maximumIntensity();
 		float height = pHeight.getValue();
 		float ratio = max / height;
-		if (ratio == 0f) return new ISpectrum(data.size());
+		if (ratio == 0f) return new ArraySpectrum(data.size());
 		return SpectrumCalculations.divideBy(data, ratio);
 		
 	}

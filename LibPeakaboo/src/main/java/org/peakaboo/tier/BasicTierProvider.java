@@ -1,7 +1,6 @@
 package org.peakaboo.tier;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
@@ -9,9 +8,11 @@ import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.BasicCalibrationController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
-import org.peakaboo.curvefit.peak.fitting.FittingFunction;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
+import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 
 public class BasicTierProvider implements TierProvider {
 	
@@ -24,7 +25,7 @@ public class BasicTierProvider implements TierProvider {
 		//nothing to do
 	}
 	
-	public List<BoltPluginManager<? extends BoltPlugin>> getPluginManagers() {
+	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers() {
 		return new ArrayList<>();
 	}
 
@@ -45,7 +46,7 @@ public class BasicTierProvider implements TierProvider {
 
 	@Override
 	public String tierName() {
-		return "Community Edition";
+		return "XRF Analysis";
 	}
 
 	@Override
@@ -59,8 +60,18 @@ public class BasicTierProvider implements TierProvider {
 	}
 
 	@Override
-	public Collection<? extends FittingFunction> getFittingFunctions() {
-		return List.of();
+	public DataSourceAnalysis createDataSourceAnalysis(List<Analysis> analyses) {
+		return DataSourceAnalysis.merge(analyses);
+	}
+
+	@Override
+	public DataSourceAnalysis createDataSourceAnalysis() {
+		return new DataSourceAnalysis();
+	}
+
+	@Override
+	public Plotter createPlotter() {
+		return new Plotter();
 	}
 	
 	

@@ -2,6 +2,7 @@ package org.peakaboo.framework.stratus.components.ui.layers;
 
 import java.awt.Component;
 import java.awt.Frame;
+import java.util.Optional;
 import java.util.Stack;
 
 import javax.swing.JComponent;
@@ -18,10 +19,8 @@ public class LayerPanel extends JLayeredPane {
 	private Layer contentLayer;
 	
 	
-	public static boolean blurLowerLayers = true;
-	
-	
-	
+	public static boolean lowGraphicsMode = false;
+
 	
 	public LayerPanel() {
 		setLayout(new LayerLayout());	
@@ -34,7 +33,7 @@ public class LayerPanel extends JLayeredPane {
 
 	Layer layerForComponent(Component component) {
 		for (Layer layer : layers) {
-			if (layer.getComponent() == component) {
+			if (layer.getContent() == component) {
 				return layer;
 			}
 		}
@@ -42,10 +41,10 @@ public class LayerPanel extends JLayeredPane {
 	}
 	
 	boolean isLayerBlocked(Layer layer) {
-		boolean blocked = false;
 		if (layers.isEmpty()) {
-			return blocked;
+			return false;
 		}
+		boolean blocked = false;
 		for (int i = layers.size()-1; i >= 0; i--) {
 			Layer li = layers.get(i);
 			if (layer == li) {
@@ -57,6 +56,24 @@ public class LayerPanel extends JLayeredPane {
 		}
 		return blocked;
 	}
+	
+	Optional<Layer> getBlockingLayer(Layer layer) {
+		if (layers.isEmpty()) {
+			return Optional.empty();
+		}
+		Layer blocker = null;
+		for (int i = layers.size()-1; i >= 0; i--) {
+			Layer li = layers.get(i);
+			if (layer == li) {
+				return Optional.ofNullable(blocker);
+			}
+			if (li.modal()) {
+				blocker = li;
+			}
+		}
+		return Optional.ofNullable(blocker);
+	}
+	
 	
 	private static final class StackConstraints {
 		public final int layer;
@@ -117,7 +134,7 @@ public class LayerPanel extends JLayeredPane {
 	 * than one modal dialog at a time.
 	 */
 	public void pushLayer(Layer layer) {
-		layer.getComponent().setFocusCycleRoot(true);
+		layer.getContent().setFocusCycleRoot(true);
 		layers.push(layer);
 		
 		this.add(layer.getJLayer(), new StackConstraints(layers.size()+200, "modal-layer-" + layers.size()));
@@ -144,7 +161,7 @@ public class LayerPanel extends JLayeredPane {
 
 	
 	public JComponent getContentLayer() {
-		return contentLayer.getComponent();
+		return contentLayer.getContent();
 	}
 	
 	/**

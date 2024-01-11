@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingParameters;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
-import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
+import org.peakaboo.curvefit.curve.fitting.FittingSetView;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.search.scoring.CompoundFittingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.CurveFittingScorer;
@@ -28,7 +28,7 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 
@@ -44,10 +44,10 @@ public class PeakProposal {
 
 	
 	public static ExecutorSet<List<ITransitionSeries>> search(
-			final ReadOnlySpectrum data,
+			final SpectrumView data,
 			PeakSearcher searcher,
-			ROFittingSet fits,
-			CurveFitterPlugin fitter,
+			FittingSetView fits,
+			CurveFitter fitter,
 			FittingSolver solver
 		) {
 		
@@ -170,7 +170,7 @@ public class PeakProposal {
 
 	//given the energy level of a peak and a list of existing new fits, check to 
 	//see if the given peak can be explained by an existing fit
-	private static boolean peakOverlap(List<ITransitionSeries> newfits, int channel, ROFittingParameters parameters) {
+	private static boolean peakOverlap(List<ITransitionSeries> newfits, int channel, FittingParametersView parameters) {
 		float energy = parameters.getCalibration().energyFromChannel(channel);
 		for (ITransitionSeries ts : newfits) {
 			for (Transition t : ts) {
@@ -182,7 +182,7 @@ public class PeakProposal {
 		}
 		return false;
 	}
-	private static boolean transitionOverlap(Transition t, float energy, float cutoff, ROFittingParameters parameters) {
+	private static boolean transitionOverlap(Transition t, float energy, float cutoff, FittingParametersView parameters) {
 		if (t.relativeIntensity < cutoff) return false; 
 		float hwhm = parameters.getFWHM(t)/2f;
 		float min = t.energyValue - hwhm;
@@ -199,10 +199,10 @@ public class PeakProposal {
 	 * @return an ordered list of {@link ITransitionSeries} which are good fits for the given data at the given channel
 	 */
 	public static List<Pair<ITransitionSeries, Float>> fromChannel(
-			final ReadOnlySpectrum data, 
-			ROFittingSet fits,
+			final SpectrumView data, 
+			FittingSetView fits,
 			FittingSet proposed,
-			CurveFitterPlugin fitter,
+			CurveFitter fitter,
 			FittingSolver solver,
 			final int channel, 
 			ITransitionSeries currentTS,
@@ -235,15 +235,15 @@ public class PeakProposal {
 		
 		//remove the current transitionseries from the list of proposed trantision series so we can re-suggest it.
 		//otherwise, the copy getting fitted eats all the signal from the one we would suggest during scoring
-		boolean currentTSisUsed = currentTS != null && proposed.getFittedTransitionSeries().contains(currentTS);
+		boolean currentTSisUsed = currentTS != null && proposed.hasTransitionSeries(currentTS);
 		if (currentTSisUsed) proposed.remove(currentTS);
 		
 		//recalculate
-		FittingResultSet fitResults = solver.solve(data, fits, fitter);
-		FittingResultSet proposedResults = solver.solve(fitResults.getResidual(), proposed, fitter);
+		FittingResultSetView fitResults = solver.solve(new FittingSolverContext(data, fits, fitter));
+		FittingResultSetView proposedResults = solver.solve(new FittingSolverContext(fitResults.getResidual(), proposed, fitter));
 		
 		
-		final ReadOnlySpectrum residualSpectrum = proposedResults.getResidual();
+		final SpectrumView residualSpectrum = proposedResults.getResidual();
 		
 		if (currentTSisUsed) proposed.addTransitionSeries(currentTS);
 		
@@ -258,7 +258,7 @@ public class PeakProposal {
 		//add in any 2x summations from the list of previously fitted AND proposed peaks.
 		//we exclude any that the caller requests so that if a UI component is *replacing* a TS with
 		//these suggestions, it doesn't get summations for the now-removed TS
-		List<ITransitionSeries> summationCandidates = fits.getFittedTransitionSeries();
+		List<ITransitionSeries> summationCandidates = new ArrayList<>(fits.getFittedTransitionSeries());
 		summationCandidates.addAll(proposed.getFittedTransitionSeries());
 		if (currentTSisUsed) summationCandidates.remove(currentTS);
 		

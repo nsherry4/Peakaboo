@@ -4,11 +4,10 @@ package org.peakaboo.filter.plugins.background;
 import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -51,7 +50,7 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter {
 
 
 	@Override
-	protected ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent) {
+	protected SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent) {
 		return calcBackgroundParabolic(data, width.getValue(), power.getValue(), percent / 100.0f);
 	}
 
@@ -106,7 +105,7 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter {
 	 *            0.0 - 1.0: the percent of the background which this algorithm should try to remove
 	 * @return a background-subtracted list of values
 	 */
-	public static Spectrum calcBackgroundParabolic(ReadOnlySpectrum data, int width, int power, float percentToRemove) {
+	public static Spectrum calcBackgroundParabolic(SpectrumView data, int width, int power, float percentToRemove) {
 
 		// y = -(x * s)^power + m upside down parabola horizontally stretched by s and shifted upwards by m
 
@@ -118,7 +117,7 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter {
 		int raise = 1;
 		if (power == 0) raise = 2;
 
-		Spectrum function = new ISpectrum(width);
+		Spectrum function = new ArraySpectrum(width);
 		for (int i = 0; i < width; i++)
 		{
 			x = i - centre;
@@ -143,11 +142,11 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter {
 	 *            0.0 - 1.0: the percent of the background which this algorithm should try to remove
 	 * @return a background-subtracted list of values
 	 */
-	public static Spectrum calcBackgroundFunctionFit(ReadOnlySpectrum data, Spectrum function, float percentToRemove) {
+	public static Spectrum calcBackgroundFunctionFit(SpectrumView data, Spectrum function, float percentToRemove) {
 
 		float value, minRatio, ratio;
 
-		Spectrum result = new ISpectrum(data.size(), 0.0f);
+		Spectrum result = new ArraySpectrum(data.size(), 0.0f);
 
 		// start with the function *centred* at the 0 index, and go until it is at the last index
 		for (int i = -(function.size() - 1); i < data.size(); i++) {
@@ -181,7 +180,7 @@ public final class PolynomialBackgroundFilter extends AbstractBackgroundFilter {
 	}
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "e9bfddb8-a8f0-490c-b01f-e2202581e809";
 	}
 	

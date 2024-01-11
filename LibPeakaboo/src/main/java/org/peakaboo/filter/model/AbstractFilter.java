@@ -7,11 +7,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.dataset.DataSet;
-import org.peakaboo.filter.plugins.FilterPlugin;
-import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 /**
@@ -22,11 +19,11 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * settings.
  * 
  * 
- * @author Nathaniel Sherry, 2009-2012
+ * @author Nathaniel Sherry
  * 
  */
 
-public abstract class AbstractFilter implements Serializable, FilterPlugin {
+public abstract class AbstractFilter implements Serializable, Filter {
 	
 	private List<Value<?>>		parameters;
 	public boolean				enabled;
@@ -35,17 +32,6 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin {
 	//==============================================
 	// PLUGIN METHODS
 	//==============================================	
-
-	@Override
-	public String pluginName() {
-		return getFilterName();
-	}
-
-	@Override
-	public String pluginDescription() {
-		return getFilterDescription();
-	}
-	
 	
 	public AbstractFilter() {
 		this.parameters = new ArrayList<>();
@@ -56,11 +42,7 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin {
 	public final List<Value<?>> getParameters() {
 		return this.parameters;
 	}
-	
-	@Override
-	public final void setParameters(List<Value<?>> values) {
-		parameters = values;
-	}
+
 	
 	protected void addParameter(Value<?> value) {
 		parameters.add(value);
@@ -75,15 +57,15 @@ public abstract class AbstractFilter implements Serializable, FilterPlugin {
 	 * Filter the given {@link Spectrum} and return the modified result
 	 * @param data the Spectrum to filter
 	 */
-	protected abstract ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx);
+	protected abstract SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx);
 		
 	
 
 	@Override
-	public ReadOnlySpectrum filter(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	public SpectrumView filter(SpectrumView data, Optional<FilterContext> ctx) {
 		
 		try{
-			ReadOnlySpectrum newdata = filterApplyTo(data, ctx);
+			SpectrumView newdata = filterApplyTo(data, ctx);
 			if (newdata != null) return newdata;
 			return data;
 		}

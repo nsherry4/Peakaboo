@@ -4,9 +4,8 @@ package org.peakaboo.filter.plugins.mathematical;
 import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -25,7 +24,7 @@ public class DerivativeMathFilter extends AbstractFilter {
 	}
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		return deriv(data);
 	}
 
@@ -47,11 +46,6 @@ public class DerivativeMathFilter extends AbstractFilter {
 		return FilterDescriptor.MATHEMATICAL;
 	}
 
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
-	
 	
 	@Override
 	public boolean canFilterSubset() {
@@ -64,12 +58,12 @@ public class DerivativeMathFilter extends AbstractFilter {
 	 * @param list the data to find the deltas for
 	 * @return a list of deltas
 	 */
-	public static Spectrum deriv(ReadOnlySpectrum list) {
+	public static Spectrum deriv(SpectrumView list) {
 		return SpectrumCalculations.derivative(list);
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "779ca35d-0f68-4ea9-b3f4-4aef46977477";
 	}
 	

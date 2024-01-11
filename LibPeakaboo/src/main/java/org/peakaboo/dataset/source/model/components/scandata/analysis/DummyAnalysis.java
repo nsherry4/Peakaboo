@@ -1,6 +1,6 @@
 package org.peakaboo.dataset.source.model.components.scandata.analysis;
 
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class DummyAnalysis implements Analysis {
@@ -26,7 +26,7 @@ public class DummyAnalysis implements Analysis {
 	}
 
 	@Override
-	public void process(ReadOnlySpectrum t) {
+	public void process(SpectrumView t) {
 		//NOOP
 	}
 

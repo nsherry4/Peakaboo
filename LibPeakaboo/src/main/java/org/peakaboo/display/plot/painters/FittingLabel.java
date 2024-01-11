@@ -1,7 +1,7 @@
 package org.peakaboo.display.plot.painters;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.DataLabelPainter.DataLabel;
@@ -9,11 +9,11 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.P
 
 public class FittingLabel extends DataLabel {
 
-	protected FittingResult fit;
+	protected FittingResultView fit;
 	protected boolean drawMaxIntensities;
 	protected String annotation;
 	
-	public FittingLabel(FittingResult fit, PlotPalette palette, EnergyCalibration ecal, String annotation, boolean drawMaxIntensities) {
+	public FittingLabel(FittingResultView fit, PlotPalette palette, EnergyCalibration ecal, String annotation, boolean drawMaxIntensities) {
 		super(palette, 0, "");
 		this.fit = fit;
 		this.drawMaxIntensities = drawMaxIntensities;

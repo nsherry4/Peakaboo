@@ -1,24 +1,20 @@
 package org.peakaboo.ui.swing.plotting.toolbar;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusColour;
-import org.peakaboo.framework.stratus.api.StratusLog;
-import org.peakaboo.framework.stratus.api.hookins.WindowDragger;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
 import org.peakaboo.tier.Tier;
@@ -174,13 +170,12 @@ public class PlotToolbar extends JToolBar {
 		viewMenuButton.setEnabled(hasData);
 		
 		boolean hasEnergyCalibration = !controller.fitting().getEnergyCalibration().isZero();
-		Color accentBackground = StratusColour.moreTransparent(Stratus.getTheme().getPalette().getColour("Yellow", "4"), 0.66f);
 		if (hasData && hasEnergyCalibration || !hasData) {
 			energyMenuButton.withBordered(BorderStyle.ACTIVE);
-			energyMenuButton.setBackground(null);
+			energyMenuButton.withNotificationDot(Optional.empty());
 		} else {
-			energyMenuButton.setBackground(accentBackground);
 			energyMenuButton.withBordered(BorderStyle.ALWAYS);
+			energyMenuButton.withNotificationDot(NotificationDotState.PROBLEM);
 		}
 		
 		
@@ -197,31 +192,36 @@ public class PlotToolbar extends JToolBar {
 
 	private FluentToolbarButton createEnergyMenuButton() {
 		energyMenu = new PlotMenuEnergy(plot, controller);
+		var colour = Stratus.getTheme().getControlText();
 		return new FluentToolbarButton()
-				.withIcon(PeakabooIcons.MENU_ENERGY)
+				.withIcon(PeakabooIcons.MENU_ENERGY, colour)
 				.withTooltip("Energy & Peak Calibration")
 				.withPopupMenuAction(energyMenu, true);
 	}
 	
 	private FluentToolbarButton createMainMenuButton() {
 		mainMenu = new PlotMenuMain(plot, controller);
-		return new FluentToolbarButton(StockIcon.MENU_MAIN)
+		var colour = Stratus.getTheme().getControlText();
+		return new FluentToolbarButton()
+				.withIcon(StockIcon.MENU_MAIN, colour)
 				.withTooltip("Main Menu")
 				.withPopupMenuAction(mainMenu, true);
 	}
 
 	private FluentToolbarButton createViewMenuButton() {
 		viewMenu = new PlotMenuView(plot, controller);
+		var colour = Stratus.getTheme().getControlText();
 		return new FluentToolbarButton()
-				.withIcon(PeakabooIcons.MENU_VIEW)
+				.withIcon(PeakabooIcons.MENU_VIEW, colour)
 				.withTooltip("Plot Display Options")
 				.withPopupMenuAction(viewMenu, true);
 	}
 	
 	
 	private FluentToolbarButton createSettingsMenuButton() {
+		var colour = Stratus.getTheme().getControlText();
 		return new FluentToolbarButton()
-				.withIcon(PeakabooIcons.MENU_SETTINGS)
+				.withIcon(PeakabooIcons.MENU_SETTINGS, colour)
 				.withTooltip("Advanced Settings & Tuneables")
 				.withAction(() -> plot.actionShowAdvancedOptions());
 	}

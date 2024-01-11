@@ -5,26 +5,23 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 
 
-public interface ScanData extends Iterable<ReadOnlySpectrum> {
+public interface ScanData extends Iterable<SpectrumView> {
 	
-	public static record ScanEntry(int index, Spectrum spectrum) {};
-
 	/**
 	 * Retrieves the values from the scan at the given index
 	 * 
 	 * @param index
 	 *            the scan number to retrieve
 	 */
-	ReadOnlySpectrum get(int index) throws IndexOutOfBoundsException;
+	SpectrumView get(int index) throws IndexOutOfBoundsException;
 
 	
-	default Iterator<ReadOnlySpectrum> iterator() {
-		return new Iterator<ReadOnlySpectrum>() {
+	default Iterator<SpectrumView> iterator() {
+		return new Iterator<SpectrumView>() {
 
 			int next = 0;
 			
@@ -34,7 +31,7 @@ public interface ScanData extends Iterable<ReadOnlySpectrum> {
 			}
 
 			@Override
-			public ReadOnlySpectrum next() {
+			public SpectrumView next() {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
 				}

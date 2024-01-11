@@ -11,22 +11,24 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltOldPluginIssue;
  * Convenience class to manage plugins and issues. Not generally intended for
  * high-level use.
  */
-public class BoltPluginSet<T extends BoltPlugin> implements BoltPluginCollection<T> {
+public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> {
 
-	private ArrayList<BoltPluginPrototype<? extends T>> plugins = new ArrayList<>();
+	//Anything modifying this plugins list should call sort() afterwards
+	private ArrayList<PluginDescriptor<? extends T>> plugins = new ArrayList<>();
 	private ArrayList<BoltIssue<? extends T>> issues = new ArrayList<>();
 	
-	private BoltPluginManager<T> manager;
+	private PluginRegistry<T> manager;
 	
-	public BoltPluginSet(BoltPluginManager<T> manager) {
+	public BoltPluginSet(PluginRegistry<T> manager) {
 		this.manager = manager;
 	}
 	
-	public List<BoltPluginPrototype<? extends T>> getPlugins() {
+	@Override
+	public List<PluginDescriptor<? extends T>> getPlugins() {
 		return Collections.unmodifiableList(plugins);
 	}
 
-	public void addPlugin(BoltPluginPrototype<? extends T> plugin) {
+	public void addPlugin(PluginDescriptor<? extends T> plugin) {
 		if (plugins.contains(plugin)) {
 			return;
 		}
@@ -34,7 +36,7 @@ public class BoltPluginSet<T extends BoltPlugin> implements BoltPluginCollection
 		if (this.hasUUID(uuid)) {
 			//there is already a plugin with the same UUID.
 			//we have to choose which of these to load
-			BoltPluginPrototype<? extends T> existingPlugin = this.getByUUID(uuid);
+			PluginDescriptor<? extends T> existingPlugin = this.getByUUID(uuid);
 			
 			if (plugin.isUpgradeFor(existingPlugin)) {
 				plugins.remove(existingPlugin);
@@ -42,16 +44,18 @@ public class BoltPluginSet<T extends BoltPlugin> implements BoltPluginCollection
 					addIssue(new BoltOldPluginIssue<>(existingPlugin));
 				}
 				plugins.add(plugin);
+				sort();
 			}
 			
 		} else {
-			plugins.add(plugin);	
+			plugins.add(plugin);
+			sort();
 		}
 		
 	}
 
-	public void loadFrom(BoltPluginCollection<? extends T> pluginset) {
-		for (BoltPluginPrototype<? extends T> t : pluginset.getPlugins()) {
+	public void loadFrom(PluginCollection<? extends T> pluginset) {
+		for (PluginDescriptor<? extends T> t : pluginset.getPlugins()) {
 			addPlugin(t);
 		}
 		for (BoltIssue<? extends T> i : pluginset.getIssues()) {
@@ -72,8 +76,15 @@ public class BoltPluginSet<T extends BoltPlugin> implements BoltPluginCollection
 	}
 
 	@Override
-	public BoltPluginManager<T> getManager() {
+	public PluginRegistry<T> getManager() {
 		return manager;
+	}
+	
+	private void sort() {
+		plugins.sort((a, b) -> {
+			//Reversed order on purpose to sort higher numbers first
+			return Integer.compare(b.getWeight(), a.getWeight());
+		});
 	}
 	
 

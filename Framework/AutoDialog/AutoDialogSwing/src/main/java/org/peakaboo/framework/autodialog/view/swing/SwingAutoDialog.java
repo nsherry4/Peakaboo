@@ -115,7 +115,7 @@ public class SwingAutoDialog extends LiveDialog
 		}
 		
 		
-		info = new FluentButton(StockIcon.BADGE_QUESTION)
+		info = new FluentButton().withIcon(StockIcon.BADGE_QUESTION)
 				.withTooltip("More Information")
 				.withLayout(FluentButtonLayout.IMAGE)
 				.withBordered(true)

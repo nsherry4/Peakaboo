@@ -3,11 +3,9 @@ package org.peakaboo.framework.stratus.components.ui.fluentcontrols.button;
 import java.awt.Dimension;
 
 import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import org.peakaboo.framework.stratus.api.StratusText;
-import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSet;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
@@ -59,6 +57,19 @@ public class FluentToolbarButton extends JButton implements FluentButtonAPI<Flue
 		init();
 		makeWidget();
 	}
+
+	
+	public FluentToolbarButton(String text, IconSet icon, IconSize size) {
+		firstconfig();
+		config().text = text;
+		config().imagename = icon.toIconName();
+		config().imagepath = icon.path();
+		config().size = size;
+		
+		init();
+		makeWidget();
+	}
+	
 	
 	public FluentToolbarButton(String text, String path, String icon) {
 		firstconfig();

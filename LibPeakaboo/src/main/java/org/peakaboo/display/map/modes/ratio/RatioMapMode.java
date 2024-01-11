@@ -35,7 +35,7 @@ public class RatioMapMode extends MapMode {
 		
 		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
-		backend.setSource(new PaletteColour(0xffffffff));
+		backend.setSource(settings.getBg());
 		backend.fill();
 		
 		List<AbstractPalette> paletteList = new ArrayList<>();

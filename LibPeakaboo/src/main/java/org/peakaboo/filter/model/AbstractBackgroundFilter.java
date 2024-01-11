@@ -6,8 +6,8 @@ import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.SeparatorStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -26,7 +26,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90, this::validate);
 		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE, this::validate);
 		
-		Parameter<?> sep1 = new Parameter<>(null, new SeparatorStyle(), 0);
+		Parameter<?> sep1 = new Parameter<>("separator-1", new SeparatorStyle(), 0);
 		
 		partial = new Parameter<>("Apply to Subset", new BooleanStyle(), Boolean.FALSE, this::validate);
 		startindex = new Parameter<>("Start Index", new IntegerStyle(), 0, this::validate);
@@ -37,7 +37,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 		});
 		
 		
-		Parameter<?> sep2 = new Parameter<>(null, new SeparatorStyle(), 0);
+		Parameter<?> sep2 = new Parameter<>("separator-2", new SeparatorStyle(), 0);
 		
 		
 		startindex.setEnabled(false);
@@ -66,9 +66,9 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 	}
 	
 	
-	protected abstract ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx, int percent);
+	protected abstract SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent);
 	
-	private final ReadOnlySpectrum getBackground(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	private final SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx) {
 		if (data == null) {
 			return null;
 		}
@@ -82,8 +82,8 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 		
 		if (usePartial) {
 			
-			ReadOnlySpectrum partial = data.subSpectrum(start, stop);
-			Spectrum result = new ISpectrum(data.size(), 0f);
+			SpectrumView partial = data.subSpectrum(start, stop);
+			Spectrum result = new ArraySpectrum(data.size(), 0f);
 			partial = getBackground(partial, ctx, percent.getValue());
 			
 			for (int i = 0; i < partial.size(); i++)
@@ -100,8 +100,8 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 	}
 	
 	@Override
-	protected final ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
-		ReadOnlySpectrum background = getBackground(data, ctx);
+	protected final SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
+		SpectrumView background = getBackground(data, ctx);
 		return SpectrumCalculations.subtractLists(data, background);
 	}
 	

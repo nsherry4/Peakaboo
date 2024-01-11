@@ -43,7 +43,7 @@ public class OverlayMapMode extends MapMode {
 		
 		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
-		backend.setSource(new PaletteColour(0xffffffff));
+		backend.setSource(settings.getBg());
 		backend.fill();
 		
 		AxisPainter spectrumCoordPainter = null;
@@ -103,6 +103,7 @@ public class OverlayMapMode extends MapMode {
 		spectrumCoordPainter = new LegendCoordsAxisPainter(
 
 			settings.drawCoord,
+			settings.getFg(),
 			settings.coordLoXHiY,
 			settings.coordHiXHiY,
 			settings.coordLoXLoY,

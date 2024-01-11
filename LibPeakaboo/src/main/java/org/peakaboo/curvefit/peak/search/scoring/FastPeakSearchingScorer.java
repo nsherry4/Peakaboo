@@ -6,7 +6,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * Detects peaks in the given data, and then scores each TransitionSeries based
@@ -14,12 +14,12 @@ import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
  */
 public class FastPeakSearchingScorer implements FittingScorer {
 
-	ReadOnlySpectrum data;
+	SpectrumView data;
 	EnergyCalibration calibration;
 	List<Integer> peakIndexes;
 	float datamax;
 	
-	public FastPeakSearchingScorer(ReadOnlySpectrum data, EnergyCalibration calibration) {
+	public FastPeakSearchingScorer(SpectrumView data, EnergyCalibration calibration) {
 		this.data = data;
 		this.calibration = calibration;
 		this.peakIndexes = new DerivativePeakSearcher().search(data);

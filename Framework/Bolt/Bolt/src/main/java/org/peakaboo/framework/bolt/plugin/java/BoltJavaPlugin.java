@@ -1,6 +1,7 @@
 package org.peakaboo.framework.bolt.plugin.java;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 
 /**
  * This is the base interface that any plugin system using the Bolt plugin 
@@ -16,7 +17,8 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 
 public interface BoltJavaPlugin extends BoltPlugin {
 
-
-	
+	default SavedPlugin save() {
+		return new SavedPlugin(this);
+	}	
 	
 }

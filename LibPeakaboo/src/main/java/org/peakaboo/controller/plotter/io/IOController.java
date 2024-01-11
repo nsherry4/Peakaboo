@@ -3,9 +3,9 @@ package org.peakaboo.controller.plotter.io;
 import java.io.File;
 
 import org.peakaboo.app.Env;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
-public class IOController extends Eventful {
+public class IOController extends EventfulBeacon {
 
 	private File sessionFile;
 	private File lastFolder;
@@ -37,7 +37,7 @@ public class IOController extends Eventful {
 		updateListeners();
 	}
 	
-	public void setBothFromSession(File session) {
+	public void setFromSession(File session) {
 		this.sessionFile = session;
 		this.lastFolder = session.getParentFile();
 		updateListeners();

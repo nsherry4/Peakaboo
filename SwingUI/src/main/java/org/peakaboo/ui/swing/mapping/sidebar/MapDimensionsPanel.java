@@ -14,16 +14,15 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
-import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonLayout;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
-import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 public class MapDimensionsPanel extends JPanel {
@@ -135,7 +134,7 @@ public class MapDimensionsPanel extends JPanel {
 	
 	private FluentButton makeGuessDimensionsButton(LayerPanel tabPanel, MappingController controller, boolean compact) {
 		return new FluentButton(compact ? "Guess" : "Guess Dimensions")
-				.withIcon(PeakabooIcons.AUTO, IconSize.BUTTON)
+				.withIcon(PeakabooIcons.AUTO, IconSize.BUTTON, Stratus.getTheme().getControlText())
 				.withTooltip("Try to detect the map's dimensions.")
 				.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
 				.withBordered(false)

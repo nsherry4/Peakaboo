@@ -5,30 +5,30 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginManager;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginPrototype;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.bolt.plugin.java.BoltJar;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
-import org.peakaboo.framework.bolt.plugin.java.BoltJavaPluginPrototype;
+import org.peakaboo.framework.bolt.plugin.java.BoltJavaPluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltBrokenJavaPluginIssue;
 
 public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements BoltContainer<T> {
 
 	protected Class<T> targetClass;
 	protected BoltPluginSet<T> plugins;
-	private BoltPluginManager<T> manager;
+	private PluginRegistry<T> manager;
 	
-	public BoltJavaContainer(BoltPluginManager<T> manager, Class<T> targetClass) {
+	public BoltJavaContainer(PluginRegistry<T> manager, Class<T> targetClass) {
 		this.targetClass = targetClass;
 		this.plugins = new BoltPluginSet<>(manager);
 		this.manager = manager;
 	}
 
 	@Override
-	public List<BoltPluginPrototype<? extends T>> getPlugins() {
+	public List<PluginDescriptor<? extends T>> getPlugins() {
 		return plugins.getPlugins();
 	}
 
@@ -37,7 +37,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 		return plugins.getIssues();
 	}
 
-	protected void add(Class<? extends T> loadedClass) {
+	protected void add(Class<? extends T> loadedClass, int weight) {
 
 		try 
 		{
@@ -46,7 +46,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 				return; 
 			} 
 			
-			BoltPluginPrototype<T> plugin = new BoltJavaPluginPrototype<>(this.manager, targetClass, loadedClass, this);
+			PluginDescriptor<T> plugin = new BoltJavaPluginDescriptor<>(this.manager, targetClass, loadedClass, this, weight);
 			
 			if (plugin.isEnabled()) {
 				plugins.addPlugin(plugin);

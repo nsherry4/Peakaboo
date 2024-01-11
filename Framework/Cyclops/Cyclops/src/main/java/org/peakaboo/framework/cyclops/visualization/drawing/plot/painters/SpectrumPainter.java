@@ -3,7 +3,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters;
 
 
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
@@ -13,10 +13,10 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData
 public abstract class SpectrumPainter extends PlotPainter
 {
 
-	protected ReadOnlySpectrum data;
+	protected SpectrumView data;
 	protected TraceType traceType = TraceType.CONNECTED;
 	
-	public SpectrumPainter(ReadOnlySpectrum data)
+	public SpectrumPainter(SpectrumView data)
 	{
 		this.data = data;
 	}

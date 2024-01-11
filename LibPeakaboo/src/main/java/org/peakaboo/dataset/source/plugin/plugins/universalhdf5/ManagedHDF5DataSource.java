@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.peakaboo.dataset.source.model.datafile.DataFile;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
+import org.peakaboo.dataset.io.DataInputAdapter;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
@@ -24,7 +25,7 @@ public abstract class ManagedHDF5DataSource extends SimpleHDF5DataSource {
 	}
 	
 	@Override
-	protected void readFile(DataFile path, int filenum) throws DataSourceReadException, IOException, InterruptedException {
+	protected void readFile(DataInputAdapter path, int filenum) throws DataSourceReadException, IOException, InterruptedException {
 		
 		//Read the contents of the file as a float array
 		HDF5DataSetInformation info = readDatasetInfo(path);
@@ -44,7 +45,7 @@ public abstract class ManagedHDF5DataSource extends SimpleHDF5DataSource {
 			int channel = channelAtIndex(filenum, i, info);
 			
 			if (!scans.containsKey(scan)) {
-				scans.put(scan, new ISpectrum(spectrumSize));
+				scans.put(scan, new ArraySpectrum(spectrumSize));
 			}
 			Spectrum spectrum = scans.get(scan);
 			spectrum.set(channel, data[i]);
@@ -73,7 +74,7 @@ public abstract class ManagedHDF5DataSource extends SimpleHDF5DataSource {
 	
 
 	
-	protected float[] readSpectralData(DataFile path) throws IOException {
+	protected float[] readSpectralData(DataInputAdapter path) throws IOException {
 		IHDF5Reader reader = HDF5Factory.openForReading(path.getAndEnsurePath().toFile());	
 		float[] data = readSpectralData(reader, dataPath);
 		reader.close();
@@ -84,7 +85,7 @@ public abstract class ManagedHDF5DataSource extends SimpleHDF5DataSource {
 		return reader.readFloatArray(dataPath);
 	}
 	
-	protected HDF5DataSetInformation readDatasetInfo(DataFile path) throws IOException {
+	protected HDF5DataSetInformation readDatasetInfo(DataInputAdapter path) throws IOException {
 		IHDF5SimpleReader reader = HDF5Factory.openForReading(path.getAndEnsurePath().toFile());	
 		HDF5DataSetInformation info = reader.getDataSetInformation(dataPath);
 		reader.close();

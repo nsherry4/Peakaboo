@@ -10,9 +10,9 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.components.VisibilityState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.eventful.Eventful;
+import org.peakaboo.framework.eventful.EventfulBeacon;
 
-public abstract class SimpleModeController extends Eventful implements ModeController {
+public abstract class SimpleModeController extends EventfulBeacon implements ModeController {
 
 	private VisibilityState visibility;
 	private MappingController map;

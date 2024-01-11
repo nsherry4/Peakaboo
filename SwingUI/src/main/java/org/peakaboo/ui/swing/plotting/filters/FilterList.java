@@ -17,8 +17,8 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
 import org.peakaboo.filter.model.Filter;
-import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -124,17 +124,20 @@ class FilterList extends ClearPanel {
 
 	private JPanel createControlPanel(){
 		
-		FluentButton addButton = new FluentButton(StockIcon.EDIT_ADD)
+		FluentButton addButton = new FluentButton()
+				.withIcon(StockIcon.EDIT_ADD, Stratus.getTheme().getControlText())
 				.withTooltip("Add Filter")
 				.withAction(() -> filtersUI.showSelectPane());
 		
-		FluentButton removeButton = new FluentButton(StockIcon.EDIT_REMOVE)
+		FluentButton removeButton = new FluentButton()
+				.withIcon(StockIcon.EDIT_REMOVE, Stratus.getTheme().getControlText())
 				.withTooltip("Remove Selected Filter")
 				.withAction(() -> {
 					if (t.getSelectedRow() != -1) { controller.removeFilter(t.getSelectedRow()); }
 				});
 		
-		FluentButton clearButton = new FluentButton(StockIcon.EDIT_CLEAR)
+		FluentButton clearButton = new FluentButton()
+				.withIcon(StockIcon.EDIT_CLEAR, Stratus.getTheme().getControlText())
 				.withTooltip("Clear All Filters")
 				.withAction(() -> controller.clearFilters());
 		

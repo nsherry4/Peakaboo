@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing;
 
 import java.awt.Color;
+import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -23,14 +24,18 @@ import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.Settings;
 import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
-import org.peakaboo.dataset.sink.plugin.DataSinkPluginManager;
-import org.peakaboo.dataset.source.plugin.DataSourcePluginManager;
-import org.peakaboo.filter.model.FilterPluginManager;
+import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
 import org.peakaboo.framework.eventful.EventfulConfig;
@@ -42,9 +47,11 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
-import org.peakaboo.mapping.filter.model.MapFilterPluginManager;
+import org.peakaboo.framework.stratus.laf.theme.Theme;
+import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.app.AccentedTheme;
+import org.peakaboo.ui.swing.app.AccentedBrightTheme;
+import org.peakaboo.ui.swing.app.AccentedDuskTheme;
 import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
@@ -143,10 +150,10 @@ public class Peakaboo {
 			PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
 		}
 	}
-	
+
 	private static void uiPerformanceTune() {
-		if (PeakabooConfiguration.memorySize == MemorySize.TINY || PeakabooConfiguration.memorySize == MemorySize.SMALL) {
-			LayerPanel.blurLowerLayers = false;
+		if (PeakabooConfiguration.memorySize == MemorySize.TINY) {
+			LayerPanel.lowGraphicsMode = true;
 		}
 	}
 
@@ -162,13 +169,17 @@ public class Peakaboo {
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		CrashHandler.init();
 		
-		PeakabooLog.get().log(Level.INFO, "Starting " + Version.longVersionNo + " - " + Version.buildDate);
+		PeakabooLog.get().log(Level.INFO, "Peakaboo is starting up.");
+		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.longVersionNo + " - " + Version.buildDate);
 		
 		CyclopsSurface.init();
+		
+		//Configure the system thread pool to follow the Peakaboo user setting for thread count
+		System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "" + Settings.getThreadCount());
 	}
 	
 	public static void run() {
-		
+
 		//warm up the peak table, which is lazy
 		//do this in a separate thread so that it proceeds in parallel 
 		//with all the other tasks, since this is usually the longest 
@@ -179,13 +190,24 @@ public class Peakaboo {
 		
 		Stratus.initialize(Tier.provider().iconPath(), Version.splash, Version.logo, "Peakaboo", () -> {
 
-			Color accent = AccentedTheme.accentColours.get(DesktopSettings.getAccentColour());
+			Color accent = AccentedBrightTheme.accentColours.get(DesktopSettings.getAccentColour());
 			if (accent == null) {
-				accent = AccentedTheme.accentColours.get("Blue");
+				accent = AccentedBrightTheme.accentColours.get("Blue");
 			}
-			StratusLookAndFeel laf = new StratusLookAndFeel(new AccentedTheme(accent));
+			Theme theme = new AccentedBrightTheme(accent);
+			if (DesktopSettings.isDarkMode()) {
+				theme = new AccentedDuskTheme(accent);
+			}
+			StratusLookAndFeel laf = new StratusLookAndFeel(theme);
 			
-					
+			//Load Peakaboo's font
+			try {
+				Stratus.registerFont("/org/peakaboo/ui/swing/fonts/springsteel-lig.otf");
+			} catch (FontFormatException | IOException e) {
+				PeakabooLog.get().log(Level.WARNING, "", e);
+			}
+			
+			
 			setLaF(laf);
 			EventfulConfig.uiThreadRunner = SwingUtilities::invokeLater;
 			errorHook();
@@ -234,11 +256,14 @@ public class Peakaboo {
 	}
 	
 	private static void initPluginSystem() {
-		FilterPluginManager.init(DesktopApp.appDir("Plugins/Filter"));
-		MapFilterPluginManager.init(DesktopApp.appDir("Plugins/MapFilter"));
-		DataSourcePluginManager.init(DesktopApp.appDir("Plugins/DataSource"));
-		DataSinkPluginManager.init(DesktopApp.appDir("Plugins/DataSink"));
-		CurveFitterPluginManager.init();
+		FilterRegistry.init(DesktopApp.appDir("Plugins/Filter"));
+		MapFilterRegistry.init(DesktopApp.appDir("Plugins/MapFilter"));
+		DataSourceRegistry.init(DesktopApp.appDir("Plugins/DataSource"));
+		DataSinkRegistry.init(DesktopApp.appDir("Plugins/DataSink"));
+		CurveFitterRegistry.init();
+		FittingSolverRegistry.init();
+		ChannelViewModeRegistry.init();
+		FittingFunctionRegistry.init();
 		
 		//Any additional plugin types provided per-tier
 		Tier.provider().initializePlugins();

@@ -4,9 +4,8 @@ package org.peakaboo.filter.plugins.mathematical;
 import java.util.Optional;
 
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -26,7 +25,7 @@ public class IntegralMathFilter extends AbstractFilter
 	
 	
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		return integ(data);
 	}
 	
@@ -50,13 +49,6 @@ public class IntegralMathFilter extends AbstractFilter
 
 	
 	@Override
-	public boolean pluginEnabled()
-	{
-		return true;
-	}
-	
-	
-	@Override
 	public boolean canFilterSubset() {
 		return true;
 	}
@@ -68,13 +60,13 @@ public class IntegralMathFilter extends AbstractFilter
 	 * @param list the data to find the integral for
 	 * @return a list of sums
 	 */
-	public static Spectrum integ(ReadOnlySpectrum list) {
+	public static Spectrum integ(SpectrumView list) {
 		return SpectrumCalculations.integral(list); 
 	}
 
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "c49d30f9-481a-41cb-ab32-23f4207e07bb";
 	}
 	

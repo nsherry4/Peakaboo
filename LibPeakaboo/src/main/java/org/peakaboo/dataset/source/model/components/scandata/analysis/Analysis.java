@@ -1,6 +1,6 @@
 package org.peakaboo.dataset.source.model.components.scandata.analysis;
 
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * Peakaboo derives a number of measurements from a Data Set which are not
@@ -17,7 +17,7 @@ public interface Analysis {
 	 * incremental metrics it may wish to do. 
 	 * @param spectrum
 	 */
-	void process(ReadOnlySpectrum spectrum);
+	void process(SpectrumView spectrum);
 	
 	
 	
@@ -28,7 +28,7 @@ public interface Analysis {
 	 * 
 	 * @return average scan
 	 */
-	ReadOnlySpectrum averagePlot();
+	SpectrumView averagePlot();
 
 
 	/**
@@ -36,14 +36,14 @@ public interface Analysis {
 	 * 
 	 * @return the top signal-per-channel scan
 	 */
-	ReadOnlySpectrum maximumPlot();
+	SpectrumView maximumPlot();
 
 	/**
 	 * Produces a single scan/list containing the sum value for each channel
 	 * 
 	 * @return summed scan
 	 */
-	ReadOnlySpectrum summedPlot();
+	SpectrumView summedPlot();
 	
 	/**
 	 * Reports the number of scans seen by this Analysis component

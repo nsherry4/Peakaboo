@@ -1,10 +1,13 @@
 package org.peakaboo.dataset.source.model.internal;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormatCompatibility;
@@ -13,7 +16,6 @@ import org.peakaboo.dataset.source.model.components.metadata.Metadata;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.components.scandata.SimpleScanData;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 
 /**
@@ -31,7 +33,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 
 	@Override
-	public FileFormatCompatibility compatibility(List<DataFile> filenames) {
+	public FileFormatCompatibility compatibility(List<DataInputAdapter> filenames) {
 		return FileFormatCompatibility.NO;
 	}
 
@@ -42,7 +44,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 
 
 	@Override
-	public void read(List<DataFile> files) throws DataSourceReadException {
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -94,7 +96,7 @@ public class EmptyDataSource implements DataSource, FileFormat {
 	}
 
 	@Override
-	public Optional<Group> getParameters(List<DataFile> paths) {
+	public Optional<Group> getParameters(List<DataInputAdapter> paths) {
 		return Optional.empty();
 	}
 

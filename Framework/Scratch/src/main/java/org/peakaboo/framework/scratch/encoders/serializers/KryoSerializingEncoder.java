@@ -12,8 +12,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.io.UnsafeMemoryInput;
-import com.esotericsoftware.kryo.io.UnsafeMemoryOutput;
+import com.esotericsoftware.kryo.unsafe.UnsafeInput;
+import com.esotericsoftware.kryo.unsafe.UnsafeOutput;
+import com.esotericsoftware.kryo.util.Util;
+
 
 public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 
@@ -36,7 +38,6 @@ public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 	
 	
 	private Class<? extends T> clazz;
-	private boolean supportsUnsafe = false;
 	
 	public KryoSerializingEncoder(Class<? extends T> clazz, Class<?>... others) {
 		this.clazz = clazz;
@@ -44,15 +45,6 @@ public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 		for (Class<?> other : others) {
 			register(other);
 		}
-		try {
-			Output test = new UnsafeMemoryOutput();
-			Kryo kryo = new Kryo();
-			kryo.writeObject(test, "Hello");
-			supportsUnsafe = true;
-		} catch (Exception e) {
-			supportsUnsafe = false;
-		}
-		supportsUnsafe = false;
 	}
 	
 	public void register(Class<?> c)
@@ -74,8 +66,8 @@ public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 	public byte[] encode(T data) throws ScratchException {
 		Output kOut;
 		ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-		if (supportsUnsafe) {
-			kOut = new UnsafeMemoryOutput(bOut);
+		if (Util.unsafe) {
+			kOut = new UnsafeOutput(bOut);
 		} else {
 			kOut = new Output(bOut);
 		}
@@ -87,8 +79,8 @@ public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 	@Override
 	public T decode(byte[] data) throws ScratchException {
 		Input kIn;
-		if (supportsUnsafe) {
-			kIn = new UnsafeMemoryInput(data);
+		if (Util.unsafe) {
+			kIn = new UnsafeInput(data);
 		} else {
 			kIn = new Input(data);
 		}

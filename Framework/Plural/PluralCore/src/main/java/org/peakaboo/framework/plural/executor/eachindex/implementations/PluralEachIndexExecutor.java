@@ -23,14 +23,6 @@ public class PluralEachIndexExecutor extends EachIndexExecutor
 	protected TicketManager	ticketManager;
 
 
-	public PluralEachIndexExecutor(int size, Consumer<Integer> pluralEachIndex)
-	{
-		super(size, pluralEachIndex);
-		
-		threadCount = calcNumThreads();
-		
-	}
-	
 	public PluralEachIndexExecutor(int size, Consumer<Integer> pluralEachIndex, int threads)
 	{
 		super(size, pluralEachIndex);

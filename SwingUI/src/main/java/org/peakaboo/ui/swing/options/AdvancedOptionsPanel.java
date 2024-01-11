@@ -4,44 +4,33 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.apache.commons.collections4.bidimap.DualHashBidiMap;
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.fitting.FittingController;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPluginManager;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
-import org.peakaboo.curvefit.curve.fitting.solver.GreedyFittingSolver;
-import org.peakaboo.curvefit.curve.fitting.solver.MultisamplingOptimizingFittingSolver;
-import org.peakaboo.curvefit.curve.fitting.solver.OptimizingFittingSolver;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterial;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.FittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
-import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
@@ -52,15 +41,16 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
 import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
 import org.peakaboo.framework.stratus.components.ui.options.OptionColours;
+import org.peakaboo.framework.stratus.components.ui.options.OptionCustomComponent;
 import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar;
-import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
+import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
-import org.peakaboo.ui.swing.app.AccentedTheme;
-import org.peakaboo.ui.swing.app.PeakabooIcons;
+import org.peakaboo.ui.swing.app.AccentedBrightTheme;
 import org.peakaboo.ui.swing.app.DesktopSettings;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
@@ -124,17 +114,19 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		entries.get(entries.size()-1).trailingSeparator = true;
 		
 		
-		String KEY_PERFORMANCE = "Performance";
-		OptionBlocksPanel perfPanel = makePerformancePanel(controller);
-		body.add(wrapSettingsInfo(perfPanel, SETTING_PER_USER), KEY_PERFORMANCE);
-		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
-		entries.add(perfEntry);
-		
 		String KEY_APP = "Appearance";
 		OptionBlocksPanel appPanel = makeAppPanel(controller);
 		body.add(wrapSettingsInfo(appPanel, SETTING_PER_USER), KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
+		
+		
+		String KEY_PERFORMANCE = "Performance";
+		OptionBlocksPanel perfPanel = makePerformancePanel(controller);
+		body.add(wrapSettingsInfo(perfPanel, SETTING_PER_USER), KEY_PERFORMANCE);
+		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
+		entries.add(perfEntry);
+
 		
 		String KEY_ERRORS = "Errors";
 		OptionBlocksPanel errorsPanel = makeErrorsPanel(controller);
@@ -161,13 +153,23 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private OptionBlocksPanel makePerformancePanel(PlotController controller) {
 		OptionBlock datasets = new OptionBlock();
+		
+		
+		OptionBlock multithreading = new OptionBlock();
+		OptionCustomComponent corecount = new OptionThreadCount(multithreading, Settings::getThreadCount, Settings::setThreadCount)
+				.withText("Parallel Processing Threads", "Take advantage of multi-core processors, requires restart")
+				.withSize(OptionSize.LARGE);
+		multithreading.add(corecount);
+		
+		
 		OptionCheckBox diskbacked = new OptionCheckBox(datasets)
 				.withText("Disk Backing", "Stores datasets in a compressed temp file on disk, lowers memory use")
 				.withSize(OptionSize.LARGE)
 				.withSelection(Settings.isDiskstore())
 				.withListener(Settings::setDiskstore);
 		datasets.add(diskbacked);
-				
+
+		
 		OptionBlock heapBlock = new OptionBlock();
 		ButtonGroup heapGroup = new ButtonGroup();
 		OptionRadioButton heapPercent = new OptionHeapSize(heapBlock, heapGroup, Settings::getHeapSizePercent, Settings::setHeapSizePercent)
@@ -186,13 +188,14 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				
 		
 		
-		return new OptionBlocksPanel(datasets, heapBlock);
+		return new OptionBlocksPanel(multithreading, datasets, heapBlock);
 	}
 	
 	private OptionBlocksPanel makeAppPanel(PlotController controller) {
 	
 		OptionBlock uxBlock = new OptionBlock();
-		var colours = AccentedTheme.accentColours;
+		
+		var colours = AccentedBrightTheme.accentColours;
 		Color accentColour = colours.get(DesktopSettings.getAccentColour()); 
 		if (accentColour == null) {
 			accentColour = colours.get("Blue");
@@ -202,6 +205,14 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withText("Accent Colour", "Requires restart")
 				.withSize(OptionSize.LARGE);
 		uxBlock.add(accent);
+		
+		OptionCheckBox darkmode = new OptionCheckBox(uxBlock)
+				.withText("Dark Mode (Experimental)", "Use a dark user interface theme, requires restart")
+				.withSize(OptionSize.LARGE)
+				.withSelection(DesktopSettings.isDarkMode())
+				.withListener(DesktopSettings::setDarkMode);
+		uxBlock.add(darkmode);
+		
 				
 		
 		OptionBlock startup = new OptionBlock();
@@ -273,13 +284,25 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private OptionBlocksPanel makeCurvefitPanel(PlotController controller) {
 		
-		List<CurveFitterPlugin> fitters = CurveFitterPluginManager.system().getPlugins().stream().map(p -> p.create()).collect(Collectors.toList());
+		List<CurveFitter> fitters = CurveFitterRegistry.system().getPlugins().stream().map(p -> p.create()).collect(Collectors.toList());
 		
 		FittingController fits = controller.fitting();
 		OptionBlock fitBlock = makeRadioBlockForPlugins(fitters, fits::getCurveFitter, fits::setCurveFitter);
 
 		return new OptionBlocksPanel(fitBlock);
 		
+	}
+	
+	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
+
+		FittingController fits = controller.fitting();
+		Supplier<PluginDescriptor<? extends FittingFunction>> getter = fits::getFittingFunction;
+		Consumer<PluginDescriptor<? extends FittingFunction>> setter = fits::setFittingFunction;
+		List<PluginDescriptor<? extends FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
+		
+		OptionBlock fitBlock = this.makeRadioBlockForFitFns(fitters, getter, setter);
+
+		return new OptionBlocksPanel(fitBlock);
 	}
 	
 	private <T extends BoltPlugin> OptionBlock makeRadioBlockForPlugins(List<T> instances, Supplier<T> getter, Consumer<T> setter) {
@@ -293,6 +316,27 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 					.withText(solver.pluginName(), solver.pluginDescription())
 					.withSelection(solver.getClass() == getter.get().getClass())
 					.withListener(() -> setter.accept(solver))
+					.withSize(OptionSize.LARGE);
+			
+			block.add(radio);
+			
+		}
+		
+		return block;
+		
+	}
+	
+	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<PluginDescriptor<? extends FittingFunction>> fitters, Supplier<PluginDescriptor<? extends FittingFunction>> getter, Consumer<PluginDescriptor<? extends FittingFunction>> setter) {
+		
+		OptionBlock block = new OptionBlock();
+		ButtonGroup group = new ButtonGroup();
+		
+		for (var proto : fitters) {
+			
+			OptionRadioButton radio = new OptionRadioButton(block, group)
+					.withText(proto.getName(), proto.getDescription())
+					.withSelection(proto.getUUID().equals(getter.get().getUUID()))
+					.withListener(() -> setter.accept(proto))
 					.withSize(OptionSize.LARGE);
 			
 			block.add(radio);
@@ -324,40 +368,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 
-	
-	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
 
-		
-		
-		List<FittingFunction> fitters = new ArrayList<>(List.of(
-				new PseudoVoigtFittingFunction(),
-				new ConvolvingVoigtFittingFunction(),
-				new GaussianFittingFunction(),
-				new LorentzFittingFunction()
-			));
-		
-		fitters.addAll(Tier.provider().getFittingFunctions());
-		
-		
-		FittingController fitter = controller.fitting();
-		//TODO: maybe change this so that the settings just stores the fitting function instance instead of the class?
-		OptionBlock peakBlock = makeRadioBlock(fitters, 
-				() -> {
-					try {
-						return fitter.getFittingFunction().getDeclaredConstructor().newInstance();
-					} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-							| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					return null;
-				}, 
-				i -> fitter.setFittingFunction(i.getClass())
-			);
-		return new OptionBlocksPanel(peakBlock);
-				
-	}
-	
 	private ClearPanel wrapSettingsInfo(JComponent panel, String info) {
 		var label = new JLabel(info, SwingConstants.CENTER);
 		label.setForeground(Stratus.getTheme().getPalette().getColour("Dark", "1"));
@@ -371,13 +382,9 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 
 	private OptionBlocksPanel makeOverlapPanel(PlotController controller) {
 
-		List<FittingSolver> solvers = List.of(
-				new GreedyFittingSolver(), 
-				new OptimizingFittingSolver(), 
-				new MultisamplingOptimizingFittingSolver()
-			);
+		List<FittingSolver> solvers = FittingSolverRegistry.system().newInstances();
 		
-		OptionBlock overlap = makeRadioBlock(solvers, 
+		OptionBlock overlap = makeRadioBlockForPlugins(solvers, 
 				() -> controller.fitting().getFittingSolver(),
 				controller.fitting()::setFittingSolver
 			);

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,17 +22,20 @@ import org.peakaboo.controller.plotter.io.IOController;
 import org.peakaboo.controller.plotter.notification.NotificationController;
 import org.peakaboo.controller.plotter.notification.NotificationController.Notice;
 import org.peakaboo.controller.plotter.undo.UndoController;
-import org.peakaboo.controller.plotter.view.ChannelCompositeMode;
 import org.peakaboo.controller.plotter.view.ViewController;
-import org.peakaboo.curvefit.curve.fitting.DelegatingROFittingSet;
+import org.peakaboo.controller.session.v2.SavedAppData;
+import org.peakaboo.controller.session.v2.SavedSession;
+import org.peakaboo.curvefit.curve.fitting.DelegatingFittingSetView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
-import org.peakaboo.filter.model.Filter;
-import org.peakaboo.filter.model.FilterContext;
+import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
+import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.SigDigits;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
+import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
+import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -90,18 +94,57 @@ public class PlotController extends EventfulType<PlotUpdateType>
 		calibrationController.addListener(() -> updateListeners(PlotUpdateType.CALIBRATION));
 		ioController.addListener(() -> updateListeners(PlotUpdateType.UI));
 		
-		undoController.setUndoPoint("");
+		undoController.setUndoPoint("", /*distinctChange =*/ true);
 	}
 
+	public SavedSession save() {
+		
+		var extended = new LinkedHashMap<String, Object>();
+		var calibration = calibrationController.save();
+		if (!calibration.isEmpty()) {
+			extended.putAll(calibration);
+		}
+		
+		return new SavedSession(
+			dataController.save(), 
+			filteringController.save(), 
+			fittingController.save(), 
+			viewController.getViewModel(), 
+			SavedAppData.current(), 
+			extended
+		);
+	}
 	
-	public SavedSession getSavedSettings() {
-		return SavedSession.storeFrom(this);
+	/**
+	 * Given a {@link SavedSession} in yaml form, read the saved session and load it's values
+	 */
+	public void load(String yaml, boolean isUndoAction) throws DruthersLoadException {
+		DruthersSerializer.deserialize(yaml, false,
+				new DruthersSerializer.FormatLoader<>(
+						SavedSession.FORMAT, 
+						SavedSession.class, 
+						saved -> load(saved, isUndoAction)
+					)
+			);
+	}
+	
+	/**
+	 * Load the values from this {@link SavedSession} into this controller's model
+	 */
+	public void load(SavedSession saved, boolean isUndoAction) {
+		if (!isUndoAction) undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
+		data().load(saved.data);
+		filtering().load(saved.filters);
+		fitting().load(saved.fittings);
+		view().getViewModel().copy(saved.view);
+		calibration().load(saved.extended);
 	}
 	
 	
-	public Optional<SavedSession> readSavedSettings(String yaml) {
+	@Deprecated(since = "6", forRemoval = true)
+	public static Optional<SavedSessionV1> readSavedSettings(String yaml) {
 		try {
-			return Optional.of(SavedSession.deserialize(yaml));
+			return Optional.of(DruthersSerializer.deserialize(yaml, SavedSessionV1.class));
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.WARNING, "Failed to load saved session", e);
 			return Optional.empty();
@@ -109,14 +152,9 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	}
 
 	
-	public void loadSettings(String data, boolean isUndoAction) {
-		SavedSession saved = SavedSession.deserialize(data);
-		loadSessionSettings(saved, isUndoAction);
-	}
-	
-	
-	public void loadSessionSettings(SavedSession saved, boolean isUndoAction) {
-		if (!isUndoAction) undoController.setUndoPoint("Load Session");
+	@Deprecated(since = "6", forRemoval = true)
+	public void loadSessionSettingsV1(SavedSessionV1 saved, boolean isUndoAction) {
+		if (!isUndoAction) undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
 		
 		List<String> errors = saved.loadInto(this);
 		
@@ -142,25 +180,25 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 * raw data supplied by the data controller.
 	 * @return a Spectrum which contains a scan
 	 */
-	public ReadOnlySpectrum currentScan()
-	{
+	public SpectrumView currentScan() {
 		if (!dataController.hasDataSet()) {
 			return null;
 		}
-		
-		ReadOnlySpectrum originalData = null;
-		
-		if (viewController.getChannelCompositeMode() == ChannelCompositeMode.AVERAGE) {
-			originalData = dataController.getDataSet().getAnalysis().averagePlot();
-		} else if (viewController.getChannelCompositeMode()  == ChannelCompositeMode.MAXIMUM) {
-			originalData = dataController.getDataSet().getAnalysis().maximumPlot();
-		} else {
-			originalData = dataController.getDataSet().getScanData().get(viewController.getScanNumber());
-		}
-		
-		return originalData;
-		
+		return viewController.getChannelViewMode().primaryScan(dataController, viewController);
 	}
+	
+	/**
+	 * Returns a string to spectrum mapping of all additional scans which should be
+	 * processed along with the current scan from
+	 * {@link PlotController#currentScan()}
+	 */
+	public Map<String, SpectrumView> currentOtherScans() {
+		if (!dataController.hasDataSet()) {
+			return null;
+		}
+		return viewController.getChannelViewMode().otherScans(dataController, viewController);
+	}
+	
 	
 
 	/**
@@ -169,55 +207,34 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	public PlotData getPlotData() {
 		
 		PlotData data = new PlotData();
-		PlotSpectra dataForPlot = getDataForPlot();
+		PlotDataSpectra spectra = getPlotDataSpectra();
 		
-		fitting().populatePlotData(data);	
+		fitting().populatePlotData(data);
 		data.consistentScale = view().getConsistentScale();
 		data.dataset = data().getDataSet();
 		data.filters = filtering().getActiveFilters();
-		
-		if (dataForPlot != null) {
-			data.filtered = dataForPlot.filtered;
-			data.raw = dataForPlot.raw;
-			data.deltas = dataForPlot.deltas;
-		}
+		data.spectra = spectra;
 
-		
-		
 		return data;
 	}
-	
-	
-	public static class PlotSpectra {
-		public ReadOnlySpectrum raw;
-		public ReadOnlySpectrum filtered;
-		public Map<Filter, ReadOnlySpectrum> deltas;
-	}
-	
-	public PlotSpectra getDataForPlot()
-	{
 
-		ReadOnlySpectrum originalData = null;
-	
+	public PlotDataSpectra getPlotDataSpectra()	{
 		if (!dataController.hasDataSet() || currentScan() == null) return null;
 
-		
-		// get the original data
-		originalData = currentScan();
-		
-		PlotSpectra spectra = new PlotSpectra();
-		spectra.raw = originalData;
-		spectra.filtered = filteringController.getFilteredPlot();
-		spectra.deltas = filteringController.getFilterDeltas();
-		
-		return spectra;
+		return new PlotDataSpectra(
+				currentScan(), 
+				filteringController.getFilteredPlot(),
+				filteringController.getFilterDeltas(),
+				filteringController.getFilteredOtherPlots()
+			);
 	}
 	
 
 	public FilterContext getFilterContext() {
-		FilterContext ctx = new FilterContext();
-		ctx.dataset = data().getDataSet();
-		ctx.fittings = new DelegatingROFittingSet(fitting().getFittingSelections());
+		FilterContext ctx = new FilterContext(
+				data().getDataSet(), 
+				new DelegatingFittingSetView(fitting().getFittingSelections())
+			);
 		return ctx;
 	}
 	
@@ -238,7 +255,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 	
 	public void writeFitleredSpectrumToCSV(File saveFile) {
-		ReadOnlySpectrum spectrum = currentScan();
+		SpectrumView spectrum = currentScan();
 		FilterSet filters = filtering().getActiveFilters();
 		spectrum = filters.applyFiltersUnsynchronized(spectrum, getFilterContext());
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
@@ -258,7 +275,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 			try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
 				int count = 0;
-				for (ReadOnlySpectrum spectrum : data) {
+				for (SpectrumView spectrum : data) {
 					spectrum = filters.applyFiltersUnsynchronized(spectrum, getFilterContext());
 					writer.write(spectrum.toString(", ") + "\n");
 

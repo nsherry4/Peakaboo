@@ -2,8 +2,8 @@ package org.peakaboo.mapping.filter.plugin.plugins.mathematical;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
@@ -39,9 +39,11 @@ public class PowerMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap source) {
-		ReadOnlySpectrum data = source.getData();
-		Spectrum exped = new ISpectrum(data.size());
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
+		SpectrumView data = source.getData();
+		Spectrum exped = new ArraySpectrum(data.size());
 		float exponent = power.getValue();
 		
 		for (int i = 0; i < data.size(); i++) {
@@ -52,11 +54,6 @@ public class PowerMapFilter extends AbstractMapFilter {
 
 	@Override
 	public boolean isReplottable() {
-		return true;
-	}
-
-	@Override
-	public boolean pluginEnabled() {
 		return true;
 	}
 

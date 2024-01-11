@@ -7,14 +7,16 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 
 public class TickMarkAxisPainter extends AxisPainter
 {
 	
 	public TickFormatter yRightValueBounds, xBottomValueBounds, xTopValueBounds, yLeftValueBounds;
+	private PaletteColour colour;
 	
-	public TickMarkAxisPainter(TickFormatter rightValueBounds, TickFormatter bottomValueBounds,
+	public TickMarkAxisPainter(PaletteColour colour, TickFormatter rightValueBounds, TickFormatter bottomValueBounds,
 			TickFormatter topValueBounds, TickFormatter leftValueBounds)
 	{
 
@@ -24,6 +26,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		this.yLeftValueBounds = leftValueBounds;
 		this.xBottomValueBounds = bottomValueBounds;
 		this.xTopValueBounds = topValueBounds;
+		this.colour = colour;
 				
 
 	}
@@ -53,7 +56,7 @@ public class TickMarkAxisPainter extends AxisPainter
 	
 		p.context.save();
 				
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 		
 			Pair<Float, Float> otherAxisSize = getAxisSizeX(p);
@@ -70,11 +73,17 @@ public class TickMarkAxisPainter extends AxisPainter
 
 			
 			var axisLength = axisSize(axesData.xPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
 			
-				float position = axisXStart + (axisLength * percentAlongAxis);
+				float position = (float) Math.ceil(axisXStart + (axisLength * percentAlongAxis));
 				drawTickLine(p.context, position, axisYStart, position, axisYStart + tickLength);
 		
 				float tickWidth = p.context.getTextWidth(tickText);
@@ -106,7 +115,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		
 		p.context.save();
 			
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 			
 			Pair<Float, Float> otherAxisSize = getAxisSizeX(p);
@@ -122,8 +131,14 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			
 			var axisLength = axisSize(axesData.xPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
 				
 				float position = axisXStart + axisLength * percentAlongAxis;
@@ -160,7 +175,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		
 		p.context.save();
 			
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 		
 			Pair<Float, Float> otherAxisSize = getAxisSizeY(p);
@@ -169,21 +184,35 @@ public class TickMarkAxisPainter extends AxisPainter
 			float axisWidth = getAxisSizeX(p).first;
 			float tickLength = getTickLength(p.dr, tick);
 			
-			
+			//TODO backwards? instead of figuring out what positions to draw at and then asking for a number, we should
+			// be figuring out what numbers we want to draw and then translating them into drawing coords
+			// Maybe the tick mark formatter should do that?
 			var axisLength = axisSize(axesData.yPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = 1f - mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
 				
-				var position = axesData.yPositionBounds.start + otherAxisSize.first + axisLength * percentAlongAxis;
+				Bounds<Float> drawRangeY = new Bounds<Float>(
+						axesData.yPositionBounds.start + otherAxisSize.first, 
+						axesData.yPositionBounds.end - otherAxisSize.second
+					);
+				float drawHeight = drawRangeY.end - drawRangeY.start;
+				float yPosition = (float) Math.floor(drawRangeY.start + percentAlongAxis * drawHeight);
 
-				if (position - p.context.getFontAscent() / 2.0 > 0) {
-					drawTickLine(p.context, axisStart + axisWidth - tickLength, position, axisStart + axisWidth, position);
+				
+				if (yPosition - p.context.getFontAscent() / 2.0 > 0) {
+					drawTickLine(p.context, axisStart + axisWidth - tickLength, yPosition, axisStart + axisWidth, yPosition);
 					float textWidth = p.context.getTextWidth(tickText);
 
 					if (!tick.isTextRotated()) {
 						float tx = axisStart + axisWidth - tickLength*1.5f;
-						float ty = position;
+						float ty = yPosition;
 						float px = -textWidth/2f;
 						float py = 0;
 						p.context.save();
@@ -193,7 +222,7 @@ public class TickMarkAxisPainter extends AxisPainter
 						p.context.restore();
 					} else {
 						float xTextPos = axisStart + axisWidth - tickLength*1.5f - textWidth;
-						float yTextPos = position + p.context.getFontAscent() / 2.0f;
+						float yTextPos = yPosition + p.context.getFontAscent() / 2.0f;
 						p.context.writeText(tickText, xTextPos, yTextPos);
 					}
 							
@@ -215,7 +244,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		
 		p.context.save();
 			
-			p.context.setSource(0,0,0);
+			p.context.setSource(this.colour);
 			p.context.useMonoFont();
 			
 			Pair<Float, Float> otherAxisSize = getAxisSizeY(p);
@@ -226,19 +255,30 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			
 			var axisLength = axisSize(axesData.yPositionBounds, otherAxisSize);
-			for (var mark : tick.getTickMarks(p, axisLength)) {
+			for (var mark : tick.getTickMarks(p, axisLength, false)) {
+				if (mark.minor()) {
+					continue;
+				}
 				float percentAlongAxis = 1f - mark.position();
+				if (percentAlongAxis < 0f || percentAlongAxis > 1f) {
+					continue;
+				}
 				String tickText = mark.value();
+							
+				Bounds<Float> drawRangeY = new Bounds<Float>(
+						axesData.yPositionBounds.start + otherAxisSize.first, 
+						axesData.yPositionBounds.end - otherAxisSize.second
+					);
+				float drawHeight = drawRangeY.end - drawRangeY.start;
+				float yPosition = (float) Math.floor(drawRangeY.start + percentAlongAxis * drawHeight);
 				
-				var position = axesData.yPositionBounds.start + otherAxisSize.first + axisLength * percentAlongAxis;
-				
-				if (position - p.context.getFontAscent() / 2.0 > 0) {
-					drawTickLine(p.context, axisStart, position, axisStart + tickLength, position);
+				if (yPosition - p.context.getFontAscent() / 2.0 > 0) {
+					drawTickLine(p.context, axisStart, yPosition, axisStart + tickLength, yPosition);
 					float textWidth = p.context.getTextWidth(tickText);
 					
 					if (!tick.isTextRotated()) {
 						float tx = axisStart + axisWidth - tickLength*2.5f;
-						float ty = position;
+						float ty = yPosition;
 						float px = -textWidth/2f;
 						float py = 0;
 						p.context.save();
@@ -247,7 +287,7 @@ public class TickMarkAxisPainter extends AxisPainter
 						p.context.writeText(tickText, px, py);
 						p.context.restore();
 					} else {
-						p.context.writeText(tickText, axisStart + tickLength*1.5f, position + p.context.getFontAscent() / 2.0f);
+						p.context.writeText(tickText, axisStart + tickLength*1.5f, yPosition + p.context.getFontAscent() / 2.0f);
 					}
 				}
 				

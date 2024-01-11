@@ -17,19 +17,16 @@ import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
 import org.peakaboo.controller.mapper.fitting.modes.CompositeModeController;
-import org.peakaboo.controller.mapper.fitting.modes.ModeController;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.mapper.selection.MapSelectionController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.controller.plotter.SavedSession;
+import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
-import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.Mapper;
-import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.util.Mutable;
@@ -47,7 +44,7 @@ import org.peakaboo.framework.plural.executor.eachindex.implementations.SimpleEa
 public class MappingController extends EventfulType<MapUpdateType>
 {
 	
-	private static final int SPECTRUM_HEIGHT = 15;
+	private static final int SPECTRUM_HEIGHT = 10;
 
 	/*
 	 * Generally, the flow from start to finish with these controllers is:
@@ -130,7 +127,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 	
 	
 	public SavedSession getPlotSavedSettings() {
-		return plotcontroller.getSavedSettings();
+		return plotcontroller.save();
 	}
 	
 	
@@ -149,6 +146,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 		
 		settings.scalemode = this.getFitting().getMapScaleMode();
 		settings.monochrome = this.getSettings().getMonochrome();
+		settings.darkmode = this.getParentPlotController().view().getDarkMode();
 		settings.contours = this.getSettings().getContours();
 		settings.contourSteps = this.getSettings().getSpectrumSteps();
 		

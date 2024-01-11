@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.framework.cyclops.FloatException;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -108,12 +108,12 @@ public class FilterSet implements Iterable<Filter> {
 
 
 	
-	public synchronized ReadOnlySpectrum applyFilters(ReadOnlySpectrum data, FilterContext ctx) {
+	public synchronized SpectrumView applyFilters(SpectrumView data, FilterContext ctx) {
 		return applyFiltersUnsynchronized(data, ctx);
 	}
 
 	
-	public ReadOnlySpectrum applyFiltersUnsynchronized(ReadOnlySpectrum data, FilterContext ctx) {
+	public SpectrumView applyFiltersUnsynchronized(SpectrumView data, FilterContext ctx) {
 		
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled() && !f.isPreviewOnly()) {
@@ -128,7 +128,7 @@ public class FilterSet implements Iterable<Filter> {
 	}
 	
 	//Scan the Spectrum for Infinity and NaN values, and replace them with 0 if found
-	private ReadOnlySpectrum correctNonFinite(ReadOnlySpectrum data) {
+	private SpectrumView correctNonFinite(SpectrumView data) {
 		//Scan the results for Infinity and NaN values, and replace them with 0 if found
 		Spectrum corrected = null;
 		for (int i = 0; i < data.size(); i++) {
@@ -136,7 +136,7 @@ public class FilterSet implements Iterable<Filter> {
 			if (!FloatException.valid(v)) {
 				//only incur the copy penalty if needed
 				if (corrected == null) {
-					corrected = new ISpectrum(data);
+					corrected = new ArraySpectrum(data);
 				}
 				corrected.set(i, 0);
 			}
@@ -159,13 +159,13 @@ public class FilterSet implements Iterable<Filter> {
 	}
 
 
-	public Map<Filter, ReadOnlySpectrum> calculateDeltas(ReadOnlySpectrum data, FilterContext ctx) {
+	public Map<Filter, SpectrumView> calculateDeltas(SpectrumView data, FilterContext ctx) {
 		
-		Map<Filter, ReadOnlySpectrum> deltas = new LinkedHashMap<>();
+		Map<Filter, SpectrumView> deltas = new LinkedHashMap<>();
 		
-		ReadOnlySpectrum last = data;
-		ReadOnlySpectrum current = null;
-		ReadOnlySpectrum delta = null;
+		SpectrumView last = data;
+		SpectrumView current = null;
+		SpectrumView delta = null;
 		
 		for (Filter f : filters) {
 			if (f != null && f.isEnabled()) {

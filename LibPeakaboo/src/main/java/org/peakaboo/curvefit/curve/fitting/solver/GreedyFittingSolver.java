@@ -3,53 +3,69 @@ package org.peakaboo.curvefit.curve.fitting.solver;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.curvefit.curve.fitting.CurveView;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.curve.fitting.ROCurve;
-import org.peakaboo.curvefit.curve.fitting.ROFittingParameters;
-import org.peakaboo.curvefit.curve.fitting.ROFittingSet;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterPlugin;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
+import org.peakaboo.curvefit.curve.fitting.FittingResultView;
+import org.peakaboo.curvefit.curve.fitting.FittingSetView;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class GreedyFittingSolver implements FittingSolver {
 
 
-	public String name() {
+	public String pluginName() {
 		return "Greedy";
 	}
 	
 	@Override
 	public String toString() {
-		return name();
+		return pluginName();
 	}
 	
 	@Override
-	public String description() {
+	public String pluginDescription() {
 		return "Sequentially matches fittings to as much signal as they will fit";
 	}
 	
+	@Override
+	public String pluginVersion() {
+		return "1.0";
+	}
+	
+	@Override
+	public String pluginUUID() {
+		return "648ed04b-83fa-4582-8d25-b67c4770e4ed";
+	}
+
 	/**
 	 * Fit this FittingSet against spectrum data
 	 */
 	@Override
-	public FittingResultSet solve(ReadOnlySpectrum data, ROFittingSet fittings, CurveFitterPlugin fitter) {
+	public FittingResultSetView solve(FittingSolverContext ctx) {
 
+		SpectrumView data = ctx.data();
+		FittingSetView fittings = ctx.fittings();
+		CurveFitter fitter = ctx.fitter();
 		
-		Spectrum resultTotalFit = new ISpectrum(data.size());
-		List<FittingResult> resultFits = new ArrayList<>();
-		ROFittingParameters resultParameters = fittings.getFittingParameters().copy();
+		Spectrum resultTotalFit = new ArraySpectrum(data.size());
+		List<FittingResultView> resultFits = new ArrayList<>();
+		FittingParametersView resultParameters = fittings.getFittingParameters().copy();
 		
-		Spectrum remainder = new ISpectrum(data);
-		Spectrum scaled = new ISpectrum(data.size());
+		Spectrum remainder = new ArraySpectrum(data);
+		Spectrum scaled = new ArraySpectrum(data.size());
 		
 		// calculate the curves
-		for (ROCurve curve : fittings.getCurves()) {
+		for (CurveView curve : fittings.getCurves()) {
 			if (!curve.getTransitionSeries().isVisible()) { continue; }
 			
-			FittingResult result = fitter.fit(remainder, curve);
+			FittingResult result = fitter.fit(new CurveFitterContext(remainder, curve));
 			curve.scaleInto(result.getCurveScale(), scaled);
 			SpectrumCalculations.subtractLists_inplace(remainder, scaled, 0.0f);
 			
@@ -59,7 +75,7 @@ public class GreedyFittingSolver implements FittingSolver {
 		}
 
 		
-		FittingResultSet results = new FittingResultSet(resultTotalFit, remainder, resultFits, resultParameters);
+		FittingResultSetView results = new FittingResultSet(resultTotalFit, remainder, resultFits, resultParameters);
 		return results;
 		
 	}

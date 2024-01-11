@@ -38,13 +38,10 @@ public class NormalizationMapFilter extends AbstractMapFilter {
 	}
 	
 	@Override
-	public AreaMap filter(AreaMap source) {
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		
 		return new AreaMap(SpectrumCalculations.addToList(source.getData(), level.getValue()), source);
-	}
-
-	@Override
-	public boolean pluginEnabled() {
-		return true;
 	}
 
 	@Override

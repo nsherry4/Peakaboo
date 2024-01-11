@@ -1,48 +1,61 @@
 package org.peakaboo.controller.plotter.view;
 
+import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 
 public class SessionViewModel {
 
 	public int					scanNumber;
-	public ChannelCompositeMode	channelComposite;
+	ChannelViewMode				channelView;
 	public boolean				backgroundShowOriginal;
 	public float				zoom;
-	public boolean				lockPlotHeight;
 	public boolean				logTransform;
 	public boolean				showTitle;
 	
 	public SessionViewModel() {
 
 		scanNumber = 0;
-		channelComposite = ChannelCompositeMode.AVERAGE;
+		channelView = ChannelViewModeRegistry.system().getPresetInstance();
 		backgroundShowOriginal = false;
 		zoom = 1.0f;
-		lockPlotHeight = true;
 		logTransform = true;
 		showTitle = false;
 		
 	}
+
+	// TODO replace these methods with better plugin serialization? There are no
+	// parameters to serialize with this, which makes it easier to do by UUID for
+	// now.
+	public SavedPlugin getChannelView() {
+		return new SavedPlugin(this.channelView);
+	}
+	public void setChannelView(SavedPlugin plugin) {
+		var proto = ChannelViewModeRegistry.system().getByUUID(plugin.uuid);
+		if (proto != null) {
+			this.channelView = proto.create();
+		} else {
+			this.channelView = ChannelViewModeRegistry.system().getPresetInstance();
+		}
+	}
+	public void setChannelView(String modeUUID) {
+		var proto = ChannelViewModeRegistry.system().getByUUID(modeUUID);
+		if (proto != null) {
+			this.channelView = proto.create();
+		} else {
+			this.channelView = ChannelViewModeRegistry.system().getPresetInstance();
+		}
+	}
 	
-		
-	//For JYAML Serialization Purposes -- Needs this to handle enums
-	public String getChannelComposite()
-	{
-		return channelComposite.name();
+	public ChannelViewMode channelView() {
+		return this.channelView;
 	}
-
-
-	public void setChannelComposite(String channelComposite)
-	{
-		this.channelComposite = ChannelCompositeMode.valueOf(channelComposite);
-	}
-
-
+	
 	public void copy(SessionViewModel view) {
 		this.scanNumber = view.scanNumber;
-		this.channelComposite = view.channelComposite;
+		this.channelView = view.channelView;
 		this.backgroundShowOriginal = view.backgroundShowOriginal;
 		this.zoom = view.zoom;
-		this.lockPlotHeight = view.lockPlotHeight;
 		this.logTransform = view.logTransform;
 		this.showTitle = view.showTitle;
 	}

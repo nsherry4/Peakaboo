@@ -37,6 +37,10 @@ public interface FluentAPI<
 		return withIcon(stock.path(), stock.toIconName(), size, null);
 	}
 
+	default B withIcon(IconSet stock, Color color) {
+		return withIcon(stock.path(), stock.toIconName(), getComponentConfig().size, color);
+	}
+	
 	default B withIcon(IconSet stock, IconSize size, Color color) {
 		return withIcon(stock.path(), stock.toIconName(), size, color);
 	}

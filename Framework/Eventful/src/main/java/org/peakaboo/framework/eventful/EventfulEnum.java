@@ -7,22 +7,41 @@ import java.util.function.Consumer;
 public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 {
 
-	protected final List<EventfulEnumListener<T>>	listeners;
+	protected final List<EventfulEnumListener<T>> listeners;
+	protected final List<EventfulListener> simpleListeners;
 	private Consumer<Runnable> uiThreadRunnerOverride = null;
 	
 	public EventfulEnum() {
 		listeners = new LinkedList<EventfulEnumListener<T>>();
+		simpleListeners = new LinkedList<EventfulListener>();
 	}
 	
-	public synchronized void addListener(EventfulEnumListener<T> l)
-	{
+	
+	@Override
+	public synchronized void addListener(EventfulListener l) {
+		simpleListeners.add(l);
+	}
+	
+	@Override
+	public synchronized void addListener(EventfulEnumListener<T> l) {
 		listeners.add(l);
 	}
 
 
+
 	//Done on the event thread on purpose
-	public synchronized void removeListener(final EventfulEnumListener<T> l)
-	{
+	@Override
+	public synchronized void removeListener(EventfulListener l) {
+		getUIThreadRunner().accept(() -> { 
+			synchronized(EventfulEnum.this) { 
+					simpleListeners.remove(l);
+			}
+		});
+	}
+	
+	//Done on the event thread on purpose
+	@Override
+	public synchronized void removeListener(final EventfulEnumListener<T> l) {
 		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulEnum.this) { 
 					listeners.remove(l);
@@ -31,8 +50,8 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	}
 
 	//Done on the event thread on purpose
-	public synchronized void removeAllListeners()
-	{
+	@Override
+	public synchronized void removeAllListeners() {
 		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulEnum.this) { 
 					listeners.clear();
@@ -41,15 +60,18 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	}
 
 	
-	public void updateListeners(final T message)
-	{
+	@Override
+	public void updateListeners(final T message) {
 
 		if (listeners.size() == 0) return;
 
-		getUIThreadRunner().accept(() -> { 
-			synchronized(EventfulEnum.this) {	
+		getUIThreadRunner().accept(() -> {
+			synchronized(EventfulEnum.this) {
 				for (EventfulEnumListener<T> l : listeners) {		
 					l.change(message);
+				}
+				for (EventfulListener l : simpleListeners) {		
+					l.change();
 				}
 			}
 		});
@@ -70,5 +92,10 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	public void setUIThreadRunnerOverride(Consumer<Runnable> override) {
 		uiThreadRunnerOverride = override;
 	}
+
+
+
+
+
 	
 }

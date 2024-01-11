@@ -1,15 +1,21 @@
 package org.peakaboo.controller.plotter.calibration;
 
-import org.peakaboo.calibration.DetectorProfile;
-import org.peakaboo.calibration.SavedCalibrationSession;
-import org.peakaboo.framework.eventful.IEventful;
+import java.io.IOException;
+import java.util.Map;
 
-public interface CalibrationController extends IEventful {
+import org.peakaboo.calibration.DetectorProfile;
+import org.peakaboo.calibration.SavedCalibrationSessionV1;
+import org.peakaboo.framework.eventful.IEventfulBeacon;
+
+public interface CalibrationController extends IEventfulBeacon {
 
 	boolean hasDetectorProfile();
 	DetectorProfile getDetectorProfile();
 
-	public SavedCalibrationSession toSaved();
-	public void loadSaved(SavedCalibrationSession saved);
+	@Deprecated(since="6", forRemoval = true)
+	public void loadSavedV1(SavedCalibrationSessionV1 saved) throws IOException;
+	
+	Map<String, Object> save();
+	void load(Map<String, Object> sessionExtended);
 	
 }

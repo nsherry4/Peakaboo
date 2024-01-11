@@ -7,16 +7,15 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.SeparatorStyle;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 //From Handbook of X-Ray Spectrometry
 public class SavitskyGolayNoiseFilter extends AbstractFilter {
@@ -52,7 +51,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 		
 		reach = new Parameter<>("Half-Window Size", new IntegerStyle(), 4, this::validate);
 		order = new Parameter<>("Polynomial Order", new IntegerStyle(), 3, this::validate);
-		Parameter<?> sep = new Parameter<>(null, new SeparatorStyle(), 0);
+		Parameter<?> sep = new Parameter<>("separator", new SeparatorStyle(), 0);
 		ignore = new Parameter<>("Only Smooth Weak Signal", new BooleanStyle(), false, this::validate);
 		max = new Parameter<>("Smoothing Cutoff: (counts)", new RealStyle(), 4.0f, this::validate);
 		max.setEnabled(false);
@@ -99,12 +98,6 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 		return true;
 	}
 
-	
-	
-	@Override
-	public boolean pluginEnabled() {
-		return true;
-	}
 
 	@Override
 	public String pluginVersion() {
@@ -112,12 +105,12 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	}
 	
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "cf3b0cd5-ab62-4d2c-9d93-fafaf3ab6400";
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		return fastSavitskyGolayFilter(data, reach.getValue(), ignore.getValue() ? max.getValue() : Float.MAX_VALUE);
 	}
 
@@ -145,15 +138,15 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	}
 	
 
-	public Spectrum fastSavitskyGolayFilter(ReadOnlySpectrum data, int reach, float max) {
+	public Spectrum fastSavitskyGolayFilter(SpectrumView data, int reach, float max) {
 
 		float[] coefs = getCoeffs();
 		if (coefs == null) {
 			PeakabooLog.get().log(Level.WARNING, "Failed to load Savitsky Golay coefficients");
-			return new ISpectrum(data);
+			return new ArraySpectrum(data);
 		}
 		
-		Spectrum out = new ISpectrum(data.size());
+		Spectrum out = new ArraySpectrum(data.size());
 		
 		for (int i = 0; i < data.size(); i++) {
 

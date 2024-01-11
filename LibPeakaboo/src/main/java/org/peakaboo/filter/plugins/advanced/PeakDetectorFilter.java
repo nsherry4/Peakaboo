@@ -7,11 +7,9 @@ import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.filter.model.AbstractFilter;
-import org.peakaboo.filter.model.FilterContext;
 import org.peakaboo.filter.model.FilterDescriptor;
-import org.peakaboo.filter.model.FilterType;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 public class PeakDetectorFilter extends AbstractFilter {
@@ -53,15 +51,15 @@ public class PeakDetectorFilter extends AbstractFilter {
 	}
 
 	@Override
-	public String pluginUUID() {
+	public String getFilterUUID() {
 		return "d2a59db0-66a5-4ff0-aac6-a9b8206098ca";
 	}
 
 	@Override
-	protected ReadOnlySpectrum filterApplyTo(ReadOnlySpectrum data, Optional<FilterContext> ctx) {
+	protected SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
 		
 		List<Integer> indexes = new DerivativePeakSearcher().search(data);
-		Spectrum peaks = new ISpectrum(data.size());
+		Spectrum peaks = new ArraySpectrum(data.size());
 		for (int i : indexes) {
 			peaks.set(i, 100);
 		}

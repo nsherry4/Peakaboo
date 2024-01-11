@@ -31,14 +31,14 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>1.32</version>
+			<version>2.2</version>
 		</dependency>
 
 		<!-- Note that while Kryo 5.x is out, it requires changes to Scratch which will require more time -->
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
 			<artifactId>kryo</artifactId>
-			<version>4.0.2</version>
+			<version>5.5.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.lz4/lz4-java -->
@@ -52,15 +52,14 @@
 		<dependency>
 			<groupId>org.xerial.snappy</groupId>
 			<artifactId>snappy-java</artifactId>
-			<version>1.1.8.4</version>
+			<version>1.1.10.5</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/de.ruedigermoeller/fst -->
-		<!-- Should be updated to 3.x, but it bumps the minimum java version along with it. -->
 		<dependency>
 			<groupId>de.ruedigermoeller</groupId>
 			<artifactId>fst</artifactId>
-			<version>2.57</version>
+			<version>3.0.1</version>
 		</dependency>
 
 
@@ -74,8 +73,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
-					<source>17</source>
-					<target>17</target>
+					<source>21</source>
+					<target>21</target>
 				</configuration>
 			</plugin>
 

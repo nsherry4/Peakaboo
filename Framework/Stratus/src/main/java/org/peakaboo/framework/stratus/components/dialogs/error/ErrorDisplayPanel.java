@@ -1,7 +1,6 @@
 package org.peakaboo.framework.stratus.components.dialogs.error;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -44,16 +43,22 @@ public class ErrorDisplayPanel extends JPanel {
 		
 		JPanel north = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
 		
-		String realText = "";
-		if (t.getMessage() != null) {
-			realText = "<div style='font-size: 115%; padding-top: 0px; padding-bottom: 5px;'>" + t.getMessage() + "</div>";
-		}
+		String title = "<div style='font-size: 115%; padding-top: 0px; padding-bottom: 5px;'>Error of type " + t.getClass().getSimpleName() + "</div>";
 		if (msg == null) {
-			msg = "The problem is of type " + t.getClass().getSimpleName();
+			msg = "";
 		}
-		realText += "<div>" + msg + "</div>";
-		realText = "<html>" + realText + "</html>";
-		JLabel lblMessage = new JLabel(realText);
+		String longMessage = "";
+		if (t.getMessage() != null) {
+			longMessage = t.getMessage();
+		}
+		if (longMessage == null) {
+			longMessage = "";
+		}
+		if (longMessage.length() > 100) {
+			longMessage = longMessage.substring(0, 99) + "…";
+		}
+		String topText = "<html>" + title + "<div>" + msg + "</div>" + longMessage + "</div></html>";
+		JLabel lblMessage = new JLabel(topText);
 		lblMessage.setBorder(new EmptyBorder(Spacing.medium, 0, Spacing.medium, 0));
 		north.add(lblMessage, BorderLayout.CENTER);
 		

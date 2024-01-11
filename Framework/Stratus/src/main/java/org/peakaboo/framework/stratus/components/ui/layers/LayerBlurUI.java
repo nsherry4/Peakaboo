@@ -5,30 +5,30 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
+import java.awt.geom.RoundRectangle2D;
+import java.util.Optional;
 
 import javax.swing.JComponent;
 import javax.swing.plaf.LayerUI;
 
 import org.jdesktop.swingx.image.AbstractFilter;
-import org.jdesktop.swingx.image.FastBlurFilter;
-import org.jdesktop.swingx.util.GraphicsUtilities;
+import org.jdesktop.swingx.image.StackBlurFilter;
 import org.peakaboo.framework.stratus.api.ManagedImageBuffer;
 
 class LayerBlurUI<T extends Component> extends LayerUI<T> {
-	private FastBlurFilter mOperation;
+	private AbstractFilter mOperation;
 	
 	private ManagedImageBuffer paintBufferer, blurBufferer;
 
 	private LayerPanel parent;
 	private Component component;
 	private long lastTime;
+	private Optional<Layer> lastBlocker;
 	
 	public LayerBlurUI(LayerPanel parent, Component component) {
 		this.parent = parent;
 		this.component = component;
-		mOperation = new FastBlurFilter(1);
+		mOperation = new StackBlurFilter(2, 2);
 		paintBufferer = new ManagedImageBuffer();
 		blurBufferer = new ManagedImageBuffer();
 	}
@@ -36,11 +36,14 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	@Override
 	public void paint(Graphics g, JComponent c) {
 		Layer layer = parent.layerForComponent(this.component);
-			
+		
 		if (!parent.isLayerBlocked(layer)) {
 			super.paint(g, c);
 			
 		} else {
+
+			Optional<Layer> blocker = parent.getBlockingLayer(layer);
+			
 			int w = c.getWidth();
 			int h = c.getHeight();
 	
@@ -52,15 +55,37 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 			blurBufferer.resize(w, h);
 			var blurBuffer = blurBufferer.get();
 	
-			//If the buffer needs repainting or the last image ages out, repaint
+			
+			
+			//Calculate if we should repaint or just redraw from buffer
+			boolean doRepaint = false;	
 			long time = System.currentTimeMillis();
-			if (time - lastTime > 500 || !blurBufferer.isPainted()) {
+			int repaintInterval = 500;
+			doRepaint |= (time - lastTime > repaintInterval);
+			doRepaint |= !blurBufferer.isPainted();
+			doRepaint |= !blocker.equals(lastBlocker);
+
+			
+			if (doRepaint) {
 				paintBufferer.clear();
 				var paintBuffer = paintBufferer.get();
 				
 				//Paint the window contents to the first buffer
 				Graphics2D pg = paintBuffer.createGraphics();
 				super.paint(pg, c);
+				
+				//Paint the shadow of the above layer
+				Optional<Layer> optAboveLayer = parent.getBlockingLayer(layer);
+				if (optAboveLayer.isPresent()) {
+					Layer aboveLayer = parent.getBlockingLayer(layer).get();
+					var above = aboveLayer.getOuterComponent();
+					if (above != null) {
+						var shadow = new RoundRectangle2D.Float(above.getX(), above.getY() + 1, above.getWidth(), above.getHeight() + 0.5f, aboveLayer.getCornerRadius(), aboveLayer.getCornerRadius());
+						pg.setColor(new Color(0x66000000, true));
+						pg.fill(shadow);
+					}
+				}
+				
 				pg.dispose();
 				paintBufferer.markPainted();
 				
@@ -70,11 +95,10 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				Graphics2D bg = blurBuffer.createGraphics();
 				
 				//First draw the painter buffer to the blur buffer, blurring (usually)
-				if (LayerPanel.blurLowerLayers) {
-					//mOperation.setSize(w, h);
-					bg.drawImage(paintBuffer, mOperation, 0, 0);
-				} else {
+				if (LayerPanel.lowGraphicsMode) {
 					bg.drawImage(paintBuffer, null, 0, 0);
+				} else {
+					bg.drawImage(paintBuffer, mOperation, 0, 0);
 				}
 				
 				//Then darken the background
@@ -87,7 +111,8 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				blurBufferer.markPainted();
 				
 				//Reset the time of the last buffer update
-				lastTime = time;	
+				lastTime = time;
+				lastBlocker = blocker;
 			}
 			
 			Graphics2D g2 = (Graphics2D) g.create();
@@ -95,6 +120,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 			g2.drawImage(blurBuffer, null, 0, 0);
 			
 			g2.dispose();
+			
 			
 		}
 	}

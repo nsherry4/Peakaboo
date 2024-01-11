@@ -4,8 +4,8 @@ import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.spectrum.ISpectrum;
-import org.peakaboo.framework.cyclops.spectrum.ReadOnlySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.model.AreaMap;
 
@@ -47,9 +47,10 @@ public abstract class AbstractConvolvingMapFilter extends AbstractMapFilter {
 	protected abstract float[][] getKernel(float intensity);
 	
 	@Override
-	public AreaMap filter(AreaMap source) {
-		ReadOnlySpectrum data = source.getData();
-		Spectrum filtered = new ISpectrum(data.size());
+	public AreaMap filter(MapFilterContext ctx) {
+		AreaMap source = ctx.map();
+		SpectrumView data = source.getData();
+		Spectrum filtered = new ArraySpectrum(data.size());
 		GridPerspective<Float> grid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
 
 		//apply the intenisty value to 

@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.interaction.Interaction;
 import org.peakaboo.dataset.source.model.components.metadata.Metadata;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
-import org.peakaboo.dataset.source.model.datafile.DataFile;
 import org.peakaboo.framework.autodialog.model.Group;
 
 public class DelegatingDataSource implements DataSource {
@@ -57,8 +58,9 @@ public class DelegatingDataSource implements DataSource {
 	}
 
 
-	public void read(List<DataFile> files) throws DataSourceReadException, IOException, InterruptedException {
-		backer.read(files);
+	@Override
+	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
+		backer.read(ctx);
 	}
 
 	@Override
@@ -72,7 +74,7 @@ public class DelegatingDataSource implements DataSource {
 	}
 	
 	@Override
-	public Optional<Group> getParameters(List<DataFile> paths) throws DataSourceReadException, IOException {
+	public Optional<Group> getParameters(List<DataInputAdapter> paths) throws DataSourceReadException, IOException {
 		return backer.getParameters(paths);
 	}
 	

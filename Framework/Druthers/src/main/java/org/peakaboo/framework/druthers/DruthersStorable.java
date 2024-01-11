@@ -1,16 +1,11 @@
 package org.peakaboo.framework.druthers;
 
-import org.peakaboo.framework.druthers.serialize.YamlSerializer;
+import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 
-public abstract class DruthersStorable {
+public interface DruthersStorable {
 
-	public static <T extends DruthersStorable> T deserialize(String yaml) {
-		return YamlSerializer.deserialize(yaml);
+	default <T extends DruthersStorable> String serialize() {
+		return DruthersSerializer.serialize(this);
 	}
-	
-	public <T extends DruthersStorable> String serialize() {
-		return YamlSerializer.serialize(this);
-	}
-	
-	
+		
 }
