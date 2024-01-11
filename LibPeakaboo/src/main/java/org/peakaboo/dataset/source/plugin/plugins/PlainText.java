@@ -71,21 +71,24 @@ public class PlainText extends AbstractDataSource
 
 	@Override
 	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
-		List<DataInputAdapter> files = ctx.inputs();
+		List<DataInputAdapter> inputs = ctx.inputs();
 		
-		if (files == null) throw new UnsupportedOperationException();
-		if (files.size() == 0) throw new UnsupportedOperationException();
-		if (files.size() > 1) throw new UnsupportedOperationException();
+		if (inputs == null) throw new UnsupportedOperationException();
+		if (inputs.size() == 0) throw new UnsupportedOperationException();
+		if (inputs.size() > 1) throw new UnsupportedOperationException();
 		
-		DataInputAdapter file = files.get(0);
-		
-		var filesize = file.size();
-		int lineEstimate = -1;
-		
+		DataInputAdapter file = inputs.get(0);
 		scandata = new PipelineScanData(file.getBasename());
 		
-		
-		
+		// Variables for getting a linecount estimate 
+		final int LINE_ESTIMATE_SAMPLE_SIZE = 5;
+		var filesize = file.size();
+		Spectrum linesizes = new ArraySpectrum(LINE_ESTIMATE_SAMPLE_SIZE);
+		int linecountEstimate = -1;
+		boolean hasLinecountEstimate = false;
+
+
+		// CSV parser used to read this file
 		CsvParserSettings settings = new CsvParserSettings();
 		//Note: the order of the delimiters here matters (!) because it will 
 		//determine the delimiter chosen in the event of a tie. I believe that
@@ -99,23 +102,33 @@ public class PlainText extends AbstractDataSource
 		settings.setMaxCharsPerColumn(24);
 		CsvParser parser = new CsvParser(settings);
 		
-		InputStream instream = file.getInputStream();;		
+		InputStream instream = file.getInputStream();
 
 		int index = 0;
 		int readcount = 0;
+		int notificationInterval = 50;
 		for (String[] row : parser.iterate(instream)) {
 			int scanIndex = index++;
 			
-			if (lineEstimate == -1 && filesize.isPresent()) {
-				lineEstimate = ((int)filesize.get().longValue()) / (String.join(" ", row).length());
-				getInteraction().notifyScanCount(lineEstimate);
+			// Estimating the number of rows by the length of the first n rows against the
+			// length of the whole file
+			if (!hasLinecountEstimate && filesize.isPresent()) {
+				// Track each linesize
+				linesizes.add(String.join(" ", row).length());
+				
+				// After we have a few data points, calculate an average linesize and do the
+				// calculation.
+				if (readcount == LINE_ESTIMATE_SAMPLE_SIZE) {
+					hasLinecountEstimate = true;
+					float averageLinesize = linesizes.sum() / linesizes.size();
+					float bytes = filesize.get().floatValue();
+					linecountEstimate = (int)Math.round(bytes / averageLinesize);
+					getInteraction().notifyScanCount(linecountEstimate);
+					notificationInterval = (int) Math.min(Math.max(notificationInterval, linecountEstimate / 100f), 1000);
+				}
 			}
 			
-			if (getInteraction().checkReadAborted()) {
-				scandata.abort();
-				break; 
-			}
-			
+
 			
 			char delim = parser.getDetectedFormat().getDelimiter();
 			ScanEntry entry = new PlainTextScanEntry(scanIndex, row, delim, sizes);
@@ -124,9 +137,19 @@ public class PlainText extends AbstractDataSource
 			scandata.submit(entry);
 			readcount++;
 			
-			if (readcount == 50) {
+			// Every so often we check in with a listener-ish component
+			if (readcount == notificationInterval) {
+				
+				// Progress
 				getInteraction().notifyScanRead(readcount);
 				readcount = 0;
+				
+				// Check for abort request
+				if (getInteraction().checkReadAborted()) {
+					scandata.abort();
+					break; 
+				}
+				
 			}
 			
 		}
