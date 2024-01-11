@@ -37,11 +37,11 @@ public class Version {
 	
 	public final static int versionNoMajor = 5;
 	public final static int versionNoMinor = 99;
-	public final static int versionNoPoint = 2;
+	public final static int versionNoPoint = 3;
 	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
 	public final static String program_name = "PeakabooDev";
 	
-	public final static ReleaseType releaseType = ReleaseType.DEVELOPMENT;
+	public final static ReleaseType releaseType = ReleaseType.CANDIDATE;
 	
 
 
