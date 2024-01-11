@@ -46,7 +46,7 @@ public class BasicTierProvider implements TierProvider {
 
 	@Override
 	public String tierName() {
-		return "Community Edition";
+		return "XRF Analysis";
 	}
 
 	@Override
