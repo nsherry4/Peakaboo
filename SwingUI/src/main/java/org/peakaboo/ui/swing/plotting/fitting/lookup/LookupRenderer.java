@@ -108,25 +108,21 @@ class LookupRenderer extends DefaultTreeCellRenderer {
 	
 	static class TSRenderer extends ClearPanel {
 
-		private JLabel name;
 		JCheckBox check;
 		private boolean editor = false;
 		
 		public TSRenderer(boolean editor) {
 			this.editor = editor;
 			setLayout(new FlowLayout(WEST, Spacing.small, Spacing.small));
-			name = new JLabel();
-			name.setBorder(new EmptyBorder(0, Spacing.small, 0, 0));
 			check = new JCheckBox();
 			add(check);
-			add(name);
 			
 			setBorder(Spacing.bTiny());
 			
 		}
 		
 		public void setTransitionSeries(ITransitionSeries ts) {
-			name.setText(ts.getShell().toString());
+			check.setText(" " + ts.getShell().toString());
 		}
 		
 		public void setSelected(boolean selected) {
@@ -136,7 +132,7 @@ class LookupRenderer extends DefaultTreeCellRenderer {
 			} else {
 				colour = Stratus.getTheme().getControlText();
 			}
-			if (name != null) name.setForeground(colour);
+			if (check != null) check.setForeground(colour);
 		}
 
 		
