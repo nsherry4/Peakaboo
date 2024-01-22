@@ -16,14 +16,15 @@ public class SavedFilteringSessionV1 {
 
 	
 	@Deprecated(since = "6", forRemoval = true)
-	public void loadInto(FilteringController controller) {
+	public void loadInto(FilteringController controller, List<String> errors) {
 		FilterSet filterset = controller.getFilteringModel().filters;
 		filterset.clear();
 		for (SerializedFilterV1 f : this.filters) {
 			try {
-				filterset.add(f.getFilter());
+				filterset.add(f.getFilter(errors).orElseThrow());
 			} catch (Exception e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to restore filter", e);
+				errors.add("Failed to restore filter " + f.getClazz());
+				PeakabooLog.get().log(Level.WARNING, "Failed to restore filter " + f.getClazz(), e);
 			}
 		}
 	}

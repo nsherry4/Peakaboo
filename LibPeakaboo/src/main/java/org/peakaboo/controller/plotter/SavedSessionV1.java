@@ -41,7 +41,7 @@ public class SavedSessionV1 implements DruthersStorable {
 		this.data.loadInto(plotController.data());
 		
 		//restore filtering settings
-		this.filtering.loadInto(plotController.filtering());
+		this.filtering.loadInto(plotController.filtering(), errors);
 		
 		//restore fitting settings
 		errors.addAll(this.fitting.loadInto(plotController.fitting()));
