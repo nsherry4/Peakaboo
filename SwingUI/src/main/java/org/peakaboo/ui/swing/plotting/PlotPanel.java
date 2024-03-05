@@ -20,7 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -724,10 +723,14 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (!file.isPresent()) {
 				return;
 			}
-			controller.io().setFromSession(file.get());
-			load(Collections.singletonList(new PathDataInputAdapter(file.get())));
+			actionLoadSession(file.get());
 		});
 
+	}
+	
+	public void actionLoadSession(File session) {
+		controller.io().setFromSession(session);
+		load(List.of(new PathDataInputAdapter(session)));
 	}
 
 	

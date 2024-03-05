@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.RecentSessions;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.SavedSessionV1;
@@ -272,6 +273,7 @@ public abstract class DataLoader {
 					warnVersion.run();
 				}
 				controller.io().setSessionFile(sessionFile);
+				RecentSessions.SYSTEM.addSessionFile(sessionFile);
 			});
 			
 							
@@ -280,6 +282,7 @@ public abstract class DataLoader {
 			controller.load(session, true);
 			warnVersion.run();
 			controller.io().setSessionFile(sessionFile);
+			RecentSessions.SYSTEM.addSessionFile(sessionFile);
 		}
 		
 	}
@@ -332,6 +335,7 @@ public abstract class DataLoader {
 					warnVersion.run();
 				}
 				controller.io().setSessionFile(sessionFile);
+				RecentSessions.SYSTEM.addSessionFile(sessionFile);
 			});
 			
 							
@@ -340,6 +344,7 @@ public abstract class DataLoader {
 			controller.loadSessionSettingsV1(session, true);
 			warnVersion.run();
 			controller.io().setSessionFile(sessionFile);
+			RecentSessions.SYSTEM.addSessionFile(sessionFile);
 		}
 		
 	}

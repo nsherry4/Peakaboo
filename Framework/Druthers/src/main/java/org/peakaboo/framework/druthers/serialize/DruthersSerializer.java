@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -250,6 +251,19 @@ public class DruthersSerializer {
 		
 		return y.dumpAs(toSerialize, Tag.MAP, FlowStyle.BLOCK);
 	}
+	
+	/**
+	 * Encodes the list as yaml
+	 */
+	public static <T> String serializeList(List<T> toSerialize) {
+		DumperOptions options = new DumperOptions();
+		options.setDefaultFlowStyle(FlowStyle.FLOW);
+		var rep = new DruthersYamlRepresenter(options);
+		Yaml y = new Yaml(rep);
+		
+		return y.dump(toSerialize);
+	}
+	
 
 	/**
 	 * Reinterpret a section of a data structure as a different class by serializing
