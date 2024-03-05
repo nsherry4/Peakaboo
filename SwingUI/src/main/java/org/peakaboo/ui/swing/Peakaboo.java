@@ -45,7 +45,6 @@ import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
-import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
@@ -153,7 +152,7 @@ public class Peakaboo {
 
 	private static void uiPerformanceTune() {
 		if (PeakabooConfiguration.memorySize == MemorySize.TINY) {
-			LayerPanel.lowGraphicsMode = true;
+			Stratus.lowGraphicsMode = true;
 		}
 	}
 

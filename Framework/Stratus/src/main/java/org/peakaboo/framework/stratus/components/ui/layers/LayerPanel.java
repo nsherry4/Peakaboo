@@ -19,9 +19,6 @@ public class LayerPanel extends JLayeredPane {
 	private Layer contentLayer;
 	
 	
-	public static boolean lowGraphicsMode = false;
-
-	
 	public LayerPanel() {
 		setLayout(new LayerLayout());	
 		contentLayer = new ContentLayer(this);

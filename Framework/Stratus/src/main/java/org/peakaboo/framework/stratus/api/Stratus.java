@@ -150,5 +150,7 @@ public class Stratus {
 		ge.registerFont(f);
 		return f;
 	}
+
+	public static boolean lowGraphicsMode = false;
 	
 }
