@@ -158,6 +158,7 @@ public abstract class DataLoader {
 		
 		if (parameters.isPresent()) {
 			Group dsGroup = parameters.get();
+			this.dataSource = new SavedPlugin(dsp);
 			
 			/*
 			 * if we've alredy loaded a set of parameters from a session we're opening then
