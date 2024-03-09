@@ -266,7 +266,8 @@ class PlainTextScanEntry implements ScanEntry {
 	private Spectrum parseLine() {
 		int length = entries.length;
 
-		//remove null values from length count if the delimiter is a space
+		// remove null values from length count if the delimiter is a space. Double
+		// space characters will cause null values that shouldn't really be there.
 		if (delimiter == ' ') {
 			for (String entry : entries) {
 				if (entry == null) length--;
@@ -274,7 +275,8 @@ class PlainTextScanEntry implements ScanEntry {
 		}
 		
 		Spectrum scan = new ArraySpectrum(length);
-		for (String entry : entries) {
+		for (int i = 0; i < entries.length; i++) {
+			String entry = entries[i];
 			try {
 				
 				//null entry means duplicate delimiter (eg "0,,0" or "0  0")
@@ -284,12 +286,13 @@ class PlainTextScanEntry implements ScanEntry {
 					if (delimiter == ' ') {
 						continue;
 					} else {
-						entry = "0";
+						scan.add(0f);
 					}
+				} else {
+					scan.add(Float.parseFloat(entry));
 				}
-				scan.add(Float.parseFloat(entry));
 			} catch (Exception e) {
-				//some kind of error
+				// TODO Poor form to catch all exceptions, better way?
 				scan.add(0f);
 			}
 		}
