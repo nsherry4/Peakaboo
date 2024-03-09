@@ -20,26 +20,29 @@ public class SpectrumCalculations
 	public static final int	MIN_SIZE_FOR_THREADING	= 512;
 
 
-	public static Spectrum maxLists(SpectrumView l1, SpectrumView l2)
-	{
-
+	public static Spectrum maxLists(SpectrumView l1, SpectrumView l2) {
+		float[] a1 = ((Spectrum)l1).backingArray();
+		float[] a2 = ((Spectrum)l2).backingArray();
+		
 		Spectrum result = new ArraySpectrum(l1.size());
+		float[] r = result.backingArray();
+		
 		int maxInd = Math.min(l1.size(), l2.size());
-		for (int i = 0; i < maxInd; i++)
-		{
-			result.set(i, Math.max(l1.get(i), l2.get(i)));
+		for (int i = 0; i < maxInd; i++) {
+			r[i] = Math.max(a1[i], a2[i]);
 		}
 
 		return result;
 	}
 
 	
-	public static Spectrum maxLists_inplace(final Spectrum s1, final SpectrumView s2)
-	{
-		int size = Math.min(s1.size(), s2.size());
-		for (int i = 0; i < size; i++)
-		{
-			s1.set(i, Math.max(s1.get(i), s2.get(i)));
+	public static Spectrum maxLists_inplace(final Spectrum s1, final SpectrumView s2) {
+		float[] a1 = s1.backingArray();
+		float[] a2 = ((Spectrum)s2).backingArray();
+		
+		int size = Math.min(a1.length, a2.length);
+		for (int i = 0; i < size; i++) {
+			a2[i] = Math.max(a1[i], a2[i]);
 		}
 		
 
