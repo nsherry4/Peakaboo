@@ -1,13 +1,12 @@
 package org.peakaboo.curvefit.curve.fitting;
 
-import java.util.List;
 import java.util.Set;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.RangeSet;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public interface CurveView extends Comparable<CurveView> {
 
@@ -34,7 +33,7 @@ public interface CurveView extends Comparable<CurveView> {
 	 * Returns a sorted List of Integers containing the channels for which this
 	 * Curve is intense or significant.
 	 */
-	List<Integer> getIntenseChannelList();
+	int[] getIntenseChannelList();
 	
 	
 	/**

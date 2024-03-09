@@ -12,8 +12,8 @@ import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class OptimizingCurveFitter implements CurveFitter {
 
@@ -57,27 +57,26 @@ public class OptimizingCurveFitter implements CurveFitter {
 	protected UnivariateFunction scoringFunction(SpectrumView data, CurveView curve) {
 		return new UnivariateFunction() {
 			
-			Spectrum scaled = new ArraySpectrum(data.size());
+			//Spectrum scaled = new ArraySpectrum(data.size());
 			Spectrum residual = new ArraySpectrum(data.size());
 			
 			@Override
 			public double value(double scale) {
-				var intenseChannels = curve.getIntenseChannelList();
+				int[] intenseChannels = curve.getIntenseChannelList();
 				
 				//If there are no intense channels, we return a 0
-				if (intenseChannels.isEmpty()) {
+				if (intenseChannels.length == 0) {
 					return 0;
 				}
 				
-				int firstChannel = intenseChannels.get(0);
-				int lastChannel = intenseChannels.get(intenseChannels.size()-1);
-				//curve.scaleInto((float) scale, scaled);
-				//SpectrumCalculations.subtractLists_target(data, scaled, residual);
+				int firstChannel = intenseChannels[0];
+				int lastChannel = intenseChannels[intenseChannels.length-1];
 				curve.scaleOnto((float)-scale, data, residual, firstChannel, lastChannel);
 				
 				float score = 0;
-				for (int i : intenseChannels) {
-					float value = residual.get(i);
+				for (int i = 0; i < intenseChannels.length; i++) {
+					int channel = intenseChannels[i];
+					float value = residual.get(channel);
 					if (value < 0) {
 						value *= overfitPenalty;
 					}
