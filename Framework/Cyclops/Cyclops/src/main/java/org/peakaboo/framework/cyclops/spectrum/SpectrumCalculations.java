@@ -307,10 +307,11 @@ public class SpectrumCalculations
 
 		Spectrum result = new ArraySpectrum(source.size());
 		float newvalue;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!Float.isNaN(minimum) && value < minimum) newvalue = minimum;
+			if (!minIsNaN && value < minimum) newvalue = minimum;
 			result.set(i, newvalue);
 		}
 
@@ -342,10 +343,11 @@ public class SpectrumCalculations
 	{
 
 		float newvalue;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!Float.isNaN(minimum) && value < minimum) newvalue = minimum;
+			if (!minIsNaN && value < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 
@@ -377,10 +379,11 @@ public class SpectrumCalculations
 	{
 
 		float newvalue;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = value - source.get(i);
-			if (!Float.isNaN(minimum) && value < minimum) newvalue = minimum;
+			if (!minIsNaN && value < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 
@@ -482,10 +485,11 @@ public class SpectrumCalculations
 		Spectrum result = new ArraySpectrum(l1.size());
 		int maxInd = Math.min(l1.size(), l2.size());
 		float value;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < maxInd; i++)
 		{
 			value = l1.get(i) - l2.get(i);
-			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
+			if (!minIsNaN && value < minimum) value = minimum;
 			result.set(i, value);
 		}
 
@@ -528,10 +532,11 @@ public class SpectrumCalculations
 		
 		int maxInd = Math.min(l1.size(), l2.size());
 		float value;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < maxInd; i++)
 		{
 			value = l1a[i] - l2a[i];
-			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
+			if (!minIsNaN && value < minimum) value = minimum;
 			l1a[i] = value;
 		}
 		
@@ -561,10 +566,11 @@ public class SpectrumCalculations
 		
 		int maxInd = Math.min(l1.size(), l2.size());
 		float value;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < maxInd; i++)
 		{
 			value = l1a[i] - l2a[i];
-			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
+			if (!minIsNaN && value < minimum) value = minimum;
 			ta[i] = value;
 		}
 		
