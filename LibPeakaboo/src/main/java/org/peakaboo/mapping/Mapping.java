@@ -81,7 +81,10 @@ public class Mapping {
 		}
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
-		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings");
+		int count = dataset.getScanData().scanCount();
+		int interval = (int)Math.max(10, Math.ceil(count / 100f));
+
+		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", interval);
 		streamer.setTask(new Range(0, dataset.getScanData().scanCount()), stream -> {
 			
 			long t1 = System.currentTimeMillis();

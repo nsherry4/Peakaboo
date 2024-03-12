@@ -3,6 +3,7 @@ package org.peakaboo.framework.plural.streams;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -21,7 +22,7 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 	private StreamExecutor<?> next;
 	private boolean parallel = true;
 	
-	private int count = 0;
+	private AtomicInteger count = new AtomicInteger();
 	private int size = -1;
 	private int interval = 100;
 	Optional<T> result = Optional.empty();
@@ -50,9 +51,8 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 	}
 
 	@Override
-	public synchronized boolean test(Object t) {
-		count++;
-		if (count % interval == 0) {
+	public boolean test(Object t) {
+		if (count.incrementAndGet() % interval == 0) {
 			updateListeners(Event.PROGRESS);
 		}
 		return state == State.RUNNING;
@@ -101,7 +101,7 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 	
 	@Override
 	public int getCount() {
-		return count;
+		return count.get();
 	}
 
 	@Override
