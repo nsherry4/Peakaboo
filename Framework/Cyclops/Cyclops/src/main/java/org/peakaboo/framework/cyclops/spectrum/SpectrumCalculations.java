@@ -531,14 +531,20 @@ public class SpectrumCalculations
 		float[] l2a = ((Spectrum)l2).backingArray();
 		
 		int maxInd = Math.min(l1.size(), l2.size());
-		float value;
-		boolean minIsNaN = Float.isNaN(minimum);
-		for (int i = 0; i < maxInd; i++)
-		{
-			value = l1a[i] - l2a[i];
-			if (!minIsNaN && value < minimum) value = minimum;
-			l1a[i] = value;
+		
+		if (! Float.isFinite(minimum)) {
+			// If min is not finite (not NaN and not +/- Infinity), just ignore it and perform 
+			//the subtraction without it
+			subtractLists_inplace(l1, l2);
+			return;
+		} else {
+			// Otherwise, perform the subtraction and choose the larger of the minimum or the result
+			for (int i = 0; i < maxInd; i++) {
+				l1a[i] = Math.max(minimum, l1a[i] - l2a[i]);
+			}
 		}
+		
+
 		
 	}
 

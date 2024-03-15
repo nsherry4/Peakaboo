@@ -10,7 +10,7 @@ public class SigDigits
 
 	public static int toIntSigDigit(double value, int significantDigits)
 	{
-		if (!FloatException.valid(value)) value = 0;
+		if (!Double.isFinite(value)) value = 0;
 		if (value == 0.0) return (int)value;
 		
 		if (significantDigits < 1) significantDigits = 1;
@@ -45,7 +45,7 @@ public class SigDigits
 	public static String roundFloatTo(float value, int decimals, boolean trimZeroes)
 	{
 		
-		if (! FloatException.valid(value)) return "-";
+		if (! Float.isFinite(value)) return "-";
 		BigDecimal bd = new BigDecimal(Float.toString(value));
 		bd = bd.setScale(decimals, RoundingMode.HALF_EVEN);
 		
