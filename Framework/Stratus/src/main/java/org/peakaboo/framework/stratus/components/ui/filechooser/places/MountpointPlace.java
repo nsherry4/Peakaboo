@@ -11,16 +11,16 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 class MountpointPlace implements Place {
 	
 	private File mountpoint;
-	private Icon icon;
+	private StockIcon icon;
 	
 	public MountpointPlace(File mountpoint) {
 		this.mountpoint = mountpoint;
-		icon = StockIcon.DEVICE_HARDDISK.toImageIcon(IconSize.BUTTON);
+		icon = StockIcon.DEVICE_HARDDISK;
 	}
 
 	@Override
-	public Icon getIcon() {
-		return icon;
+	public Icon getIcon(IconSize size) {
+		return icon.toImageIcon(size);
 	}
 
 	@Override
