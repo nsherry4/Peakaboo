@@ -65,8 +65,14 @@ public class OptimizingCurveFitter implements CurveFitter {
 			Spectrum residual = new ArraySpectrum(data.size());
 			int[] intenseChannels = curve.getIntenseChannelList();
 			
-			int firstChannel = intenseChannels[0];
-			int lastChannel = intenseChannels[intenseChannels.length-1];
+			
+			int firstChannel, lastChannel;
+			{
+				if (intenseChannels.length > 0) {
+					firstChannel = intenseChannels[0];
+					lastChannel = intenseChannels[intenseChannels.length-1];
+				}
+			}
 			
 			@Override
 			public double value(double scale) {

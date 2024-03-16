@@ -154,7 +154,7 @@ public class PlainText extends AbstractDataSource
 			
 		}
 		
-		
+		parser.stopParsing();
 		scandata.finish();
 		
 		//Check and make sure all the scans are the same size
