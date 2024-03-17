@@ -118,7 +118,7 @@ public interface CurveView extends Comparable<CurveView> {
 	 *            last channel to perform the operation on
 	 */
 	default void scaleOnto(float scale, Spectrum target, int firstChannel, int lastChannel) {
-		SpectrumCalculations.fma(get(), scale, target, target, firstChannel, lastChannel);
+		SpectrumCalculations.fma_target(get(), scale, target, firstChannel, lastChannel);
 	}
 	
 	/**

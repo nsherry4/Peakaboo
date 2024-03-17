@@ -54,7 +54,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		
 		List<CurveView> curves = fittings.getVisibleCurves();
 		sortCurves(curves);
-		List<Integer> intenseChannels = getIntenseChannels(curves);
+		int[] intenseChannels = getIntenseChannels(curves);
 		
 		List<CurveView> perm = new ArrayList<>(curves);
 		int counter = 0;

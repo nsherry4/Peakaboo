@@ -81,6 +81,7 @@ public class Mapping {
 		}
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 		
+		// Update on progress every 1%, but no more frequently than every 10 scans
 		int count = dataset.getScanData().scanCount();
 		int interval = (int)Math.max(10, Math.ceil(count / 100f));
 

@@ -26,13 +26,13 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class OptimizingFittingSolver implements FittingSolver {
 
-	protected double COST_FUNCTION_PRECISION =  0.01d;
+	protected double costFnPrecision =  0.01d;
 	
 	@Override
 	public String pluginName() {
@@ -73,13 +73,13 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		List<CurveView> curves = new ArrayList<>(fittings.getVisibleCurves());
 		sortCurves(curves);
-		List<Integer> intenseChannels = getIntenseChannels(curves);
+		int[] intenseChannels = getIntenseChannels(curves);
 		EvaluationContext context = new EvaluationContext(data, fittings, curves);
 		MultivariateFunction cost = getCostFunction(context, intenseChannels);
 		double[] guess = getInitialGuess(curves, fitter, data);
 				
 			
-		PointValuePair result = optimizeCostFunction(cost, guess, COST_FUNCTION_PRECISION);
+		PointValuePair result = optimizeCostFunction(cost, guess, costFnPrecision);
 
 		
 		double[] scalings = result.getPoint();
@@ -147,18 +147,22 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return guess;
 	}
 	
-	protected List<Integer> getIntenseChannels(List<CurveView> curves) {
+	protected int[] getIntenseChannels(List<CurveView> curves) {
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
 		for (CurveView curve : curves) {
 			intenseChannels.addAll(curve.getIntenseChannels());
 		}
 		List<Integer> asList = new ArrayList<>(intenseChannels);
 		asList.sort(Integer::compare);
-		return asList;
+		int[] asArr = new int[asList.size()];
+		for (int i = 0; i < asArr.length; i++) {
+			asArr[i] = asList.get(i);
+		}
+		return asArr;
 	}
 	
 	
-	protected MultivariateFunction getCostFunction(EvaluationContext context, List<Integer> intenseChannels) {
+	protected MultivariateFunction getCostFunction(EvaluationContext context, int[] intenseChannels) {
 		return new MultivariateFunction() {
 			
 			@Override
@@ -206,22 +210,22 @@ public class OptimizingFittingSolver implements FittingSolver {
 	/** 
 	 * Calculate the residual from data (signal) and total (fittings). Store the result in residual 
 	 */
-	private void test(double[] point, List<Integer> channels, EvaluationContext context) {
-		int index = 0;
-		//context.scratch.zero();
-		context.total.zero();
+	private void test(double[] weights, int[] channels, EvaluationContext context) {
+		Spectrum total = context.total;
+		total.zero();
 		
 		//When there are no intense channels to consider, the residual will be equal to the data
-		if (channels.isEmpty()) {
+		if (channels.length == 0) {
 			SpectrumCalculations.subtractFromList_target(context.data, context.residual, 0f);
 			return;
 		}
-		
-		int first = channels.get(0);
-		int last = channels.get(channels.size()-1);
-		for (CurveView curve : context.curves) {
-			float scale = (float) point[index++];
-			curve.scaleOnto(scale, context.total, first, last);						
+
+		List<CurveView> curves = context.curves;
+		int curvesLength = weights.length;
+		int first = channels[0];
+		int last = channels[channels.length-1];
+		for (int i = 0; i < curvesLength; i++) {
+			curves.get(i).scaleOnto((float) weights[i], total, first, last);						
 		}
 		SpectrumCalculations.subtractLists_target(context.data, context.total, context.residual, first, last);
 
@@ -231,20 +235,21 @@ public class OptimizingFittingSolver implements FittingSolver {
 	/**
 	 * Score the context's residual spectrum
 	 */
-	private float score(double[] point, List<Integer> channels, Spectrum residual) {
+	// NB: Bytecode-optimized function. Take care making changes
+	private float score(double[] point, int[] channels, Spectrum residual) {
 		float[] ra = residual.backingArray();
 		float score = 0;
-		for (int i : channels) {
-			float value = ra[i];
+		int length = channels.length;
+		for (int i = 0; i < length; i++) {
+			float value = ra[channels[i]];
 			
 			//Negative values mean that we've fit more signal than exists
 			//We penalize this to prevent making up data where none exists.
 			if (value < 0) {
-				value = value*-50;
+				value = value*-50f;
 			}
 			
 			score += value;	
-			
 		}
 		
 		return score;

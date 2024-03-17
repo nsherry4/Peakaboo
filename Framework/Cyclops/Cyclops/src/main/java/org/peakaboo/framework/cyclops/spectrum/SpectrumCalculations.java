@@ -226,6 +226,19 @@ public class SpectrumCalculations
 		return target;
 	}
 
+	/*
+	 * Version of the fma method which adds from and stores to the target array 
+	 */
+	public static Spectrum fma_target(final SpectrumView source, float mult, final Spectrum target, int first, int last) {
+		final float[] sourceArray = ((Spectrum)source).backingArray();
+		final float[] targetArray = ((Spectrum)target).backingArray();
+		
+		for (int i = first; i <= last; i++) {
+			targetArray[i] = Math.fma(sourceArray[i], mult, targetArray[i]);
+		}
+		
+		return target;
+	}
 
 	/**
 	 * Returns a copy of the given list with all values in the list expressed as a fraction of the given value
