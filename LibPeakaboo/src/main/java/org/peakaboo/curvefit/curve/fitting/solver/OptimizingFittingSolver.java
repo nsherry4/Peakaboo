@@ -2,9 +2,7 @@ package org.peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.InitialGuess;
@@ -20,15 +18,10 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
-import org.peakaboo.curvefit.curve.fitting.FittingSetView;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
-import org.peakaboo.curvefit.peak.table.Element;
-import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class OptimizingFittingSolver implements FittingSolver {
 
@@ -62,38 +55,28 @@ public class OptimizingFittingSolver implements FittingSolver {
 	@Override
 	public FittingResultSetView solve(FittingSolverContext ctx) {
 		
-		SpectrumView data = ctx.data();
-		FittingSetView fittings = ctx.fittings();
-		CurveFitter fitter = ctx.fitter();	
-		
-		int size = fittings.getVisibleCurves().size();
+		int size = ctx.fittings.getVisibleCurves().size();
 		if (size == 0) {
-			return getEmptyResult(data, fittings);
+			return getEmptyResult(ctx);
 		}
-		
-		List<CurveView> curves = new ArrayList<>(fittings.getVisibleCurves());
-		sortCurves(curves);
-		int[] intenseChannels = getIntenseChannels(curves);
-		EvaluationContext context = new EvaluationContext(data, fittings, curves);
-		MultivariateFunction cost = getCostFunction(context, intenseChannels);
-		double[] guess = getInitialGuess(curves, fitter, data);
-				
+
+		EvaluationSpace eval = new EvaluationSpace(ctx.data.size());
+		MultivariateFunction cost = getCostFunction(ctx, eval);
+		double[] guess = getInitialGuess(ctx);
 			
 		PointValuePair result = optimizeCostFunction(cost, guess, costFnPrecision);
-
 		
 		double[] scalings = result.getPoint();
-		return evaluate(scalings, context);
-		
+		return evaluate(scalings, ctx);
 		
 	}
 	
-	protected FittingResultSet getEmptyResult(SpectrumView data, FittingSetView fittings) {
+	protected FittingResultSet getEmptyResult(FittingSolverContext ctx) {
 		return new FittingResultSet(
-				new ArraySpectrum(data.size()), 
-				new ArraySpectrum(data), 
+				new ArraySpectrum(ctx.data.size()), 
+				new ArraySpectrum(ctx.data), 
 				Collections.emptyList(), 
-				fittings.getFittingParameters().copy()
+				ctx.fittings.getFittingParameters().copy()
 			);
 	}
 	
@@ -128,12 +111,12 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 	}
 	
-	protected double[] getInitialGuess(List<CurveView> curves, CurveFitter fitter, SpectrumView data) {
-		int curveCount = curves.size();
+	public static double[] getInitialGuess(FittingSolverContext ctx) {
+		int curveCount = ctx.curves.size();
 		double[] guess = new double[curveCount];
 		for (int i = 0; i < curveCount; i++) {
-			CurveView curve = curves.get(i);
-			FittingResultView guessFittingResult = fitter.fit(new CurveFitterContext(data, curve));
+			CurveView curve = ctx.curves.get(i);
+			FittingResultView guessFittingResult = ctx.fitter.fit(new CurveFitterContext(ctx.data, curve));
 			
 			//there will usually be some overlap between elements, so
 			//we use 80% of the independently fitted guess.
@@ -147,22 +130,10 @@ public class OptimizingFittingSolver implements FittingSolver {
 		return guess;
 	}
 	
-	protected int[] getIntenseChannels(List<CurveView> curves) {
-		Set<Integer> intenseChannels = new LinkedHashSet<>();
-		for (CurveView curve : curves) {
-			intenseChannels.addAll(curve.getIntenseChannels());
-		}
-		List<Integer> asList = new ArrayList<>(intenseChannels);
-		asList.sort(Integer::compare);
-		int[] asArr = new int[asList.size()];
-		for (int i = 0; i < asArr.length; i++) {
-			asArr[i] = asList.get(i);
-		}
-		return asArr;
-	}
+
 	
 	
-	protected MultivariateFunction getCostFunction(EvaluationContext context, int[] intenseChannels) {
+	protected MultivariateFunction getCostFunction(FittingSolverContext ctx, EvaluationSpace eval) {
 		return new MultivariateFunction() {
 			
 			@Override
@@ -176,8 +147,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 					}
 				}
 
-				test(point, intenseChannels, context);
-				float score = score(point, intenseChannels, context.residual);
+				test(point, ctx, eval);
+				float score = score(point, ctx, eval.residual);
 				if (containsNegatives > 0) {
 					return score * (1f+containsNegatives);
 				}
@@ -188,46 +159,29 @@ public class OptimizingFittingSolver implements FittingSolver {
 	}
 	
 	
-	/**
-	 * Given a list of curves, sort them by by shell first, and then by element
-	 */
-	protected void sortCurves(List<CurveView> curves) {
-		curves.sort((a, b) -> {
-			TransitionShell as, bs;
-			as = a.getTransitionSeries().getShell();
-			bs = b.getTransitionSeries().getShell();
-			Element ae, be;
-			ae = a.getTransitionSeries().getElement();
-			be = b.getTransitionSeries().getElement();
-			if (as.equals(bs)) {
-				return ae.compareTo(be);
-			} else {
-				return as.compareTo(bs);
-			}
-		});
-	}
+
 
 	/** 
 	 * Calculate the residual from data (signal) and total (fittings). Store the result in residual 
 	 */
-	private void test(double[] weights, int[] channels, EvaluationContext context) {
-		Spectrum total = context.total;
+	private void test(double[] weights, FittingSolverContext ctx, EvaluationSpace eval) {
+		Spectrum total = eval.total;
 		total.zero();
 		
 		//When there are no intense channels to consider, the residual will be equal to the data
-		if (channels.length == 0) {
-			SpectrumCalculations.subtractFromList_target(context.data, context.residual, 0f);
+		if (ctx.channels.length == 0) {
+			SpectrumCalculations.subtractFromList_target(ctx.data, eval.residual, 0f);
 			return;
 		}
 
-		List<CurveView> curves = context.curves;
+		List<CurveView> curves = ctx.curves;
 		int curvesLength = weights.length;
-		int first = channels[0];
-		int last = channels[channels.length-1];
+		int first = ctx.channels[0];
+		int last = ctx.channels[ctx.channels.length-1];
 		for (int i = 0; i < curvesLength; i++) {
-			curves.get(i).scaleOnto((float) weights[i], total, first, last);						
+			curves.get(i).scaleOnto((float) weights[i], total, first, last);
 		}
-		SpectrumCalculations.subtractLists_target(context.data, context.total, context.residual, first, last);
+		SpectrumCalculations.subtractLists_target(ctx.data, eval.total, eval.residual, first, last);
 
 	}
 	
@@ -236,12 +190,12 @@ public class OptimizingFittingSolver implements FittingSolver {
 	 * Score the context's residual spectrum
 	 */
 	// NB: Bytecode-optimized function. Take care making changes
-	private float score(double[] point, int[] channels, Spectrum residual) {
+	private float score(double[] point, FittingSolverContext ctx, Spectrum residual) {
 		float[] ra = residual.backingArray();
 		float score = 0;
-		int length = channels.length;
+		int length = ctx.channels.length;
 		for (int i = 0; i < length; i++) {
-			float value = ra[channels[i]];
+			float value = ra[ctx.channels[i]];
 			
 			//Negative values mean that we've fit more signal than exists
 			//We penalize this to prevent making up data where none exists.
@@ -260,36 +214,30 @@ public class OptimizingFittingSolver implements FittingSolver {
 	 * and a context. Scales the context.curves by the weights. Returns a new
 	 * FittingResultSet containing the fitted curves and other totals.
 	 */
-	protected FittingResultSetView evaluate(double[] point, EvaluationContext context) {
+	public static FittingResultSetView evaluate(double[] point, FittingSolverContext ctx) {
 		int index = 0;
 		List<FittingResultView> fits = new ArrayList<>();
-		Spectrum total = new ArraySpectrum(context.data.size());
-		Spectrum scaled = new ArraySpectrum(context.data.size());
-		for (CurveView curve : context.curves) {
+		Spectrum total = new ArraySpectrum(ctx.data.size());
+		Spectrum scaled = new ArraySpectrum(ctx.data.size());
+		for (CurveView curve : ctx.curves) {
 			float scale = (float) point[index++];
 			curve.scaleInto(scale, scaled);
 			fits.add(new FittingResult(curve, scale));
 			SpectrumCalculations.addLists_inplace(total, scaled);
 		}
-		Spectrum residual = SpectrumCalculations.subtractLists(context.data, total);
+		Spectrum residual = SpectrumCalculations.subtractLists(ctx.data, total);
 		
-		return new FittingResultSet(total, residual, fits, context.fittings.getFittingParameters().copy());
+		return new FittingResultSet(total, residual, fits, ctx.fittings.getFittingParameters().copy());
 	}
 	
-	public static class EvaluationContext {
-		public SpectrumView data;
-		public FittingSetView fittings;
-		public List<CurveView> curves;
+	public static class EvaluationSpace {
 		public Spectrum scratch;
 		public Spectrum total;
 		public Spectrum residual;
-		public EvaluationContext(SpectrumView data, FittingSetView fittings, List<CurveView> curves) {
-			this.data = data;
-			this.fittings = fittings;
-			this.curves = curves;
-			this.scratch = new ArraySpectrum(data.size());
-			this.total = new ArraySpectrum(data.size());
-			this.residual = new ArraySpectrum(data.size());
+		public EvaluationSpace(int size) {
+			this.scratch = new ArraySpectrum(size);
+			this.total = new ArraySpectrum(size);
+			this.residual = new ArraySpectrum(size);
 		}
 	}
 	
