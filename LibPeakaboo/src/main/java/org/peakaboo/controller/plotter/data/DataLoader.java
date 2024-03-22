@@ -33,85 +33,57 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 
 public abstract class DataLoader {
 
+	public static class DataLoaderContext {
+		public List<DataInputAdapter> datafiles;
+		public SavedPlugin dataSource;
+		public File sessionFile;
+		public Runnable sessionCallback = () -> {}; 
+	};
+	
 	protected PlotController controller;
-	private List<DataInputAdapter> datafiles;
-	private SavedPlugin dataSource = null;
-	private File sessionFile = null;
 	
-	//if we're loading a session, we need to do some extra work after loading the dataset
-	private Runnable sessionCallback = () -> {}; 
+	// Track information about the data set that we're in the process of opening
+	protected Optional<DataLoaderContext> pending = Optional.empty();
+
 	
-	public DataLoader(PlotController controller, List<DataInputAdapter> datafiles) {
+	public DataLoader(PlotController controller) {
 		this.controller = controller;
-		this.datafiles = datafiles;
 	}
 	
-	private void loadWithDataSource(DataSourcePlugin dsp) {
-		
-		if (datafiles != null) {
-			
-			ExecutorSet<DatasetReadResult> reading = controller.data().asyncReadFileListAsDataset(datafiles, dsp, result -> {
-					
-				if (result == null || result.status == ReadStatus.FAILED) {
-					onDataSourceLoadFailure(dsp, result);					
-				} else {
-					onDataSourceLoadSuccess();
-				}						
-							
-			});
-
-			onLoading(reading);
-			reading.startWorking();
-
-		}
-	}
-	
-	private void onDataSourceLoadSuccess() {
-		sessionCallback.run();
-		controller.data().setDataSourcePlugin(dataSource);
-		controller.data().setDataPaths(datafiles);
-		
-		//Try and set the last-used folder for local UIs to refer to
-		//First, check the first data file for its folder
-		Optional<File> localDir = datafiles.get(0).localFolder();
-		if (localDir.isPresent()) {
-			controller.io().setLastFolder(localDir.get());
-		} else if (sessionFile != null) {
-			controller.io().setLastFolder(sessionFile.getParentFile());
-		}
-		onSuccess(datafiles, sessionFile);
+	/**
+	 * Load a new dataset from a list of files/inputs
+	 * 
+	 * <br/><br/>
+	 * Previous Step: None<br/>
+	 * Next Step: {@link DataLoader#load(DataLoaderContext)}<br/>
+	 */
+	public void loadFiles(List<DataInputAdapter> inputs) {
+		DataLoaderContext ctx = new DataLoaderContext();
+		ctx.datafiles = inputs;
+		this.load(ctx);
 	}
 
-	private void onDataSourceLoadFailure(DataSourcePlugin dsp, DatasetReadResult result) {
-		String message = "\nSource: " + dsp.getFileFormat().getFormatName();
-		
-		if (result != null && result.message != null) {
-			message += "\nMessage: " + result.message;
-		}
-		if (result != null && result.problem != null) {
-			message += "\nProblem: " + result.problem;
-		}
-		
-		if (result != null) {
-			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
-		} else {
-			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException("Dataset Read Result was null"));
-		}
-		onFail(datafiles, message);
-	}
 	
 	
 
-	public void load() {
-		if (datafiles.isEmpty()) {
-			return;
-		}
+	/**
+	 * Load a new session / dataset from a DataLoaderContext
+	 * 
+	 * <br/><br/>
+	 * Previous Step: {@link DataLoader#loadFiles(List)}<br/>
+	 * Next Step: {@link DataLoader#promptCallback(DataSourcePlugin)} or<br/>
+	 * Next Step: {@link DataLoader#loadSession()}<br/>
+	 */
+	protected void load(DataLoaderContext ctx) {
+
+		// Set this context as the one we're currently trying to load
+		this.pending = Optional.of(ctx);
 		
 		//check if it's a peakaboo session file first
 		if (
-				datafiles.size() == 1 && 
-				datafiles.get(0).addressable() && 
-				datafiles.get(0).getFilename().toLowerCase().endsWith(".peakaboo")
+				ctx.datafiles.size() == 1 && 
+				ctx.datafiles.get(0).addressable() && 
+				ctx.datafiles.get(0).getFilename().toLowerCase().endsWith(".peakaboo")
 			) 
 		{
 			loadSession();
@@ -123,8 +95,8 @@ public abstract class DataLoader {
 		 * specified, we look up all formats
 		 */
 		List<DataSourcePlugin> formats = new ArrayList<>();
-		if (dataSource != null) {
-			var plugin = DataSourceRegistry.system().fromSaved(dataSource);
+		if (ctx.dataSource != null) {
+			var plugin = DataSourceRegistry.system().fromSaved(ctx.dataSource);
 			if (plugin.isPresent()) {
 				formats.add(plugin.get());
 			} else {
@@ -133,40 +105,54 @@ public abstract class DataLoader {
 		}
 		if (formats.isEmpty()) {
 			List<DataSourcePlugin> candidates =  DataSourceRegistry.system().newInstances();
-			formats = DataSourceLookup.findDataSourcesForFiles(datafiles, candidates);
+			formats = DataSourceLookup.findDataSourcesForFiles(ctx.datafiles, candidates);
 		}
 		
 		if (formats.size() > 1) {
-			onSelection(formats, this::prompt);
+			onSelection(formats, this::promptCallback);
 		} else if (formats.isEmpty()) {
-			onFail(datafiles, "Could not determine the data format of the selected file(s)");
+			onFail(ctx, "Could not determine the data format of the selected file(s)");
 		} else {
-			prompt(formats.get(0));
+			promptCallback(formats.get(0));
 		}
 		
 	}
 	
-	private void prompt(DataSourcePlugin dsp) {
+	
+	/**
+	 * If user input is required for loading a dataset, this function will be called
+	 * once that input has been provided.
+	 * 
+	 * <br/><br/>
+	 * Previous Step: {@link DataLoader#load(DataLoaderContext)}<br/>
+	 * Next Step: {@link DataLoader#openDataSource(DataSourcePlugin)}<br/>
+	 */
+	private void promptCallback(DataSourcePlugin dsp) {
+		
+		if (this.pending.isEmpty()) {
+			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+		}
+		var ctx = pending.get();
 		
 		Optional<Group> parameters = Optional.empty();
 		try {
-			parameters = dsp.getParameters(datafiles);
+			parameters = dsp.getParameters(ctx.datafiles);
 		} catch (DataSourceReadException | IOException e1) {
-			onFail(datafiles, "Data Source failed while loading paramters");
+			onFail(ctx, "Data Source failed while loading paramters");
 			return;
 		}
 		
 		if (parameters.isPresent()) {
 			Group dsGroup = parameters.get();
-			this.dataSource = new SavedPlugin(dsp);
+			ctx.dataSource = new SavedPlugin(dsp);
 			
 			/*
 			 * if we've alredy loaded a set of parameters from a session we're opening then
 			 * we transfer those values into the values for the data source's Parameters
 			 */
-			if (dataSource.settings != null) {
+			if (ctx.dataSource.settings != null) {
 				try {
-					dsGroup.deserialize(dataSource.settings);
+					dsGroup.deserialize(ctx.dataSource.settings);
 				} catch (RuntimeException e) {
 					PeakabooLog.get().log(Level.WARNING, "Failed to load saved Data Source parameters", e);
 				}
@@ -175,30 +161,83 @@ public abstract class DataLoader {
 			onParameters(dsGroup, accepted -> {
 				if (accepted) {
 					//user accepted, save a copy of the new parameters
-					this.dataSource = new SavedPlugin(this.dataSource, dsGroup.serialize());
-					loadWithDataSource(dsp);
+					ctx.dataSource = new SavedPlugin(ctx.dataSource, dsGroup.serialize());
+					openDataSource(dsp);
 				}
 			});
 		} else {
-			this.dataSource = new SavedPlugin(dsp);
-			loadWithDataSource(dsp);
+			ctx.dataSource = new SavedPlugin(dsp);
+			openDataSource(dsp);
 		}
 	}
 	
 	
+
+	/**
+	 * Load a new dataset from a DataSource. This method should only be called once
+	 * all necessary work to configure the datasource has been completed
+	 * 
+	 * <br/><br/>
+	 * Previous Step: {@link DataLoader#promptCallback(DataSourcePlugin)}<br/>
+	 * Next Step: {@link DataLoader#onLoadFailure(DataSourcePlugin, DatasetReadResult)} or<br/>
+	 * Next Step: {@link DataLoader#onLoadCancelled()} or<br/>
+	 * Next Step: {@link DataLoader#onLoadSuccess()}<br/>
+	 */
+	private void openDataSource(DataSourcePlugin dsp) {
+		
+		if (pending.isPresent() && pending.get().datafiles != null) {
+			
+			var ctx = this.pending.get();
+			
+			ExecutorSet<DatasetReadResult> reading = controller.data().asyncReadFileListAsDataset(ctx.datafiles, dsp, result -> {
+					
+				if (result == null || result.status == ReadStatus.FAILED) {
+					onLoadFailure(dsp, result);					
+				} else if (result.status == ReadStatus.CANCELLED) {
+					onLoadCancelled();
+				} else {
+					onLoadSuccess();
+				}		
+							
+			});
+
+			onLoading(reading);
+			reading.startWorking();
+
+		}
+	}
+	
 	/**
 	 * Attempt to find and load a saved Peakaboo session from the data files that
 	 * are being loaded. This method will attempt to load either a v1 or v2 session.
+	 * 
+	 * <br/><br/>
+	 * Previous Step: {@link DataLoader#load(DataLoaderContext)}<br/>
+	 * Next Step: {@link DataLoader#loadV1Session(SavedSessionV1)} or<br/>
+	 * Next Step: {@link DataLoader#loadV2Session(SavedSession)} or<br/>
+	 * Next Step: {@link DataLoader#onSessionFailure()}<br/>
 	 */
 	private void loadSession() {
+		
+		if (this.pending.isEmpty()) {
+			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+		}
+		var ctx = pending.get();
+		
 		try {
+			
+			List<DataInputAdapter> datafiles = ctx.datafiles;
+			
 			//We don't want users saving a session loaded from /tmp
 			if (!datafiles.get(0).writable()) {		
 				//TODO: is writable the right thing to ask here? local vs non-local maybe?
 				//TODO: maybe in later versions, the UI can inspect this when determining if it can save instead of save-as
 				throw new IOException("Cannot load session from read-only source");
 			}
-			sessionFile = datafiles.get(0).getAndEnsurePath().toFile();
+			
+			// Get the File for our session and update our context with it
+			File sessionFile = datafiles.get(0).getAndEnsurePath().toFile();
+			ctx.sessionFile = sessionFile;
 			
 			String contents = StringInput.contents(sessionFile);
 			if (DruthersSerializer.hasFormat(contents)) {
@@ -229,9 +268,13 @@ public abstract class DataLoader {
 	
 	
 	private void loadV2Session(SavedSession session) {
-
 		
-		//chech if the session is from a newer version of Peakaboo, and warn if it is
+		if (this.pending.isEmpty()) {
+			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+		}
+		var ctx = pending.get();
+		
+		//check if the session is from a newer version of Peakaboo, and warn if it is
 		Runnable warnVersion = () -> {
 			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.app.version) < 0) {
 				onSessionNewer();
@@ -254,18 +297,18 @@ public abstract class DataLoader {
 		//If the data files in the saved session are different, offer to load the data set from the new session
 		if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
 			
-			onSessionHasData(sessionFile, load -> {
+			onSessionHasData(ctx.sessionFile, load -> {
 				if (load) {
 					//they said yes, load the new data, and then apply the session
 					//this needs to be done this way b/c loading a new dataset wipes out
 					//things like calibration info
-					this.datafiles = sessionPaths;
-					this.dataSource = session.data.datasource;
-					sessionCallback = () -> {
+					ctx.datafiles = sessionPaths;
+					ctx.dataSource = session.data.datasource;
+					ctx.sessionCallback = () -> {
 						controller.load(session, true);
 						warnVersion.run();
 					};
-					load();
+					load(ctx);
 				} else {
 					//load the settings w/o the data, then set the file paths back to the current values
 					controller.load(session, true);
@@ -273,8 +316,7 @@ public abstract class DataLoader {
 					controller.data().setDataPaths(currentPaths);
 					warnVersion.run();
 				}
-				controller.io().setSessionFile(sessionFile);
-				RecentSessions.SYSTEM.addSessionFile(sessionFile);
+				controller.io().setSessionFile(ctx.sessionFile);
 			});
 			
 							
@@ -282,8 +324,8 @@ public abstract class DataLoader {
 			//just load the session, as there is either no data associated with it, or it's the same data
 			controller.load(session, true);
 			warnVersion.run();
-			controller.io().setSessionFile(sessionFile);
-			RecentSessions.SYSTEM.addSessionFile(sessionFile);
+			controller.io().setSessionFile(ctx.sessionFile);
+			RecentSessions.SYSTEM.addSessionFile(ctx.sessionFile);
 		}
 		
 	}
@@ -291,9 +333,13 @@ public abstract class DataLoader {
 	@Deprecated(since = "6", forRemoval = true)
 	private void loadV1Session(SavedSessionV1 session) {
 		
+		if (this.pending.isEmpty()) {
+			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+		}
+		var ctx = pending.get();
 
 		
-		//chech if the session is from a newer version of Peakaboo, and warn if it is
+		//check if the session is from a newer version of Peakaboo, and warn if it is
 		Runnable warnVersion = () -> {
 			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) < 0) {
 				onSessionNewer();
@@ -316,18 +362,18 @@ public abstract class DataLoader {
 		//If the data files in the saved session are different, offer to load the data set from the new session
 		if (sessionPathsExist && !sessionPaths.isEmpty() && !sessionPaths.equals(currentPaths)) {
 			
-			onSessionHasData(sessionFile, load -> {
+			onSessionHasData(ctx.sessionFile, load -> {
 				if (load) {
 					//they said yes, load the new data, and then apply the session
 					//this needs to be done this way b/c loading a new dataset wipes out
 					//things like calibration info
-					this.datafiles = sessionPaths;
-					this.dataSource = new SavedPlugin(session.data.dataSourcePluginUUID, "Data Source", "", session.data.dataSourceParameters);
-					sessionCallback = () -> {
+					ctx.datafiles = sessionPaths;
+					ctx.dataSource = new SavedPlugin(session.data.dataSourcePluginUUID, "Data Source", "", session.data.dataSourceParameters);
+					ctx.sessionCallback = () -> {
 						controller.loadSessionSettingsV1(session, true);	
 						warnVersion.run();
 					};
-					load();
+					load(ctx);
 				} else {
 					//load the settings w/o the data, then set the file paths back to the current values
 					controller.loadSessionSettingsV1(session, true);
@@ -335,8 +381,8 @@ public abstract class DataLoader {
 					controller.data().setDataPaths(currentPaths);
 					warnVersion.run();
 				}
-				controller.io().setSessionFile(sessionFile);
-				RecentSessions.SYSTEM.addSessionFile(sessionFile);
+				controller.io().setSessionFile(ctx.sessionFile);
+				RecentSessions.SYSTEM.addSessionFile(ctx.sessionFile);
 			});
 			
 							
@@ -344,16 +390,91 @@ public abstract class DataLoader {
 			//just load the session, as there is either no data associated with it, or it's the same data
 			controller.loadSessionSettingsV1(session, true);
 			warnVersion.run();
-			controller.io().setSessionFile(sessionFile);
-			RecentSessions.SYSTEM.addSessionFile(sessionFile);
+			controller.io().setSessionFile(ctx.sessionFile);
+			RecentSessions.SYSTEM.addSessionFile(ctx.sessionFile);
 		}
 		
 	}
 
+	
+
+	
+	private void onLoadSuccess() {
+		
+		if (this.pending.isEmpty()) {
+			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+		}		
+		var ctx = this.pending.get();
+ 		
+		// Now that we've successfully loaded the data set, add the session file (if
+		// there is one) to the list of recently opened sessions
+		if (ctx.sessionFile != null) {
+			RecentSessions.SYSTEM.addSessionFile(ctx.sessionFile);
+		}
+		
+		List<DataInputAdapter> datafiles = ctx.datafiles;
+		File sessionFile = ctx.sessionFile;
+		
+		ctx.sessionCallback.run();
+		controller.data().setDataSourcePlugin(ctx.dataSource);
+		controller.data().setDataPaths(datafiles);
+		
+		//Try and set the last-used folder for local UIs to refer to
+		//First, check the first data file for its folder
+		Optional<File> localDir = datafiles.get(0).localFolder();
+		if (localDir.isPresent()) {
+			controller.io().setLastFolder(localDir.get());
+		} else if (sessionFile != null) {
+			controller.io().setLastFolder(sessionFile.getParentFile());
+		}
+		
+		//We've successfully loaded the pending context, swap it with the loaded context
+		//this.loaded = this.pending;
+		this.pending = Optional.empty();
+		
+		onSuccess(ctx);
+	}
+	
+	private void onLoadCancelled() {
+		
+		if (this.pending.isEmpty()) {
+			throw new RuntimeException("DataLoader Context cannot be empty");
+		}
+
+		this.pending = Optional.empty();
+	}
+
+	private void onLoadFailure(DataSourcePlugin dsp, DatasetReadResult result) {
+		
+		if (this.pending.isEmpty()) {
+			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+		}
+		var ctx = pending.get();
+				
+		String message = "\nSource: " + dsp.getFileFormat().getFormatName();
+		
+		if (result != null && result.message != null) {
+			message += "\nMessage: " + result.message;
+		}
+		if (result != null && result.problem != null) {
+			message += "\nProblem: " + result.problem;
+		}
+		
+		if (result != null) {
+			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
+		} else {
+			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException("Dataset Read Result was null"));
+		}
+		onFail(ctx, message);
+		
+		this.pending = Optional.empty();
+	}
+	
+	
 	public abstract void onLoading(ExecutorSet<DatasetReadResult> job);
-	public abstract void onSuccess(List<DataInputAdapter> paths, File session);
+	public abstract void onSuccess(DataLoaderContext ctx);
 	public abstract void onWarn(String message);
-	public abstract void onFail(List<DataInputAdapter> paths, String message);
+	public abstract void onFail(DataLoaderContext ctx, String message);
 	public abstract void onParameters(Group parameters, Consumer<Boolean> finished);
 	public abstract void onSelection(List<DataSourcePlugin> datasources, Consumer<DataSourcePlugin> selected);
 	

@@ -348,8 +348,8 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	void load(List<DataInputAdapter> files) {
-		DataLoader loader = new PlotDataLoader(this, controller, files);
-		loader.load();
+		DataLoader loader = new PlotDataLoader(this, controller);
+		loader.loadFiles(files);
 	}
 
 
@@ -420,7 +420,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
 	}
 	
-	public void actionOpenData() {	
+	public void actionOpenData() {
 		List<SimpleFileExtension> exts = new ArrayList<>();
 		for (DataSourcePlugin p : DataSourceRegistry.system().newInstances()) {
 			FileFormat f = p.getFileFormat();

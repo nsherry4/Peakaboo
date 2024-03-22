@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.dataset.DatasetReadResult;
-import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.swing.SwingAutoPanel;
@@ -26,8 +25,8 @@ class PlotDataLoader extends DataLoader {
 
 	private final PlotPanel plotPanel;
 
-	PlotDataLoader(PlotPanel plotPanel, PlotController controller, List<DataInputAdapter> datafiles) {
-		super(controller, datafiles);
+	PlotDataLoader(PlotPanel plotPanel, PlotController controller) {
+		super(controller);
 		this.plotPanel = plotPanel;
 	}
 
@@ -37,14 +36,14 @@ class PlotDataLoader extends DataLoader {
 	}
 
 	@Override
-	public void onSuccess(List<DataInputAdapter> paths, File session) {
+	public void onSuccess(DataLoaderContext ctx) {
 		// set some controls based on the fact that we have just loaded a
 		// new data set
 		this.plotPanel.getCanvas().updateCanvasSize();
 	}
 
 	@Override
-	public void onFail(List<DataInputAdapter> paths, String message) {
+	public void onFail(DataLoaderContext ctx, String message) {
 		new LayerDialog(
 				"Open Failed", 
 				message, 
