@@ -54,7 +54,7 @@ public interface FittingSolver extends BoltJavaPlugin {
 		/**
 		 *  Subset of channels to focus on
 		 */
-		int[] channels;
+		public int[] channels;
 		
 		public FittingSolverContext(SpectrumView data, FittingSetView fittings, CurveFitter fitter) {
 			this.data = data;
