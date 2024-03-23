@@ -25,7 +25,7 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class OptimizingFittingSolver implements FittingSolver {
 
-	protected double costFnPrecision =  0.01d;
+	protected double costFnPrecision = 0.015d;
 	
 	@Override
 	public String pluginName() {
@@ -60,15 +60,19 @@ public class OptimizingFittingSolver implements FittingSolver {
 			return getEmptyResult(ctx);
 		}
 
+		double[] weights = calculateWeights(ctx);
+		return evaluate(weights, ctx);
+		
+	}
+	
+	public double[] calculateWeights(FittingSolverContext ctx) {
 		EvaluationSpace eval = new EvaluationSpace(ctx.data.size());
 		MultivariateFunction cost = getCostFunction(ctx, eval);
 		double[] guess = getInitialGuess(ctx);
 			
 		PointValuePair result = optimizeCostFunction(cost, guess, costFnPrecision);
 		
-		double[] scalings = result.getPoint();
-		return evaluate(scalings, ctx);
-		
+		return result.getPoint();
 	}
 	
 	protected FittingResultSet getEmptyResult(FittingSolverContext ctx) {
@@ -135,7 +139,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	
 	protected MultivariateFunction getCostFunction(FittingSolverContext ctx, EvaluationSpace eval) {
 		return new MultivariateFunction() {
-			
+					
 			@Override
 			public double value(double[] point) {
 				
@@ -151,7 +155,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 				float score = score(point, ctx, eval.residual);
 				if (containsNegatives > 0) {
 					return score * (1f+containsNegatives);
-				}
+				}		
 				return score;
 				
 			}
@@ -194,8 +198,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 		float[] ra = residual.backingArray();
 		float score = 0;
 		int length = ctx.channels.length;
+		int[] channels = ctx.channels;
 		for (int i = 0; i < length; i++) {
-			float value = ra[ctx.channels[i]];
+			float value = ra[channels[i]];
 			
 			//Negative values mean that we've fit more signal than exists
 			//We penalize this to prevent making up data where none exists.

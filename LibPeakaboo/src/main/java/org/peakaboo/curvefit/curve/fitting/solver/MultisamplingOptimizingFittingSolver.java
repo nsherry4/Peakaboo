@@ -11,6 +11,8 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 
+	public static final int MULTISAMPLE_COUNT = 8;
+	
 	@Override
 	public String pluginName() {
 		return "MultiSampling";
@@ -52,7 +54,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		int counter = 0;
 		double[] scalings = new double[size];
 		EvaluationSpace eval = new EvaluationSpace(permCtx.data.size());
-		while (counter <= 10) {
+		while (counter <= MULTISAMPLE_COUNT) {
 			Collections.shuffle(permCtx.curves, new Random(12345654321l));
 			
 			
