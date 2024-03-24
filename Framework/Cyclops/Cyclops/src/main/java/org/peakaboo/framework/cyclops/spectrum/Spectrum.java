@@ -18,7 +18,18 @@ public interface Spectrum extends SpectrumView {
 	 * Values copied will be in the range of 0 .. min(size(), s.size()) exclusive
 	 * @param s
 	 */
-	void copy(Spectrum s);
+	default void copy(Spectrum s) {
+		this.copy(s, 0, Math.min(this.size(), s.size()) - 1);
+	}
+
+	/**
+	 * Copies the values from the given spectrum into this one. 
+	 * Values copied will be in the range of 0 .. min(size(), s.size()) exclusive
+	 * @param s
+	 * @param first the first index to copy
+	 * @param last the last index to copy
+	 */
+	void copy(Spectrum s, int first, int last);
 	
 	/**
 	 * Adds a value to the Spectrum.  When a new spectrum is created 
@@ -57,6 +68,13 @@ public interface Spectrum extends SpectrumView {
 	 * This will not impact the add cursor's location
 	 */
 	void zero();
+	
+	/**
+	 * Populate all entries in a spectrum with 0s
+	 * This will not impact the add cursor's location
+	 */
+	void zero(int first, int last);
+	
 	
 	
 	/**

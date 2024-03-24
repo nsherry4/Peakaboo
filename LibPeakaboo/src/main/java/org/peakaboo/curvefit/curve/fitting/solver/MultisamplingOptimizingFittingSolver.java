@@ -7,7 +7,6 @@ import java.util.Random;
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 
@@ -38,17 +37,15 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		return "87eeb1e0-6c4e-4f80-9cf7-8c19a07423b5";
 	}
 
+
 	@Override
-	public FittingResultSetView solve(FittingSolverContext inputCtx) {
+	public double[] calculateWeights(OptimizingFittingSolver.Context inputCtx) {
 		
 		int size = inputCtx.fittings.getVisibleCurves().size();
-		if (size == 0) {
-			return getEmptyResult(inputCtx);
-		}
 		
 		// Create a shallow copy of the input context and then make a deep copy of the
 		// curve list so that we can permute it without impacting the original
-		FittingSolverContext permCtx = new FittingSolverContext(inputCtx);
+		OptimizingFittingSolver.Context permCtx = new OptimizingFittingSolver.Context(inputCtx);
 		permCtx.curves = new ArrayList<>(permCtx.curves);
 		
 		int counter = 0;
@@ -82,8 +79,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			scalings[i] /= counter;
 		}
 		
-		return evaluate(scalings, inputCtx);
-		
+		return scalings;
 		
 	}
 	

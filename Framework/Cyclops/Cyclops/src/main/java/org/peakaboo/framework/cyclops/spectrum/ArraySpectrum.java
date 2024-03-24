@@ -138,37 +138,42 @@ public class ArraySpectrum implements Spectrum
 	}
 	
 	
-	/**
-	 * Copies the values from the given spectrum into this one. 
-	 * Values copied will be in the range of 0 .. min(size(), s.size()) exclusive
-	 * @param s
-	 */
+
 	@Override
 	public void copy(SpectrumView s)
 	{
-		copy(s.backingArrayCopy());
+		copy(((Spectrum) s));
 	}
 
-	/**
-	 * Copies the values from the given spectrum into this one. 
-	 * Values copied will be in the range of 0 .. min(size(), s.size()) exclusive
-	 * @param s
-	 */
+
 	@Override
 	public void copy(Spectrum s)
 	{
-		copy(s.backingArray());
+		copy(s.backingArray(), 0, Math.min(this.size, s.size()) - 1);
+	}
+	
+	/**
+	 * Copies the values from the given spectrum into this one. 
+	 * @param s
+	 * @param first the first index to copy
+	 * @param last the last index to copy
+	 */
+	@Override
+	public void copy(Spectrum s, int first, int last)
+	{
+		copy(s.backingArray(), first, last);
 	}
 	
 	/**
 	 * Copies the given array into the start of this Spectrum's data array 
-	 * up to min(this.size(), array.length) exclusive;
 	 * @param array the array to copy from
+	 * @param first the first index to copy
+	 * @param last the last index to copy
 	 */
-	private void copy(float[] array) {
+	private void copy(float[] array, int first, int last) {
 		int length = Math.min(this.data.length, array.length);
-		System.arraycopy(array, 0, this.data, 0, length);
-		maxIndex = Math.max(maxIndex, array.length-1);
+		System.arraycopy(array, first, this.data, first, last - first + 1);
+		maxIndex = Math.max(maxIndex, last);
 	}
 
 	/**
@@ -435,6 +440,11 @@ public class ArraySpectrum implements Spectrum
 		Arrays.fill(data, 0f);
 	}
 
+	@Override
+	public void zero(int first, int last) {
+		Arrays.fill(data, first, last+1, 0f);
+	}
+	
 	public float sum()  {
 		float sum = 0;
 		for (int i = 0; i < size; i++) {
