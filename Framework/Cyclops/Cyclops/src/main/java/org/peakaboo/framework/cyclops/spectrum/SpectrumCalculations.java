@@ -42,7 +42,7 @@ public class SpectrumCalculations
 		
 		int size = Math.min(a1.length, a2.length);
 		for (int i = 0; i < size; i++) {
-			a2[i] = Math.max(a1[i], a2[i]);
+			a1[i] = Math.max(a1[i], a2[i]);
 		}
 		
 
