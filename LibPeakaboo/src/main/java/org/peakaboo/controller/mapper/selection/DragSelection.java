@@ -1,16 +1,15 @@
 package org.peakaboo.controller.mapper.selection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.Range;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Represents a box-style selection over an area
@@ -20,7 +19,7 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 class DragSelection extends AbstractSelection {
 
 	private Coord<Integer> start, end;
-	private List<Integer> points = new ArrayList<>();
+	private IntArrayList points = new IntArrayList();
 	
 	public DragSelection(MappingController map) {
 		super(map);
@@ -70,7 +69,7 @@ class DragSelection extends AbstractSelection {
 	/**
 	 * generate a list of indexes in the map which are selected
 	 */
-	private List<Integer> getPoints() {
+	private IntArrayList getPoints() {
 		trimSelectionToBounds();
 		points.clear();
 		
@@ -95,7 +94,7 @@ class DragSelection extends AbstractSelection {
 
 	}
 	
-	private List<Integer> getPointsRectangle(GridPerspective<Float> grid) {
+	private IntArrayList getPointsRectangle(GridPerspective<Float> grid) {
 		points.clear();
 		
 		int xstart = getStart().x;
@@ -124,18 +123,12 @@ class DragSelection extends AbstractSelection {
 				points.add(row + x);
 			}
 		}
-			
-//		for (int y : new Range(ystart, yend)) {
-//			for (int x : new Range(xstart, xend)) {
-//				points.add( grid.getIndexFromXY(x, y) );
-//			}
-//		}
 		
 		return points;
 		
 	}
 	
-	private List<Integer> getPointsEllipse(GridPerspective<Float> grid) {
+	private IntArrayList getPointsEllipse(GridPerspective<Float> grid) {
 		points.clear();
 		
 		final int xstart = Math.min(getStart().x, getEnd().x);
@@ -185,27 +178,27 @@ class DragSelection extends AbstractSelection {
 	}
 
 	@Override
-	public List<Integer> selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
+	public IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
 		start = null;
 		end = null;
-		return Collections.emptyList();
+		return IntArrayList.of();
 	}
 
 	@Override
-	public List<Integer> startDragSelection(Coord<Integer> point) {
+	public IntArrayList startDragSelection(Coord<Integer> point) {
 		setStart(point);
 		setEnd(null);
 		return getPoints();
 	}
 
 	@Override
-	public List<Integer> addDragSelection(Coord<Integer> point) {
+	public IntArrayList addDragSelection(Coord<Integer> point) {
 		setEnd(point);
 		return getPoints();
 	}
 
 	@Override
-	public List<Integer> releaseDragSelection(Coord<Integer> point) {
+	public IntArrayList releaseDragSelection(Coord<Integer> point) {
 		return addDragSelection(point);
 	}
 	

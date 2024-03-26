@@ -1,12 +1,13 @@
 package org.peakaboo.display.map.modes.correlation;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.display.map.modes.MapModeData;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public class CorrelationModeData implements MapModeData {
 	public Spectrum data;
@@ -51,7 +52,7 @@ public class CorrelationModeData implements MapModeData {
 
 	@Override
 	public Optional<SelectionInfo> getMapSelectionInfo() {
-		return Optional.of(new SelectionInfo(data, List.of()));
+		return Optional.of(new SelectionInfo(data, IntArrayList.of()));
 	}
 	
 	

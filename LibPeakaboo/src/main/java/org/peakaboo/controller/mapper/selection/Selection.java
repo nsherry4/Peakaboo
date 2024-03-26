@@ -1,19 +1,20 @@
 package org.peakaboo.controller.mapper.selection;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 public interface Selection {
 	
 	Optional<Group> getParameters();
 	
-	List<Integer> selectPoint(Coord<Integer> clickedAt, boolean singleSelect);
+	IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect);
 	
-	List<Integer> startDragSelection(Coord<Integer> point);
-	List<Integer> addDragSelection(Coord<Integer> point);
-	List<Integer> releaseDragSelection(Coord<Integer> point);
+	IntArrayList startDragSelection(Coord<Integer> point);
+	IntArrayList addDragSelection(Coord<Integer> point);
+	IntArrayList releaseDragSelection(Coord<Integer> point);
 
 }

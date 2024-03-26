@@ -1,11 +1,9 @@
 package org.peakaboo.controller.mapper.selection;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
@@ -17,6 +15,8 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
 import org.peakaboo.framework.eventful.cache.EventfulNullableCache;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public class MapSelectionController extends EventfulType<MapUpdateType> {
 
@@ -36,8 +36,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 	private ModeController currentMode;
 	
-	private List<Integer> currentSelection = new ArrayList<>();
-	private List<Integer> newSelection = new ArrayList<>();
+	private IntArrayList currentSelection = new IntArrayList();
+	private IntArrayList newSelection = new IntArrayList();
 	private boolean modify = false;
 	private Coord<Integer> dragFocalPoint;
 	
@@ -85,7 +85,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		
 		displayPointCache = new EventfulNullableCache<>(() -> {
 			boolean spatial = map.getFitting().getActiveMode().isSpatial();
-			List<Integer> points = mergeSelections(dragFocalPoint, modify);
+			IntArrayList points = mergeSelections(dragFocalPoint, modify);
 			points = trimSelectionToBounds(points, false);
 			if (spatial) {
 				List<Integer> invalidPoints = map.getFiltering().getInvalidPoints();
@@ -96,7 +96,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		
 		logicalPointCache = new EventfulNullableCache<>(() -> {
 			boolean spatial = map.getFitting().getActiveMode().isSpatial();
-			List<Integer> points = mergeSelections(dragFocalPoint, modify);
+			IntArrayList points = mergeSelections(dragFocalPoint, modify);
 			points = trimSelectionToBounds(translateToSpatial(points), true);
 			
 			/*
@@ -251,8 +251,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		updateListeners(MapUpdateType.SELECTION);
 	}
 	
-	private List<Integer> mergeSelections(Coord<Integer> point, boolean modify) {
-		List<Integer> merged = new ArrayList<>();
+	private IntArrayList mergeSelections(Coord<Integer> point, boolean modify) {
+		IntArrayList merged = new IntArrayList(currentSelection.size() + newSelection.size());
 		if (!modify) {
 			if (newSelection.isEmpty()) {
 				merged.addAll(currentSelection);
@@ -305,7 +305,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		return getSelection().getParameters();
 	}
 	
-	public List<Integer> trimSelectionToBounds(List<Integer> points, boolean spatial) {
+	public IntArrayList trimSelectionToBounds(IntArrayList points, boolean spatial) {
 		
 		//This is a bit tricky -- the fitting map mode generally comes before filtering
 		//since it has to select which transition series get included and how, but it also
@@ -320,10 +320,11 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		int x = dimensions.x;
 		int y = dimensions.y;
 		int size = x*y;
-
-		List<Integer> trimmed = new ArrayList<>(points.size());
-		for (int index = 0; index < points.size(); index++) {
-			int i = points.get(index);
+		int pointsCount = points.size();
+		
+		IntArrayList trimmed = new IntArrayList(pointsCount);
+		for (int index = 0; index < pointsCount; index++) {
+			int i = points.getInt(index);
 			if (i >= 0 && i < size) {
 				trimmed.add(i);
 			}
@@ -337,7 +338,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 * to the spectra that generated those points. If there is no translation, the points will
 	 * simply be returned.
 	 */
-	private List<Integer> translateToSpatial(List<Integer> points) {
+	private IntArrayList translateToSpatial(IntArrayList points) {
 		return map.getFitting().getActiveMode().translateSelectionToSpatial(points);
 	}
 	

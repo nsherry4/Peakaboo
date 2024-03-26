@@ -39,11 +39,13 @@ public class SelectionMaskPainter extends RasterColorMapPainter {
 		for (int i = 0; i < size; i++) {
 			colors.add(transparent);
 		}
-		for (Integer i : points) {
-			if (i >= size || i < 0) {
-				CyclopsLog.get().log(Level.FINE, "Selected point " + i + " is out of bounds, ignoring");
+		
+		for (int i = 0; i < points.size(); i++) {
+			int point = points.get(i);
+			if (point >= size || point < 0) {
+				CyclopsLog.get().log(Level.FINE, "Selected point " + point + " is out of bounds, ignoring");
 			} else {
-				colors.set(i, selectionColour);
+				colors.set(point, selectionColour);
 			}
 		}
 

@@ -1,9 +1,6 @@
 package org.peakaboo.controller.mapper.selection;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -13,9 +10,11 @@ import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.GridPerspective;
+import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Represents a selection of similar points, which may not be contiguous 
@@ -25,7 +24,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 class SimilarSelection extends AbstractSelection {
 
-	private List<Integer> indexes = new ArrayList<>();
+	private IntArrayList indexes = new IntArrayList();
 	
 	
 	private Parameter<Float> threshold;
@@ -40,15 +39,15 @@ class SimilarSelection extends AbstractSelection {
 	}
 
 
-	public List<Integer> selectPoint(Coord<Integer> clickedAt, boolean contiguous) {
+	public IntArrayList selectPoint(Coord<Integer> clickedAt, boolean contiguous) {
 		indexes.clear();
 		
 		var selectionInfo = map.getFitting().getMapModeData().getMapSelectionInfo().orElseGet(() -> null);
 		if (selectionInfo == null) {
-			return new ArrayList<>();
+			return new IntArrayList();
 		}		
 		Spectrum data = selectionInfo.map();
-		List<Integer> invalid = selectionInfo.unselectable();
+		IntArrayList invalid = selectionInfo.unselectable();
 		
 		
 		Coord<Integer> mapSize = mapSize();
@@ -57,7 +56,7 @@ class SimilarSelection extends AbstractSelection {
 		GridPerspective<Float> grid = new GridPerspective<>(w, h, null);
 		float value = grid.get(data, clickedAt.x, clickedAt.y);
 				
-		List<Integer> points;
+		IntArrayList points;
 		if (! contiguous) {
 			points = selectNonContiguous(data, invalid, value, grid);
 		} else {
@@ -77,14 +76,14 @@ class SimilarSelection extends AbstractSelection {
 	}
 	
 	
-	private List<Integer> selectContiguous(Spectrum data, 
-			List<Integer> invalid,
+	private IntArrayList selectContiguous(Spectrum data, 
+			IntArrayList invalid,
 			Coord<Integer> clickedAt,
 			GridPerspective<Float> grid
 		) {
 		
 
-		List<Integer> points = new ArrayList<>();
+		IntArrayList points = new IntArrayList();
 		//hashsets are faster for `contains` operations, which is what these will be heavily used for
 		Set<Integer> pointSet = new HashSet<>();
 		Set<Integer> invalidPoints = new HashSet<>(invalid);
@@ -95,7 +94,7 @@ class SimilarSelection extends AbstractSelection {
 		pointSet.add(point);
 		int cursor = 0;
 		while (cursor < points.size()) {
-			point = points.get(cursor);
+			point = points.getInt(cursor);
 			int x, y;
 			
 			int[] neighbours = new int[] {grid.north(point), grid.south(point), grid.east(point), grid.west(point)};
@@ -133,9 +132,9 @@ class SimilarSelection extends AbstractSelection {
 	}
 
 
-	private List<Integer> selectNonContiguous(Spectrum data, List<Integer> invalid, float value, GridPerspective<Float> grid) {
+	private IntArrayList selectNonContiguous(Spectrum data, IntArrayList invalid, float value, GridPerspective<Float> grid) {
 		//All points, even those not touching
-		List<Integer> points = new ArrayList<>();
+		IntArrayList points = new IntArrayList();
 		float thresholdValue = threshold.getValue();
 		for (int y : new Range(0, grid.height)) {
 			for (int x : new Range(0, grid.width)) {
@@ -161,7 +160,7 @@ class SimilarSelection extends AbstractSelection {
 		return points;
 	}
 	
-	private List<Integer> padSelection(List<Integer> points) {
+	private IntArrayList padSelection(IntArrayList points) {
 		Set<Integer> pointSet = new HashSet<>();
 		pointSet.addAll(points);
 	
@@ -184,7 +183,7 @@ class SimilarSelection extends AbstractSelection {
 			}
 		}
 		
-		return new ArrayList<>(pointSet);
+		return new IntArrayList(pointSet);
 		
 		
 	}
@@ -195,18 +194,18 @@ class SimilarSelection extends AbstractSelection {
 	}
 
 	@Override
-	public List<Integer> startDragSelection(Coord<Integer> point) {
-		return Collections.emptyList();
+	public IntArrayList startDragSelection(Coord<Integer> point) {
+		return IntArrayList.of();
 	}
 
 	@Override
-	public List<Integer> addDragSelection(Coord<Integer> point) {
-		return Collections.emptyList();
+	public IntArrayList addDragSelection(Coord<Integer> point) {
+		return IntArrayList.of();
 	}
 
 	@Override
-	public List<Integer> releaseDragSelection(Coord<Integer> point) {
-		return Collections.emptyList();
+	public IntArrayList releaseDragSelection(Coord<Integer> point) {
+		return IntArrayList.of();
 	}
 
 

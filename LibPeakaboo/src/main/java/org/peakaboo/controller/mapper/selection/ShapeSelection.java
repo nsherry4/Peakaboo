@@ -1,13 +1,10 @@
 package org.peakaboo.controller.mapper.selection;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Stack;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.autodialog.model.Group;
@@ -15,9 +12,11 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 class ShapeSelection extends AbstractSelection {
 
-	private List<Integer> points = new ArrayList<>();
+	private IntArrayList points = new IntArrayList();
 	
 	private static final int EMPTY = 0;
 	private static final int INSIDE = 1;
@@ -29,13 +28,13 @@ class ShapeSelection extends AbstractSelection {
 	}
 
 	@Override
-	public List<Integer> startDragSelection(Coord<Integer> point) {
+	public IntArrayList startDragSelection(Coord<Integer> point) {
 		points.clear();
 		return addDragSelection(point);
 	}
 
 	@Override
-	public List<Integer> addDragSelection(Coord<Integer> point) {
+	public IntArrayList addDragSelection(Coord<Integer> point) {
 		point = bounded(point);
 		GridPerspective<Float> grid = grid();
 		int index = grid.getIndexFromXY(point.x, point.y);
@@ -45,7 +44,7 @@ class ShapeSelection extends AbstractSelection {
 		// all of the points, so we interpolate
 		if (!points.isEmpty()) {
 			//check if the last point is touching
-			int lastIndex = points.get(points.size()-1);
+			int lastIndex = points.getInt(points.size()-1);
 			IntPair lastPoint = grid.getXYFromIndex(lastIndex);
 			if (Math.abs(lastPoint.first - point.x) > 1 || Math.abs(lastPoint.second - point.y) > 1) {
 				interpolate(lastIndex, index, grid);
@@ -58,12 +57,12 @@ class ShapeSelection extends AbstractSelection {
 		return points;
 	}
 
-	public List<Integer> releaseDragSelection(Coord<Integer> point) {
+	public IntArrayList releaseDragSelection(Coord<Integer> point) {
 		//add the last point
 		addDragSelection(point);
 		
 		//interpolate between the first and last points
-		interpolate(points.get(0), points.get(points.size()-1), grid());
+		interpolate(points.getInt(0), points.getInt(points.size()-1), grid());
 		
 		//fill in the traced area now that the user is done making the selection
 		fillTrace();
@@ -117,7 +116,7 @@ class ShapeSelection extends AbstractSelection {
 		// * 0 = empty
 		// * 1 = inside
 		// * 2 = outside
-		List<Integer> values = new ArrayList<>();
+		IntArrayList values = new IntArrayList();
 		for (int i = 0; i < grid.width*grid.height; i++) {
 			values.add(EMPTY);
 		}
@@ -138,13 +137,13 @@ class ShapeSelection extends AbstractSelection {
 		//read the value matrix and use it to build a new points list
 		points.clear();
 		for (int i = 0; i < grid.width*grid.height; i++) {
-			if (values.get(i) != OUTSIDE) {
+			if (values.getInt(i) != OUTSIDE) {
 				points.add(i);
 			}
 		}
 	}
 	
-	private void floodFill(List<Integer> values, Deque<Integer> stack, GridPerspective<Float> grid) {	
+	private void floodFill(IntArrayList values, Deque<Integer> stack, GridPerspective<Float> grid) {	
 		
 		/*
 		 * We track all pixels we've visited to or are going to visit. This ensures we
@@ -167,7 +166,7 @@ class ShapeSelection extends AbstractSelection {
 				};
 			
 			for (int i : neighbours) {
-				if (i >= 0 && values.get(i) == EMPTY && !visiting.contains(i)) { 
+				if (i >= 0 && values.getInt(i) == EMPTY && !visiting.contains(i)) { 
 					stack.add(i);
 					visiting.add(i);
 				}
@@ -265,7 +264,7 @@ class ShapeSelection extends AbstractSelection {
 
 
 	@Override
-	public List<Integer> selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
+	public IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
 		points.clear();
 		return points;
 	}
