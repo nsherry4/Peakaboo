@@ -4,7 +4,6 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.stream.IntStream;
 
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.IntPair;

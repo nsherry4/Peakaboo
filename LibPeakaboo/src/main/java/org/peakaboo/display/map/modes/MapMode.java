@@ -17,6 +17,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleA
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 public abstract class MapMode {
 
 	protected DrawingRequest dr;
@@ -85,7 +87,7 @@ public abstract class MapMode {
 		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, settings.getFg(), null, null, null, title);
 	}
 	
-	protected SelectionMaskPainter getSelectionPainter(PaletteColour colour, List<Integer> points, int width, int height) {
+	protected SelectionMaskPainter getSelectionPainter(PaletteColour colour, IntArrayList points, int width, int height) {
 		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
 		if (selectionPainter == null) {
 			selectionPainter = new SelectionMaskPainter(colour, points, width, height);

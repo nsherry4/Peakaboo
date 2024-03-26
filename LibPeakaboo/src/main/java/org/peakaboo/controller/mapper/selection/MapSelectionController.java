@@ -42,7 +42,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	private Coord<Integer> dragFocalPoint;
 	
 	//cache values for the selected points, one suitable for display and the other for accessing datasets
-	private EventfulCache<List<Integer>> displayPointCache, logicalPointCache;
+	private EventfulCache<IntArrayList> displayPointCache, logicalPointCache;
 	
 	public MapSelectionController(MappingController mappingController) {
 		this.map = mappingController;
@@ -151,7 +151,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 * display modes (eg correlation) back to the data's underlying indexes before
 	 * removing selection points with no backing data (ie invalid points)
 	 */
-	public List<Integer> getDisplayPoints() {
+	public IntArrayList getDisplayPoints() {
 		return displayPointCache.getValue();
 	}
 	
@@ -162,7 +162,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	 * will translate selections made in non-spatial map modes (eg correlation) and
 	 * remove any points for which no backing data exists.
 	 */
-	public List<Integer> getLogicalPoints() {
+	public IntArrayList getLogicalPoints() {
 		return logicalPointCache.getValue();
 	}
 	

@@ -1,14 +1,13 @@
 package org.peakaboo.display.map;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.display.map.modes.MapModeRegistry;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 
 public class MapRenderSettings {
@@ -42,7 +41,7 @@ public class MapRenderSettings {
 	public int spectrumHeight = 10;
 	public String spectrumTitle = "";
 		
-	public List<Integer> selectedPoints = new ArrayList<>();
+	public IntArrayList selectedPoints = new IntArrayList();
 	
 	public DetectorProfile detectorProfile = new BasicDetectorProfile();
 
