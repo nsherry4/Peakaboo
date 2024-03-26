@@ -7,7 +7,6 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Range;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -136,16 +135,20 @@ class DragSelection extends AbstractSelection {
 		final int xend = Math.max(getStart().x, getEnd().x);
 		final int yend = Math.max(getStart().y, getEnd().y);
 
-		final int width = (xend - xstart) + 1;
-		final int height = (yend - ystart) + 1;
-		final float a = width/2f;
-		final float b = height/2f;
+		final float a = ((xend - xstart) + 1)/2f; // width / 2
+		final float b = ((yend - ystart) + 1)/2f; // height / 2
 
-		for (int x : new Range(xstart, xend+1)) {
+		// Pull the squaring and division operations out of the loops below, replace
+		// with mults of 1/value
+		final float one_over_a_squared = 1f / (a*a);
+		final float one_over_b_squared = 1f / (b*b);
+		
+		for (int x = xstart; x <= xend; x++) {
 			float x0 = (x - xstart) - a + 0.5f; //0.5 for the middle of the pixel
-			for (int y : new Range(ystart, yend+1)){
+			float x0_squared = x0*x0;
+			for (int y = ystart; y <= yend; y++) {
 				float y0 = (y - ystart) - b + 0.5f;	
-				float dist = (x0*x0) / (a*a) + (y0*y0) / (b*b);
+				float dist = x0_squared * one_over_a_squared + (y0*y0) * one_over_b_squared;
 				if (dist <= 1f) {
 					points.add( grid.getIndexFromXY(x, y) );
 				}
