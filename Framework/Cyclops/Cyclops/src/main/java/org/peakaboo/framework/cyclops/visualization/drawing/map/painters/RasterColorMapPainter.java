@@ -1,7 +1,6 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -14,6 +13,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.visualization.palette.palettes.SingleColourPalette;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 /**
  * 
  * This class implements the drawing of a map using block pixel filling
@@ -24,7 +25,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.SingleColou
 public class RasterColorMapPainter extends MapPainter
 {
 	
-	private List<PaletteColour> pixels;
+	private IntArrayList pixels;
 	protected Buffer buffer;
 	protected boolean stale = true;
 	private boolean enabled = true;
@@ -36,8 +37,16 @@ public class RasterColorMapPainter extends MapPainter
 	}
 
 
-	public synchronized void setPixels(List<PaletteColour> pixels) {
+	public synchronized void setPixels(IntArrayList pixels) {
 		this.pixels = pixels;
+		this.stale = true;
+	}
+	
+	public synchronized void setPixels(List<PaletteColour> pixelColours) {
+		this.pixels = new IntArrayList(pixelColours.size());
+		for (int i = 0; i < pixelColours.size(); i++) {
+			this.pixels.add(pixelColours.get(i).getARGB());
+		}
 		this.stale = true;
 	}
 	
@@ -53,7 +62,7 @@ public class RasterColorMapPainter extends MapPainter
 		
 		p.context.save();
 
-			List<PaletteColour> data = transformListDataForMap(p.dr, pixels);
+			IntArrayList data = transformListDataForMap(p.dr, pixels);
 	
 			if (p.dr.drawToVectorSurface) {
 				drawAsScalar(p, data, cellSize);
@@ -79,15 +88,13 @@ public class RasterColorMapPainter extends MapPainter
 		return p.context.getImageBuffer(p.dr.dataWidth, p.dr.dataHeight);
 	}
 	
-	private void drawToRasterBuffer(PainterData p, final List<PaletteColour> data, float cellSize, final int maximumIndex)
+	private void drawToRasterBuffer(PainterData p, final IntArrayList data, float cellSize, final int maximumIndex)
 	{
 		final PaletteColour transparent = new PaletteColour(0x00000000);
 		
 		int size = Math.min(maximumIndex, data.size());
 		for (int ordinal = 0; ordinal < size; ordinal++) {
-			PaletteColour c = data.get(ordinal);
-			if (c == null) c = transparent;
-			buffer.setPixelValue(ordinal, c);
+			buffer.setPixelARGB(ordinal, data.getInt(ordinal));
 		}
 		
 		this.stale = false;
@@ -95,7 +102,7 @@ public class RasterColorMapPainter extends MapPainter
 	}
 
 
-	private void drawAsScalar(PainterData p, List<PaletteColour> data, float cellSize)
+	private void drawAsScalar(PainterData p, IntArrayList data, float cellSize)
 	{
 
 		p.context.save();
@@ -111,7 +118,7 @@ public class RasterColorMapPainter extends MapPainter
 
 				int index = y * p.dr.dataWidth + x;
 				p.context.rectAt(x * cellSize, y * cellSize, cellSize + 1, cellSize + 1);
-				p.context.setSource(data.get(index));
+				p.context.setSource(data.getInt(index));
 				p.context.fill();
 
 				
@@ -122,9 +129,12 @@ public class RasterColorMapPainter extends MapPainter
 	}
 
 	
-	protected <T> List<T> transformListDataForMap(DrawingRequest dr, List<T> list)
+	protected IntArrayList transformListDataForMap(DrawingRequest dr, IntArrayList list)
 	{
-		List<T> flip = new ArrayList<>(list);
+		IntArrayList flip = new IntArrayList(list.size());
+		for (int i = 0; i < list.size(); i++) {
+			flip.add(0);
+		}
 		
 		//vertical orientation flip
 		if (!dr.screenOrientation) {
@@ -157,7 +167,7 @@ public class RasterColorMapPainter extends MapPainter
 				y = (height-1) - y;
 				int index = grid.getIndexFromXY(x, y);
 				if (index == -1) continue;
-				flip.set(index, list.get(i));
+				flip.set(index, list.getInt(i));
 			}
 		}		
 		

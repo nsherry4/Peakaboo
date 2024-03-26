@@ -28,6 +28,7 @@ public interface Buffer extends Surface
 	
 	void setPixelValue(int x, int y, PaletteColour c);
 	void setPixelValue(int offset, PaletteColour c);
+	void setPixelARGB(int offset, int c);
 
 	void clear();
 	

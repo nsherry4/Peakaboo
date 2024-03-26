@@ -1,7 +1,5 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
@@ -12,14 +10,14 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 public class SelectionMaskPainter extends RasterColorMapPainter {
 
 	private int sizeX, sizeY;
-	private PaletteColour selectionColour;
-	private List<PaletteColour> colours;
+	private int selectionColour;
+	private IntArrayList colours;
 	
 	public SelectionMaskPainter(PaletteColour c, IntArrayList points, int sizeX, int sizeY) {
 		super();
-		this.selectionColour = c;
-		colours = new ArrayList<>(sizeX * sizeY);
-		configure(sizeX, sizeY, points);	
+		this.selectionColour = c.getARGB();
+		colours = new IntArrayList(sizeX * sizeY);
+		configure(sizeX, sizeY, points);
 	}
 
 	public synchronized void configure(int dataWidth, int dataHeight, IntArrayList points) {
@@ -41,10 +39,9 @@ public class SelectionMaskPainter extends RasterColorMapPainter {
 		}
 		
 		PaletteColour transparent = new PaletteColour(0, 0, 0, 0);
-		
-		
+		int transparentARGB = transparent.getARGB();
 		for (int i = 0; i < size; i++) {
-			colours.add(transparent);
+			colours.add(transparentARGB);
 		}
 		
 		for (int i = 0; i < points.size(); i++) {
