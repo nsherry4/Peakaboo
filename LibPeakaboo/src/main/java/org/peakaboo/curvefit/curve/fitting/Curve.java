@@ -234,8 +234,7 @@ public class Curve implements CurveView {
 		
 
 		//Build a list of fitting functions
-		for (Transition t : this.transitionSeries)
-		{
+		for (Transition t : this.transitionSeries) {
 
 			functions.add(parameters.forTransition(t));
 
@@ -249,33 +248,29 @@ public class Curve implements CurveView {
 
 		//Use the functions to generate a model
 		float value;
-		for (int i = 0; i < calibration.getDataWidth(); i++)
-		{
-
-			value = 0.0f;
-			for (FittingFunction f : functions)
-			{
-
-				value += f.forEnergy(calibration.energyFromChannel(i));
-
+		for (int i = 0; i < calibration.getDataWidth(); i++) {
+			float energy = calibration.energyFromChannel(i);
+			value = 0f;
+			for (int j = 0; j < functions.size(); j++) {
+				value += functions.get(j).forEnergy(energy);
 			}
 			fit.set(i, value);
-
 		}
 
 
 		normalizationScale = fit.max();
-		if (normalizationScale == 0.0)
-		{
-			normalizedCurve = SpectrumCalculations.multiplyBy(fit, 0.0f);
-		}
-		else
-		{
+		if (normalizationScale == 0.0) {
+			normalizedCurve = new ArraySpectrum(fit.size(), 0f);
+			normalizedMax = 0f;
+			normalizedSum = 0f;
+		} else {
 			normalizedCurve = SpectrumCalculations.divideBy(fit, normalizationScale);
+			// normalizedCurve is the fit divided by its maximum value, so the max of
+			// normalizedCurve will always be 1 (or a rounding error away from 1)
+			normalizedMax = 1f;
+			normalizedSum = normalizedCurve.sum();
 		}
-		normalizedSum = normalizedCurve.sum();
-		normalizedMax = normalizedCurve.max();
-
+		
 
 	}
 
