@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.laf.painters.checkbutton;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
@@ -17,7 +18,7 @@ public class CheckPainter extends SimpleThemed implements Painter<JComponent>{
 
 	private int pad = 0;
 	private int voffset = 0;
-	private boolean enabled = true;
+	protected boolean enabled = true;
 	
 	public CheckPainter(Theme theme, int pad, int voffset, boolean enabled) {
 		super(theme);
@@ -42,22 +43,18 @@ public class CheckPainter extends SimpleThemed implements Painter<JComponent>{
 		int height = (h-pad*2);
 		int width = (w-pad*2);
 		
+		g.setPaint(getCheckColour(object));
+		drawCheck(g, width, height);
+	}
+	
+	protected Color getCheckColour(JComponent object) {
 		if (enabled && Stratus.focusedWindow(object)) {
-			//check
-			g.setPaint(getTheme().getHighlightText());
-			drawCheck(g, width, height);
+			return getTheme().getHighlightText();
 		} else if (!enabled) {
-			g.setPaint(getTheme().getControlTextDisabled());
-			drawCheck(g, width, height);
+			return getTheme().getControlTextDisabled();
 		} else {
-			g.setPaint(getTheme().getControlText());
-			drawCheck(g, width, height);
+			return getTheme().getControlText();
 		}
-		
-		
-		
-
-		
 	}
 	
 	private void drawCheck(Graphics2D g, int width, int height) {
