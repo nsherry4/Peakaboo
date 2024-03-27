@@ -772,7 +772,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			
 		}
 		
-		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties));
+		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties), false);
 		propPanel.setBorder(Spacing.bHuge());
 
 		HeaderLayer layer = new HeaderLayer(this, true);
@@ -874,7 +874,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 		});
 		textfield.setText(controller.fitting().getAnnotation(selected));
-		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, StockIcon.BADGE_QUESTION);
+		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield);
 		dialogbox.set(dialog);
 		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
 		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
