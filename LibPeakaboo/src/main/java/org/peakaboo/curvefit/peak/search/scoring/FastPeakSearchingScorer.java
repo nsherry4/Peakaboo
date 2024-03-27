@@ -3,7 +3,6 @@ package org.peakaboo.curvefit.peak.search.scoring;
 import java.util.List;
 
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
-import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
@@ -19,10 +18,10 @@ public class FastPeakSearchingScorer implements FittingScorer {
 	List<Integer> peakIndexes;
 	float datamax;
 	
-	public FastPeakSearchingScorer(SpectrumView data, EnergyCalibration calibration) {
+	public FastPeakSearchingScorer(SpectrumView data, List<Integer> peakIndexes, EnergyCalibration calibration) {
 		this.data = data;
 		this.calibration = calibration;
-		this.peakIndexes = new DerivativePeakSearcher().search(data);
+		this.peakIndexes = peakIndexes;
 		this.datamax = (float) Math.log1p(data.max());
 	}
 	
