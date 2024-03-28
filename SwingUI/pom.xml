@@ -46,11 +46,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache-extras.beanshell</groupId>
-			<artifactId>bsh</artifactId>
-			<version>2.0b6</version>
-		</dependency>
-		<dependency>
 			<groupId>org.peakaboo</groupId>
 			<artifactId>libpeakaboo</artifactId>
 			<version>${project.version}</version>

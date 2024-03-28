@@ -143,11 +143,6 @@ public class PlotMenuMain extends JPopupMenu {
 				.withAction(plot::actionReportBug);
 		debug.add(bugreport);
 		
-		JMenuItem console = new FluentMenuItem()
-				.withText("Debug Console")
-				.withAction(plot::actionDebugConsole);
-		debug.add(console);
-
 		
 		this.add(debug);
 		

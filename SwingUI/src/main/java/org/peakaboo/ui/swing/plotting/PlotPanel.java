@@ -104,7 +104,6 @@ import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
-import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.options.AdvancedOptionsPanel;
@@ -442,15 +441,6 @@ public class PlotPanel extends TabbedLayerPanel {
 		});
 		
 	}
-	
-	public void actionDebugConsole() {
-		DebugConsole console = new DebugConsole(tabs);
-		
-		tabs.addTab(console);
-		tabs.setTabTitle(console, "Debug Console");
-	}
-
-
 	
 	
 	public void actionLoadSubsetDataSource(SubsetDataSource sds, SavedSession settings) {
