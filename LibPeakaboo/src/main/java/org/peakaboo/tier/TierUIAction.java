@@ -9,7 +9,7 @@ import org.peakaboo.framework.autodialog.model.SelfDescribing;
 
 public class TierUIAction<V, C> implements SelfDescribing {
 
-	public String text, iconname, description, location;
+	public String text, iconname, desc, location;
 	public BiConsumer<V, C> action; //view, controller
 	public Object component; //UI can stash component here for easy tracking. This is NOT for the Tier to populate
 	public Function<C, Boolean> enabled;
@@ -22,7 +22,7 @@ public class TierUIAction<V, C> implements SelfDescribing {
 		this.location = location;
 		this.text = text;
 		this.iconname = iconname;
-		this.description = description;
+		this.desc = description;
 		
 		this.action = action;
 		this.enabled = enabled;
@@ -35,7 +35,7 @@ public class TierUIAction<V, C> implements SelfDescribing {
 
 	@Override
 	public String description() {
-		return this.description;
+		return this.desc;
 	}
 	
 	

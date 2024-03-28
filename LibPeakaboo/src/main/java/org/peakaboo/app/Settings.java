@@ -116,11 +116,11 @@ public class Settings {
 
 		//Load the system-wide cfg file for the jpackage launcher
 		try {
-			File sourceCFG = Env.systemCFGFile(Version.program_name);
+			File sourceCFG = Env.systemCFGFile(Version.PROGRAM_NAME);
 			String cfgContents = Files.readString(sourceCFG.toPath());
 			//replace the default memory option with the new one
 			cfgContents = cfgContents.replace("java-options=-XX:MaxRAMPercentage=75", jvmOption);
-			File userCFG = Env.userCFGFile(Version.program_name);
+			File userCFG = Env.userCFGFile(Version.PROGRAM_NAME);
 			Files.writeString(userCFG.toPath(), cfgContents);
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.WARNING, "Cannot write to per-user Peakaboo.cfg file", e);

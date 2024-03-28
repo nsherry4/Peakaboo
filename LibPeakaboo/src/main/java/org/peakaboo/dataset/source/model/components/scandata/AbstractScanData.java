@@ -1,10 +1,8 @@
 package org.peakaboo.dataset.source.model.components.scandata;
 
 import org.peakaboo.dataset.source.model.PeakabooLists;
-import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
-import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.scratch.list.ScratchList;
 
 public abstract class AbstractScanData implements ScanData {
@@ -15,7 +13,7 @@ public abstract class AbstractScanData implements ScanData {
 	protected float minEnergy = 0;
 	
 	
-	public AbstractScanData(String name) {
+	protected AbstractScanData(String name) {
 		this.name = name;
 		this.spectra = PeakabooLists.create();
 	}

@@ -5,8 +5,8 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 import org.peakaboo.mapping.filter.plugin.plugins.AbstractMapFilter;
@@ -32,7 +32,7 @@ public class BinningMapFilter extends AbstractMapFilter {
 
 	@Override
 	public void initialize() {
-		reps = new Parameter<Integer>("Repetitions", new IntegerSpinnerStyle(), 1, this::validate);
+		reps = new Parameter<>("Repetitions", new IntegerSpinnerStyle(), 1, this::validate);
 		addParameter(reps);
 	}
 	
@@ -59,10 +59,10 @@ public class BinningMapFilter extends AbstractMapFilter {
 
 	private AreaMap bin(AreaMap source) {
 		
-		GridPerspective<Float> originalGrid = new GridPerspective<Float>(source.getSize().x, source.getSize().y, 0f);
+		GridPerspective<Float> originalGrid = new GridPerspective<>(source.getSize().x, source.getSize().y, 0f);
 		SpectrumView originalData = source.getData();
 		
-		GridPerspective<Float> binnedGrid = new GridPerspective<Float>(source.getSize().x/2, source.getSize().y/2, 0f);
+		GridPerspective<Float> binnedGrid = new GridPerspective<>(source.getSize().x/2, source.getSize().y/2, 0f);
 		Spectrum binnedData = new ArraySpectrum(binnedGrid.size());
 		
 		for (int y = 0; y < binnedGrid.height; y++) {

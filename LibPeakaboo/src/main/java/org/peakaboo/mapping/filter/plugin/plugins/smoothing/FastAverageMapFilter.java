@@ -11,6 +11,13 @@ public class FastAverageMapFilter extends AbstractConvolvingMapFilter {
 	}
 
 	@Override
+	public void initialize() {
+		super.initialize();
+		super.intensity.setEnabled(false);
+	}
+	
+	
+	@Override
 	public String getFilterName() {
 		return "Fast Average";
 	}

@@ -124,9 +124,7 @@ public class AutoEnergyCalibration {
 			FittingController controller,
 			int dataWidth
 		) {
-		
-		List<Integer> peakIndexes = new DerivativePeakSearcher().search(spectrum);
-		
+			
 		StreamExecutor<EnergyCalibration> scorer = new StreamExecutor<>("Evaluating Candidates", 5);
 		scorer.setTask(energies, stream -> {
 			
@@ -139,9 +137,9 @@ public class AutoEnergyCalibration {
 				FittingResultSetView results;
 				fits.get().getFittingParameters().setCalibration(calibration);
 				results = controller.getFittingSolver().solve(new FittingSolverContext(spectrum, fits.get(), controller.getCurveFitter()));
-				return scoreFitGood(results, peakIndexes, spectrum);
+				return scoreFitGood(results, spectrum);
 				
-			}).collect(Collectors.toList());
+			}).toList();
 			
 			
 			
@@ -157,7 +155,7 @@ public class AutoEnergyCalibration {
 			}
 
 			EnergyCalibration best = energies.get().get(bestIndex);
-			return fineTune(best, peakIndexes, spectrum, tsList, controller, 0.1f);
+			return fineTune(best, spectrum, tsList, controller, 0.1f);
 			
 		});
 		
@@ -182,7 +180,7 @@ public class AutoEnergyCalibration {
 		return score;
 	}
 	
-	public static float scoreFitGood(FittingResultSetView results, List<Integer> peakIndexes, SpectrumView spectrum) {
+	public static float scoreFitGood(FittingResultSetView results, SpectrumView spectrum) {
 		float score = 0f;
 
 		Spectrum fit = results.getTotalFit();
@@ -198,16 +196,13 @@ public class AutoEnergyCalibration {
 			//square root because middling fit should not be rewarded too much
 			score += Math.sqrt(percent);
 		}
-		
-			
-		
+
 		return score;
 	}
 	
 	
 	private static EnergyCalibration fineTune(
 			EnergyCalibration calibration,
-			List<Integer> peakIndexes,
 			SpectrumView spectrum, 
 			List<ITransitionSeries> tsList, 
 			FittingController controller,
@@ -236,7 +231,7 @@ public class AutoEnergyCalibration {
 				var ctx = new FittingSolverContext(spectrum, fits, controller.getCurveFitter());
 				FittingResultSetView results = controller.getFittingSolver().solve(ctx);
 				
-				float score = scoreFitGood(results, peakIndexes, spectrum);
+				float score = scoreFitGood(results, spectrum);
 				
 				if (score > bestScore) {
 					bestScore = score;

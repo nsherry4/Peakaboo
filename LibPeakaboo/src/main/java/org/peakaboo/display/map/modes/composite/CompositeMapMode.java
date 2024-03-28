@@ -23,7 +23,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScal
 
 public class CompositeMapMode extends MapMode{
 
-	public static String MODE_NAME = "Composite";
+	public static final String MODE_NAME = "Composite";
 	
 	private SpectrumMapPainter contourMapPainter;
 	
@@ -34,7 +34,7 @@ public class CompositeMapMode extends MapMode{
 		
 		//clear surface	
 		size = this.setDimensions(settings, size);
-		backend.rectAt(0, 0, (float)size.x, (float)size.y);
+		backend.rectAt(0, 0, size.x, size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
 		

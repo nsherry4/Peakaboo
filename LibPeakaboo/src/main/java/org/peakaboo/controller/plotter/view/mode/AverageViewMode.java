@@ -40,6 +40,7 @@ public class AverageViewMode implements ChannelViewMode {
 
 	@Override
 	public boolean equals(Object other) {
+		if (other == null) { return false; }
 		return (other.getClass() == getClass());
 	}
 	

@@ -35,13 +35,13 @@ public class CrashHandler {
 	private Bugsnag bugsnag;
 	
 	public CrashHandler() {
-		var devbuild = Version.releaseType != Version.ReleaseType.RELEASE;
+		var devbuild = Version.RELEASE_TYPE != Version.ReleaseType.RELEASE;
 		boolean autosubmit=DesktopSettings.isCrashAutoreporting() || devbuild;
 
 		//Create a new BugSnag instance with our id
 		this.bugsnag = new Bugsnag("4b9ef1b9c7b6851433ddaceb7155e2db", autosubmit);
-		this.bugsnag.setReleaseStage(Version.releaseType.toString());
-		this.bugsnag.setAppVersion(Version.longVersionNo);
+		this.bugsnag.setReleaseStage(Version.RELEASE_TYPE.toString());
+		this.bugsnag.setAppVersion(Version.LONG_VERSION);
 		this.bugsnag.setSendThreads(true);		
 	}
 
@@ -53,7 +53,7 @@ public class CrashHandler {
 			bugsnag.notify(throwable, Severity.ERROR, report -> {
 				final String APP_TAB = "Peakaboo";
 				report.addToTab(APP_TAB, "heapsize", Env.maxHeapBytes());
-				report.addToTab(APP_TAB, "version", Version.longVersionNo);
+				report.addToTab(APP_TAB, "version", Version.LONG_VERSION);
 				report.addToTab(APP_TAB, "build-date", Version.buildDate);
 				report.addToTab(APP_TAB, "tier", Tier.provider().tierName());
 				

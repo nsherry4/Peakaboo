@@ -391,7 +391,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	// ////////////////////////////////////////////////////////
 
 	public void actionAbout() {
-		ImageIcon logo = IconFactory.getImageIcon(Tier.provider().iconPath(), Version.logo);
+		ImageIcon logo = IconFactory.getImageIcon(Tier.provider().iconPath(), Version.LOGO);
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
 		
 		
@@ -404,9 +404,9 @@ public class PlotPanel extends TabbedLayerPanel {
 		contents.licence = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/licence.txt"));
 		contents.credits = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/credits.txt"));
 		contents.logo = logo;
-		contents.version = Version.versionNoMajor + "." + Version.versionNoMinor;
-		contents.longVersion = Version.longVersionNo;
-		contents.releaseDescription = Version.releaseDescription;
+		contents.version = Version.VERSION_MAJOR + "." + Version.VERSION_MINOR;
+		contents.longVersion = Version.LONG_VERSION;
+		contents.releaseDescription = Version.RELEASE_DESCRIPTION;
 		contents.date = Version.buildDate;
 		contents.titleStyle = "font-family: Springsteel-Light; font-size: 350%;";
 		

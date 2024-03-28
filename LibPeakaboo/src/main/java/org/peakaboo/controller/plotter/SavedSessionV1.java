@@ -27,7 +27,7 @@ public class SavedSessionV1 implements DruthersStorable {
 	public SavedFittingSessionV1 fitting;
 	public SessionViewModel view;
 	public SavedCalibrationSessionV1 calibration;
-	public String version = Version.longVersionNo;
+	public String version = Version.LONG_VERSION;
 	
 	/**
 	 * applies serialized preferences to the model

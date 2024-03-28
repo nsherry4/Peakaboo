@@ -78,10 +78,10 @@ public class DesktopApp {
 	}
 	
 	public static File appDir() {
-		return Env.appDir(Version.program_name);
+		return Env.appDir(Version.PROGRAM_NAME);
 	}
 	public static File appDir(String subdir) {
-		return Env.appDirEntry(Version.program_name, subdir);
+		return Env.appDirEntry(Version.PROGRAM_NAME, subdir);
 	}
 	
 }

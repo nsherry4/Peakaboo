@@ -5,8 +5,8 @@ import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.mapping.filter.model.AreaMap;
 
 public abstract class AbstractConvolvingMapFilter extends AbstractMapFilter {
@@ -19,7 +19,7 @@ public abstract class AbstractConvolvingMapFilter extends AbstractMapFilter {
 	protected Parameter<Float> intensity;
 	private int reach = 1;
 
-	public AbstractConvolvingMapFilter(int reach) {
+	protected AbstractConvolvingMapFilter(int reach) {
 		super();
 		this.reach = reach;
 	}
@@ -61,27 +61,7 @@ public abstract class AbstractConvolvingMapFilter extends AbstractMapFilter {
 			for (int y = 0; y < source.getSize().y; y++) {
 				for (int x = 0; x < source.getSize().x; x++) {
 	
-					float sum = 0f;
-					float count = 0;
-					
-					for (int dy = -reach; dy <= reach; dy++) {
-						int py = y+dy;
-						for (int dx = -reach; dx <= reach; dx++) {
-							int px = x+dx;
-							if (!grid.boundsCheck(px, py)) {
-								continue;
-							}
-							float kval = kernel[reach+dy][reach+dx];
-							sum += grid.get(data, px, py)*kval;
-							count += kval;
-						}
-					}
-					
-					if (count == 0) {
-						count = 0.01f;
-					}
-					float newValue = Math.max(0, sum/count);
-					grid.set(filtered, x, y, newValue);
+					applyKernelAtPoint(x, y, data, filtered, kernel, grid);
 					
 				}
 			}
@@ -91,6 +71,32 @@ public abstract class AbstractConvolvingMapFilter extends AbstractMapFilter {
 		}
 		
 		return new AreaMap(filtered, source);
+	}
+	
+	private void applyKernelAtPoint(int x, int y, SpectrumView data, Spectrum result, float[][] kernel, GridPerspective<Float> grid) {
+		
+		float sum = 0f;
+		float count = 0;
+		
+		for (int dy = -reach; dy <= reach; dy++) {
+			int py = y+dy;
+			for (int dx = -reach; dx <= reach; dx++) {
+				int px = x+dx;
+				if (!grid.boundsCheck(px, py)) {
+					continue;
+				}
+				float kval = kernel[reach+dy][reach+dx];
+				sum += grid.get(data, px, py)*kval;
+				count += kval;
+			}
+		}
+		
+		if (count == 0) {
+			count = 0.01f;
+		}
+		float newValue = Math.max(0, sum/count);
+		grid.set(result, x, y, newValue);
+		
 	}
 
 	@Override

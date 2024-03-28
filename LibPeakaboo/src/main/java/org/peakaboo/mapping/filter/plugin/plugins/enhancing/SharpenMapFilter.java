@@ -16,6 +16,7 @@ public class SharpenMapFilter extends AbstractConvolvingMapFilter {
 		super.reps.setEnabled(false);
 	}
 	
+	@Override
 	protected boolean validateIntensity(Parameter<?> param) {
 		if (intensity.getValue() <= 0.1) { return false; }
 		if (intensity.getValue() > 1.5) { return false; }

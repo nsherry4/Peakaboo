@@ -8,8 +8,8 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.framework.autodialog.model.Value;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * 
@@ -33,7 +33,7 @@ public abstract class AbstractFilter implements Serializable, Filter {
 	// PLUGIN METHODS
 	//==============================================	
 	
-	public AbstractFilter() {
+	protected AbstractFilter() {
 		this.parameters = new ArrayList<>();
 		this.enabled = true;
 	}

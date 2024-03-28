@@ -121,7 +121,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	public void load(String yaml, boolean isUndoAction) throws DruthersLoadException {
 		DruthersSerializer.deserialize(yaml, false,
 				new DruthersSerializer.FormatLoader<>(
-						SavedSession.FORMAT, 
+						SavedSession.SESSION_FORMAT, 
 						SavedSession.class, 
 						saved -> load(saved, isUndoAction)
 					)
@@ -194,7 +194,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 */
 	public Map<String, SpectrumView> currentOtherScans() {
 		if (!dataController.hasDataSet()) {
-			return null;
+			return Map.of();
 		}
 		return viewController.getChannelViewMode().otherScans(dataController, viewController);
 	}

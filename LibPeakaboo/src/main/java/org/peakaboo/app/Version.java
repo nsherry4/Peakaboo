@@ -35,53 +35,53 @@ public class Version {
 	}
 	
 	
-	public final static int versionNoMajor = 6;
-	public final static int versionNoMinor = 0;
-	public final static int versionNoPoint = 0;
+	public final static int VERSION_MAJOR = 6;
+	public final static int VERSION_MINOR = 0;
+	public final static int VERSION_POINT = 0;
 	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
-	public final static String program_name = "Peakaboo";
+	public final static String PROGRAM_NAME = "Peakaboo";
 	
-	public final static ReleaseType releaseType = ReleaseType.DEVELOPMENT;
+	public final static ReleaseType RELEASE_TYPE = ReleaseType.DEVELOPMENT;
 	
 
 
 	
-	public final static String releaseDescription;
-	public final static String titleReleaseDescription;
-	public final static String longVersionNo;
-	public final static String logo, splash;
-	public final static String title;
+	public final static String RELEASE_DESCRIPTION;
+	public final static String RELEASE_TITLE;
+	public final static String LONG_VERSION;
+	public final static String LOGO, SPLASH;
+	public final static String APP_TITLE;
 	
 	
 	static {
-		switch (releaseType) {
+		switch (RELEASE_TYPE) {
 		
 		default:
 		case DEVELOPMENT:
-			releaseDescription = Tier.provider().tierName() + " Development Version - " + buildDate;
-			titleReleaseDescription = "[" + releaseDescription + "]";
-			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "dev";
-			logo = "devicon";
-			splash = "devsplash";
-			title = Tier.provider().appName() + longVersionNo + titleReleaseDescription;
+			RELEASE_DESCRIPTION = Tier.provider().tierName() + " Development Version - " + buildDate;
+			RELEASE_TITLE = "[" + RELEASE_DESCRIPTION + "]";
+			LONG_VERSION = VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_POINT + "dev";
+			LOGO = "devicon";
+			SPLASH = "devsplash";
+			APP_TITLE = Tier.provider().appName() + LONG_VERSION + RELEASE_TITLE;
 			break;
 			
 		case CANDIDATE:
-			releaseDescription = Tier.provider().tierName() + " Release Candidate";
-			titleReleaseDescription = "[" + releaseDescription + "]";
-			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint + "rc";
-			logo = "rcicon";
-			splash = "rcsplash";
-			title = Tier.provider().appName() + versionNoMajor + "." + versionNoMinor + titleReleaseDescription;
+			RELEASE_DESCRIPTION = Tier.provider().tierName() + " Release Candidate";
+			RELEASE_TITLE = "[" + RELEASE_DESCRIPTION + "]";
+			LONG_VERSION = VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_POINT + "rc";
+			LOGO = "rcicon";
+			SPLASH = "rcsplash";
+			APP_TITLE = Tier.provider().appName() + VERSION_MAJOR + "." + VERSION_MINOR + RELEASE_TITLE;
 			break;
 
 		case RELEASE:
-			releaseDescription = Tier.provider().tierName();
-			titleReleaseDescription = "";
-			longVersionNo = versionNoMajor + "." + versionNoMinor + "." + versionNoPoint;
-			title = Tier.provider().appName() + versionNoMajor + titleReleaseDescription;
-			logo = "icon";
-			splash = "splash";
+			RELEASE_DESCRIPTION = Tier.provider().tierName();
+			RELEASE_TITLE = "";
+			LONG_VERSION = VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_POINT;
+			APP_TITLE = Tier.provider().appName() + VERSION_MAJOR + RELEASE_TITLE;
+			LOGO = "icon";
+			SPLASH = "splash";
 			break;
 			
 		}
@@ -113,7 +113,7 @@ public class Version {
 	
 	private static boolean hasNewVersion(URL url) throws IOException {
 		
-		String thisVersion = longVersionNo;
+		String thisVersion = LONG_VERSION;
 		String otherVersion = "";
 		
 

@@ -6,7 +6,7 @@ public abstract class AbstractState {
 
 	protected ModeController mode;
 	
-	public AbstractState(ModeController mode) {
+	protected AbstractState(ModeController mode) {
 		this.mode = mode;
 	}
 	

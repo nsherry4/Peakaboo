@@ -15,8 +15,8 @@ public class SavedAppData {
 	
 	public static SavedAppData current() {
 		var app = new SavedAppData();
-		app.version = Version.longVersionNo;
-		app.name = Version.program_name;
+		app.version = Version.LONG_VERSION;
+		app.name = Version.PROGRAM_NAME;
 		app.tier = Tier.provider().tierName();
 		return app;
 	}

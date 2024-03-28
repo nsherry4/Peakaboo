@@ -40,13 +40,15 @@ public abstract class DataLoader {
 		public Runnable sessionCallback = () -> {}; 
 	};
 	
+	private static final String ERR_EMPTY_CTX = "Pending DataLoader Context cannot be empty";
+	
 	protected PlotController controller;
 	
 	// Track information about the data set that we're in the process of opening
 	protected Optional<DataLoaderContext> pending = Optional.empty();
 
 	
-	public DataLoader(PlotController controller) {
+	protected DataLoader(PlotController controller) {
 		this.controller = controller;
 	}
 	
@@ -130,7 +132,7 @@ public abstract class DataLoader {
 	private void promptCallback(DataSourcePlugin dsp) {
 		
 		if (this.pending.isEmpty()) {
-			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+			throw new RuntimeException(ERR_EMPTY_CTX);
 		}
 		var ctx = pending.get();
 		
@@ -220,7 +222,7 @@ public abstract class DataLoader {
 	private void loadSession() {
 		
 		if (this.pending.isEmpty()) {
-			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+			throw new RuntimeException(ERR_EMPTY_CTX);
 		}
 		var ctx = pending.get();
 		
@@ -243,7 +245,7 @@ public abstract class DataLoader {
 			if (DruthersSerializer.hasFormat(contents)) {
 				DruthersSerializer.deserialize(contents, false,
 					new DruthersSerializer.FormatLoader<>(
-							SavedSession.FORMAT, 
+							SavedSession.SESSION_FORMAT, 
 							SavedSession.class, 
 							this::loadV2Session
 						)
@@ -270,13 +272,13 @@ public abstract class DataLoader {
 	private void loadV2Session(SavedSession session) {
 		
 		if (this.pending.isEmpty()) {
-			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+			throw new RuntimeException(ERR_EMPTY_CTX);
 		}
 		var ctx = pending.get();
 		
 		//check if the session is from a newer version of Peakaboo, and warn if it is
 		Runnable warnVersion = () -> {
-			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.app.version) < 0) {
+			if (AlphaNumericComparitor.compareVersions(Version.LONG_VERSION, session.app.version) < 0) {
 				onSessionNewer();
 			}
 		};
@@ -334,14 +336,14 @@ public abstract class DataLoader {
 	private void loadV1Session(SavedSessionV1 session) {
 		
 		if (this.pending.isEmpty()) {
-			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+			throw new RuntimeException(ERR_EMPTY_CTX);
 		}
 		var ctx = pending.get();
 
 		
 		//check if the session is from a newer version of Peakaboo, and warn if it is
 		Runnable warnVersion = () -> {
-			if (AlphaNumericComparitor.compareVersions(Version.longVersionNo, session.version) < 0) {
+			if (AlphaNumericComparitor.compareVersions(Version.LONG_VERSION, session.version) < 0) {
 				onSessionNewer();
 			}
 		};
@@ -402,7 +404,7 @@ public abstract class DataLoader {
 	private void onLoadSuccess() {
 		
 		if (this.pending.isEmpty()) {
-			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+			throw new RuntimeException(ERR_EMPTY_CTX);
 		}		
 		var ctx = this.pending.get();
  		
@@ -429,7 +431,6 @@ public abstract class DataLoader {
 		}
 		
 		//We've successfully loaded the pending context, swap it with the loaded context
-		//this.loaded = this.pending;
 		this.pending = Optional.empty();
 		
 		onSuccess(ctx);
@@ -447,7 +448,7 @@ public abstract class DataLoader {
 	private void onLoadFailure(DataSourcePlugin dsp, DatasetReadResult result) {
 		
 		if (this.pending.isEmpty()) {
-			throw new RuntimeException("Pending DataLoader Context cannot be empty");
+			throw new RuntimeException(ERR_EMPTY_CTX);
 		}
 		var ctx = pending.get();
 				
