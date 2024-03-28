@@ -1,5 +1,6 @@
 package org.peakaboo.ui.swing.mapping.components;
 
+import java.awt.Frame;
 import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
@@ -56,8 +57,8 @@ public class PlotSelectionButton extends FluentToolbarButton {
 		JFrame plotWindow = plotter.getWindow();
 		plotWindow.toFront();
 		int windowState = plotWindow.getExtendedState();
-		if ((windowState & JFrame.ICONIFIED) == JFrame.ICONIFIED) {
-			plotWindow.setExtendedState(windowState ^ JFrame.ICONIFIED);
+		if ((windowState & Frame.ICONIFIED) == Frame.ICONIFIED) {
+			plotWindow.setExtendedState(windowState ^ Frame.ICONIFIED);
 		}
 	}
 	

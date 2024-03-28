@@ -6,10 +6,10 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.app.Version;
@@ -32,19 +32,19 @@ public class PlotFrame extends LiveFrame
 
 	
 	private TabbedInterface<TabbedLayerPanel> tabControl;
-	private String title;
+	private String frameTitle;
 	
 	public PlotFrame() {
 	
 		tabControl = createTabControl();
-		title = Tier.provider().appName();
+		frameTitle = Tier.provider().appName();
 		
 		addWindowListener(new TabWindowListener(this, tabControl));
 		
 		setPreferredSize(new Dimension(1200, 569));
 		setIconImage(IconFactory.getImage(Tier.provider().iconPath(), Version.logo));
-		setTitle(title);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setTitle(frameTitle);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		tabControl.init();
 		
 		getContentPane().setLayout(new BorderLayout());
@@ -75,7 +75,7 @@ public class PlotFrame extends LiveFrame
 
 			@Override
 			protected void titleChanged(String title) {
-				setTitle(PlotFrame.this.title + " — " + title);
+				setTitle(PlotFrame.this.frameTitle + " — " + title);
 				
 			}
 

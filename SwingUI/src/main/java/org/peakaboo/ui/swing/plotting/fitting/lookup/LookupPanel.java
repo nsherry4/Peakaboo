@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -133,7 +132,7 @@ public class LookupPanel extends ClearPanel implements Changeable {
 	}
 
 	private void filter() {
-		filtered = Arrays.asList(Element.values()).stream().filter(this::match).collect(Collectors.toList());
+		filtered = Arrays.asList(Element.values()).stream().filter(this::match).toList();
 	}
 
 	public void changed() {
@@ -231,7 +230,7 @@ class LookupModel implements MutableTreeModel {
 		else if (parent instanceof Element)
 		{
 			ITransitionSeries ts = (ITransitionSeries) child;
-			List<ITransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).collect(Collectors.toList());
+			List<ITransitionSeries> ofElement = controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == ts.getElement()).toList();
 			return ofElement.indexOf(ts);
 								
 		}
@@ -241,7 +240,7 @@ class LookupModel implements MutableTreeModel {
 
 	public int getChildCount(Object parent) {
 		if (parent instanceof Element e) {
-			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).size();
+			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).toList().size();
 		} else if (parent instanceof String) {
 			return filtered.get().size();
 		}
@@ -254,7 +253,7 @@ class LookupModel implements MutableTreeModel {
 		if (parent instanceof String) {
 			return filtered.get().get(index);
 		} else if (parent instanceof Element e) {
-			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).collect(Collectors.toList()).get(index);
+			return controller.getUnfittedTransitionSeries().stream().filter(t -> t.getElement() == e).toList().get(index);
 		}
 		return null;
 	}

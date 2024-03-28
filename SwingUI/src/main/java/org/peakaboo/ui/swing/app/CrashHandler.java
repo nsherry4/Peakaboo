@@ -51,19 +51,20 @@ public class CrashHandler {
 		
 		Consumer<Feedback> doReport = (feedback) -> {
 			bugsnag.notify(throwable, Severity.ERROR, report -> {
-				report.addToTab("Peakaboo", "heapsize", Env.maxHeapBytes());
-				report.addToTab("Peakaboo", "version", Version.longVersionNo);
-				report.addToTab("Peakaboo", "build-date", Version.buildDate);
-				report.addToTab("Peakaboo", "tier", Tier.provider().tierName());
+				final String APP_TAB = "Peakaboo";
+				report.addToTab(APP_TAB, "heapsize", Env.maxHeapBytes());
+				report.addToTab(APP_TAB, "version", Version.longVersionNo);
+				report.addToTab(APP_TAB, "build-date", Version.buildDate);
+				report.addToTab(APP_TAB, "tier", Tier.provider().tierName());
 				
-				report.addToTab("Plugins", "filters", FilterRegistry.system().infodump());
-				report.addToTab("Plugins", "datasources", DataSourceRegistry.system().infodump());
-				report.addToTab("Plugins", "datasinks", DataSinkRegistry.system().infodump());
-				report.addToTab("Plugins", "mapfilters", MapFilterRegistry.system().infodump());						
+				final String PLUGINS_TAB = "Plugins";
+				report.addToTab(PLUGINS_TAB, "filters", FilterRegistry.system().infodump());
+				report.addToTab(PLUGINS_TAB, "datasources", DataSourceRegistry.system().infodump());
+				report.addToTab(PLUGINS_TAB, "datasinks", DataSinkRegistry.system().infodump());
+				report.addToTab(PLUGINS_TAB, "mapfilters", MapFilterRegistry.system().infodump());						
 
 				if (feedback != null) {
 					report.addToTab("User", "notes", feedback.notes());
-					//TODO: add logs if the user chose to include them
 					if (feedback.includeLogs()) {
 						String logs = PeakabooLog.getRecentLogs();
 						report.addToTab("User", "logs", logs);

@@ -2,7 +2,6 @@ package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.Component;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -62,8 +61,8 @@ class FittingRenderer extends DefaultTableCellRenderer
 				tswidget.setAtomicNumber(ts.getElement().atomicNumber());
 				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(ITransitionSeries::getElement).collect(Collectors.toList());
-				tswidget.setAtomicNumbers(elements.stream().map(Element::atomicNumber).collect(Collectors.toList()));
+				List<Element> elements = ts.getPrimaryTransitionSeries().stream().map(ITransitionSeries::getElement).toList();
+				tswidget.setAtomicNumbers(elements.stream().map(Element::atomicNumber).toList());
 				tooltip = elements.stream().map(Element::toString).reduce((a, b) -> a + ", " + b).orElse("");
 			}
 			if (controller.hasAnnotation(ts)) {

@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
@@ -13,7 +14,6 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.peakaboo.controller.plotter.filtering.FilteringController;
-import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.model.FilterType;
@@ -43,7 +43,7 @@ class FilterSelectionList extends ClearPanel
 		
 		this.setLayout(new BorderLayout());
 
-		JScrollPane scroller = new JScrollPane(createFilterTree(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scroller = new JScrollPane(createFilterTree(), ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroller.setBorder(Spacing.bNone());
 		
 		this.add(scroller, BorderLayout.CENTER);

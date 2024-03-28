@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.eventful.EventfulBeacon;
@@ -53,7 +54,7 @@ public class TSSelector extends JPanel implements IEventfulBeacon {
 		
 		tsLabel = new JLabel();
 		tsLabel.setPreferredSize(tsCombo.getPreferredSize());
-		tsLabel.setHorizontalAlignment(JLabel.CENTER);
+		tsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		
 		tsComboListener = e -> {

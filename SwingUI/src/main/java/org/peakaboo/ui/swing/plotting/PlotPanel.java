@@ -274,13 +274,13 @@ public class PlotPanel extends TabbedLayerPanel {
 		ImageIcon peakabooLogo;
 		if (DesktopSettings.isDarkMode()) {
 			peakabooLogo = IconFactory.getImageIcon(
-					PeakabooIcons.PATH, 
+					PeakabooIcons.ASSET_PATH, 
 					"icon-symbolic", 
 					new Color((0x00ffffff & Stratus.getTheme().getControlText().getRGB()) | 0x20000000, true)
 				);
 		} else {
 			peakabooLogo = IconFactory.getImageIcon(
-					PeakabooIcons.PATH, 
+					PeakabooIcons.ASSET_PATH, 
 					"icon-symbolic" 
 				);
 		}
@@ -428,8 +428,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		}
 		
 		//Add session file ext.
-		SimpleFileExtension session = new SimpleFileExtension("Peakaboo Session Files", "peakaboo");
-		exts.add(session);
+		exts.add(new SessionFileExtension());
 		
 		StratusFilePanels.openFiles(this, "Select Data Files to Open", controller.io().getLastFolder(), exts, files -> {
 			if (!files.isPresent()) return;
@@ -497,8 +496,6 @@ public class PlotPanel extends TabbedLayerPanel {
 		if (mapTask == null) return;
 
 		TaskMonitorView taskView = new TaskMonitorView(mapTask);
-		//TaskMonitorPanel taskPanel = new TaskMonitorPanel("Generating Maps", taskView);
-		//ModalLayer layer = new ModalLayer(this, taskPanel);
 		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Maps", taskView);
 		
 		mapTask.addListener(event -> {
@@ -556,9 +553,9 @@ public class PlotPanel extends TabbedLayerPanel {
 	
 	public void actionSaveSessionAs() {
 
-		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
 		
-		StratusFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), peakaboo, file -> {
+		
+		StratusFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), new SessionFileExtension(), file -> {
 			if (!file.isPresent()) {
 				return;
 			}
@@ -649,7 +646,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 
 	public void actionSaveFilteredDataSet() {	
-		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
+		SimpleFileExtension text = new CSVFileExtension();
 		StratusFilePanels.saveFile(this, "Save Fitted Data to CSV File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
 				return;
@@ -674,7 +671,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 	
 	public void actionSaveFilteredSpectrum() {	
-		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
+		SimpleFileExtension text = new CSVFileExtension();
 		StratusFilePanels.saveFile(this, "Save Spectrum to CSV File", controller.io().getLastFolder(), text, saveFile -> {
 			if (!saveFile.isPresent()) {
 				return;
@@ -708,8 +705,7 @@ public class PlotPanel extends TabbedLayerPanel {
 		
 	public void actionLoadSession() {
 
-		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		StratusFilePanels.openFile(this, "Load Session Data", controller.io().getSessionFile(), peakaboo, file -> {
+		StratusFilePanels.openFile(this, "Load Session Data", controller.io().getSessionFile(), new SessionFileExtension(), file -> {
 			if (!file.isPresent()) {
 				return;
 			}
@@ -792,7 +788,7 @@ public class PlotPanel extends TabbedLayerPanel {
 				controller.data().getDataSet().getAnalysis().channelsPerScan());
 		
 		
-		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).collect(Collectors.toList());
+		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).toList();
 		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Detecting Energy Level", views);
 		
 		energyTask.last().addListener(event -> {
@@ -945,6 +941,18 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	PlotCanvas getCanvas() {
 		return canvas;
+	}
+
+	public static class SessionFileExtension extends SimpleFileExtension {
+		public SessionFileExtension() {
+			super("Peakaboo Session Files", "peakaboo");
+		}
+	}
+	
+	public static class CSVFileExtension extends SimpleFileExtension {
+		public CSVFileExtension() {
+			super("CSV File", "csv");
+		}
 	}
 	
 }

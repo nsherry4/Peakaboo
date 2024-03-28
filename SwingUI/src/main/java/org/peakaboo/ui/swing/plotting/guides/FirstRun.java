@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -26,7 +25,7 @@ public class FirstRun extends HeaderLayer {
 	private FluentButton next, back;
 	private JCheckBox reporting;
 	private int index = 0;
-	private static final int slideCount = 5;
+	private static final int SLIDE_COUNT = 5;
 	
 	public FirstRun(LayerPanel owner) {	
 		super(owner, true);
@@ -87,7 +86,7 @@ public class FirstRun extends HeaderLayer {
 	}
 	
 	private void loadSlides() {
-		for (int i = 1; i <= slideCount; i++) {
+		for (int i = 1; i <= SLIDE_COUNT; i++) {
 			URL slideURL = FirstRun.class.getResource("/org/peakaboo/ui/swing/firstrun/slide" + i + ".png");
 			ImageIcon image = new ImageIcon(slideURL);
 			slides.add(image);

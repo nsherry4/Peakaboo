@@ -2,8 +2,6 @@ package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 
 
-import static java.util.stream.Collectors.toList;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -84,7 +82,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 				List<ITransitionSeries> tss = Arrays.stream(rows)
 						.boxed()
 						.map(i -> controller.getFittedTransitionSeries().get(i))
-						.collect(toList());
+						.toList();
 					
 				if (tss.isEmpty()) return;
 				for (ITransitionSeries ts : tss)	{

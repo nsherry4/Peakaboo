@@ -11,6 +11,7 @@ import java.awt.Font;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTree;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
@@ -73,7 +74,7 @@ class LookupRenderer extends DefaultTreeCellRenderer {
 					return new Dimension(28, super.getPreferredSize().height);
 				}
 			};
-			symbol.setHorizontalAlignment(JLabel.RIGHT);
+			symbol.setHorizontalAlignment(SwingConstants.RIGHT);
 			symbol.setBorder(new EmptyBorder(0, 0, 0, Spacing.small));
 			symbol.setFont(symbol.getFont().deriveFont(Font.BOLD));
 			

@@ -108,10 +108,10 @@ public class Peakaboo {
 		PeakabooLog.getRoot().addHandler(new Handler() {
 			
 			@Override
-			public void publish(LogRecord record) {
-				if (record.getLevel() == Level.SEVERE) {
-					Throwable t = record.getThrown();
-					String m = record.getMessage();
+			public void publish(LogRecord entry) {
+				if (entry.getLevel() == Level.SEVERE) {
+					Throwable t = entry.getThrown();
+					String m = entry.getMessage();
 					
 					if (t == null && m.startsWith("\tat ")) {
 						return;
