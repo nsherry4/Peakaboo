@@ -8,7 +8,7 @@ public abstract class AbstractEventfulCache<T> extends EventfulBeacon implements
 
 	private Supplier<T> supplier;
 	
-	public AbstractEventfulCache(Supplier<T> supplier) {
+	protected AbstractEventfulCache(Supplier<T> supplier) {
 		this.supplier = supplier;
 		/*
 		 * events usually get pushed out on the UI's event thread/queue, but this can

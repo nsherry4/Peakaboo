@@ -25,7 +25,7 @@ public class EventfulBeacon implements IEventfulBeacon
 
 	public EventfulBeacon()
 	{
-		listeners = new LinkedList<EventfulListener>();
+		listeners = new LinkedList<>();
 	}
 
 
@@ -78,7 +78,7 @@ public class EventfulBeacon implements IEventfulBeacon
 	public void updateListeners()
 	{
 
-		if (listeners.size() == 0) return;
+		if (listeners.isEmpty()) return;
 
 		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulBeacon.this) {

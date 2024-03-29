@@ -5,6 +5,8 @@ import java.util.function.Consumer;
 
 public class EventfulConfig {
 
+	private EventfulConfig() {}
+	
 	public static Consumer<Runnable> uiThreadRunner = r -> r.run();
 	
 	private static LinkedBlockingQueue<Runnable> globalDeliveryQueue = new LinkedBlockingQueue<>();
