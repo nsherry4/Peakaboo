@@ -90,18 +90,14 @@ public enum Palette
 		;
 		public abstract int[] getPaletteData();
 
-		
+		@Override
 		public String toString()
 		{
 			String name = this.name();
-			name = name.replace('_', ' ');
-			
-			
-			
-			return name;			
+			return name.replace('_', ' ');
 		}
 		
-		private final static int[] thermal = { 
+		private static final int[] thermal = { 
 				0xff10154D, 0,
 				0xff0D47A1, 60,
 				0xff388E3C, 40,
@@ -111,19 +107,19 @@ public enum Palette
 		};
 		
 
-		private final static int[] monochrome = {
+		private static final int[] monochrome = {
 				0xff000000, 0,
 				0xffffffff, 255
 		};
 		
 
-		private final static int[] inv_monochrome = {
+		private static final int[] inv_monochrome = {
 				0xffffffff, 255,
 				0xff000000, 0
 		};
 		
 		//nice
-		private final static int[] thoughtful = {
+		private static final int[] thoughtful = {
 				0xffecd078, 0,
 				0xffd95b43, 85,
 				0xffc02942, 85,
@@ -131,7 +127,7 @@ public enum Palette
 		};
 		
 		//nice
-		private final static int[] terra = {
+		private static final int[] terra = {
 				0xff031634, 0,
 				0xff033649, 64,
 				0xff036564, 64,
@@ -140,7 +136,7 @@ public enum Palette
 		};
 		
 		//good on unsubtracted, okay on subtracted
-		private final static int[] olive = {
+		private static final int[] olive = {
 				0xff300018, 0,
 				0xff5a3d31, 64,
 				0xff837b47, 64,
@@ -148,7 +144,7 @@ public enum Palette
 				0xffe5edb8, 63
 		};
 		
-		private final static int[] vintage = {
+		private static final int[] vintage = {
 				0xff8c2318, 0,
 				0xff5e8c6a, 64,
 				0xff88a65e, 64,
@@ -156,7 +152,7 @@ public enum Palette
 				0xfff2c45a, 63
 		};
 		
-		private final static int[] goldfish = {
+		private static final int[] goldfish = {
 				0xff69d2e7, 0,
 				0xffa7dbd8, 80,
 				0xffe0e4cc, 64,
@@ -167,7 +163,7 @@ public enum Palette
 		};
 		
 		// based off of "sugar is three"
-		private final static int[] sugar = {
+		private static final int[] sugar = {
 				0xff2c8b9a, 0,
 				0xff6ac3ae, 64,
 				0xffd9c8a7, 48,
@@ -178,7 +174,7 @@ public enum Palette
 		};
 
 
-		private final static int[] brownsugar = {
+		private static final int[] brownsugar = {
 				0xff490a3d, 0,
 				0xffbd1550, 64,
 				0xffe97f02, 64,
@@ -187,7 +183,7 @@ public enum Palette
 		};
 
 
-		private final static int[] blackbody = {
+		private static final int[] blackbody = {
 				0xfff82600, 0,
 				0xffffb12f, 64,
 				0xffffe7bf, 64,
@@ -195,7 +191,7 @@ public enum Palette
 				0xffa6baff, 63
 		};
 		
-		private final static int[] georgia = {
+		private static final int[] georgia = {
 				0xffFFFFFF, 0,
 				0xffE6B350, 51,
 				0xffF27C55, 51,

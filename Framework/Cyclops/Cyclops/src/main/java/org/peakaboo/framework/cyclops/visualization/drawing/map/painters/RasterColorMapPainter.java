@@ -73,7 +73,7 @@ public class RasterColorMapPainter extends MapPainter
 					buffer = createRasterBuffer(p);
 				}
 				if (stale) {
-					drawToRasterBuffer(p, data, cellSize, p.dr.dataHeight * p.dr.dataWidth);
+					drawToRasterBuffer(data, p.dr.dataHeight * p.dr.dataWidth);
 				}
 				p.context.compose(buffer, 0, 0, cellSize);
 				
@@ -88,7 +88,7 @@ public class RasterColorMapPainter extends MapPainter
 		return p.context.getImageBuffer(p.dr.dataWidth, p.dr.dataHeight);
 	}
 	
-	private void drawToRasterBuffer(PainterData p, final IntArrayList data, float cellSize, final int maximumIndex)
+	private void drawToRasterBuffer(final IntArrayList data, final int maximumIndex)
 	{	
 		int size = Math.min(maximumIndex, data.size());
 		for (int ordinal = 0; ordinal < size; ordinal++) {

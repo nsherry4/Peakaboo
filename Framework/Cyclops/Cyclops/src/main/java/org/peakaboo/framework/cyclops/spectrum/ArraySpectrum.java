@@ -292,18 +292,19 @@ public class ArraySpectrum implements Spectrum
 
 			int	index	= 0;
 
+			@Override
 			public boolean hasNext()
 			{
 				return (index < size);
 			}
 
-
+			@Override
 			public Float next()
 			{
 				return data[index++];
 			}
 
-
+			@Override
 			public void remove()
 			{
 				data[index] = 0.0f;

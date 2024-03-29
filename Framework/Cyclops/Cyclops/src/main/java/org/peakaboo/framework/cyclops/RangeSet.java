@@ -108,7 +108,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 			Iterator<Range> rangeIterator = ranges.iterator();
 			Iterator<Integer> numIterator;
 			
-			
+			@Override
 			public boolean hasNext() {
 				while (numIterator == null || !numIterator.hasNext()){
 					if (! rangeIterator.hasNext()) return false;
@@ -117,6 +117,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 				return numIterator.hasNext();
 			}
 
+			@Override
 			public Integer next() {
 				while (numIterator == null || !numIterator.hasNext()){
 					if (! rangeIterator.hasNext()) throw new IndexOutOfBoundsException();
@@ -125,6 +126,7 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 				return numIterator.next();				
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}

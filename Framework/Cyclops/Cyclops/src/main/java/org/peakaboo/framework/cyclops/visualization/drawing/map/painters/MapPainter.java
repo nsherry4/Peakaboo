@@ -32,14 +32,14 @@ public abstract class MapPainter extends Painter
 	protected List<AbstractPalette>	colourRules;
 
 
-	public MapPainter(List<AbstractPalette> colourRules)
+	protected MapPainter(List<AbstractPalette> colourRules)
 	{
 		this.colourRules = colourRules;
 	}
 	
-	public MapPainter(AbstractPalette colourRule)
+	protected MapPainter(AbstractPalette colourRule)
 	{
-		List<AbstractPalette> rules = new ArrayList<AbstractPalette>();
+		List<AbstractPalette> rules = new ArrayList<>();
 		rules.add(colourRule);
 		this.colourRules = rules;
 	}

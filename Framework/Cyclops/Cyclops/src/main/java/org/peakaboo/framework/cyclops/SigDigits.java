@@ -7,7 +7,8 @@ import java.math.RoundingMode;
 public class SigDigits
 {
 
-
+	private SigDigits() {}
+	
 	public static int toIntSigDigit(double value, int significantDigits)
 	{
 		if (!Double.isFinite(value)) value = 0;

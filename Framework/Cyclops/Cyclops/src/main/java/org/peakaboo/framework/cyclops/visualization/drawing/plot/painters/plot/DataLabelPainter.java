@@ -3,7 +3,6 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.peakaboo.framework.cyclops.Bounds;
@@ -151,16 +150,11 @@ public class DataLabelPainter extends PlotPainter
 		}
 		
 		//sort the elements by order of bottom y position
-		Collections.sort(labelsInRange, new Comparator<DataLabel>() {
-
-			public int compare(DataLabel o1, DataLabel o2)
-			{
+		Collections.sort(labelsInRange, (DataLabel o1, DataLabel o2) -> {
 				if (o1.position.y.start < o2.position.y.start) return -1;
 				if (o1.position.y.start > o2.position.y.start) return 1;
 				return 0;
-			}
-
-		});
+			});
 			
 		for (DataLabel labelInRange : labelsInRange) {
 

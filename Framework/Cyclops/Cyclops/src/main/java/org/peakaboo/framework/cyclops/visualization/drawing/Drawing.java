@@ -23,12 +23,12 @@ public abstract class Drawing
 	
 	
 	
-	public Drawing(DrawingRequest dr)
+	protected Drawing(DrawingRequest dr)
 	{
 		this.dr = dr;
 	}
 	
-	public Drawing()
+	protected Drawing()
 	{
 	}
 	
@@ -57,7 +57,7 @@ public abstract class Drawing
 	
 	
 	
-	public static float getPenWidth(float baseSize, DrawingRequest dr)
+	public static float getPenWidth()
 	{
 		return 1f;
 	}

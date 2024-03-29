@@ -9,6 +9,7 @@ import java.util.function.BiFunction;
 
 public class ListOps {
 
+	private ListOps() {}
 	
 	//////////////////////////////////////////////////////////
 	// UNIQUE
@@ -17,7 +18,7 @@ public class ListOps {
 	{
 
 		List<T1> newlist = new ArrayList<>();
-		Set<T1> hash = new LinkedHashSet<T1>();
+		Set<T1> hash = new LinkedHashSet<>();
 		
 		for (T1 t : list){
 			if (!hash.contains(t)) hash.add(t);

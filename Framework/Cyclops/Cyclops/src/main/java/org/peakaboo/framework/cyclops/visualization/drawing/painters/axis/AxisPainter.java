@@ -31,9 +31,9 @@ public abstract class AxisPainter extends Painter
 	protected AxesData		axesData;
 
 
-	public AxisPainter()
+	protected AxisPainter()
 	{
-		axesData = new AxesData(new Bounds<Float>(0.0f, 0.0f), new Bounds<Float>(0.0f, 0.0f));
+		axesData = new AxesData(new Bounds<>(0.0f, 0.0f), new Bounds<>(0.0f, 0.0f));
 	}
 
 
@@ -105,8 +105,8 @@ public abstract class AxisPainter extends Painter
 
 				axisPainter.setDimensions(
 
-				new Bounds<Float>(availableX.start, availableX.end),
-						new Bounds<Float>(availableY.start, availableY.end)
+				new Bounds<>(availableX.start, availableX.end),
+						new Bounds<>(availableY.start, availableY.end)
 
 				);
 
@@ -122,7 +122,7 @@ public abstract class AxisPainter extends Painter
 
 		}
 
-		return new Coord<Bounds<Float>>(availableX, availableY);
+		return new Coord<>(availableX, availableY);
 	}
 
 }

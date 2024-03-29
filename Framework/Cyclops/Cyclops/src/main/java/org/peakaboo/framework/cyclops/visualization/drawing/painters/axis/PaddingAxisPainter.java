@@ -20,12 +20,12 @@ public class PaddingAxisPainter extends AxisPainter {
 	
 	@Override
 	public Pair<Float, Float> getAxisSizeY(PainterData p) {
-		return new Pair<Float, Float>(top, bottom);
+		return new Pair<>(top, bottom);
 	}
 
 	@Override
 	public Pair<Float, Float> getAxisSizeX(PainterData p) {
-		return new Pair<Float, Float>(left, right);
+		return new Pair<>(left, right);
 	}
 
 	@Override

@@ -17,6 +17,8 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 public class SpectrumCalculations
 {
 
+	private SpectrumCalculations() {}
+	
 	public static final int	MIN_SIZE_FOR_THREADING	= 512;
 
 

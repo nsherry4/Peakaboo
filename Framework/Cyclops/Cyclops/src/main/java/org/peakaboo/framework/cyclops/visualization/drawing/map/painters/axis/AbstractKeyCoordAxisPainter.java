@@ -17,14 +17,14 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 	protected Coord<Number>			coordLoXLoY, coordHiXLoY, coordLoXHiY, coordHiXHiY;
 	protected SISize				coordinateUnits;
-	protected static Coord<Float>	coordPadding	= new Coord<Float>(2.0f, 2.0f);
+	protected static Coord<Float>	coordPadding	= new Coord<>(2.0f, 2.0f);
 
 	protected boolean				drawCoords, drawKey, realDimensionsProvided, drawScaleBar;
 	protected int					keyHeight;
 	
 	protected PaletteColour			colour;
 	
-	public AbstractKeyCoordAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
+	protected AbstractKeyCoordAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
 			boolean drawKey, int keyHeight, boolean realDimensionsProvided, boolean drawScaleBar)
 	{
@@ -51,7 +51,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	{
 
 		Coord<Bounds<Float>> borderSize = getBorderSize(p.context);
-		return new Pair<Float, Float>(borderSize.x.start, borderSize.x.end);
+		return new Pair<>(borderSize.x.start, borderSize.x.end);
 	}
 
 
@@ -59,7 +59,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	public Pair<Float, Float> getAxisSizeY(PainterData p)
 	{
 		Coord<Bounds<Float>> borderSize = getBorderSize(p.context);
-		return new Pair<Float, Float>(borderSize.y.start, borderSize.y.end);
+		return new Pair<>(borderSize.y.start, borderSize.y.end);
 	}
 
 

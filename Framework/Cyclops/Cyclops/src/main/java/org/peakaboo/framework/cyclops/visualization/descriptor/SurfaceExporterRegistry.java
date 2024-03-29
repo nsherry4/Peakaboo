@@ -7,6 +7,8 @@ import java.util.Map;
 
 public class SurfaceExporterRegistry {
 
+	private SurfaceExporterRegistry() {}
+	
 	private static Map<String, SurfaceDescriptor> exporters = new LinkedHashMap<>();
 	
 	public static void registerExporter(SurfaceDescriptor exporter) {

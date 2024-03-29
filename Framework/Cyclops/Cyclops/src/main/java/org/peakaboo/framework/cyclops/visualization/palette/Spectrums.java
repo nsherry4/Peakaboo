@@ -17,6 +17,8 @@ import java.util.List;
 public class Spectrums
 {
 
+	private Spectrums() {}
+	
 	public static int	DEFAULT_STEPS	= 1000;
 
 
@@ -25,13 +27,13 @@ public class Spectrums
 	 * where p is the percent distance from the last colour stop expressed in the range 0..255
 	 */
 	
-	final static int[] ratioThermal = {
+	static final int[] ratioThermal = {
 			0xff1485CC, 0,
 			0xff000000, 127,
 			0xffff0000, 128
 	};
 	
-	final static int[] ratioMonochrome = { 
+	static final int[] ratioMonochrome = { 
 			0xff000000, 0,
 			0xffffffff, 255
 	};

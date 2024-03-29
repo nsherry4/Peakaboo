@@ -91,7 +91,7 @@ public class MapDrawing extends Drawing
 	{
 		super(dr);
 		this.context = context;
-		axisPainters = new ArrayList<AxisPainter>();
+		axisPainters = new ArrayList<>();
 	}
 
 	
@@ -102,25 +102,25 @@ public class MapDrawing extends Drawing
 	public MapDrawing()
 	{
 		super();
-		axisPainters = new ArrayList<AxisPainter>();
+		axisPainters = new ArrayList<>();
 	}
 
 	public void setAxisPainters(List<AxisPainter> axisPainters) {
 		this.axisPainters = axisPainters;
 	}
 	public void setAxisPainters(AxisPainter painter) {
-		axisPainters = new ArrayList<AxisPainter>();
+		axisPainters = new ArrayList<>();
 		axisPainters.add(painter);
 	}
 	public void clearAxisPainters()
 	{
-		axisPainters = new ArrayList<AxisPainter>();
+		axisPainters = new ArrayList<>();
 	}
 	public void setPainters(List<MapPainter> painters) {
 		this.painters = painters;
 	}
 	public void setPainters(MapPainter painter) {
-		painters = new ArrayList<MapPainter>();
+		painters = new ArrayList<>();
 		painters.add(painter);
 	}
 	
@@ -166,9 +166,9 @@ public class MapDrawing extends Drawing
 			Bounds<Float> availableX, availableY;
 			Coord<Float> totalSize = calcTotalSize();
 	
-			availableX = new Bounds<Float>(0.0f, totalSize.x);
-			availableY = new Bounds<Float>(0.0f, totalSize.y);
-			PainterData p = new PainterData(context, dr, new Coord<Float>(dr.imageWidth, dr.imageHeight), null);
+			availableX = new Bounds<>(0.0f, totalSize.x);
+			availableY = new Bounds<>(0.0f, totalSize.y);
+			PainterData p = new PainterData(context, dr, new Coord<>(dr.imageWidth, dr.imageHeight), null);
 	
 			if (axisPainters != null) {
 	
@@ -178,8 +178,8 @@ public class MapDrawing extends Drawing
 	
 					axisPainter.setDimensions(
 	
-					new Bounds<Float>(availableX.start, availableX.end),
-							new Bounds<Float>(availableY.start, availableY.end)
+					new Bounds<>(availableX.start, availableX.end),
+							new Bounds<>(availableY.start, availableY.end)
 	
 					);
 	
@@ -289,7 +289,7 @@ public class MapDrawing extends Drawing
 	 */
 	public Coord<Bounds<Float>> calcAxisBorders()
 	{
-		return AxisPainter.calcAxisBorders(new PainterData(context, dr, new Coord<Float>(dr.imageWidth, dr.imageHeight), null), axisPainters);
+		return AxisPainter.calcAxisBorders(new PainterData(context, dr, new Coord<>(dr.imageWidth, dr.imageHeight), null), axisPainters);
 
 	}
 
@@ -371,8 +371,8 @@ public class MapDrawing extends Drawing
 			indexY = (dr.uninterpolatedHeight-1) - indexY;
 		}
 		
-		if (!allowOutOfBounds) if (indexX < 0 || indexX >= dr.uninterpolatedWidth) return null;
-		if (!allowOutOfBounds) if (indexY < 0 || indexY >= dr.uninterpolatedHeight) return null;
+		if (!allowOutOfBounds && (indexX < 0 || indexX >= dr.uninterpolatedWidth)) return null;
+		if (!allowOutOfBounds && (indexY < 0 || indexY >= dr.uninterpolatedHeight)) return null;
 		
 		return new Coord<>(indexX, indexY);
 

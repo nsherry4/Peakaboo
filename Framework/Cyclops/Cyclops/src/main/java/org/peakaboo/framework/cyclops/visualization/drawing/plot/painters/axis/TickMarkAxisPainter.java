@@ -199,7 +199,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				}
 				String tickText = mark.value();
 				
-				Bounds<Float> drawRangeY = new Bounds<Float>(
+				Bounds<Float> drawRangeY = new Bounds<>(
 						axesData.yPositionBounds.start + otherAxisSize.first, 
 						axesData.yPositionBounds.end - otherAxisSize.second
 					);
@@ -266,7 +266,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				}
 				String tickText = mark.value();
 							
-				Bounds<Float> drawRangeY = new Bounds<Float>(
+				Bounds<Float> drawRangeY = new Bounds<>(
 						axesData.yPositionBounds.start + otherAxisSize.first, 
 						axesData.yPositionBounds.end - otherAxisSize.second
 					);

@@ -33,7 +33,7 @@ public class SelectionMaskPainter extends RasterColorMapPainter {
 		
 		// don't bother updating the pixel list, we won't be drawing anything when no
 		// points are in the selection.
-		if (points.size() == 0) {
+		if (points.isEmpty()) {
 			setEnabled(false);
 			return;
 		}

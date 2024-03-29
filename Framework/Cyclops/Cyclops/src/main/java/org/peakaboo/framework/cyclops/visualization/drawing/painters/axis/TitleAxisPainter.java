@@ -180,14 +180,14 @@ public class TitleAxisPainter extends AxisPainter
 	public Pair<Float,Float> getAxisSizeX(PainterData p)
 	{
 		float titleHeight = getTitleFontHeight(p.context, titleScale);
-		return new Pair<Float,Float>(leftTitle != null ? titleHeight : 0.0f, rightTitle != null ? titleHeight : 0.0f);
+		return new Pair<>(leftTitle != null ? titleHeight : 0.0f, rightTitle != null ? titleHeight : 0.0f);
 	}
 
 	@Override
 	public Pair<Float,Float> getAxisSizeY(PainterData p)
 	{
 		float titleHeight = getTitleFontHeight(p.context, titleScale);
-		return new Pair<Float,Float>(topTitle != null ? titleHeight : 0.0f, bottomTitle != null ? titleHeight : 0.0f);
+		return new Pair<>(topTitle != null ? titleHeight : 0.0f, bottomTitle != null ? titleHeight : 0.0f);
 	}
 
 }
