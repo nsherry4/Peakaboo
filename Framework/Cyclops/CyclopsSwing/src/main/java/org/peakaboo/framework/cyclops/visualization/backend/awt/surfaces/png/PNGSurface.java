@@ -17,7 +17,7 @@ class PNGSurface extends AbstractImageSurface {
 	}
 
 	public void write(OutputStream out) throws IOException {
-		graphics.finalize();
+		graphics.dispose();
 		ImageIO.write(image, "png", out);
 	}
 

@@ -6,9 +6,12 @@ import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceExporterRe
 
 public class CyclopsSurface {
 
-	private static boolean inited = false;
+	private CyclopsSurface() {}
+	
+	private static boolean initted = false;
 	public static synchronized void init() {
-		inited = true;
+		if (initted) return;
+		initted = true;
 		SurfaceExporterRegistry.registerExporter(new PNGDescriptor());
 		SurfaceExporterRegistry.registerExporter(new SVGDescriptor());
 	}

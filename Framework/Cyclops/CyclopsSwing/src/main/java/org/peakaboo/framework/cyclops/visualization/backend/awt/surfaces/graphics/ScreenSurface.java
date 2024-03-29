@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.AbstractGraphicsSurface;
-import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 
 
 public class ScreenSurface extends AbstractGraphicsSurface

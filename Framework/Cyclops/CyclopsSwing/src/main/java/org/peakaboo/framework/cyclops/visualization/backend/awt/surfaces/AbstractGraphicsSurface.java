@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.font.TextLayout;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -48,7 +49,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	private CompositeModes		compositeMode;
 	protected SurfaceDescriptor descriptor;
 
-	public AbstractGraphicsSurface(Graphics2D g, SurfaceDescriptor descriptor)
+	protected AbstractGraphicsSurface(Graphics2D g, SurfaceDescriptor descriptor)
 	{
 		this.descriptor = descriptor;
 		this.graphics = g;
@@ -60,7 +61,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 
 		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 
-		saveStack = new Stack<Graphics2D>();
+		saveStack = new Stack<>();
 
 		path = newPath();
 		stroke = new BasicStroke();
@@ -72,7 +73,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	private GeneralPath newPath()
 	{
 		GeneralPath newpath = new GeneralPath();
-		newpath.setWindingRule(GeneralPath.WIND_EVEN_ODD);
+		newpath.setWindingRule(Path2D.WIND_EVEN_ODD);
 		newpath.moveTo(0.0f, 0.0f);
 		return newpath;
 	}

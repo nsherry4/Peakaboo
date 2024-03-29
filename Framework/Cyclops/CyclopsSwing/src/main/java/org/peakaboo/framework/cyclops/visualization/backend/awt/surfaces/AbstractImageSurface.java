@@ -10,7 +10,7 @@ public abstract class AbstractImageSurface extends AbstractGraphicsSurface imple
 
 	protected BufferedImage image;
 	
-	public AbstractImageSurface(BufferedImage image, SurfaceDescriptor descriptor) {
+	protected AbstractImageSurface(BufferedImage image, SurfaceDescriptor descriptor) {
 		super(image.createGraphics(), descriptor);
 		this.image = image;
 	}
