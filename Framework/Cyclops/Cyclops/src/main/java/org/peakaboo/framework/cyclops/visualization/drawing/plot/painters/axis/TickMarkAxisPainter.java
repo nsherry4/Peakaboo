@@ -64,7 +64,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			// dimensions for various parts of the axis
 			float tickLength = getTickLength(p.dr, tick);
-			float textHeight = getTickFontHeight(p.context, p.dr);
+			float textHeight = getTickFontHeight(p.context);
 			float textAscent = p.context.getFontAscent();
 			
 			float axisYStart = axesData.yPositionBounds.end - getAxisSizeY(p).second;
@@ -354,7 +354,7 @@ public class TickMarkAxisPainter extends AxisPainter
 	}
 
 
-	private static float getTickFontHeight(Surface context, DrawingRequest dr)
+	private static float getTickFontHeight(Surface context)
 	{
 		return context.getFontHeight();
 	}

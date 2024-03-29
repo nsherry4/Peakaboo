@@ -123,13 +123,13 @@ public class Plotter {
 		float plotMaxSignal = getMaxIntensity(data);
 		float plotMaxValue = PlotDrawing.getDataScale(plotMaxSignal, settings.logTransform, true);
 		
-		TickFormatter tickRight = new RangeTickFormatter(0.0f, plotMaxValue, plotMaxSignal)
+		TickFormatter tickRight = new RangeTickFormatter(0.0f, plotMaxValue)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);
 		TickFormatter tickBottom = new RangeTickFormatter(data.calibration.getMinEnergy(), data.calibration.getMaxEnergy()).withRotate(false);
 		TickFormatter tickTop = null;
-		TickFormatter tickLeft = new RangeTickFormatter(0.0f, plotMaxValue, plotMaxSignal)
+		TickFormatter tickLeft = new RangeTickFormatter(0.0f, plotMaxValue)
 				.withLog(settings.logTransform)
 				.withRotate(true)
 				.withPad(true);

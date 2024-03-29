@@ -72,7 +72,7 @@ public class CompositeMapMode extends MapMode{
 		
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (contourMapPainter == null) {
-			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, compositedata.getData(), spectrumSteps); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, compositedata.getData()); 
 		} else {
 			contourMapPainter.setData(compositedata.getData());
 			contourMapPainter.setPalettes(paletteList);
@@ -85,7 +85,7 @@ public class CompositeMapMode extends MapMode{
 		//Invalid points with no backing data
 		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(
 				new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), 
-				compositedata.getInvalidPoints(), 0);
+				compositedata.getInvalidPoints());
 		mapPainters.add(invalidPainter);
 		
 		//Selection Painter

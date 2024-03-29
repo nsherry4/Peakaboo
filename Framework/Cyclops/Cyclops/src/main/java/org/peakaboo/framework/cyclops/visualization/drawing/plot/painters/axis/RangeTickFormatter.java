@@ -12,28 +12,18 @@ import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.t
 
 public class RangeTickFormatter extends AbstractTickFormatter {
 	
-	private float scaleMin, scaleMax, maxScaleSignal;
+	private float scaleMin, scaleMax;
 	private Function<Integer, String> formatter;
 		
 	
 	public RangeTickFormatter(float scaleStart, float scaleEnd) {
 		this(scaleStart, scaleEnd, String::valueOf);
 	}
-	
-	public RangeTickFormatter(float scaleStart, float scaleEnd, float maxScaleSignal) {
-		this(scaleStart, scaleEnd, maxScaleSignal, String::valueOf);
-	}
-
-	
-	public RangeTickFormatter(float scaleStart, float scaleEnd, Function<Integer, String> formatter) {
-		this(scaleStart, scaleEnd, scaleEnd, formatter);
-	}
-	
-	public RangeTickFormatter(float scaleMin, float scaleMax, float maxScaleSignal, Function<Integer, String> formatter) {
+		
+	public RangeTickFormatter(float scaleMin, float scaleMax, Function<Integer, String> formatter) {
 		this.scaleMin = scaleMin;
 		this.scaleMax = scaleMax;
 		this.formatter = formatter;
-		this.maxScaleSignal = maxScaleSignal;
 	}
 	
 	

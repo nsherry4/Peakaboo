@@ -68,7 +68,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	{
 
 		if (drawKey) drawKey(p);
-		drawCoordinates(p, getCoordinateBorderSize(p.context));
+		drawCoordinates(p);
 		if (realDimensionsProvided && coordinateUnits != null && drawScaleBar) drawScaleBar(p);
 
 	}
@@ -142,7 +142,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	}
 
 
-	private void drawCoordinates(PainterData p, Coord<Float> borders)
+	private void drawCoordinates(PainterData p)
 	{
 
 		if (!drawCoords) return;
@@ -167,15 +167,15 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		}
 		
 
-		drawCoordinatePair(p, coordLoXLoY, borders, mapLoX, mapLoY, true);
-		drawCoordinatePair(p, coordHiXLoY, borders, mapHiX, mapLoY, false);
+		drawCoordinatePair(p, coordLoXLoY, mapLoX, mapLoY, true);
+		drawCoordinatePair(p, coordHiXLoY, mapHiX, mapLoY, false);
 
-		drawCoordinatePair(p, coordLoXHiY, borders, mapLoX, mapHiY, true);
-		drawCoordinatePair(p, coordHiXHiY, borders, mapHiX, mapHiY, false);
+		drawCoordinatePair(p, coordLoXHiY, mapLoX, mapHiY, true);
+		drawCoordinatePair(p, coordHiXHiY, mapHiX, mapHiY, false);
 	}
 
 
-	private void drawCoordinatePair(PainterData p, Coord<Number> pair, Coord<Float> border, float x, float y, boolean forwards)
+	private void drawCoordinatePair(PainterData p, Coord<Number> pair, float x, float y, boolean forwards)
 	{
 		p.context.save();
 
@@ -211,24 +211,18 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 	private float getScaleBarHeight(Surface context)
 	{
-
-		float y = context.getFontHeight() * 2 - context.getFontLeading() - context.getFontDescent();
-		return y;
-
+		return context.getFontHeight() * 2 - context.getFontLeading() - context.getFontDescent();
 	}
 
 
 	private Coord<Float> getCoordinateBorderSize(Surface context)
 	{
 
-		if (!drawCoords) return new Coord<Float>(0.0f, 0.0f);
+		if (!drawCoords) return new Coord<>(0.0f, 0.0f);
 
 		float x, y;
-		float cx;
 
 		context.save();
-
-		String units = coordinateUnits == null ? "" : " " + coordinateUnits;
 
 		context.setFontSize(context.getFontSize() - 2);
 		
@@ -240,7 +234,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		
 		context.restore();
 
-		return new Coord<Float>(x + (coordPadding.x * 2.0f), y + (coordPadding.y * 2.0f));
+		return new Coord<>(x + (coordPadding.x * 2.0f), y + (coordPadding.y * 2.0f));
 
 	}
 
@@ -248,17 +242,17 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 	protected Coord<Float> getKeyBorderSize(Surface context)
 	{
 
-		if (!drawKey) return new Coord<Float>(0.0f, 0.0f);
+		if (!drawKey) return new Coord<>(0.0f, 0.0f);
 
 		float textHeight = context.getFontHeight();
 
 		if (drawCoords)
 		{
-			return new Coord<Float>(0.0f, keyHeight * 1.6f + textHeight);
+			return new Coord<>(0.0f, keyHeight * 1.6f + textHeight);
 		}
 		else
 		{
-			return new Coord<Float>(0.0f, keyHeight * 1.3f + textHeight);
+			return new Coord<>(0.0f, keyHeight * 1.3f + textHeight);
 		}
 
 	}
@@ -293,7 +287,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 			bottomCoordHeight = 0.0f;
 		}
 		
-		return new Coord<Bounds<Float>>(new Bounds<Float>(coordBorder.x, coordBorder.x), new Bounds<Float>(
+		return new Coord<>(new Bounds<>(coordBorder.x, coordBorder.x), new Bounds<>(
 			coordBorder.y,
 			bottomCoordHeight + spectBorder.y));
 
