@@ -58,7 +58,7 @@ public class SwingEditorFactory {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static <T> SwingEditor<T> fallback(CoreStyle fallbackStyle) {
+	private static <T> SwingEditor<T> fallback(CoreStyle fallbackStyle) {		
 		switch (fallbackStyle) {
 			case BOOLEAN: return (SwingEditor<T>) new BooleanEditor();
 			case TEXT_VALUE: return (SwingEditor<T>) new TextBoxEditor();
@@ -68,7 +68,7 @@ public class SwingEditorFactory {
 			case LIST: return new ListEditor<>();
 			case SPACING: return (SwingEditor<T>) new SeparatorEditor();
 			case LABEL_VALUE: return (SwingEditor<T>) new LabelEditor();
-			default: return null;
+			default: throw new RuntimeException("Unknown CoreStyle");
 		}
 	}
 	

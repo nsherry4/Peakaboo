@@ -10,12 +10,12 @@ public abstract class WrappingEditor<T, S extends JComponent> extends AbstractSw
 	private boolean expandHorizontal = false;
 	private LabelStyle labelStyle = LabelStyle.LABEL_ON_SIDE;
 	
-	public WrappingEditor(S component) {
+	protected WrappingEditor(S component) {
 		this(component, false, false, LabelStyle.LABEL_ON_SIDE);
 	}
 	
 	
-	public WrappingEditor(S component, boolean expandVertical, boolean expandHorizontal, LabelStyle labelStyle) {
+	protected WrappingEditor(S component, boolean expandVertical, boolean expandHorizontal, LabelStyle labelStyle) {
 		this.component = component;
 		this.expandVertical = expandVertical;
 		this.expandHorizontal = expandHorizontal;

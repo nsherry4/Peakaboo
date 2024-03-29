@@ -4,8 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 

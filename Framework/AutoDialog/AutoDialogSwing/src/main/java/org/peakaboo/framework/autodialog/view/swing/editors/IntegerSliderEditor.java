@@ -3,8 +3,6 @@ package org.peakaboo.framework.autodialog.view.swing.editors;
 import java.awt.Dimension;
 
 import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 

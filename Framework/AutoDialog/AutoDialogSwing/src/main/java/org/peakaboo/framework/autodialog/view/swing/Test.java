@@ -62,7 +62,7 @@ public class Test {
 		g2.getValue().add(new Parameter<>("Filename", new FileNameStyle(), null, new StringClassInfo()));
 		
 		g2.getValue().add(new Parameter<>("Slider", new IntegerSliderStyle(), 1));
-		g2.getValue().add(new Parameter<String>("TextArea", new TextAreaStyle(), ""));
+		g2.getValue().add(new Parameter<>("TextArea", new TextAreaStyle(), ""));
 		
 		
 		

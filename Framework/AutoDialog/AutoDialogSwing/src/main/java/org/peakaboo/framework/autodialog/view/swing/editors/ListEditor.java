@@ -1,7 +1,6 @@
 package org.peakaboo.framework.autodialog.view.swing.editors;
 
 import java.awt.Component;
-import java.awt.Dimension;
 
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -28,7 +27,6 @@ public class ListEditor<T> extends AbstractSwingEditor<T> {
 
 		control.setModel(new ListComboBoxModel<>(selparam.getPossibleValues()));
 		control.setAlignmentX(Component.LEFT_ALIGNMENT);
-		//control.setPreferredSize(new Dimension(150, control.getPreferredSize().height));
 		
 		setFromParameter();
 		param.getValueHook().addListener(v -> this.setFromParameter());

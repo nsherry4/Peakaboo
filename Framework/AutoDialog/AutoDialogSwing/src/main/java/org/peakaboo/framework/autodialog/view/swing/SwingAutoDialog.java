@@ -8,6 +8,7 @@ import java.awt.Window;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.view.editors.AutoDialogButtons;
@@ -65,8 +66,8 @@ public class SwingAutoDialog extends LiveDialog
 			
 		JScrollPane scroller = new JScrollPane(SwingLayoutFactory.forGroup(group).getComponent());
 		scroller.setBorder(Spacing.bNone());
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		scroller.setBorder(Spacing.bMedium());
 		c.add(scroller, BorderLayout.CENTER);
