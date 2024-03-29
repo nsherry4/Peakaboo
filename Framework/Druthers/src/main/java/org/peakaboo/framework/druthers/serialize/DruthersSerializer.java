@@ -33,16 +33,16 @@ public class DruthersSerializer {
 			// maps. From what I understand, SnakeYAML stores refs for maps to prevent
 			// infinite loops while serializing, but empty maps shouldn't have that problem.
 			this.multiRepresenters.put(Map.class, new RepresentMap() {
+				
+				@Override
 				public Node representData(Object data) {
 					//Make the representation by calling super's mehtod
 					Node n = super.representData(data);
 					
 					// If this data really is a map, and the map is empty, then remove this object
 					// from the inventory of already-represented objects
-					if (data instanceof Map mapdata) {
-						if (mapdata.isEmpty()) {
-							representedObjects.remove(data);
-						}
+					if (data instanceof Map mapdata && mapdata.isEmpty()) {
+						representedObjects.remove(data);
 					}
 					
 					//Return our new node
@@ -60,8 +60,7 @@ public class DruthersSerializer {
 	    	if (!classTags.containsKey(cls)) {
 	            addClassTag(bean.getClass(), Tag.MAP);
 	        }
-	        MappingNode mapping = super.representJavaBean(props, bean);
-	        return mapping;
+	        return super.representJavaBean(props, bean);
 	    }
 		
 		
@@ -126,7 +125,7 @@ public class DruthersSerializer {
 			T loaded = deserialize(yaml, strict, format, cls);
 			callback.accept(loaded);
 		}
-	};
+	}
 	
 	/**
 	 * Accepts yaml and a set of {@link FormatLoader}s which provide strategies for
@@ -139,11 +138,9 @@ public class DruthersSerializer {
 	public static void deserialize(String yaml, boolean strict, FormatLoader<?>... formats) throws DruthersLoadException {
 		
 		//Figure out the format in this file
-		String format = null;
+		String format = "";
 		if (hasFormat(yaml)) {
 			format = getFormat(yaml);
-		} else {
-			format = "";
 		}
 		
 		//Use the format to pick a loader
@@ -167,13 +164,11 @@ public class DruthersSerializer {
 		loader.load(yaml, strict);
 		
 		//Success
-		return;
 	}
 	
 	private static <T extends Object> T deserialize(String yaml, Yaml y) throws DruthersLoadException {
 		try {
-			T loaded = y.load(yaml);
-			return loaded;
+			return y.load(yaml);
 		} catch (YAMLException e) {
 			throw new DruthersLoadException(e);
 		}
@@ -189,8 +184,7 @@ public class DruthersSerializer {
 		var representer = new DruthersYamlRepresenter(dumperopts);
 		representer.getPropertyUtils().setSkipMissingProperties(!strict);
 		
-		Yaml y = new Yaml(constructor, representer);
-		return y;
+		return new Yaml(constructor, representer);
 	}
 	
 
@@ -218,7 +212,7 @@ public class DruthersSerializer {
 	
 	
 	
-	private static class Shallow extends HashMap<String, String> {};
+	private static class Shallow extends HashMap<String, String> {}
 	
 	public static String getFormat(String yaml) {
 		Shallow shallow;
