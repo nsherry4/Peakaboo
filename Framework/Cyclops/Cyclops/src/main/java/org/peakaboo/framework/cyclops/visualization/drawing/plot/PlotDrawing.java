@@ -10,8 +10,8 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
@@ -157,17 +157,15 @@ public class PlotDrawing extends Drawing
 			Coord<Bounds<Float>> axisBounds = getPlotOffsetFromBottomLeft();
 			Bounds<Float> availableX = axisBounds.x, availableY = axisBounds.y;
 			plotSize = new Coord<Float>(availableX.end - availableX.start + 1, availableY.end - availableY.start + 1); 
-			if (plotSize.x <= 0 | plotSize.y <= 0) return;
+			if (plotSize.x <= 0 || plotSize.y <= 0) return;
 			
 			// transform to get out past the x axis
 			// we can't scale to make the region fit in the imageHeight/Width values
 			// since the fonts get all squishy
-			//context.translate(axesSize.x, 0);
 			context.translate(availableX.start, availableY.start);
 	
 			// clip the region so that we can't draw outside of it
 			context.rectAt(0, 0, plotSize.x, plotSize.y);
-			//context.rectangle(0, 0, availableX.end - availableX.start, availableY.end - availableY.start);
 			context.clip();
 	
 			// Draw extensions which request being in front of plot

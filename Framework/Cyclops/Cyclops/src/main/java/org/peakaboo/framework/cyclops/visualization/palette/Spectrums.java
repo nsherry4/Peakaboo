@@ -279,7 +279,6 @@ public class Spectrums
 		 * For each entry in the stepcount array, we create the 
 		 * required number of intermediate colours 
 		 */
-		//int r, b, g;
 		int steps;
 		double percent;
 		for (int stage = 0; stage < stepcount.length; stage++)
@@ -294,14 +293,8 @@ public class Spectrums
 			//create 'steps' intermediate colours
 			for (int step = 0; step < steps; step++)
 			{
-				
 				//how far along from the start colour to the end colour are we?
 				percent = (double) step / (double) steps;
-
-//				//rgb vlaues here are just a mix -- 30% along means 70% start colour, 30% end colour
-//				r = (int)Math.round(previous.getRed()   * (1.0 - percent) + next.getRed()   * percent);
-//				g = (int)Math.round(previous.getGreen() * (1.0 - percent) + next.getGreen() * percent);
-//				b = (int)Math.round(previous.getBlue()  * (1.0 - percent) + next.getBlue()  * percent);
 				PaletteColour blend = previous.blend(next, percent);
 				spectrum.add(blend); 
 			}

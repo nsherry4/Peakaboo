@@ -251,12 +251,12 @@ public class DataLabelPainter extends PlotPainter
 				
 		p.context.setSource(label.palette.labelBackground);
 		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
-		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.fill();
+		
 		p.context.setSource(label.palette.labelStroke);
 		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
-		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.stroke();
+		
 		p.context.setSource(label.palette.labelText);
 		p.context.writeText(label.title, xTextStart+1, p.plotSize.y - yTextStart+1);
 		

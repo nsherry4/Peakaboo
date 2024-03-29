@@ -157,7 +157,6 @@ public class RasterColorMapPainter extends MapPainter
 			} else {
 				CyclopsLog.get().log(Level.WARNING, "List has wrong dimensions");
 				grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
-				//throw new IllegalArgumentException("List has wrong dimensions");
 			}
 			
 			for (int i = 0; i < flip.size(); i++) {

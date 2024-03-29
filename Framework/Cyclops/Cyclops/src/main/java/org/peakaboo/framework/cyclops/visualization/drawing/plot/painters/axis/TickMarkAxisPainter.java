@@ -1,5 +1,7 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 
+import java.util.logging.Level;
+
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
@@ -42,8 +44,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		drawRightYAxis(p, yRightValueBounds);
 		
 		} catch (Exception e) {
-			CyclopsLog.get().warning(e.getMessage());
-			System.out.println(e);
+			CyclopsLog.get().log(Level.WARNING, "Failed to draw element", e);
 		}
 		
 	}

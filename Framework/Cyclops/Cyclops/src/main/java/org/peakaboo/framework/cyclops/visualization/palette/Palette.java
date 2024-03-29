@@ -204,17 +204,5 @@ public enum Palette
 				0xff521C5E, 51
 		};
 		
-//		public static void main(String[] args) {
-//			
-//			int[] spectrum = blackbody;
-//			for (int i = 0; i+3 < spectrum.length; i+=4) {
-//				PaletteColour c = new PaletteColour(255, spectrum[i], spectrum[i+1], spectrum[i+2]);
-//				int steps = spectrum[i+3];
-//				System.out.println("0x" + Integer.toHexString(c.getARGB()) + ", " + steps + ",");
-//			}
-//			
-//			
-//		}
-//		
-	
+
 }

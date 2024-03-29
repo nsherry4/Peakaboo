@@ -51,8 +51,6 @@ public class MapDrawing extends Drawing
 		super(dr);
 		this.context = context;
 		this.axisPainters = axisPainters;
-
-		// mapSize = calculateMapDimensions(dr, context);
 	}
 
 
@@ -73,9 +71,9 @@ public class MapDrawing extends Drawing
 		
 		this.context = context;
 
-		List<AxisPainter> axisPainters = new ArrayList<>();
-		axisPainters.add(axisPainter);
-		this.axisPainters = axisPainters;
+		List<AxisPainter> ps = new ArrayList<>();
+		ps.add(axisPainter);
+		this.axisPainters = ps;
 
 	}
 
@@ -365,9 +363,7 @@ public class MapDrawing extends Drawing
 		float percentX, percentY;
 		percentX = mapX / mapSize.x;
 		percentY = mapY / mapSize.y;
-		
-		//percentY = 1.0f - percentY;
-		
+
 		int indexX = (int) Math.floor(dr.uninterpolatedWidth * percentX);
 		int indexY = (int) Math.floor(dr.uninterpolatedHeight * percentY);
 		

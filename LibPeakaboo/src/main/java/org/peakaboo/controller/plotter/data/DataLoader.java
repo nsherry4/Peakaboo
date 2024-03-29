@@ -2,12 +2,14 @@ package org.peakaboo.controller.plotter.data;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
+import org.apache.commons.io.FileUtils;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.RecentSessions;
 import org.peakaboo.app.Version;
@@ -24,9 +26,10 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
-import org.peakaboo.framework.cyclops.util.StringInput;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
+
+import com.google.common.base.Charsets;
 
 
 
@@ -241,7 +244,8 @@ public abstract class DataLoader {
 			File sessionFile = datafiles.get(0).getAndEnsurePath().toFile();
 			ctx.sessionFile = sessionFile;
 			
-			String contents = StringInput.contents(sessionFile);
+			
+			String contents = FileUtils.readFileToString(sessionFile, StandardCharsets.UTF_8);
 			if (DruthersSerializer.hasFormat(contents)) {
 				DruthersSerializer.deserialize(contents, false,
 					new DruthersSerializer.FormatLoader<>(

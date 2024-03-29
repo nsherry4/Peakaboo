@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -227,28 +226,6 @@ public class RangeSet implements Serializable, Iterable<Integer> {
 		return new ArrayList<>(ranges);
 	}
 	
-	public static void main(String[] args) {
-		
-		Range r1 = new Range(1, 10, 2);
-		Range r2 = new Range(6, 20, 2);
-		
-		assert(r1.isOverlapped(r2));
-		assert(!r1.isCoincident(r2));
-		assert(!r1.isAdjacent(r2));
-		assert(!r1.isTouching(r2));
-		
-		System.out.println(r1.stream().collect(Collectors.toList()));
-		System.out.println(r2.stream().collect(Collectors.toList()));
-		
-		
-		
-		RangeSet rs1 = new RangeSet();
-		rs1.addRange(r1);
-		rs1.addRange(r2);
-		System.out.println(rs1.stream().collect(Collectors.toList()));
-		
-		
-	}
 	
 	
 }
