@@ -7,6 +7,10 @@ import java.util.regex.Pattern;
 
 public class AutoDialog {
 
+	private AutoDialog() {
+		
+	}
+	
 	public static Logger logger() {
 		StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
 		return Logger.getLogger( stElements[0].getClassName() );
