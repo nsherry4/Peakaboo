@@ -183,7 +183,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 		float textY;
 		String text;
 
-		String units = (!realDimensionsProvided | coordinateUnits == null) ? "" : " " + coordinateUnits;
+		String units = (!realDimensionsProvided || coordinateUnits == null) ? "" : " " + coordinateUnits;
 
 		p.context.setFontSize(getCoordFontSize(p));
 
@@ -223,9 +223,7 @@ public abstract class AbstractKeyCoordAxisPainter extends AxisPainter
 
 		if (!drawCoords) return new Coord<Float>(0.0f, 0.0f);
 
-		float x = 0.0f;
-		float y = 0.0f;
-
+		float x, y;
 		float cx;
 
 		context.save();

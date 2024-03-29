@@ -89,9 +89,7 @@ public class RasterColorMapPainter extends MapPainter
 	}
 	
 	private void drawToRasterBuffer(PainterData p, final IntArrayList data, float cellSize, final int maximumIndex)
-	{
-		final PaletteColour transparent = new PaletteColour(0x00000000);
-		
+	{	
 		int size = Math.min(maximumIndex, data.size());
 		for (int ordinal = 0; ordinal < size; ordinal++) {
 			buffer.setPixelARGB(ordinal, data.getInt(ordinal));

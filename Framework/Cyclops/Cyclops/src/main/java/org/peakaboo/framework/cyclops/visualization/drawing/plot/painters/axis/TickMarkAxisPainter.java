@@ -301,12 +301,12 @@ public class TickMarkAxisPainter extends AxisPainter
 	
 	@Override
 	public Pair<Float, Float> getAxisSizeX(PainterData p) {		
-		return new Pair<Float, Float>(  getSingleAxisSize(p, yLeftValueBounds, true), getSingleAxisSize(p, yRightValueBounds, true)  );
+		return new Pair<>(  getSingleAxisSize(p, yLeftValueBounds), getSingleAxisSize(p, yRightValueBounds)  );
 	}
 
 	@Override
 	public Pair<Float, Float> getAxisSizeY(PainterData p) {
-		return new Pair<Float, Float>(  getSingleAxisSize(p, xTopValueBounds, false), getSingleAxisSize(p, xBottomValueBounds, false)  );
+		return new Pair<>(  getSingleAxisSize(p, xTopValueBounds), getSingleAxisSize(p, xBottomValueBounds)  );
 	}
 	
 	
@@ -318,11 +318,11 @@ public class TickMarkAxisPainter extends AxisPainter
 		context.setAntialias(true);
 	}
 	
-	private float getSingleAxisSize(PainterData p, TickFormatter tick, boolean vertical) {
+	private float getSingleAxisSize(PainterData p, TickFormatter tick) {
 		
 		p.context.save();
 		
-		float textWidth = 0f;
+		float textWidth;
 		if (tick != null){
 			var maxsize = tick.maxTextSize(p);
 			if (!tick.isTextRotated()) {

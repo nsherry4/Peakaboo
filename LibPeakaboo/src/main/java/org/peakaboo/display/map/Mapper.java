@@ -59,7 +59,7 @@ public class Mapper {
 			mapmode.draw(size, data, settings, context, spectrumSteps);
 		} else if (doBuffer) {
 
-			Buffer buffer = bufferer.get(context, size.x, size.y);
+			Buffer buffer = bufferer.get(size.x, size.y);
 			boolean needsRedraw = buffer == null || lastSize == null || !lastSize.equals(size) || invalidated;
 			//if there is no cached buffer meeting our size requirements, create it and draw to it
 			if (needsRedraw) {

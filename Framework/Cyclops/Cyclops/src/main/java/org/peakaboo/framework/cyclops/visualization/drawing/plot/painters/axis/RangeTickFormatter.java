@@ -110,12 +110,6 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 	}
 	
 
-
-
-
-
-
-
 	private float calcMaxTicks(PainterData p, float freeSpace) {
 		//how many ticks we can fit and the range of values we're drawing over
 		float maxTicks = 0;
@@ -134,10 +128,6 @@ public class RangeTickFormatter extends AbstractTickFormatter {
 		return maxTicks;
 	}
 	
-	private static int getIncrement(float valueRange, float maxTickCount, int significantDigits) {		
-		if (maxTickCount == 0) return Integer.MAX_VALUE;
-		return SigDigits.toIntSigDigit(valueRange / maxTickCount, significantDigits);
-	}
 	
 	
 }

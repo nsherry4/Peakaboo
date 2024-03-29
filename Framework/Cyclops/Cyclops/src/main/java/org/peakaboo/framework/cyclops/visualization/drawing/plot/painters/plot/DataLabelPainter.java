@@ -87,7 +87,7 @@ public class DataLabelPainter extends PlotPainter
 			//draw the label
 			for (DataLabel label : labels){
 				if (!label.viable) continue;
-				drawTextLabel(p, label, false);
+				drawTextLabel(p, label);
 			}
 
 			
@@ -115,8 +115,7 @@ public class DataLabelPainter extends PlotPainter
 		if (baselineStart >= baselineEnd) {
 			return 0;
 		}
-		float baseline = p.dataHeights.subSpectrum(baselineStart, baselineEnd).max() + label.penWidth;
-		return baseline;
+		return p.dataHeights.subSpectrum(baselineStart, baselineEnd).max() + label.penWidth;
 	}
 	
 	//calculates the minimum height the label can be drawn at based on spectral data AND previous labels in the way
@@ -227,7 +226,7 @@ public class DataLabelPainter extends PlotPainter
 		
 		
 		
-		return new Coord<Bounds<Float>>(new Bounds<Float>(leftChannel, rightChannel), new Bounds<Float>(penWidth, totalHeight));
+		return new Coord<>(new Bounds<>(leftChannel, rightChannel), new Bounds<>(penWidth, totalHeight));
 		
 	}
 	
@@ -236,7 +235,7 @@ public class DataLabelPainter extends PlotPainter
 	 * @param p the {@link PainterData} structure containing objects and information needed to draw to the plot.
 	 * @param title the title of the label
 	 */
-	protected void drawTextLabel(PainterData p, DataLabel label, boolean resetColour) {
+	protected void drawTextLabel(PainterData p, DataLabel label) {
 			
 		if (label.title == null || label.title.length() == 0) { return; }
 		

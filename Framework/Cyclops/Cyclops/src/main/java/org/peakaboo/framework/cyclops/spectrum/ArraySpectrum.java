@@ -171,7 +171,6 @@ public class ArraySpectrum implements Spectrum
 	 * @param last the last index to copy
 	 */
 	private void copy(float[] array, int first, int last) {
-		int length = Math.min(this.data.length, array.length);
 		System.arraycopy(array, first, this.data, first, last - first + 1);
 		maxIndex = Math.max(maxIndex, last);
 	}

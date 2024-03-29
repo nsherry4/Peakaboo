@@ -300,7 +300,7 @@ public class MapDrawing extends Drawing
 	{
 
 		Coord<Bounds<Float>> axisBorders = calcAxisBorders();
-		float x = 0.0f, y = 0.0f;
+		float x, y;
 
 		x = axisBorders.x.start + (dr.imageWidth - axisBorders.x.end);
 		y = axisBorders.y.start + (dr.imageHeight - axisBorders.y.end);
@@ -317,7 +317,7 @@ public class MapDrawing extends Drawing
 	{
 
 		Coord<Float> borderSize = calcBorderSize();
-		float x = 0.0f, y = 0.0f;
+		float x, y;
 
 		float cellSize = calcInterpolatedCellSize(dr.imageWidth - borderSize.x, dr.imageHeight - borderSize.y, dr);
 		x = dr.dataWidth * cellSize;

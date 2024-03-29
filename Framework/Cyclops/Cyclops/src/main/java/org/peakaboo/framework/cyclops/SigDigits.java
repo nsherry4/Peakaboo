@@ -39,11 +39,6 @@ public class SigDigits
 	
 	public static String roundFloatTo(float value, int decimals)
 	{
-		return roundFloatTo(value, decimals, false);
-	}
-	
-	public static String roundFloatTo(float value, int decimals, boolean trimZeroes)
-	{
 		
 		if (! Float.isFinite(value)) return "-";
 		BigDecimal bd = new BigDecimal(Float.toString(value));
