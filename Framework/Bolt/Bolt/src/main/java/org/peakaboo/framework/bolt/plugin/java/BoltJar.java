@@ -7,6 +7,10 @@ import java.net.URL;
 
 public class BoltJar {
 
+	private BoltJar() {
+		
+	}
+	
 	public static boolean isClassInJar(Class<?> classInJar)
 	{
 		String className = classInJar.getName().replace('.', '/');

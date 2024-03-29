@@ -31,7 +31,7 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 	private String slug;
 	
 	
-	public BoltPluginRegistry(String slug) {
+	protected BoltPluginRegistry(String slug) {
 		this.slug = slug;
 	}
 	

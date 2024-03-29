@@ -50,16 +50,12 @@ public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements Plugi
 		{
 			return implClass.newInstance();
 		}
-		catch (InstantiationException e)
+		catch (InstantiationException | IllegalAccessException e)
 		{
 			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
 			return null;
 		}
-		catch (IllegalAccessException e)
-		{
-			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
-			return null;
-		}
+
 	}
 	
 	@Override

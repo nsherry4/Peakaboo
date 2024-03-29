@@ -21,7 +21,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 	protected BoltPluginSet<T> plugins;
 	private PluginRegistry<T> manager;
 	
-	public BoltJavaContainer(PluginRegistry<T> manager, Class<T> targetClass) {
+	protected BoltJavaContainer(PluginRegistry<T> manager, Class<T> targetClass) {
 		this.targetClass = targetClass;
 		this.plugins = new BoltPluginSet<>(manager);
 		this.manager = manager;

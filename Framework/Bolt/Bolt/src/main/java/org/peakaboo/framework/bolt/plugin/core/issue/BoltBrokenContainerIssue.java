@@ -10,7 +10,7 @@ public abstract class BoltBrokenContainerIssue<T extends BoltPlugin> implements 
 	
 	private BoltContainer<T> container;
 
-	public BoltBrokenContainerIssue(BoltContainer<T> container) {
+	protected BoltBrokenContainerIssue(BoltContainer<T> container) {
 		this.container = container;
 	}
 	

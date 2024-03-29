@@ -99,8 +99,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 			if (jin != null) {
 				try {
 					jin.close();
-				} catch (IOException e) {
-				}
+				} catch (IOException e) {}
 			}
 		}
 	}
@@ -130,8 +129,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 	public boolean delete() {
 		try {
 			File f = new File(url.toURI());
-			f.delete();
-			return true;
+			return f.delete();
 		} catch (URISyntaxException e) {
 			return false;
 		}

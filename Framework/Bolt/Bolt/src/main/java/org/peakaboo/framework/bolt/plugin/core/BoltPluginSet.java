@@ -81,10 +81,8 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 	}
 	
 	private void sort() {
-		plugins.sort((a, b) -> {
-			//Reversed order on purpose to sort higher numbers first
-			return Integer.compare(b.getWeight(), a.getWeight());
-		});
+		//Reversed order on purpose to sort higher numbers first
+		plugins.sort((a, b) -> Integer.compare(b.getWeight(), a.getWeight()));
 	}
 	
 
