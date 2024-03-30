@@ -36,7 +36,7 @@ public abstract class FilterExecutor<T1> extends AbstractExecutor<List<T1>>
 	
 
 
-	public FilterExecutor(List<T1> sourceData, Predicate<T1> filter)
+	protected FilterExecutor(List<T1> sourceData, Predicate<T1> filter)
 	{
 		super();
 		

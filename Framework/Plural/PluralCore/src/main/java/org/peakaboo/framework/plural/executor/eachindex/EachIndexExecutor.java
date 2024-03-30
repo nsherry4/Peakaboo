@@ -12,7 +12,7 @@ public abstract class EachIndexExecutor extends AbstractExecutor<Void> {
 	protected Consumer<Integer>		eachIndex;
 	
 	
-	public EachIndexExecutor(int size, Consumer<Integer> eachIndex)
+	protected EachIndexExecutor(int size, Consumer<Integer> eachIndex)
 	{
 
 		super();

@@ -9,7 +9,7 @@ public abstract class AbstractStage<S, T> extends AbstractOperator<S, T> impleme
 	private String name;
 
 	
-	public AbstractStage(String name, Function<S, T> function) {
+	protected AbstractStage(String name, Function<S, T> function) {
 		this.name = name;
 		this.function = function;
 	}

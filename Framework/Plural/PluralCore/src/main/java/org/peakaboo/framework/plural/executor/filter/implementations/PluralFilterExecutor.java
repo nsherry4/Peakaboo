@@ -80,8 +80,6 @@ public class PluralFilterExecutor<T1> extends FilterExecutor<T1>
 		}
 		
 		
-		
-		//super.result = Fn.fold(results, fold);
 		int size = acceptedLists.stream().map(List::size).reduce(0, (length, sum) -> sum+length);
 		
 		result = new ArrayList<T1>(size);

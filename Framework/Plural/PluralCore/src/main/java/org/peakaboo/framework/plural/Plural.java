@@ -17,10 +17,11 @@ import org.peakaboo.framework.plural.executor.map.implementations.PluralMapExecu
 
 public class Plural {
 
+	private Plural() {}
+	
 	public static Logger logger() {
 		StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
-		Logger logger = Logger.getLogger( stElements[0].getClassName() );
-		return logger;
+		return Logger.getLogger( stElements[0].getClassName() );
 	}
 	
 	/**

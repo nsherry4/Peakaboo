@@ -61,25 +61,4 @@ public class TicketManager {
 		return nextBlock++;
 	}
 	
-	
-	/*
-	public Range getBlockAsRange()
-	{
-		int blockStart, blockEnd, blockNum;
-		
-		//get the block number to work on
-		blockNum = getTicketBlockIndex();
-				
-		//if there are no more block numbers left, exit
-		if (blockNum == -1) return null;
-		
-		//calculate start, stop indexes
-		blockStart = getBlockStart(blockNum);
-		blockEnd = blockStart + getBlockSize(blockNum);
-		
-		return new Range(blockStart, blockEnd-1);
-	}
-	*/
-	
-	
 }

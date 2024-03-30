@@ -31,12 +31,12 @@ public abstract class MapExecutor<T1, T2> extends AbstractExecutor<List<T2>>
 	protected List<T2>				targetList;
 	
 
-	public MapExecutor(List<T1> sourceData, Function<T1, T2> map)
+	protected MapExecutor(List<T1> sourceData, Function<T1, T2> map)
 	{
 		this(sourceData, null, map);
 	}
 	
-	public MapExecutor(List<T1> sourceData, List<T2> target, Function<T1, T2> map)
+	protected MapExecutor(List<T1> sourceData, List<T2> target, Function<T1, T2> map)
 	{
 		super();
 		

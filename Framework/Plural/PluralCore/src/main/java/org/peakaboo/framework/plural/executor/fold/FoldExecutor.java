@@ -31,7 +31,7 @@ public abstract class FoldExecutor<T1> extends AbstractExecutor<T1>
 	protected T1						result;
 	
 	
-	public FoldExecutor(List<T1> sourceData, BiFunction<T1, T1, T1> fold)
+	protected FoldExecutor(List<T1> sourceData, BiFunction<T1, T1, T1> fold)
 	{
 		super();
 		
@@ -43,7 +43,7 @@ public abstract class FoldExecutor<T1> extends AbstractExecutor<T1>
 	}
 	
 	
-	public FoldExecutor(List<T1> sourceData, T1 base, BiFunction<T1, T1, T1> fold)
+	protected FoldExecutor(List<T1> sourceData, T1 base, BiFunction<T1, T1, T1> fold)
 	{
 		this(sourceData, fold);
 		

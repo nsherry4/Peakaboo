@@ -18,7 +18,7 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	private boolean			stalling = false; 
 	
 	
-	public AbstractExecutor() {
+	protected AbstractExecutor() {
 		state = ExecutorState.UNSTARTED;
 		workUnitsCompleted = 0;
 		setWorkUnits(-1);
@@ -164,7 +164,6 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	@Override
 	public synchronized void setWorkUnits(int units)
 	{
-		//if (state == ExecutorState.WORKING || state == ExecutorState.STALLED) return;
 		if (units < workUnitsCompleted) return;
 		if (units <= 0) return;
 		workUnits = units;
@@ -189,17 +188,7 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	protected void execute(int numThreads)
 	{
 		if (numThreads <= 0) numThreads = 1;
-				
-		Runnable r = new Runnable() {
-		
-			public void run()
-			{
-				workForExecutor();
-			}
-		};
-				
-		PluralThreadPool.execute(r, numThreads);
-		
+		PluralThreadPool.execute(this::workForExecutor, numThreads);
 	}
 	
 	/**

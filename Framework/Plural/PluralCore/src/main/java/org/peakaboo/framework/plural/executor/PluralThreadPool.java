@@ -15,8 +15,9 @@ import org.peakaboo.framework.plural.Plural;
 class PluralThreadPool
 {
 
+	private PluralThreadPool() {}
+	
 	private static ExecutorService executorService = Executors.newCachedThreadPool(new PluralThreadFactory());
-
 	
 	
 	public static void execute(Runnable r, int numThreads){
