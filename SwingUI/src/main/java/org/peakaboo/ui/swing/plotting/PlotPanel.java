@@ -823,22 +823,34 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionQuickMap(int channel) {
-		ExecutorSet<RawMapSet> execset = Mapping.quickMapTask(controller.data(), channel);
-		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
-
-		Mutable<Boolean> done = new Mutable<>(false);
-		execset.addListener(() -> {
-			if (execset.getCompleted() && execset.getResult() != null && !done.get()) {
-				done.set(true);
-				QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, execset.getResult(), mapSession,
-						controller);
-				this.pushLayer(maplayer);
-			}
-		});
-
+		StreamExecutor<RawMapSet> quickmapper = Mapping.quickMapTask(controller.data(), channel);
+		var layer = new TaskMonitorLayer(this, "Generating Quick Map", quickmapper);
 		pushLayer(layer);
-		execset.startWorking();
-
+		
+		quickmapper.addListener(event -> {
+			
+			switch(event) {
+			case ABORTED:
+				removeLayer(layer);
+				break;
+			case COMPLETED:
+				removeLayer(layer);
+				var result = quickmapper.getResult();
+				if (result.isPresent()) {
+					QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, result.get(), mapSession, controller);
+					this.pushLayer(maplayer);
+				}
+				break;
+			case PROGRESS:
+				break;
+			default:
+				break;
+			}
+			
+		});
+		
+		quickmapper.start();
+		
 	}
 
 	@Override

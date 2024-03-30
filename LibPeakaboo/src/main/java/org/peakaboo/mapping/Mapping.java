@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.app.Settings;
 import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
@@ -21,15 +20,10 @@ import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
-import org.peakaboo.framework.plural.Plural;
-import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.plural.executor.eachindex.EachIndexExecutor;
-import org.peakaboo.framework.plural.executor.eachindex.implementations.PluralEachIndexExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
@@ -122,7 +116,7 @@ public class Mapping {
 	}
 	
 
-	public static ExecutorSet<RawMapSet> quickMapTask(DataController data, int channel) {
+	public static StreamExecutor<RawMapSet> quickMapTask(DataController data, int channel) {
 		
 
 		
@@ -130,52 +124,52 @@ public class Mapping {
 		DataSet ds = data.getDataSet();
 		
 		DataSet dataset = data.getDataSet();
-		int mapsize = dataset.getScanData().scanCount();
 		boolean noncontiguous = !dataset.getDataSource().isRectangular() && dataset.getDataSource().getDataSize().isPresent();
 		Coord<Integer> dimensions = dataset.getDataSize().getDataDimensions();
 		GridPerspective<Integer> grid = new GridPerspective<>(dimensions.x, dimensions.y, 0);
+		
+		final int mapsize;
+		final int scanCount = dataset.getScanData().scanCount();
 		if (noncontiguous) {
 			//the dataset is non-contiguous, but provides dimensions and a way to get a coord per index
 			mapsize = dimensions.x * dimensions.y;
+		} else {
+			mapsize = scanCount;
 		}
-		int finalMapsize = mapsize;
 		
-		Spectrum map = new ArraySpectrum(finalMapsize);
-		EachIndexExecutor maptask = new PluralEachIndexExecutor(dataset.getScanData().scanCount(), index -> {
-			int translated = index;
-			if (noncontiguous) {
-				translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
-			}
-			map.set(translated, ds.getScanData().get(index).get(channel));
-		}, Settings.getThreadCount());
-		maptask.setName("Examining Spectra");
+		Spectrum mapdata = new ArraySpectrum(mapsize);
 		
 		
-		//timer
-		Mutable<Long> t1 = new Mutable<>();
-		Mutable<Long> t2 = new Mutable<>();
-		Runnable timerPre = () -> t1.set(System.currentTimeMillis());
-		Runnable timerPost = () -> {
-			t2.set(System.currentTimeMillis());
-			long seconds = (t2.get() - t1.get()) / 1000;
-			PeakabooLog.get().log(Level.INFO, "Generated a QuickMap in " + seconds + " seconds");
-		};
-		
-		
-		//executor
-		return Plural.build("Generating Quick Map", maptask, timerPre, v -> {
-			timerPost.run();
+		StreamExecutor<RawMapSet> quickmapper = new StreamExecutor<>("Examining Spectra", Math.max(1, mapsize / 100));
+		quickmapper.setTask(new Range(0, scanCount), stream -> {
+			
+			long timePre = System.currentTimeMillis();
+			
+			// Generate the map
+			stream.forEach(index -> {
+				int translated = index;
+				if (noncontiguous) {
+					translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
+				}
+				mapdata.set(translated, ds.getScanData().get(index).get(channel));
+			});
+			
+			long timePost = System.currentTimeMillis();
+			long timeDelta = (timePost - timePre) / 1000;
+			PeakabooLog.get().log(Level.INFO, "Generated a QuickMap in " + timeDelta + " seconds");
 			
 			//build the RawMapSet now that the map Spectrum has been populated
-			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), map);
+			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), mapdata);
 			return new RawMapSet(
 					Collections.singletonList(rawmap), 
-					finalMapsize, 
+					mapsize, 
 					data.getDataSet().getDataSource().isRectangular(), 
 					true
 				);
+			
 		});
-
+		
+		return quickmapper;
 		
 	}
 	
