@@ -2,7 +2,6 @@ package org.peakaboo.framework.plural.executor;
 
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.plural.Plural;
-import org.peakaboo.framework.plural.executor.map.MapExecutor;
 
 
 public abstract class AbstractExecutor<T> extends EventfulBeacon implements PluralExecutor{

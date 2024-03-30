@@ -157,12 +157,11 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 		return result;
 	}
 
-	public void setResult(T result) {
+	private void setResult(T result) {
 		if (state == State.RUNNING) {
 			this.result = Optional.ofNullable(result);
 			complete();
 		}
-
 	}
 
 	

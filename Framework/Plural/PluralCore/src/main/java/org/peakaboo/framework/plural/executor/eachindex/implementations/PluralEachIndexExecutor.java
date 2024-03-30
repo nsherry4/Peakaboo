@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import org.peakaboo.framework.plural.executor.TicketManager;
 import org.peakaboo.framework.plural.executor.eachindex.EachIndexExecutor;
-import org.peakaboo.framework.plural.executor.map.MapExecutor;
 
 /**
  * 

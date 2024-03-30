@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorState;
-import org.peakaboo.framework.plural.executor.map.MapExecutor;
 
 public abstract class EachIndexExecutor extends AbstractExecutor<Void> {
 
