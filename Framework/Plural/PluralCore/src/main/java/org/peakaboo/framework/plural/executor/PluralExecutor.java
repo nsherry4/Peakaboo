@@ -1,5 +1,7 @@
 package org.peakaboo.framework.plural.executor;
 
+import java.util.function.BiFunction;
+
 import org.peakaboo.framework.eventful.IEventfulBeacon;
 
 public interface PluralExecutor extends IEventfulBeacon{
@@ -91,5 +93,37 @@ public interface PluralExecutor extends IEventfulBeacon{
 	ExecutorSet<?> getExecutorSet();
 
 	void setExecutorSet(ExecutorSet<?> executorSet);
+	
+	
+
+	/**
+	 * Builds a simple ExecutorSet with a single DummyExecutor to track work
+	 * provided by a function.
+	 */
+	public static <T> ExecutorSet<T> build(String title, String taskname, BiFunction<ExecutorSet<T>, DummyExecutor, T> function) {
+		
+		DummyExecutor task = new DummyExecutor();
+		task.setName(taskname);
+		
+		ExecutorSet<T> execset = new ExecutorSet<T>(title) {
+
+			@Override
+			protected T execute() {
+				
+				task.advanceState();
+				task.setExecutorSet(this);
+				T result = function.apply(this, task);
+				task.advanceState();
+				return result;
+				
+			}
+		};
+		
+		execset.addExecutor(task);
+		
+		return execset;
+		
+	}
+			
 	
 }

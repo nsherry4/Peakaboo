@@ -177,19 +177,7 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	 */
 	protected abstract void workForExecutor();
 
-	/**
-	 * Implementations of MapExecutor should call this method to begin processing with the desired number of
-	 * threads. The appropriate number of threads will be acquired, and each will call into
-	 * {@link MapExecutor#workForExecutor()}
-	 * 
-	 * @param numThreads
-	 */
-	protected void execute(int numThreads)
-	{
-		if (numThreads <= 0) numThreads = 1;
-		PluralThreadPool.execute(this::workForExecutor, numThreads);
-	}
-	
+
 	/**
 	 * Calculates the number of threads that should be used by this {@link MapExecutor}
 	 * 

@@ -65,8 +65,8 @@ import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
-import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
@@ -416,7 +416,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		Mutable<ModalLayer> layer = new Mutable<>();
 
-		ExecutorSet<Boolean> loader = Plural.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
+		ExecutorSet<Boolean> loader = PluralExecutor.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
 			getController().data().setDataSource(sds, exec, execset::isAborted);
 			getController().load(settings, false);
 			removeLayer(layer.get());
