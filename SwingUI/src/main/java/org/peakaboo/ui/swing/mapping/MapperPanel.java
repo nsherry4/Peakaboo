@@ -32,8 +32,8 @@ import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
-import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener;
 import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener.Buttons;
@@ -278,12 +278,27 @@ public class MapperPanel extends TabbedLayerPanel {
 		FileOutputStream fos = new FileOutputStream(file);
 		
 		Supplier<ExportableSurface> surfaceFactory = () -> (ExportableSurface)format.create(new Coord<>(width, height));
-		ExecutorSet<Void> executorset = controller.writeArchive(fos, format, width, height, surfaceFactory);
+		StreamExecutor<Void> archiver = controller.writeArchive(fos, format, width, height, surfaceFactory);
 		
-		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, executorset);
+		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Archive", archiver);
+		archiver.addListener(event -> {
+			switch(event) {
+			case ABORTED, COMPLETED:
+				removeLayer(layer);
+				break;
+				
+			case PROGRESS:
+			default:
+				break;
+			
+			}
+		});
+		
+		//ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, executorset);
 		this.pushLayer(layer);
 		
-		executorset.startWorking();
+		//executorset.startWorking();
+		archiver.start();
 		
 	}
 

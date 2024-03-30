@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
@@ -33,10 +32,7 @@ import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.eventful.EventfulType;
-import org.peakaboo.framework.plural.Plural;
-import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.plural.executor.eachindex.EachIndexExecutor;
-import org.peakaboo.framework.plural.executor.eachindex.implementations.SimpleEachIndexExecutor;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
 
 
 
@@ -190,14 +186,14 @@ public class MappingController extends EventfulType<MapUpdateType>
 	}
 
 
-	public ExecutorSet<Void> writeArchive(OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
+	public StreamExecutor<Void> writeArchive(OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
 		//we make a copy of the controller to prevent spamming the UI with changes as we generate map after map
 		MappingController exportController = new MappingController(this.rawDataController, this.plotcontroller);
 		new SavedMapSession().storeFrom(this).loadInto(exportController);
 		return writeArchive(exportController, fos, format, width, height, surfaceFactory);
 	}
 	
-	private static ExecutorSet<Void> writeArchive(MappingController controller, OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
+	private static StreamExecutor<Void> writeArchive(MappingController controller, OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
 		final ZipOutputStream zos = new ZipOutputStream(fos);
 		
 		List<ITransitionSeries> tss = controller.getFitting().getAllTransitionSeries();
@@ -211,43 +207,21 @@ public class MappingController extends EventfulType<MapUpdateType>
 		Coord<Integer> size = new Coord<>(width, height);
 		Mutable<Exception> exceptionBox = new Mutable<>();
 		
-		EachIndexExecutor executor = new SimpleEachIndexExecutor(tss.size(), index -> {
-			ITransitionSeries ts = tss.get(index);
+		StreamExecutor<Void> archiver = new StreamExecutor<>("Exporting Map Data", 1);
+		archiver.setParallel(false);
+		archiver.setTask(tss, tsStream -> {
 			
-			CompositeModeController composite = (CompositeModeController) controller.getFitting().getModeController(CompositeMapMode.MODE_NAME).get();
+			// Run the stream, writing a map for each fitting
+			tsStream.forEach(ts -> {
+				try {
+					writeTSToArchive(ts, controller, size, format, surfaceFactory, zos);
+				} catch (IOException e) {
+					//Stash exception for later reporting
+					exceptionBox.set(e);
+				}
+			});
 			
-			Mapper mapper = new Mapper();
-			MapRenderData data = new MapRenderData();
-			data.mapModeData = composite.getData(Optional.of(ts));
-			data.maxIntensity = controller.getFitting().sumAllTransitionSeriesMaps().max();
-			
-			composite.setAllVisible(false);
-			composite.setVisibility(ts, true);
-			MapRenderSettings settings = controller.getRenderSettings();
-			
-			//image extension
-			String ext = format.extension().toLowerCase();
-			try {
-				ZipEntry entry = new ZipEntry(ts.toString() + "." + ext);
-				zos.putNextEntry(entry);
-				ExportableSurface context = surfaceFactory.get();
-				mapper.draw(data, settings, context, size);
-				context.write(zos);
-				zos.closeEntry();
-				
-				//csv
-				entry = new ZipEntry(ts.toString() + ".csv");
-				zos.putNextEntry(entry);
-				controller.writeCSV(zos);
-				zos.closeEntry();
-			} catch (IOException exception) {
-				exceptionBox.set(exception);
-			}
-		});
-		executor.setName("Generating Maps");
-		
-		Function<Void, Void> after = nothing -> {
-			
+			// Write out the session file
 			try {
 				ZipEntry sessionEntry = new ZipEntry("session.peakaboo");
 				zos.putNextEntry(sessionEntry);
@@ -268,9 +242,46 @@ public class MappingController extends EventfulType<MapUpdateType>
 			}
 			
 			return null;
-		};
+		});
 		
-		return Plural.build("Writing Archive", executor, () -> {}, after);
+		return archiver;
+		
+	}
+	
+	private static void writeTSToArchive(
+			ITransitionSeries ts, 
+			MappingController controller, 
+			Coord<Integer> size,
+			SurfaceDescriptor format,
+			Supplier<ExportableSurface> surfaceFactory,
+			ZipOutputStream zos
+		) throws IOException {
+
+		CompositeModeController composite = (CompositeModeController) controller.getFitting().getModeController(CompositeMapMode.MODE_NAME).get();
+		
+		Mapper mapper = new Mapper();
+		MapRenderData data = new MapRenderData();
+		data.mapModeData = composite.getData(Optional.of(ts));
+		data.maxIntensity = controller.getFitting().sumAllTransitionSeriesMaps().max();
+		
+		composite.setAllVisible(false);
+		composite.setVisibility(ts, true);
+		MapRenderSettings settings = controller.getRenderSettings();
+		
+		//image extension
+		String ext = format.extension().toLowerCase();
+		ZipEntry entry = new ZipEntry(ts.toString() + "." + ext);
+		zos.putNextEntry(entry);
+		ExportableSurface context = surfaceFactory.get();
+		mapper.draw(data, settings, context, size);
+		context.write(zos);
+		zos.closeEntry();
+		
+		//csv
+		entry = new ZipEntry(ts.toString() + ".csv");
+		zos.putNextEntry(entry);
+		controller.writeCSV(zos);
+		zos.closeEntry();
 
 		
 	}
