@@ -54,7 +54,7 @@ please feel free to contact the developer at `nsherry4@uwo.ca`
 
 ## Opening Data
 
-Select ![image](icons/document-open.png) `Open` or `image Menu → image Open` to locate
+Select ![open] `Open` or ![menu] `Menu` → `Open` to locate
 your XRF data. If all scan point data is contained in a single file,
 simply select that file and open it. If there are many individual scan
 point files, (e.g. one scan per file), then locate them in their
@@ -101,7 +101,7 @@ rather than individual scans.
 
 ## Energy Calibration
 
-The `image Calibration` menu in the upper right allows you to configure
+The ![menu-energy] `Energy Calibration` menu in the upper right allows you to configure
 the energy range of the dataset. If your dataset contains these values
 (and if Peakaboo can read them), the minimum and maximum energy values
 will be set automatically. If not, you will have to enter them manually.
@@ -117,7 +117,7 @@ energy on the detector is non-zero, no other additions to the
 calibration menu are necessary.
 
 Peakaboo can also try to auto-detect the energy calibration with the
- `image Guess Calibration` tool. You should always review any results
+![auto] `Guess Energy Calibration` tool. You should always review any results
 from this tool to make sure that they are correct.
 
 A minimum of two elements must be present in the Element Table (see
@@ -162,7 +162,7 @@ fitting and mapping.
 subsection](figures/quickmap.png)
 
 When viewing a Quick Map of a data set without dimensional information,
-the dimensions can be set or auto-detected from the `image Settings`
+the dimensions can be set or auto-detected from the ![map-size] `Settings`
 menu.
 
 ## Saving and Loading Work Sessions
@@ -173,8 +173,8 @@ Alternatively, the same fittings and parameters can be applied to a
 different spectrum. In either case, this can be done through the use of
 sessions.
 
-From the toolbar, you can `image Save` your session to a file.
-Reloading a session can be done using the `image Open` button – the
+From the toolbar, you can ![save] `Save` your session to a file.
+Reloading a session can be done using the ![open] `Open` button – the
 same as if you were loading a data set. As the scan data can be quite
 large, the saved session does not store the data itself. When reopening
 a session, the data must still be available in the same location it was
@@ -183,8 +183,8 @@ previously for it to be automatically reloaded.
 ## Saving and Exporting Spectral Data
 
 Spectra that are collected in Peakaboo can be saved and/or exported in
-several different ways. These are all accessed through the `image
-Export` menu in the toolbar.
+several different ways. These are all accessed through the ![export] `Export` 
+menu in the toolbar.
 
   - Images
     This will save the current plot – as you see it – as an image in one
@@ -220,22 +220,22 @@ Export` menu in the toolbar.
     information on the fittings to a single zip archive.
 
 Your spectrum, as it appears in the window, can also be saved by
-selecting `image Export Data → image Plot as Image`
+selecting ![export] `Export Data` → `Plot as Image`
 from the toolbar or `Control + P`. Image format options include `PNG`,
 `SVG` or `PDF`. You can also save the fitting results as a text file by
-selecting `image Export Data → Fittings as Text`.
+selecting ![export] `Export Data` → `Fittings as Text`.
 
 # Filters
 
 Filters are ways to process or transform spectral data. Filters can be
 accessed by clicking on the `Filters` sidebar tab and then clicking on
- `image Add Filters` to display the available filters. Filters are
+ ![add] `Add Filters` to display the available filters. Filters are
 grouped into folders based on type. Each folder can be expanded by
 clicking on the expander to the left of the filter type. Select the
-filter you wish to use and then click `image OK` to add it.
+filter you wish to use and then click ![ok] `OK` to add it.
 
 After you have added the filter, you can modify or check the parameters
-associated with your filter by clicking on the `image Edit` button next
+associated with your filter by clicking on the ![settings] `Settings` button next
 to the filter. This will bring up a settings dialog for this filter. As
 you change the parameters, you will see the changes reflected in the
 spectrum being displayed.
@@ -247,8 +247,7 @@ the appendix.
 in plot](figures/brukner-filter.png)
 
 The use of filters will obviously alter the spectrum. If you wish to see
-the original spectrum in addition to the filtered data, select ` image
-View → Raw Data Outline`.
+the original spectrum in addition to the filtered data, select ![menu-view] `View` → `Raw Data Outline`.
 
 For a more detailed example of using a filter, as well as further
 descriptions of the filters available, see the appendix.
@@ -306,7 +305,7 @@ X-ray’s measured energy by 1.74 keV. This escape peak will be present
 for major elements in a sample.
 
 To adjust the type of escape peaks used in fitting the peaks in your
-spectra, select ` image Calibration → Advanced Options` and
+spectra, select ` image Calibration` → `Advanced Options` and
 choose either `Silicon` or `Germanium`, depending on the type of
 detector you used. If you do not need to fit escape peaks, choose
 `None`. By default, `Silicon` is selected.
@@ -331,10 +330,9 @@ In fitting each peak in the spectrum, the appropriate lineshape must
 consist of an overlay of several functions since there are multiple
 transitions, closely spaced in energy, that are associated with each K,
 L and M-shell XRF transition. You can choose to display these individual
-transitions or not with `View → Curve Fit
-→ Markings`. Each individual transition is indicated by a
-solid line within the lineshape envelope that is a composite of these
-transitions and their probability (see Figure 5).
+transitions or not with `View` → `Curve Fit` → `Markings`. Each individual 
+transition is indicated by a solid line within the lineshape envelope that 
+is a composite of these transitions and their probability (see Figure 5).
 
 ![Spectral Fitting of multi element sample showing individual
 lines](figures/fitting-markings.png)
@@ -353,7 +351,7 @@ transition were taken from tabulated sources to build an accurate and
 up-to-date data base. Fittings from the database take account of details
 such as separations and relative intensities of transitions. Most
 fittings are derived from data from the
-[Xraylib](https://github.com/tschoonj/xraylib)  project. For high \(Z\)
+[Xraylib](https://github.com/tschoonj/xraylib)  project. For high `Z`
 elements where the K series fittings are not available in Xraylib,
 values provided by Krause  have been used. The intensity ratios have
 been optimized for 20keV irradiation.
@@ -361,7 +359,7 @@ been optimized for 20keV irradiation.
 ## Selecting Fittings
 
 There are four different tools which can be used to fit your data. To
-access these options, click the `image Add Fittings` button at the top
+access these options, click the ![add] `Add Fittings` button at the top
 of the `Peak Fitting` tab.
 
 ### Element Lookup
@@ -374,9 +372,9 @@ desired transition. A set of red-coloured provisional lineshapes will
 appear within the actual spectrum and an atomic symbol will appear on
 the most intense component. Your assignment may or may not coincide with
 the positions of spectral peaks that you are trying to identify. If the
-assignment appears incorrect, click on the `image Cancel` button, or
+assignment appears incorrect, click on the `Cancel` button, or
 deselect the element and try again. If the choice appears to be correct,
-click `image OK`.
+click ![ok] `OK`.
 
 ![The elemental lookup fitting controls](figures/lookup-fitting.png)
 
@@ -393,10 +391,10 @@ by double clicking on the appropriate element in the list.
 Guided fitting will attempt to identify peaks the user selects. Click on
 the peak you wish to fit and the program will fit the peak with its
 recommendation. Other recommendations will also be displayed in a drop
-down list in the side bar. To add another fitting, click on the `image
-Add` button below the current entry and click on another peak. To edit a
-previous fitting, click `image Edit`. After you are happy with the
-fittings, click `image OK` to add the fittings to your list.
+down list in the side bar. To add another fitting, click on the ![add] `Add` 
+button below the current entry and click on another peak. To edit a
+previous fitting, click ![edit] `Edit`. After you are happy with the
+fittings, click ![ok] `OK` to add the fittings to your list.
 
 ![The guided fitting controls](figures/guided-fitting.png)
 
@@ -433,25 +431,24 @@ lineshape in a complex overlay of spectral peaks.
 
 When trying to determine how to fit an element’s theoretical lineshape
 to real data, Peakaboo has several algorithms to make this
-determination. The algorithms can be selected from ` image Calibration
-→ Advanced Options → Single-Curve Fitting`. The
+determination. The algorithms can be selected from ![menu-energy] `Energy Calibration` → `Advanced Options` → `Single-Curve Fitting`. The
 available options are:
 
-  - Max-Under-Curve  
+  - Max-Under-Curve
     This is the default algorithm in Peakaboo. It is extremely fast, and
     is quite conservative in fitting against real data. Within the
     dimensions of the peak, it will never over-fit against real data.
     The drawback is that it does not handle noisy data particularly
     well.
 
-  - Least Squares  
+  - Least Squares
     This is a standard optimizing algorithm minimizing the sum of the
     squares of the difference between the fitting’s lineshape and the
     data. This algorithm is excellent for working with extremely noisy
     data, but has a tendency to over-fit against data which is not as
     strong as it thinks it ought to be.
 
-  - Optimizing  
+  - Optimizing
     This is a Least Squares algorithm modified to strongly penalize
     over-fitting against signal which doesn’t exist. It acts as a
     trade-off between the other two; reasonably good fitting of noisy
@@ -465,8 +462,7 @@ available options are:
 When fittings from two or more elements overlap, they content for being
 fit against the same data. Peakaboo must solve this signal contention by
 determining how much of the signal originates from each elemental
-fitting. The algorithm can be selected from ` image Calibration
-→ Advanced Options → Multi-Curve Solver`. Peakaboo
+fitting. The algorithm can be selected from ` image Calibration` → `Advanced Options` → `Multi-Curve Solver`. Peakaboo
 has two algorithms for determining the intensity of each contending
 fitting:
 
@@ -547,7 +543,7 @@ again and setting the
 
 # Mapping
 
-To map the fitted elements, click on `image Map Fittings` in the
+To map the fitted elements, click on ![map] `Map Fittings` in the
 toolbar. Only those fittings which are enabled in your `Peak Fitting`
 list will be mapped. It is recommended that you enable all fittings for
 mapping as each fitting results in an individual map which can be
@@ -579,7 +575,7 @@ information, see the section on Map Filtering.
 Composite is the default map mode. It sums the intensities from
 different fittings into a single map. The data is displayed with a heat
 map colour scale, but can also be shown in monochrome by selecting
- `image View` \(→\) `Monochrome`
+ ![menu-view] `View` → `Monochrome`
 
 Composite maps are scaled against a global maximum of all fittings. If
 you wish to scale a fitting to its own highest intensity, select
@@ -656,11 +652,11 @@ the `Granularity` control at the bottom of the sidebar.
 
 Just as with spectra, maps can be filtered to clean up the data and
 improve appearance. You can add filters to your maps by selecting the
-`Filters` tab in the sidebar and then clicking on `image Add Filters`
+`Filters` tab in the sidebar and then clicking on ![add] `Add Filters`
 to display the available filters. Filters are grouped into folders based
 on type. Each folder can be expanded by clicking on the expander to the
 left of the filter type. Select the filter you wish to use and then
-click `image OK` to add it.
+click ![ok] `OK` to add it.
 
 ![Comparison of mapping data before (left) and after (right) being
 treated with the Outlier Correction filter where small, extremely
@@ -668,11 +664,11 @@ intense spots are brought in line with the rest of the
 map.](figures/map-filter-outliers.png)
 
 After you have added the filter, you can modify or check the parameters
-associated with your filter by clicking on the `image Edit` button next
+associated with your filter by clicking on the ![settings] `Settings` button next
 to the filter. This will bring up a settings dialog for this filter. As
 you change the parameters, you will see the changes reflected in the map
 being displayed. To learn more about a map filter, you can view it’s
-description by clicking the `image Help` button in the settings dialog.
+description by hovering over the ![help] `Help` icon in the settings dialog.
 
 ![Comparison of mapping of a nickel intensity distribution before and
 after being treated with the low signal removal filter(40% setting)) and
@@ -697,8 +693,8 @@ value of a point on the final map would be 200, rather than 100.
 
 ## Exporting Data
 
-Maps may be saved by clicking the `image Export` button on the toolbar,
-and selecting `image Export as Image`. Various formats are available
+Maps may be saved by clicking the ![export] `Export` button on the toolbar,
+and selecting ![image-symbolic] `Export as Image`. Various formats are available
 for saving your element line maps, Pixel Image (`PNG`), Vector Image
 (`SVG`) and `PDF` format.
 
@@ -716,7 +712,7 @@ window, making sure you are in `Individual Scan` mode, and enter the
 `Index #` of the invalid data in the `Scan` field at the bottom of the
 window.
 
-Click on the `image Exclude` button to flag the scan as bad, and to
+Click on the ![cancel] `Exclude` button to flag the scan as bad, and to
 exclude it from the data set. In all future maps, this data point will
 be interpolated from neighbouring data.
 
@@ -740,7 +736,7 @@ set](figures/select-points.png)
 The point-selection mode has two settings which will control how point
 selections are made:
 
-  - Threshold  
+  - Threshold
     Threshold adjusts the sensitivity of the selection. For a threshold
     \(t\), double-clicking a point with intensity \(i\) will select all
     contiguous points with an intensity between \(\frac{i}{t}\) and
@@ -748,7 +744,7 @@ selections are made:
     double-clicking a point with a value 2 will select all touching
     points with a value between 50 and 200.
 
-  - Padding  
+  - Padding
     Padding controls how many extra ‘rings’ of pixels get selected along
     with matching pixels. For example, when a point selection is made
     with a padding value of 1, all pixels which are adjacent to the
@@ -769,7 +765,7 @@ around, but not including, an intense region.
 
 Peakaboo also allows you to view spectra from selected regions within
 your map. Using the same technique as described above to select a
-subsection of your data, click `image Plot Region` to view the spectra
+subsection of your data, click ![plot] `Plot Region` to view the spectra
 for the selected region. Another tab in the plotting window will open up
 to display the spectra from the selected region or subset. The spectra
 can then be processed with Peakaboo.
@@ -786,8 +782,7 @@ Peakaboo](https://github.com/nsherry4/PeakabooPlugins/releases/latest),
 and anyone with some experience in Java programming can also make their
 own.
 
-You can manage Peakaboo’s plugins by selecting ` image Menu
-→ Plugins`.
+You can manage Peakaboo’s plugins by selecting ![menu] `Menu` → `Plugins`.
 
 ![Peakaboo’s plugin management screen](figures/plugins.png)
 
@@ -795,8 +790,8 @@ You can manage Peakaboo’s plugins by selecting ` image Menu
 
 You can import new plugins to Peakaboo in three ways.
 
-  - Import Plugins Button  
-    Clicking the `image Import Plugins` button will open up a file
+  - Add Plugins Button  
+    Clicking the ![add] `Add Plugins` button will open up a file
     browser so that you may select the plugin archive that you wish to
     import.
 
@@ -805,16 +800,16 @@ You can import new plugins to Peakaboo in three ways.
     screen, Peakaboo will import them for you automatically.
 
   - Manually  
-    If you click the `image Open Plugins Folder` button, Peakaboo will
+    If you click the ![open-symbolic] `Open Plugins Folder` button, Peakaboo will
     open its plugins folder in a file browser. You can manage your
     plugins manually by adding or removing files. Be sure to update
-    Peakaboo by clicking the `image Reload Plugins` button after you’re
+    Peakaboo by clicking the ![refresh] `Reload Plugins` button after you’re
     done.
 
 ## Removing Existing Plugins
 
 To remove a plugin, select it in the plugins list on the left side of
-the plugin management screen, then click the `image Remove Plugins`
+the plugin management screen, then click the ![remove] `Remove Plugins`
 button. Be aware that if the plugin is contained in an archive along
 with other plugins, those other plugins will be removed as well.
 
@@ -844,8 +839,7 @@ The interface in question depends on the kind of plugin being created.
 These plugin classes should be bundled in `.jar` files and placed in the
 correct plugin folder inside of the user’s application data directory.
 For example, on Linux, this path is `~/.config/Peakaboo5/`. You can
-access this folder by selecting ` image Menu → Plugins
-→ Open Folder`.
+access this folder by selecting ![menu] `Menu` → `Plugins` → ![open-symbolic] `Open Folder`.
 
 In order to know which classes to load without scanning each class in
 every jar file, a jar containing a plugin must include a manifest file,
@@ -900,7 +894,7 @@ set of parameters.
 ### Validation
 
 Whenever the user makes changes to a filter’s parameter value in the
- `image Settings` dialog, the new parameter value is validated in a
+![settings] `Settings` dialog, the new parameter value is validated in a
 call to the parameter’s validator method. In the example above, the
 parameter’s validate method is in the filter itself, and could be used
 by other parameters to validate combinations of values.
@@ -1113,7 +1107,7 @@ to correct the spectra. By normalizing against a channel from within the
 saturation.
 
 Go to the `Filters` tab and add the `Normalizer Filter` found under the
-`Advanced` filter types. Click on the `image Settings` button to bring
+`Advanced` filter types. Click on the ![settings] `Settings` button to bring
 up the settings window for the filter. Place the cursor on the \(Ar\)
 peak in the spectrum and read the channel number and value (counts) from
 the information found below the spectrum window, and enter them into the
@@ -1177,3 +1171,28 @@ ORNL-5399, 1978.
 
 Rene E. Van Grieken, Andrzej A. Markowicz, *Handbook of X-Ray
 Spectrometry*, Marcel Dekker, Inc., Second Edition, 2002
+
+
+
+[open]: icons/document-open.png
+[menu]: icons/main-menu.png
+[save]: icons/document-save.png
+[auto]: icons/auto.png
+[map-size]: icons/map-size.png
+[menu-energy]: icons/menu-energy.png
+[menu-settings]: icons/menu-settings.png
+[menu-view]: icons/menu-view.png
+[export]: icons/document-export.png
+[add]: icons/edit-add.png
+[remove]: icons/edit-remove.png
+[settings]: icons/menu-settings.png
+[edit]: icons/edit-edit.png
+[ok]: icons/ok.png
+[cancel]: icons/cancel.png
+[map]: icons/map.png
+[help]: icons/app-help.png
+[image-symbolic]: icons/mime-raster-symbolic.png
+[plot]: icons/plot.png
+[open-symbolic]: icons/document-open-symbolic.png
+[refresh]: icons/action-refresh-symbolic.png
+[]: icons/.png
