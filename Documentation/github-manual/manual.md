@@ -48,7 +48,7 @@ language to add support for new file formats. See the section on
 ## Getting Help
 
 If you have any questions or concerns not addressed in this guide,
-please feel free to contact the developer at `nsherry4@uwo.ca`
+please feel free to contact the developer at `nsherry4` @ `uwo.ca`
 
 # Getting Started
 
@@ -133,17 +133,14 @@ spectrum.
 The ![menu-view] `View` menu contains settings to help you visualize the
 spectrum. Some of the more important options are:
 
-  - Logarithmic Scale  
-    Selecting Logarithmic or Linear Scale allows you to select which
+  - **Logarithmic Scale** Selecting Logarithmic or Linear Scale allows you to select which
     components of your data to emphasize.
 
-  - Curve Fit Markings  
-    This will display all transition lines for a fitted element, scaled
+  - **Curve Fit Markings** This will display all transition lines for a fitted element, scaled
     by their relative intensity. It can be useful for understanding the
     structure of a fitting’s lineshape.
 
-  - Max or Mean per Channel  
-    These options allow you to view a composite spectrum when viewing
+  - **Max or Mean per Channel** These options allow you to view a composite spectrum when viewing
     multi-point data (i.e. line or area raster scans). These modes can
     be useful for viewing a cleaner spectrum or for finding elements
     which only appear in a small area of your dataset.
@@ -162,7 +159,7 @@ fitting and mapping.
 subsection](figures/quickmap.png)
 
 When viewing a Quick Map of a data set without dimensional information,
-the dimensions can be set or auto-detected from the ![map-size] `Settings`
+the dimensions can be set or auto-detected from the ![map-size] `Sizing`
 menu.
 
 ## Saving and Loading Work Sessions
@@ -186,8 +183,7 @@ Spectra that are collected in Peakaboo can be saved and/or exported in
 several different ways. These are all accessed through the ![export] `Export` 
 menu in the toolbar.
 
-  - Images
-    This will save the current plot – as you see it – as an image in one
+  - **Images** This will save the current plot – as you see it – as an image in one
     of several formats. The most common of these is the `PNG` file
     format that stores images as a raster image (coloured dots of fixed
     size on a grid). It provides an image that is acceptable for
@@ -198,25 +194,21 @@ menu in the toolbar.
     images are not always compatible with older versions of other
     software.
 
-  - Filtered Spectrum
-    This will save the current plot – including any filtering – as a
+  - **Filtered Spectrum** This will save the current plot – including any filtering – as a
     `CSV` (Comma Separated Value) file. `CSV` files are a human-readable
     matrix of values separated by commas and line-breaks. They are
     readable by a broad set of other applications including
     spreadsheeting programs.
 
-  - Filtered Data Set  
-    Similar to the previous option. This will save <span>*the entire
+  - **Filtered Data Set** Similar to the previous option. This will save <span>*the entire
     data set*</span>, including any filtering, as a `CSV` (Comma
     Separated Value) file.
 
-  - Fittings  
-    This option exports a listing of the fitted elements along with the
+  - **Fittings** This option exports a listing of the fitted elements along with the
     relative heights and areas of the fitting curves for the current
     spectrum.
 
-  - All-in-one Zip Archive  
-    This will export an image of the plot, the session file, and
+  - **All-in-one Zip Archive** This will export an image of the plot, the session file, and
     information on the fittings to a single zip archive.
 
 Your spectrum, as it appears in the window, can also be saved by
@@ -353,7 +345,7 @@ such as separations and relative intensities of transitions. Most
 fittings are derived from data from the
 [Xraylib](https://github.com/tschoonj/xraylib)  project. For high `Z`
 elements where the K series fittings are not available in Xraylib,
-values provided by Krause  have been used. The intensity ratios have
+values provided by Krause [^1] have been used. The intensity ratios have
 been optimized for 20keV irradiation.
 
 ## Selecting Fittings
@@ -368,11 +360,11 @@ This option provides a listing of chemical elements that will help you
 fit a K,L or M lineshape for a particular element to a peak (or peaks)
 in the spectrum. A particular element can be found by scrolling through
 the menu or typing the element name or atomic symbol. Then, select the
-desired transition. A set of red-coloured provisional lineshapes will
+desired transition. A set of purple-coloured provisional lineshapes will
 appear within the actual spectrum and an atomic symbol will appear on
 the most intense component. Your assignment may or may not coincide with
 the positions of spectral peaks that you are trying to identify. If the
-assignment appears incorrect, click on the `Cancel` button, or
+assignment appears incorrect, click on the ![cancel] `Cancel` button, or
 deselect the element and try again. If the choice appears to be correct,
 click ![ok] `OK`.
 
@@ -434,35 +426,31 @@ to real data, Peakaboo has several algorithms to make this
 determination. The algorithms can be selected from ![menu-energy] `Energy Calibration` → `Advanced Options` → `Single-Curve Fitting`. The
 available options are:
 
-  - Max-Under-Curve
-    This is the default algorithm in Peakaboo. It is extremely fast, and
+  - **Max-Under-Curve** This is the default algorithm in Peakaboo. It is extremely fast, and
     is quite conservative in fitting against real data. Within the
     dimensions of the peak, it will never over-fit against real data.
     The drawback is that it does not handle noisy data particularly
     well.
 
-  - Least Squares
-    This is a standard optimizing algorithm minimizing the sum of the
+  - **Least Squares** This is a standard optimizing algorithm minimizing the sum of the
     squares of the difference between the fitting’s lineshape and the
     data. This algorithm is excellent for working with extremely noisy
     data, but has a tendency to over-fit against data which is not as
     strong as it thinks it ought to be.
 
-  - Optimizing
-    This is a Least Squares algorithm modified to strongly penalize
+  - **Optimizing** This is a Least Squares algorithm modified to strongly penalize
     over-fitting against signal which doesn’t exist. It acts as a
     trade-off between the other two; reasonably good fitting of noisy
     data and reasonably averse to over-fitting non-existent signal.
     
-    ![Comparison of mapping data treated with Max-Under-Curve (left) and
-    Optimizing (right)](figures/maxunder-vs-optimizing.png)
+![Comparison of mapping data treated with Max-Under-Curve (left) and Optimizing (right)](figures/maxunder-vs-optimizing.png)
 
 ## Multi-Element Fitting Solvers
 
 When fittings from two or more elements overlap, they content for being
 fit against the same data. Peakaboo must solve this signal contention by
 determining how much of the signal originates from each elemental
-fitting. The algorithm can be selected from ` image Calibration` → `Advanced Options` → `Multi-Curve Solver`. Peakaboo
+fitting. The algorithm can be selected from ![menu-energy] `Calibration` → `Advanced Options` → `Multi-Curve Solver`. Peakaboo
 has two algorithms for determining the intensity of each contending
 fitting:
 
@@ -472,8 +460,7 @@ mathematical approximations that will provide reliable and consistent
 assignments of areas associated with the neighbouring peaks. Peakaboo
 has two approaches to assessment of such data:
 
-  - Greedy  
-    The Greedy fitting solver is the default fitting solver algorithm in
+  - **Greedy** The Greedy fitting solver is the default fitting solver algorithm in
     Peakaboo. is extremely fast, and allows the user to control the
     order of fittings by rearranging the fittings in the side bar.
     
@@ -489,8 +476,7 @@ has two approaches to assessment of such data:
     problems. Select the fitting that you wish to reorder, and
     click-and-drag the element in the list to reorder it.
 
-  - Optimizing  
-    The Optimizing fitting solver is a Least Squares algorithm modified
+  - **Optimizing** The Optimizing fitting solver is a Least Squares algorithm modified
     to strongly penalize over-fitting against signal which doesn’t
     exist. This algorithm is slower than Greedy, but results in more
     nuanced fitting solutions in complex, crowded spectra with many
@@ -498,8 +484,7 @@ has two approaches to assessment of such data:
     where it is possible to fit minor L peaks in the presence of more
     intense K peaks.
 
-  - MultiSampling  
-    The MultiSampling fitting solver is a variation of the Optimizing
+  - **MultiSampling** The MultiSampling fitting solver is a variation of the Optimizing
     solver which averages several deterministically permuted orderings
     of the element fittings to eliminate any ordering effects from the
     Optimizing solver. This helps to produce more reliable results, but
@@ -519,23 +504,23 @@ again and setting the
 
 ## Suggestions for Successful Fitting
 
-  - Consider NOT using any background subtraction. Its use may distort
-    some peak shapes and thereby compromise an exacting fitting
-    procedure.
-
   - After energy calibration, use Automatic Fitting to find and assign
     many of the more obvious peaks. Thereafter, use a combination of
     Guided Fitting and Element Lookup to identify as many peaks as
     possible.
-
-  - The fitted spectrum summation line should match, as closely as
-    possible, the experimental line.
 
   - Watch carefully for summation peaks. If you find one, there are
     likely others. Summation peaks are prevalent when the SDD detector
     is experiencing a higher flux of incoming photons. Use of the
     Summation Fitting process is an efficient way to cover all possible
     contributions.
+
+  - Consider *not* using any background subtraction. Its use may distort
+    some peak shapes and thereby compromise an exacting fitting
+    procedure.
+
+  - The fitted spectrum summation line should match (as closely as
+    possible) the experimental line, moreso for areas of intense signal.
 
   - Consider trying minor adjustments to the peak width setting (FWHM
     noise level) to improve the fitting match. Increased photon flux
@@ -590,22 +575,20 @@ The `Overlay` option for mapping is chosen from the drop down list under
 different colour groups. These groups are overlaid, with the presence of
 each colour indicating the intensities of their fitting groups.
 
-<span>**<span style="color: BrickRed">Caution: </span> **</span>Because
-Red, Green, and Blue are the primary colours for computer displays, care
-must be taken not to introduce ambiguity when choosing colours for
-overlays.
+**Caution:** Because Red, Green, and Blue are the primary colours for 
+computer displays, care must be taken not to introduce ambiguity when 
+choosing colours for overlays.
 
 ![Overlay of Iron and Zinc concentration](figures/map-overlay.png)
 
 The `Scale By` options control the way that the fitting group’s colours
 are scaled. With the `All` option, the highest intensity from
-<span>**all**</span> groups of fittings is used to scale the intensities
-for <span>**every**</span> group. With the `Colour` option, the highest
-intensity from <span>**within each**</span> group of fittings is used to
+**all** groups of fittings is used to scale the intensities
+for **every** group. With the `Colour` option, the highest
+intensity from **within each** group of fittings is used to
 scale the intensities for that group.
 
-<span>**<span style="color: BrickRed">Caution: </span> **</span>The
-`Colour` option produces maps which may be qualitatively interesting,
+**Caution:** The`Colour` option produces maps which may be qualitatively interesting,
 but are quantitatively incorrect.
 
 Sometimes the weaker intensities for different elements can overlap to
@@ -626,14 +609,13 @@ lists next to each fitting.
 
 The `Scale By` options control the way that the fitting group’s colours
 are scaled. With the `All` option, the highest intensity from
-<span>**either**</span> set of fittings is used to scale the intensities
-for <span>**both**</span> groups. With the `Colour` option, the highest
-intensity from <span>**within each**</span> group of fittings is used to
+**either** set of fittings is used to scale the intensities
+for **both** groups. With the `Colour` option, the highest
+intensity from **within each** group of fittings is used to
 scale the intensities for that group.
 
-<span>**<span style="color: BrickRed">Caution: </span> **</span>The
-`Colour` option produces maps which may be qualitatively interesting,
-but are quantitatively incorrect.
+**Caution:** The `Colour` option produces maps which may be qualitatively 
+interesting, but are quantitatively incorrect.
 
 ### Correlations
 
@@ -680,7 +662,7 @@ treated with the Denoise filter where areas of high noise are replaced
 with a smoothed value without altering the rest of the
 map](figures/map-filter-denoise.png)
 
-<span>**<span style="color: BrickRed">Caution: </span> **</span>It is
+**Caution** It is
 important to note that these filters change the map data, and are
 applied to each fitting individually, before they are combined to
 produce the maps as shown. This usually doesn’t make much difference,
@@ -736,16 +718,14 @@ set](figures/select-points.png)
 The point-selection mode has two settings which will control how point
 selections are made:
 
-  - Threshold
-    Threshold adjusts the sensitivity of the selection. For a threshold
+  - **Threshold** Threshold adjusts the sensitivity of the selection. For a threshold
     `t`, double-clicking a point with intensity `i` will select all
-    contiguous points with an intensity between \(\frac{i}{t}\) and
-    \(i\times t\). For example, with a threshold setting of 2,
+    contiguous points with an intensity between `i ÷ t` and
+    `i × t`. For example, with a threshold setting of 2,
     double-clicking a point with a value 2 will select all touching
     points with a value between 50 and 200.
 
-  - Padding
-    Padding controls how many extra ‘rings’ of pixels get selected along
+  - **Padding** Padding controls how many extra ‘rings’ of pixels get selected along
     with matching pixels. For example, when a point selection is made
     with a padding value of 1, all pixels which are adjacent to the
     selection area are added to the selection. For a larger padding
@@ -790,17 +770,14 @@ You can manage Peakaboo’s plugins by selecting ![menu] `Menu` → `Plugins`.
 
 You can import new plugins to Peakaboo in three ways.
 
-  - Add Plugins Button  
-    Clicking the ![add] `Add Plugins` button will open up a file
+  - **Add Plugins Button** Clicking the ![add] `Add Plugins` button will open up a file
     browser so that you may select the plugin archive that you wish to
     import.
 
-  - Drag and Drop  
-    If you drag and drop plugin archives onto the plugin management
+  - **Drag and Drop** If you drag and drop plugin archives onto the plugin management
     screen, Peakaboo will import them for you automatically.
 
-  - Manually  
-    If you click the ![open-symbolic] `Open Plugins Folder` button, Peakaboo will
+  - **Manually** If you click the ![open-symbolic] `Open Plugins Folder` button, Peakaboo will
     open its plugins folder in a file browser. You can manage your
     plugins manually by adding or removing files. Be sure to update
     Peakaboo by clicking the ![refresh] `Reload Plugins` button after you’re
@@ -850,13 +827,11 @@ names of each class to be loaded as a plugin, one per line.
 
 The specific interfaces used for different types of plugins are:
 
-  - Data Source: <span>
-    `org.peakaboo.datasource.plugin.JavaDataSourcePlugin`</span>
+  - **Data Source** `org.peakaboo.datasource.plugin.JavaDataSourcePlugin`
 
-  - Data Sink: <span>
-    `org.peakaboo.datasink.plugin.JavaDataSinkPlugin`</span>
+  - **Data Sink** `org.peakaboo.datasink.plugin.JavaDataSinkPlugin`
 
-  - Filter: <span> `org.peakaboo.filter.plugin.JavaFilterPlugin`</span>
+  - **Filter** `org.peakaboo.filter.plugin.JavaFilterPlugin`
 
 Example plugins for both filters and data sources are [available
 online](https://github.com/nsherry4/PeakabooPlugins/), along with a jar
@@ -864,14 +839,14 @@ file containing Peakaboo for building against.
 
 ## Filters
 
-Custom filters must implement <span> `JavaFilterPlugin`</span>, and for
-convenience may also extend the <span> `AbstractSimpleFilter`</span> or
-<span> `AbstractBackgroundFilter`</span> classes, and should either not
+Custom filters must implement `JavaFilterPlugin`, and for
+convenience may also extend the `AbstractSimpleFilter` or
+`AbstractBackgroundFilter` classes, and should either not
 define a constructor, or define a `public` no-argument constructor.
 
 ### Parameters
 
-Filters define a series of <span> `Parameter`</span>s, each with an
+Filters define a series of `Parameter`s, each with an
 associated data type. These parameters are displayed in the filter’s
 settings panel, using the associated data types and class information to
 determine what kind of widgets should be used. These parameters should
@@ -880,13 +855,24 @@ be created and initialized in the filter’s `initialize` method.
 Once constructed, the parameter should be passed to the `addParameter`
 method of the superclass. This method returns an integer value which you
 can use to retrieve the parameter later using `getParameter(int index)`.
-The alternative is to simply keep local references to all your <span>
-`Parameter`</span>s. Here is an example of the `initialize` method of
-the <span> `Addition`</span> filter:
+The alternative is to simply keep local references to all your `Parameter`s. 
+Here is an example of the `initialize` method of the `Addition` filter:
 
-<span> </span>
+```java
+@Override
+public void initialize()
+{
+  Parameter<Float> add = new Parameter<>(
+    "Amount to Add", //Human-readable name
+    new RealStyle(), //Style hint for UI generation
+    1.0f,            //Starting value
+    this::validate); //validation function
+    
+  addParameter(add);  
+}
+```
 
-This creates a new <span> `Parameter`</span> called “Amount to Add” with
+This creates a new `Parameter` called “Amount to Add” with
 a Float data type, a default value of 1.0, and a validation function
 defined elsewhere in the class body. It then adds it to this filter’s
 set of parameters.
@@ -904,37 +890,34 @@ fields are reset to their old values.
 
 ### Processing Spectra
 
-An active filter’s `filter( ReadOnlySpectrum data)` method is called
-repeatedly. This method should return a modified <span>
-`Spectrum`</span> containing the results of filtering the input <span>
-`ReadOnlySpectrum`</span>.
+An active filter’s `filter(ReadOnlySpectrum data)` method is called
+repeatedly. This method should return a modified `Spectrum` containing 
+the results of filtering the input `ReadOnlySpectrum`.
 
-The <span> `Spectrum`</span> and <span> `ReadOnlySpectrum`</span>
-classes have a <span> `List`</span>-like interface, but use a fixed-size
-<span> `float`</span> array to store the actual data for memory and
-performance reasons. If you prefer to work with the <span>
-`float[]`</span> data directly, the `backingArray` method provides
+The `Spectrum` and `ReadOnlySpectrum` classes have a `List`-like 
+interface, but use a fixed-size `float` array to store the actual 
+data for memory and performance reasons. If you prefer to work with 
+the `float[]` data directly, the `backingArray` method provides
 direct access to it.
 
 ## File Formats (Data Sources)
 
 Adding support for new file formats in Peakaboo is accomplished by
-creating a new Data Source. When creating a new data source, the <span>
-`JavaDataSourcePlugin`</span> interface must be implemented. The
+creating a new Data Source. When creating a new data source, the 
+`JavaDataSourcePlugin` interface must be implemented. The
 implementation should either not define a constructor, or define a
 `public` no-argument constructor. A Data Source has a number of methods
-to retrieve other data structures, some of which are <span>
-`Optional`</span>.
+to retrieve other data structures, some of which are `Optional`.
 
 ### File Format
 
-The <span> `FileFormat`</span> interface is how a Data Source describes
+The `FileFormat` interface is how a Data Source describes
 the type of files it reads and tests if it can read specific files. When
 the user opens one or more files, Peakaboo must determine which Data
 Source plugin(s) may be used, and it relies on the Data Source’s
 FileFormat to inform it.
 
-For convenience, the <span> `SimpleFileFormat`</span> class provides an
+For convenience, the `SimpleFileFormat` class provides an
 easy way to get started, with file-extension based testing and the
 ability to specify single or multi-file support. Because many data
 sources use very common file extentions (e.g. `.dat`) or container files
@@ -946,15 +929,19 @@ through an examination of a file’s contents.
 Once your data source has been selected, the `void read( List< Path>
 paths)` method will be called at most once. The paths given here will be
 the same as the paths tested for compatibility through the supplied
-<span> `FileFormat`</span>, so there is no need to recheck the files.
+`FileFormat`, so there is no need to recheck the files.
 
 Because Peakaboo is an interactive desktop application, progress should
-be reported to the user through the <span> `Interaction`</span> class.
+be reported to the user through the `Interaction` class.
 The Data Source interface defines get/set methods for this object, and
 this object will be set before the data is read. It contains several
 methods which can be used to report progress or allow user control.
 
-<span> </span>
+```java
+boolean checkReadAborted()
+void notifyScanCount(int scanCount)
+void notifyScanRead(int number)
+```
 
 The `checkReadAborted` method checks to see if the user has decided to
 abort the read operation. This method should be checked periodically,
@@ -975,23 +962,21 @@ show a “busy” indicator instead.
 ### Accessing the Data
 
 Once the `read` method has been called, your data source will need to
-provide access to the data. This is achieved through the <span>
-`ScanData`</span> interface. For convenience, the <span>
-`SimpleScanData`</span> class is provided. It is *highly* recommended
-that the <span> `SimpleScanData`</span> class be used in most cases, as
-it provides a number of performance and memory footprint optimizations.
-Other implementations of <span> `ScanData`</span> should study the
-<span> `SimpleScanData`</span> implementation for an idea of how to
+provide access to the data. This is achieved through the `ScanData` 
+interface. For convenience, the `SimpleScanData` class is provided. 
+It is *highly* recommended that the `SimpleScanData` class be used 
+in most cases, as it provides a number of performance and memory 
+footprint optimizations. Other implementations of `ScanData` should 
+study the `SimpleScanData` implementation for an idea of how to
 achieve these for themselves.
 
 ### Providing Extended Information
 
 Each data source reads from different kinds of files, which contain
 different kinds of information about the scan. Further information can
-be exposed through the <span> `DataSize`</span>, <span>
-`PhysicalSize`</span>, and <span> `Metadata`</span> interfaces, which
-are all access through the <span> `DataSource`</span> interface as
-<span> `Optional`</span> values.
+be exposed through the `DataSize`, `PhysicalSize`, and `Metadata` 
+interfaces, which are all access through the `DataSource` interface as
+`Optional` values.
 
 # Filter Descriptions
 
@@ -1009,8 +994,7 @@ channel on each pass.
 ### Linear Trim
 
 This filter examines all pairs of points which are `n` channels apart
-(ie \((1, 10), 
-(2, 11)\), … where \(n = 10\)). For each pair of points, any signal
+(ie `(1, 10), (2, 11), …` where `n = 10`). For each pair of points, any signal
 which exceeds a straight line connecting the two points is truncated.
 
 ### Polynomial
@@ -1050,8 +1034,8 @@ exponentially weighted average of the sampled points.
 ### Savitsky-Golay
 
 This filter attempts to remove noise by fitting a polynomial to each
-point \(p_i\) and its surrounding points \(p_{i-n} \ldots p_{i+n}\), and
-then taking the value of the polynomial at \(p_i\). This filter is
+point `P_i` and its surrounding points `P_(i-n) … P_(i+n)`, and
+then taking the value of the polynomial at `P_i`. This filter is
 generally fast, while minimizing peak distortion. A moving average may
 be considered a special case of this filter with a polynomial of order
 1.
@@ -1086,8 +1070,7 @@ window until either:
 
   - Both of the following are true:
     
-      - The signal in the window is less than Threshold x
-        sqrt(centerpoint)
+      - The signal in the window is less than `Threshold × sqrt(centerpoint)`
     
       - The slopes of the left vs. right windows is less than Max Slope
 
@@ -1161,16 +1144,11 @@ is always the same across all spectra.
 This filter allows the application of another filter to a portion of a
 spectrum.
 
-<span>9</span>
+# Citations
 
-https://github.com/tschoonj/xraylib
-
-M.O. Krause, C.W. Nestor, C.J. Sparks and E. Ricci, *X-Ray Fluorescence
+[^1]: M.O. Krause, C.W. Nestor, C.J. Sparks and E. Ricci, *X-Ray Fluorescence
 Cross Sections for K and L X Rays of the elements*, Oak Ridge Report
 ORNL-5399, 1978.
-
-Rene E. Van Grieken, Andrzej A. Markowicz, *Handbook of X-Ray
-Spectrometry*, Marcel Dekker, Inc., Second Edition, 2002
 
 
 
