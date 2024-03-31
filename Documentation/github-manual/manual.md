@@ -80,7 +80,7 @@ best matches your data.
 
 ## Viewing the Data
 
-The `🔍` icon on the bottom right of the window allows you to expand 
+The ![find] `Zoom` icon on the bottom right of the window allows you to expand 
 the x-axis (energy scale). You can use the scroll bar below the scan 
 (or click and drag on the spectrum itself) to pan back and forth to 
 view different energy regions.
@@ -1195,4 +1195,6 @@ Spectrometry*, Marcel Dekker, Inc., Second Edition, 2002
 [plot]: icons/plot.png
 [open-symbolic]: icons/document-open-symbolic.png
 [refresh]: icons/action-refresh-symbolic.png
+[find]: icons/find.png
+[]: icons/.png
 []: icons/.png
