@@ -66,6 +66,9 @@ Because Peakaboo has a tabbed interface, additional data sets may be
 opened and processed without having to close other data sets.
 
 ![Peakaboo’s file selection dialog](figures/open-files.png)
+<span style='display: block; text-align: center'>
+Peakaboo’s file selection dialog
+</span>
 
 ## File Format Conflicts
 
@@ -86,6 +89,9 @@ the x-axis (energy scale). You can use the scroll bar below the scan
 view different energy regions.
 
 ![Zoom controls and horizontal scrollbar](figures/zoom-scroll.png)
+<span style='display: block; text-align: center'>
+Zoom controls and horizontal scrollbar
+</span>
 
 ## Individual Scans
 
@@ -98,6 +104,9 @@ another view mode, like the mean average or strongest per channel composites
 rather than individual scans.
 
 ![Scan number selector](figures/scan-number.png)
+<span style='display: block; text-align: center'>
+Scan number selector
+</span>
 
 ## Energy Calibration
 
@@ -127,6 +136,9 @@ air surrounding the sample and its XRF signature is found in every
 spectrum.
 
 ![The calibration menu](figures/max-energy.png)
+<span style='display: block; text-align: center'>
+The calibration menu
+</span>
 
 ## Customizing the View
 
@@ -155,8 +167,10 @@ used to help identify peaks when energy calibration is unknown, and
 allows early cropping of datasets without first having to perform peak
 fitting and mapping.
 
-![Using a Quick Map to select and plot a
-subsection](figures/quickmap.png)
+![Using a Quick Map to select and plot a subsection](figures/quickmap.png)
+<span style='display: block; text-align: center'>
+Using a Quick Map to select and plot a subsection
+</span>
 
 When viewing a Quick Map of a data set without dimensional information,
 the dimensions can be set or auto-detected from the ![map-size] `Sizing`
@@ -235,8 +249,10 @@ spectrum being displayed.
 To view a full listing of built-in filters and their descriptions, see
 the appendix.
 
-![The Brukner background filter’s settings window with raw data outline
-in plot](figures/brukner-filter.png)
+![The Brukner background filter’s settings window with raw data outline in plot](figures/brukner-filter.png)
+<span style='display: block; text-align: center'>
+The Brukner background filter’s settings window with raw data outline in plot
+</span>
 
 The use of filters will obviously alter the spectrum. If you wish to see
 the original spectrum in addition to the filtered data, select ![menu-view] `View` → `Raw Data Outline`.
@@ -326,8 +342,10 @@ transitions or not with `View` → `Curve Fit` → `Markings`. Each individual
 transition is indicated by a solid line within the lineshape envelope that 
 is a composite of these transitions and their probability (see Figure 5).
 
-![Spectral Fitting of multi element sample showing individual
-lines](figures/fitting-markings.png)
+![Spectral Fitting of multi element sample showing individual lines](figures/fitting-markings.png)
+<span style='display: block; text-align: center'>
+Spectral Fitting of multi element sample showing individual lines
+</span>
 
 The width of XRF peaks detected by solid state devices such as a Silicon
 Diode Detector (SDD) is a convolution of an invariant intrinsic width
@@ -369,6 +387,9 @@ deselect the element and try again. If the choice appears to be correct,
 click ![ok] `OK`.
 
 ![The elemental lookup fitting controls](figures/lookup-fitting.png)
+<span style='display: block; text-align: center'>
+The elemental lookup fitting controls
+</span>
 
 Best results are usually obtained by adding elements with the lowest
 atomic numbers first and working your way up. It is recommended that you
@@ -389,6 +410,9 @@ previous fitting, click ![edit] `Edit`. After you are happy with the
 fittings, click ![ok] `OK` to add the fittings to your list.
 
 ![The guided fitting controls](figures/guided-fitting.png)
+<span style='display: block; text-align: center'>
+The guided fitting controls
+</span>
 
 ### Automatic Fitting
 
@@ -407,6 +431,9 @@ the Element Table can be summed in different combinations to create new
 lineshapes on the experimental spectrum.
 
 ![The summation fitting controls](figures/fitting-summation.png)
+<span style='display: block; text-align: center'>
+The summation fitting controls
+</span>
 
 ## Working with Fittings
 
@@ -444,6 +471,9 @@ available options are:
     data and reasonably averse to over-fitting non-existent signal.
     
 ![Comparison of mapping data treated with Max-Under-Curve (left) and Optimizing (right)](figures/maxunder-vs-optimizing.png)
+<span style='display: block; text-align: center'>
+Comparison of mapping data treated with Max-Under-Curve (left) and Optimizing (right)
+</span>
 
 ## Multi-Element Fitting Solvers
 
@@ -538,6 +568,9 @@ filtering or Optimizing/Least-Squares Curve Fitting or Fitting Solver
 algorithms.
 
 ![Peakaboo’s mapping window](figures/map-window.png)
+<span style='display: block; text-align: center'>
+Peakaboo’s mapping window
+</span>
 
 After the mapping is complete, a window will appear with a coloured map,
 a scale, and a list of the mapped element lines. For datasets which
@@ -580,6 +613,9 @@ computer displays, care must be taken not to introduce ambiguity when
 choosing colours for overlays.
 
 ![Overlay of Iron and Zinc concentration](figures/map-overlay.png)
+<span style='display: block; text-align: center'>
+Overlay of Iron and Zinc concentration
+</span>
 
 The `Scale By` options control the way that the fitting group’s colours
 are scaled. With the `All` option, the highest intensity from
@@ -606,6 +642,9 @@ wish to view in ratio and select the desired colours from the dropdown
 lists next to each fitting.
 
 ![Ratio of Iron and Zinc](figures/map-ratio.png)
+<span style='display: block; text-align: center'>
+Ratio of Iron and Zinc
+</span>
 
 The `Scale By` options control the way that the fitting group’s colours
 are scaled. With the `All` option, the highest intensity from
@@ -629,6 +668,9 @@ intensity ranges. The number of ranges (or bins) can be controlled with
 the `Granularity` control at the bottom of the sidebar.
 
 ![Correlation of Iron and Zinc](figures/map-correlation.png)
+<span style='display: block; text-align: center'>
+Correlation of Iron and Zinc
+</span>
 
 ## Map Filters
 
@@ -653,14 +695,27 @@ being displayed. To learn more about a map filter, you can view it’s
 description by hovering over the ![help] `Help` icon in the settings dialog.
 
 ![Comparison of mapping of a nickel intensity distribution before and
-after being treated with the low signal removal filter(40% setting)) and
-with the weighted average filter (radius:1,repetitions
+after being treated with the low signal removal filter (40% setting) and
+with the weighted average filter (radius:1, repetitions
 :1)](figures/map-filter-lowsignal.png)
+<span style='display: block; text-align: center'>
+Comparison of mapping of a nickel intensity distribution before and
+after being treated with the low signal removal filter (40% setting) and
+with the weighted average filter (radius:1, repetitions
+:1)
+</span>
+
 
 ![Comparison of mapping data before (left) and after (right) being
 treated with the Denoise filter where areas of high noise are replaced
 with a smoothed value without altering the rest of the
 map](figures/map-filter-denoise.png)
+<span style='display: block; text-align: center'>
+Comparison of mapping data before (left) and after (right) being
+treated with the Denoise filter where areas of high noise are replaced
+with a smoothed value without altering the rest of the
+map
+</span>
 
 **Caution** It is
 important to note that these filters change the map data, and are
@@ -711,9 +766,14 @@ clicking will select all points in a map with similar intensity
 regardless of location.
 
 ![Selecting a cropped subset of a data set](figures/select-subset.png)
+<span style='display: block; text-align: center'>
+Selecting a cropped subset of a data set
+</span>
 
-![Selecting a series of contiguous high-intensity points from the data
-set](figures/select-points.png)
+![Selecting a series of contiguous high-intensity points from the data set](figures/select-points.png)
+<span style='display: block; text-align: center'>
+Selecting a series of contiguous high-intensity points from the data set
+</span>
 
 The point-selection mode has two settings which will control how point
 selections are made:
@@ -750,8 +810,10 @@ for the selected region. Another tab in the plotting window will open up
 to display the spectra from the selected region or subset. The spectra
 can then be processed with Peakaboo.
 
-![Plotting window showing data for a subset of the original data
-set](figures/plot-subset.png)
+![Plotting window showing data for a subset of the original data set](figures/plot-subset.png)
+<span style='display: block; text-align: center'>
+Plotting window showing data for a subset of the original data set
+</span>
 
 # Plugins
 
@@ -765,6 +827,9 @@ own.
 You can manage Peakaboo’s plugins by selecting ![menu] `Menu` → `Plugins`.
 
 ![Peakaboo’s plugin management screen](figures/plugins.png)
+<span style='display: block; text-align: center'>
+Peakaboo’s plugin management screen
+</span>
 
 ## Importing New Plugins
 
@@ -1098,15 +1163,25 @@ appropriate settings fields. Make sure you are viewing the `Mean Average`
 spectrum to get the average value (counts) for the `Ar`.
 Close the edit window.
 
-![Uncorrected `Ar` with weak signal where `Ti` is
-strongest](figures/normalize-uncorrected-ar.png)
+![Uncorrected `Ar` with weak signal where `Ti` is strongest](figures/normalize-uncorrected-ar.png)
+<span style='display: block; text-align: center'>
+Uncorrected `Ar` with weak signal where `Ti` is strongest
+</span>
 
-![Uncorrected \(Ti\)](figures/normalize-uncorrected-ti.png)
+![Uncorrected `Ti`](figures/normalize-uncorrected-ti.png)
+<span style='display: block; text-align: center'>
+Uncorrected `Ti`
+</span>
 
-![Corrected \(Ar\)](figures/normalize-corrected-ar.png)
+![Corrected `Ar`](figures/normalize-corrected-ar.png)
+<span style='display: block; text-align: center'>
+Corrected `Ar`
+</span>
 
-![Corrected \(Ti\) with greater maximum
-intensity](figures/normalize-corrected-ti.png)
+![Corrected `Ti` with greater maximum intensity](figures/normalize-corrected-ti.png)
+<span style='display: block; text-align: center'>
+Corrected `Ti` with greater maximum intensity
+</span>
 
 ## Mathematical Filters
 
