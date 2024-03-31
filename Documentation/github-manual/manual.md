@@ -130,7 +130,7 @@ spectrum.
 
 ## Customizing the View
 
-The ` image View` menu contains settings to help you visualize the
+The ![menu-view] `View` menu contains settings to help you visualize the
 spectrum. Some of the more important options are:
 
   - Logarithmic Scale  
@@ -300,7 +300,7 @@ you used to collect the XRF spectra. Features may be present in your
 spectra that are due to incoming X-rays interacting with the detector
 material. For example, for a Silicon Diode Detector (SDD), there is a
 probability that some of the incoming X-rays will interact with the
-Silicon and emit \(Si\) K-shell electrons, thereby reducing the incoming
+Silicon and emit `Si` K-shell electrons, thereby reducing the incoming
 X-ray’s measured energy by 1.74 keV. This escape peak will be present
 for major elements in a sample.
 
@@ -687,8 +687,8 @@ produce the maps as shown. This usually doesn’t make much difference,
 but can occasionally cause some confusion. To give an example, consider
 the `Signal Cap` filter, which limits any given point to a cap value.
 Suppose that the cap specified was 100 counts, and was applied to a
-composite map of \(Fe\) K and \(Zn\) K. Because the filter is applied to
-the \(Fe\) and \(Zn\) maps separately before being combined, the maximum
+composite map of `Fe` K and `Zn` K. Because the filter is applied to
+the `Fe` and `Zn` maps separately before being combined, the maximum
 value of a point on the final map would be 200, rather than 100.
 
 ## Exporting Data
@@ -738,7 +738,7 @@ selections are made:
 
   - Threshold
     Threshold adjusts the sensitivity of the selection. For a threshold
-    \(t\), double-clicking a point with intensity \(i\) will select all
+    `t`, double-clicking a point with intensity `i` will select all
     contiguous points with an intensity between \(\frac{i}{t}\) and
     \(i\times t\). For example, with a threshold setting of 2,
     double-clicking a point with a value 2 will select all touching
@@ -749,7 +749,7 @@ selections are made:
     with matching pixels. For example, when a point selection is made
     with a padding value of 1, all pixels which are adjacent to the
     selection area are added to the selection. For a larger padding
-    value \(p\), this process is repeated \(p\) times.
+    value `p`, this process is repeated `p` times.
 
 More complex selections can be made by holding the `Control` key while
 clicking. For example, with point selection, `Control` + `Click` on a
@@ -1008,7 +1008,7 @@ channel on each pass.
 
 ### Linear Trim
 
-This filter examines all pairs of points which are \(n\) channels apart
+This filter examines all pairs of points which are `n` channels apart
 (ie \((1, 10), 
 (2, 11)\), … where \(n = 10\)). For each pair of points, any signal
 which exceeds a straight line connecting the two points is truncated.
@@ -1025,7 +1025,7 @@ is calculated and subtracted from the original data.
 
 This is a very fast background removal method based on the Peak
 Stripping algorithm. It iteratively replaces signal with the average of
-the points \((-window, +window)\) channels apart if that average is less
+the points `(-window, +window)` channels apart if that average is less
 than the existing signal. By taking a double square root of the signal
 and then reversing it afterwards, the number if iterations required is
 greatly reduced. Because noise-reduction filters are separate and
@@ -1044,7 +1044,7 @@ through.
 ### Weighted Averaging
 
 This filter refines the values of each point in a scan by sampling it
-and the \(n\) points to either side of it, and replacing it with an
+and the `n` points to either side of it, and replacing it with an
 exponentially weighted average of the sampled points.
 
 ### Savitsky-Golay
@@ -1097,25 +1097,25 @@ This example uses the Normalizer Filter.
 
 When detector deadtime is very high, the detector cannot keep up with
 the incoming x-rays. For example, low energy x-rays such as those coming
-from \(Ar\) may not get counted and mapping the distribution of \(Ar\)
+from `Ar` may not get counted and mapping the distribution of `Ar`
 will reveal areas of next to no intensity.
 
 The `Normalizer Filer` scales each spectrum so that the intensity at a
 given channel is always the same. This filter can be used in this case
 to correct the spectra. By normalizing against a channel from within the
-\(Ar\) peak, we can mitigate the distortion caused by detector
+`Ar` peak, we can mitigate the distortion caused by detector
 saturation.
 
 Go to the `Filters` tab and add the `Normalizer Filter` found under the
 `Advanced` filter types. Click on the ![settings] `Settings` button to bring
-up the settings window for the filter. Place the cursor on the \(Ar\)
+up the settings window for the filter. Place the cursor on the `Ar`
 peak in the spectrum and read the channel number and value (counts) from
 the information found below the spectrum window, and enter them into the
-appropriate settings fields. Make sure you are viewing the `Mean
-Average` spectrum to get the average value (counts) for the \(Ar\).
+appropriate settings fields. Make sure you are viewing the `Mean Average` 
+spectrum to get the average value (counts) for the `Ar`.
 Close the edit window.
 
-![Uncorrected \(Ar\) with weak signal where \(Ti\) is
+![Uncorrected `Ar` with weak signal where `Ti` is
 strongest](figures/normalize-uncorrected-ar.png)
 
 ![Uncorrected \(Ti\)](figures/normalize-uncorrected-ti.png)
@@ -1175,7 +1175,7 @@ Spectrometry*, Marcel Dekker, Inc., Second Edition, 2002
 
 
 [open]: icons/document-open.png
-[menu]: icons/main-menu.png
+[menu]: icons/menu-main.png
 [save]: icons/document-save.png
 [auto]: icons/auto.png
 [map-size]: icons/map-size.png
