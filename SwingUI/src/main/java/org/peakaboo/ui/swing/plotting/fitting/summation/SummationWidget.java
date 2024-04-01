@@ -6,12 +6,10 @@ import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
-import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelector;
 import org.peakaboo.ui.swing.plotting.fitting.TSSelectorGroup;
@@ -35,7 +33,7 @@ class SummationWidget extends TSSelectorGroup {
 		List<ITransitionSeries> tss = selectors.stream()
 				.map(TSSelector::getTransitionSeries)
 				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+				.toList();
 		List<ITransitionSeries> sum = new ArrayList<>();
 		sum.add(ITransitionSeries.pileup(tss));
 		return sum;
@@ -103,7 +101,10 @@ class SummationWidget extends TSSelectorGroup {
 		TSSelector sel = super.addTSSelector(active);
 		
 		sel.setTransitionSeries(
-			controller.getFittedTransitionSeries().stream().filter(element ->element.getMode() == TransitionSeriesMode.PRIMARY).collect(Collectors.toList())		
+			controller.getFittedTransitionSeries()
+				.stream()
+				.filter(element ->element.getMode() == TransitionSeriesMode.PRIMARY)
+				.toList()
 		);
 		
 		return sel;

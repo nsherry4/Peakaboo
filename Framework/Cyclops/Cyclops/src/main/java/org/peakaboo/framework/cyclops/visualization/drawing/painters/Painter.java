@@ -17,7 +17,7 @@ public abstract class Painter
 	protected CompositeModes compositeMode;
 	protected String sourceName;
 
-	public Painter()
+	protected Painter()
 	{
 		compositeMode = CompositeModes.OVER;
 	}

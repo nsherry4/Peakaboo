@@ -25,11 +25,13 @@ public class DummyExecutor extends AbstractExecutor<Void> {
 		return 0;
 	}
 	
+	@Override
 	public synchronized void advanceState()
 	{
 		super.advanceState();
 	}
 	
+	@Override
 	public synchronized void setWorkUnits(int count)
 	{
 		super.setWorkUnits(count);

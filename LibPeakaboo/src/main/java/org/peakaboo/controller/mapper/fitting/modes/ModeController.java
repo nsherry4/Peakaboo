@@ -13,6 +13,8 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.eventful.IEventfulBeacon;
 import org.peakaboo.mapping.filter.model.AreaMap;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 public interface ModeController extends IEventfulBeacon {
 
 	/**
@@ -71,14 +73,14 @@ public interface ModeController extends IEventfulBeacon {
 	 * to spacial indices representing the spectra that generated those points. This
 	 * should only ever be called for map modes where isTranslatable is true
 	 */
-	public List<Integer> translateSelectionToSpatial(List<Integer> points);
+	public IntArrayList translateSelectionToSpatial(IntArrayList points);
 
 	/**
 	 * Given a list of points that the user has tried to select, return only those
 	 * points which are actually selectable. This allows map modes to include
 	 * non-rectangular areas without having to worry about invalid selections
 	 */
-	public List<Integer> filterSelection(List<Integer> points);
+	public IntArrayList filterSelection(IntArrayList points);
 	
 	/**
 	 * Indicates if the current mode's values can be compared to one another to

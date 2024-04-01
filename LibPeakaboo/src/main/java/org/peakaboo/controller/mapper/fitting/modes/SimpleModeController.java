@@ -3,7 +3,6 @@ package org.peakaboo.controller.mapper.fitting.modes;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.controller.mapper.MappingController;
@@ -11,6 +10,8 @@ import org.peakaboo.controller.mapper.fitting.modes.components.VisibilityState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.eventful.EventfulBeacon;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public abstract class SimpleModeController extends EventfulBeacon implements ModeController {
 
@@ -73,7 +74,7 @@ public abstract class SimpleModeController extends EventfulBeacon implements Mod
 	
 
 	@Override
-	public List<Integer> translateSelectionToSpatial(List<Integer> points) {
+	public IntArrayList translateSelectionToSpatial(IntArrayList points) {
 		return points;
 	}
 
@@ -85,8 +86,8 @@ public abstract class SimpleModeController extends EventfulBeacon implements Mod
 	
 
 	@Override
-	public List<Integer> filterSelection(List<Integer> points) {
-		return new ArrayList<>(points);
+	public IntArrayList filterSelection(IntArrayList points) {
+		return new IntArrayList(points);
 	}
 		
 }

@@ -23,12 +23,12 @@ public abstract class Drawing
 	
 	
 	
-	public Drawing(DrawingRequest dr)
+	protected Drawing(DrawingRequest dr)
 	{
 		this.dr = dr;
 	}
 	
-	public Drawing()
+	protected Drawing()
 	{
 	}
 	
@@ -57,29 +57,26 @@ public abstract class Drawing
 	
 	
 	
-	public static float getPenWidth(float baseSize, DrawingRequest dr)
+	public static float getPenWidth()
 	{
-		//float width;
-		//width = baseSize;
-		//return width;
 		return 1f;
 	}
 
 
-	public static float getTickSize(float baseSize, DrawingRequest dr)
+	public static float getTickSize(float baseSize)
 	{
 		return baseSize * 5;
 	}
 
 
-	public static float getTickFontHeight(Surface context, DrawingRequest dr)
+	public static float getTickFontHeight(Surface context)
 	{
 		return context.getFontHeight();
 	}
 
 
 	//TODO: Remove this in favour of painters
-	public static float getTitleFontHeight(Surface context, DrawingRequest dr)
+	public static float getTitleFontHeight(Surface context)
 	{
 		float height;
 		context.save();

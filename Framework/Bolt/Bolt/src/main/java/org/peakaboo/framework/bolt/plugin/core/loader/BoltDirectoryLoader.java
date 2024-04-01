@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
@@ -24,7 +23,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 	private File directory;
 	private boolean managed;
 	
-	public BoltDirectoryLoader(File directory, boolean managed) {
+	protected BoltDirectoryLoader(File directory, boolean managed) {
 		this.directory = directory;
 		this.managed = managed;
 	}
@@ -58,7 +57,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 			return Files.list(directory.toPath())
 					.map(Path::toFile)
 					.filter(filter::test)
-					.collect(Collectors.toList());
+					.toList();
 		} catch (IOException e) {
 			Bolt.logger().log(Level.WARNING, "Cannot list managed plugin directory contents", e);
 		}
@@ -91,15 +90,13 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 			BoltContainer<T> container = build(file);
 			if (container == null) { return false; }
 			if (container.isEmpty()) { return false; }
-			if (importedFile(file).exists()) {
+			if (importedFile(file).exists() && isUpgrade(file)) {
 				// if the destination file already exists, we want to test if the new file would
 				// consitute an upgrade for the existing file. If it does, then we can go ahead
 				// and replace the existing file with the new one. If it doesn't, we can't
-				// import it. TODO: implement a renaming scheme for these kinds of name
-				// collisions
-				if (isUpgrade(file)) {
-					return true;
-				}
+				// import it. 
+				// TODO: implement a renaming scheme for these kinds of name collisions?
+				return true;
 			}
 			return true;
 		} catch (Throwable e) {

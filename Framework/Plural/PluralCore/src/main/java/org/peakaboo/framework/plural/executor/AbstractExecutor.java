@@ -2,7 +2,6 @@ package org.peakaboo.framework.plural.executor;
 
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.plural.Plural;
-import org.peakaboo.framework.plural.executor.map.MapExecutor;
 
 
 public abstract class AbstractExecutor<T> extends EventfulBeacon implements PluralExecutor{
@@ -18,7 +17,7 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	private boolean			stalling = false; 
 	
 	
-	public AbstractExecutor() {
+	protected AbstractExecutor() {
 		state = ExecutorState.UNSTARTED;
 		workUnitsCompleted = 0;
 		setWorkUnits(-1);
@@ -164,7 +163,6 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	@Override
 	public synchronized void setWorkUnits(int units)
 	{
-		//if (state == ExecutorState.WORKING || state == ExecutorState.STALLED) return;
 		if (units < workUnitsCompleted) return;
 		if (units <= 0) return;
 		workUnits = units;
@@ -179,29 +177,7 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	 */
 	protected abstract void workForExecutor();
 
-	/**
-	 * Implementations of MapExecutor should call this method to begin processing with the desired number of
-	 * threads. The appropriate number of threads will be acquired, and each will call into
-	 * {@link MapExecutor#workForExecutor()}
-	 * 
-	 * @param numThreads
-	 */
-	protected void execute(int numThreads)
-	{
-		if (numThreads <= 0) numThreads = 1;
-				
-		Runnable r = new Runnable() {
-		
-			public void run()
-			{
-				workForExecutor();
-			}
-		};
-				
-		PluralThreadPool.execute(r, numThreads);
-		
-	}
-	
+
 	/**
 	 * Calculates the number of threads that should be used by this {@link MapExecutor}
 	 * 

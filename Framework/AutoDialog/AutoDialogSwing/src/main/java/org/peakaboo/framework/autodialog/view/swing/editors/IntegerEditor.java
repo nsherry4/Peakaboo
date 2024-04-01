@@ -4,8 +4,6 @@ import java.awt.Dimension;
 
 import javax.swing.JComponent;
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 

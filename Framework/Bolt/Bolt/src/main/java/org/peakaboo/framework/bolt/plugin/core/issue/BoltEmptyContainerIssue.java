@@ -10,7 +10,7 @@ public abstract class BoltEmptyContainerIssue<T extends BoltPlugin> implements B
 
 	private BoltContainer<T> container;
 	
-	public BoltEmptyContainerIssue(BoltContainer<T> container) {
+	protected BoltEmptyContainerIssue(BoltContainer<T> container) {
 		this.container = container;
 	}
 	

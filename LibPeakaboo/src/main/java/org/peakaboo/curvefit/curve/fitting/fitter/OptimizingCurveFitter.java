@@ -12,8 +12,8 @@ import org.apache.commons.math3.optim.univariate.UnivariatePointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class OptimizingCurveFitter implements CurveFitter {
 
@@ -30,11 +30,15 @@ public class OptimizingCurveFitter implements CurveFitter {
 	
 	private float findScale(CurveFitterContext ctx) {
 
-		UnivariateFunction score = scoringFunction(ctx.data(), ctx.curve());
+		Spectrum data = (Spectrum) ctx.data();
+		float[] d = data.backingArray();
+		
+		UnivariateFunction score = scoringFunction(data, ctx.curve());
 		
 		double guess = 0;
-		for (int channel : ctx.curve().getIntenseChannelList()) {
-			guess = Math.max(guess, ctx.data().get(channel));
+		int[] channels = ctx.curve().getIntenseChannelList();
+		for (int channel : channels) {
+			guess = Math.max(guess, d[channel]);
 		}
 		
 		UnivariateOptimizer optimizer = new BrentOptimizer(0.0001, 0.00001);
@@ -57,32 +61,39 @@ public class OptimizingCurveFitter implements CurveFitter {
 	protected UnivariateFunction scoringFunction(SpectrumView data, CurveView curve) {
 		return new UnivariateFunction() {
 			
-			Spectrum scaled = new ArraySpectrum(data.size());
+			//Spectrum scaled = new ArraySpectrum(data.size());
 			Spectrum residual = new ArraySpectrum(data.size());
+			int[] intenseChannels = curve.getIntenseChannelList();
+			
+			
+			int firstChannel, lastChannel;
+			{
+				if (intenseChannels.length > 0) {
+					firstChannel = intenseChannels[0];
+					lastChannel = intenseChannels[intenseChannels.length-1];
+				}
+			}
 			
 			@Override
 			public double value(double scale) {
-				var intenseChannels = curve.getIntenseChannelList();
-				
+					
 				//If there are no intense channels, we return a 0
-				if (intenseChannels.isEmpty()) {
+				if (intenseChannels.length == 0) {
 					return 0;
 				}
 				
-				int firstChannel = intenseChannels.get(0);
-				int lastChannel = intenseChannels.get(intenseChannels.size()-1);
-				//curve.scaleInto((float) scale, scaled);
-				//SpectrumCalculations.subtractLists_target(data, scaled, residual);
 				curve.scaleOnto((float)-scale, data, residual, firstChannel, lastChannel);
 				
 				float score = 0;
-				for (int i : intenseChannels) {
-					float value = residual.get(i);
+				for (int i = 0; i < intenseChannels.length; i++) {
+					int channel = intenseChannels[i];
+					float value = residual.get(channel);
 					if (value < 0) {
 						value *= overfitPenalty;
 					}
-					value *= value;
-					score += value;
+					// Square the value and add it to the score. Scoring the value will 
+					// emphasize larger residuals
+					score += value*value;
 				}
 				return score;
 			}

@@ -10,8 +10,8 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
@@ -123,7 +123,7 @@ public class PlotDrawing extends Drawing
 	}
 	
 	public void setAxisPainters(AxisPainter axisPainter) {
-		axisPainters = new ArrayList<AxisPainter>();
+		axisPainters = new ArrayList<>();
 		axisPainters.add(axisPainter);
 	}
 	
@@ -132,7 +132,7 @@ public class PlotDrawing extends Drawing
 	}
 	
 	public void setPainters(PlotPainter painter) {
-		painters = new ArrayList<PlotPainter>();
+		painters = new ArrayList<>();
 		painters.add(painter);
 	}
 	
@@ -150,24 +150,22 @@ public class PlotDrawing extends Drawing
 		
 		dataHeights = new ArraySpectrum(dr.dataWidth, 0.0f);
 
-		context.setLineWidth(getPenWidth(getBaseUnitSize(dr), dr));
+		context.setLineWidth(getPenWidth());
 		
 		context.save();
 	
 			Coord<Bounds<Float>> axisBounds = getPlotOffsetFromBottomLeft();
 			Bounds<Float> availableX = axisBounds.x, availableY = axisBounds.y;
-			plotSize = new Coord<Float>(availableX.end - availableX.start + 1, availableY.end - availableY.start + 1); 
-			if (plotSize.x <= 0 | plotSize.y <= 0) return;
+			plotSize = new Coord<>(availableX.end - availableX.start + 1, availableY.end - availableY.start + 1); 
+			if (plotSize.x <= 0 || plotSize.y <= 0) return;
 			
 			// transform to get out past the x axis
 			// we can't scale to make the region fit in the imageHeight/Width values
 			// since the fonts get all squishy
-			//context.translate(axesSize.x, 0);
 			context.translate(availableX.start, availableY.start);
 	
 			// clip the region so that we can't draw outside of it
 			context.rectAt(0, 0, plotSize.x, plotSize.y);
-			//context.rectangle(0, 0, availableX.end - availableX.start, availableY.end - availableY.start);
 			context.clip();
 	
 			// Draw extensions which request being in front of plot
@@ -193,8 +191,8 @@ public class PlotDrawing extends Drawing
 
 		context.save();
 			
-			availableX = new Bounds<Float>(0.0f, dr.imageWidth);
-			availableY = new Bounds<Float>(0.0f, dr.imageHeight);
+			availableX = new Bounds<>(0.0f, dr.imageWidth);
+			availableY = new Bounds<>(0.0f, dr.imageHeight);
 			if (axisPainters != null) {
 				
 				
@@ -204,8 +202,8 @@ public class PlotDrawing extends Drawing
 				
 					axisPainter.setDimensions( 
 							
-							new Bounds<Float>(availableX.start, availableX.end),
-							new Bounds<Float>(availableY.start, availableY.end)
+							new Bounds<>(availableX.start, availableX.end),
+							new Bounds<>(availableY.start, availableY.end)
 							
 					);
 					

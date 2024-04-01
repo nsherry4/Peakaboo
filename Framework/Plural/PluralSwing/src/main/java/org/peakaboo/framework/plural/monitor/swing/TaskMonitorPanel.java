@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -20,9 +19,7 @@ import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
-import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
-import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 
 public class TaskMonitorPanel extends JPanel {
 
@@ -31,7 +28,7 @@ public class TaskMonitorPanel extends JPanel {
 	private JPanel body;
 	
 	public TaskMonitorPanel(String title, TaskMonitor<?>... monitors) {
-		this(title, Arrays.asList(monitors).stream().map(TaskMonitorView::new).collect(Collectors.toList()));
+		this(title, Arrays.asList(monitors).stream().map(TaskMonitorView::new).toList());
 	}
 	
 	public TaskMonitorPanel(String title, TaskMonitorView... observerViews) {

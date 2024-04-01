@@ -71,15 +71,15 @@ public class LineAxisPainter extends AxisPainter
 	public Pair<Float, Float> getAxisSizeX(PainterData p)
 	{
 		
-		float penWidth = (float)Math.floor(getPenWidth(getBaseUnitSize(p.dr), p.dr)/2.0);
-		return new Pair<Float, Float>(left ? penWidth : 0.0f, right ? penWidth : 0.0f);
+		float penWidth = (float)Math.floor(getPenWidth(getBaseUnitSize(p.dr))/2.0);
+		return new Pair<>(left ? penWidth : 0.0f, right ? penWidth : 0.0f);
 	}
 
 	@Override
 	public Pair<Float, Float> getAxisSizeY(PainterData p)
 	{
-		float penWidth = (float)Math.floor(getPenWidth(getBaseUnitSize(p.dr), p.dr)/2.0);		
-		return new Pair<Float, Float>(top ? penWidth : 0.0f, bottom ? penWidth : 0.0f);
+		float penWidth = (float)Math.floor(getPenWidth(getBaseUnitSize(p.dr))/2.0);		
+		return new Pair<>(top ? penWidth : 0.0f, bottom ? penWidth : 0.0f);
 	}
 
 }

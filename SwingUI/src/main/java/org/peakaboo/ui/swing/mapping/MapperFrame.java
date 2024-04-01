@@ -12,7 +12,7 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.components.ui.live.LiveFrame;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
@@ -108,7 +108,7 @@ public class MapperFrame extends LiveFrame
 			}
 		};
 		setTitle("Peakaboo");
-		setIconImage(IconFactory.getImage(Tier.provider().iconPath(), Version.logo));
+		setIconImage(IconFactory.getImage(Tier.provider().iconPath(), Version.LOGO));
 		
 		pane.add(tabs, BorderLayout.CENTER);
 		this.pack();

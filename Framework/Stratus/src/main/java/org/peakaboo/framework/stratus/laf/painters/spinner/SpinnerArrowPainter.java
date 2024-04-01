@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
-import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -37,7 +36,7 @@ public class SpinnerArrowPainter implements Painter<JComponent> {
 			bg = theme.getHighlight();
 			fg = theme.getHighlightText();
 		} else if (this.states.contains(ButtonState.MOUSEOVER)) {
-			bg = StratusColour.moreTransparent(theme.getHighlight(), 0.75f);
+			bg = theme.getWidgetBorder();
 		}
 	}
 
@@ -49,12 +48,12 @@ public class SpinnerArrowPainter implements Painter<JComponent> {
 		
 		GeneralPath arrow = new GeneralPath();
 		
-		float size = Math.min(width, height) / 3f;
-		float half = (int)(size/2f);
+		float size = ((float)Math.min(width, height)) / 2.5f;
+		float half = size/2f;
 		float line = size / 4f;
 		
-		float midX = width/2f;
-		float midY = height/2f;
+		float midX = ((float)width)/2f;
+		float midY = ((float)height)/2f;
 		float startX = midX - half;
 		float startY = midY - half;
 		float endX = midX + half;
@@ -68,7 +67,7 @@ public class SpinnerArrowPainter implements Painter<JComponent> {
 		}
 
 		if (bg != null) {
-			Ellipse2D circle = new Ellipse2D.Float(startX-half, startY-half, size+half*2, size+half*2);
+			Ellipse2D circle = new Ellipse2D.Float(startX-half, startY-half, size+half*2f+1f, size+half*2f);
 			g.setColor(bg);
 			g.fill(circle);
 		}

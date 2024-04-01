@@ -3,8 +3,8 @@ package org.peakaboo.framework.cyclops;
 
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 
 
@@ -191,11 +191,7 @@ public class GridPerspective<T> implements Cloneable
 	@Override
 	public GridPerspective<T> clone()
 	{
-	
-		GridPerspective<T> g = new GridPerspective<T>(width, height, fallback);
-		
-		return g;
-		
+		return new GridPerspective<>(width, height, fallback);
 	}
 	
 	public boolean boundsCheck(int x, int y) {

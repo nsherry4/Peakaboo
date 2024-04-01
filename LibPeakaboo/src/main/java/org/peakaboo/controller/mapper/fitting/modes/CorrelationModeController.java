@@ -21,6 +21,8 @@ import org.peakaboo.mapping.filter.model.AreaMap;
 import org.peakaboo.mapping.filter.model.MapFilter.MapFilterContext;
 import org.peakaboo.mapping.filter.plugin.plugins.clipping.SignalOutlierCorrectionMapFilter;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 public class CorrelationModeController extends SimpleModeController {
 
 	private GroupState groups;
@@ -193,7 +195,7 @@ public class CorrelationModeController extends SimpleModeController {
 	}
 	
 	@Override
-	public List<Integer> translateSelectionToSpatial(List<Integer> points) {
+	public IntArrayList translateSelectionToSpatial(IntArrayList points) {
 		return translation.toSpatial(points);
 	}	
 	

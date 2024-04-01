@@ -11,7 +11,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 public class CornersAxisPainter extends AxisPainter {
 
 	protected String textLoXLoY, textHiXLoY, textLoXHiY, textHiXHiY;
-	protected static Coord<Float> coordPadding = new Coord<Float>(3.0f, 3.0f);
+	protected static Coord<Float> coordPadding = new Coord<>(3.0f, 3.0f);
 	protected PaletteColour colour;
 	
 	public CornersAxisPainter(PaletteColour colour, String textLoXLoY, String textHiXLoY, String textLoXHiY, String textHiXHiY) {
@@ -37,7 +37,7 @@ public class CornersAxisPainter extends AxisPainter {
 		p.context.setFontSize(getCoordFontSize(p));
 		float height = p.context.getFontHeight();
 		p.context.restore();
-		return new Pair<Float, Float>(height, height);
+		return new Pair<>(height, height);
 	}
 
 

@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 
 import org.peakaboo.framework.stratus.api.ManagedImageBuffer;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.layouts.CenteringLayout;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
@@ -127,7 +128,7 @@ public class ModalLayer implements Layer {
 			@Override
 			public void paint(Graphics g) {
 
-				if (LayerPanel.lowGraphicsMode) {
+				if (Stratus.lowGraphicsMode) {
 					super.paint(g);
 				} else {
 					//Paint into a buffer

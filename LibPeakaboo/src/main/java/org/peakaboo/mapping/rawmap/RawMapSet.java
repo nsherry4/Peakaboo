@@ -57,23 +57,7 @@ public class RawMapSet implements Cloneable, Iterable<RawMap> {
 		this.mapSize = mapSize;
 		this.allPointsValid = allPointsValid;
 	}
-	
-	@Override
-	public RawMapSet clone() throws CloneNotSupportedException
-	{
-			
-		List<RawMap> mapresults = new ArrayList<>();
 		
-		for (RawMap map : maps)
-		{
-			mapresults.add(map.clone());
-		}
-				
-		return new RawMapSet(mapresults, mapSize, allPointsValid, true);
-		
-	}
-	
-	
 	public Stream<RawMap> stream() {
 		return maps.stream();
 	}

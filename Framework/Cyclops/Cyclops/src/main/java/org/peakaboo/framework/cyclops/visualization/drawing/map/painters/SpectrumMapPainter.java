@@ -10,13 +10,13 @@ public abstract class SpectrumMapPainter extends MapPainter
 
 	protected Spectrum data;
 	
-	public SpectrumMapPainter(AbstractPalette colourRule, Spectrum data)
+	protected SpectrumMapPainter(AbstractPalette colourRule, Spectrum data)
 	{
 		super(colourRule);
 		this.data = data;
 	}
 	
-	public SpectrumMapPainter(List<AbstractPalette> colourRules, Spectrum data)
+	protected SpectrumMapPainter(List<AbstractPalette> colourRules, Spectrum data)
 	{
 		super(colourRules);
 		this.data = data;

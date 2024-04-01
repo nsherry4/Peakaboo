@@ -106,7 +106,7 @@ public class RatioMapMode extends MapMode {
 		
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (ratioMapPainter == null) {
-			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first, spectrumSteps); 
+			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first); 
 		} else {
 			ratioMapPainter.setData(ratiodata.first);
 			ratioMapPainter.setPalettes(paletteList);
@@ -115,7 +115,7 @@ public class RatioMapMode extends MapMode {
 		
 
 
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), ratiodata.second, 0);
+		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), ratiodata.second);
 		mapPainters.add(invalidPainter);
 		
 		

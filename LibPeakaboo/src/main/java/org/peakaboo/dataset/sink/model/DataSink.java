@@ -6,11 +6,12 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.io.DataOutputAdapter;
+import org.peakaboo.dataset.sink.model.DataSink.DataSinkWriteException;
 import org.peakaboo.dataset.sink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.dataset.sink.model.components.interaction.Interaction;
 import org.peakaboo.dataset.source.model.DataSource;
-import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.PluralExecutor;
 
 public interface DataSink {
 
@@ -53,7 +54,7 @@ public interface DataSink {
 		
 		CallbackInteraction interaction = new CallbackInteraction();
 
-		return Plural.build("Writing Data Set", "Writing Scans", (execset, exec) -> {
+		return PluralExecutor.build("Writing Data Set", "Writing Scans", (execset, exec) -> {
 			interaction.setCallbackAbortRequested(() -> execset.isAborted() || execset.isAbortRequested());
 			interaction.setCallbackScansWritten(exec::workUnitCompleted);
 			exec.setWorkUnits(ctx.source.getScanData().scanCount());

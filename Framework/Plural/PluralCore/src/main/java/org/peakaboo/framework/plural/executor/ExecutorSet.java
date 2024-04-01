@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.peakaboo.framework.eventful.EventfulBeacon;
-import org.peakaboo.framework.eventful.EventfulListener;
 
 /**
  * 
@@ -42,7 +41,7 @@ public abstract class ExecutorSet<T> extends EventfulBeacon implements Iterable<
 	 * @param description
 	 *            the description of this list of {@link Task}s. Useful for displaying the progress in a UI.
 	 */
-	public ExecutorSet(String description)
+	protected ExecutorSet(String description)
 	{
 		executors = new ArrayList<>();
 		result = null;

@@ -3,7 +3,6 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.peakaboo.framework.cyclops.Bounds;
@@ -87,7 +86,7 @@ public class DataLabelPainter extends PlotPainter
 			//draw the label
 			for (DataLabel label : labels){
 				if (!label.viable) continue;
-				drawTextLabel(p, label, false);
+				drawTextLabel(p, label);
 			}
 
 			
@@ -115,8 +114,7 @@ public class DataLabelPainter extends PlotPainter
 		if (baselineStart >= baselineEnd) {
 			return 0;
 		}
-		float baseline = p.dataHeights.subSpectrum(baselineStart, baselineEnd).max() + label.penWidth;
-		return baseline;
+		return p.dataHeights.subSpectrum(baselineStart, baselineEnd).max() + label.penWidth;
 	}
 	
 	//calculates the minimum height the label can be drawn at based on spectral data AND previous labels in the way
@@ -152,16 +150,11 @@ public class DataLabelPainter extends PlotPainter
 		}
 		
 		//sort the elements by order of bottom y position
-		Collections.sort(labelsInRange, new Comparator<DataLabel>() {
-
-			public int compare(DataLabel o1, DataLabel o2)
-			{
+		Collections.sort(labelsInRange, (DataLabel o1, DataLabel o2) -> {
 				if (o1.position.y.start < o2.position.y.start) return -1;
 				if (o1.position.y.start > o2.position.y.start) return 1;
 				return 0;
-			}
-
-		});
+			});
 			
 		for (DataLabel labelInRange : labelsInRange) {
 
@@ -227,7 +220,7 @@ public class DataLabelPainter extends PlotPainter
 		
 		
 		
-		return new Coord<Bounds<Float>>(new Bounds<Float>(leftChannel, rightChannel), new Bounds<Float>(penWidth, totalHeight));
+		return new Coord<>(new Bounds<>(leftChannel, rightChannel), new Bounds<>(penWidth, totalHeight));
 		
 	}
 	
@@ -236,7 +229,7 @@ public class DataLabelPainter extends PlotPainter
 	 * @param p the {@link PainterData} structure containing objects and information needed to draw to the plot.
 	 * @param title the title of the label
 	 */
-	protected void drawTextLabel(PainterData p, DataLabel label, boolean resetColour) {
+	protected void drawTextLabel(PainterData p, DataLabel label) {
 			
 		if (label.title == null || label.title.length() == 0) { return; }
 		
@@ -251,12 +244,12 @@ public class DataLabelPainter extends PlotPainter
 				
 		p.context.setSource(label.palette.labelBackground);
 		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
-		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.fill();
+		
 		p.context.setSource(label.palette.labelStroke);
 		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
-		//p.context.addShape(new RoundRectangle2D.Float(xStart, p.plotSize.y - label.position.y.end, w, h, 5, 5));
 		p.context.stroke();
+		
 		p.context.setSource(label.palette.labelText);
 		p.context.writeText(label.title, xTextStart+1, p.plotSize.y - yTextStart+1);
 		

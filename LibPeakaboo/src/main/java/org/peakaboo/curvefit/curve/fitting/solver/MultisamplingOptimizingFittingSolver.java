@@ -2,19 +2,16 @@ package org.peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
-import org.peakaboo.curvefit.curve.fitting.FittingSetView;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 
+	public static final int MULTISAMPLE_COUNT = 8;
+	
 	@Override
 	public String pluginName() {
 		return "MultiSampling";
@@ -40,32 +37,26 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		return "87eeb1e0-6c4e-4f80-9cf7-8c19a07423b5";
 	}
 
+
 	@Override
-	public FittingResultSetView solve(FittingSolverContext ctx) {
+	public double[] calculateWeights(OptimizingFittingSolver.Context inputCtx) {
 		
-		SpectrumView data = ctx.data();
-		FittingSetView fittings = ctx.fittings();
-		CurveFitter fitter = ctx.fitter();
+		int size = inputCtx.fittings.getVisibleCurves().size();
 		
-		int size = fittings.getVisibleCurves().size();
-		if (size == 0) {
-			return getEmptyResult(data, fittings);
-		}
+		// Create a shallow copy of the input context and then make a deep copy of the
+		// curve list so that we can permute it without impacting the original
+		OptimizingFittingSolver.Context permCtx = new OptimizingFittingSolver.Context(inputCtx);
+		permCtx.curves = new ArrayList<>(permCtx.curves);
 		
-		List<CurveView> curves = fittings.getVisibleCurves();
-		sortCurves(curves);
-		List<Integer> intenseChannels = getIntenseChannels(curves);
-		
-		List<CurveView> perm = new ArrayList<>(curves);
 		int counter = 0;
 		double[] scalings = new double[size];
-		while (counter <= 10) {
-			Collections.shuffle(perm, new Random(12345654321l));
+		EvaluationSpace eval = new EvaluationSpace(permCtx.data.size());
+		while (counter <= MULTISAMPLE_COUNT) {
+			Collections.shuffle(permCtx.curves, new Random(12345654321l));
 			
 			
-			double[] guess = getInitialGuess(perm, fitter, data);
-			EvaluationContext context = new EvaluationContext(data, fittings, perm);
-			MultivariateFunction cost = getCostFunction(context, intenseChannels);
+			double[] guess = getInitialGuess(permCtx);
+			MultivariateFunction cost = getCostFunction(permCtx, eval);
 			PointValuePair result = optimizeCostFunction(cost, guess, 0.02d);
 			double[] permScalings = result.getPoint();
 			
@@ -75,8 +66,9 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			//guess = permScalings;
 			
 			for (int i = 0; i < scalings.length; i++) {
-				CurveView c = perm.get(i);
-				int j = curves.indexOf(c);
+				// Map the scores back to the original permutation of the curves list
+				CurveView c = permCtx.curves.get(i);
+				int j = inputCtx.curves.indexOf(c);
 				scalings[j] += permScalings[i];
 			}
 			counter++;
@@ -86,11 +78,8 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		for (int i = 0; i < scalings.length; i++) {
 			scalings[i] /= counter;
 		}
-
-		EvaluationContext context = new EvaluationContext(data, fittings, curves);
 		
-		return evaluate(scalings, context);
-		
+		return scalings;
 		
 	}
 	

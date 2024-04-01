@@ -26,9 +26,7 @@ public class FramesSwingLayout extends SimpleSwingLayout {
 		
 		if (style.isHiddenOnDisable()) {
 			panel.setVisible(group.isEnabled());
-			group.getEnabledHook().addListener(e -> {
-				panel.setVisible(e.booleanValue());
-			});
+			group.getEnabledHook().addListener(e -> panel.setVisible(e.booleanValue()));
 		}
 		return panel;
 	}

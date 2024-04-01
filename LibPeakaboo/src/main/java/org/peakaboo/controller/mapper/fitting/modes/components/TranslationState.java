@@ -1,17 +1,17 @@
 package org.peakaboo.controller.mapper.fitting.modes.components;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.peakaboo.controller.mapper.fitting.modes.ModeController;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 public class TranslationState extends AbstractState {
 
-	private Map<Integer, List<Integer>> translation = new LinkedHashMap<>();
+	private Map<Integer, IntArrayList> translation = new LinkedHashMap<>();
 	private boolean valid;
 	
 	public TranslationState(ModeController mode) {
@@ -21,7 +21,7 @@ public class TranslationState extends AbstractState {
 	public void initialize(int size) {
 		translation.clear();
 		for (int i = 0; i < size; i++) {
-			translation.put(i, new ArrayList<>());
+			translation.put(i, new IntArrayList());
 		}
 		this.valid = true;
 	}
@@ -38,7 +38,7 @@ public class TranslationState extends AbstractState {
 		this.valid = false;
 	}
 	
-	public List<Integer> toSpatial(List<Integer> points) {
+	public IntArrayList toSpatial(IntArrayList points) {
 		if (!isValid()) {
 			//regenerate data, including translation map
 			mode.getData();
@@ -47,7 +47,7 @@ public class TranslationState extends AbstractState {
 		for (int i : points) {
 			translated.addAll(translation.get(i));
 		}
-		return new ArrayList<>(translated);
+		return new IntArrayList(translated);
 	}	
 	
 		

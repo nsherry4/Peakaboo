@@ -27,7 +27,7 @@ public class SavedSessionV1 implements DruthersStorable {
 	public SavedFittingSessionV1 fitting;
 	public SessionViewModel view;
 	public SavedCalibrationSessionV1 calibration;
-	public String version = Version.longVersionNo;
+	public String version = Version.LONG_VERSION;
 	
 	/**
 	 * applies serialized preferences to the model
@@ -41,7 +41,7 @@ public class SavedSessionV1 implements DruthersStorable {
 		this.data.loadInto(plotController.data());
 		
 		//restore filtering settings
-		this.filtering.loadInto(plotController.filtering());
+		this.filtering.loadInto(plotController.filtering(), errors);
 		
 		//restore fitting settings
 		errors.addAll(this.fitting.loadInto(plotController.fitting()));

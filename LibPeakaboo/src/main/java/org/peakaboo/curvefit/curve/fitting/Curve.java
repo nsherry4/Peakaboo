@@ -3,6 +3,7 @@ package org.peakaboo.curvefit.curve.fitting;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,9 +16,9 @@ import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.RangeSet;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 
 
@@ -58,7 +59,7 @@ public class Curve implements CurveView {
 	//Areas (in channels) where the curve is strong enough that we need to consider it.
 	private RangeSet				intenseRanges;
 	private Set<Integer>			intenseChannels;
-	private List<Integer>			intenseChannelList;
+	private int[]					intenseChannelList;
 	
 	//how large a footprint this curve has, used in scoring fittings
 	private int						baseSize;
@@ -78,7 +79,7 @@ public class Curve implements CurveView {
 		//constraintMask = DataTypeFactory.<Boolean> listInit(dataWidth);
 		intenseRanges = new RangeSet();
 		intenseChannels = new LinkedHashSet<>();
-		intenseChannelList = new ArrayList<>();
+		intenseChannelList = new int[0];
 		
 		if (ts != null) setTransitionSeries(ts);
 		
@@ -147,8 +148,8 @@ public class Curve implements CurveView {
 	 * Curve is intense or significant.
 	 */
 	@Override
-	public List<Integer> getIntenseChannelList() {
-		return Collections.unmodifiableList(intenseChannelList);
+	public int[] getIntenseChannelList() {
+		return intenseChannelList;
 	}
 	
 	@Override
@@ -197,17 +198,26 @@ public class Curve implements CurveView {
 		}
 		
 		intenseChannels.clear();
-		intenseChannelList.clear();
 		for (int channel : intenseRanges) {
 			intenseChannels.add(channel);
 		}
-		intenseChannelList.addAll(intenseChannels);
-		intenseChannelList.sort(Integer::compare);
-		
-		
+		intenseChannelList = Curve.channelSetToArray(intenseChannels);
 
 	}
 	
+	
+	public static int[] channelSetToArray(Set<Integer> channels) {
+		// Pack the channel set into an array. We do this here because it is cached, and we
+		// want to avoid any repeated auto-unboxing and getter access penalties.
+		int[] array = new int[channels.size()];
+		int index = 0;
+		for (int channel : channels) {
+			array[index++] = channel;
+		}
+		Arrays.sort(array);
+		
+		return array;
+	}
 
 	// generates an initial unscaled curvefit from which later curves are scaled as needed
 	private void calcUnscaledFit(boolean fitEscape) {
@@ -224,8 +234,7 @@ public class Curve implements CurveView {
 		
 
 		//Build a list of fitting functions
-		for (Transition t : this.transitionSeries)
-		{
+		for (Transition t : this.transitionSeries) {
 
 			functions.add(parameters.forTransition(t));
 
@@ -239,33 +248,29 @@ public class Curve implements CurveView {
 
 		//Use the functions to generate a model
 		float value;
-		for (int i = 0; i < calibration.getDataWidth(); i++)
-		{
-
-			value = 0.0f;
-			for (FittingFunction f : functions)
-			{
-
-				value += f.forEnergy(calibration.energyFromChannel(i));
-
+		for (int i = 0; i < calibration.getDataWidth(); i++) {
+			float energy = calibration.energyFromChannel(i);
+			value = 0f;
+			for (int j = 0; j < functions.size(); j++) {
+				value += functions.get(j).forEnergy(energy);
 			}
 			fit.set(i, value);
-
 		}
 
 
 		normalizationScale = fit.max();
-		if (normalizationScale == 0.0)
-		{
-			normalizedCurve = SpectrumCalculations.multiplyBy(fit, 0.0f);
-		}
-		else
-		{
+		if (normalizationScale == 0.0) {
+			normalizedCurve = new ArraySpectrum(fit.size(), 0f);
+			normalizedMax = 0f;
+			normalizedSum = 0f;
+		} else {
 			normalizedCurve = SpectrumCalculations.divideBy(fit, normalizationScale);
+			// normalizedCurve is the fit divided by its maximum value, so the max of
+			// normalizedCurve will always be 1 (or a rounding error away from 1)
+			normalizedMax = 1f;
+			normalizedSum = normalizedCurve.sum();
 		}
-		normalizedSum = normalizedCurve.sum();
-		normalizedMax = normalizedCurve.max();
-
+		
 
 	}
 

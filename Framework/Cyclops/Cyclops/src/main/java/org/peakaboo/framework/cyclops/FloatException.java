@@ -22,23 +22,7 @@ public class FloatException extends RuntimeException {
 	}
 
 
-	/**
-	 * Returns true if the value is a 'normal' number
-	 */
-	public static boolean valid(float value) {
-		if (Float.isNaN(value)) return false;
-		if (Float.isInfinite(value)) return false;
-		return true;
-	}
-	
-	/**
-	 * Returns true if the value is a 'normal' number
-	 */
-	public static boolean valid(double value) {
-		if (Double.isNaN(value)) return false;
-		if (Double.isInfinite(value)) return false;
-		return true;
-	}
+
 	
 	/**
 	 * Raises a FloatException if this value is not a 'normal' number. Includes a custom message

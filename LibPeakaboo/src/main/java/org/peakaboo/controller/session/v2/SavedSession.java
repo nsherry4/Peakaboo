@@ -11,7 +11,7 @@ import org.peakaboo.framework.druthers.DruthersStorable;
 
 public class SavedSession implements DruthersStorable {
 	
-	public static final String FORMAT = "org.peakaboo.session/v2";
+	public static final String SESSION_FORMAT = "org.peakaboo.session/v2";
 	
 	public String format;
 	public SavedData data;
@@ -31,7 +31,7 @@ public class SavedSession implements DruthersStorable {
 			SavedAppData app, 
 			LinkedHashMap<String, Object> extended
 		) {
-		this.format = FORMAT;
+		this.format = SESSION_FORMAT;
 		this.data = data;
 		this.filters = filters;
 		this.fittings = fittings;

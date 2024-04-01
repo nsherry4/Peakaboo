@@ -12,6 +12,10 @@ public class SwingLayoutFactory {
 	
 	private static Map<String, Supplier<SwingLayout>> styleProviders = new HashMap<>();
 	
+	private SwingLayoutFactory() {
+		
+	}
+	
 	static {
 		registerStyleProvider("layout-tabs", TabbedSwingLayout::new);
 		registerStyleProvider("layout-column", SimpleSwingLayout::new);

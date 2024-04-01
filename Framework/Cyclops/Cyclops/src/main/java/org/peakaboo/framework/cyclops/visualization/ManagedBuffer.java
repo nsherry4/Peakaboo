@@ -43,7 +43,7 @@ public class ManagedBuffer {
 		}
 
 		if (needsResize) {
-			buffer = new SoftReference<Buffer>(null);
+			buffer = new SoftReference<>(null);
 		}
 		
 		return needsResize;
@@ -63,17 +63,16 @@ public class ManagedBuffer {
 	/**
 	 * Gets the managed buffer if one exists, otherwise returns null.
 	 */
-	public Buffer get(Surface forSurface) {
-		Buffer image = buffer.get();
-		return image;
+	public Buffer get() {
+		return buffer.get();
 	}
 
 	/**
 	 * Gets the managed buffer if one exists and meets the size requirements, otherwise returns null.
 	 */
-	public Buffer get(Surface forSurface, int width, int height) {
+	public Buffer get(int width, int height) {
 		resize(width, height);
-		return get(forSurface);
+		return get();
 	}
 
 	

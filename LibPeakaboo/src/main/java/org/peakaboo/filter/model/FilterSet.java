@@ -10,11 +10,10 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.Filter.FilterContext;
-import org.peakaboo.framework.cyclops.FloatException;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * 
@@ -126,26 +125,27 @@ public class FilterSet implements Iterable<Filter> {
 
 		return data;
 	}
+
 	
 	//Scan the Spectrum for Infinity and NaN values, and replace them with 0 if found
 	private SpectrumView correctNonFinite(SpectrumView data) {
-		//Scan the results for Infinity and NaN values, and replace them with 0 if found
-		Spectrum corrected = null;
-		for (int i = 0; i < data.size(); i++) {
-			float v = data.get(i);
-			if (!FloatException.valid(v)) {
-				//only incur the copy penalty if needed
-				if (corrected == null) {
-					corrected = new ArraySpectrum(data);
-				}
-				corrected.set(i, 0);
-			}
-		}
-		if (corrected != null) {
+		if (Float.isFinite(data.sum())) {
+			// non-finite + finite = non-finite, and summing a list is faster 
+			//than checking if each element is finite
+			return data;
+		} else {
+			
 			PeakabooLog.get().log(Level.WARNING, "Filtered data contained NaN or Infinity");
-			data = corrected;
+			Spectrum corrected = new ArraySpectrum(data);
+			float[] c = corrected.backingArray();
+			for (int i = 0; i < c.length; i++) {
+				if (!Float.isFinite(c[i])) {
+					c[i] = 0;
+				}
+			}
+			return corrected;
+			
 		}
-		return data;
 	}
 
 	public Iterator<Filter> iterator() {

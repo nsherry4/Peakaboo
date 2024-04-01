@@ -14,12 +14,12 @@ public abstract class BoltBrokenPluginIssue<T extends BoltPlugin> implements Bol
 	private BoltContainer<T> container;
 	private String message;
 	
-	public BoltBrokenPluginIssue(BoltContainer<T> container, String message) {
+	protected BoltBrokenPluginIssue(BoltContainer<T> container, String message) {
 		this.container = container;
 		this.message = message;
 	}
 	
-	public BoltBrokenPluginIssue(BoltContainer<T> container, Throwable e) {
+	protected BoltBrokenPluginIssue(BoltContainer<T> container, Throwable e) {
 		this.container = container;
 		
 		StringWriter s = new StringWriter();

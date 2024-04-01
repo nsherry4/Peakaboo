@@ -31,11 +31,11 @@ public abstract class GraphicsPanel extends JPanel {
 	private float bufferSlack = 1.2f;
 	private VolatileImage bimage;
 
-	public GraphicsPanel() {
+	protected GraphicsPanel() {
 		System.setProperty("sun.java2d.opengl", "True");
 	}
 	
-	public GraphicsPanel(boolean buffered) {
+	protected GraphicsPanel(boolean buffered) {
 		this();
 		buffer = buffered;
 	}
@@ -44,7 +44,7 @@ public abstract class GraphicsPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		Coord<Integer> size = new Coord<Integer>(getWidth(), getHeight());
+		Coord<Integer> size = new Coord<>(getWidth(), getHeight());
 		
 		if (buffer) {
 			if (

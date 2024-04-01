@@ -1,5 +1,7 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 
+import java.util.logging.Level;
+
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
@@ -42,8 +44,7 @@ public class TickMarkAxisPainter extends AxisPainter
 		drawRightYAxis(p, yRightValueBounds);
 		
 		} catch (Exception e) {
-			CyclopsLog.get().warning(e.getMessage());
-			System.out.println(e);
+			CyclopsLog.get().log(Level.WARNING, "Failed to draw element", e);
 		}
 		
 	}
@@ -63,7 +64,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			// dimensions for various parts of the axis
 			float tickLength = getTickLength(p.dr, tick);
-			float textHeight = getTickFontHeight(p.context, p.dr);
+			float textHeight = getTickFontHeight(p.context);
 			float textAscent = p.context.getFontAscent();
 			
 			float axisYStart = axesData.yPositionBounds.end - getAxisSizeY(p).second;
@@ -198,7 +199,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				}
 				String tickText = mark.value();
 				
-				Bounds<Float> drawRangeY = new Bounds<Float>(
+				Bounds<Float> drawRangeY = new Bounds<>(
 						axesData.yPositionBounds.start + otherAxisSize.first, 
 						axesData.yPositionBounds.end - otherAxisSize.second
 					);
@@ -265,7 +266,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				}
 				String tickText = mark.value();
 							
-				Bounds<Float> drawRangeY = new Bounds<Float>(
+				Bounds<Float> drawRangeY = new Bounds<>(
 						axesData.yPositionBounds.start + otherAxisSize.first, 
 						axesData.yPositionBounds.end - otherAxisSize.second
 					);
@@ -300,12 +301,12 @@ public class TickMarkAxisPainter extends AxisPainter
 	
 	@Override
 	public Pair<Float, Float> getAxisSizeX(PainterData p) {		
-		return new Pair<Float, Float>(  getSingleAxisSize(p, yLeftValueBounds, true), getSingleAxisSize(p, yRightValueBounds, true)  );
+		return new Pair<>(  getSingleAxisSize(p, yLeftValueBounds), getSingleAxisSize(p, yRightValueBounds)  );
 	}
 
 	@Override
 	public Pair<Float, Float> getAxisSizeY(PainterData p) {
-		return new Pair<Float, Float>(  getSingleAxisSize(p, xTopValueBounds, false), getSingleAxisSize(p, xBottomValueBounds, false)  );
+		return new Pair<>(  getSingleAxisSize(p, xTopValueBounds), getSingleAxisSize(p, xBottomValueBounds)  );
 	}
 	
 	
@@ -317,11 +318,11 @@ public class TickMarkAxisPainter extends AxisPainter
 		context.setAntialias(true);
 	}
 	
-	private float getSingleAxisSize(PainterData p, TickFormatter tick, boolean vertical) {
+	private float getSingleAxisSize(PainterData p, TickFormatter tick) {
 		
 		p.context.save();
 		
-		float textWidth = 0f;
+		float textWidth;
 		if (tick != null){
 			var maxsize = tick.maxTextSize(p);
 			if (!tick.isTextRotated()) {
@@ -353,7 +354,7 @@ public class TickMarkAxisPainter extends AxisPainter
 	}
 
 
-	private static float getTickFontHeight(Surface context, DrawingRequest dr)
+	private static float getTickFontHeight(Surface context)
 	{
 		return context.getFontHeight();
 	}

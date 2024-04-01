@@ -11,7 +11,7 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 	protected URL url;
 	protected boolean deletable;
 	
-	public BoltURLContainer(URL url, boolean deletable) {
+	protected BoltURLContainer(URL url, boolean deletable) {
 		this.url = url;
 		this.deletable = deletable;
 	}
@@ -45,8 +45,7 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 		}
 		try {
 			File f = new File(url.toURI());
-			f.delete();
-			return true;
+			return f.delete();
 		} catch (URISyntaxException e) {
 			return false;
 		}

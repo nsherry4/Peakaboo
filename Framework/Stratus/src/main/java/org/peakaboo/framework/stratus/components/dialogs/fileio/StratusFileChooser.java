@@ -332,7 +332,7 @@ public class StratusFileChooser extends JFileChooser {
 		@Override
 		protected void onSetValue(File file, boolean selected) {
 			StratusFileChooser chooser = StratusFileChooser.this;
-					
+			
 			label.setText(chooser.getName(file));
 			label.setIcon(chooser.getIcon(file));
 			label.setForeground(this.getForeground());
@@ -342,21 +342,16 @@ public class StratusFileChooser extends JFileChooser {
 				label.setVerticalTextPosition(JLabel.BOTTOM);
 				label.setHorizontalAlignment(JLabel.CENTER);
 				
-				int size = 96;
-				label.setMaximumSize(new Dimension(size, size));
-				label.setPreferredSize(new Dimension(size, size));
-				label.setMinimumSize(new Dimension(size, size));
+				label.setBorder(Spacing.bNone());
 				
 			} else {
 				
 				label.setHorizontalTextPosition(JLabel.RIGHT);
 				label.setVerticalTextPosition(JLabel.CENTER);
-				label.setHorizontalAlignment(JLabel.CENTER);
+				label.setHorizontalAlignment(JLabel.LEFT);
 				
-				//undo the set sizes
-				label.setMaximumSize(null);
-				label.setPreferredSize(null);
-				label.setMinimumSize(null);
+				label.setBorder(Spacing.bSmall());
+
 			}
 							
 			this.setOpaque(selected);
@@ -370,9 +365,32 @@ public class StratusFileChooser extends JFileChooser {
 	
 	class ListFileWidget extends BaseFileWidget {
 
+		static final Dimension ICON_VIEW_SIZE = new Dimension(96, 96);
 
 		public ListFileWidget(JList<File> list) {
-			label = new JLabel();
+			label = new JLabel() {
+				public Dimension getMinimumSize() {
+					if (iconView) {
+						return ICON_VIEW_SIZE;
+					} else {
+						return new Dimension(Math.max(128, Math.min(256, super.getMinimumSize().width)), 32);
+					}
+				}
+				public Dimension getPreferredSize() {
+					if (iconView) {
+						return ICON_VIEW_SIZE;
+					} else {
+						return new Dimension(Math.max(128, Math.min(256, super.getPreferredSize().width)), 32);
+					}
+				}
+				public Dimension getMaximumSize() {
+					if (iconView) {
+						return ICON_VIEW_SIZE;
+					} else {
+						return new Dimension(Math.max(128, Math.min(256, super.getMaximumSize().width)), 32);
+					}
+				}
+			};
 			
 			label.setBorder(Spacing.bTiny());
 			setLayout(new BorderLayout());
@@ -396,34 +414,14 @@ public class StratusFileChooser extends JFileChooser {
 				g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		    	
 				g2.setColor(getBackground());
-				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 6, 6);
+				g2.fillRoundRect(0, 0, getWidth(), getHeight(), Spacing.huge, Spacing.huge);
 			}
 		}
 
 
 		
 	}
-	
-	class DetailsFileWidget extends BaseFileWidget {
 
-		public DetailsFileWidget(JTable owner) {
-			label = new JLabel();
-			
-			label.setBorder(Spacing.bTiny());
-			setLayout(new BorderLayout());
-			this.add(label, BorderLayout.CENTER);
-			label.setOpaque(false);
-			
-			Theme theme = Stratus.getTheme();
-			selBg = theme.getHighlight();
-			selFg = theme.getHighlightText();
-			bg = theme.getRecessedControl();
-			fg = theme.getRecessedText();
-			
-		}
-
-		
-	};
 	
 	
 }

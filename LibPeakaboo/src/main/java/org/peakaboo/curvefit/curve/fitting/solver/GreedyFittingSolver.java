@@ -9,11 +9,8 @@ import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
-import org.peakaboo.curvefit.curve.fitting.FittingSetView;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
@@ -49,23 +46,19 @@ public class GreedyFittingSolver implements FittingSolver {
 	 */
 	@Override
 	public FittingResultSetView solve(FittingSolverContext ctx) {
-
-		SpectrumView data = ctx.data();
-		FittingSetView fittings = ctx.fittings();
-		CurveFitter fitter = ctx.fitter();
 		
-		Spectrum resultTotalFit = new ArraySpectrum(data.size());
+		Spectrum resultTotalFit = new ArraySpectrum(ctx.data.size());
 		List<FittingResultView> resultFits = new ArrayList<>();
-		FittingParametersView resultParameters = fittings.getFittingParameters().copy();
+		FittingParametersView resultParameters = ctx.fittings.getFittingParameters().copy();
 		
-		Spectrum remainder = new ArraySpectrum(data);
-		Spectrum scaled = new ArraySpectrum(data.size());
+		Spectrum remainder = new ArraySpectrum(ctx.data);
+		Spectrum scaled = new ArraySpectrum(ctx.data.size());
 		
 		// calculate the curves
-		for (CurveView curve : fittings.getCurves()) {
+		for (CurveView curve : ctx.fittings.getCurves()) {
 			if (!curve.getTransitionSeries().isVisible()) { continue; }
 			
-			FittingResult result = fitter.fit(new CurveFitterContext(remainder, curve));
+			FittingResult result = ctx.fitter.fit(new CurveFitterContext(remainder, curve));
 			curve.scaleInto(result.getCurveScale(), scaled);
 			SpectrumCalculations.subtractLists_inplace(remainder, scaled, 0.0f);
 			

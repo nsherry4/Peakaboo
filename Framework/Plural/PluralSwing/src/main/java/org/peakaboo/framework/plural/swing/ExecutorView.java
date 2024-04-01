@@ -7,7 +7,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.peakaboo.framework.eventful.EventfulListener;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
@@ -50,8 +49,7 @@ public class ExecutorView extends JPanel{
 		case COMPLETED:
 			icon.setIcon(StockIcon.PROCESS_COMPLETED.toImageIcon(IconSize.BUTTON));
 			break;
-		case WORKING:
-		case STALLED:
+		case WORKING, STALLED:
 			icon.setIcon(StockIcon.GO_NEXT.toImageIcon(IconSize.BUTTON));
 			break;
 		case UNSTARTED:

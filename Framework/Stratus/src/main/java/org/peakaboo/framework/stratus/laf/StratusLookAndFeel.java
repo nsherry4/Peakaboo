@@ -37,7 +37,7 @@ import org.peakaboo.framework.stratus.laf.painters.ComboBoxArrowPainter;
 import org.peakaboo.framework.stratus.laf.painters.CompositePainter;
 import org.peakaboo.framework.stratus.laf.painters.EmptyPainter;
 import org.peakaboo.framework.stratus.laf.painters.FillPainter;
-import org.peakaboo.framework.stratus.laf.painters.RadioButtonPainter;
+import org.peakaboo.framework.stratus.laf.painters.MenuArrowPainter;
 import org.peakaboo.framework.stratus.laf.painters.SplitPaneDividerPainter;
 import org.peakaboo.framework.stratus.laf.painters.TableHeaderPainter;
 import org.peakaboo.framework.stratus.laf.painters.TitledBorderBorder;
@@ -45,10 +45,13 @@ import org.peakaboo.framework.stratus.laf.painters.ToolTipPainter;
 import org.peakaboo.framework.stratus.laf.painters.TreeArrowPainter;
 import org.peakaboo.framework.stratus.laf.painters.checkbutton.CheckButtonPainter;
 import org.peakaboo.framework.stratus.laf.painters.checkbutton.CheckPainter;
+import org.peakaboo.framework.stratus.laf.painters.checkbutton.MenuCheckPainter;
 import org.peakaboo.framework.stratus.laf.painters.linkedbutton.LinkedButtonPainter;
 import org.peakaboo.framework.stratus.laf.painters.progressbar.ProgressBarBackgroundPainter;
 import org.peakaboo.framework.stratus.laf.painters.progressbar.ProgressBarForegroundPainter;
 import org.peakaboo.framework.stratus.laf.painters.progressbar.ProgressBarForegroundPainter.Mode;
+import org.peakaboo.framework.stratus.laf.painters.radiobutton.MenuRadioButtonPainter;
+import org.peakaboo.framework.stratus.laf.painters.radiobutton.RadioButtonPainter;
 import org.peakaboo.framework.stratus.laf.painters.scrollbar.ScrollBarThumbPainter;
 import org.peakaboo.framework.stratus.laf.painters.scrollbar.ScrollBarTrackPainter;
 import org.peakaboo.framework.stratus.laf.painters.slider.SliderThumbPainter;
@@ -194,33 +197,63 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "MenuBar.contentMargins", new Insets(0, 0, 0, 0));
 			reg(ret, "MenuBar:Menu.contentMargins", new Insets(4, 8, 5, 8));
 			reg(ret, "MenuBar:Menu[Enabled].textForeground", theme.getMenuText());
-			reg(ret, "MenuBar:Menu[MouseOver].textForeground", theme.getHighlightText());
+			reg(ret, "MenuBar:Menu[MouseOver].textForeground", theme.getMenuText());
+			reg(ret, "MenuBar:Menu[Selected].textForeground", theme.getMenuText());
 			reg(ret, "MenuBar:Menu[Disabled].textForeground", theme.getControlTextDisabled());
 			
 			
+			var menuItemInsets = new Insets(6, 12, 6, 13);
+			
 			reg(ret, "MenuItem[Enabled].textForeground", theme.getMenuText());
 			reg(ret, "MenuItem[Disabled].textForeground", theme.getControlTextDisabled());
-			reg(ret, "MenuItem[MouseOver].textForeground", theme.getHighlightText());
-			reg(ret, "MenuItem.contentMargins", new Insets(4, 12, 4, 13));
+			reg(ret, "MenuItem[MouseOver].textForeground", theme.getMenuText());
+			reg(ret, "MenuItem[MouseOver].backgroundPainter", new FillPainter(theme.getWidget()));
+			reg(ret, "MenuItem:MenuItemAccelerator[Disabled].textForeground", theme.getControlTextDisabled());
+			reg(ret, "MenuItem:MenuItemAccelerator[Enabled].textForeground", theme.getMenuText());
+			reg(ret, "MenuItem:MenuItemAccelerator[MouseOver].textForeground", theme.getMenuText());
+			reg(ret, "MenuItem.contentMargins", menuItemInsets);
 			reg(ret, "MenuItem:MenuItemAccelerator[Enabled].textForeground", theme.getControlTextDisabled());
 			reg(ret, "MenuItem:MenuItemAccelerator[Disabled].textForeground", theme.getControlTextDisabled());
-			reg(ret, "MenuItem:MenuItemAccelerator[MouseOver].textForeground", theme.getHighlightText());
 			
 
-			reg(ret, "CheckBoxMenuItem.contentMargins", new Insets(4, 12, 4, 13));
+			reg(ret, "CheckBoxMenuItem.contentMargins", menuItemInsets);
 			reg(ret, "CheckBoxMenuItem[Enabled].textForeground", theme.getMenuText());
-			reg(ret, "CheckBoxMenuItem[MouseOver].textForeground", theme.getHighlightText());
-			reg(ret, "CheckBoxMenuItem[Disabled].textForeground", theme.getControlTextDisabled());
+			reg(ret, "CheckBoxMenuItem[MouseOver].textForeground", theme.getMenuText());
+			reg(ret, "CheckBoxMenuItem[MouseOver+Selected].textForeground", theme.getMenuText());
+			reg(ret, "CheckBoxMenuItem[MouseOver].backgroundPainter", new FillPainter(theme.getWidget()));
+			reg(ret, "CheckBoxMenuItem[MouseOver+Selected].backgroundPainter", new FillPainter(theme.getWidget()));
+			reg(ret, "CheckBoxMenuItem:MenuItemAccelerator[MouseOver].textForeground", theme.getMenuText());
 			
-			reg(ret, "RadioButtonMenuItem.contentMargins", new Insets(4, 12, 4, 13));
+			reg(ret, "CheckBoxMenuItem[Disabled+Selected].checkIconPainter", new MenuCheckPainter(theme, 0, 0, false));
+			reg(ret, "CheckBoxMenuItem[Enabled+Selected].checkIconPainter", new MenuCheckPainter(theme, 0, 0, true));
+			reg(ret, "CheckBoxMenuItem[MouseOver+Selected].checkIconPainter", new MenuCheckPainter(theme, 0, 0, true));
+			
+			
+			
+			reg(ret, "RadioButtonMenuItem.contentMargins", menuItemInsets);
 			reg(ret, "RadioButtonMenuItem[Enabled].textForeground", theme.getMenuText());
-			reg(ret, "RadioButtonMenuItem[MouseOver].textForeground", theme.getHighlightText());
+			reg(ret, "RadioButtonMenuItem[MouseOver].textForeground", theme.getMenuText());
+			reg(ret, "RadioButtonMenuItem[MouseOver+Selected].textForeground", theme.getMenuText());
+			reg(ret, "RadioButtonMenuItem[MouseOver].backgroundPainter", new FillPainter(theme.getWidget()));
+			reg(ret, "RadioButtonMenuItem[MouseOver+Selected].backgroundPainter", new FillPainter(theme.getWidget()));
+			reg(ret, "RadioButtonMenuItem:MenuItemAccelerator[MouseOver].textForeground", theme.getMenuText());
 			reg(ret, "RadioButtonMenuItem[Disabled].textForeground", theme.getControlTextDisabled());
 			
-			reg(ret, "Menu.contentMargins", new Insets(4, 12, 4, 5));
+			reg(ret, "RadioButtonMenuItem[Disabled+Selected].checkIconPainter", new MenuRadioButtonPainter(theme, true, ButtonState.DISABLED, ButtonState.SELECTED));
+			reg(ret, "RadioButtonMenuItem[Enabled+Selected].checkIconPainter", new MenuRadioButtonPainter(theme, true, ButtonState.ENABLED, ButtonState.SELECTED));
+			reg(ret, "RadioButtonMenuItem[MouseOver+Selected].checkIconPainter", new MenuRadioButtonPainter(theme, true, ButtonState.MOUSEOVER, ButtonState.SELECTED));
+			
+			reg(ret, "Menu.contentMargins", new Insets(6, 12, 6, 5));
 			reg(ret, "Menu[Enabled].textForeground", theme.getMenuText());
-			reg(ret, "Menu[MouseOver].textForeground", theme.getHighlightText());
+			reg(ret, "Menu[MouseOver].textForeground", theme.getMenuText());
+			reg(ret, "Menu:MenuItemAccelerator[MouseOver].textForeground", theme.getMenuText());
 			reg(ret, "Menu[Disabled].textForeground", theme.getControlTextDisabled());
+			reg(ret, "Menu[Enabled+Selected].textForeground", theme.getMenuText());
+			reg(ret, "Menu[Enabled+Selected].backgroundPainter", new FillPainter(theme.getWidget()));
+			
+			reg(ret, "Menu[Enabled+Selected].arrowIconPainter", new MenuArrowPainter(theme.getMenuText()));
+			reg(ret, "Menu[Enabled].arrowIconPainter", new MenuArrowPainter(theme.getMenuText()));
+			reg(ret, "Menu[Disabled].arrowIconPainter", new MenuArrowPainter(theme.getControlTextDisabled()));
 			
 			reg(ret, "PopupMenu[Enabled].backgroundPainter", new CompositePainter(new FillPainter(theme.getMenu()), new BorderPainter(theme.getWidgetBorder(), 1, 0)));
 			

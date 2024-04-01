@@ -88,14 +88,12 @@ public class Sequence<T> implements Iterable<T>
 
 			private T current = start;
 			
-			
-			
+			@Override
 			public boolean hasNext() {
-				
 				return (current != null);
-				
 			}
 
+			@Override
 			public T next() {
 				
 				//store the current value so that we can return it
@@ -108,6 +106,7 @@ public class Sequence<T> implements Iterable<T>
 				return cur;
 			}
 
+			@Override
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}

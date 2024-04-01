@@ -9,16 +9,16 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class StackedAreaPainter extends SpectrumPainter {
 
-	private List<SpectrumView> data;
+	private List<SpectrumView> spectra;
 	private List<PaletteColour> fills, strokes;
 
 	/**
 	 * Accepts a list of Spectrum to be drawn as a stacked area plot. Each spectra
 	 * must contain the total height for it's line.
 	 */
-	public StackedAreaPainter(List<SpectrumView> data, List<PaletteColour> fills, List<PaletteColour> strokes) {
-		super(data.get(0));
-		this.data = data;
+	public StackedAreaPainter(List<SpectrumView> spectra, List<PaletteColour> fills, List<PaletteColour> strokes) {
+		super(spectra.get(0));
+		this.spectra = spectra;
 		this.fills = fills;
 		this.strokes = strokes;
 	}
@@ -30,10 +30,10 @@ public class StackedAreaPainter extends SpectrumPainter {
 	@Override
 	public void drawElement(PainterData p) {
 		
-		for (int i = 0; i < data.size(); i++) {
+		for (int i = 0; i < spectra.size(); i++) {
 			
 			// Pull values for this spectrum
-			var spectrum = data.get(i);
+			var spectrum = spectra.get(i);
 			var fill = this.fills.get(i);
 			var stroke = this.strokes.get(i);
 			

@@ -2,11 +2,7 @@ package org.peakaboo.ui.swing.plotting.fitting.guidedfitting;
 
 
 
-import static java.util.stream.Collectors.toList;
-
 import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +40,7 @@ class GuidedFittingWidget extends TSSelectorGroup {
 
 	@Override
 	public List<ITransitionSeries> getTransitionSeries() {
-		return selectors.stream().map(TSSelector::getTransitionSeries).collect(toList());
+		return selectors.stream().map(TSSelector::getTransitionSeries).toList();
 	}
 
 	public ITransitionSeries getActiveTransitionSeries() {

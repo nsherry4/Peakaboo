@@ -17,29 +17,34 @@ import org.peakaboo.framework.cyclops.GridPerspective;
 public class SpectrumCalculations
 {
 
+	private SpectrumCalculations() {}
+	
 	public static final int	MIN_SIZE_FOR_THREADING	= 512;
 
 
-	public static Spectrum maxLists(SpectrumView l1, SpectrumView l2)
-	{
-
+	public static Spectrum maxLists(SpectrumView l1, SpectrumView l2) {
+		float[] a1 = ((Spectrum)l1).backingArray();
+		float[] a2 = ((Spectrum)l2).backingArray();
+		
 		Spectrum result = new ArraySpectrum(l1.size());
+		float[] r = result.backingArray();
+		
 		int maxInd = Math.min(l1.size(), l2.size());
-		for (int i = 0; i < maxInd; i++)
-		{
-			result.set(i, Math.max(l1.get(i), l2.get(i)));
+		for (int i = 0; i < maxInd; i++) {
+			r[i] = Math.max(a1[i], a2[i]);
 		}
 
 		return result;
 	}
 
 	
-	public static Spectrum maxLists_inplace(final Spectrum s1, final SpectrumView s2)
-	{
-		int size = Math.min(s1.size(), s2.size());
-		for (int i = 0; i < size; i++)
-		{
-			s1.set(i, Math.max(s1.get(i), s2.get(i)));
+	public static Spectrum maxLists_inplace(final Spectrum s1, final SpectrumView s2) {
+		float[] a1 = s1.backingArray();
+		float[] a2 = ((Spectrum)s2).backingArray();
+		
+		int size = Math.min(a1.length, a2.length);
+		for (int i = 0; i < size; i++) {
+			a1[i] = Math.max(a1[i], a2[i]);
 		}
 		
 
@@ -223,6 +228,19 @@ public class SpectrumCalculations
 		return target;
 	}
 
+	/*
+	 * Version of the fma method which adds from and stores to the target array 
+	 */
+	public static Spectrum fma_target(final SpectrumView source, float mult, final Spectrum target, int first, int last) {
+		final float[] sourceArray = ((Spectrum)source).backingArray();
+		final float[] targetArray = ((Spectrum)target).backingArray();
+		
+		for (int i = first; i <= last; i++) {
+			targetArray[i] = Math.fma(sourceArray[i], mult, targetArray[i]);
+		}
+		
+		return target;
+	}
 
 	/**
 	 * Returns a copy of the given list with all values in the list expressed as a fraction of the given value
@@ -304,10 +322,11 @@ public class SpectrumCalculations
 
 		Spectrum result = new ArraySpectrum(source.size());
 		float newvalue;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!Float.isNaN(minimum) && value < minimum) newvalue = minimum;
+			if (!minIsNaN && value < minimum) newvalue = minimum;
 			result.set(i, newvalue);
 		}
 
@@ -339,10 +358,11 @@ public class SpectrumCalculations
 	{
 
 		float newvalue;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!Float.isNaN(minimum) && value < minimum) newvalue = minimum;
+			if (!minIsNaN && value < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 
@@ -374,10 +394,11 @@ public class SpectrumCalculations
 	{
 
 		float newvalue;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = value - source.get(i);
-			if (!Float.isNaN(minimum) && value < minimum) newvalue = minimum;
+			if (!minIsNaN && value < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 
@@ -479,10 +500,11 @@ public class SpectrumCalculations
 		Spectrum result = new ArraySpectrum(l1.size());
 		int maxInd = Math.min(l1.size(), l2.size());
 		float value;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < maxInd; i++)
 		{
 			value = l1.get(i) - l2.get(i);
-			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
+			if (!minIsNaN && value < minimum) value = minimum;
 			result.set(i, value);
 		}
 
@@ -524,13 +546,20 @@ public class SpectrumCalculations
 		float[] l2a = ((Spectrum)l2).backingArray();
 		
 		int maxInd = Math.min(l1.size(), l2.size());
-		float value;
-		for (int i = 0; i < maxInd; i++)
-		{
-			value = l1a[i] - l2a[i];
-			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
-			l1a[i] = value;
+		
+		if (! Float.isFinite(minimum)) {
+			// If min is not finite (not NaN and not +/- Infinity), just ignore it and perform 
+			//the subtraction without it
+			subtractLists_inplace(l1, l2);
+			return;
+		} else {
+			// Otherwise, perform the subtraction and choose the larger of the minimum or the result
+			for (int i = 0; i < maxInd; i++) {
+				l1a[i] = Math.max(minimum, l1a[i] - l2a[i]);
+			}
 		}
+		
+
 		
 	}
 
@@ -558,10 +587,11 @@ public class SpectrumCalculations
 		
 		int maxInd = Math.min(l1.size(), l2.size());
 		float value;
+		boolean minIsNaN = Float.isNaN(minimum);
 		for (int i = 0; i < maxInd; i++)
 		{
 			value = l1a[i] - l2a[i];
-			if (!Float.isNaN(minimum) && value < minimum) value = minimum;
+			if (!minIsNaN && value < minimum) value = minimum;
 			ta[i] = value;
 		}
 		

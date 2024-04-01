@@ -24,7 +24,7 @@ public class PeakabooTabTitle extends TabbedInterfaceTitle {
 		boolean added = List.of(this.getComponents()).contains(dot);
 		if (colour != null && !added) {
 			this.add(dot, BorderLayout.WEST);
-		} else if (colour == null & added) {
+		} else if (colour == null && added) {
 			this.remove(dot);
 		}
 	}

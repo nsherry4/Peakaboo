@@ -27,11 +27,11 @@ class MapFilterSettingsPanel extends ClearPanel {
 	private static Map<MapFilter, JComponent> editorUIs = new HashMap<>();
 	
 	private MapFilteringController controller;
-	private FiltersPanel parent;
+	private FiltersPanel parentComponent;
 	
 	public MapFilterSettingsPanel(MapFilteringController controller, FiltersPanel parent) {
 		this.controller = controller;
-		this.parent = parent;
+		this.parentComponent = parent;
 		
 		this.setBorder(Spacing.bSmall());
 		this.setLayout(new BorderLayout());
@@ -46,7 +46,7 @@ class MapFilterSettingsPanel extends ClearPanel {
 			var group = filter.getParameterGroup();
 			var layout =  new NarrowSwingLayout(200);
 			layout.initialize(group);
-			var autopanel = new SwingAutoPanel(group, true, layout);  //SwingLayoutFactory.forGroup(filter.getParameterGroup()).getComponent();
+			var autopanel = new SwingAutoPanel(group, true, layout);
 			autopanel.setBorder(Spacing.bSmall());
 			//Hook up our Parameter's event system to Peakaboo's
 			group.getValueHook().addListener(o -> controller.filteredDataInvalidated());
@@ -59,7 +59,7 @@ class MapFilterSettingsPanel extends ClearPanel {
 		}
 		component = editorUIs.get(filter);
 
-		var titlepanel = new TitleBar(this.parent, filter);
+		var titlepanel = new TitleBar(this.parentComponent, filter);
 
 		this.add(titlepanel, BorderLayout.NORTH);
 		this.add(component, BorderLayout.CENTER);

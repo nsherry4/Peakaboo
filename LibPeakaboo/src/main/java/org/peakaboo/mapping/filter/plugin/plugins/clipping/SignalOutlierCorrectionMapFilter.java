@@ -33,7 +33,7 @@ public class SignalOutlierCorrectionMapFilter extends AbstractMapFilter {
 
 	private boolean validate(Parameter<?> param) {
 		if (percent.getValue() <= 0f) { return false; }
-		if (percent.getValue() > 5f) { return false; }
+		if (percent.getValue() > 50f) { return false; }
 		return true;
 	}
 	

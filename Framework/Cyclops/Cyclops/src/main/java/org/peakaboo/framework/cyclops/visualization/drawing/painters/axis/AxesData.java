@@ -24,8 +24,8 @@ public class AxesData
 	{
 		
 
-		xPositionBounds = new Bounds<Float>(yLeftPosition, yRightPosition);
-		yPositionBounds = new Bounds<Float>(xTopPosition, xBottomPosition);
+		xPositionBounds = new Bounds<>(yLeftPosition, yRightPosition);
+		yPositionBounds = new Bounds<>(xTopPosition, xBottomPosition);
 
 	}
 

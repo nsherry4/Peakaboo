@@ -2,7 +2,10 @@ package org.peakaboo.filter.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
@@ -85,9 +88,9 @@ public class SerializedFilterV1 {
 	}
 	
 	@Deprecated(since = "6", forRemoval = true)
-	public Filter getFilter() {
+	public Optional<Filter> getFilter(List<String> errors) {
 		//If it already exists, just return it, otherwise build a filter
-		if (filter != null) { return filter; }
+		if (filter != null) { return Optional.of(filter); }
 			
 		for (PluginDescriptor<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
 			if (
@@ -109,12 +112,17 @@ public class SerializedFilterV1 {
 						filter.getParameterGroup().deserialize(this.settings);
 					}
 				} catch (IllegalArgumentException e) {
-					throw new RuntimeException("Cannot build plugin: " + plugin.getName(), e);
+					var msg = "Cannot restore settings for " + plugin.getName();
+					errors.add(msg);
+					PeakabooLog.get().log(Level.WARNING, msg, e);
 				}
-				return filter;
+				return Optional.of(filter);
 			}
 		}
-		throw new RuntimeException("Cannot find plugin " + uuidOrClazz);
+		var msg = "Cannot restore plugin " + uuidOrClazz;
+		errors.add(msg);
+		PeakabooLog.get().log(Level.WARNING, msg);
+		return Optional.empty();
 	}
 
 	

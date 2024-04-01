@@ -24,8 +24,8 @@ import org.peakaboo.app.CustomFormatter.BufferHandler;
 
 public class PeakabooLog {
 
-	private final static String format = "[" + Version.longVersionNo + "] %1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
-	private final static Map<String, Logger> loggers = new HashMap<>();
+	private final static String LOG_FORMAT = "[" + Version.LONG_VERSION + "] %1$ty-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$-7s [%2$s] %5$s %6$s%n";
+	private final static Map<String, Logger> LOGGERS = new HashMap<>();
 	private static boolean initted = false;
 	private static String logfilename;
 
@@ -33,10 +33,12 @@ public class PeakabooLog {
 	private static FileHandler fileHandler;
 	private static ConsoleHandler consoleHandler;
 	
-
+	private PeakabooLog() {
+		// No setup required
+	}
 	
 	public synchronized static void init(File logDir) {
-		if (initted == true) {
+		if (initted) {
 			return;
 		}
 		initted = true;
@@ -75,7 +77,7 @@ public class PeakabooLog {
 
 		
 		//In-memory logger
-		bufferedHandler = new BufferHandler(new CustomFormatter(format));
+		bufferedHandler = new BufferHandler(new CustomFormatter(LOG_FORMAT));
 		bufferedHandler.setLevel(getLevel());
 		getRoot().addHandler(bufferedHandler);
 		
@@ -98,7 +100,7 @@ public class PeakabooLog {
 			////////////////////////////
 			
 			fileHandler = new FileHandler(logfilename, 16*1024*1024, 1, true);
-			fileHandler.setFormatter(new CustomFormatter(format));
+			fileHandler.setFormatter(new CustomFormatter(LOG_FORMAT));
 			fileHandler.setLevel(getLevel());
 			getRoot().addHandler(fileHandler);
 		} catch (SecurityException | IOException e) {
@@ -130,12 +132,12 @@ public class PeakabooLog {
 	}
 	
 	private static Logger get(String name) {
-		if (!loggers.containsKey(name)) {
+		if (!LOGGERS.containsKey(name)) {
 			Logger logger = Logger.getLogger(name);
 			logger.setLevel(getLevel());
-			loggers.put(name, logger);
+			LOGGERS.put(name, logger);
 		}
-		return loggers.get(name);
+		return LOGGERS.get(name);
 	}
 
 
@@ -160,20 +162,20 @@ class CustomFormatter extends Formatter {
 	}
 
 	@Override
-	public String format(LogRecord record) {
+	public String format(LogRecord entry) {
 		String className = "";
-		if (record.getSourceClassName().contains(".")) {
-			String[] clsParts = record.getSourceClassName().split("\\.");
-			className = clsParts[clsParts.length-1] + ":" + record.getSourceMethodName();
+		if (entry.getSourceClassName().contains(".")) {
+			String[] clsParts = entry.getSourceClassName().split("\\.");
+			className = clsParts[clsParts.length-1] + ":" + entry.getSourceMethodName();
 		} else {
-			className = record.getSourceClassName() + ":" + record.getSourceMethodName();
+			className = entry.getSourceClassName() + ":" + entry.getSourceMethodName();
 		}
 		
 		String thrown = "";
-		if (record.getThrown() != null) {
+		if (entry.getThrown() != null) {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
-			record.getThrown().printStackTrace(pw);
+			entry.getThrown().printStackTrace(pw);
 			pw.flush();
 			thrown = sw.toString();
 		}
@@ -181,11 +183,11 @@ class CustomFormatter extends Formatter {
 		
 		return String.format(
 			format, 
-			new java.util.Date(record.getMillis()), 
+			new java.util.Date(entry.getMillis()), 
 			className,
-			record.getLoggerName(), 
-			record.getLevel().getLocalizedName(), 
-			record.getMessage(),
+			entry.getLoggerName(), 
+			entry.getLevel().getLocalizedName(), 
+			entry.getMessage(),
 			thrown
 		);
 	}
@@ -208,9 +210,9 @@ class CustomFormatter extends Formatter {
 		public void flush() {}
 
 		@Override
-		public void publish(LogRecord record) {
-			String entry = formatter.format(record);
-			this.entries.add(entry);
+		public void publish(LogRecord logEntry) {
+			String entryText = formatter.format(logEntry);
+			this.entries.add(entryText);
 		}
 		
 		public String getRecentLogs() {

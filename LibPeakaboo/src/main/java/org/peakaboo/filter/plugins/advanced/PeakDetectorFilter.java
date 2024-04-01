@@ -42,7 +42,7 @@ public class PeakDetectorFilter extends AbstractFilter {
 
 	@Override
 	public boolean pluginEnabled() {
-		return Version.releaseType != ReleaseType.RELEASE;
+		return Version.RELEASE_TYPE != ReleaseType.RELEASE;
 	}
 
 	@Override

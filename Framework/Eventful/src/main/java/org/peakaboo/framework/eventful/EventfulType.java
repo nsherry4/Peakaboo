@@ -12,8 +12,8 @@ public class EventfulType<T> implements IEventfulType<T>
 	private Consumer<Runnable> uiThreadRunnerOverride = null;
 	
 	public EventfulType() {
-		listeners = new LinkedList<EventfulTypeListener<T>>();
-		simpleListeners = new LinkedList<EventfulListener>();
+		listeners = new LinkedList<>();
+		simpleListeners = new LinkedList<>();
 				
 	}
 
@@ -63,7 +63,7 @@ public class EventfulType<T> implements IEventfulType<T>
 	@Override
 	public void updateListeners(final T message) {
 
-		if (listeners.size() == 0) return;
+		if (listeners.isEmpty()) return;
 
 		getUIThreadRunner().accept(() -> {
 			synchronized(EventfulType.this){

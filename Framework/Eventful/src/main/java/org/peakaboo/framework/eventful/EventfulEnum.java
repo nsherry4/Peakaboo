@@ -12,8 +12,8 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	private Consumer<Runnable> uiThreadRunnerOverride = null;
 	
 	public EventfulEnum() {
-		listeners = new LinkedList<EventfulEnumListener<T>>();
-		simpleListeners = new LinkedList<EventfulListener>();
+		listeners = new LinkedList<>();
+		simpleListeners = new LinkedList<>();
 	}
 	
 	
@@ -63,7 +63,7 @@ public class EventfulEnum<T extends Enum<T>> implements IEventfulEnum<T>
 	@Override
 	public void updateListeners(final T message) {
 
-		if (listeners.size() == 0) return;
+		if (listeners.isEmpty()) return;
 
 		getUIThreadRunner().accept(() -> {
 			synchronized(EventfulEnum.this) {

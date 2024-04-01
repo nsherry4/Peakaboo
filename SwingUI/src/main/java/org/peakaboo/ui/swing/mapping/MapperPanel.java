@@ -3,7 +3,6 @@ package org.peakaboo.ui.swing.mapping;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,15 +14,13 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
@@ -31,18 +28,16 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
-import org.peakaboo.framework.plural.executor.ExecutorSet;
-import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
-import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
+import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener;
 import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener.Buttons;
 import org.peakaboo.framework.stratus.components.Banner;
-import org.peakaboo.framework.stratus.components.Banner.BannerAction;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -150,8 +145,8 @@ public class MapperPanel extends TabbedLayerPanel {
 	private JPanel createCanvasPanel() {
 		canvas = new MapCanvas(controller, true);
 		JScrollPane canvasScroller = new JScrollPane(canvas);
-		canvasScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		canvasScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		canvasScroller.setBorder(new EmptyBorder(0, 0, 0, 0));
 		new DraggingScrollPaneListener(canvasScroller.getViewport(), canvas, Buttons.MIDDLE, Buttons.RIGHT);
 		
@@ -283,12 +278,27 @@ public class MapperPanel extends TabbedLayerPanel {
 		FileOutputStream fos = new FileOutputStream(file);
 		
 		Supplier<ExportableSurface> surfaceFactory = () -> (ExportableSurface)format.create(new Coord<>(width, height));
-		ExecutorSet<Void> executorset = controller.writeArchive(fos, format, width, height, surfaceFactory);
+		StreamExecutor<Void> archiver = controller.writeArchive(fos, format, width, height, surfaceFactory);
 		
-		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, executorset);
+		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Archive", archiver);
+		archiver.addListener(event -> {
+			switch(event) {
+			case ABORTED, COMPLETED:
+				removeLayer(layer);
+				break;
+				
+			case PROGRESS:
+			default:
+				break;
+			
+			}
+		});
+		
+		//ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, executorset);
 		this.pushLayer(layer);
 		
-		executorset.startWorking();
+		//executorset.startWorking();
+		archiver.start();
 		
 	}
 

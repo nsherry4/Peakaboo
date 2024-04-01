@@ -1,7 +1,5 @@
 package org.peakaboo.ui.swing.plotting;
 
-
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -18,9 +16,9 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +37,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
+import org.apache.commons.io.IOUtils;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
@@ -62,13 +61,12 @@ import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.cyclops.Pair;
-import org.peakaboo.framework.cyclops.util.Mutable;
-import org.peakaboo.framework.cyclops.util.StringInput;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
-import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
@@ -105,7 +103,6 @@ import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.PeakabooTabTitle;
-import org.peakaboo.ui.swing.console.DebugConsole;
 import org.peakaboo.ui.swing.mapping.MapperFrame;
 import org.peakaboo.ui.swing.mapping.QuickMapPanel;
 import org.peakaboo.ui.swing.options.AdvancedOptionsPanel;
@@ -116,70 +113,65 @@ import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
 import org.peakaboo.ui.swing.plugins.PluginManager;
 
-
-
 public class PlotPanel extends TabbedLayerPanel {
 
-	//Non-UI
-	private PlotController				controller;
+	// Non-UI
+	private PlotController controller;
 
-	private PlotCanvas					canvas;
+	private PlotCanvas canvas;
 
-	//===TOOLBAR WIDGETS===
-	private PlotToolbar                 toolBar;
-	private PlotStatusBar				statusBar;
+	// ===TOOLBAR WIDGETS===
+	private PlotToolbar toolBar;
+	private PlotStatusBar statusBar;
 
-	
-	TabbedInterface<TabbedLayerPanel> 	tabs;
+	TabbedInterface<TabbedLayerPanel> tabs;
 
 	private static boolean newVersionNotified = false;
-	
-	private Mutable<SavedMapSession> 	mapSession = new Mutable<>();
-	
+
+	private Mutable<SavedMapSession> mapSession = new Mutable<>();
+
 	public PlotPanel(TabbedInterface<TabbedLayerPanel> container) {
 		super(container);
 		this.tabs = container;
-		
+
 		controller = new PlotController(DesktopApp.appDir());
 		controller.view().setDarkMode(DesktopSettings.isDarkMode());
-		
+
 		initGUI();
 
 		controller.addListener(msg -> setWidgetsState());
 		controller.notifications().addListener(notice -> notifyUser(notice.message(), notice.action()));
 		setWidgetsState();
-		
+
 		doVersionCheck();
-		
+
 		doFirstRun();
 
 	}
-	
+
 	private void doVersionCheck() {
 		if (!newVersionNotified) {
 			newVersionNotified = true;
-			
+
 			Thread versionCheck = new Thread(() -> {
-				
+
 				if (Version.hasNewVersion()) {
-					notifyUser(
-							"A new version of Peakaboo is available", 
-							() -> DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases")
-						);
+					notifyUser("A new version of Peakaboo is available",
+							() -> DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases"));
 				}
-				
-			}); //thread
+
+			}); // thread
 			versionCheck.setDaemon(true);
 			versionCheck.start();
 		}
 	}
-	
-	
+
 	private void notifyUser(String message, Runnable action) {
-		Runnable onclick = action == null ? () -> {} : action;
+		Runnable onclick = action == null ? () -> {
+		} : action;
 		SwingUtilities.invokeLater(() -> this.pushLayer(new ToastLayer(this, message, onclick)));
 	}
-	
+
 	private void doFirstRun() {
 		if (DesktopSettings.isFirstrun()) {
 			DesktopSettings.setFirstrun(false);
@@ -187,45 +179,42 @@ public class PlotPanel extends TabbedLayerPanel {
 			this.pushLayer(fr);
 		}
 	}
-	
+
 	public PlotController getController() {
 		return controller;
 	}
 
-
 	private void setWidgetsState() {
 
 		boolean hasData = controller.data().hasDataSet();
-		
+
 		setTitleBar();
 
 		toolBar.setWidgetState(hasData);
 		statusBar.setWidgetState(hasData);
-		
+
 		getTabbedInterface().validate();
 		getTabbedInterface().repaint();
-		
+
 		setNeedsRedraw();
 
 	}
-	
+
 	private void initGUI() {
 
 		canvas = new PlotCanvas(controller, this);
 		canvas.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-		
+
 		canvas.setMouseMoveCallback((channel, coords) -> mouseMoveCanvasEvent(coords.x));
-		
+
 		canvas.setRightClickCallback((channel, coords) -> {
-			//if the click is in the bounds of the data/plot
+			// if the click is in the bounds of the data/plot
 			if (channel > -1 && channel < controller.data().getDataSet().getAnalysis().channelsPerScan()) {
 				CanvasPopupMenu menu = new CanvasPopupMenu(this, controller, channel);
 				menu.show(canvas, coords.x, coords.y);
 			}
 		});
 
-
-		
 		Container pane = this.getContentLayer();
 
 		GridBagLayout layout = new GridBagLayout();
@@ -239,129 +228,112 @@ public class PlotPanel extends TabbedLayerPanel {
 		c.weightx = 1.0;
 		c.weighty = 0.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		
+
 		toolBar = new PlotToolbar(this, controller);
 		pane.add(toolBar, c);
 
 		JPanel p = new JPanel();
 		p.setPreferredSize(new Dimension(1000, 100));
-		
+
 		JScrollPane scrolledCanvas = new JScrollPane(canvas);
 		scrolledCanvas.setAutoscrolls(true);
 		scrolledCanvas.setBorder(Spacing.bNone());
-		
-		
+
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas, Buttons.LEFT, Buttons.MIDDLE);
 
-		
 		statusBar = new PlotStatusBar(controller);
-		
+
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);
 		canvasPanel.add(statusBar, BorderLayout.SOUTH);
 		canvasPanel.setPreferredSize(new Dimension(600, 300));
 
 		canvasPanel.addComponentListener(new ComponentAdapter() {
-			
+
 			@Override
-			public void componentResized(ComponentEvent e)
-			{
+			public void componentResized(ComponentEvent e) {
 				canvas.updateCanvasSize();
 			}
 
 		});
-		
+
 		ImageIcon peakabooLogo;
 		if (DesktopSettings.isDarkMode()) {
-			peakabooLogo = IconFactory.getImageIcon(
-					PeakabooIcons.PATH, 
-					"icon-symbolic", 
-					new Color((0x00ffffff & Stratus.getTheme().getControlText().getRGB()) | 0x20000000, true)
-				);
+			peakabooLogo = IconFactory.getImageIcon(PeakabooIcons.ASSET_PATH, "icon-symbolic",
+					new Color((0x00ffffff & Stratus.getTheme().getControlText().getRGB()) | 0x20000000, true));
 		} else {
-			peakabooLogo = IconFactory.getImageIcon(
-					PeakabooIcons.PATH, 
-					"icon-symbolic" 
-				);
+			peakabooLogo = IconFactory.getImageIcon(PeakabooIcons.ASSET_PATH, "icon-symbolic");
 		}
-		
-		BlankMessagePanel blankCanvas = new BlankMessagePanel(
-				"No Data", 
+
+		BlankMessagePanel blankCanvas = new BlankMessagePanel("No Data",
 				"You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.",
-				peakabooLogo
-			);
+				peakabooLogo);
 		new FileDrop(blankCanvas, canvas.getFileDropListener());
-		
-		
+
 		JTabbedPane sidebarTabs = new JTabbedPane();
 		sidebarTabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
 		sidebarTabs.add(new FiltersetViewer(controller.filtering(), getTabbedInterface().getWindow()), 1);
-		
-		
+
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.BOTH;
-		
+
 		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
 		sidebarTabs.setPreferredSize(new Dimension(230, sidebarTabs.getPreferredSize().height));
 		split.add(blankCanvas, BorderLayout.CENTER);
-				
+
 		split.setBorder(Spacing.bNone());
 		pane.add(split, c);
 
-		
 		controller.addListener(e -> {
 			if (controller.data().hasDataSet() && Arrays.asList(split.getComponents()).contains(blankCanvas)) {
 				split.remove(blankCanvas);
 				split.add(canvasPanel, BorderLayout.CENTER);
 				split.add(sidebarTabs, BorderLayout.WEST);
 			}
-		});		
+		});
 
 	}
-
 
 	private void setTitleBar() {
 		String title = getTabTitle();
-		if (title.trim().length() == 0) title = "No Data";
+		if (title.trim().length() == 0)
+			title = "No Data";
 		getTabbedInterface().setTabTitle(this, title);
 	}
-
 
 	@Override
 	public String getTabTitle() {
 		StringBuilder titleString = new StringBuilder();
-		
+
 		if (controller.data().hasDataSet()) {
 			titleString.append(controller.data().getTitle());
 		} else {
 			titleString.append("No Data");
 		}
 
-		
 		return titleString.toString();
 	}
 
 	void load(List<DataInputAdapter> files) {
-		DataLoader loader = new PlotDataLoader(this, controller, files);
-		loader.load();
+		DataLoader loader = new PlotDataLoader(this, controller);
+		loader.loadFiles(files);
 	}
-
 
 	private void mouseMoveCanvasEvent(int x) {
 
 		int channel = canvas.channelFromCoordinate(x);
 		float energy = controller.view().getEnergyForChannel(channel);
-		
+
 		Pair<Float, Float> values;
 		if (channel < 0 || channel >= controller.data().getDataSet().getAnalysis().channelsPerScan()) {
-			//out of bounds
+			// out of bounds
 			values = null;
 		} else {
 			values = controller.view().getValueForChannel(channel);
@@ -372,43 +344,39 @@ public class PlotPanel extends TabbedLayerPanel {
 		} else {
 			statusBar.setData(controller.view().getChannelViewMode());
 		}
-		
-		
-		
+
 	}
 
 	public void setNeedsRedraw() {
 		canvas.setNeedsRedraw();
 	}
 
-
-
-
-
-
-
-
 	// ////////////////////////////////////////////////////////
 	// UI ACTIONS
 	// ////////////////////////////////////////////////////////
 
 	public void actionAbout() {
-		ImageIcon logo = IconFactory.getImageIcon(Tier.provider().iconPath(), Version.logo);
+		ImageIcon logo = IconFactory.getImageIcon(Tier.provider().iconPath(), Version.LOGO);
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
-		
-		
+			
 		AboutLayer.Contents contents = new AboutLayer.Contents();
 		contents.name = Tier.provider().appName();
 		contents.description = "XRF Analysis Software";
 		contents.linkAction = () -> DesktopApp.browser("http://peakaboo.org");
 		contents.linktext = "Website";
 		contents.copyright = "2009-2024 by The University of Western Ontario and The Canadian Light Source Inc.";
-		contents.licence = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/licence.txt"));
-		contents.credits = StringInput.contents(getClass().getResourceAsStream("/org/peakaboo/credits.txt"));
+		
+		try {
+			contents.licence = IOUtils.toString( getClass().getResourceAsStream("/org/peakaboo/licence.txt"), StandardCharsets.UTF_8 );
+			contents.credits = IOUtils.toString( getClass().getResourceAsStream("/org/peakaboo/credits.txt"), StandardCharsets.UTF_8 );
+		} catch (IOException e) {
+			PeakabooLog.get().log(Level.WARNING, "Failed to load asset from classloader", e);
+		}
+		
 		contents.logo = logo;
-		contents.version = Version.versionNoMajor + "." + Version.versionNoMinor;
-		contents.longVersion = Version.longVersionNo;
-		contents.releaseDescription = Version.releaseDescription;
+		contents.version = Version.VERSION_MAJOR + "." + Version.VERSION_MINOR;
+		contents.longVersion = Version.LONG_VERSION;
+		contents.releaseDescription = Version.RELEASE_DESCRIPTION;
 		contents.date = Version.buildDate;
 		contents.titleStyle = "font-family: Springsteel-Light; font-size: 350%;";
 		
@@ -416,64 +384,51 @@ public class PlotPanel extends TabbedLayerPanel {
 		this.pushLayer(about);
 		
 	}
-	
+
 	public void actionHelp() {
 		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
 	}
-	
-	public void actionOpenData() {	
+
+	public void actionOpenData() {
 		List<SimpleFileExtension> exts = new ArrayList<>();
 		for (DataSourcePlugin p : DataSourceRegistry.system().newInstances()) {
 			FileFormat f = p.getFileFormat();
 			SimpleFileExtension ext = new SimpleFileExtension(f.getFormatName(), f.getFileExtensions());
 			exts.add(ext);
 		}
-		
-		//Add session file ext.
-		SimpleFileExtension session = new SimpleFileExtension("Peakaboo Session Files", "peakaboo");
-		exts.add(session);
-		
+
+		// Add session file ext.
+		exts.add(new SessionFileExtension());
+
 		StratusFilePanels.openFiles(this, "Select Data Files to Open", controller.io().getLastFolder(), exts, files -> {
-			if (!files.isPresent()) return;
+			if (!files.isPresent())
+				return;
 			controller.io().setLastFolder(files.get().get(0).getParentFile());
-			
+
 			List<File> filelist = files.get();
 			load(filelist.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
-			
+
 		});
-		
-	}
-	
-	public void actionDebugConsole() {
-		DebugConsole console = new DebugConsole(tabs);
-		
-		tabs.addTab(console);
-		tabs.setTabTitle(console, "Debug Console");
+
 	}
 
-
-	
-	
 	public void actionLoadSubsetDataSource(SubsetDataSource sds, SavedSession settings) {
-		
+
 		Mutable<ModalLayer> layer = new Mutable<>();
-		
-		ExecutorSet<Boolean> loader = Plural.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
+
+		ExecutorSet<Boolean> loader = PluralExecutor.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
 			getController().data().setDataSource(sds, exec, execset::isAborted);
 			getController().load(settings, false);
 			removeLayer(layer.get());
 			return true;
 		});
-		
+
 		ExecutorSetView view = new ExecutorSetView(loader);
 		layer.set(new ModalLayer(this, view));
 		pushLayer(layer.get());
 		loader.startWorking();
-		
-	}
 
-	
-	
+	}
 
 	public void actionExportData(DataSink sink) {
 		DataSource source = controller.data().getDataSet().getDataSource();
@@ -485,7 +440,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 			controller.io().setLastFolder(file.get().getParentFile());
 			actionExportData(source, sink, file.get());
-			
+
 		});
 
 	}
@@ -498,87 +453,80 @@ public class PlotPanel extends TabbedLayerPanel {
 		pushLayer(layer);
 		writer.startWorking();
 	}
-	
+
 	public void actionMap() {
 
-		if (!controller.data().hasDataSet()) return;
-
+		if (!controller.data().hasDataSet())
+			return;
 
 		StreamExecutor<RawMapSet> mapTask = controller.getMapTask();
-		if (mapTask == null) return;
+		if (mapTask == null)
+			return;
 
 		TaskMonitorView taskView = new TaskMonitorView(mapTask);
-		//TaskMonitorPanel taskPanel = new TaskMonitorPanel("Generating Maps", taskView);
-		//ModalLayer layer = new ModalLayer(this, taskPanel);
 		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Maps", taskView);
-		
+
 		mapTask.addListener(event -> {
-			
-			//if this is just a progress event, exit early
-			if (event == Event.PROGRESS) { return; }
-			
-			//hide the task panel since this is either COMPLETED or ABORTED
+
+			// if this is just a progress event, exit early
+			if (event == Event.PROGRESS) {
+				return;
+			}
+
+			// hide the task panel since this is either COMPLETED or ABORTED
 			removeLayer(layer);
-			
-			//If this task was aborted instead of completed, exit early
-			if (event == Event.ABORTED) { return; }
-			
-			//If there is no result, exit early
-			if (!mapTask.getResult().isPresent()) { return; }
-			
-			
+
+			// If this task was aborted instead of completed, exit early
+			if (event == Event.ABORTED) {
+				return;
+			}
+
+			// If there is no result, exit early
+			if (!mapTask.getResult().isPresent()) {
+				return;
+			}
+
 			MapperFrame mapperWindow;
 			RawMapSet results = mapTask.getResult().get();
 			RawDataController mapData = new RawDataController();
-			
+
 			DataSet sourceDataset = controller.data().getDataSet();
 
-			mapData.setMapData(
-					results,
-					sourceDataset,
-					controller.data().getTitle(),
-					controller.data().getDiscards().list(),
-					controller.calibration().getDetectorProfile()
-				);
-			
-			
+			mapData.setMapData(results, sourceDataset, controller.data().getTitle(),
+					controller.data().getDiscards().list(), controller.calibration().getDetectorProfile());
+
 			mapperWindow = new MapperFrame(getTabbedInterface(), mapData, mapSession, controller);
 			mapperWindow.setVisible(true);
 
 		});
-		
-		
+
 		pushLayer(layer);
 		mapTask.start();
 
-
 	}
-
 
 	public void actionSaveSession() {
 		if (controller.io().getSessionFile() == null) {
 			actionSaveSessionAs();
 			return;
 		}
-		
+
 		actionSaveSession(controller.io().getSessionFile());
-		
+
 	}
-	
+
 	public void actionSaveSessionAs() {
 
-		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		
-		StratusFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), peakaboo, file -> {
-			if (!file.isPresent()) {
-				return;
-			}
-			controller.io().setFromSession(file.get());
-			actionSaveSession(file.get());	
-		});
+		StratusFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), new SessionFileExtension(),
+				file -> {
+					if (!file.isPresent()) {
+						return;
+					}
+					controller.io().setFromSession(file.get());
+					actionSaveSession(file.get());
+				});
 	}
-	
-	
+
 	public void actionSaveSession(File file) {
 		try (FileOutputStream os = new FileOutputStream(file)) {
 			os.write(controller.save().serialize().getBytes());
@@ -587,7 +535,6 @@ public class PlotPanel extends TabbedLayerPanel {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
 		}
 	}
-	
 
 	public void actionSavePicture() {
 		SavePicture sp = new SavePicture(this, canvas, controller.io().getLastFolder(), file -> {
@@ -596,49 +543,47 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 		});
 		sp.show();
-		 
+
 	}
-	
+
 	public void actionExportArchive() {
 		Mutable<ExportPanel> export = new Mutable<>(null);
-		
-		export.set(new ExportPanel(this, canvas, () -> 
-			
-			StratusFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(), new SimpleFileExtension("Zip Archive", "zip"), file -> {
-				if (!file.isPresent()) {
-					return;
-				}
-				controller.io().setLastFolder(file.get().getParentFile());
-				
-				SurfaceDescriptor format = export.get().getPlotFormat();
-				int width = export.get().getImageWidth();
-				int height = export.get().getImageHeight();
-				
-				actionExportArchiveToZip(file.get(), format, width, height);
-				
-				
-			})
-		));
+
+		export.set(new ExportPanel(this, canvas, () ->
+
+		StratusFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(),
+				new SimpleFileExtension("Zip Archive", "zip"), file -> {
+					if (!file.isPresent()) {
+						return;
+					}
+					controller.io().setLastFolder(file.get().getParentFile());
+
+					SurfaceDescriptor format = export.get().getPlotFormat();
+					int width = export.get().getImageWidth();
+					int height = export.get().getImageHeight();
+
+					actionExportArchiveToZip(file.get(), format, width, height);
+
+				})));
 	}
-	
+
 	private void actionExportArchiveToZip(File file, SurfaceDescriptor format, int width, int height) {
 		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file))) {
 
-			//Save Plot
-			String ext = format.extension().toLowerCase();			
+			// Save Plot
+			String ext = format.extension().toLowerCase();
 			ZipEntry e = new ZipEntry("plot." + ext);
 			zos.putNextEntry(e);
 
 			canvas.write(format, zos, new Coord<Integer>(width, height));
 			zos.closeEntry();
-			
-			
-			//save fittings as text
+
+			// save fittings as text
 			e = new ZipEntry("fittings.txt");
 			zos.putNextEntry(e);
 			controller.writeFittingInformation(zos);
 			zos.closeEntry();
-			
+
 			if (controller.calibration().hasDetectorProfile()) {
 				e = new ZipEntry("detector-profile.pbdp");
 				zos.putNextEntry(e);
@@ -646,169 +591,168 @@ public class PlotPanel extends TabbedLayerPanel {
 				zos.write(profileYaml.getBytes());
 				zos.closeEntry();
 			}
-			
-			
+
 			e = new ZipEntry("session.peakaboo");
 			zos.putNextEntry(e);
 			zos.write(controller.save().serialize().getBytes());
-			zos.closeEntry();			
-			
+			zos.closeEntry();
+
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.SEVERE, "Could not save archive", e);
 		}
 	}
 
+	public void actionSaveFilteredDataSet() {
+		SimpleFileExtension text = new CSVFileExtension();
+		StratusFilePanels.saveFile(this, "Save Fitted Data to CSV File", controller.io().getLastFolder(), text,
+				saveFile -> {
+					if (!saveFile.isPresent()) {
+						return;
+					}
+					controller.io().setLastFolder(saveFile.get().getParentFile());
 
-	public void actionSaveFilteredDataSet() {	
-		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
-		StratusFilePanels.saveFile(this, "Save Fitted Data to CSV File", controller.io().getLastFolder(), text, saveFile -> {
-			if (!saveFile.isPresent()) {
-				return;
-			}
-			controller.io().setLastFolder(saveFile.get().getParentFile());
-			
-			ExecutorSet<Object> execset = controller.writeFitleredDataSetToCSV(saveFile.get());
-			
-			ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
-			
-			execset.addListener(() -> {
-				if (execset.isAborted()) {
-					saveFile.get().delete();
-				}
-			});
-			
-			pushLayer(layer);
-			execset.startWorking();
-			
-			
-		});
+					ExecutorSet<Object> execset = controller.writeFitleredDataSetToCSV(saveFile.get());
+
+					ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
+
+					execset.addListener(() -> {
+						if (execset.isAborted()) {
+							saveFile.get().delete();
+						}
+					});
+
+					pushLayer(layer);
+					execset.startWorking();
+
+				});
 	}
-	
-	public void actionSaveFilteredSpectrum() {	
-		SimpleFileExtension text = new SimpleFileExtension("CSV File", "csv");
-		StratusFilePanels.saveFile(this, "Save Spectrum to CSV File", controller.io().getLastFolder(), text, saveFile -> {
-			if (!saveFile.isPresent()) {
-				return;
-			}
-			controller.io().setLastFolder(saveFile.get().getParentFile());
-			controller.writeFitleredSpectrumToCSV(saveFile.get());			
-		});
+
+	public void actionSaveFilteredSpectrum() {
+		SimpleFileExtension text = new CSVFileExtension();
+		StratusFilePanels.saveFile(this, "Save Spectrum to CSV File", controller.io().getLastFolder(), text,
+				saveFile -> {
+					if (!saveFile.isPresent()) {
+						return;
+					}
+					controller.io().setLastFolder(saveFile.get().getParentFile());
+					controller.writeFitleredSpectrumToCSV(saveFile.get());
+				});
 	}
-	
-	
-	public void actionSaveFittingInformation()
-	{
+
+	public void actionSaveFittingInformation() {
 		SimpleFileExtension ext = new SimpleFileExtension("Text File", "txt");
-		StratusFilePanels.saveFile(this, "Save Fitting Information to Text File", controller.io().getLastFolder(), ext, file -> {
-			if (!file.isPresent()) {
-				return;
-			}
-			controller.io().setLastFolder(file.get().getParentFile());
-			
-			try {
-				FileOutputStream os = new FileOutputStream(file.get());
-				controller.writeFittingInformation(os);
-				os.close();
-			} catch (IOException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
-			}
-			
-		});
+		StratusFilePanels.saveFile(this, "Save Fitting Information to Text File", controller.io().getLastFolder(), ext,
+				file -> {
+					if (!file.isPresent()) {
+						return;
+					}
+					controller.io().setLastFolder(file.get().getParentFile());
+
+					try {
+						FileOutputStream os = new FileOutputStream(file.get());
+						controller.writeFittingInformation(os);
+						os.close();
+					} catch (IOException e) {
+						PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
+					}
+
+				});
 
 	}
-		
+
 	public void actionLoadSession() {
 
-		SimpleFileExtension peakaboo = new SimpleFileExtension("Peakaboo Session File", "peakaboo");
-		StratusFilePanels.openFile(this, "Load Session Data", controller.io().getSessionFile(), peakaboo, file -> {
-			if (!file.isPresent()) {
-				return;
-			}
-			controller.io().setFromSession(file.get());
-			load(Collections.singletonList(new PathDataInputAdapter(file.get())));
-		});
+		StratusFilePanels.openFile(this, "Load Session Data", controller.io().getSessionFile(),
+				new SessionFileExtension(), file -> {
+					if (!file.isPresent()) {
+						return;
+					}
+					actionLoadSession(file.get());
+				});
 
 	}
 
-	
+	public void actionLoadSession(File session) {
+		controller.io().setFromSession(session);
+		load(List.of(new PathDataInputAdapter(session)));
+	}
+
 	public void actionShowInfo() {
-		
+
 		Map<String, String> properties;
-		
+
 		properties = new LinkedHashMap<>();
-		properties.put("Data Format", "" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
+		properties.put("Data Format",
+				"" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
 		properties.put("Dataset Title", "" + controller.data().getTitle());
 		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().getAnalysis().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().getAnalysis().maximumIntensity());
 
-		//Only load those attributes which have values
+		// Only load those attributes which have values
 		BiConsumer<String, String> populator = (k, v) -> {
 			if (v != null && !"".equals(v)) {
 				properties.put(k, v);
 			}
 		};
-		
-		//Extended attributes
+
+		// Extended attributes
 		if (controller.data().getDataSet().getMetadata().isPresent()) {
 			Metadata metadata = controller.data().getDataSet().getMetadata().get();
-			
+
 			populator.accept("Date of Creation", metadata.getCreationTime());
 			populator.accept("Created By", metadata.getCreator());
-			
+
 			populator.accept("Project Name", metadata.getProjectName());
 			populator.accept("Session Name", metadata.getSessionName());
 			populator.accept("Experiment Name", metadata.getExperimentName());
 			populator.accept("Sample Name", metadata.getSampleName());
 			populator.accept("Scan Name", metadata.getScanName());
-			
+
 			populator.accept("Facility", metadata.getFacilityName());
 			populator.accept("Laboratory", metadata.getLaboratoryName());
 			populator.accept("Instrument", metadata.getInstrumentName());
 			populator.accept("Technique", metadata.getTechniqueName());
-			
+
 		}
-		
-		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties));
+
+		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties), false);
 		propPanel.setBorder(Spacing.bHuge());
 
 		HeaderLayer layer = new HeaderLayer(this, true);
 		layer.setBody(propPanel);
 		layer.getHeader().setCentre("Dataset Information");
 		this.pushLayer(layer);
-		
+
 	}
-	
+
 	public void actionGuessMaxEnergy() {
-		
-		if (controller == null) return;
+
+		if (controller == null)
+			return;
 		if (controller.fitting().getVisibleTransitionSeries().isEmpty()) {
-			new LayerDialog(
-					"Cannot Detect Energy Calibration", 
-					"Detecting energy calibration requires that at least one element be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.", 
-					StockIcon.BADGE_WARNING
-				).showIn(this);
+			new LayerDialog("Cannot Detect Energy Calibration",
+					"Detecting energy calibration requires that at least one element be fitted.\nTry using 'Elemental Lookup', as 'Guided Fitting' will not work without energy calibration set.",
+					StockIcon.BADGE_WARNING).showIn(this);
 			return;
 		}
-		
-		
+
 		StreamExecutorSet<EnergyCalibration> energyTask = AutoEnergyCalibration.propose(
-				controller.data().getDataSet().getAnalysis().averagePlot(), 
-				controller.fitting().getVisibleTransitionSeries(), 
-				controller.fitting(),
+				controller.data().getDataSet().getAnalysis().averagePlot(),
+				controller.fitting().getVisibleTransitionSeries(), controller.fitting(),
 				controller.data().getDataSet().getAnalysis().channelsPerScan());
-		
-		
-		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).collect(Collectors.toList());
+
+		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).toList();
 		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Detecting Energy Level", views);
-		
+
 		energyTask.last().addListener(event -> {
-			//if event is not progress, then its either COMPLETED or ABORTED, so hide the panel
+			// if event is not progress, then its either COMPLETED or ABORTED, so hide the
+			// panel
 			if (event != Event.PROGRESS) {
 				removeLayer(layer);
 			}
-			
-			//if the last executor completed successfully, then set the calibration
+
+			// if the last executor completed successfully, then set the calibration
 			if (event == Event.COMPLETED) {
 				EnergyCalibration energy = energyTask.last().getResult().orElse(null);
 				if (energy != null) {
@@ -816,20 +760,16 @@ public class PlotPanel extends TabbedLayerPanel {
 				}
 			}
 		});
-		
+
 		pushLayer(layer);
 		energyTask.start();
 
-		
 	}
-	
+
 	public void actionShowPlugins() {
 		pushLayer(new PluginManager(this));
 	}
 
-
-	
-	
 	public void actionShowLogs() {
 		File appDataDir = DesktopApp.appDir("Logging");
 		appDataDir.mkdirs();
@@ -840,7 +780,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to open logging folder", e1);
 		}
 	}
-	
+
 	public void actionReportBug() {
 		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/issues/new/choose");
 	}
@@ -854,9 +794,9 @@ public class PlotPanel extends TabbedLayerPanel {
 		if (!controller.fitting().getFittingSelections().hasTransitionSeries(selected)) {
 			return;
 		}
-		
+
 		Mutable<LayerDialog> dialogbox = new Mutable<>();
-		
+
 		JTextField textfield = new JTextField(20);
 		textfield.addActionListener(ae -> {
 			controller.fitting().setAnnotation(selected, textfield.getText());
@@ -871,7 +811,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 		});
 		textfield.setText(controller.fitting().getAnnotation(selected));
-		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield, StockIcon.BADGE_QUESTION);
+		LayerDialog dialog = new LayerDialog("Annotation for " + selected.toString(), textfield);
 		dialogbox.set(dialog);
 		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
 		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(() -> {
@@ -882,24 +822,35 @@ public class PlotPanel extends TabbedLayerPanel {
 		textfield.grabFocus();
 	}
 
-
 	public void actionQuickMap(int channel) {
-		ExecutorSet<RawMapSet> execset = Mapping.quickMapTask(controller.data(), channel);
-		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
-
-		Mutable<Boolean> done = new Mutable<>(false);
-		execset.addListener(() -> {
-			if (execset.getCompleted() && execset.getResult() != null && !done.get()) {
-				done.set(true);
-				QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, execset.getResult(), mapSession, controller);
-				this.pushLayer(maplayer);
+		StreamExecutor<RawMapSet> quickmapper = Mapping.quickMapTask(controller.data(), channel);
+		var layer = new TaskMonitorLayer(this, "Generating Quick Map", quickmapper);
+		pushLayer(layer);
+		
+		quickmapper.addListener(event -> {
+			
+			switch(event) {
+			case ABORTED:
+				removeLayer(layer);
+				break;
+			case COMPLETED:
+				removeLayer(layer);
+				var result = quickmapper.getResult();
+				if (result.isPresent()) {
+					QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, result.get(), mapSession, controller);
+					this.pushLayer(maplayer);
+				}
+				break;
+			case PROGRESS:
+				break;
+			default:
+				break;
 			}
+			
 		});
 		
-		pushLayer(layer);
-		execset.startWorking();
+		quickmapper.start();
 		
-
 	}
 
 	@Override
@@ -907,21 +858,20 @@ public class PlotPanel extends TabbedLayerPanel {
 		if (!controller.data().hasDataSet()) {
 			return;
 		}
-		
+
 		var dialogbox = new Mutable<LayerDialog>();
 		var textfield = new JTextField(20);
 		var title = (PeakabooTabTitle) getTabbedInterface().getTabTitleComponent(this);
 		var colours = new ArrayList<Color>(Stratus.getTheme().getPalette().getShadeColours("4").values());
 		var chooser = new ColourChooser(colours, title.getColour());
-		
-		
+
 		Runnable onClose = () -> {
 			controller.data().setTitle(textfield.getText());
 			title.setColour(chooser.getSelected());
 			dialogbox.get().hide();
-			
+
 		};
-				
+
 		textfield.addActionListener(e -> onClose.run());
 		textfield.addKeyListener(new KeyAdapter() {
 			@Override
@@ -932,18 +882,18 @@ public class PlotPanel extends TabbedLayerPanel {
 			}
 		});
 		textfield.setText(controller.data().getTitle());
-		
+
 		JPanel body = new JPanel(new BorderLayout());
-		body.add(textfield, BorderLayout.CENTER);		
+		body.add(textfield, BorderLayout.CENTER);
 		body.add(chooser, BorderLayout.SOUTH);
-		
+
 		LayerDialog dialog = new LayerDialog("Dataset Title", body);
 		dialogbox.set(dialog);
 		dialog.addLeft(new FluentButton("Cancel").withAction(dialog::hide));
 		dialog.addRight(new FluentButton("OK").withStateDefault().withAction(onClose));
 		dialog.showIn(this);
 		textfield.grabFocus();
-		
+
 	}
 
 	public boolean hasUnsavedWork() {
@@ -953,5 +903,17 @@ public class PlotPanel extends TabbedLayerPanel {
 	PlotCanvas getCanvas() {
 		return canvas;
 	}
-	
+
+	public static class SessionFileExtension extends SimpleFileExtension {
+		public SessionFileExtension() {
+			super("Peakaboo Session Files", "peakaboo");
+		}
+	}
+
+	public static class CSVFileExtension extends SimpleFileExtension {
+		public CSVFileExtension() {
+			super("CSV File", "csv");
+		}
+	}
+
 }

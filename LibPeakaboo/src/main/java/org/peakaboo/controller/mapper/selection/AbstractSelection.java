@@ -7,7 +7,7 @@ public abstract class AbstractSelection implements Selection {
 
 	protected MappingController map;
 	
-	public AbstractSelection(MappingController map) {
+	protected AbstractSelection(MappingController map) {
 		this.map = map;
 	}
 	

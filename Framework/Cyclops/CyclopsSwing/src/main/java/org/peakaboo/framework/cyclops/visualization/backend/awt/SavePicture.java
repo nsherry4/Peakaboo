@@ -26,11 +26,9 @@ import javax.swing.SpinnerNumberModel;
 
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
-import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceExporterRegistry;
 import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -152,13 +150,13 @@ public class SavePicture extends JPanel {
 
 	public void show() {
 		makeGUI();
-		layer = new ModalLayer((LayerPanel) owner, this);
-		((LayerPanel) owner).pushLayer(layer);
+		layer = new ModalLayer(owner, this);
+		owner.pushLayer(layer);
 		this.requestFocus();
 	}
 	
 	public void hide() {
-		((LayerPanel) owner).removeLayer(layer);
+		owner.removeLayer(layer);
 	}
 	
 
@@ -200,9 +198,9 @@ public class SavePicture extends JPanel {
 		
 		
 		
-		formatPicker = new OptionChooserPanel<>(SurfaceExporterRegistry.exporters(), item -> {
-			return new OptionRadioButton().withText(item.title(), item.description());
-		});
+		formatPicker = new OptionChooserPanel<>(
+				SurfaceExporterRegistry.exporters(), 
+				item -> new OptionRadioButton().withText(item.title(), item.description()));
 		panel.add(formatPicker, BorderLayout.CENTER);
 		
 		return panel;
@@ -221,7 +219,7 @@ public class SavePicture extends JPanel {
 			
 			try {
 				OutputStream os = new FileOutputStream(result.get());
-				controller.write(descriptor, os, new Coord<Integer>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
+				controller.write(descriptor, os, new Coord<>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
 				os.close();
 
 				startingFolder = result.get().getParentFile();
@@ -243,64 +241,6 @@ public class SavePicture extends JPanel {
 	public File getStartingFolder()
 	{
 		return startingFolder;
-	}
-
-	
-	private File tempfile() throws IOException
-	{
-		final File tempfile = File.createTempFile("Image File - ", " export");
-		tempfile.deleteOnExit();
-		return tempfile;
-	}
-	
-	
-	public static void main(String[] args) throws InterruptedException {
-		
-
-		
-
-		
-		GraphicsPanel g = new GraphicsPanel() {
-			
-			@Override
-			public float getUsedWidth(float zoom) {
-				// TODO Auto-generated method stub
-				return 1000;
-			}
-			
-			@Override
-			public float getUsedWidth() {
-				// TODO Auto-generated method stub
-				return 2000;
-			}
-			
-			@Override
-			public float getUsedHeight(float zoom) {
-				// TODO Auto-generated method stub
-				return 500;
-			}
-			
-			@Override
-			public float getUsedHeight() {
-				// TODO Auto-generated method stub
-				return 1000;
-			}
-			
-			@Override
-			protected void drawGraphics(Surface backend, Coord<Integer> size) {
-				// TODO Auto-generated method stub
-				
-			}
-		};
-		
-		Stratus.initializeAndWait("Test");
-		
-		new SavePicture(null, g, null, file -> {});
-		
-		
-		
-		
-		
 	}
 
 }

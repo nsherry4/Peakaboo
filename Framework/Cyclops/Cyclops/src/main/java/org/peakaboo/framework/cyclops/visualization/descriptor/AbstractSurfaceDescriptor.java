@@ -4,7 +4,7 @@ public abstract class AbstractSurfaceDescriptor implements SurfaceDescriptor {
 
 	private String title, desc, ext;
 	
-	public AbstractSurfaceDescriptor(String title, String desc, String ext) {
+	protected AbstractSurfaceDescriptor(String title, String desc, String ext) {
 		this.title = title;
 		this.desc = desc;
 		this.ext = ext;

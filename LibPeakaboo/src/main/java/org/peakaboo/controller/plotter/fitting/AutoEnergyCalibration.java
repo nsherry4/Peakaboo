@@ -13,11 +13,12 @@ import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
+import org.peakaboo.curvefit.peak.search.searcher.DerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutorSet;
 
@@ -67,7 +68,7 @@ public class AutoEnergyCalibration {
 	 */
 	private static StreamExecutor<List<EnergyCalibration>> roughOptions(List<Supplier<EnergyCalibration>> energies, SpectrumView spectrum, List<ITransitionSeries> tsList, int dataWidth) {
 		
-		
+		List<Integer> peakIndexes = new DerivativePeakSearcher().search(spectrum);
 		
 		//SCORE THE ENERGY PAIRS AND CREATE AN INDEX -> SCORE MAP
 		StreamExecutor<List<EnergyCalibration>> scorer = new StreamExecutor<>("Searching for Calibrations", energies.size() / 100);
@@ -82,7 +83,7 @@ public class AutoEnergyCalibration {
 				
 				EnergyCalibration calibration = energies.get(index).get();
 				
-				float score = scoreFitFast(fits, spectrum, calibration);
+				float score = scoreFitFast(fits, peakIndexes, spectrum, calibration);
 				return new Pair<>(index, score);
 				
 			}).collect(Collectors.toList());
@@ -123,7 +124,7 @@ public class AutoEnergyCalibration {
 			FittingController controller,
 			int dataWidth
 		) {
-		
+			
 		StreamExecutor<EnergyCalibration> scorer = new StreamExecutor<>("Evaluating Candidates", 5);
 		scorer.setTask(energies, stream -> {
 			
@@ -138,7 +139,7 @@ public class AutoEnergyCalibration {
 				results = controller.getFittingSolver().solve(new FittingSolverContext(spectrum, fits.get(), controller.getCurveFitter()));
 				return scoreFitGood(results, spectrum);
 				
-			}).collect(Collectors.toList());
+			}).toList();
 			
 			
 			
@@ -166,10 +167,10 @@ public class AutoEnergyCalibration {
 	}
 	
 	
-	private static float scoreFitFast(FittingSetView fits, SpectrumView spectrum, EnergyCalibration calibration) {
+	private static float scoreFitFast(FittingSetView fits, List<Integer> peakIndexes, SpectrumView spectrum, EnergyCalibration calibration) {
 		float score = 0;
 
-		FittingScorer scorer = new FastPeakSearchingScorer(spectrum, calibration);		
+		FittingScorer scorer = new FastPeakSearchingScorer(spectrum, peakIndexes, calibration);		
 		for (ITransitionSeries ts : fits.getVisibleTransitionSeries()) {
 			if (ts.isVisible()) {
 				score += Math.sqrt(scorer.score(ts));
@@ -195,15 +196,13 @@ public class AutoEnergyCalibration {
 			//square root because middling fit should not be rewarded too much
 			score += Math.sqrt(percent);
 		}
-		
-			
-		
+
 		return score;
 	}
 	
 	
 	private static EnergyCalibration fineTune(
-			EnergyCalibration calibration, 
+			EnergyCalibration calibration,
 			SpectrumView spectrum, 
 			List<ITransitionSeries> tsList, 
 			FittingController controller,

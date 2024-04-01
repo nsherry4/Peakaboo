@@ -17,6 +17,8 @@ import java.util.List;
 public class Spectrums
 {
 
+	private Spectrums() {}
+	
 	public static int	DEFAULT_STEPS	= 1000;
 
 
@@ -25,13 +27,13 @@ public class Spectrums
 	 * where p is the percent distance from the last colour stop expressed in the range 0..255
 	 */
 	
-	final static int[] ratioThermal = {
+	static final int[] ratioThermal = {
 			0xff1485CC, 0,
 			0xff000000, 127,
 			0xffff0000, 128
 	};
 	
-	final static int[] ratioMonochrome = { 
+	static final int[] ratioMonochrome = { 
 			0xff000000, 0,
 			0xffffffff, 255
 	};
@@ -279,7 +281,6 @@ public class Spectrums
 		 * For each entry in the stepcount array, we create the 
 		 * required number of intermediate colours 
 		 */
-		//int r, b, g;
 		int steps;
 		double percent;
 		for (int stage = 0; stage < stepcount.length; stage++)
@@ -294,14 +295,8 @@ public class Spectrums
 			//create 'steps' intermediate colours
 			for (int step = 0; step < steps; step++)
 			{
-				
 				//how far along from the start colour to the end colour are we?
 				percent = (double) step / (double) steps;
-
-//				//rgb vlaues here are just a mix -- 30% along means 70% start colour, 30% end colour
-//				r = (int)Math.round(previous.getRed()   * (1.0 - percent) + next.getRed()   * percent);
-//				g = (int)Math.round(previous.getGreen() * (1.0 - percent) + next.getGreen() * percent);
-//				b = (int)Math.round(previous.getBlue()  * (1.0 - percent) + next.getBlue()  * percent);
 				PaletteColour blend = previous.blend(next, percent);
 				spectrum.add(blend); 
 			}

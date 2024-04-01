@@ -37,8 +37,8 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.eventful.EventfulType;
-import org.peakaboo.framework.plural.Plural;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
+import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
@@ -121,7 +121,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	public void load(String yaml, boolean isUndoAction) throws DruthersLoadException {
 		DruthersSerializer.deserialize(yaml, false,
 				new DruthersSerializer.FormatLoader<>(
-						SavedSession.FORMAT, 
+						SavedSession.SESSION_FORMAT, 
 						SavedSession.class, 
 						saved -> load(saved, isUndoAction)
 					)
@@ -194,7 +194,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	 */
 	public Map<String, SpectrumView> currentOtherScans() {
 		if (!dataController.hasDataSet()) {
-			return null;
+			return Map.of();
 		}
 		return viewController.getChannelViewMode().otherScans(dataController, viewController);
 	}
@@ -267,7 +267,7 @@ public class PlotController extends EventfulType<PlotUpdateType>
 	
 	public ExecutorSet<Object> writeFitleredDataSetToCSV(File saveFile) {
 		
-		return Plural.build("Exporting Data", "Writing", (execset, exec) -> {
+		return PluralExecutor.build("Exporting Data", "Writing", (execset, exec) -> {
 			FilterSet filters = filtering().getActiveFilters();
 			ScanData data = data().getDataSet().getScanData();
 			

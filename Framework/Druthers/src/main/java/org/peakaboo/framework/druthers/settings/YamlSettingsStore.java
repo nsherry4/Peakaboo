@@ -14,21 +14,21 @@ import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 
 public class YamlSettingsStore implements SettingsStore {
 
-	public static String FORMAT = "org.peakaboo.framework.druthers.settings/v1";
+	public static final String DRUTHERS_SETTINGS_FORMAT = "org.peakaboo.framework.druthers.settings/v1";
 	
-	static class KeyValueStore extends HashMap<String, String> {};
+	static class KeyValueStore extends HashMap<String, String> {}
 	static class SettingsStoreYaml {
 		public String format;
 		public KeyValueStore entries;
 		public SettingsStoreYaml() {
-			format = FORMAT;
+			format = DRUTHERS_SETTINGS_FORMAT;
 			entries = new KeyValueStore();
 		}
 		public SettingsStoreYaml(String format, KeyValueStore entries) {
 			this.format = format;
 			this.entries = entries;
 		}
-	};
+	}
 	
 	private Path filepath;
 	private KeyValueStore values = new KeyValueStore();
@@ -47,7 +47,7 @@ public class YamlSettingsStore implements SettingsStore {
 		String yaml = Files.readString(filepath);
 		
 		if (DruthersSerializer.hasFormat(yaml)) {
-			values = DruthersSerializer.deserialize(yaml, false, FORMAT, SettingsStoreYaml.class).entries;
+			values = DruthersSerializer.deserialize(yaml, false, DRUTHERS_SETTINGS_FORMAT, SettingsStoreYaml.class).entries;
 		} else {
 			//This is an older P5 settings file
 			//TODO: remove this in Peakaboo 7
@@ -68,7 +68,7 @@ public class YamlSettingsStore implements SettingsStore {
 	}
 	
 	private void write() {
-		String yaml = DruthersSerializer.serialize(new SettingsStoreYaml(FORMAT, values));
+		String yaml = DruthersSerializer.serialize(new SettingsStoreYaml(DRUTHERS_SETTINGS_FORMAT, values));
 		try {
 			Files.writeString(filepath, yaml, 
 					StandardOpenOption.CREATE, 

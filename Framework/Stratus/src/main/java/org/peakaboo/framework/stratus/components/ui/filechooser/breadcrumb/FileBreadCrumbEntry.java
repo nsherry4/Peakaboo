@@ -3,7 +3,7 @@ package org.peakaboo.framework.stratus.components.ui.filechooser.breadcrumb;
 import java.io.File;
 import java.util.function.Function;
 
-import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.ui.breadcrumb.BreadCrumbEntry;
 import org.peakaboo.framework.stratus.components.ui.filechooser.places.Place;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
@@ -21,7 +21,7 @@ public class FileBreadCrumbEntry extends BreadCrumbEntry<File> {
 		FluentToggleButton button = super.make();
 		if (dir != null && dir.isRoot()) {
 			//not a good idea -- the ImageButton may regenerate it's UI based on internal state 
-			button.setIcon(dir.getIcon());
+			button.setIcon(dir.getIcon(IconSize.BUTTON));
 			
 		}
 		return button;

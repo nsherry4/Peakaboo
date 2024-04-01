@@ -2,16 +2,17 @@ package org.peakaboo.ui.swing.plotting.toolbar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
-import org.peakaboo.app.PeakabooLog;
+import org.apache.commons.io.FilenameUtils;
+import org.peakaboo.app.RecentSessions;
 import org.peakaboo.controller.plotter.PlotController;
-import org.peakaboo.framework.cyclops.util.Mutable;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
@@ -22,6 +23,7 @@ public class PlotMenuMain extends JPopupMenu {
 	private JMenuItem undo, redo, save, saveAs;
 	private JMenu export;
 	private JMenuItem exportSinks, exportImage, exportFilteredSpectrum, exportFilteredData, exportFittings, exportArchive;
+	private List<FluentMenuItem> recents;
 	
 	public PlotMenuMain(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
@@ -53,6 +55,22 @@ public class PlotMenuMain extends JPopupMenu {
 				.withText("Load Session")
 				.withAction(plot::actionLoadSession);
 		this.add(mLoad);
+		
+		
+		
+		var recentSessionsMenu = new JMenu("Recent Sessions");
+		this.add(recentSessionsMenu);
+		
+		recents = new ArrayList<>();
+		for (int i = 0; i < RecentSessions.SIZE; i++) {
+			var item = recentSessionMenuItem(plot, i);
+			recents.add(item);
+			recentSessionsMenu.add(item);
+		}
+		updateRecentSessionsMenu();
+		RecentSessions.SYSTEM.addListener(this::updateRecentSessionsMenu);
+		
+		
 		
 
 		export = new JMenu("Export");
@@ -125,11 +143,6 @@ public class PlotMenuMain extends JPopupMenu {
 				.withAction(plot::actionReportBug);
 		debug.add(bugreport);
 		
-		JMenuItem console = new FluentMenuItem()
-				.withText("Debug Console")
-				.withAction(plot::actionDebugConsole);
-		debug.add(console);
-
 		
 		this.add(debug);
 		
@@ -146,6 +159,26 @@ public class PlotMenuMain extends JPopupMenu {
 				.withIcon(StockIcon.APP_ABOUT)
 				.withAction(plot::actionAbout);
 		this.add(about);
+	}
+	
+	
+	private FluentMenuItem recentSessionMenuItem(PlotPanel plot, int index) {
+		return new FluentMenuItem().withText("").withAction(() -> plot.actionLoadSession(RecentSessions.SYSTEM.getRecentSessionFiles().get(index)));
+	}
+	
+	private void updateRecentSessionsMenu() {
+		var sessions = RecentSessions.SYSTEM.getRecentSessionFiles();
+		for (int i = 0; i < RecentSessions.SIZE; i++) {
+			var recent = recents.get(i);
+			if (sessions.size() <= i) {
+				recent.setVisible(false);
+			} else {
+				recent.setVisible(true);
+				var session = sessions.get(i);
+				recent.setText(FilenameUtils.getBaseName(session.getAbsolutePath()));
+				recent.setToolTipText(session.getAbsolutePath());
+			}
+		}
 	}
 	
 	public void setWidgetState(boolean hasData) {

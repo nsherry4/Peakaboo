@@ -1,6 +1,5 @@
 package org.peakaboo.display.map.modes.ratio;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.peakaboo.controller.mapper.fitting.modes.RatioModeController.Ratios;
@@ -9,6 +8,8 @@ import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public class RatioModeData implements MapModeData {
 
@@ -45,7 +46,7 @@ public class RatioModeData implements MapModeData {
 
 	@Override
 	public Optional<SelectionInfo> getMapSelectionInfo() {
-		var unselectable = new ArrayList<Integer>();
+		IntArrayList unselectable = new IntArrayList();
 		Spectrum invalidMap = data.second;
 		for (int i = 0; i < invalidMap.size(); i++) {
 			if (invalidMap.get(i) > 0f) {

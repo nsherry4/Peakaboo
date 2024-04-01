@@ -30,11 +30,11 @@ public enum PeakabooIcons implements IconSet {
 	
 	;
 
-	public static final String PATH = "/org/peakaboo/ui/swing/icons/";
+	public static final String ASSET_PATH = "/org/peakaboo/ui/swing/icons/";
 	
 	@Override
 	public String path() {
-		return PATH;
+		return ASSET_PATH;
 	}
 
 }

@@ -11,7 +11,7 @@ public abstract class AbstractOperator<A, Z> implements Operator<A, Z> {
 	protected int counter = 0;
 	private State state = State.STARTING;
 	
-	public AbstractOperator() {}
+	protected AbstractOperator() {}
 	
 	public static final Map<State, List<State>> TRANSITIONS = Map.of(
 			State.STARTING, List.of(State.OPERATING),

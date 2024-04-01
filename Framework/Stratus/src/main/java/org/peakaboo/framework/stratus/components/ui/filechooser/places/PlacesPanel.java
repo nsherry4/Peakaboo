@@ -20,6 +20,7 @@ import javax.swing.table.TableModel;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.models.ListTableModel;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
@@ -40,10 +41,10 @@ public class PlacesPanel extends JPanel {
 			return;
 		}
 		items = new JTable();
+		
 		model = new ListTableModel<>(places.getAll());
 		items.setModel(model);
 			
-		//items.setBackground(new Color(this.getBackground().getRGB()));
 		this.setBackground(new Color(items.getBackground().getRGB()));
 		this.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		
@@ -125,7 +126,7 @@ class DirWidget extends Stencil<Place> {
 	@Override
 	protected void onSetValue(Place value, boolean selected) {
 		l.setText(value.getName());
-		l.setIcon(value.getIcon());
+		l.setIcon(value.getIcon(IconSize.TOOLBAR_SMALL));
 	}
 	
 	@Override

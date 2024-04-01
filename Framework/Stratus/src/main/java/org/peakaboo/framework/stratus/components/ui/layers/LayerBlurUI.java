@@ -14,6 +14,7 @@ import javax.swing.plaf.LayerUI;
 import org.jdesktop.swingx.image.AbstractFilter;
 import org.jdesktop.swingx.image.StackBlurFilter;
 import org.peakaboo.framework.stratus.api.ManagedImageBuffer;
+import org.peakaboo.framework.stratus.api.Stratus;
 
 class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	private AbstractFilter mOperation;
@@ -95,7 +96,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				Graphics2D bg = blurBuffer.createGraphics();
 				
 				//First draw the painter buffer to the blur buffer, blurring (usually)
-				if (LayerPanel.lowGraphicsMode) {
+				if (Stratus.lowGraphicsMode) {
 					bg.drawImage(paintBuffer, null, 0, 0);
 				} else {
 					bg.drawImage(paintBuffer, mOperation, 0, 0);

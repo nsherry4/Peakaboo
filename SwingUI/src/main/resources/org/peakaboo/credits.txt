@@ -1,4 +1,4 @@
 Development: Nathaniel Sherry
 Peak Tables: The Xraylib Team
-Icons: <html><a href="https://github.com/vinceliuice/vimix-icon-theme">Vimix</a>, <a href="https://github.com/snwh/faba-icon-theme">Faba</a>, <a href="https://github.com/snwh/moka-icon-theme">Moka</a>, and <a href="https://www.gnome.org/">The GNOME Project</a></html>
+Icons: <html><a href="https://github.com/vinceliuice/vimix-icon-theme">Vimix</a>, <a href="https://github.com/snwh/faba-icon-theme">Faba</a>, <a href="https://github.com/snwh/moka-icon-theme">Moka</a>, <a href="https://github.com/snwh/paper-icon-theme">Paper</a>, and <a href="https://www.gnome.org/">The GNOME Project</a></html>
 Special Thanks To: <html>Marina Fuller<br/>Stewart McIntyre<br/>Lisa Van Loon<br/>Neil Banerjee</html>

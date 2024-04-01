@@ -60,26 +60,24 @@ public class ImageBuffer extends ScreenSurface implements Buffer
 	}
 
 	@Override
-	public void setPixelValue(int x, int y, PaletteColour c)
-	{
-		dirty = true;
-		int offset = (y * image.getWidth() + x);
-		setPixelValue(offset, c);
+	public void setPixelValue(int x, int y, PaletteColour c) {
+		setPixelValue(y * image.getWidth() + x, c);
 	}
 
 	@Override
-	public void setPixelValue(int offset, PaletteColour c)
-	{
-
+	public void setPixelValue(int offset, PaletteColour c) {
+		setPixelARGB(offset, c.getARGB());
+	}
+	
+	@Override
+	public void setPixelARGB(int offset, int c) {
 		if (datasource == null) {
 			init();
 		}
-		
 		dirty = true;
-		
-		datasource[offset] = c.getARGB();
-
+		datasource[offset] = c;
 	}
+
 	
 	
 

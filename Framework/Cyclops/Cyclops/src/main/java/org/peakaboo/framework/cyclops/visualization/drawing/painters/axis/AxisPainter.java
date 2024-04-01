@@ -31,9 +31,9 @@ public abstract class AxisPainter extends Painter
 	protected AxesData		axesData;
 
 
-	public AxisPainter()
+	protected AxisPainter()
 	{
-		axesData = new AxesData(new Bounds<Float>(0.0f, 0.0f), new Bounds<Float>(0.0f, 0.0f));
+		axesData = new AxesData(new Bounds<>(0.0f, 0.0f), new Bounds<>(0.0f, 0.0f));
 	}
 
 
@@ -58,13 +58,13 @@ public abstract class AxisPainter extends Painter
 
 
 
-	protected static float getTitleFontHeight(Surface context, DrawingRequest dr)
+	protected static float getTitleFontHeight(Surface context)
 	{
-		return getTitleFontHeight(context, dr, 1.0f);
+		return getTitleFontHeight(context, 1.0f);
 	}
 
 
-	protected static float getTitleFontHeight(Surface context, DrawingRequest dr, float titleScale)
+	protected static float getTitleFontHeight(Surface context, float titleScale)
 	{
 		float height;
 		context.save();
@@ -82,7 +82,7 @@ public abstract class AxisPainter extends Painter
 	}
 
 
-	protected float getPenWidth(float baseSize, DrawingRequest dr)
+	protected float getPenWidth(float baseSize)
 	{
 		float width;
 		width = baseSize;
@@ -93,8 +93,8 @@ public abstract class AxisPainter extends Painter
 	public static Coord<Bounds<Float>> calcAxisBorders(PainterData p, List<AxisPainter> axisPainters)
 	{
 		Bounds<Float> availableX, availableY;
-		availableX = new Bounds<Float>(0.0f, p.dr.imageWidth);
-		availableY = new Bounds<Float>(0.0f, p.dr.imageHeight);
+		availableX = new Bounds<>(0.0f, p.dr.imageWidth);
+		availableY = new Bounds<>(0.0f, p.dr.imageHeight);
 
 		if (axisPainters != null) {
 
@@ -105,8 +105,8 @@ public abstract class AxisPainter extends Painter
 
 				axisPainter.setDimensions(
 
-				new Bounds<Float>(availableX.start, availableX.end),
-						new Bounds<Float>(availableY.start, availableY.end)
+				new Bounds<>(availableX.start, availableX.end),
+						new Bounds<>(availableY.start, availableY.end)
 
 				);
 
@@ -122,7 +122,7 @@ public abstract class AxisPainter extends Painter
 
 		}
 
-		return new Coord<Bounds<Float>>(availableX, availableY);
+		return new Coord<>(availableX, availableY);
 	}
 
 }

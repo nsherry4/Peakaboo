@@ -1,11 +1,10 @@
 package org.peakaboo.controller.mapper.fitting.modes.components;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.peakaboo.controller.mapper.fitting.modes.ModeController;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Manages state for map modes that want some points to be unselectable. This state component never emits mode update messages. 
@@ -36,15 +35,15 @@ public class SelectabilityState extends AbstractState {
 		return get(grid.getIndexFromXY(x, y));
 	}
 
-	public List<Integer> selectables() {
-		List<Integer> indices = new ArrayList<>();
+	public IntArrayList selectables() {
+		IntArrayList indices = new IntArrayList();
 		for (int i = 0; i < selectable.length; i++) {
 			if (selectable[i]) { indices.add(i); }
 		}
 		return indices;
 	}
-	public List<Integer> unselectables() {
-		List<Integer> indices = new ArrayList<>();
+	public IntArrayList unselectables() {
+		IntArrayList indices = new IntArrayList();
 		for (int i = 0; i < selectable.length; i++) {
 			if (!selectable[i]) { indices.add(i); }
 		}
@@ -61,8 +60,8 @@ public class SelectabilityState extends AbstractState {
 	/**
 	 * Filter a list of indexes so that only those which are selectable are returned
 	 */
-	public List<Integer> filter(List<Integer> indexList) {
-		List<Integer> filtered = new ArrayList<>();
+	public IntArrayList filter(IntArrayList indexList) {
+		IntArrayList filtered = new IntArrayList();
 		for (int index : indexList) {
 			if (get(index)) { filtered.add(index); }
 		}

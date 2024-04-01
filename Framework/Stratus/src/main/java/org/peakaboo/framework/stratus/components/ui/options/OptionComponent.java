@@ -12,7 +12,7 @@ import org.peakaboo.framework.stratus.laf.theme.Theme;
 public abstract class OptionComponent extends ClearPanel {
 
 	protected int padding = OptionSize.MEDIUM.getPaddingSize();
-	protected float radius = 6;
+	protected float radius = 8;
 	protected Color bg = Color.WHITE;
 	protected Color fg = Color.BLACK;
 	protected Color fgDisabled = Color.GRAY;

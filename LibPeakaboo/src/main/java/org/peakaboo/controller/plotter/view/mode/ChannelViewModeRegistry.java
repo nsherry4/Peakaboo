@@ -11,18 +11,18 @@ import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 public class ChannelViewModeRegistry extends BoltPluginRegistry<ChannelViewMode> implements PluginPreset<ChannelViewMode> {
 
 
-	private static ChannelViewModeRegistry SYSTEM;
+	private static ChannelViewModeRegistry systemImpl;
 	public static void init() {
 		try {
-			if (SYSTEM == null) {
-				SYSTEM = new ChannelViewModeRegistry();
+			if (systemImpl == null) {
+				systemImpl = new ChannelViewModeRegistry();
 			}
 		} catch (Exception e) {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to load channel view plugins", e);
 		}
 	}
 	public static ChannelViewModeRegistry system() {
-		return SYSTEM;
+		return systemImpl;
 	}
 	
 	//--------------------------------

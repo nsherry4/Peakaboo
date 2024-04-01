@@ -2,15 +2,12 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
@@ -35,14 +32,14 @@ public abstract class MapPainter extends Painter
 	protected List<AbstractPalette>	colourRules;
 
 
-	public MapPainter(List<AbstractPalette> colourRules)
+	protected MapPainter(List<AbstractPalette> colourRules)
 	{
 		this.colourRules = colourRules;
 	}
 	
-	public MapPainter(AbstractPalette colourRule)
+	protected MapPainter(AbstractPalette colourRule)
 	{
-		List<AbstractPalette> rules = new ArrayList<AbstractPalette>();
+		List<AbstractPalette> rules = new ArrayList<>();
 		rules.add(colourRule);
 		this.colourRules = rules;
 	}
@@ -132,33 +129,6 @@ public abstract class MapPainter extends Painter
 			}
 			transformedData = flip;
 			
-			
-			
-//			GridPerspective<Float> grid = new GridPerspective<>(width, height, 0f);
-//			Spectrum flip = new ISpectrum(transformedData.size());
-//			int x = 0, y1 = 0, y2 = height-1;
-//			for (int i = 0; i < data.size(); i++) {
-//				
-//				
-////				IntPair xy = grid.getXYFromIndex(i);
-////				int x = xy.first;
-////				int y = xy.second;
-////				y = (dr.dataHeight-1) - y;
-////				flip.set(i, grid.get(transformedData, x, y));
-//				
-//				
-//				flip.set(i, grid.get(transformedData, x, height - y1);
-//				
-//				//increment x and y to avoid modulo, div, etc operations
-//				x++;
-//				if (x == width) {
-//					x = 0;
-//					y1++;
-//					y2--;
-//				}
-//				
-//			}
-//			transformedData = flip;
 		}		
 		
 		return transformedData;

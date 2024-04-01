@@ -1,15 +1,11 @@
 package org.peakaboo.framework.autodialog.view.swing.layouts;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.autodialog.view.editors.Editor.LabelStyle;
@@ -26,6 +22,7 @@ public class NarrowSwingLayout extends SimpleSwingLayout {
 	}
 	
 
+	@Override
 	public void layout() {
 		root.setOpaque(false);
 		root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
@@ -51,9 +48,6 @@ public class NarrowSwingLayout extends SimpleSwingLayout {
 		
 		JLabel paramLabel = makeLabel(editor);
 
-		boolean expandH = expandHorizontal(editor, param);
-		boolean expandV = expandVertical(editor, param);
-				
 		var editorComponent = editor.getComponent();
 		
 		int fullwidth = paramLabel.getPreferredSize().width + editorComponent.getPreferredSize().width;
@@ -66,15 +60,14 @@ public class NarrowSwingLayout extends SimpleSwingLayout {
 			rowpanel.setLayout(new BorderLayout(spacing, spacing));
 			rowpanel.add(paramLabel, BorderLayout.WEST);
 			rowpanel.add(editorComponent, BorderLayout.EAST);
-		} else if (editor.getLabelStyle() == LabelStyle.LABEL_ON_SIDE && toowide) {
+		} else if (
+				(editor.getLabelStyle() == LabelStyle.LABEL_ON_SIDE && toowide) ||
+				(editor.getLabelStyle() == LabelStyle.LABEL_ON_TOP)
+			) {
 			rowpanel.setLayout(new BorderLayout(spacing, spacing));
 			rowpanel.add(paramLabel, BorderLayout.NORTH);
 			rowpanel.add(editorComponent, BorderLayout.SOUTH);
-		} else if (editor.getLabelStyle() == LabelStyle.LABEL_ON_TOP) {
-			rowpanel.setLayout(new BorderLayout(spacing, spacing));
-			rowpanel.add(paramLabel, BorderLayout.NORTH);
-			rowpanel.add(editorComponent, BorderLayout.SOUTH);
-		} else if(editor.getLabelStyle() == LabelStyle.LABEL_HIDDEN) {
+		} else if (editor.getLabelStyle() == LabelStyle.LABEL_HIDDEN) {
 			rowpanel.setLayout(new BorderLayout(spacing, spacing));
 			rowpanel.add(editorComponent, BorderLayout.CENTER);
 		}

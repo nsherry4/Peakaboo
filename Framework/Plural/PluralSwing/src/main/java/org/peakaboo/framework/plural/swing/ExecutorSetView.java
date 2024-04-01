@@ -22,9 +22,9 @@ public class ExecutorSetView extends JPanel
 	ExecutorSet<?> executors;
 	private JProgressBar progress;
 	
-	public ExecutorSetView(ExecutorSet<?> _tasks){
+	public ExecutorSetView(ExecutorSet<?> tasks){
 		
-		this.executors = _tasks;
+		this.executors = tasks;
 		init();
 	}
 	
@@ -33,9 +33,9 @@ public class ExecutorSetView extends JPanel
 	{
 		this.setLayout(new BorderLayout());
 
-		FluentButton cancel = new FluentButton("Cancel").withStateCritical().withAction(() -> {
-			executors.requestAbortWorking();
-		});
+		FluentButton cancel = new FluentButton("Cancel")
+				.withStateCritical()
+				.withAction(() -> executors.requestAbortWorking());
 		
         HeaderBox header = new HeaderBox(null, executors.getDescription(), cancel);
         this.add(header, BorderLayout.NORTH);

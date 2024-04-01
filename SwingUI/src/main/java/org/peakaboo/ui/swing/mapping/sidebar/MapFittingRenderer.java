@@ -1,9 +1,7 @@
 package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.Component;
-import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -56,11 +54,12 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 			if (ts.getMode() != TransitionSeriesMode.SUMMATION){
 				tooltip = ts.getElement().toString();
 			} else {
-				List<Element> elements = ts.getPrimaryTransitionSeries()
+				tooltip = ts.getPrimaryTransitionSeries()
 						.stream()
 						.map(ITransitionSeries::getElement)
-						.collect(Collectors.toList());
-				tooltip = elements.stream().map(Element::toString).reduce((a, b) -> a + ", " + b).orElse("");
+						.map(Element::toString)
+						.reduce((a, b) -> a + ", " + b)
+						.orElse("");
 			}
 			tswidget.setToolTipText(tooltip);
 			

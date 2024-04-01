@@ -3,7 +3,6 @@ package org.peakaboo.framework.plural.monitor.swing;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
@@ -16,9 +15,9 @@ public class TaskMonitorLayer extends HeaderLayer {
 	}
 
 	public TaskMonitorLayer(LayerPanel owner, String title, TaskMonitor<?>... monitors) {
-		this(owner, title, Arrays.asList(monitors).stream().map(TaskMonitorView::new).collect(Collectors.toList()));
+		this(owner, title, Arrays.asList(monitors).stream().map(TaskMonitorView::new).toList());
 	}
-		
+	
 	public TaskMonitorLayer(LayerPanel owner, String title, TaskMonitorView observerView) {
 		this(owner, title, List.of(observerView));		
 	}

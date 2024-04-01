@@ -23,7 +23,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScal
 
 public class CompositeMapMode extends MapMode{
 
-	public static String MODE_NAME = "Composite";
+	public static final String MODE_NAME = "Composite";
 	
 	private SpectrumMapPainter contourMapPainter;
 	
@@ -34,7 +34,7 @@ public class CompositeMapMode extends MapMode{
 		
 		//clear surface	
 		size = this.setDimensions(settings, size);
-		backend.rectAt(0, 0, (float)size.x, (float)size.y);
+		backend.rectAt(0, 0, size.x, size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
 		
@@ -72,7 +72,7 @@ public class CompositeMapMode extends MapMode{
 		
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (contourMapPainter == null) {
-			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, compositedata.getData(), spectrumSteps); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, compositedata.getData()); 
 		} else {
 			contourMapPainter.setData(compositedata.getData());
 			contourMapPainter.setPalettes(paletteList);
@@ -85,7 +85,7 @@ public class CompositeMapMode extends MapMode{
 		//Invalid points with no backing data
 		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(
 				new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), 
-				compositedata.getInvalidPoints(), 0);
+				compositedata.getInvalidPoints());
 		mapPainters.add(invalidPainter);
 		
 		//Selection Painter

@@ -2,6 +2,9 @@ package org.peakaboo.framework.autodialog.model.classinfo;
 
 public class ClassInfoDefaults {
 
+	private ClassInfoDefaults() {
+		
+	}
 	
 	public static ClassInfo<?> guess(Class<?> cls) {
 		

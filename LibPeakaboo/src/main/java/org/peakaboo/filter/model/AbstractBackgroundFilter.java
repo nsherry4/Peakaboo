@@ -7,9 +7,9 @@ import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.SeparatorStyle;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 
 public abstract class AbstractBackgroundFilter extends AbstractFilter {
@@ -21,7 +21,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 	private Parameter<Boolean> partial;
 
 	
-	public AbstractBackgroundFilter() {
+	protected AbstractBackgroundFilter() {
 		
 		percent = new Parameter<>("Percent to Remove", new IntegerStyle(), 90, this::validate);
 		preview = new Parameter<>("Preview Only", new BooleanStyle(), Boolean.FALSE, this::validate);
@@ -82,13 +82,13 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 		
 		if (usePartial) {
 			
-			SpectrumView partial = data.subSpectrum(start, stop);
+			SpectrumView partialData = data.subSpectrum(start, stop);
 			Spectrum result = new ArraySpectrum(data.size(), 0f);
-			partial = getBackground(partial, ctx, percent.getValue());
+			partialData = getBackground(partialData, ctx, percent.getValue());
 			
-			for (int i = 0; i < partial.size(); i++)
+			for (int i = 0; i < partialData.size(); i++)
 			{
-				result.set(i + start, partial.get(i));
+				result.set(i + start, partialData.get(i));
 			}
 			
 			return result;

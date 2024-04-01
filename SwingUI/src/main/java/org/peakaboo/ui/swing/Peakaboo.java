@@ -36,7 +36,7 @@ import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
-import org.peakaboo.framework.cyclops.util.Mutable;
+import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
@@ -45,7 +45,6 @@ import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
-import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
@@ -63,10 +62,10 @@ public class Peakaboo {
 	private static Timer gcTimer;
 	
 	private static void checkDevRelease() {
-		if (Version.releaseType != ReleaseType.RELEASE){
+		if (Version.RELEASE_TYPE != ReleaseType.RELEASE){
 			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
 			String title = "Development Build of Peakaboo";
-			if (Version.releaseType == ReleaseType.CANDIDATE) {
+			if (Version.RELEASE_TYPE == ReleaseType.CANDIDATE) {
 				title = "Release Candidate for Peakaboo";
 			}
 			
@@ -109,10 +108,10 @@ public class Peakaboo {
 		PeakabooLog.getRoot().addHandler(new Handler() {
 			
 			@Override
-			public void publish(LogRecord record) {
-				if (record.getLevel() == Level.SEVERE) {
-					Throwable t = record.getThrown();
-					String m = record.getMessage();
+			public void publish(LogRecord entry) {
+				if (entry.getLevel() == Level.SEVERE) {
+					Throwable t = entry.getThrown();
+					String m = entry.getMessage();
 					
 					if (t == null && m.startsWith("\tat ")) {
 						return;
@@ -153,7 +152,7 @@ public class Peakaboo {
 
 	private static void uiPerformanceTune() {
 		if (PeakabooConfiguration.memorySize == MemorySize.TINY) {
-			LayerPanel.lowGraphicsMode = true;
+			Stratus.lowGraphicsMode = true;
 		}
 	}
 
@@ -170,7 +169,7 @@ public class Peakaboo {
 		CrashHandler.init();
 		
 		PeakabooLog.get().log(Level.INFO, "Peakaboo is starting up.");
-		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.longVersionNo + " - " + Version.buildDate);
+		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.LONG_VERSION + " - " + Version.buildDate);
 		
 		CyclopsSurface.init();
 		
@@ -188,7 +187,7 @@ public class Peakaboo {
 		peakLoader.setDaemon(true);
 		peakLoader.start();
 		
-		Stratus.initialize(Tier.provider().iconPath(), Version.splash, Version.logo, "Peakaboo", () -> {
+		Stratus.initialize(Tier.provider().iconPath(), Version.SPLASH, Version.LOGO, "Peakaboo", () -> {
 
 			Color accent = AccentedBrightTheme.accentColours.get(DesktopSettings.getAccentColour());
 			if (accent == null) {
@@ -243,10 +242,10 @@ public class Peakaboo {
 	private static void initPeakTable() {
 		PeakTable original = PeakTable.SYSTEM.getSource();
 		String filename;
-		if (Version.releaseType == ReleaseType.RELEASE) {
-			filename = "derived-peakfile-" + Version.longVersionNo + ".dat";
+		if (Version.RELEASE_TYPE == ReleaseType.RELEASE) {
+			filename = "derived-peakfile-" + Version.LONG_VERSION + ".dat";
 		} else {
-			filename = "derived-peakfile-" + Version.longVersionNo + "-" + Version.buildDate + ".dat";
+			filename = "derived-peakfile-" + Version.LONG_VERSION + "-" + Version.buildDate + ".dat";
 		}
 		File peakdir = DesktopApp.appDir("PeakTable");
 		peakdir.mkdirs();

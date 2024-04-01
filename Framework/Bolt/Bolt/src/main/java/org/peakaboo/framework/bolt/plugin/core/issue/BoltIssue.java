@@ -2,7 +2,6 @@ package org.peakaboo.framework.bolt.plugin.core.issue;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 

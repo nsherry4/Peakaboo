@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops.util;
+package org.peakaboo.framework.cyclops;
 
 public class Mutable<T> {
 
@@ -19,13 +19,5 @@ public class Mutable<T> {
 	public void set(T value) {
 		this.value = value;
 	}
-	
-	public synchronized T testAndSet(T value) {
-		T old = get();
-		set(value);
-		return old;
-	}
-	
-	
 	
 }

@@ -4,8 +4,10 @@ import java.io.File;
 
 import javax.swing.Icon;
 
+import org.peakaboo.framework.stratus.api.icons.IconSize;
+
 public interface Place {
-	Icon getIcon();
+	Icon getIcon(IconSize size);
 	String getName();
 	File getFile();
 	boolean isRoot();

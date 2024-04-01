@@ -36,7 +36,7 @@ public class BoltJarDirectoryLoader<T extends BoltJavaPlugin> extends BoltDirect
 	@Override
 	public List<BoltContainer<T>> getContainers() {
 		return getJars().stream()
-				.map(f -> build(f))
+				.map(this::build)
 				.filter(c -> c != null)
 				.filter(c -> unmanagedNotEmpty(c))
 				.collect(Collectors.toList());

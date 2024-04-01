@@ -91,7 +91,7 @@ public class CorrelationMapMode extends MapMode {
 		
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (correlationMapPainter == null) {
-			correlationMapPainter = MapTechniqueFactory.getTechnique(paletteList, correlationData.data, spectrumSteps); 
+			correlationMapPainter = MapTechniqueFactory.getTechnique(paletteList, correlationData.data); 
 		} else {
 			correlationMapPainter.setData(correlationData.data);
 			correlationMapPainter.setPalettes(paletteList);

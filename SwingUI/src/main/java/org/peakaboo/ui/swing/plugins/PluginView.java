@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import org.apache.batik.ext.swing.GridBagConstants;
@@ -57,7 +58,7 @@ class PluginView extends JPanel {
 		description.setVerticalAlignment(SwingConstants.TOP);
 		JScrollPane scroller = new JScrollPane(description);
 		scroller.setBorder(Spacing.bLarge());
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 				
 		this.add(propertyPanel, c);
 

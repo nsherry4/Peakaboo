@@ -6,6 +6,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -101,8 +102,8 @@ class SubfilterEditor extends AbstractSwingEditor<Filter> {
 		
 		JScrollPane scroller = new JScrollPane(subfilterView);
 		scroller.setBorder(Spacing.bNone());
-		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		subfilterPanel.add(scroller, BorderLayout.CENTER);
 		

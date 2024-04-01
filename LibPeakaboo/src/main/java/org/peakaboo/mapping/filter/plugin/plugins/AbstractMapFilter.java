@@ -12,7 +12,7 @@ public abstract class AbstractMapFilter implements MapFilterPlugin {
 	private boolean enabled;
 	private List<Value<?>> parameters;
 	
-	public AbstractMapFilter() {
+	protected AbstractMapFilter() {
 		this.parameters = new ArrayList<>();
 		this.enabled = true;
 	}

@@ -180,18 +180,12 @@ public class AlphaNumericComparitor implements Comparator<String> {
 	}
 	
 	public static <T> Comparator<T> stringComparatorFor() {
-		return stringComparatorFor(t -> t.toString());
+		return stringComparatorFor(Object::toString);
 	}
 	
 	public static <T> Comparator<T> stringComparatorFor(Function<T, String> converter) {
 		var backer = new AlphaNumericComparitor();
-		return new Comparator<T>() {
-
-			@Override
-			public int compare(T t0, T t1) {
-				return backer.compare(converter.apply(t0), converter.apply(t1));
-			}
-		};
+		return (T t0, T t1) -> backer.compare(converter.apply(t0), converter.apply(t1));
 	}
 
 }

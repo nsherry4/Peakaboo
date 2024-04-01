@@ -32,21 +32,24 @@ public class OptionHeapSize extends OptionRadioButton {
 			
 			@Override
 			public void removeUpdate(DocumentEvent arg0) {
-				if (size.getText().length() == 0) { return;	}
-				set();
+				this.update();
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent arg0) {
-				if (size.getText().length() == 0) { return;	}
-				set();
+				this.update();
 			}
 			
 			@Override
 			public void changedUpdate(DocumentEvent arg0) {
+				this.update();
+			}
+			
+			private void update() {
 				if (size.getText().length() == 0) { return;	}
 				set();
 			}
+			
 		});
 		
 	}
