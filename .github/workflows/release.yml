@@ -10,12 +10,12 @@ jobs:
 
     steps:
     
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
     
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 21
         distribution: 'temurin'
@@ -29,7 +29,7 @@ jobs:
       shell: bash
 
     - name: Upload Jar
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Peakaboo.jar
@@ -42,18 +42,18 @@ jobs:
 
     steps:
       
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
     
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 21
         distribution: 'temurin'
     
     - name: Download Jar
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
@@ -63,7 +63,7 @@ jobs:
       working-directory: ./Packaging
     
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.deb
         path: ./Packaging/peakaboo*.deb
@@ -76,18 +76,18 @@ jobs:
 
     steps:
       
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
     
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 21
         distribution: 'temurin'
     
     - name: Download Jar
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
@@ -97,7 +97,7 @@ jobs:
       working-directory: ./Packaging
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.rpm
         path: ./Packaging/peakaboo*.rpm
@@ -110,12 +110,12 @@ jobs:
 
     steps:
        
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
     
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 21
         distribution: 'temurin'
@@ -125,7 +125,7 @@ jobs:
       shell: bash
         
     - name: Download Jar
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
@@ -135,7 +135,7 @@ jobs:
       working-directory: ./Packaging
     
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.dmg
         path: ./Packaging/Peakaboo*.dmg
@@ -149,12 +149,12 @@ jobs:
 
     steps:
        
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
    
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 21
         distribution: 'temurin'
@@ -164,7 +164,7 @@ jobs:
       shell: bash
         
     - name: Download Jar
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
@@ -175,7 +175,7 @@ jobs:
       working-directory: ./Packaging
     
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with: 
         name: Peakaboo-${{ github.ref_name }}.exe
         path: ./Packaging/Peakaboo*.exe
