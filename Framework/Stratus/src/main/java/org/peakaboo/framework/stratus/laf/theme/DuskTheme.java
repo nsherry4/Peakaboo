@@ -30,7 +30,7 @@ public class DuskTheme implements Theme {
 	
 	private Color recessedComponent = new Color(0x303030);
 	
-	private Color menuControl = new Color(0x404040);
+	private Color menuControl = new Color(0x202020);
 	private Color menuControlText = controlText;
 	
 	private Color tableHeaderText = new Color(0x666666);
