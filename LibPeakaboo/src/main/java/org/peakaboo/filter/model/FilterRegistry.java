@@ -11,7 +11,7 @@ import org.peakaboo.filter.plugins.advanced.PeakDetectorFilter;
 import org.peakaboo.filter.plugins.advanced.SpectrumNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.SubFilter;
 import org.peakaboo.filter.plugins.background.BruknerBackgroundFilter;
-import org.peakaboo.filter.plugins.background.ExponentialComptonBackgroundFilter;
+import org.peakaboo.filter.plugins.background.ComptonBackgroundFilter;
 import org.peakaboo.filter.plugins.background.LinearTrimBackgroundFilter;
 import org.peakaboo.filter.plugins.background.PolynomialBackgroundFilter;
 import org.peakaboo.filter.plugins.background.SpectrumBackgroundFilter;
@@ -94,7 +94,7 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 		builtins.load(SquareSnipBackgroundFilter.class);
 		builtins.load(SpectrumBackgroundFilter.class);
 		
-		builtins.load(ExponentialComptonBackgroundFilter.class);
+		builtins.load(ComptonBackgroundFilter.class);
 		
 		builtins.load(AdditionMathFilter.class);
 		builtins.load(DerivativeMathFilter.class);
