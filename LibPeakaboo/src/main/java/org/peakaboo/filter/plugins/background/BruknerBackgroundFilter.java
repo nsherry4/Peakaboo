@@ -8,9 +8,9 @@ import org.peakaboo.filter.model.AbstractBackgroundFilter;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * 
@@ -56,8 +56,9 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 	@Override
 	protected SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent)
 	{		
-		return SpectrumCalculations.multiplyBy(
-				calcBackgroundBrukner(data, width.getValue(), iterations.getValue()), (percent/100.0f)
+		return SpectrumCalculations.multiplyBy_inplace(
+				calcBackgroundBrukner(data, width.getValue(), iterations.getValue()), 
+				percent/100.0f
 			);
 	}
 
@@ -154,19 +155,15 @@ public final class BruknerBackgroundFilter extends AbstractBackgroundFilter
 	 * Performs a single iteration of the brukner min(data, moving average) process
 	 * @param source the data to look at
 	 * @param target the {@link Spectrum} to write the new values out to
-	 * @param windowSize the window size for the moving average
+	 * @param windowSize the number of elements from the center of the window to the edge for a moving average
 	 */
 	private static void removeBackgroundBruknerIteration(final Spectrum source, final Spectrum target, final int windowSize)
 	{
-
-		for (int i = 0; i < source.size(); i++)
-		{
-			int start, stop;
-			start = Math.max(i - windowSize, 0);
-			stop = Math.min(i + windowSize+1, source.size() - 1);
-			float average = SpectrumCalculations.sumValuesInList(source, start, stop) / (windowSize * 2 + 1);
+		for (int i = 0; i < source.size(); i++) {
+			int first = Math.max(i - windowSize, 0);
+			int last = Math.min(i + windowSize, source.size() - 1);
+			float average = SpectrumCalculations.sumValuesInList(source, first, last) / (last - first + 1);
 			target.set(i, Math.min(average, source.get(i)));
-			
 		}
 		
 	}
