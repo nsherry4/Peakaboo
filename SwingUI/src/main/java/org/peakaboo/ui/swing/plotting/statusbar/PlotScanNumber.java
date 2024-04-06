@@ -28,7 +28,7 @@ public class PlotScanNumber extends ClearPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		scanNo = new JSpinner();
-		scanNo.getEditor().setPreferredSize(new Dimension(50, 0));
+		scanNo.getEditor().setPreferredSize(new Dimension(60, 0));
 		scanLabel = new JLabel("Scan");
 		scanLabel.setBorder(Spacing.bSmall());
 		scanBlock = new FluentToggleButton(StockIcon.CHOOSE_CANCEL)
