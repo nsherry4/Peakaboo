@@ -25,7 +25,6 @@ import org.peakaboo.filter.plugins.noise.FourierNoiseFilter;
 import org.peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
-import org.peakaboo.filter.plugins.noise.WaveletNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
@@ -106,7 +105,6 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 		builtins.load(WeightedAverageNoiseFilter.class);
 		builtins.load(SavitskyGolayNoiseFilter.class);
 		builtins.load(SpringNoiseFilter.class);
-		builtins.load(WaveletNoiseFilter.class);
 		builtins.load(LowStatisticsNoiseFilter.class);
 		
 		builtins.load(PeakDetectorFilter.class);
