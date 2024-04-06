@@ -2,10 +2,10 @@ package org.peakaboo.framework.autodialog.view.swing.editors;
 
 import java.awt.Component;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
-import org.jdesktop.swingx.combobox.ListComboBoxModel;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.SelectionParameter;
 
@@ -25,7 +25,7 @@ public class ListEditor<T> extends AbstractSwingEditor<T> {
 		this.param = p;
 		SelectionParameter<T> selparam = (SelectionParameter<T>) p;
 
-		control.setModel(new ListComboBoxModel<>(selparam.getPossibleValues()));
+		control.setModel(new DefaultComboBoxModel(selparam.getPossibleValues().toArray()));
 		control.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		setFromParameter();
