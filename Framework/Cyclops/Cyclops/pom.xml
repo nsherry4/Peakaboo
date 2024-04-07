@@ -28,7 +28,7 @@
 		<!-- https://mvnrepository.com/artifact/it.unimi.dsi/fastutil -->
 		<dependency>
 			<groupId>it.unimi.dsi</groupId>
-			<artifactId>fastutil</artifactId>
+			<artifactId>fastutil-core</artifactId>
 			<version>8.5.13</version>
 		</dependency>
 		
