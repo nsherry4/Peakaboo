@@ -1,4 +1,4 @@
-package org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem;
+package org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu;
 
 import java.awt.event.ActionEvent;
 import java.util.function.Consumer;

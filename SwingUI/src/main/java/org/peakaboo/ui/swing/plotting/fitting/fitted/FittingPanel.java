@@ -30,7 +30,7 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentMenuItem;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ListControls;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ListControls.ElementCount;
 import org.peakaboo.framework.stratus.components.ui.itemlist.ReorderTransferHandler;

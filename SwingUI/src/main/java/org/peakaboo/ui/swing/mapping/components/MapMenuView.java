@@ -5,7 +5,7 @@ import javax.swing.JPopupMenu;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentCheckMenuItem;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentCheckMenuItem;
 
 public class MapMenuView extends JPopupMenu {
 

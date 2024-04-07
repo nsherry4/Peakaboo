@@ -1,4 +1,4 @@
-package org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem;
+package org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu;
 
 import java.awt.event.ActionEvent;
 
@@ -6,22 +6,27 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JMenuItem;
 
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 
-public class FluentRadioMenuItem extends JRadioButtonMenuItem implements FluentMenuItemAPI<FluentRadioMenuItem, FluentMenuItemConfig> {
+public class FluentMenuItem extends JMenuItem implements FluentMenuItemAPI<FluentMenuItem, FluentMenuItemConfig>{
 
 	private FluentMenuItemConfig config = new FluentMenuItemConfig();
-	
-	public FluentRadioMenuItem() {
+
+	public FluentMenuItem() {
 		this.addActionListener(this::action);
 		makeWidget();
 	}
 	
+	public FluentMenuItem(String text) {
+		this();
+		withText(text);
+	}
+	
 	@Override
-	public FluentRadioMenuItem getSelf() {
+	public FluentMenuItem getSelf() {
 		return this;
 	}
 
@@ -48,21 +53,19 @@ public class FluentRadioMenuItem extends JRadioButtonMenuItem implements FluentM
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					FluentRadioMenuItem.this.action(e);
+					FluentMenuItem.this.action(e);
 				}
 			};
 			config.keystrokeParent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(config.keystroke, config.keystroke.toString());
-			config.keystrokeParent.getActionMap().put(config.keystroke.toString(), null);
 			config.keystrokeParent.getActionMap().put(config.keystroke.toString(), action);
 		}
 		
 	}
-	
+
 	private void action(ActionEvent e) {
-		this.setSelected(true);
 		if (config.onAction != null) {
 			config.onAction.run();
 		}
 	}
-
+	
 }

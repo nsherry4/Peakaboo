@@ -1,19 +1,26 @@
 package org.peakaboo.ui.swing.plotting.toolbar;
 
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
 import org.peakaboo.controller.plotter.view.mode.MaximumViewMode;
 import org.peakaboo.controller.plotter.view.mode.SingleViewMode;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
 import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
@@ -163,8 +170,20 @@ public class PlotMenuView extends JPopupMenu {
 
 
 		
-		OptionBlocksPanel compositePanel = new OptionBlocksPanel(compositeBlock, scaleBlock, viewBlock);
-		this.add(compositePanel);
+		OptionBlocksPanel leftPanel = new OptionBlocksPanel(compositeBlock, scaleBlock);
+		OptionBlocksPanel rightPanel = new OptionBlocksPanel(viewBlock);
+		ClearPanel twoPaneMenu = new ClearPanel(new BorderLayout());
+		twoPaneMenu.add(leftPanel, BorderLayout.WEST);
+		twoPaneMenu.add(rightPanel, BorderLayout.EAST);
+		
+		JLabel energyTitle = new JLabel("Plot Display Options");
+		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
+		energyTitle.setBorder(new EmptyBorder(Spacing.huge, Spacing.huge, Spacing.small, Spacing.huge));
+		twoPaneMenu.add(energyTitle, BorderLayout.NORTH);
+		
+		
+		this.add(twoPaneMenu);
 		
 		updateWidgetValues();
 		controller.addListener(s -> updateWidgetValues());

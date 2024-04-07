@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentMenuItem;
 
 public class CanvasPopupMenu extends JPopupMenu {
 

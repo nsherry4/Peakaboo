@@ -14,7 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.peakaboo.app.RecentSessions;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuMain extends JPopupMenu {
