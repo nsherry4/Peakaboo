@@ -386,7 +386,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionHelp() {
-		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/releases/download/v5.0.0/Peakaboo.5.Manual.pdf");
+		DesktopApp.browser("https://github.com/nsherry4/Peakaboo/wiki");
 	}
 
 	public void actionOpenData() {

@@ -12,7 +12,7 @@ import org.peakaboo.dataset.sink.plugin.DataSinkPlugin;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentMenuItem;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotMenuExport extends JPopupMenu {

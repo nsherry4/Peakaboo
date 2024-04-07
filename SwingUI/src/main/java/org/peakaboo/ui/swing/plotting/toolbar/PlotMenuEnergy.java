@@ -1,5 +1,6 @@
 package org.peakaboo.ui.swing.plotting.toolbar;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -14,6 +15,7 @@ import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.panels.SettingsPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
@@ -29,10 +31,17 @@ public class PlotMenuEnergy extends JPopupMenu {
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
 		
-		SettingsPanel outer = new SettingsPanel(Spacing.iSmall());
-		outer.addSetting(energyCalibration(plot));
-		outer.setOpaque(false);
-		this.add(outer);
+		ClearPanel menu = new ClearPanel(new BorderLayout());
+		menu.add(energyCalibration(plot), BorderLayout.CENTER);
+		
+				
+		JLabel energyTitle = new JLabel("Energy Calibration");
+		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
+		energyTitle.setBorder(Spacing.bHuge());
+		menu.add(energyTitle, BorderLayout.NORTH);
+		
+		this.add(menu);
 		
 	}
 
@@ -43,14 +52,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 
 		SettingsPanel energy = new SettingsPanel(Spacing.iTiny());
 		energy.setOpaque(false);
-		energy.setBorder(Spacing.bMedium());
-		JLabel energyTitle = new JLabel("Energy Calibration");
-		energyTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		energyTitle.setFont(energyTitle.getFont().deriveFont(Font.BOLD));
-		energyTitle.setBorder(new EmptyBorder(0, 0, Spacing.small, 0));
-		energy.addSetting(energyTitle);
-		
-		
+		energy.setBorder(new EmptyBorder(0, Spacing.huge, Spacing.huge, Spacing.huge));
 		
 		minEnergy = new JSpinner();
 		minEnergy.setModel(new SpinnerNumberModel(0.0, -20.48, 20.48, 0.01));

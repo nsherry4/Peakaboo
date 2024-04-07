@@ -11,6 +11,7 @@ import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentAPI;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentPopupAlignment;
 
 interface FluentButtonAPI<
 		B extends JComponent & FluentButtonAPI<B, C>, 
@@ -104,6 +105,7 @@ interface FluentButtonAPI<
 		return this.withPopupMenuAction(menu, false);
 	}
 	
+	
 	/**
 	 * Sets the Action to display the given popup menu
 	 * @param menu the menu to display
@@ -115,6 +117,36 @@ interface FluentButtonAPI<
 			if (rightAligned) { 
 				x = (int)(self.getWidth() - menu.getPreferredSize().getWidth()); 
 			}
+			menu.show(self, x, self.getHeight());
+		});
+		return self;
+	}
+	
+	default B withPopupMenuAction(JPopupMenu menu, FluentPopupAlignment align) {
+		B self = getSelf();
+		this.withAction(() -> {
+			int x = 0;
+			int menuWidth = (int) menu.getPreferredSize().getWidth();
+			int buttonWidth = self.getWidth();
+			switch (align) {
+			
+			case CENTER:
+				x = (buttonWidth - menuWidth) / 2;
+				break;
+				
+			case LEFT:
+				x = 0;
+				break;
+				
+			case RIGHT:
+				x = buttonWidth - menuWidth;
+				break;
+				
+			default:
+				break;
+			
+			}
+
 			menu.show(self, x, self.getHeight());
 		});
 		return self;

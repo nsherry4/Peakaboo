@@ -14,11 +14,11 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public abstract class AbstractBackgroundFilter extends AbstractFilter {
 
-	private Parameter<Integer> percent;
-	private Parameter<Boolean> preview;
-	private Parameter<Integer> stopindex;
-	private Parameter<Integer> startindex;
-	private Parameter<Boolean> partial;
+	protected Parameter<Integer> percent;
+	protected Parameter<Boolean> preview;
+	protected Parameter<Integer> stopindex;
+	protected Parameter<Integer> startindex;
+	protected Parameter<Boolean> partial;
 
 	
 	protected AbstractBackgroundFilter() {
@@ -68,7 +68,7 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 	
 	protected abstract SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx, int percent);
 	
-	private final SpectrumView getBackground(SpectrumView data, Optional<FilterContext> ctx) {
+	private final SpectrumView getImplBackground(SpectrumView data, Optional<FilterContext> ctx) {
 		if (data == null) {
 			return null;
 		}
@@ -101,8 +101,8 @@ public abstract class AbstractBackgroundFilter extends AbstractFilter {
 	
 	@Override
 	protected final SpectrumView filterApplyTo(SpectrumView data, Optional<FilterContext> ctx) {
-		SpectrumView background = getBackground(data, ctx);
-		return SpectrumCalculations.subtractLists(data, background);
+		SpectrumView background = getImplBackground(data, ctx);
+		return SpectrumCalculations.subtractLists(data, background, 0f);
 	}
 	
 	@Override

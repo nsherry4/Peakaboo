@@ -5,6 +5,10 @@ package org.peakaboo.filter.plugins.noise;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.transform.DftNormalization;
+import org.apache.commons.math3.transform.FastFourierTransformer;
+import org.apache.commons.math3.transform.TransformType;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterDescriptor;
 import org.peakaboo.framework.autodialog.model.Parameter;
@@ -13,11 +17,10 @@ import org.peakaboo.framework.autodialog.model.classinfo.EnumClassInfo;
 import org.peakaboo.framework.autodialog.model.style.editors.DropDownStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealStyle;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
-import JSci.maths.Complex;
-import JSci.maths.FourierMath;
+
 
 /**
  * 
@@ -158,36 +161,40 @@ class FFT {
 		}
 	}
 
+	private static final FastFourierTransformer TRANSFORMER = new FastFourierTransformer(DftNormalization.STANDARD);
+
 	
 	public static Complex[] dataToFFT(SpectrumView data) {
+		int n = data.size();
+		float[] arr = ((Spectrum)data).backingArray();
 		
-		// Fast Fourier Transform
-
-		double[] dataAsDoubles = new double[data.size()];
-
-		for (int i = 0; i < data.size(); i++) {
-			dataAsDoubles[i] = data.get(i);
-		}
-
-
-		// FFT Transform
-		return FourierMath.transform(dataAsDoubles);
-		
+        // Convert the float[] to double[] as that is the type accepted by the FFT function
+        double[] complexInput = new double[n];
+        for (int i = 0; i < n; i++) {
+            complexInput[i] = arr[i];
+        }
+        
+        // Perform FFT
+        return TRANSFORMER.transform(complexInput, TransformType.FORWARD);
+        
 	}
 	
-
+	
 	public static Spectrum fftToData(Complex[] fft) {
-		// FFT Inverse Transform
-		fft = FourierMath.inverseTransform(fft);
-
-
-		// get the data into a list of doubles for returning
-		Spectrum result = new ArraySpectrum(fft.length);
-		for (int i = 0; i < fft.length; i++) {
-			result.set(  i, Math.max(  0f, (float)(fft[i].real())  )  );
-		}
+		int n = fft.length;
 		
-		return result;
+        // Perform inverse FFT to convert back to the energy domain
+        Complex[] energyDomain = TRANSFORMER.transform(fft, TransformType.INVERSE);
+		
+        // Extract the real parts to get the smoothed signal
+        float[] smoothedSignal = new float[n];
+        for (int i = 0; i < n; i++) {
+            smoothedSignal[i] = (float)energyDomain[i].getReal();
+        }
+		
+        // Package and return the smoothed float[]
+        return new ArraySpectrum(smoothedSignal);
+        
 	}
 	
 	
@@ -213,7 +220,8 @@ class FFT {
 		int startcutoff, endcutoff;
 
 		/*
-		 * From JSci: [DFT is] an array containing the positive time part of the signal followed by the negative time part
+		 * From JSci originally but appears to be true for Apache Commons Math as well
+		 * [DFT is] an array containing the positive time part of the signal followed by the negative time part
 		 * 
 		 * So the highest frequency data is actually in the middle of the array.
 		 * 
@@ -266,13 +274,11 @@ class FFT {
 
 
 		// FFT Inverse Transform
-		transformedData = FourierMath.inverseTransform(transformedData);
+		Spectrum result = fftToData(transformedData);
 
-
-		// get the data into a list of doubles for returning
-		Spectrum result = new ArraySpectrum(data.size());
+		// Apply a floor of 0 for all values
 		for (int i = 0; i < data.size(); i++) {
-			result.set(  i, Math.max(0f, (float)transformedData[i].real())  );
+			result.set(  i, Math.max(0f, result.get(i))  );
 		}
 
 		return result;
@@ -313,7 +319,7 @@ class FFT {
 			// in between start and stop
 			if (di < start && di > stop) {
 				percentLeftInLine = 1.0 - ((double) (di - start) / (double) (stop - start));
-				data[i] = new Complex(data[i].real() * percentLeftInLine, data[i].imag() * percentLeftInLine);
+				data[i] = new Complex(data[i].getReal() * percentLeftInLine, data[i].getImaginary() * percentLeftInLine);
 			} else if (di < start) {
 
 				data[i] = new Complex(0.0, 0.0);
@@ -346,7 +352,7 @@ class FFT {
 			if (di < start && di > stop) {
 				percentLeftInLine = 1.0 - ((double) (di - start) / (double) (stop - start));
 				sine = (Math.sin(Math.PI * percentLeftInLine - Math.PI / 2.0) + 1.0) / 2.0;
-				data[i] = new Complex(data[i].real() * sine, data[i].imag() * sine);
+				data[i] = new Complex(data[i].getReal() * sine, data[i].getImaginary() * sine);
 			} else if (di < start) {
 
 				data[i] = new Complex(0.0, 0.0);

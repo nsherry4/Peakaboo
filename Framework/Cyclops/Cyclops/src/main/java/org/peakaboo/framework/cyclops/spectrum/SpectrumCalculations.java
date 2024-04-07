@@ -712,12 +712,13 @@ public class SpectrumCalculations
 	 * @param list
 	 * @return the sum of the values in the list
 	 */
-	public static float sumValuesInList(SpectrumView list, int start, int stop)
+	public static float sumValuesInList(SpectrumView list, int first, int last)
 	{
 		float sum = 0;
-		for (int i = start; i < stop; i++)
+		float[] arr = ((Spectrum)list).backingArray();
+		for (int i = first; i <= last; i++)
 		{
-			sum += list.get(i);
+			sum += arr[i];
 		}
 		return sum;
 	}
@@ -778,5 +779,143 @@ public class SpectrumCalculations
 	}
 
 
+	public static Spectrum convolve(SpectrumView source, float[] kernel) {
+		Spectrum target = new ArraySpectrum(source);
+		convolve_target(source, kernel, target);
+		return target;
+	}
+	
+	/**
+	 * Repeatedly applies a convolution with a kernel. Note that this is
+	 * significantly slower than calculating a kernel which approximates repeated
+	 * convolution.
+	 */
+	public static Spectrum convolve_repeated(SpectrumView source, float[] kernel, int reps) {
+		if (reps < 0) {
+			throw new IllegalArgumentException("Reps must be non-negative");
+		}
+		
+		// Create two spectra to bounce the value back and forth between
+		Spectrum a = new ArraySpectrum(source);
+		Spectrum b = new ArraySpectrum(source.size());
+		
+		Spectrum src = a;
+		Spectrum tgt = b;
+		Spectrum tmp;
+		
+		for (int rep = 0; rep < reps; rep++) {
+			// Perform a convolution from current src to current tgt
+			convolve_target(src, kernel, tgt);
+			
+			// Swap src and tgt
+			tmp = src;
+			src = tgt;
+			tgt = tmp;
+		}
+		
+		// We stapped the most recent tgt into the src var at the end of the last loop,
+		// so returning src is returning the last convolution result.
+		return src;
+	}
+	
+	public static void convolve_target(SpectrumView source, float[] kernel, Spectrum target) {
+		float[] src = ((Spectrum)source).backingArray();
+		float[] tgt = target.backingArray();
+		
+		if (tgt.length != src.length) {
+			throw new RuntimeException("Source and Target size must match");
+		}
+		
+		int srcLength = src.length;
+		int kernelLength = kernel.length;
+		int pad = kernel.length / 2;
+				
+		for (int s = 0; s < srcLength; s++) {
+			float sum = 0;
+			int kernelStart = Math.max(0, pad - s);
+			int kernelEnd = Math.min(kernelLength, srcLength - s + pad);
+			int kernelOffset = s - pad;
+			for (int k = kernelStart; k < kernelEnd; k++) {
+				// Math.fma didn't improve performance here
+				// Maybe vector library in the future?
+				sum += src[kernelOffset + k] * kernel[k];
+			}
+			tgt[s] = sum;
+		}
+		
+	}
+
+	public static float[] kernel_flat(int pad) {
+		int length = pad * 2 + 1;
+		float[] kernel = new float[length];
+		
+		float val = 1f / length;
+		for (int i = 0; i < length; i++) {
+			kernel[i] = val;
+		}
+		
+		return kernel;
+	}
+
+	public static float[] kernel_exp(int pad, float sigma) {
+		return kernel_exp(pad, sigma, 1);
+	}
+	
+	public static float[] kernel_exp(int pad, float sigma, int reps) {
+		int length = pad * 2 + 1;
+		float[] kernel = new float[length];
+		
+		//Multiply sigma by sqrt(reps) to approximate repeated application of the single-rep kernel
+		sigma = sigma * (float)Math.sqrt(reps);
+		
+		// Calculate the kernel, storing a sum to normalize later
+		float sum = 0;
+		for (int i = 0; i < length; i++) {
+			int offset = Math.abs(i - pad);
+			float val = (float)Math.exp(-offset / sigma);
+			kernel[i] = val;
+			sum += val;
+		}
+		
+		// Normalize the kernel so the sum is 1
+		float inverse = 1f / sum;
+		for (int i = 0; i < length; i++) {
+			kernel[i] *= inverse;
+		}
+		
+		return kernel;
+	}
+	
+	public static float[] kernel_gaussian(int pad, float sigma) {
+		return kernel_gaussian(pad, sigma, 1);
+	}
+	
+	public static float[] kernel_gaussian(int pad, float sigma, int reps) {
+		int length = pad * 2 + 1;
+		float[] kernel = new float[length];
+		
+		// Multiply sigma by sqrt(reps) to approximate repeated application of the single-rep kernel
+		sigma = sigma * (float)Math.sqrt(reps);
+		
+		// Pre-calculate this value to hoist the work out of the loop
+		float twoSigmaSquared = 2f * sigma * sigma;
+		
+		// Calculate the kernel, storing a sum to normalize later
+		float sum = 0;
+		for (int i = 0; i < length; i++) {
+			int offset = Math.abs(i - pad);
+			float val = (float)Math.exp(-(offset*offset) / twoSigmaSquared);
+			kernel[i] = val;
+			sum += val;
+		}
+		
+		// Normalize the kernel so the sum is 1
+		float inverse = 1f / sum;
+		for (int i = 0; i < length; i++) {
+			kernel[i] *= inverse;
+		}
+		
+		return kernel;
+	}
 
 }

@@ -73,20 +73,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.jsci</groupId>
-			<artifactId>jsci</artifactId>
-			<version>1.2</version>
-
-			<!-- This package is quite old now and appears unmaintained? It doesn't seem quite compatible with the new Java module system-->
-			<exclusions>
-				<exclusion>
-					<groupId>xml-apis</groupId>
-					<artifactId>xml-apis</artifactId>
-				</exclusion>
-			</exclusions>
-
-		</dependency>
-		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>cyclops-core</artifactId>
 			<version>${project.version}</version>

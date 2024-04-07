@@ -140,7 +140,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionSidebar sidebar = new OptionSidebar(entries, e -> {
 			cards.show(body, e.getName());
 		});
-		sidebar.select(detectorEntry);
+		sidebar.select(hasdata? detectorEntry : appEntry);
 		
 		ClearPanel outer = new ClearPanel(new BorderLayout());
 		outer.add(body, BorderLayout.CENTER);

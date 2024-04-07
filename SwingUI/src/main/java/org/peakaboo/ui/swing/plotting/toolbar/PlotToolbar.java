@@ -17,6 +17,7 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton.NotificationDotState;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToolbarButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentPopupAlignment;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
@@ -196,7 +197,7 @@ public class PlotToolbar extends JToolBar {
 		return new FluentToolbarButton()
 				.withIcon(PeakabooIcons.MENU_ENERGY, colour)
 				.withTooltip("Energy & Peak Calibration")
-				.withPopupMenuAction(energyMenu, true);
+				.withPopupMenuAction(energyMenu, FluentPopupAlignment.CENTER);
 	}
 	
 	private FluentToolbarButton createMainMenuButton() {
@@ -214,7 +215,7 @@ public class PlotToolbar extends JToolBar {
 		return new FluentToolbarButton()
 				.withIcon(PeakabooIcons.MENU_VIEW, colour)
 				.withTooltip("Plot Display Options")
-				.withPopupMenuAction(viewMenu, true);
+				.withPopupMenuAction(viewMenu, FluentPopupAlignment.CENTER);
 	}
 	
 	

@@ -8,7 +8,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menuitem.FluentMenuItem;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.menu.FluentMenuItem;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 
 public class MapMenuExport extends JPopupMenu {
