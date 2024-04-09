@@ -4,10 +4,10 @@ package org.peakaboo.ui.swing.plotting.fitting;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.TrayIcon.MessageType;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.peakaboo.controller.plotter.PlotController;
@@ -21,6 +21,7 @@ import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.ui.swing.plotting.PlotCanvas;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plotting.fitting.auto.AutoFittingPanel;
 import org.peakaboo.ui.swing.plotting.fitting.fitted.FittingPanel;
 import org.peakaboo.ui.swing.plotting.fitting.guidedfitting.GuidedFittingPanel;
 import org.peakaboo.ui.swing.plotting.fitting.lookup.LookupPanel;
@@ -39,12 +40,14 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 	private static final String		LOOKUP		= "Lookup";
 	private static final String		SUMMATION	= "Summation";
 	private static final String		SMART		= "Smart";
+	private static final String		AUTO 		= "Auto";
 
 
 	private FittingPanel		fittedPanel;
 	private LookupPanel			proposalPanel;
 	private SummationPanel		summationPanel;
 	private GuidedFittingPanel	smartPanel;
+	private AutoFittingPanel	autoPanel;
 	
 	
 	private JPanel				cardPanel;
@@ -64,9 +67,10 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 
 		fittedPanel = new FittingPanel(controller, this, plotPanel);
 		proposalPanel = new LookupPanel(controller, this);
-		summationPanel = new SummationPanel(controller, this);
+		summationPanel = new SummationPanel(controller, this, canvas);
 		smartPanel = new GuidedFittingPanel(controller, this, canvas);
-
+		autoPanel = new AutoFittingPanel(controller, this, canvas);
+		
 		cardPanel = createCardPanel();
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -114,7 +118,7 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 	{
 		if (plotController.data().hasDataSet() && plotController.fitting().getMaxEnergy() > 0f) {
 			smartPanel.resetSelectors();
-			smartPanel.setSelectionMode(true);
+			smartPanel.setActive(true);
 			card.show(cardPanel, SMART);
 			changed();
 		} else {
@@ -142,8 +146,21 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 				
 				if (exec.getCompleted()) {
 					ran.set(true);
-					changed();
+					
+					List<ITransitionSeries> results = exec.getResult();
+					
+					if (! results.isEmpty()) {
+						autoPanel.setActive(true);
+						autoPanel.setResults(results);
+						card.show(cardPanel, AUTO);
+						changed();						
+					} else {
+						var dialog = new LayerDialog("No Results", new JLabel("Automatic fitting produced no new results."));
+						dialog.showIn(plotPanel);
+					}
+					
 					exec.discard();
+					
 				} else if (exec.isAborted()) {
 					ran.set(true);
 					exec.discard();
@@ -168,8 +185,9 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 	
 	public void dialogClose() {
 		card.show(cardPanel, FITTED);
-		smartPanel.setSelectionMode(false);
+		smartPanel.setActive(false);
 		summationPanel.setActive(false);
+		autoPanel.setActive(false);
 		changed();
 	}
 	
@@ -184,6 +202,7 @@ public class CurveFittingView extends ClearPanel implements Changeable {
 		panel.add(proposalPanel, LOOKUP);
 		panel.add(summationPanel, SUMMATION);
 		panel.add(smartPanel, SMART);
+		panel.add(autoPanel, AUTO);
 
 		return panel;
 	}

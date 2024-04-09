@@ -127,7 +127,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			onSingleClickCallback.accept(channel, mouseCoords);
 		} else {
 			ITransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(channel);
-	        controller.fitting().clearProposedTransitionSeries();
+			
 	        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
 	        if (bestFit != null) {
 	            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit));

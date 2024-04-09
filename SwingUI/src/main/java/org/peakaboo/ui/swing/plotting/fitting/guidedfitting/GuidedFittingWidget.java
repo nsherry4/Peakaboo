@@ -3,11 +3,13 @@ package org.peakaboo.ui.swing.plotting.fitting.guidedfitting;
 
 
 import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -30,7 +32,7 @@ class GuidedFittingWidget extends TSSelectorGroup {
 		
 		editButtons = new ArrayList<>();
 		
-		resetSelectors(true);
+		clearSelectors(true);
 		activeIndex = 0;
 
 		refreshGUI();
@@ -65,6 +67,7 @@ class GuidedFittingWidget extends TSSelectorGroup {
 
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(Spacing.tiny, 0, Spacing.tiny, 0);
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weighty = 0.0;
@@ -117,7 +120,7 @@ class GuidedFittingWidget extends TSSelectorGroup {
 	}
 
 	@Override
-	protected TSSelector addTSSelector(boolean active) {	
+	protected TSSelector addTSSelector(boolean active) {
 		activeIndex = selectors.size();
 		return super.addTSSelector(active);
 	}

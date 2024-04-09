@@ -2,86 +2,45 @@ package org.peakaboo.ui.swing.plotting.fitting.guidedfitting;
 
 
 
-import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.framework.stratus.components.ui.itemlist.SelectionListControls;
 import org.peakaboo.ui.swing.plotting.PlotCanvas;
+import org.peakaboo.ui.swing.plotting.fitting.AbstractFittingPanel;
 import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 
 
 
-public class GuidedFittingPanel extends JPanel {
+public class GuidedFittingPanel extends AbstractFittingPanel {
 
-	private FittingController		controller;
 	private PlotCanvas				canvas;
-
 	private Cursor					canvasCursor;
 
-	private SelectionListControls	selControls;
 	private GuidedFittingWidget		guidedWidget;
 
 	private List<ITransitionSeries>	potentials;
 
 
 	public GuidedFittingPanel(final FittingController controller, final CurveFittingView owner, PlotCanvas canvas) {
-		this.controller = controller;
+		super(controller, owner, "Fittings", "Click Plot to Fit");
 		this.canvas = canvas;
 
 		potentials = new ArrayList<>();
 
-		selControls = new SelectionListControls("Fittings", "Click Plot to Fit") {
-
-			@Override
-			protected void cancel() {
-				controller.clearProposedTransitionSeries();
-				owner.dialogClose();
-			}
-
-
-			@Override
-			protected void approve() {
-				controller.commitProposedTransitionSeries();
-				owner.dialogClose();
-			}
-		};
-		selControls.setOpaque(false);
-
-		this.setLayout(new BorderLayout());
-
 		guidedWidget = new GuidedFittingWidget(controller);
 		guidedWidget.setBorder(Spacing.bMedium());
-		JScrollPane scroll = new JScrollPane(guidedWidget);
-		scroll.setBorder(Spacing.bNone());
-		scroll.setPreferredSize(new Dimension(200, 0));
-		scroll.setBackground(getBackground());
-		scroll.getViewport().setBackground(getBackground());
-		
 
-		this.add(scroll, BorderLayout.CENTER);
-		this.add(selControls, BorderLayout.NORTH);
-
-		
-
-		
+		setBody(guidedWidget);
 	}
 
 
-	/**
-	 * Flips the canvas between guided fitting (selection) mode (true) and normal
-	 * mode
-	 */
-	public void setSelectionMode(boolean mode) {
-		if (mode)
+	@Override
+	public void setActive(boolean isActive) {
+		if (isActive)
 		{
 			guidedWidget.setTransitionSeriesOptions(null);
 			canvas.setSingleClickCallback((channel, coords) -> {
@@ -111,7 +70,23 @@ public class GuidedFittingPanel extends JPanel {
 	}
 	
 	public void resetSelectors() {
-		guidedWidget.resetSelectors(true);
+		guidedWidget.clearSelectors(true);
+	}
+
+
+	@Override
+	protected void onAccept() {
+		this.controller.commitProposedTransitionSeries();
+		this.guidedWidget.clearSelectors(false);
+		this.owner.dialogClose();
+	}
+
+
+	@Override
+	protected void onCancel() {
+		this.controller.clearProposedTransitionSeries();
+		this.guidedWidget.clearSelectors(false);
+		this.owner.dialogClose();
 	}
 
 }

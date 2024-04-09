@@ -467,10 +467,6 @@ public class FittingController extends EventfulType<Boolean>
 			if (!exec.getCompleted()) return;
 			if (ran.get()) return;
 			ran.set(true);
-			for (ITransitionSeries ts : exec.getResult()) {
-				getFittingSelections().addTransitionSeries(ts);
-			}
-			fittingDataInvalidated();
 		});
 		
 		
