@@ -17,11 +17,5 @@ public interface Interaction {
 	 * Allows the worker to check if the observer has requested this action be aborted
 	 */
 	boolean checkReadAborted();
-	
-	/**
-	 * 
-	 * @param scanCount
-	 */
-	void notifyScanOpened(int scanCount);
 
 }

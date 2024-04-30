@@ -41,11 +41,5 @@ public class CallbackInteraction implements Interaction {
 	{
 		fnGetScanCountCallback.accept(scanCount);
 	}
-	
-	@Override
-	public void notifyScanOpened(int scanCount) {
-		fnOpenedScanCallback.accept(scanCount);
-	}
-
-	
+		
 }
