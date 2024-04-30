@@ -2,7 +2,7 @@ package org.peakaboo.dataset.source.model.components.interaction;
 
 public class SimpleInteraction implements Interaction {
 
-	public int scanCount, scansRead, scansOpened;
+	public int scanCount, scansRead;
 	public boolean aborted;
 	
 	@Override
@@ -19,11 +19,6 @@ public class SimpleInteraction implements Interaction {
 	@Override
 	public boolean checkReadAborted() {
 		return aborted;
-	}
-
-	@Override
-	public void notifyScanOpened(int scanCount) {
-		this.scansOpened += scanCount;
 	}
 
 }
