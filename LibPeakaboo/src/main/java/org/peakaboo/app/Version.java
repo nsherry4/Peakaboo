@@ -41,7 +41,7 @@ public class Version {
 	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
 	public final static String PROGRAM_NAME = "Peakaboo";
 	
-	public final static ReleaseType RELEASE_TYPE = ReleaseType.DEVELOPMENT;
+	public final static ReleaseType RELEASE_TYPE = ReleaseType.RELEASE;
 	
 
 
