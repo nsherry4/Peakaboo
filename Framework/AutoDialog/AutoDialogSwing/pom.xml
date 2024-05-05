@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.peakaboo.framework</groupId>
 		<artifactId>autodialog</artifactId>
-		<version>5.6-SNAPSHOT</version>
+		<version>6.0</version>
 	</parent>
 	<artifactId>autodialog-swing</artifactId>
 	<packaging>jar</packaging>
