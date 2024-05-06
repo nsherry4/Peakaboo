@@ -7,9 +7,11 @@ Peakaboo allows users to identify the spectral origins of the XRF spectrum using
 
 ![Peakaboo](https://raw.githubusercontent.com/nsherry4/Peakaboo/master/Documentation/github/screenshot.png)
 
+[Downloads for Windows, Mac, Linux](https://github.com/nsherry4/Peakaboo/releases)
+
 [Learn how to use Peakaboo on our Wiki](https://github.com/nsherry4/Peakaboo/wiki)
 
-[Downloads for Windows, Mac, Linux](https://github.com/nsherry4/Peakaboo/releases)
+[Ask a question in our Discussions](https://github.com/nsherry4/Peakaboo/discussions)
 
 ## Noise Reduction 
 
