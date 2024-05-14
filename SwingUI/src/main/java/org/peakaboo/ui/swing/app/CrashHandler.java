@@ -20,7 +20,7 @@ import com.bugsnag.Severity;
 public class CrashHandler {
 
 	private static CrashHandler handler;
-	
+		
 	public static void init() {
 		if (handler != null) return; //subsequent calls do nothing
 		handler = new CrashHandler();
@@ -33,6 +33,9 @@ public class CrashHandler {
 	/* ---------------------------------------- */
 	
 	private Bugsnag bugsnag;
+	
+	/* Only allow one crash report dialog at a time to prevent spamming */
+	private boolean inUse = false;
 	
 	public CrashHandler() {
 		var devbuild = Version.RELEASE_TYPE != Version.ReleaseType.RELEASE;
@@ -76,11 +79,14 @@ public class CrashHandler {
 			});
 		};
 		
-		
-		ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable, doReport);
-		
-		errorDialog.setModal(true);
-		errorDialog.setVisible(true); //stalls here until dialog closes
+		if (!inUse) {
+			inUse = true;
+			ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable, doReport);
+			errorDialog.setModal(true);
+			errorDialog.setVisible(true); //stalls here until dialog closes
+			inUse = false;
+		}
+
 		
 		if (! reported.get() && DesktopSettings.isCrashAutoreporting()) {
 			//When autoreporting is on, we report even when the user doesn't send additional feedback
