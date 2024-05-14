@@ -113,7 +113,7 @@ public class Env
 			case ANDROID -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 			case WINDOWS -> new File(install.getPath() + "/app/" + appname + ".cfg");
 			case MAC -> new File(install.getPath() + "/app/" + appname + ".cfg");
-			case UNIX -> new File(install.getPath() + "/lib/app/" + appname + ".cfg");
+			case UNIX -> new File(install.getPath() + "/../lib/app/" + appname + ".cfg");
 			case OTHER -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 		};
 		if (!cfg.exists()) {
