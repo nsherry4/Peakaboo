@@ -37,7 +37,7 @@ public class Version {
 	
 	public final static int VERSION_MAJOR = 6;
 	public final static int VERSION_MINOR = 0;
-	public final static int VERSION_POINT = 0;
+	public final static int VERSION_POINT = 1;
 	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
 	public final static String PROGRAM_NAME = "Peakaboo";
 	
