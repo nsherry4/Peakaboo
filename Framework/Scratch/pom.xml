@@ -60,6 +60,14 @@
 			<groupId>de.ruedigermoeller</groupId>
 			<artifactId>fst</artifactId>
 			<version>3.0.4-jdk17</version>
+
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-core</artifactId>
+				</exclusion>
+			</exclusions>
+			
 		</dependency>
 
 
