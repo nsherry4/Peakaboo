@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing.app;
 
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
@@ -52,6 +53,8 @@ public class CrashHandler {
 		
 		var reported = new Mutable<Boolean>(false);
 		
+		
+		
 		Consumer<Feedback> doReport = (feedback) -> {
 			bugsnag.notify(throwable, Severity.ERROR, report -> {
 				final String APP_TAB = "Peakaboo";
@@ -89,8 +92,24 @@ public class CrashHandler {
 
 		
 		if (! reported.get() && DesktopSettings.isCrashAutoreporting()) {
-			//When autoreporting is on, we report even when the user doesn't send additional feedback
-			doReport.accept(null);
+			
+			try {
+				//When autoreporting is on, we report even when the user doesn't send additional feedback
+				doReport.accept(null);
+				
+			} catch (NoSuchMethodError e) {
+				// Specifically silence this error, since there was an issue where 
+				// bugsnag ended up in an infinite loop trying to report about a 
+				// failure to report the last crash.
+				PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
+				
+			} catch (Exception e) {
+				// Also don't report exceptions generally, to avoid an infinite 
+				// crash-reporting loop
+				PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
+			}
+			
+
 		}
 	}
 
