@@ -12,11 +12,19 @@ import java.util.Optional;
 public class StratusText {
 
 	public static String lineWrapHTML(Component c, String text) {
-		return "<html>" + lineWrap(c, text).replace("\n", "<br/>") + "</html>";
+		return "<html>" + lineWrapHTMLInline(c, text) + "</html>";
 	}
 	
 	public static String lineWrapHTML(Component c, String text, int width) {
-		return "<html>" + lineWrap(c, text, width).replace("\n", "<br/>") + "</html>";
+		return "<html>" + lineWrapHTMLInline(c, text, width) + "</html>";
+	}
+	
+	public static String lineWrapHTMLInline(Component c, String text) {
+		return lineWrap(c, text).replace("\n", "<br/>");
+	}
+	
+	public static String lineWrapHTMLInline(Component c, String text, int width) {
+		return lineWrap(c, text, width).replace("\n", "<br/>");
 	}
 	
 	public static String lineWrap(Component c, String text) {

@@ -35,6 +35,7 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.StratusText;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
@@ -197,10 +198,7 @@ public class PluginManager extends HeaderLayer {
 			return;
 		}
 		
-		new LayerDialog(
-				"Delete Plugin Container?", 
-				"Are you sure you want to delete the container with the plugins:\n\n" + listToUL(container.getPlugins()), 
-				StockIcon.BADGE_QUESTION)
+		new LayerDialog("Delete Plugin Bundle?", descriptorsToHTML(container.getPlugins()))
 			.addRight(
 				new FluentButton("Delete").withAction(() -> {
 					plugin.getContainer().delete();
@@ -213,20 +211,28 @@ public class PluginManager extends HeaderLayer {
 		
 	}
 	
-	private String listToUL(List<?> stuff) {
+	private String descriptorsToHTML(List<?> stuff) {
+		
 		StringBuilder buff = new StringBuilder();
-		buff.append("<ul>");
 		for (Object o : stuff) {
-			String name = o.toString();
 			if (o instanceof PluginDescriptor<?> plugin) {
-				name = plugin.getName() + " (v" + plugin.getVersion() + ")";
+				if (!buff.isEmpty()) {
+					buff.append("<br>");
+				}
+				buff.append(descriptorToHTML(plugin));
+			} else {
+				throw new RuntimeException("Item was not a plugin descriptor");
 			}
-			buff.append("<li>" + name + "</li>");
 		}
-		buff.append("</ul>");
 		return buff.toString();
+		
 	}
 	
+	private String descriptorToHTML(PluginDescriptor<?> plugin) {
+		// The details panel is just a convenient component which hasn't had its default font properties changes
+		String wrappedDescription = StratusText.lineWrapHTMLInline(details, plugin.getDescription(), 400);
+		return String.format("<div style='padding: 5px;'><div style='font-size: 20pt;'>%s</div><div style='font-size: 10pt; padding-bottom: 5px;'>version %s</div><div style=''>%s</div></div>", plugin.getName(), plugin.getVersion(), wrappedDescription);
+	}
 	
 
 	/**
@@ -279,10 +285,7 @@ public class PluginManager extends HeaderLayer {
 		BoltContainer<? extends BoltPlugin> container = manager.importOrUpgradeFile(file);
 		
 		this.reload();
-		new LayerDialog(
-				"Imported New Plugins", 
-				"Peakboo successfully imported the following plugin(s):\n" + listToUL(container.getPlugins()), 
-				StockIcon.BADGE_INFO).showIn(parent);
+		new LayerDialog("Imported New Plugins", descriptorsToHTML(container.getPlugins())).showIn(parent);
 
 		return true;
 
