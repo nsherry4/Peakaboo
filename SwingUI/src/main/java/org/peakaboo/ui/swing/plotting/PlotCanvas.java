@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.io.FilenameUtils;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -188,7 +189,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	}
 	
 	void filesDropped(File[] files) {
-		plotPanel.load(Arrays.asList(files).stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
+		filesDropped(Arrays.asList(files));
 	}
 	
 	void urlsDropped(URL[] urls) {
@@ -196,7 +197,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
 				if (!optfiles.isPresent()) { return; }
-				plotPanel.load(optfiles.get().stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
+				filesDropped(optfiles.get());
 			});
 
 			TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
@@ -206,6 +207,17 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		}
 	}
 	
+	void filesDropped(List<File> files) {
+		
+		if (files.size() == 1 && "jar".equals(FilenameUtils.getExtension(files.get(0).getAbsolutePath()) )) {
+			// This is a jar file plugin, route it to the plugin window
+			plotPanel.actionShowDropPlugin(files.get(0));
+		} else {
+			// Otherwise try to load this as data
+			plotPanel.load(files.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
+		}
+		
+	}
 
 
 

@@ -232,7 +232,7 @@ public class PluginManager extends HeaderLayer {
 	/**
 	 * Add a jar file containing plugins
 	 */
-	private void addPluginFile(File file) {
+	public void addPluginFile(File file) {
 		
 		boolean handled = false;
 		
