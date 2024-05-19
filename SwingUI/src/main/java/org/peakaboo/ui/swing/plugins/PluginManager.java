@@ -235,6 +235,21 @@ public class PluginManager extends HeaderLayer {
 	}
 	
 
+	public static boolean isPluginFile(File file) {
+		boolean loadable = false;
+		
+		loadable |= DataSourceRegistry.system().isImportable(file);
+		loadable |= DataSinkRegistry.system().isImportable(file);
+		loadable |= FilterRegistry.system().isImportable(file);
+		loadable |= MapFilterRegistry.system().isImportable(file);
+		
+		for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+			loadable |= manager.isImportable(file);
+		}
+		
+		return loadable;
+	}
+	
 	/**
 	 * Add a jar file containing plugins
 	 */

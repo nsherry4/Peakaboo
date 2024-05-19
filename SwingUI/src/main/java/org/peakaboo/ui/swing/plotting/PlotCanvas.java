@@ -35,6 +35,7 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.plugins.PluginManager;
 
 
 
@@ -209,8 +210,9 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	
 	void filesDropped(List<File> files) {
 		
-		if (files.size() == 1 && "jar".equals(FilenameUtils.getExtension(files.get(0).getAbsolutePath()) )) {
-			// This is a jar file plugin, route it to the plugin window
+		
+		if (files.size() == 1 && PluginManager.isPluginFile(files.get(0)) ) {
+			// This is a plugin file, route it to the plugin window
 			plotPanel.actionShowDropPlugin(files.get(0));
 		} else {
 			// Otherwise try to load this as data
