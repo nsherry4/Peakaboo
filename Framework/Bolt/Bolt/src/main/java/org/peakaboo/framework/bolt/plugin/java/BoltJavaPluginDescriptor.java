@@ -1,11 +1,13 @@
 package org.peakaboo.framework.bolt.plugin.java;
 
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
+import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltException;
 
 public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements PluginDescriptor<T> {
 
@@ -16,13 +18,20 @@ public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements Plugi
 	private PluginRegistry<T> registry;
 	private int weight = PluginDescriptor.WEIGHT_MEDIUM;
 	
-	public BoltJavaPluginDescriptor(PluginRegistry<T> registry, Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container, int weight) {
+	public BoltJavaPluginDescriptor(PluginRegistry<T> registry, Class<T> pluginClass, Class<? extends T> implClass, BoltContainer<T> container, int weight) throws BoltException {
 		this.pluginClass = pluginClass;
 		this.implClass = implClass;
 		this.container = container;
 		this.registry = registry;
 		this.weight = weight;
-		instance = create();
+		
+		var creation = create();
+		if (creation.isPresent()) {
+			this.instance = creation.get();
+		} else {
+			throw new BoltException("Coult not create reference instance for plugin " + pluginClass.getName());
+		}
+		
 	}
 	
 	public Class<? extends T> getImplementationClass() {
@@ -44,16 +53,16 @@ public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements Plugi
 	
 	
 	@Override
-	public T create()
+	public Optional<T> create()
 	{
 		try
 		{
-			return implClass.newInstance();
+			return Optional.of(implClass.newInstance());
 		}
 		catch (InstantiationException | IllegalAccessException e)
 		{
 			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
-			return null;
+			return Optional.empty();
 		}
 
 	}

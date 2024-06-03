@@ -230,9 +230,12 @@ public class FiltersPanel extends JPanel {
 				} catch (ClassCastException e) {}
 				
 				if (proto != null) { 
-					MapFilterPlugin plugin = proto.create();
-					plugin.initialize();
-					controller.add(plugin);
+					var created = proto.create();
+					if (created.isPresent()) {
+						MapFilterPlugin plugin = created.get();
+						plugin.initialize();
+						controller.add(plugin);
+					}
 				}
 				layout.show(FiltersPanel.this, PANEL_FILTERS);
 			}

@@ -56,7 +56,11 @@ public class SerializedMapFilter {
 			
 		for (PluginDescriptor<MapFilterPlugin> plugin : MapFilterRegistry.system().getPlugins()) {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
-				filter = plugin.create();
+				var created = plugin.create();
+				if (created.isEmpty()) {
+					throw new RuntimeException("Cannot create plugin for " + clazz);
+				}
+				filter = created.get();
 				filter.initialize();
 				filter.getParameterGroup().deserialize(settings);
 				return filter;

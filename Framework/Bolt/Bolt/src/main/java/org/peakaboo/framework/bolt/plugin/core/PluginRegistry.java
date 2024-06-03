@@ -49,7 +49,7 @@ public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<
 		if (lookup.isEmpty()) {
 			return Optional.empty();
 		}
-		return Optional.of(lookup.get().create());		
+		return lookup.get().create();
 	}
 	
 	default PluginRegistry<P> getManager() {

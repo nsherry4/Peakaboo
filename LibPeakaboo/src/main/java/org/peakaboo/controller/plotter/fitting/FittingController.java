@@ -546,7 +546,7 @@ public class FittingController extends EventfulType<Boolean>
 			savedannos, 
 			getFittingSolver().save(), 
 			getCurveFitter().save(),
-			getFittingFunction().save(),
+			getFittingFunction().save().orElseThrow(),
 			fittingModel.selections.getFittingParameters().save()
 		);
 	}

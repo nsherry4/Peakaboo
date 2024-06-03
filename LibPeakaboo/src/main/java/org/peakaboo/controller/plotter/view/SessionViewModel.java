@@ -35,8 +35,9 @@ public class SessionViewModel {
 	}
 	public void setChannelView(String uuid) {
 		var lookup = ChannelViewModeRegistry.system().getByUUID(uuid);
-		if (lookup.isPresent()) {
-			this.channelView = lookup.get().create();
+		var created = lookup.flatMap(d -> d.create());
+		if (created.isPresent()) {
+			this.channelView = created.get();
 		} else {
 			this.channelView = ChannelViewModeRegistry.system().getPresetInstance();
 		}

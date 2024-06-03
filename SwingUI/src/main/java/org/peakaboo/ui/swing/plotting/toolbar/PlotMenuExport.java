@@ -63,10 +63,13 @@ public class PlotMenuExport extends JPopupMenu {
 		JMenu exportSinks = new JMenu("Raw Data");
 		
 		for (PluginDescriptor<DataSinkPlugin> plugin : DataSinkRegistry.system().getPlugins()) {
-			exportSinks.add(new FluentMenuItem()
-					.withText(plugin.getName())
-					.withAction(() -> plot.actionExportData(plugin.create()))
-				);
+			var created = plugin.create();
+			if (created.isPresent()) {
+				exportSinks.add(new FluentMenuItem()
+						.withText(plugin.getName())
+						.withAction(() -> plot.actionExportData(created.get()))
+					);
+			}
 		}
 		
 		return exportSinks;

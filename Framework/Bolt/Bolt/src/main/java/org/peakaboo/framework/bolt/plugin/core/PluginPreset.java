@@ -1,5 +1,8 @@
 package org.peakaboo.framework.bolt.plugin.core;
 
+/**
+ * PluginPreset defines how a component like a plugin Registry can provide a default plugin
+ */
 public interface PluginPreset<P extends BoltPlugin> {
 
 	/**
@@ -9,7 +12,10 @@ public interface PluginPreset<P extends BoltPlugin> {
 	PluginDescriptor<P> getPreset();
 	
 	default P getPresetInstance() {
-		return getPreset().create();
+		// Don't use Optional and force all callers to check to make sure we loaded the
+		// fallback/preset/default implementation. If we can't even load the fallback,
+		// we can just accept defeat and throw an exception
+		return getPreset().create().orElseThrow();
 	}
 	
 }

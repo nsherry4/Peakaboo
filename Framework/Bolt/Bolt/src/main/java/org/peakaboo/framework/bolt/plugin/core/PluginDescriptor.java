@@ -1,5 +1,7 @@
 package org.peakaboo.framework.bolt.plugin.core;
 
+import java.util.Optional;
+
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 /**
@@ -17,8 +19,11 @@ public interface PluginDescriptor<T extends BoltPlugin> {
 	 */
 	Class<T> getPluginClass();
 
-	//TODO create should return Optional<T> rather than sometimes null
-	T create();
+	/**
+	 * Create a new instance of the {@link BoltPlugin} described by this component
+	 * @return
+	 */
+	Optional<T> create();
 
 	boolean isEnabled();
 
@@ -105,8 +110,8 @@ public interface PluginDescriptor<T extends BoltPlugin> {
 	 * {@link PluginDescriptor}. The SavedPlugin will be based on a freshly created
 	 * instance of the plugin.
 	 */
-	default SavedPlugin save() {
-		return new SavedPlugin(create());
+	default Optional<SavedPlugin> save() {
+		return create().map(SavedPlugin::new);	
 	}	
 	
 }

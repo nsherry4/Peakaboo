@@ -97,7 +97,11 @@ public class SerializedFilterV1 {
 				plugin.getUUID().equals(uuidOrClazz) || 
 				plugin.getImplementationClass().getName().equals(uuidOrClazz)
 			) {
-				filter = plugin.create();
+				var created = plugin.create();
+				if (created.isEmpty()) {
+					return Optional.empty();
+				}
+				filter = created.get();
 				filter.initialize();
 				try {
 					/*

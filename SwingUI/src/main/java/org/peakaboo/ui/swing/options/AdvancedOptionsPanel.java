@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -284,7 +285,12 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private OptionBlocksPanel makeCurvefitPanel(PlotController controller) {
 		
-		List<CurveFitter> fitters = CurveFitterRegistry.system().getPlugins().stream().map(p -> p.create()).collect(Collectors.toList());
+		List<CurveFitter> fitters = CurveFitterRegistry.system().getPlugins()
+				.stream()
+				.map(p -> p.create())
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toList());
 		
 		FittingController fits = controller.fitting();
 		OptionBlock fitBlock = makeRadioBlockForPlugins(fitters, fits::getCurveFitter, fits::setCurveFitter);

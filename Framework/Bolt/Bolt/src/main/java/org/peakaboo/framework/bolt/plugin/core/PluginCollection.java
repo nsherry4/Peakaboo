@@ -26,6 +26,8 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 		List<T> insts = getPlugins()
 				.stream()
 				.map(p -> p.create())
+				.filter(Optional::isPresent)
+				.map(Optional::get)
 				.collect(Collectors.toList());
 		Collections.sort(insts, (f1, f2) -> f1.pluginName().compareTo(f1.pluginName()));
 		return insts;

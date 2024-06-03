@@ -95,9 +95,12 @@ class FilterSelectionList extends ClearPanel
 				if (leaf instanceof PluginDescriptor<?>) {
 					@SuppressWarnings("unchecked")
 					PluginDescriptor<Filter> plugin = (PluginDescriptor<Filter>) leaf;
-					Filter filter = plugin.create();
-					filter.initialize();
-					controller.addFilter(filter);
+					var created = plugin.create();
+					if (created.isPresent()) {
+						Filter filter = created.get();
+						filter.initialize();
+						controller.addFilter(filter);					
+					}
 				}
 
 				owner.showEditPane();
