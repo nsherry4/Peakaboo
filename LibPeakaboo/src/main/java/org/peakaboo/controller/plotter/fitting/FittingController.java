@@ -416,14 +416,14 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Change Peak Shape");
 	}
 
-	public void setFittingFunction(PluginDescriptor<? extends FittingFunction> cls) {
+	public void setFittingFunction(PluginDescriptor<FittingFunction> cls) {
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
 		fittingDataInvalidated();
 		setUndoPoint("Change Peak Model");
 	}
 	
-	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<FittingFunction> getFittingFunction() {
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
@@ -596,7 +596,7 @@ public class FittingController extends EventfulType<Boolean>
 		
 		//Restore the fitting function
 		try {
-			PluginDescriptor<? extends FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
+			PluginDescriptor<FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
 			if (oProto == null) {
 				errors.add("Failed to load Fitting Function: " + saved.model.name);
 				oProto = FittingFunctionRegistry.system().getPreset();

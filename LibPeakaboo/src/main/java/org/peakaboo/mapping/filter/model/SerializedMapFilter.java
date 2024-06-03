@@ -54,7 +54,7 @@ public class SerializedMapFilter {
 	public MapFilter getFilter() {
 		if (filter != null) { return filter; }
 			
-		for (PluginDescriptor<? extends MapFilterPlugin> plugin : MapFilterRegistry.system().getPlugins()) {
+		for (PluginDescriptor<MapFilterPlugin> plugin : MapFilterRegistry.system().getPlugins()) {
 			if (plugin.getImplementationClass().getName().equals(clazz)) {
 				filter = plugin.create();
 				filter.initialize();

@@ -12,26 +12,29 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
  * Interface for exposing a set of {@link BoltPlugin}s and {@link BoltIssue}s
  * in a read-only way.
  */
-public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginDescriptor<? extends T>> {
+public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginDescriptor<T>> {
 
-	List<PluginDescriptor<? extends T>> getPlugins();
+	List<PluginDescriptor<T>> getPlugins();
 	
-	default Iterator<PluginDescriptor<? extends T>> iterator() {
+	default Iterator<PluginDescriptor<T>> iterator() {
 		return getPlugins().iterator();
 	}
 	
-	List<BoltIssue<? extends T>> getIssues();
+	List<BoltIssue<T>> getIssues();
 	
 	default List<T> newInstances() {
-		List<T> insts = getPlugins().stream().map(p -> p.create()).collect(Collectors.toList());
+		List<T> insts = getPlugins()
+				.stream()
+				.map(p -> p.create())
+				.collect(Collectors.toList());
 		Collections.sort(insts, (f1, f2) -> f1.pluginName().compareTo(f1.pluginName()));
 		return insts;
 	}
 	
 	PluginRegistry<T> getManager();
 	
-	default PluginDescriptor<? extends T> getByUUID(String uuid) {
-		for (PluginDescriptor<? extends T> plugin : getPlugins()) {
+	default PluginDescriptor<T> getByUUID(String uuid) {
+		for (PluginDescriptor<T> plugin : getPlugins()) {
 			if (plugin.getUUID().equals(uuid)) {
 				return plugin;
 			}
@@ -39,7 +42,7 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 		return null;
 	}
 	
-	default Optional<PluginDescriptor<? extends T>> getByClass(Class<? extends T> cls) {
+	default Optional<PluginDescriptor<T>> getByClass(Class<? extends T> cls) {
 		synchronized(this) {
 			for (var plugin : getPlugins()) {
 				if (plugin.getReferenceInstance().getClass().equals(cls)) {
@@ -72,7 +75,7 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 	 * @param other the other collection to compare against
 	 * @return true if this collection is a proper upgrade for the other, false otherwise
 	 */
-	default boolean isUpgradeFor(PluginCollection<? extends T> other) {
+	default boolean isUpgradeFor(PluginCollection<T> other) {
 		//get all the UUIDs from the other plugin set
 		List<String> otherUUIDs = other.getPlugins().stream().map(p -> p.getUUID()).collect(Collectors.toList());
 				

@@ -92,7 +92,7 @@ public class SerializedFilterV1 {
 		//If it already exists, just return it, otherwise build a filter
 		if (filter != null) { return Optional.of(filter); }
 			
-		for (PluginDescriptor<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
+		for (PluginDescriptor<Filter> plugin : FilterRegistry.system().getPlugins()) {
 			if (
 				plugin.getUUID().equals(uuidOrClazz) || 
 				plugin.getImplementationClass().getName().equals(uuidOrClazz)

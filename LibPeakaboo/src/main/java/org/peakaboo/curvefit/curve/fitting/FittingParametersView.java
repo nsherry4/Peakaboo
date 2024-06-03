@@ -37,7 +37,7 @@ public interface FittingParametersView {
 
 	DetectorMaterialType getDetectorMaterial();
 
-	PluginDescriptor<? extends FittingFunction> getFittingFunction();
+	PluginDescriptor<FittingFunction> getFittingFunction();
 
 	boolean getShowEscapePeaks();
 

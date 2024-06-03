@@ -14,8 +14,8 @@ import org.peakaboo.framework.bolt.plugin.core.issue.BoltOldPluginIssue;
 public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> {
 
 	//Anything modifying this plugins list should call sort() afterwards
-	private ArrayList<PluginDescriptor<? extends T>> plugins = new ArrayList<>();
-	private ArrayList<BoltIssue<? extends T>> issues = new ArrayList<>();
+	private ArrayList<PluginDescriptor<T>> plugins = new ArrayList<>();
+	private ArrayList<BoltIssue<T>> issues = new ArrayList<>();
 	
 	private PluginRegistry<T> manager;
 	
@@ -24,11 +24,11 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 	}
 	
 	@Override
-	public List<PluginDescriptor<? extends T>> getPlugins() {
+	public List<PluginDescriptor<T>> getPlugins() {
 		return Collections.unmodifiableList(plugins);
 	}
 
-	public void addPlugin(PluginDescriptor<? extends T> plugin) {
+	public void addPlugin(PluginDescriptor<T> plugin) {
 		if (plugins.contains(plugin)) {
 			return;
 		}
@@ -36,7 +36,7 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 		if (this.hasUUID(uuid)) {
 			//there is already a plugin with the same UUID.
 			//we have to choose which of these to load
-			PluginDescriptor<? extends T> existingPlugin = this.getByUUID(uuid);
+			PluginDescriptor<T> existingPlugin = this.getByUUID(uuid);
 			
 			if (plugin.isUpgradeFor(existingPlugin)) {
 				plugins.remove(existingPlugin);
@@ -54,24 +54,24 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 		
 	}
 
-	public void loadFrom(PluginCollection<? extends T> pluginset) {
-		for (PluginDescriptor<? extends T> t : pluginset.getPlugins()) {
+	public void loadFrom(PluginCollection<T> pluginset) {
+		for (var t : pluginset.getPlugins()) {
 			addPlugin(t);
 		}
-		for (BoltIssue<? extends T> i : pluginset.getIssues()) {
+		for (var i : pluginset.getIssues()) {
 			addIssue(i);
 		}
 	}
 	
 	
 	
-	public List<BoltIssue<? extends T>> getIssues() {
+	public List<BoltIssue<T>> getIssues() {
 		return Collections.unmodifiableList(issues);
 	}
 	
 
 	
-	public void addIssue(BoltIssue<? extends T> issue) {
+	public void addIssue(BoltIssue<T> issue) {
 		issues.add(issue);
 	}
 

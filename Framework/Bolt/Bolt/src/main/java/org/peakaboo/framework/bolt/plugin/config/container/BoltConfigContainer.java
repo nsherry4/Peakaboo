@@ -37,12 +37,12 @@ public class BoltConfigContainer<T extends BoltConfigPlugin> extends BoltURLCont
 	}
 
 	@Override
-	public List<PluginDescriptor<? extends T>> getPlugins() {
+	public List<PluginDescriptor<T>> getPlugins() {
 		return plugins.getPlugins();
 	}
 
 	@Override
-	public List<BoltIssue<? extends T>> getIssues() {
+	public List<BoltIssue<T>> getIssues() {
 		return plugins.getIssues();
 	}
 

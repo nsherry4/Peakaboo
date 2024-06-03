@@ -50,7 +50,7 @@ public class DelegatingFittingParametersView implements FittingParametersView {
 	}
 
 	@Override
-	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<FittingFunction> getFittingFunction() {
 		return params.getFittingFunction();
 	}
 

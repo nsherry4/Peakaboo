@@ -296,9 +296,9 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
 
 		FittingController fits = controller.fitting();
-		Supplier<PluginDescriptor<? extends FittingFunction>> getter = fits::getFittingFunction;
-		Consumer<PluginDescriptor<? extends FittingFunction>> setter = fits::setFittingFunction;
-		List<PluginDescriptor<? extends FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
+		Supplier<PluginDescriptor<FittingFunction>> getter = fits::getFittingFunction;
+		Consumer<PluginDescriptor<FittingFunction>> setter = fits::setFittingFunction;
+		List<PluginDescriptor<FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
 		
 		OptionBlock fitBlock = this.makeRadioBlockForFitFns(fitters, getter, setter);
 
@@ -326,7 +326,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 	
-	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<PluginDescriptor<? extends FittingFunction>> fitters, Supplier<PluginDescriptor<? extends FittingFunction>> getter, Consumer<PluginDescriptor<? extends FittingFunction>> setter) {
+	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<PluginDescriptor<FittingFunction>> fitters, Supplier<PluginDescriptor<FittingFunction>> getter, Consumer<PluginDescriptor<FittingFunction>> setter) {
 		
 		OptionBlock block = new OptionBlock();
 		ButtonGroup group = new ButtonGroup();

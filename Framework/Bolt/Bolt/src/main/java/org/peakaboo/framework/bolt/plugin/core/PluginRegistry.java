@@ -30,10 +30,10 @@ public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<
 	 * 
 	 * @param loader
 	 */
-	void addLoader(BoltLoader<? extends P> loader);
+	void addLoader(BoltLoader<P> loader);
 
 	
-	List<BoltIssue<? extends P>> getIssues();
+	List<BoltIssue<P>> getIssues();
 
 	String getAssetPath();
 
@@ -45,12 +45,11 @@ public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<
 	
 	
 	default Optional<P> fromSaved(SavedPlugin saved) {
-		var proto = this.getByUUID(saved.uuid);
+		PluginDescriptor<P> proto = this.getByUUID(saved.uuid);
 		if (proto == null) {
 			return Optional.empty();
 		}
-		var solver = proto.create();
-		return Optional.of(solver);
+		return Optional.of(proto.create());
 	}
 	
 	default PluginRegistry<P> getManager() {
