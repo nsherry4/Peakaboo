@@ -17,6 +17,7 @@ public interface PluginDescriptor<T extends BoltPlugin> {
 	 */
 	Class<T> getPluginClass();
 
+	//TODO create should return Optional<T> rather than sometimes null
 	T create();
 
 	boolean isEnabled();

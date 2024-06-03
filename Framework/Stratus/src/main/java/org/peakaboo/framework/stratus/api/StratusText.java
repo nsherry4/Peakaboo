@@ -32,6 +32,9 @@ public class StratusText {
 	}
 	
 	public static String lineWrap(Component c, String text, int width) {
+		if (text == null || text.isEmpty()) {
+			return "";
+		}
 		if (text.contains("\n")) {
 			String[] lines = text.split("\n");
 			StringBuilder sb = new StringBuilder();

@@ -56,7 +56,7 @@ public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements P
 			s.close();
 			return plugin;
 		} catch (IOException e) {
-			Bolt.logger().log(Level.WARNING, "Could not create plugin instance: " + container.getSourceName(), e);
+			Bolt.logger().log(Level.FINE, "Could not create plugin instance: " + container.getSourceName(), e);
 			return null;
 		}
 
