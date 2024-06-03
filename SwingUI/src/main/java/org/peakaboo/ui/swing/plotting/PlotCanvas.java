@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.io.FilenameUtils;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -190,7 +189,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	}
 	
 	void filesDropped(File[] files) {
-		filesDropped(Arrays.asList(files));
+		plotPanel.load(Arrays.asList(files).stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 	}
 	
 	void urlsDropped(URL[] urls) {
@@ -208,17 +207,11 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		}
 	}
 	
+
 	void filesDropped(List<File> files) {
-		
-		
 		if (files.size() == 1 && PluginManager.isPluginFile(files.get(0)) ) {
-			// This is a plugin file, route it to the plugin window
-			plotPanel.actionShowDropPlugin(files.get(0));
-		} else {
-			// Otherwise try to load this as data
 			plotPanel.load(files.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 		}
-		
 	}
 
 

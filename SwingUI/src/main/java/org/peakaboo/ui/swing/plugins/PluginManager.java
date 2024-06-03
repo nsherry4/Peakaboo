@@ -253,7 +253,7 @@ public class PluginManager extends HeaderLayer {
 	/**
 	 * Add a jar file containing plugins
 	 */
-	public void addPluginFile(File file) {
+	private void addPluginFile(File file) {
 		
 		boolean handled = false;
 		

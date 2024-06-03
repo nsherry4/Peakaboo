@@ -770,12 +770,6 @@ public class PlotPanel extends TabbedLayerPanel {
 		pushLayer(new PluginManager(this));
 	}
 
-	public void actionShowDropPlugin(File file) {
-		var pluginui = new PluginManager(this);
-		pushLayer(pluginui);
-		pluginui.addPluginFile(file);
-	}
-	
 	public void actionShowLogs() {
 		File appDataDir = DesktopApp.appDir("Logging");
 		appDataDir.mkdirs();
