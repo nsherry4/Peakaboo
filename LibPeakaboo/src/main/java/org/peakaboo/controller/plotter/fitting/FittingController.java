@@ -596,10 +596,13 @@ public class FittingController extends EventfulType<Boolean>
 		
 		//Restore the fitting function
 		try {
-			PluginDescriptor<FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
-			if (oProto == null) {
+			var lookup = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
+			PluginDescriptor<FittingFunction> oProto;
+			if (lookup.isEmpty()) {
 				errors.add("Failed to load Fitting Function: " + saved.model.name);
 				oProto = FittingFunctionRegistry.system().getPreset();
+			} else {
+				oProto = lookup.get();
 			}
 			fittingModel.selections.getFittingParameters().setFittingFunction(oProto);
 			fittingModel.proposals.getFittingParameters().setFittingFunction(oProto);

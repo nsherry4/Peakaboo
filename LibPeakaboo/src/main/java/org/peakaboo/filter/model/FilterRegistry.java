@@ -63,11 +63,11 @@ public class FilterRegistry extends BoltPluginRegistry<Filter> {
 	
 	@Override
 	public Optional<Filter> fromSaved(SavedPlugin saved) {
-		var proto = FilterRegistry.system().getByUUID(saved.uuid);
-		if (proto == null) {
+		var lookup = FilterRegistry.system().getByUUID(saved.uuid);
+		if (lookup.isEmpty()) {
 			return Optional.empty();
 		}
-		var filter = proto.create();
+		var filter = lookup.get().create();
 		filter.initialize();
 		filter.getParameterGroup().deserialize(saved.settings);
 		return Optional.of(filter);

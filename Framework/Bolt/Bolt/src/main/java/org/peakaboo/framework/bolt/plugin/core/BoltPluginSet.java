@@ -33,10 +33,11 @@ public class BoltPluginSet<T extends BoltPlugin> implements PluginCollection<T> 
 			return;
 		}
 		String uuid = plugin.getUUID();
-		if (this.hasUUID(uuid)) {
+		var lookup = this.getByUUID(uuid);
+		if (lookup.isPresent()) {
 			//there is already a plugin with the same UUID.
 			//we have to choose which of these to load
-			PluginDescriptor<T> existingPlugin = this.getByUUID(uuid);
+			PluginDescriptor<T> existingPlugin = lookup.get();
 			
 			if (plugin.isUpgradeFor(existingPlugin)) {
 				plugins.remove(existingPlugin);

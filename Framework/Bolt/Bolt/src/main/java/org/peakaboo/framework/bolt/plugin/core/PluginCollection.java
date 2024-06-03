@@ -33,13 +33,13 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 	
 	PluginRegistry<T> getManager();
 	
-	default PluginDescriptor<T> getByUUID(String uuid) {
+	default Optional<PluginDescriptor<T>> getByUUID(String uuid) {
 		for (PluginDescriptor<T> plugin : getPlugins()) {
 			if (plugin.getUUID().equals(uuid)) {
-				return plugin;
+				return Optional.of(plugin);
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 	
 	default Optional<PluginDescriptor<T>> getByClass(Class<? extends T> cls) {
@@ -54,7 +54,7 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 	}
 	
 	default boolean hasUUID(String uuid) {
-		return getByUUID(uuid) != null;
+		return getByUUID(uuid).isPresent();
 	}
 	
 	default int size() {
@@ -79,13 +79,27 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 		//get all the UUIDs from the other plugin set
 		List<String> otherUUIDs = other.getPlugins().stream().map(p -> p.getUUID()).collect(Collectors.toList());
 				
+		// For every uuid in THEIR collection, we wee if OUR collection
+		// also has that uuid. If we do, we must check if OUR matching 
+		// plugin is an upgrade for THEIR plugin
 		//if this set is missing any of the UUIDs, it's not an upgrade
-		for (String otherUUID : otherUUIDs) {
-			if (!this.hasUUID(otherUUID)) {
+		for (String uuid : otherUUIDs) {
+			
+			// Try to get OUR plugin for this uuid
+			var ourLookup = this.getByUUID(uuid);
+			if (ourLookup.isEmpty()) {
 				return false;
 			}
-			boolean isUpgrade = this.getByUUID(otherUUID).isUpgradeFor(other.getByUUID(otherUUID));
-			if (!isUpgrade) {
+			var ourPlugin = ourLookup.get();
+			
+			// Try to get THEIR plugin for this uuid
+			var theirLookup = other.getByUUID(uuid);
+			if (theirLookup.isEmpty()) {
+				return false;
+			}
+			var theirPlugin = theirLookup.get();
+			
+			if ( ! ourPlugin.isUpgradeFor(theirPlugin) ) {
 				return false;
 			}
 		}

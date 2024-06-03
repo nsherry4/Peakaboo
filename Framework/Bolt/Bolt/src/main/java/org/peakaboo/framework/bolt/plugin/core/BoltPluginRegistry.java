@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
@@ -110,8 +111,8 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 						
 			for (PluginDescriptor<P> plugin : container.getPlugins()) {
 				//look up the newest version of this plugin by UUID
-				PluginDescriptor<P> newest = getByUUID(plugin.getUUID());
-				if (newest.isNewerThan(plugin)) {
+				Optional<PluginDescriptor<P>> lookup = getByUUID(plugin.getUUID());
+				if (lookup.isPresent() && lookup.get().isNewerThan(plugin)) {
 					outdated = true;
 				}
 			}

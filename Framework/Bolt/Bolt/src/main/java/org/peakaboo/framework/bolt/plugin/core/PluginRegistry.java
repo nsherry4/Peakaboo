@@ -45,11 +45,11 @@ public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<
 	
 	
 	default Optional<P> fromSaved(SavedPlugin saved) {
-		PluginDescriptor<P> proto = this.getByUUID(saved.uuid);
-		if (proto == null) {
+		Optional<PluginDescriptor<P>> lookup = this.getByUUID(saved.uuid);
+		if (lookup.isEmpty()) {
 			return Optional.empty();
 		}
-		return Optional.of(proto.create());
+		return Optional.of(lookup.get().create());		
 	}
 	
 	default PluginRegistry<P> getManager() {
