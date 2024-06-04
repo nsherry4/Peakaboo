@@ -54,7 +54,7 @@ public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction>
 		return "Fitting functions describe an ideal shape for a peak";
 	}
 	@Override
-	public PluginDescriptor<? extends FittingFunction> getPreset() {
+	public PluginDescriptor<FittingFunction> getPreset() {
 		return this.getByClass(PseudoVoigtFittingFunction.class).orElseThrow();
 	}
 	

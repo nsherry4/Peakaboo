@@ -49,7 +49,7 @@ public class FittingSolverRegistry extends BoltPluginRegistry<FittingSolver> imp
 		return "Fitting solvers determine how to match signal with curves for overlapping Transition Series";
 	}
 	@Override
-	public PluginDescriptor<? extends FittingSolver> getPreset() {
+	public PluginDescriptor<FittingSolver> getPreset() {
 		return this.getByClass(GreedyFittingSolver.class).orElseThrow();
 	}
 	

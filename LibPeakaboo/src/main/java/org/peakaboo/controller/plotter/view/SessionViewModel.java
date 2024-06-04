@@ -31,17 +31,13 @@ public class SessionViewModel {
 		return new SavedPlugin(this.channelView);
 	}
 	public void setChannelView(SavedPlugin plugin) {
-		var proto = ChannelViewModeRegistry.system().getByUUID(plugin.uuid);
-		if (proto != null) {
-			this.channelView = proto.create();
-		} else {
-			this.channelView = ChannelViewModeRegistry.system().getPresetInstance();
-		}
+		setChannelView(plugin.uuid);
 	}
-	public void setChannelView(String modeUUID) {
-		var proto = ChannelViewModeRegistry.system().getByUUID(modeUUID);
-		if (proto != null) {
-			this.channelView = proto.create();
+	public void setChannelView(String uuid) {
+		var lookup = ChannelViewModeRegistry.system().getByUUID(uuid);
+		var created = lookup.flatMap(d -> d.create());
+		if (created.isPresent()) {
+			this.channelView = created.get();
 		} else {
 			this.channelView = ChannelViewModeRegistry.system().getPresetInstance();
 		}

@@ -93,7 +93,7 @@ public class SavedFittingSessionV1 {
 		//Restore the fitting function
 		try {
 			var fittingFunctionClass = (Class<? extends FittingFunction>) Class.forName(function);
-			PluginDescriptor<? extends FittingFunction> fitfnProto = FittingFunctionRegistry.system()
+			PluginDescriptor<FittingFunction> fitfnProto = FittingFunctionRegistry.system()
 					.getByClass(fittingFunctionClass)
 					.orElse(FittingFunctionRegistry.system().getPreset());
 			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fitfnProto);

@@ -48,7 +48,7 @@ public class ChannelViewModeRegistry extends BoltPluginRegistry<ChannelViewMode>
 		return "Channel view modes determine how the spectra in a dataset are presented to the user";
 	}
 	@Override
-	public PluginDescriptor<? extends ChannelViewMode> getPreset() {
+	public PluginDescriptor<ChannelViewMode> getPreset() {
 		return this.getByClass(AverageViewMode.class).orElseThrow();
 	}
 

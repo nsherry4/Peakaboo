@@ -94,10 +94,13 @@ class FilterSelectionList extends ClearPanel
 
 				if (leaf instanceof PluginDescriptor<?>) {
 					@SuppressWarnings("unchecked")
-					PluginDescriptor<? extends Filter> plugin = (PluginDescriptor<? extends Filter>) leaf;
-					Filter filter = plugin.create();
-					filter.initialize();
-					controller.addFilter(filter);
+					PluginDescriptor<Filter> plugin = (PluginDescriptor<Filter>) leaf;
+					var created = plugin.create();
+					if (created.isPresent()) {
+						Filter filter = created.get();
+						filter.initialize();
+						controller.addFilter(filter);					
+					}
 				}
 
 				owner.showEditPane();
@@ -137,7 +140,7 @@ class FilterSelectionTreeModel implements TreeModel {
 
 		if (parent instanceof FilterType) {
 			@SuppressWarnings("unchecked")
-			PluginDescriptor<? extends Filter> plugin = (PluginDescriptor<? extends Filter>) child;
+			PluginDescriptor<Filter> plugin = (PluginDescriptor<Filter>) child;
 			return FilterRegistry.system().getPlugins().indexOf(plugin);
 		} else if (parent instanceof String) {
 			FilterType ft = (FilterType) child;
@@ -151,7 +154,7 @@ class FilterSelectionTreeModel implements TreeModel {
 
 		if (parent instanceof FilterType ft) {
 			int typeCount = 0;
-			for (PluginDescriptor<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
+			for (PluginDescriptor<Filter> plugin : FilterRegistry.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 			}
 			return typeCount;
@@ -169,7 +172,7 @@ class FilterSelectionTreeModel implements TreeModel {
 			index++;
 			int typeCount = 0;
 
-			for (PluginDescriptor<? extends Filter> plugin : FilterRegistry.system().getPlugins()) {
+			for (PluginDescriptor<Filter> plugin : FilterRegistry.system().getPlugins()) {
 				if (plugin.getReferenceInstance().getFilterDescriptor().getType() == ft) typeCount++;
 				if (typeCount == index) return plugin;
 			}

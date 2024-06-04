@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -284,7 +285,12 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private OptionBlocksPanel makeCurvefitPanel(PlotController controller) {
 		
-		List<CurveFitter> fitters = CurveFitterRegistry.system().getPlugins().stream().map(p -> p.create()).collect(Collectors.toList());
+		List<CurveFitter> fitters = CurveFitterRegistry.system().getPlugins()
+				.stream()
+				.map(p -> p.create())
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toList());
 		
 		FittingController fits = controller.fitting();
 		OptionBlock fitBlock = makeRadioBlockForPlugins(fitters, fits::getCurveFitter, fits::setCurveFitter);
@@ -296,9 +302,9 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	private OptionBlocksPanel makePeakModelPanel(PlotController controller) {
 
 		FittingController fits = controller.fitting();
-		Supplier<PluginDescriptor<? extends FittingFunction>> getter = fits::getFittingFunction;
-		Consumer<PluginDescriptor<? extends FittingFunction>> setter = fits::setFittingFunction;
-		List<PluginDescriptor<? extends FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
+		Supplier<PluginDescriptor<FittingFunction>> getter = fits::getFittingFunction;
+		Consumer<PluginDescriptor<FittingFunction>> setter = fits::setFittingFunction;
+		List<PluginDescriptor<FittingFunction>> fitters = FittingFunctionRegistry.system().getPlugins();
 		
 		OptionBlock fitBlock = this.makeRadioBlockForFitFns(fitters, getter, setter);
 
@@ -326,7 +332,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 	}
 	
-	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<PluginDescriptor<? extends FittingFunction>> fitters, Supplier<PluginDescriptor<? extends FittingFunction>> getter, Consumer<PluginDescriptor<? extends FittingFunction>> setter) {
+	private <T extends FittingFunction> OptionBlock makeRadioBlockForFitFns(List<PluginDescriptor<FittingFunction>> fitters, Supplier<PluginDescriptor<FittingFunction>> getter, Consumer<PluginDescriptor<FittingFunction>> setter) {
 		
 		OptionBlock block = new OptionBlock();
 		ButtonGroup group = new ButtonGroup();

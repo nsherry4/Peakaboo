@@ -43,7 +43,7 @@ class PluginTreeWidget extends Stencil<Object> {
         	label.setText(manager.getInterfaceName());
         	label.setIcon(StockIcon.PLACE_FOLDER.toImageIcon(IconSize.BUTTON));
     	} else if (object instanceof PluginDescriptor) {
-        	PluginDescriptor<? extends BoltPlugin> plugin = (PluginDescriptor<? extends BoltPlugin>)object;
+        	PluginDescriptor<BoltPlugin> plugin = (PluginDescriptor<BoltPlugin>)object;
         	label.setText(plugin.getName());
         	label.setIcon(getIcon(plugin));	
     	} else if (object instanceof BoltIssue issue) {
@@ -53,7 +53,7 @@ class PluginTreeWidget extends Stencil<Object> {
 		
 	}
 	
-	private ImageIcon getIcon(PluginDescriptor<? extends BoltPlugin> plugin) {
+	private ImageIcon getIcon(PluginDescriptor<BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == DataSourcePlugin.class) {

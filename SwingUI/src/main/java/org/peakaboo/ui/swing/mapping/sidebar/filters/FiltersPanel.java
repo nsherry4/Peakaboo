@@ -203,8 +203,8 @@ public class FiltersPanel extends JPanel {
 	private JPanel buildAddPanel() {
 		
 		//model and tree
-		List<PluginDescriptor<? extends MapFilterPlugin>> plugins = MapFilterRegistry.system().getPlugins();
-		GroupedListTreeModel<PluginDescriptor<? extends MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
+		List<PluginDescriptor<MapFilterPlugin>> plugins = MapFilterRegistry.system().getPlugins();
+		GroupedListTreeModel<PluginDescriptor<MapFilterPlugin>> treeModel = new GroupedListTreeModel<>(plugins, 
 				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);
 		tree.setRootVisible(false);
@@ -224,15 +224,18 @@ public class FiltersPanel extends JPanel {
 			@Override
 			protected void approve() {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-				PluginDescriptor<? extends MapFilterPlugin> proto = null;
+				PluginDescriptor<MapFilterPlugin> proto = null;
 				try {
-					proto = (PluginDescriptor<? extends MapFilterPlugin>) node.getUserObject();	
+					proto = (PluginDescriptor<MapFilterPlugin>) node.getUserObject();	
 				} catch (ClassCastException e) {}
 				
 				if (proto != null) { 
-					MapFilterPlugin plugin = proto.create();
-					plugin.initialize();
-					controller.add(plugin);
+					var created = proto.create();
+					if (created.isPresent()) {
+						MapFilterPlugin plugin = created.get();
+						plugin.initialize();
+						controller.add(plugin);
+					}
 				}
 				layout.show(FiltersPanel.this, PANEL_FILTERS);
 			}

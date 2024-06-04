@@ -77,7 +77,11 @@ public class PlotMenuView extends JPopupMenu {
 		
 		
 		for (var proto : ChannelViewModeRegistry.system().getPlugins()) {
-			var viewmode = proto.create();
+			var created = proto.create();
+			if (created.isEmpty()) {
+				continue;
+			}
+			var viewmode = created.get();
 			if (scanmodes.keySet().contains(viewmode)) { continue; }
 			
 			var oMode = new OptionRadioButton(compositeBlock, compositeGroup)

@@ -29,7 +29,7 @@ import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 class PluginView extends JPanel {
 	
-	public PluginView(PluginDescriptor<? extends BoltPlugin> plugin) {
+	public PluginView(PluginDescriptor<BoltPlugin> plugin) {
 		super(new GridBagLayout());
 		setBorder(Spacing.bHuge());
 
@@ -70,7 +70,7 @@ class PluginView extends JPanel {
 		
 	}
 
-	private ImageIcon getIcon(PluginDescriptor<? extends BoltPlugin> plugin) {
+	private ImageIcon getIcon(PluginDescriptor<BoltPlugin> plugin) {
 		Class<? extends BoltPlugin> pluginBaseClass = plugin.getPluginClass();
 		
 		if (pluginBaseClass == DataSourcePlugin.class) {

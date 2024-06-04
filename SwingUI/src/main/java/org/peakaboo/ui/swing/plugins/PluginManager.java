@@ -161,7 +161,7 @@ public class PluginManager extends HeaderLayer {
 	}
 	
 
-	private PluginDescriptor<? extends BoltPlugin> selectedPlugin() {
+	private PluginDescriptor<BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
 		if (node == null) {
@@ -171,23 +171,25 @@ public class PluginManager extends HeaderLayer {
 			return null;
 		}
 		
-		PluginDescriptor<? extends BoltPlugin> plugin = (PluginDescriptor<? extends BoltPlugin>) node.getUserObject();
+		PluginDescriptor<BoltPlugin> plugin = (PluginDescriptor<BoltPlugin>) node.getUserObject();
 		return plugin;
 	}
 	
 	private void removeSelected() {	
-		PluginDescriptor<? extends BoltPlugin> plugin = selectedPlugin();
-		if (plugin != null) {
-			remove(plugin);	
-		}
+		remove(selectedPlugin());
 	}
 	
-	private void remove(PluginDescriptor<? extends BoltPlugin> plugin) {
+	private void remove(PluginDescriptor<BoltPlugin> plugin) {
 		/*
 		 * This is a little tricky. There's no rule that says that each plugin is in 
 		 * it's own jar file. We need to confirm with the user that they want to 
 		 * remove the jar file and all plugins that it contains.
 		 */
+		
+		if (plugin == null) {
+			// No need to do anything
+			return;
+		}
 		
 		BoltContainer<? extends BoltPlugin> container = plugin.getContainer();
 		if (!container.isDeletable()) {
@@ -400,10 +402,10 @@ public class PluginManager extends HeaderLayer {
 			} else {
 				Object o = node.getUserObject();
 				if (o instanceof PluginDescriptor<?>) {
-					details.add(new PluginView((PluginDescriptor<? extends BoltPlugin>) o), BorderLayout.CENTER);
+					details.add(new PluginView((PluginDescriptor<BoltPlugin>) o), BorderLayout.CENTER);
 					remove.setEnabled(selectedPlugin().getContainer().isDeletable());
 				} else if (o instanceof BoltIssue) {
-					details.add(new IssueView((BoltIssue<? extends BoltPlugin>) o, this));
+					details.add(new IssueView((BoltIssue<BoltPlugin>) o, this));
 					remove.setEnabled(false);
 				}
 			}

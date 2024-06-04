@@ -49,7 +49,7 @@ public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> impleme
 		return "Curve fitters match curves for individual Transition Series to real signal";
 	}
 	@Override
-	public PluginDescriptor<? extends CurveFitter> getPreset() {
+	public PluginDescriptor<CurveFitter> getPreset() {
 		return this.getByClass(UnderCurveFitter.class).orElseThrow();
 	}
 
