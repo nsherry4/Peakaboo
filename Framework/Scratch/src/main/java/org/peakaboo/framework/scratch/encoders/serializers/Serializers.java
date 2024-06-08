@@ -1,8 +1,11 @@
 package org.peakaboo.framework.scratch.encoders.serializers;
 
 import java.io.Serializable;
+import java.lang.reflect.InaccessibleObjectException;
+import java.util.logging.Level;
 
 import org.peakaboo.framework.scratch.ScratchEncoder;
+import org.peakaboo.framework.scratch.ScratchLog;
 
 public class Serializers {
 
@@ -16,9 +19,15 @@ public class Serializers {
 	
 	public static <T> ScratchEncoder<T> fstUnsafe(Class<? extends T> clazz, Class<?>... classes) {
 		if (isAndroid()) {
+			// Android doesn't do unsafe, fall back to safe android implementation
 			return fst(clazz, classes);
 		} else {
-			return new FSTUnsafeSerializingEncoder<>(clazz, classes);
+			try {
+				return new FSTUnsafeSerializingEncoder<>(clazz, classes);
+			} catch (InaccessibleObjectException e) {
+				ScratchLog.get().log(Level.WARNING, "Could not create unsafe FST serializer, falling back to safe implementation.", e);
+				return new FSTDefaultSerializingEncoder<>(clazz, classes);
+			}
 		}
 	}
 	
