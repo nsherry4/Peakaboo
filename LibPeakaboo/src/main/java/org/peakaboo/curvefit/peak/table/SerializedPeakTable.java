@@ -13,12 +13,20 @@ import java.util.logging.Level;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class SerializedPeakTable implements PeakTable {
 
-	private static ScratchEncoder encoder = Serializers.fst(PrimaryTransitionSeries.class, Transition.class);
+	private static ScratchEncoder encoder = Serializers.fst(
+			PrimaryTransitionSeries.class,
+			PrimaryTransitionSeries[].class,
+			Transition.class,
+			TransitionShell.class,
+			Element.class,
+			ArrayList.class
+		);
 	private List<PrimaryTransitionSeries> series;
 	
 	public SerializedPeakTable(PeakTable fallback, File file) {
