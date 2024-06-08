@@ -26,7 +26,7 @@ public class Serializers {
 				return new FSTUnsafeSerializingEncoder<>(clazz, classes);
 			} catch (InaccessibleObjectException e) {
 				ScratchLog.get().log(Level.WARNING, "Could not create unsafe FST serializer, falling back to safe implementation.", e);
-				return new FSTDefaultSerializingEncoder<>(clazz, classes);
+				return fst(clazz, classes);
 			}
 		}
 	}
@@ -35,7 +35,12 @@ public class Serializers {
 		if (isAndroid()) {
 			return new FSTAndroidSerializingEncoder<>(clazz, classes);
 		} else {
-			return new FSTDefaultSerializingEncoder<>(clazz, classes);
+			try {
+				return new FSTDefaultSerializingEncoder<>(clazz, classes);
+			} catch (InaccessibleObjectException e) {
+				// Fall back to Kryo, which doesn't require as much module access
+				return new KryoSerializingEncoder<T>(clazz, classes);
+			}
 		}
 	}
 	
