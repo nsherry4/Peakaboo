@@ -9,7 +9,13 @@ import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class PeakabooConfiguration {
 
-	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(Serializers.fstUnsafe(ArraySpectrum.class), Compressors.lz4fast());
+	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(
+			Serializers.fstUnsafe(
+					ArraySpectrum.class,
+					float[].class
+				), 
+			Compressors.lz4fast()
+		);
 
 	
 	public static final MemorySize memorySize = calcMemoryFootprint();
