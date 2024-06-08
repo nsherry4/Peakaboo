@@ -6,9 +6,10 @@ import org.peakaboo.framework.scratch.ScratchException;
 
 public class FSTUnsafeSerializingEncoder<T> implements ScratchEncoder<T>{
 
-	private FSTConfiguration conf = FSTConfiguration.createUnsafeBinaryConfiguration();
+	private FSTConfiguration conf;
 	
 	public FSTUnsafeSerializingEncoder(Class<? extends T> clazz, Class<?>... classes) {
+		this.conf = FSTConfiguration.createUnsafeBinaryConfiguration();	
 		conf.registerClass(clazz);
 		conf.registerClass(classes);
 	}

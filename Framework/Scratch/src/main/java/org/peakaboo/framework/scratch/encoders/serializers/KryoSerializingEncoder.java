@@ -9,6 +9,7 @@ import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.ScratchException;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -84,7 +85,11 @@ public class KryoSerializingEncoder<T> implements ScratchEncoder<T>{
 		} else {
 			kIn = new Input(data);
 		}
-		return getKryo().readObject(kIn, clazz);
+		try {
+			return getKryo().readObject(kIn, clazz);
+		} catch (KryoException e) {
+			throw new ScratchException(e);
+		}
 	}
 
 	public String toString() {
