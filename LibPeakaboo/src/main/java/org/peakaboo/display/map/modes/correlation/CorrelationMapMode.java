@@ -63,7 +63,7 @@ public class CorrelationMapMode extends MapMode {
 		map.setDrawingRequest(dr);
 
 		List<Palette> paletteList = new ArrayList<>();
-		paletteList.add(new ColourStopPalette(settings.monochrome ? Gradients.INV_MONOCHROME : Gradients.GEORGIA));
+		paletteList.add(new ColourStopPalette(settings.gradient));
 		
 		List<AxisPainter> axisPainters = new ArrayList<>();
 		super.setupTitleAxisPainters(settings, axisPainters);

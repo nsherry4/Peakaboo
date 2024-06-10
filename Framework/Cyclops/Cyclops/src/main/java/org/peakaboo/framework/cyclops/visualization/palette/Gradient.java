@@ -21,13 +21,16 @@ public class Gradient {
 	};
 
 	private List<Stop> stops;
+	private String name;
 
-	public Gradient(List<Stop> stops) {
+	public Gradient(String name, List<Stop> stops) {
 		this.stops = stops;
+		this.name = name;
 	}
 
-	public Gradient(Stop... stops) {
+	public Gradient(String name, Stop... stops) {
 		this.stops = List.of(stops);
+		this.name = name;
 	}
 	
 	public List<PaletteColour> toList(int steps) {
@@ -117,6 +120,10 @@ public class Gradient {
 
 		return spectrum;
 	
+	}
+
+	public String getName() {
+		return name;
 	}
 	
 	

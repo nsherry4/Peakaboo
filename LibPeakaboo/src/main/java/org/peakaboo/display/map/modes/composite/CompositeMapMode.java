@@ -39,7 +39,7 @@ public class CompositeMapMode extends MapMode{
 		backend.setSource(settings.getBg());
 		backend.fill();
 		
-		Palette palette	= new ColourStopPalette(settings.monochrome ? Gradients.MONOCHROME : Gradients.THERMAL);
+		Palette palette	= new ColourStopPalette(settings.gradient);
 		List<Palette> paletteList = new ArrayList<>();
 		
 				

@@ -6,6 +6,8 @@ import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Bounds;
 import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.eventful.EventfulType;
 
 /**
@@ -30,7 +32,7 @@ public class MapSettingsController extends EventfulType<MapUpdateType>
 	
 	private int		spectrumSteps		= 15;
 	private boolean	contour				= false;
-	private boolean	monochrome			= false;
+	private Gradient colourGradient = Gradients.DEFAULT;
 
 	private float	zoom				= 1f;
 
@@ -93,20 +95,19 @@ public class MapSettingsController extends EventfulType<MapUpdateType>
 		return this.spectrumSteps;
 	}
 
-
-	public void setMonochrome(boolean mono)
+	
+	public void setColourGradient(Gradient gradient)
 	{
-		this.monochrome = mono;
+		this.colourGradient = gradient;
 		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
 
 
-	public boolean getMonochrome()
+	public Gradient getColourGradient()
 	{
-		return this.monochrome;
+		return this.colourGradient;
 	}
 
-	
 
 	public void setShowSpectrum(boolean show)
 	{

@@ -65,7 +65,7 @@ public class RatioMapMode extends MapMode {
 		
 		//if this is a valid ratio, make a real colour palette -- otherwise, just a black palette
 		if (validRatio) {
-			paletteList.add(new RatioPalette(settings.monochrome ? Gradients.RATIO_MONOCHROME : Gradients.RATIO_THERMAL));
+			paletteList.add(new RatioPalette(settings.gradient));
 		}
 		
 		
