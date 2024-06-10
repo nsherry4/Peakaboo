@@ -12,7 +12,7 @@ import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
-import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
 
 public class Mapper {
 
@@ -38,7 +38,7 @@ public class Mapper {
 			settings = new MapRenderSettings();
 		}
 
-		final int spectrumSteps = (settings.contours) ? settings.contourSteps : Spectrums.DEFAULT_STEPS;
+		final int spectrumSteps = (settings.contours) ? settings.contourSteps : Gradient.DEFAULT_STEPS;
 		
 		if (! mapmode.mapModeName().equals(settings.mode)) {
 			mapmode = modecache.get(settings.mode);

@@ -13,8 +13,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.Painter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 /**
  * 
@@ -29,17 +29,17 @@ public abstract class MapPainter extends Painter
 {
 
 	
-	protected List<AbstractPalette>	colourRules;
+	protected List<Palette>	colourRules;
 
 
-	protected MapPainter(List<AbstractPalette> colourRules)
+	protected MapPainter(List<Palette> colourRules)
 	{
 		this.colourRules = colourRules;
 	}
 	
-	protected MapPainter(AbstractPalette colourRule)
+	protected MapPainter(Palette colourRule)
 	{
-		List<AbstractPalette> rules = new ArrayList<>();
+		List<Palette> rules = new ArrayList<>();
 		rules.add(colourRule);
 		this.colourRules = rules;
 	}
@@ -57,7 +57,7 @@ public abstract class MapPainter extends Painter
 
 		PaletteColour c;
 		
-		for (AbstractPalette r : colourRules) {
+		for (Palette r : colourRules) {
 			c = r.getFillColour(intensity, maximum);
 			if (c != null) return c;
 		}
@@ -66,12 +66,12 @@ public abstract class MapPainter extends Painter
 
 	}
 	
-	public void setPalette(AbstractPalette palette)
+	public void setPalette(Palette palette)
 	{
 		colourRules.clear();
 		colourRules.add(palette);
 	}
-	public void setPalettes(List<AbstractPalette> palettes)
+	public void setPalettes(List<Palette> palettes)
 	{
 		colourRules.clear();
 		colourRules.addAll(palettes);

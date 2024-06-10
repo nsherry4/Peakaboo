@@ -11,15 +11,15 @@ import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 
 
 public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 {
 	private int							spectrumSteps;
-	private List<AbstractPalette>		colourRules;
+	private List<Palette>		colourRules;
 	private boolean						negativeValues;
 	private List<Pair<Float, String>>	markings;
 	private int 						decimalPoints;
@@ -27,7 +27,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	
 	public SpectrumCoordsAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
+			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<Palette> palettes,
 			boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super(
@@ -56,7 +56,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	public SpectrumCoordsAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<AbstractPalette> palettes,
+			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<Palette> palettes,
 			boolean realDimensionsProvided, boolean drawScaleBar, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
 	{
 		super(
@@ -183,7 +183,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			maximum = (float)Math.log1p(maximum);
 		}
 		
-		for (AbstractPalette r : colourRules)
+		for (Palette r : colourRules)
 		{
 			c = r.getFillColour(intensity, maximum);
 			if (c != null) return c;

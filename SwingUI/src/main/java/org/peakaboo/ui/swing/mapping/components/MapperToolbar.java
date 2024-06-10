@@ -91,7 +91,7 @@ public class MapperToolbar extends JToolBar {
 		
 	}
 	
-
+	
 	public static FluentToolbarButton createOptionsButton(MappingController controller) {
 		
 		JPopupMenu menu = new MapMenuView(controller);

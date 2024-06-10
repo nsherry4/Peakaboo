@@ -3,7 +3,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.SingleColourPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.SingleColourPalette;
 
 
 /**

@@ -27,6 +27,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.Le
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.ColourStopPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class OverlayMapMode extends MapMode {
@@ -79,7 +80,7 @@ public class OverlayMapMode extends MapMode {
 				//add the colour to a list of colourcode/label pairs
 				colours.add(new Pair<>(colour.toColour(), tsFormatter.apply(colour)));
 				
-				OverlayPalette palette = new OverlayPalette(spectrumSteps, colour.toColour());
+				ColourStopPalette palette = new ColourStopPalette(spectrumSteps, colour.toColour());
 				
 				// create a list of map painters, one for each of the maps we want to show
 				RasterSpectrumMapPainter overlayColourMapPainter;

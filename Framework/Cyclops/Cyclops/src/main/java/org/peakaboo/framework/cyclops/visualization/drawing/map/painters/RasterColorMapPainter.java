@@ -11,7 +11,7 @@ import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.SingleColourPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.SingleColourPalette;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 

@@ -19,9 +19,10 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.Selecti
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.SaturationPalette;
 
 public class RatioMapMode extends MapMode {
 
@@ -38,7 +39,7 @@ public class RatioMapMode extends MapMode {
 		backend.setSource(settings.getBg());
 		backend.fill();
 		
-		List<AbstractPalette> paletteList = new ArrayList<>();
+		List<Palette> paletteList = new ArrayList<>();
 		
 
 		Pair<Spectrum, Spectrum> ratiodata = ((RatioModeData)data.mapModeData).getData();
@@ -63,9 +64,8 @@ public class RatioMapMode extends MapMode {
 		
 		
 		//if this is a valid ratio, make a real colour palette -- otherwise, just a black palette
-		if (validRatio)
-		{
-			paletteList.add(new RatioPalette(spectrumSteps, settings.monochrome));
+		if (validRatio) {
+			paletteList.add(new RatioPalette(settings.monochrome ? Gradients.RATIO_MONOCHROME : Gradients.RATIO_THERMAL));
 		}
 		
 		

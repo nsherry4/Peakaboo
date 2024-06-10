@@ -1,8 +1,6 @@
-package org.peakaboo.framework.cyclops.visualization.palette.palettes;
+package org.peakaboo.framework.cyclops.visualization.palette;
 
-import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-
-public class SaturationPalette extends AbstractPalette
+public class SaturationPalette implements Palette
 {
 
 	private PaletteColour saturated, unsaturated;

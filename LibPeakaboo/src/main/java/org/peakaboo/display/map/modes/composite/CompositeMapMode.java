@@ -16,10 +16,11 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.Selecti
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.ColourStopPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScalePalette;
+import org.peakaboo.framework.cyclops.visualization.palette.SaturationPalette;
 
 public class CompositeMapMode extends MapMode{
 
@@ -38,8 +39,8 @@ public class CompositeMapMode extends MapMode{
 		backend.setSource(settings.getBg());
 		backend.fill();
 		
-		AbstractPalette palette				=		new ThermalScalePalette(spectrumSteps, settings.monochrome);
-		List<AbstractPalette> paletteList	=		new ArrayList<>();
+		Palette palette	= new ColourStopPalette(settings.monochrome ? Gradients.MONOCHROME : Gradients.THERMAL);
+		List<Palette> paletteList = new ArrayList<>();
 		
 				
 		dr.uninterpolatedWidth = settings.filteredDataWidth;

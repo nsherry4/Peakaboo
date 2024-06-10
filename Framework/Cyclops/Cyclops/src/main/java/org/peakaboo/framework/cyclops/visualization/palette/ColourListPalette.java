@@ -1,10 +1,11 @@
-package org.peakaboo.framework.cyclops.visualization.palette.palettes;
+package org.peakaboo.framework.cyclops.visualization.palette;
 
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-
-public class ColourListPalette extends AbstractPalette {
+/**
+ * Accepts a list of evenly spaced {@link PaletteColour}s and provides a
+ */
+public class ColourListPalette implements Palette {
 
 	private List<PaletteColour> spectrum;
 	private boolean hasNegatives;

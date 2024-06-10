@@ -20,11 +20,10 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleA
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.RangeTickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.ColourStopPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListPalette;
 
 public class CorrelationMapMode extends MapMode {
 
@@ -63,12 +62,8 @@ public class CorrelationMapMode extends MapMode {
 		
 		map.setDrawingRequest(dr);
 
-		List<AbstractPalette> paletteList = new ArrayList<>();
-		if (settings.monochrome) {
-			paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.MONOCHROME_INVERTED.getPaletteData(), 1f, 1f), false));
-		} else {
-			paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.GEORGIA.getPaletteData(), 1f, 1f), false));
-		}
+		List<Palette> paletteList = new ArrayList<>();
+		paletteList.add(new ColourStopPalette(settings.monochrome ? Gradients.INV_MONOCHROME : Gradients.GEORGIA));
 		
 		List<AxisPainter> axisPainters = new ArrayList<>();
 		super.setupTitleAxisPainters(settings, axisPainters);
