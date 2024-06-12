@@ -73,6 +73,8 @@ public class MapSettingsController extends EventfulType<MapUpdateType>
 
 
 	public void setZoom(float zoom) {
+		if (zoom < 1) zoom = 1;
+		if (zoom > 50) zoom = 50;
 		this.zoom = zoom;
 		updateListeners(MapUpdateType.UI_OPTIONS);
 	}

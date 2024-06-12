@@ -3,6 +3,8 @@ package org.peakaboo.ui.swing.mapping.components;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.SwingUtilities;
 
@@ -10,7 +12,7 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.ui.swing.mapping.MapCanvas;
 
-public class MapSelectionListener implements MouseMotionListener, MouseListener {
+public class MapSelectionListener implements MouseMotionListener, MouseListener, MouseWheelListener {
 
 	private MappingController controller;
 	private MapCanvas canvas;
@@ -93,6 +95,24 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		//NOOP
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent wheel) {
+		System.out.println("Event " + wheel);
+		int moves = wheel.getWheelRotation();
+		double factor = Math.pow(1.1f, Math.abs(moves));
+		
+		float zoom = controller.getSettings().getZoom();
+		if (moves < 0) {
+			// Scrolled Up
+			zoom *= factor;
+		} else {
+			// Scrolled Down
+			zoom /= factor;
+		}
+		controller.getSettings().setZoom(zoom);
+		
 	}
 	
 }

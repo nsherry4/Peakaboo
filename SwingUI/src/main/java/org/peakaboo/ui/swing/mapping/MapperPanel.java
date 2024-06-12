@@ -123,6 +123,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		canvas.addMouseMotionListener(movementListener);
 		canvas.addMouseMotionListener(selectionListener);
 		canvas.addMouseListener(selectionListener);
+		canvas.addMouseWheelListener(selectionListener);
 		
 
 		controller.addListener(t -> {
@@ -148,6 +149,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		canvasScroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		canvasScroller.setWheelScrollingEnabled(false);
 		new DraggingScrollPaneListener(canvasScroller.getViewport(), canvas, Buttons.MIDDLE, Buttons.RIGHT);
 		
 		JPanel canvasContainer = new JPanel(new GridBagLayout());
