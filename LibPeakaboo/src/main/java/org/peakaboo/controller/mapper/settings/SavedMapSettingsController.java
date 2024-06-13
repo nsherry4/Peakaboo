@@ -1,5 +1,6 @@
 package org.peakaboo.controller.mapper.settings;
 
+import org.peakaboo.app.Settings;
 import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 
 public class SavedMapSettingsController {
@@ -22,7 +23,7 @@ public class SavedMapSettingsController {
 		controller.setShowDatasetTitle(drawDataSetTitle);
 		controller.setSpectrumSteps(spectrumSteps);
 		controller.setContours(contour);
-		controller.setColourGradient(Gradients.forName(colourPalette).orElse(Gradients.DEFAULT));
+		controller.setColourGradient(Gradients.forName(colourPalette).orElse(Settings.getDefaultMapPalette()));
 		
 	}
 	

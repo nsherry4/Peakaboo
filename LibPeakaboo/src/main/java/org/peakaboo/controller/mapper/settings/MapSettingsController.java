@@ -1,7 +1,9 @@
 package org.peakaboo.controller.mapper.settings;
 
 import java.io.File;
+import java.util.List;
 
+import org.peakaboo.app.Settings;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.cyclops.Bounds;
@@ -16,8 +18,7 @@ import org.peakaboo.framework.eventful.EventfulType;
  * 
  * @author NAS
  */
-public class MapSettingsController extends EventfulType<MapUpdateType>
-{
+public class MapSettingsController extends EventfulType<MapUpdateType> {
 
 	//SOURCE DATA
 	private MappingController mapController;
@@ -32,13 +33,13 @@ public class MapSettingsController extends EventfulType<MapUpdateType>
 	
 	private int		spectrumSteps		= 15;
 	private boolean	contour				= false;
-	private Gradient colourGradient = Gradients.DEFAULT;
+	private Gradient colourGradient 	= Settings.getDefaultMapPalette();
 
 	private float	zoom				= 1f;
 
 	public File		lastFolder 			= null;
+
 	
-		
 	public MapSettingsController(MappingController mapController)
 	{
 		setMappingController(mapController);
@@ -103,8 +104,7 @@ public class MapSettingsController extends EventfulType<MapUpdateType>
 		this.colourGradient = gradient;
 		updateListeners(MapUpdateType.UI_OPTIONS);
 	}
-
-
+	
 	public Gradient getColourGradient()
 	{
 		return this.colourGradient;

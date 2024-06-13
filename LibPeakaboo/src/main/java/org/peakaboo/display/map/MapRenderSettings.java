@@ -1,5 +1,6 @@
 package org.peakaboo.display.map;
 
+import org.peakaboo.app.Settings;
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.display.map.modes.MapModeRegistry;
@@ -24,7 +25,7 @@ public class MapRenderSettings {
 	public String mapTitle = "";
 	
 	public MapScaleMode scalemode = MapScaleMode.ABSOLUTE;
-	public Gradient gradient = Gradients.DEFAULT;
+	public Gradient gradient = Settings.getDefaultMapPalette();
 	public boolean darkmode = false;
 	public boolean contours = false;
 	public int contourSteps = 15;

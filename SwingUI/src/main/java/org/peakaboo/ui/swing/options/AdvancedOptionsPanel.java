@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -32,11 +33,14 @@ import org.peakaboo.framework.autodialog.model.SelfDescribing;
 import org.peakaboo.framework.autodialog.view.swing.layouts.SwingLayoutFactory;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.stencil.Stencil;
+import org.peakaboo.framework.stratus.components.stencil.StencilListCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlock;
 import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
@@ -47,11 +51,13 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
+import org.peakaboo.mapping.Mapping;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
 import org.peakaboo.ui.swing.app.AccentedBrightTheme;
 import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
+import org.peakaboo.ui.swing.mapping.components.MapMenuView;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
@@ -194,6 +200,40 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	
 	private OptionBlocksPanel makeAppPanel(PlotController controller) {
 	
+
+		OptionBlock mapsBlock = new OptionBlock();
+		
+		var stencil = new Stencil<Gradient>() {
+
+			private JLabel label;
+			
+			{
+				this.label = new JLabel();
+				this.setLayout(new BorderLayout());
+				this.add(label, BorderLayout.CENTER);
+				this.label.setBorder(Spacing.bLarge());
+				this.label.setIconTextGap(Spacing.large);
+			}
+			
+			@Override
+			protected void onSetValue(Gradient g, boolean selected) {
+				this.label.setText(g.getName());
+				this.label.setIcon(MapMenuView.gradientToIcon(g));
+			}
+		};
+		
+		var paletteCombo = new JComboBox<Gradient>(Mapping.MAP_PALETTES.toArray(new Gradient[] {}));
+		paletteCombo.setRenderer(new StencilListCellRenderer<>(stencil));
+		paletteCombo.setSelectedItem(Settings.getDefaultMapPalette());
+		paletteCombo.addActionListener(e -> {
+			Gradient sel = (Gradient) paletteCombo.getSelectedItem();
+			Settings.setDefaultMapPalette(sel);
+		});
+		var palettes = new OptionCustomComponent(mapsBlock, paletteCombo, false);
+		palettes.withTitle("Map Palette").withSize(OptionSize.LARGE);
+		mapsBlock.add(palettes);
+		
+		
 		OptionBlock uxBlock = new OptionBlock();
 		
 		var colours = AccentedBrightTheme.accentColours;
@@ -224,7 +264,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withListener(DesktopSettings::setFirstrun);
 		startup.add(firstrun);
 
-		return new OptionBlocksPanel(uxBlock, startup);
+		return new OptionBlocksPanel(mapsBlock, uxBlock, startup);
 				
 	}
 

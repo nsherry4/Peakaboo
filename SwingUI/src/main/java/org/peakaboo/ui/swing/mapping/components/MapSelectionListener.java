@@ -99,7 +99,6 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent wheel) {
-		System.out.println("Event " + wheel);
 		int moves = wheel.getWheelRotation();
 		double factor = Math.pow(1.1f, Math.abs(moves));
 		

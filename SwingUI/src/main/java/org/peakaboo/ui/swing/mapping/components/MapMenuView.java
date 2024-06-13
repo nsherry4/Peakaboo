@@ -31,6 +31,7 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionBlocksPanel;
 import org.peakaboo.framework.stratus.components.ui.options.OptionCheckBox;
 import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
+import org.peakaboo.mapping.Mapping;
 
 public class MapMenuView extends JPopupMenu {
 
@@ -47,14 +48,9 @@ public class MapMenuView extends JPopupMenu {
 		ButtonGroup paletteGroup = new ButtonGroup();
 		OptionBlock paletteBlock = new OptionBlock();
 		
-		paletteBlock.add(makeOpt(Gradients.SPECTRUM, paletteBlock, paletteGroup));
-		paletteBlock.add(makeOpt(Gradients.GEORGIA, paletteBlock, paletteGroup));
-		paletteBlock.add(makeOpt(Gradients.IRON, paletteBlock, paletteGroup));
-		paletteBlock.add(makeOpt(Gradients.NAVIA, paletteBlock, paletteGroup));
-		paletteBlock.add(makeOpt(Gradients.LAJOLLA, paletteBlock, paletteGroup));
-		paletteBlock.add(makeOpt(Gradients.OSLO, paletteBlock, paletteGroup));
-		paletteBlock.add(makeOpt(Gradients.MONOCHROME, paletteBlock, paletteGroup));
-		paletteBlock.add(makeOpt(Gradients.INV_MONOCHROME, paletteBlock, paletteGroup));
+		for (var g : Mapping.MAP_PALETTES) {
+			paletteBlock.add(makeOpt(g, paletteBlock, paletteGroup));
+		}
 				
 		OptionBlocksPanel blockPanel = new OptionBlocksPanel(OptionSize.SMALL, paletteBlock);	
 		panel.add(blockPanel, BorderLayout.WEST);
@@ -120,7 +116,7 @@ public class MapMenuView extends JPopupMenu {
 		this.controller.getSettings().setColourGradient(g);
 	}
 
-	private ImageIcon gradientToIcon(Gradient g) {
+	public static ImageIcon gradientToIcon(Gradient g) {
 		int width = 64;
 		int height = 16;
 		

@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.druthers.settings.DummySettingsStore;
 import org.peakaboo.framework.druthers.settings.SettingsStore;
 import org.peakaboo.framework.druthers.settings.YamlSettingsStore;
@@ -122,14 +124,24 @@ public class Settings {
 			cfgContents = cfgContents.replace("java-options=-XX:MaxRAMPercentage=75", jvmOption);
 			File userCFG = Env.userCFGFile(Version.PROGRAM_NAME);
 			Files.writeString(userCFG.toPath(), cfgContents);
-		} catch (IOException e) {
+		} catch (IOException | RuntimeException e) {
 			PeakabooLog.get().log(Level.WARNING, "Cannot write to per-user Peakaboo.cfg file", e);
-			throw new RuntimeException(e);
 		}
 		
 		
 
 		
+	}
+
+	private static final String MAP_PALETTE = "org.peakaboo.app.map-palette";
+	public static void setDefaultMapPalette(Gradient g) {
+		provider.set(MAP_PALETTE, g.getName());
+		writeHeapConfig();
+	}
+
+	public static Gradient getDefaultMapPalette() {
+		String name = provider.get(MAP_PALETTE, Gradients.DEFAULT.getName());
+		return Gradients.forName(name).orElse(Gradients.DEFAULT);
 	}
 
 	
