@@ -10,18 +10,18 @@ public class Gradients {
 	private Gradients() {};
 	
 	
-	public static final Gradient MONOCHROME = new Gradient("Monochrome",
+	public static final Gradient MONOCHROME = new Gradient("Black to White",
 			new Stop(0xff000000, 0f),
 			new Stop(0xffffffff, 1f)
 		);
 	
-	public static final Gradient INV_MONOCHROME = new Gradient("Inverted Monochrome",
+	public static final Gradient INV_MONOCHROME = new Gradient("White to Black",
 			new Stop(0xffffffff, 0f),
 			new Stop(0xff000000, 1f)
 		);
 	
 	
-	public static final Gradient SPECTRUM = new Gradient("Spectrum",
+	public static final Gradient SPECTRUM = new Gradient("Rainbow",
 			new Stop(0xff10154D, 0f),
 			new Stop(0xff0D47A1, 0.235f),
 			new Stop(0xff388E3C, 0.392f),
@@ -31,46 +31,68 @@ public class Gradients {
 		);
 	
 	
-	public static final Gradient NAVIA = new Gradient("Navia",
-			new Stop(0xff0b1627, 0f),
-			new Stop(0xff1a2b3f, 0.11f),
-			new Stop(0xff19598c, 0.22f),
-			new Stop(0xff29728e, 0.33f),
-			new Stop(0xff3a8285, 0.44f),
-			new Stop(0xff4b9379, 0.55f),
-			new Stop(0xff66aa6a, 0.66f),
-			new Stop(0xff98ca6e, 0.77f),
-			new Stop(0xffd9e5a6, 0.88f),
-			new Stop(0xfffcf5d9, 1f)
+	public static final Gradient REDHOT = new Gradient("Red Hot",
+			new Stop(0xff000000, 0.0f),
+			new Stop(0xff320000, 0.06f),
+			new Stop(0xff4b0100, 0.12f),
+			new Stop(0xff630100, 0.19f),
+			new Stop(0xff7e0200, 0.25f),
+			new Stop(0xff990400, 0.31f),
+			new Stop(0xffb50600, 0.37f),
+			new Stop(0xffd10a00, 0.44f),
+			new Stop(0xffed1500, 0.5f),
+			new Stop(0xfffc4100, 0.56f),
+			new Stop(0xffff6900, 0.62f),
+			new Stop(0xffff8a00, 0.68f),
+			new Stop(0xffffa701, 0.75f),
+			new Stop(0xffffc104, 0.81f),
+			new Stop(0xffffdb0a, 0.87f),
+			new Stop(0xfffff324, 0.93f),
+			new Stop(0xffffffff, 1.0f)
 		);
 
-
-	public static final Gradient LAJOLLA = new Gradient("Lajolla", 
-			new Stop(0xff1f1e0f, 0f),
-			new Stop(0xff332312, 0.11f), 
-			new Stop(0xff5b2f22, 0.22f), 
-			new Stop(0xff91403c, 0.33f), 
-			new Stop(0xffc94e4a, 0.44f),
-			new Stop(0xffe1714d, 0.55f), 
-			new Stop(0xffe9924f, 0.66f), 
-			new Stop(0xffefb553, 0.77f), 
-			new Stop(0xfff8de7a, 0.88f),
-			new Stop(0xfffcf9cb, 1f)
+	public static final Gradient GOULDIAN = new Gradient("Gouldian",
+			new Stop(0xff303030, 0.0f),
+			new Stop(0xff3c3659, 0.06f),
+			new Stop(0xff423d7f, 0.12f),
+			new Stop(0xff4345a2, 0.19f),
+			new Stop(0xff3f51bc, 0.25f),
+			new Stop(0xff3761c9, 0.31f),
+			new Stop(0xff2977b7, 0.37f),
+			new Stop(0xff258b95, 0.44f),
+			new Stop(0xff429a76, 0.5f),
+			new Stop(0xff6ca557, 0.56f),
+			new Stop(0xff96ad3a, 0.62f),
+			new Stop(0xffbeb31d, 0.68f),
+			new Stop(0xffe6b713, 0.75f),
+			new Stop(0xfff8c214, 0.81f),
+			new Stop(0xfffed313, 0.87f),
+			new Stop(0xfffee60f, 0.93f),
+			new Stop(0xfff9f90a, 1.0f)
 		);
+	
 
-	public static final Gradient OSLO = new Gradient("Oslo", 
-			new Stop(0xff080706, 0f),
-			new Stop(0xff101928, 0.11f), 
-			new Stop(0xff143250, 0.22f), 
-			new Stop(0xff1f4c7b, 0.33f), 
-			new Stop(0xff3968a7, 0.44f),
-			new Stop(0xff688ac4, 0.55f), 
-			new Stop(0xff8a9fc8, 0.66f), 
-			new Stop(0xffabb6c9, 0.77f), 
-			new Stop(0xffd4d6da, 0.88f),
-			new Stop(0xfffefefe, 1f)
+	public static final Gradient CRANBERRY = new Gradient("Cranberry",
+			new Stop(0xffffffff, 0.0f),
+			new Stop(0xffebf7fd, 0.06f),
+			new Stop(0xffd8eefd, 0.12f),
+			new Stop(0xffc8e5fe, 0.19f),
+			new Stop(0xffbedaff, 0.25f),
+			new Stop(0xffb9cefe, 0.31f),
+			new Stop(0xffb9c1fc, 0.37f),
+			new Stop(0xffbeb2f6, 0.44f),
+			new Stop(0xffc8a2eb, 0.5f),
+			new Stop(0xffd291dd, 0.56f),
+			new Stop(0xffdd7eca, 0.62f),
+			new Stop(0xffe56bb2, 0.68f),
+			new Stop(0xffeb5797, 0.75f),
+			new Stop(0xffec4279, 0.81f),
+			new Stop(0xffe73158, 0.87f),
+			new Stop(0xffdd2535, 0.93f),
+			new Stop(0xffd0210e, 1.0f)
 		);
-		
+	
+	
 	public static final Gradient IRON = new Gradient("Iron",
 			new Stop(0xff020f15, 0f),
 			new Stop(0xff26036c, 0.1f),
@@ -96,23 +118,13 @@ public class Gradients {
 		);
 	
 	
-	public static final Gradient RATIO_THERMAL = new Gradient("Ratio Thermal",
-			new Stop(0xff1485CC, 0f),
-			new Stop(0xff000000, 0.5f),
-			new Stop(0xffff0000, 1f)
-		);
-	
-	
-	public static final Gradient RATIO_MONOCHROME = new Gradient("Ratio Monochrome",
-			new Stop(0xff000000, 0f),
-			new Stop(0xffffffff, 1f)
-		);
-		
+
+
 
 	public static final Gradient DEFAULT = SPECTRUM;
 	
 	public static Optional<Gradient> forName(String colourPalette) {
-		var gs = List.of(MONOCHROME, INV_MONOCHROME, SPECTRUM, NAVIA, LAJOLLA, OSLO, IRON, GEORGIA);
+		var gs = List.of(MONOCHROME, INV_MONOCHROME, SPECTRUM, GOULDIAN, REDHOT, CRANBERRY, IRON, GEORGIA);
 		for (var g : gs) {
 			if (g.getName().equalsIgnoreCase(colourPalette)) {
 				return Optional.of(g);
