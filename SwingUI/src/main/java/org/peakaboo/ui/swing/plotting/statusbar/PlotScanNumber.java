@@ -12,6 +12,7 @@ import org.peakaboo.controller.plotter.view.mode.SingleViewMode;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 
 public class PlotScanNumber extends ClearPanel {
@@ -33,12 +34,10 @@ public class PlotScanNumber extends ClearPanel {
 		scanLabel.setBorder(Spacing.bSmall());
 		scanBlock = new FluentToggleButton(StockIcon.CHOOSE_CANCEL)
 				.withTooltip("Flag this scan to exclude it and extrapolate it from neighbouring points in maps")
+				.withBordered(BorderStyle.ACTIVE)
 				.withAction(selected -> {
-					if (selected) {
-						controller.data().getDiscards().discard(controller.view().getScanNumber());
-					} else {
-						controller.data().getDiscards().undiscard(controller.view().getScanNumber());
-					}
+					int scanNumber = controller.view().getScanNumber();
+					controller.data().getDiscards().setDiscarded(scanNumber, selected);
 				});
 		
 		this.add(scanLabel);

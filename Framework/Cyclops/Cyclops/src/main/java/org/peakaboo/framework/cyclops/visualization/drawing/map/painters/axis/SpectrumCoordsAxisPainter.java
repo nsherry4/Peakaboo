@@ -19,7 +19,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 {
 	private int							spectrumSteps;
-	private List<Palette>		colourRules;
+	private List<Palette>				colourRules;
 	private boolean						negativeValues;
 	private List<Pair<Float, String>>	markings;
 	private int 						decimalPoints;
@@ -102,11 +102,12 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		if (drawCoords) offsetY += 0.3f*keyHeight;
 
 		float spectrumPosition = position;
-		for (int i = (negativeValues ? -steps : 0); i < steps; i++)
-		{
-
+		float maxY = p.dr.maxYIntensity;
+		float scale = maxY / steps;
+		for (int i = (negativeValues ? -steps : 0); i < steps; i++) {
 			p.context.rectAt(spectrumPosition, offsetY, increment + 1.0f, keyHeight);
-			p.context.setSource(getColourFromRules(((float)i/(float)steps)*p.dr.maxYIntensity, p.dr.maxYIntensity, p.dr.viewTransform));
+			var source = getColourFromRules(i * scale, maxY, p.dr.viewTransform);
+			p.context.setSource(source);
 			p.context.fill();
 			spectrumPosition += increment;
 
@@ -173,8 +174,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	}
 
 
-	public PaletteColour getColourFromRules(float intensity, float maximum, ViewTransform transform)
-	{
+	public PaletteColour getColourFromRules(float intensity, float maximum, ViewTransform transform) {
 
 		PaletteColour c;
 
@@ -183,8 +183,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 			maximum = (float)Math.log1p(maximum);
 		}
 		
-		for (Palette r : colourRules)
-		{
+		for (Palette r : colourRules) {
 			c = r.getFillColour(intensity, maximum);
 			if (c != null) return c;
 		}
