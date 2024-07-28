@@ -75,7 +75,7 @@ public class PlotStatusBar extends ClearPanel {
 
 
 	public void setData(ChannelViewMode viewmode, int channel, float energy, float value, float rawvalue) {
-		pView.setValue(viewmode.shortName());
+		pView.setValue(viewmode.name());
 		
 		pChannel.setValue(channel);
 		if (!pChannel.isVisible()) pChannel.setVisible(true);
@@ -95,7 +95,7 @@ public class PlotStatusBar extends ClearPanel {
 	}
 		
 	public void setData(ChannelViewMode viewmode) {
-		pView.setValue(viewmode.shortName());
+		pView.setValue(viewmode.name());
 		
 		if (pChannel.isVisible()) pChannel.setVisible(false);
 		if (pEnergy.isVisible()) pEnergy.setVisible(false);

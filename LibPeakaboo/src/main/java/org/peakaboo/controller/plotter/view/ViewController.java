@@ -69,7 +69,7 @@ public class ViewController extends EventfulBeacon {
 
 	public void setChannelViewMode(ChannelViewMode mode) {
 		viewModel.channelView = mode;
-		setUndoPoint(mode.longName());
+		setUndoPoint(mode.name());
 		plot.filtering().filteredDataInvalidated();
 	}
 	
