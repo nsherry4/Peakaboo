@@ -16,6 +16,7 @@ import java.util.concurrent.Semaphore;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -69,7 +70,8 @@ public class Stratus {
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-				
+		ToolTipManager.sharedInstance().setDismissDelay(15000);
+		
 		if (splashBackground != null && splashIcon != null) {
 			SwingUtilities.invokeLater(() -> {
 				splashWindow = new SplashScreen(IconFactory.getImageIcon(splashPath, splashBackground), IconFactory.getImage(splashPath, splashIcon), appName);
