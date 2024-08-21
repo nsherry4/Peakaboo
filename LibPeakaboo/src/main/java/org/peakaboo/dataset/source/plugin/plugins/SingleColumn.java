@@ -9,6 +9,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
@@ -71,16 +72,18 @@ public class SingleColumn extends AbstractDataSource {
 			}
 			
 			@Override
-			public FileFormatCompatibility compatibility(List<DataInputAdapter> filenames) {
+			public FileFormatCompatibility compatibility(List<DataInputAdapter> files) {
 				try {
 					//exactly 1 file
-					if (filenames.size() != 1) {
+					if (files.size() != 1) {
+						PeakabooLog.get().fine("Expected exactly one file");
 						return FileFormatCompatibility.NO;
 					}
-					DataInputAdapter filename = filenames.get(0);
+					DataInputAdapter filename = files.get(0);
 					
 					//no larger than 1MB
 					if (filename.size().orElse(0l) > 1048576l) {
+						PeakabooLog.get().fine("Expected a file less than 1MB");
 						return FileFormatCompatibility.NO;
 					}
 					
@@ -90,10 +93,12 @@ public class SingleColumn extends AbstractDataSource {
 					if (test(lines)) {
 						return FileFormatCompatibility.MAYBE_BY_CONTENTS;
 					} else {
+						PeakabooLog.get().fine("File did not meet expected structure");
 						return FileFormatCompatibility.NO;
 					}
 					
 				} catch (IOException e) {
+					PeakabooLog.get().fine("An error occurred while reading this file: " + e.getMessage());
 					return FileFormatCompatibility.NO;
 				}
 			}
@@ -184,9 +189,12 @@ public class SingleColumn extends AbstractDataSource {
 		if (parts.length == 2) {			
 			for (String line : lines) {
 				parts = line.split(splitPattern);
-				if (parts.length != 2) return false;
-				if (!isNumeric(parts[0])) return false;
-				if (!isNumeric(parts[1])) return false;
+				if (parts.length != 2) {
+					return false;
+				}
+				if (!isNumeric(parts[0]) || !isNumeric(parts[1])) {
+					return false;
+				}
 			}
 		} else if (parts.length == 1) {
 			for (String line : lines) {
