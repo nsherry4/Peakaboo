@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
@@ -167,6 +168,19 @@ public class Peakaboo {
 		DesktopSettings.init();
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		CrashHandler.init();
+		
+		// TODO: ugly -- rework logging to make this easier (and in the correct place)
+		// Don't do verbose logging for particularly chatty parts of java's internals
+		List<String> exclusions = List.of(
+				"sun.awt",
+				"java.awt",
+				"java.lang",
+				"sun.net",
+				"jdk.internal"
+		);
+		for (String excl : exclusions) {
+			Logger.getLogger(excl).setLevel(Level.INFO);
+		}
 		
 		PeakabooLog.get().log(Level.INFO, "Peakaboo is starting up.");
 		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.LONG_VERSION + " - " + Version.buildDate);
