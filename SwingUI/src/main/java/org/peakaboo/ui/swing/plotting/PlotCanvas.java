@@ -178,18 +178,16 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			@Override
 			public void urlsDropped(URL[] urls) {
+				PeakabooLog.get().log(Level.INFO, "Received dropped URLs: " + Arrays.toString(urls));
 				PlotCanvas.this.urlsDropped(urls);
 			}
 			
 			@Override
 			public void filesDropped(File[] files) {
-				PlotCanvas.this.filesDropped(files);
+				PeakabooLog.get().log(Level.INFO, "Received dropped Files: " + Arrays.toString(files));
+				PlotCanvas.this.filesDropped(List.of(files));
 			}
 		};
-	}
-	
-	void filesDropped(File[] files) {
-		plotPanel.load(Arrays.asList(files).stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 	}
 	
 	void urlsDropped(URL[] urls) {
@@ -197,6 +195,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
 				if (!optfiles.isPresent()) { return; }
+				PeakabooLog.get().log(Level.INFO, "Downloaded URLs to files: " + optfiles.get().toString());
 				filesDropped(optfiles.get());
 			});
 
@@ -209,9 +208,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	
 
 	void filesDropped(List<File> files) {
-		if (files.size() == 1 && PluginManager.isPluginFile(files.get(0)) ) {
-			plotPanel.load(files.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
-		}
+		plotPanel.load(files.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 	}
 
 

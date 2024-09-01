@@ -305,7 +305,7 @@ public class Peakaboo {
 					File f = FileDrop.getUrlAsFile(url, urlProgress);
 					files.add(f);
 				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString());
+					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString(), e);
 					return null;
 				}
 				count.set(count.get()+1);

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Optional;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,7 +18,8 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 
 public class ErrorDisplayPanel extends JPanel {
 
-	private Throwable t;
+	
+	private Optional<Throwable> t;
 	
 	
 	public ErrorDisplayPanel(Throwable t) {
@@ -25,10 +27,21 @@ public class ErrorDisplayPanel extends JPanel {
 	}
 	
 	public ErrorDisplayPanel(String msg, Throwable t) {
-		if (t == null) {
-			throw new RuntimeException("Error Panel cannot be shown without exception");
+		
+		String errorMessage = "";
+		String errorType = "";
+
+		if (t != null) {
+			errorType = t.getClass().getSimpleName();
+			errorMessage = t.getMessage();
+			if (errorMessage == null) {
+				errorMessage = "";
+			}
 		}
-		this.t = t;
+		
+		this.t = Optional.of(t);
+		
+		
 		setLayout(new BorderLayout(Spacing.huge, Spacing.huge));
 		setBorder(Spacing.bHuge());
 		
@@ -43,17 +56,12 @@ public class ErrorDisplayPanel extends JPanel {
 		
 		JPanel north = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
 		
-		String title = "<div style='font-size: 115%; padding-top: 0px; padding-bottom: 5px;'>Error of type " + t.getClass().getSimpleName() + "</div>";
+		String title = "<div style='font-size: 115%; padding-top: 0px; padding-bottom: 5px;'>Error of type " + errorType + "</div>";
 		if (msg == null) {
 			msg = "";
 		}
-		String longMessage = "";
-		if (t.getMessage() != null) {
-			longMessage = t.getMessage();
-		}
-		if (longMessage == null) {
-			longMessage = "";
-		}
+		
+		String longMessage = errorMessage;
 		if (longMessage.length() > 100) {
 			longMessage = longMessage.substring(0, 99) + "…";
 		}
@@ -70,9 +78,10 @@ public class ErrorDisplayPanel extends JPanel {
 	}
 	
 	public String getStackTrace() {
+		if (t.isEmpty()) return "";
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
-		t.printStackTrace(pw);
+		t.get().printStackTrace(pw);
 		return sw.toString();
 	}
 	
