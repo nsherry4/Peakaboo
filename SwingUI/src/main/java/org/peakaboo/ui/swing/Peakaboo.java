@@ -43,7 +43,6 @@ import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
@@ -55,6 +54,7 @@ import org.peakaboo.ui.swing.app.AccentedDuskTheme;
 import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
+import org.peakaboo.ui.swing.app.widgets.FileDrop;
 import org.peakaboo.ui.swing.plotting.PlotFrame;
 
 

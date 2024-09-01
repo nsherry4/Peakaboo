@@ -36,7 +36,6 @@ import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusText;
-import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
@@ -52,6 +51,7 @@ import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.app.DesktopApp;
+import org.peakaboo.ui.swing.app.widgets.FileDrop;
 
 public class PluginManager extends HeaderLayer {
 

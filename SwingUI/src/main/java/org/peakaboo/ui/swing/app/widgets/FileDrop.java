@@ -1,4 +1,4 @@
-package org.peakaboo.framework.stratus.api.hookins;
+package org.peakaboo.ui.swing.app.widgets;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -24,12 +24,16 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+import org.peakaboo.app.Env;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.StratusLog;
@@ -416,28 +420,37 @@ public class FileDrop {
 		for (DataFlavor f : flavors)
 			log("FileDrop: Found DataFlavor " + f.toString());
 		
-		// See if any of the flavors match
-		for (DataFlavor curFlavor : flavors) {
-			
-			// If it's a file list flavour, accept it
-			if (curFlavor.equals(DataFlavor.javaFileListFlavor)) {
-				log("FileDrop: Found a DropType of " + DropType.DROP_FILELIST.toString());
-				return DropType.DROP_FILELIST;
-			}
 
-			// if the mime-type is a uri-list, accept it
-			if (curFlavor.getSubType().equals("uri-list") && curFlavor.isRepresentationClassReader()) {
-				log("FileDrop: Found a DropType of " + DropType.DROP_LINUX.toString());
-				return DropType.DROP_LINUX;
-			}
-
-			// if the String payload is a URL, accept it
-			if (isDragUrl(evt)) {
-				log("FileDrop: Found a DropType of " + DropType.DROP_URL.toString());
-				return DropType.DROP_URL;
-			}
-
+		// Tests for each flavour and a way to look up the drop type from the successful test
+		Predicate<DataFlavor> isFileListDrop = f -> f.equals(DataFlavor.javaFileListFlavor);
+		Predicate<DataFlavor> isLinuxDrop = f -> f.getSubType().equals("uri-list") && f.isRepresentationClassReader();
+		Predicate<DataFlavor> isURLDrop = f -> isDragUrl(evt);
+		Map<Predicate<DataFlavor>, DropType> dropTypes = Map.of(
+				isFileListDrop, DropType.DROP_FILELIST,
+				isLinuxDrop, DropType.DROP_LINUX,
+				isURLDrop, DropType.DROP_URL
+		);
+		
+		// The list of predicates determines the order of preference for each type of input
+		List<Predicate<DataFlavor>> tests = List.of(isFileListDrop, isLinuxDrop, isURLDrop);
+		if (Env.getOS() == Env.OS.MAC) {
+			// Don't use the linux file drop on MacOS, it doesn't seem to provide the needed `file://` prefixes?
+			tests = List.of(isFileListDrop, isURLDrop);
 		}
+		
+		// For each test in order of preference, try each flavour to see if it's a fit
+		for (var test : tests) {
+			for (var flavor : flavors) {
+				
+				if (test.test(flavor)) {
+					DropType selectedType = dropTypes.get(test);
+					log("Testing on DataFlavor " + flavor.toString() + " has been selected for use with DropType " + selectedType);
+					return selectedType;
+				}
+				
+			}
+		}
+		
 
 		log("FileDrop: Found a DropType of " + DropType.DROP_FAIL.toString());
 		return DropType.DROP_FAIL;
@@ -463,6 +476,7 @@ public class FileDrop {
 			return false;
 		}
 		try {
+			System.out.println(data);
 			URL url = new URL(data);
 		} catch (Exception e) {
 			return false;
