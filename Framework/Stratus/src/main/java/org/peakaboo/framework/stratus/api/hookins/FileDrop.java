@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -337,8 +338,16 @@ public class FileDrop {
 					if (ZERO_CHAR_STRING.equals(line))
 						continue;
 
+					// Clean up this line and check if it needs to be URL encoded before being read as a URL
+					line = line.strip();
+					if (line.contains(" ") && !line.contains("%")) {
+						line = URLEncoder.encode(line, "UTF-8");
+					}
+
+					// Turn it into a File and add it to the list
 					File file = new File(new URI(line));
 					list.add(file);
+					
 				} catch (Exception ex) {
 					log("Error with " + line + ": " + ex.getMessage());
 				}
@@ -412,21 +421,25 @@ public class FileDrop {
 			
 			// If it's a file list flavour, accept it
 			if (curFlavor.equals(DataFlavor.javaFileListFlavor)) {
+				log("FileDrop: Found a DropType of " + DropType.DROP_FILELIST.toString());
 				return DropType.DROP_FILELIST;
 			}
 
 			// if the mime-type is a uri-list, accept it
 			if (curFlavor.getSubType().equals("uri-list") && curFlavor.isRepresentationClassReader()) {
+				log("FileDrop: Found a DropType of " + DropType.DROP_LINUX.toString());
 				return DropType.DROP_LINUX;
 			}
 
 			// if the String payload is a URL, accept it
 			if (isDragUrl(evt)) {
+				log("FileDrop: Found a DropType of " + DropType.DROP_URL.toString());
 				return DropType.DROP_URL;
 			}
 
 		}
 
+		log("FileDrop: Found a DropType of " + DropType.DROP_FAIL.toString());
 		return DropType.DROP_FAIL;
 
 
