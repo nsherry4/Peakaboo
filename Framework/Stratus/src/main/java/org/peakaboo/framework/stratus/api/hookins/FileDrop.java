@@ -721,7 +721,7 @@ public class FileDrop {
 	}
 	
 	private static void log(String message) {
-		StratusLog.get().log(Level.FINEST, message);
+		StratusLog.get().log(Level.FINE, message);
 	}
 
 	/**
