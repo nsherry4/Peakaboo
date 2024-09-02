@@ -434,7 +434,7 @@ public class FileDrop {
 		// The list of predicates determines the order of preference for each type of input
 		List<Predicate<DataFlavor>> tests = List.of(isFileListDrop, isLinuxDrop, isURLDrop);
 		if (Env.getOS() == Env.OS.MAC) {
-			// Don't use the linux file drop on MacOS, it doesn't seem to provide the needed `file://` prefixes?
+			// Don't use the linux file drop on MacOS, it doesn't seem to work properly?
 			tests = List.of(isFileListDrop, isURLDrop);
 		}
 		
@@ -476,7 +476,6 @@ public class FileDrop {
 			return false;
 		}
 		try {
-			System.out.println(data);
 			URL url = new URL(data);
 		} catch (Exception e) {
 			return false;
