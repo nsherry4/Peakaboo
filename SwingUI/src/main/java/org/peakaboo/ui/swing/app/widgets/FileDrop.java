@@ -9,6 +9,7 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetListener;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,12 +18,15 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -34,6 +38,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
 import org.peakaboo.app.Env;
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.StratusLog;
@@ -614,31 +619,42 @@ public class FileDrop {
 		return getUrlAsFile(url, null);
 	}
 	
+	
 	public static File getUrlAsFile(URL url, Consumer<Float> progressCallback) throws IOException {
-		String[] parts = url.toString().split("\\.");
-		String ext = "";
-		if (parts.length > 1) {
-			ext = "." + parts[parts.length-1];
-		}
-		String filename = "";
-		if (parts.length > 2) {
-			String[] urlpathparts = parts[parts.length-2].split("/");
-			filename = urlpathparts[urlpathparts.length-1] + "." + ext;
-		}
+		final int BLOCK_SIZE = 8192;
+		
+		// Get the file name from the URL
+		String filename = Paths.get(url.getPath()).getFileName().toString();
+		filename = URLDecoder.decode(filename, "UTF-8");
+		
+		// Create a local file with the same name
 		Path tempdir = Files.createTempDirectory("Peakaboo");
 		Path tempfile = tempdir.resolve(filename);
 		File file = tempfile.toFile();
-		file.deleteOnExit();
+
+		PeakabooLog.get().log(Level.FINE, "Downloading URL '" + url.toString() + "' to File '" + file.getAbsolutePath() + "'");
 		
-		int expectedSize = contentLength(url);
-		ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-		if (progressCallback != null) {
-			rbc = new CallbackByteChannel(rbc, expectedSize, progressCallback);
+		// Open a connection to the URL which we will use to download the file
+        URLConnection connection = url.openConnection();
+        int contentLength = connection.getContentLength();
+		
+		try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+			 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+			
+			byte[] dataBuffer = new byte[BLOCK_SIZE];
+			int bytesRead;
+			long totalBytesRead = 0;
+			
+			while ((bytesRead = in.read(dataBuffer, 0, BLOCK_SIZE)) != -1) {
+				fileOutputStream.write(dataBuffer, 0, bytesRead);
+				totalBytesRead += bytesRead;
+				if (progressCallback != null && contentLength > 0) {
+					float progress = totalBytesRead / (float)contentLength;
+					progressCallback.accept(progress);
+				}
+			}
 		}
-		FileOutputStream fos = new FileOutputStream(file);
-		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		fos.close();
-		rbc.close();
+
 		return file;
 	}
 	

@@ -291,6 +291,8 @@ public class Peakaboo {
 	//TODO: is there a better place for this code to live?
 	public static TaskMonitor<List<File>> getUrlsAsync(List<URL> urls, Consumer<Optional<List<File>>> callback) {
 		
+		PeakabooLog.get().log(Level.FINE, "Fetching URLs for download: [" + String.join(",", urls.stream().map(Object::toString).toList()) + "]");
+		
 		Mutable<SimpleTaskMonitor<List<File>>> monitor = new Mutable<>();
 		
 		Supplier<List<File>> supplier = () -> {
@@ -310,6 +312,8 @@ public class Peakaboo {
 				}
 				count.set(count.get()+1);
 			}
+			
+			PeakabooLog.get().log(Level.FINE, "Fetched URLs as Files: [" + String.join(",", files.stream().map(Object::toString).toList()) + "]");
 			return files;
 		};
 		monitor.set(new SimpleTaskMonitor<>("Downloading Files", supplier, callback));
