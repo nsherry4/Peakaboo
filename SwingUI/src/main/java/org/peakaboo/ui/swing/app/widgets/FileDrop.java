@@ -436,12 +436,16 @@ public class FileDrop {
 				isURLDrop, DropType.DROP_URL
 		);
 		
+		
 		// The list of predicates determines the order of preference for each type of input
-		List<Predicate<DataFlavor>> tests = List.of(isFileListDrop, isLinuxDrop, isURLDrop);
-		if (Env.getOS() == Env.OS.MAC) {
-			// Don't use the linux file drop on MacOS, it doesn't seem to work properly?
-			tests = List.of(isFileListDrop, isURLDrop);
-		}
+		// We customize which formats to use on an OS-by-OS basis
+		List<Predicate<DataFlavor>> tests = switch (Env.getOS()) {
+			case Env.OS.WINDOWS -> List.of(isURLDrop);
+			case Env.OS.UNIX -> List.of(isFileListDrop, isLinuxDrop, isURLDrop);
+			case Env.OS.MAC -> List.of(isFileListDrop, isURLDrop);
+			default -> List.of(isFileListDrop, isLinuxDrop, isURLDrop);
+		};
+		
 		
 		// For each test in order of preference, try each flavour to see if it's a fit
 		for (var test : tests) {
@@ -627,17 +631,17 @@ public class FileDrop {
 		String filename = Paths.get(url.getPath()).getFileName().toString();
 		filename = URLDecoder.decode(filename, "UTF-8");
 		
+		
 		// Create a local file with the same name
 		Path tempdir = Files.createTempDirectory("Peakaboo");
 		Path tempfile = tempdir.resolve(filename);
 		File file = tempfile.toFile();
-
 		PeakabooLog.get().log(Level.FINE, "Downloading URL '" + url.toString() + "' to File '" + file.getAbsolutePath() + "'");
+		
 		
 		// Open a connection to the URL which we will use to download the file
         URLConnection connection = url.openConnection();
         int contentLength = connection.getContentLength();
-		
 		try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
 			 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
 			
