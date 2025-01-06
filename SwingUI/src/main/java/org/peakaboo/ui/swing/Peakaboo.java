@@ -288,37 +288,6 @@ public class Peakaboo {
 		run();
 	}
 
-	//TODO: is there a better place for this code to live?
-	public static TaskMonitor<List<File>> getUrlsAsync(List<URL> urls, Consumer<Optional<List<File>>> callback) {
-		
-		PeakabooLog.get().log(Level.FINE, "Fetching URLs for download: [" + String.join(",", urls.stream().map(Object::toString).toList()) + "]");
-		
-		Mutable<SimpleTaskMonitor<List<File>>> monitor = new Mutable<>();
-		
-		Supplier<List<File>> supplier = () -> {
-			Mutable<Float> count = new Mutable<>(0f);
-			List<File> files = new ArrayList<>();
-			Consumer<Float> urlProgress = (Float percent) -> {
-				float total = (count.get() + percent) / ((float)urls.size());
-				monitor.get().setPercent(total);
-			};
-			for (URL url : urls) {
-				try {
-					File f = FileDrop.getUrlAsFile(url, urlProgress);
-					files.add(f);
-				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString(), e);
-					return null;
-				}
-				count.set(count.get()+1);
-			}
-			
-			PeakabooLog.get().log(Level.FINE, "Fetched URLs as Files: [" + String.join(",", files.stream().map(Object::toString).toList()) + "]");
-			return files;
-		};
-		monitor.set(new SimpleTaskMonitor<>("Downloading Files", supplier, callback));
-		return monitor.get();
-	}
 
 
 }

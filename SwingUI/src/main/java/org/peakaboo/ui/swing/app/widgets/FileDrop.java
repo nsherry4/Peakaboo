@@ -15,26 +15,26 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiPredicate;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.border.Border;
 
 import org.peakaboo.app.Env;
@@ -42,6 +42,7 @@ import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.StratusLog;
+import org.peakaboo.ui.swing.app.widgets.FileDrop.TransferableObject;
 
 /**
  * This class makes it easy to drag and drop files from the operating system to
@@ -111,8 +112,7 @@ public class FileDrop {
 		DROP_FAIL,
 		DROP_NONE,
 	}
-	DropType dropType = DropType.DROP_NONE;
-	
+
 	/**
 	 * Constructs a {@link FileDrop} with a default light-blue border and, if
 	 * <var>c</var> is a {@link java.awt.Container}, recursively sets all elements
@@ -124,14 +124,13 @@ public class FileDrop {
 	 * @since 1.0
 	 */
 	public FileDrop(final Component c, final Listener listener) {
-		this(	c, // Drop target
+		this(c, // Drop target
 				BorderFactory.createMatteBorder(border, border, border, border, defaultBorderColor), // Drag border
 				BorderFactory.createMatteBorder(border, border, border, border, rejectBorderColor), // Drag reject border
 				true, // Recursive
 				listener);
 	} // end constructor
 
-	
 	/**
 	 * Constructor with a default border and the option to recursively set drop
 	 * targets. If your component is a <tt>java.awt.Container</tt>, then each of its
@@ -144,13 +143,12 @@ public class FileDrop {
 	 * @since 1.0
 	 */
 	public FileDrop(final Component c, final boolean recursive, final Listener listener) {
-		this(	c, // Drop target
+		this(c, // Drop target
 				BorderFactory.createMatteBorder(border, border, border, border, defaultBorderColor), // Drag border
 				BorderFactory.createMatteBorder(border, border, border, border, rejectBorderColor), // Drag reject border
 				recursive, // Recursive
 				listener);
 	} // end constructor
-
 
 	/**
 	 * Constructor with a specified border
@@ -160,16 +158,13 @@ public class FileDrop {
 	 * @param listener   Listens for <tt>filesDropped</tt>.
 	 * @since 1.0
 	 */
-	public FileDrop(final Component c, final Border dragBorder,
-			final Border rejectBorder, final Listener listener) {
-		this(	c, // Drop target
+	public FileDrop(final Component c, final Border dragBorder, final Border rejectBorder, final Listener listener) {
+		this(c, // Drop target
 				dragBorder, // Drag border
 				rejectBorder, // Drag reject border
 				false, // Recursive
 				listener);
 	} // end constructor
-
-
 
 	/**
 	 * Full constructor with a specified border and debugging optionally turned on.
@@ -186,22 +181,19 @@ public class FileDrop {
 	 * @param listener   Listens for <tt>filesDropped</tt>.
 	 * @since 1.0
 	 */
-	public FileDrop(final Component c,
-			final Border dragBorder, final Border rejectBorder, final boolean recursive,
+	public FileDrop(final Component c, final Border dragBorder, final Border rejectBorder, final boolean recursive,
 			final Listener listener) {
 
 		if (supportsDnD()) { // Make a drop listener
 			dropListener = new DropTargetListener() {
-				
+
 				public void dragEnter(java.awt.dnd.DropTargetDragEvent evt) {
 					log("FileDrop: dragEnter event.");
 
 					// Is this an acceptable drag event?
-					dropType = isDragOk(evt);
-					if (dropType != DropType.DROP_FAIL && dropType != DropType.DROP_NONE && c.isEnabled()) {
+					if (isDragOk(evt) && c.isEnabled()) {
 						// If it's a Swing component, set its border
-						if (c instanceof javax.swing.JComponent) {
-							javax.swing.JComponent jc = (javax.swing.JComponent) c;
+						if (c instanceof JComponent jc) {
 							if (normalBorder == null) {
 								normalBorder = jc.getBorder();
 							} // end if: border not yet saved
@@ -219,13 +211,14 @@ public class FileDrop {
 						evt.rejectDrag();
 						log("FileDrop: event rejected.");
 
-						javax.swing.JComponent jc = (javax.swing.JComponent) c;
-						if (normalBorder == null) {
-							normalBorder = jc.getBorder();
-						} // end if: border not yet saved
-						log("FileDrop: normal border saved.");
-						jc.setBorder(rejectBorder);
-						log("FileDrop: drag border set.");
+						if (c instanceof JComponent jc) {
+							if (normalBorder == null) {
+								normalBorder = jc.getBorder();
+							} // end if: border not yet saved
+							log("FileDrop: normal border saved.");
+							jc.setBorder(rejectBorder);
+							log("FileDrop: drag border set.");
+						}
 					} // end else: drag not ok
 				} // end dragEnter
 
@@ -239,19 +232,16 @@ public class FileDrop {
 					try { // Get whatever was dropped
 						Transferable tr = evt.getTransferable();
 
-						switch(dropType) {
-						
+						switch (FileDrop.this.getDropType(evt)) {
+
 						default:
-						case DROP_FAIL:
-						case DROP_NONE:
+						case DROP_FAIL, DROP_NONE:
 							break;
-							
-							
+
 						case DROP_FILELIST:
 							acceptDropFilelist(evt, listener);
 							break;
-							
-							
+
 						case DROP_LINUX:
 							acceptDropLinux(evt, listener);
 							break;
@@ -259,10 +249,8 @@ public class FileDrop {
 						case DROP_URL:
 							acceptDropUrl(evt, listener);
 							break;
-						
-						}//end switch on dropType
-						
-						
+
+						}// end switch on dropType
 
 					} // end try
 					catch (java.io.IOException io) {
@@ -277,8 +265,7 @@ public class FileDrop {
 					} // end catch: UnsupportedFlavorException
 					finally {
 						// If it's a Swing component, reset its border
-						if (c instanceof javax.swing.JComponent) {
-							javax.swing.JComponent jc = (javax.swing.JComponent) c;
+						if (c instanceof JComponent jc) {
 							jc.setBorder(normalBorder);
 							log("FileDrop: normal border restored.");
 						} // end if: JComponent
@@ -287,10 +274,8 @@ public class FileDrop {
 
 				public void dragExit(java.awt.dnd.DropTargetEvent evt) {
 					log("FileDrop: dragExit event.");
-					dropType = DropType.DROP_NONE;
 					// If it's a Swing component, reset its border
-					if (c instanceof javax.swing.JComponent) {
-						javax.swing.JComponent jc = (javax.swing.JComponent) c;
+					if (c instanceof JComponent jc) {
 						jc.setBorder(normalBorder);
 						log("FileDrop: normal border restored.");
 					} // end if: JComponent
@@ -299,8 +284,7 @@ public class FileDrop {
 				public void dropActionChanged(java.awt.dnd.DropTargetDragEvent evt) {
 					log("FileDrop: dropActionChanged event.");
 					// Is this an acceptable drag event?
-					dropType = isDragOk(evt);
-					if (dropType != DropType.DROP_FAIL && dropType != DropType.DROP_NONE) {
+					if (isDragOk(evt)) {
 						evt.acceptDrag(DnDConstants.ACTION_COPY);
 						log("FileDrop: event accepted.");
 					} // end if: drag ok
@@ -339,7 +323,7 @@ public class FileDrop {
 
 	private static File[] createFileArray(BufferedReader bReader) {
 		try {
-			List list = new java.util.ArrayList();
+			var list = new ArrayList<File>();
 			java.lang.String line = null;
 			while ((line = bReader.readLine()) != null) {
 				try {
@@ -356,13 +340,13 @@ public class FileDrop {
 					// Turn it into a File and add it to the list
 					File file = new File(new URI(line));
 					list.add(file);
-					
+
 				} catch (Exception ex) {
 					log("Error with " + line + ": " + ex.getMessage());
 				}
 			}
 
-			return (File[]) list.toArray(new File[list.size()]);
+			return list.toArray(new File[0]);
 		} catch (IOException ex) {
 			log("FileDrop: IOException");
 		}
@@ -413,70 +397,79 @@ public class FileDrop {
 		} // end if: recursively set components as listener
 	} // end dropListener
 
+	
 	/** Determine if the dragged data is a file list. */
-	private DropType isDragOk(final java.awt.dnd.DropTargetDragEvent evt) {
-
-		// Get data flavors being dragged
-		java.awt.datatransfer.DataFlavor[] flavors = evt.getCurrentDataFlavors();
-
+	private boolean isDragOk(final DropTargetDragEvent evt) {
+		DropType t = getDropType(evt);
+		return ! (t == DropType.DROP_FAIL || t == DropType.DROP_NONE);
+	}
+	
+	
+	
+	private DropType getDropType(final DropTargetDragEvent evt) {
+		return getDropType(evt.getCurrentDataFlavors(), evt.getTransferable());
+	}
+	
+	private DropType getDropType(final DropTargetDropEvent evt) {
+		return getDropType(evt.getCurrentDataFlavors(), evt.getTransferable());
+	}
+	
+	private DropType getDropType(DataFlavor[] flavors, Transferable transferable) {
+		
 		// Show data flavors
 		if (flavors.length == 0)
 			log("FileDrop: no data flavors.");
 		for (DataFlavor f : flavors)
-			log("FileDrop: Found DataFlavor " + f.toString());
-		
+			log("FileDrop: Found DataFlavor " + f.toString() + " (subtype='" + f.getSubType().toString()
+					+ "', mimetype='" + f.getMimeType() + "')");
 
 		// Tests for each flavour and a way to look up the drop type from the successful test
 		Predicate<DataFlavor> isFileListDrop = f -> f.equals(DataFlavor.javaFileListFlavor);
 		Predicate<DataFlavor> isLinuxDrop = f -> f.getSubType().equals("uri-list") && f.isRepresentationClassReader();
-		Predicate<DataFlavor> isURLDrop = f -> isDragUrl(evt);
+		Predicate<DataFlavor> isURLDrop = f -> isUrlDataFlavor(transferable);
 		Map<Predicate<DataFlavor>, DropType> dropTypes = Map.of(
 				isFileListDrop, DropType.DROP_FILELIST,
 				isLinuxDrop, DropType.DROP_LINUX,
 				isURLDrop, DropType.DROP_URL
-		);
-		
-		
+			);
+
 		// The list of predicates determines the order of preference for each type of input
 		// We customize which formats to use on an OS-by-OS basis
 		List<Predicate<DataFlavor>> tests = switch (Env.getOS()) {
-			case Env.OS.WINDOWS -> List.of(isURLDrop);
+			case Env.OS.WINDOWS -> List.of(isFileListDrop, isURLDrop);
 			case Env.OS.UNIX -> List.of(isFileListDrop, isLinuxDrop, isURLDrop);
 			case Env.OS.MAC -> List.of(isFileListDrop, isURLDrop);
 			default -> List.of(isFileListDrop, isLinuxDrop, isURLDrop);
 		};
-		
-		
+
 		// For each test in order of preference, try each flavour to see if it's a fit
 		for (var test : tests) {
 			for (var flavor : flavors) {
-				
+
 				if (test.test(flavor)) {
 					DropType selectedType = dropTypes.get(test);
 					log("Testing on DataFlavor " + flavor.toString() + " has been selected for use with DropType " + selectedType);
 					return selectedType;
 				}
-				
+
 			}
 		}
-		
 
 		log("FileDrop: Found a DropType of " + DropType.DROP_FAIL.toString());
 		return DropType.DROP_FAIL;
 
-
 	} // end isDragOk
 
-	private boolean isDragUrl(DropTargetDragEvent evt) {
+	private boolean isUrlDataFlavor(Transferable t) {
 
 		DataFlavor flavour = DataFlavor.stringFlavor;
-		if (!evt.isDataFlavorSupported(flavour)) {
+		if (!t.isDataFlavorSupported(flavour)) {
 			return false;
 		}
 
 		String data;
 		try {
-			data = (String) evt.getTransferable().getTransferData(flavour);
+			data = (String) t.getTransferData(flavour);
 		} catch (UnsupportedFlavorException | IOException e) {
 			return false;
 		}
@@ -492,9 +485,6 @@ public class FileDrop {
 		return true;
 	}
 
-
-
-	
 	private void acceptDropFilelist(DropTargetDropEvent evt, Listener listener) throws UnsupportedFlavorException, IOException {
 		Transferable tr = evt.getTransferable();
 		// Is it a file list?
@@ -505,24 +495,20 @@ public class FileDrop {
 			log("FileDrop: file list accepted.");
 
 			// Get a useful list
-			List fileList = (List) tr.getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
-			java.util.Iterator iterator = fileList.iterator();
-
-			// Convert list to array
-			File[] filesTemp = new File[fileList.size()];
-			fileList.toArray(filesTemp);
-			final File[] files = filesTemp;
+			List<File> files = (List<File>) tr.getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
+			files = new ArrayList<>(files);
 
 			// Alert listener to drop.
 			if (listener != null)
-				listener.filesDropped(files);
+				listener.filesDropped(files.toArray(new File[0]));
 
 			// Mark that drop is completed.
 			evt.getDropTargetContext().dropComplete(true);
 			log("FileDrop: drop complete.");
 		} // end if: file list
 	}
-	
+
+
 	private void acceptDropLinux(DropTargetDropEvent evt, Listener listener) throws UnsupportedFlavorException, IOException {
 		Transferable tr = evt.getTransferable();
 		// Thanks, Nathan!
@@ -530,11 +516,6 @@ public class FileDrop {
 		DataFlavor[] flavors = tr.getTransferDataFlavors();
 		boolean handled = false;
 		for (int zz = 0; zz < flavors.length; zz++) {
-
-			if (flavors[zz].equals(DataFlavor.stringFlavor)) {
-
-			}
-
 			if (flavors[zz].isRepresentationClassReader()) {
 				// Say we'll take it.
 				// evt.acceptDrop ( DnDConstants.ACTION_COPY_OR_MOVE );
@@ -561,37 +542,41 @@ public class FileDrop {
 		}
 		// END 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
 	}
-	
-	private void acceptDropUrl(DropTargetDropEvent evt, Listener listener) throws UnsupportedFlavorException, IOException {
+
+	private void acceptDropUrl(DropTargetDropEvent evt, Listener listener) {
 		evt.acceptDrop(DnDConstants.ACTION_COPY);
 		URL url = getDropUrl(evt);
-		if (url == null) {
-			evt.getDropTargetContext().dropComplete(false);
-			return; 
-		}
 		
-		if (listener == null) {
+		if (url == null || listener == null) {
 			evt.getDropTargetContext().dropComplete(false);
+			log("FileDrop: not able to retrieve url - abort.");
+			evt.rejectDrop();
 			return;
 		}
+
+		Optional<File> f = getUrlAsFile(url);
 		
-		listener.urlsDropped(new URL[] { url });
-		evt.getDropTargetContext().dropComplete(true);
-		
+		if (f.isPresent()) {
+			listener.filesDropped(new File[] {f.get()});
+			evt.getDropTargetContext().dropComplete(true);			
+		} else {
+			log("FileDrop: not able to retrieve url - abort.");
+			evt.rejectDrop();
+		}
+
 	}
-	
+
 	private URL getDropUrl(DropTargetDropEvent evt) {
-		
-		//make sure we can get the data
+
+		// make sure we can get the data
 		DataFlavor flavour = DataFlavor.stringFlavor;
 		if (!evt.isDataFlavorSupported(flavour)) {
 			return null;
 		}
 
-
 		String data;
 		try {
-			//accept the drop to attemt to read it
+			// accept the drop to attempt to read it
 			evt.acceptDrop(DnDConstants.ACTION_COPY);
 			data = (String) evt.getTransferable().getTransferData(flavour);
 		} catch (UnsupportedFlavorException | IOException e) {
@@ -616,44 +601,44 @@ public class FileDrop {
 	 * is a blocking call, and may take some time for larger files.
 	 * 
 	 * @param url the URL to downlolad
-	 * @return a File representing the downloaded file
-	 * @throws IOException
+	 * @return an Optional<File> representing the downloaded file if successful
 	 */
-	public static File getUrlAsFile(URL url) throws IOException {
-		return getUrlAsFile(url, null);
+	public static Optional<File> getUrlAsFile(URL url) {
+		try {
+			return Optional.of(getUrlAsFile(url, null));
+		} catch (IOException e) {
+			return Optional.empty();
+		}
 	}
-	
-	
+
 	public static File getUrlAsFile(URL url, Consumer<Float> progressCallback) throws IOException {
 		final int BLOCK_SIZE = 8192;
-		
+
 		// Get the file name from the URL
 		String filename = Paths.get(url.getPath()).getFileName().toString();
 		filename = URLDecoder.decode(filename, "UTF-8");
-		
-		
+
 		// Create a local file with the same name
 		Path tempdir = Files.createTempDirectory("Peakaboo");
 		Path tempfile = tempdir.resolve(filename);
 		File file = tempfile.toFile();
 		PeakabooLog.get().log(Level.FINE, "Downloading URL '" + url.toString() + "' to File '" + file.getAbsolutePath() + "'");
-		
-		
+
 		// Open a connection to the URL which we will use to download the file
-        URLConnection connection = url.openConnection();
-        int contentLength = connection.getContentLength();
+		URLConnection connection = url.openConnection();
+		int contentLength = connection.getContentLength();
 		try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
 			 FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-			
+
 			byte[] dataBuffer = new byte[BLOCK_SIZE];
 			int bytesRead;
 			long totalBytesRead = 0;
-			
+
 			while ((bytesRead = in.read(dataBuffer, 0, BLOCK_SIZE)) != -1) {
 				fileOutputStream.write(dataBuffer, 0, bytesRead);
 				totalBytesRead += bytesRead;
 				if (progressCallback != null && contentLength > 0) {
-					float progress = totalBytesRead / (float)contentLength;
+					float progress = totalBytesRead / (float) contentLength;
 					progressCallback.accept(progress);
 				}
 			}
@@ -661,18 +646,7 @@ public class FileDrop {
 
 		return file;
 	}
-	
-	private static int contentLength(URL url) {
-		HttpURLConnection connection;
-		int contentLength = -1;
-		try {
-			connection = (HttpURLConnection) url.openConnection();
-			contentLength = connection.getContentLength();
-		} catch (Exception e) {
-		}
-		return contentLength;
-	}
-	
+
 	private static void log(String message) {
 		StratusLog.get().log(Level.FINE, message);
 	}
@@ -681,7 +655,6 @@ public class FileDrop {
 		StratusLog.get().log(Level.FINE, t.getMessage(), t);
 	}
 
-	
 	/**
 	 * Removes the drag-and-drop hooks from the component and optionally from the
 	 * all children. You should call this if you add and remove components after
@@ -708,7 +681,7 @@ public class FileDrop {
 	 * @since 1.0
 	 */
 	public static boolean remove(java.io.PrintStream out, Component c, boolean recursive) { // Make sure we
-																										// support dnd.
+																							// support dnd.
 		if (supportsDnD()) {
 			log("FileDrop: Removing drag-and-drop hooks.");
 			c.setDropTarget(null);
@@ -750,8 +723,6 @@ public class FileDrop {
 		 * @since 1.0
 		 */
 		public abstract void filesDropped(File[] files);
-		
-		public abstract void urlsDropped(URL[] urls);
 
 	} // end inner-interface Listener
 
@@ -804,8 +775,7 @@ public class FileDrop {
 	/**
 	 * At last an easy way to encapsulate your custom objects for dragging and
 	 * dropping in your Java programs! When you need to create a
-	 * {@link Transferable} object, use this class to wrap
-	 * your object. For example:
+	 * {@link Transferable} object, use this class to wrap your object. For example:
 	 * 
 	 * <pre>
 	 * <code>
@@ -1059,5 +1029,5 @@ public class FileDrop {
 			return n;
 		}
 	}
-	
+
 } // end class FileDrop

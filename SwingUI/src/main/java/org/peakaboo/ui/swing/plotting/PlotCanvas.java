@@ -174,39 +174,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	}
 	
 	public FileDrop.Listener getFileDropListener() {
-		return new FileDrop.Listener() {
-			
-			@Override
-			public void urlsDropped(URL[] urls) {
-				PeakabooLog.get().log(Level.INFO, "Received dropped URLs: " + Arrays.toString(urls));
-				PlotCanvas.this.urlsDropped(urls);
-			}
-			
-			@Override
-			public void filesDropped(File[] files) {
-				PeakabooLog.get().log(Level.INFO, "Received dropped Files: " + Arrays.toString(files));
-				PlotCanvas.this.filesDropped(List.of(files));
-			}
+		return (File[] files) -> {
+			PeakabooLog.get().log(Level.INFO, "Received dropped Files: " + Arrays.toString(files));
+			PlotCanvas.this.filesDropped(List.of(files));
 		};
 	}
 	
-	void urlsDropped(URL[] urls) {
-		try {
-			
-			TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
-				if (!optfiles.isPresent()) { return; }
-				PeakabooLog.get().log(Level.INFO, "Downloaded URLs to files: " + optfiles.get().toString());
-				filesDropped(optfiles.get());
-			});
-
-			TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
-
-		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
-		}
-	}
-	
-
 	void filesDropped(List<File> files) {
 		plotPanel.load(files.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 	}

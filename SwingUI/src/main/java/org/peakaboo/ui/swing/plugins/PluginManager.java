@@ -74,31 +74,11 @@ public class PluginManager extends HeaderLayer {
 		details = new JPanel(new BorderLayout());
 		details.add(new BlankMessagePanel("No Selection", noSelectionDescription), BorderLayout.CENTER);
 		body.add(details, BorderLayout.CENTER);
-		new FileDrop(body, new FileDrop.Listener() {
-			
-			@Override
-			public void urlsDropped(URL[] urls) {
-				
-				TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
-					if (!optfiles.isPresent()) {
-						return;
-					}
-					for (File file : optfiles.get()) {
-						addPluginFile(file);
-					}
-				});
-				
-				TaskMonitorPanel.onLayerPanel(monitor, parent);
-
-			}
-			
-			@Override
-			public void filesDropped(File[] files) {
-				for (File file : files) {
-					addPluginFile(file);
-				}
-			}
-		});
+		new FileDrop(body, (File[] files) -> {
+			for (File file : files) {
+				addPluginFile(file);
+			}}
+		);
 
 		setBody(body);
 		
