@@ -47,11 +47,11 @@ import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
+import org.peakaboo.framework.stratus.laf.theme.DuskTheme;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.app.AccentedBrightTheme;
-import org.peakaboo.ui.swing.app.AccentedDuskTheme;
 import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
@@ -203,14 +203,8 @@ public class Peakaboo {
 		
 		Stratus.initialize(Tier.provider().iconPath(), Version.SPLASH, Version.LOGO, "Peakaboo", () -> {
 
-			Color accent = AccentedBrightTheme.accentColours.get(DesktopSettings.getAccentColour());
-			if (accent == null) {
-				accent = AccentedBrightTheme.accentColours.get("Blue");
-			}
-			Theme theme = new AccentedBrightTheme(accent);
-			if (DesktopSettings.isDarkMode()) {
-				theme = new AccentedDuskTheme(accent);
-			}
+			String accentColourName = DesktopSettings.getAccentColour();
+			Theme theme = DesktopSettings.isDarkMode() ? new DuskTheme(accentColourName) : new BrightTheme(accentColourName);
 			StratusLookAndFeel laf = new StratusLookAndFeel(theme);
 			
 			//Load Peakaboo's font

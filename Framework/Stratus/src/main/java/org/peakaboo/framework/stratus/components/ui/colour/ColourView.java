@@ -48,7 +48,7 @@ public abstract class ColourView extends ColourComponent {
 		
 		Graphics2D g = Stratus.g2d(g0);
 
-		int r = size/2;
+		int r = size;
 		int pad = settings.pad();
 		
 		g.setColor(this.colour);

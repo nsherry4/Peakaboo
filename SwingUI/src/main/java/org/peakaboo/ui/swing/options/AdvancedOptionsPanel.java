@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -51,10 +52,10 @@ import org.peakaboo.framework.stratus.components.ui.options.OptionRadioButton;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSidebar.Entry;
 import org.peakaboo.framework.stratus.components.ui.options.OptionSize;
+import org.peakaboo.framework.stratus.laf.theme.Theme.Accent;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.tier.TierUIAutoGroup;
-import org.peakaboo.ui.swing.app.AccentedBrightTheme;
 import org.peakaboo.ui.swing.app.DesktopSettings;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.mapping.components.MapMenuView;
@@ -236,13 +237,12 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		OptionBlock uxBlock = new OptionBlock();
 		
-		var colours = AccentedBrightTheme.accentColours;
-		Color accentColour = colours.get(DesktopSettings.getAccentColour()); 
-		if (accentColour == null) {
-			accentColour = colours.get("Blue");
-		}
-		OptionColours accent = new OptionColours(uxBlock, new ArrayList<>(colours.values()), accentColour)
-				.withListener(c -> DesktopSettings.setAccentColour(colours.getKey(c)))
+		
+		var accentColour = Accent.forName(DesktopSettings.getAccentColour());
+		var theme = Stratus.getTheme();
+		var accents = theme.getAccents();
+		OptionColours accent = new OptionColours(uxBlock, new ArrayList<>(accents.values()), theme.getAccent(accentColour))
+				.withListener(c -> DesktopSettings.setAccentColour(theme.getColourAccentName(c)))
 				.withText("Accent Colour", "Requires restart")
 				.withSize(OptionSize.LARGE);
 		uxBlock.add(accent);

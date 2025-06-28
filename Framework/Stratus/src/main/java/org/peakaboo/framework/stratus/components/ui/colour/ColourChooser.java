@@ -16,6 +16,8 @@ public class ColourChooser extends ClearPanel implements ItemSelectable {
 	private Color selected;
 	private List<Color> options;
 	private List<ColourChoice> circles;
+	
+	// Allow clearing the selection by clicking on the already-selected colour
 	private boolean allowNull = true;
 	
 	private List<ItemListener> listeners = new ArrayList<>();
