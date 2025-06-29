@@ -1,4 +1,4 @@
-package org.peakaboo.ui.swing.plugins;
+package org.peakaboo.ui.swing.plugins.manager;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,10 +18,11 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
 import org.peakaboo.framework.stratus.components.panels.TitledPanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.ui.swing.plugins.PluginsController;
 
 class IssueView extends JPanel {
 
-	public IssueView(BoltIssue<?> issue, PluginManager parent) {
+	public IssueView(BoltIssue<?> issue, PluginsController controller) {
 		super(new GridBagLayout());
 		this.setBorder(Spacing.bHuge());
 		
@@ -48,7 +49,7 @@ class IssueView extends JPanel {
 			}
 			action.withAction(() -> {
 				issue.fix();
-				parent.reload();
+				controller.reload();
 			});
 			GridBagConstraints c = new GridBagConstraints();
 			c.anchor = GridBagConstraints.CENTER;
