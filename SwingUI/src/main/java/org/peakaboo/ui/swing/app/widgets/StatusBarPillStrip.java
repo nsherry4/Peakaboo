@@ -15,7 +15,15 @@ public class StatusBarPillStrip extends ClearPanel {
 
 	private JPanel innerPanel;
 	
+	public enum Alignment {
+		LEFT, CENTER, RIGHT
+	}
+	
 	public StatusBarPillStrip() {
+		this(Alignment.CENTER);
+	}
+	
+	public StatusBarPillStrip(Alignment alignment) {
 		
 		innerPanel = new ClearPanel();
 		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.LINE_AXIS));
@@ -41,6 +49,11 @@ public class StatusBarPillStrip extends ClearPanel {
 				int h = c.getHeight();
 				int pw = innerPanel.getPreferredSize().width;
 				int margin = (int)Math.max(0, (w - pw) / 2f);
+				switch (alignment) {
+					case LEFT -> margin = 0;
+					case CENTER -> margin = margin;
+					case RIGHT -> margin *= 2;
+				}
 				innerPanel.setBounds(margin, 0, pw, h);
 			}
 			
@@ -51,6 +64,19 @@ public class StatusBarPillStrip extends ClearPanel {
 		this.add(innerPanel);
 		
 	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		var inner = innerPanel.getPreferredSize();
+		return new Dimension(inner.width, Math.max(24, inner.height));
+	}
+	
+	@Override
+	public Dimension getMinimumSize() {
+		var inner = innerPanel.getPreferredSize();
+		return new Dimension(inner.width, inner.height);
+	}
+	
 	
 	public void addPill(KeyValuePill pill) {
 		innerPanel.add(pill);

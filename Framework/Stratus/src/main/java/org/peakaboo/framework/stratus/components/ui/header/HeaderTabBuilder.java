@@ -2,6 +2,7 @@ package org.peakaboo.framework.stratus.components.ui.header;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
@@ -27,6 +28,7 @@ public class HeaderTabBuilder {
 		body.add(component, title);
 		FluentToggleButton button = new FluentToggleButton(title)
 				.withAction(() -> layout.show(body, title));
+		button.setFont(button.getFont().deriveFont(Font.BOLD));
 		group.add(button);
 		linker.addButton(button);
 		

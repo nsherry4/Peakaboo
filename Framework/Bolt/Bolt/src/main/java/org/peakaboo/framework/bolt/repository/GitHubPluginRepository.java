@@ -121,8 +121,9 @@ public class GitHubPluginRepository implements PluginRepository {
                         try {
                             String metadataJson = fetchTextFromUrl(downloadUrl);
                             PluginMetadata meta = DruthersSerializer.deserialize(metadataJson, false, PluginMetadata.class);
-                            // We don't set the download URL directly in the metadata, so we set it here
+                            // We don't set the download URL or repo name from metadata, we set it here
                             meta.downloadUrl = downloadUrl.replace(".json", ".jar"); // By convention, the JAR is named similarly
+                            meta.repositoryName = getRepositoryName();
                             // Filter the plugins based on application version
                             if (meta.minAppVersion > applicationVersion) {
 								continue; // Skip plugins that require a higher app version

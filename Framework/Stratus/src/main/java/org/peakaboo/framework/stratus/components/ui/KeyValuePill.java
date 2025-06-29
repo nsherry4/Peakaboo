@@ -39,9 +39,8 @@ public class KeyValuePill extends JPanel {
 		
 		this.key = new JLabel(title);
 		this.key.setFont(this.key.getFont().deriveFont(Font.BOLD).deriveFont(11f));
-		//this.key.setForeground(Color.WHITE);
-		
 
+		setForeground(this.getForeground());
 		
 		//This needs to be final for the value label inner method, but we also need to set it after defining the value label
 		int[] width = new int[1];
@@ -49,7 +48,7 @@ public class KeyValuePill extends JPanel {
 		this.value = new JLabel("") {
 			@Override
 			public Dimension getPreferredSize() {
-				int sh = super.getPreferredSize().height;
+				int sh = Math.max(24, super.getPreferredSize().height);
 				int sw = super.getPreferredSize().width;
 				if (characters == -1) {
 					return new Dimension(sw, sh);
@@ -66,7 +65,7 @@ public class KeyValuePill extends JPanel {
 		};
 		this.value.setFont(Font.decode(Font.MONOSPACED + " 11"));
 		this.value.setHorizontalAlignment(SwingConstants.RIGHT);
-		
+				
 		//Measure the width of a character in the value label to determine proper width
 		if (characters > 0) {
 			this.value.setText("0".repeat(characters));
@@ -123,6 +122,13 @@ public class KeyValuePill extends JPanel {
 			text = Float.toString(value);
 		}
 		this.value.setText(text);
+	}
+	
+	@Override
+	public void setForeground(Color color) {
+		super.setForeground(color);
+		if (this.key != null) this.key.setForeground(color);
+		if (this.value != null) this.value.setForeground(color);
 	}
 	
 }
