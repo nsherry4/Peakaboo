@@ -1,6 +1,9 @@
 package org.peakaboo.framework.bolt.repository;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 public interface PluginRepository {
@@ -19,7 +22,7 @@ public interface PluginRepository {
      * @return Plugin metadata or null if not found
      * @throws PluginRepositoryException if unable to fetch metadata
      */
-    PluginMetadata getPluginMetadata(String pluginName, int version) throws PluginRepositoryException;
+    PluginMetadata getPluginMetadata(String pluginName, String version) throws PluginRepositoryException;
     
     /**
      * Downloads a plugin JAR file
@@ -28,6 +31,26 @@ public interface PluginRepository {
      * @throws PluginRepositoryException if unable to download plugin
      */
     InputStream downloadPlugin(PluginMetadata metadata) throws PluginRepositoryException;
+    	
+    
+    
+    public static InputStream downloadPluginHttp(PluginMetadata metadata) throws PluginRepositoryException {
+		if (metadata == null || metadata.downloadUrl == null || metadata.downloadUrl.isBlank()) {
+			throw new PluginRepositoryException("No download URL specified for plugin: " + (metadata != null ? metadata.name : "null"));
+		}
+		try {
+			URL url = new URL(metadata.downloadUrl);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			int responseCode = conn.getResponseCode();
+			if (responseCode != 200) {
+				throw new PluginRepositoryException("Failed to download plugin: HTTP " + responseCode);
+			}
+			return conn.getInputStream();
+		} catch (IOException e) {
+			throw new PluginRepositoryException("Error downloading plugin: " + metadata.downloadUrl, e);
+		}
+    }
     
     /**
      * Searches for plugins matching the given query

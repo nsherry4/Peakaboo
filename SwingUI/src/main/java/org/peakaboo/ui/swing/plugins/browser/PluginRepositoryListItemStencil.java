@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.lang.ModuleLayer.Controller;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -20,6 +21,8 @@ import javax.swing.border.MatteBorder;
 
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
+import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
@@ -162,10 +165,12 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         // Check if the plugin is installed locally. This will determine the action we take.
         boolean alreadyInstalled = reg.hasUUID(value.uuid);
         boolean removable = true;
+        boolean upgradable = false;
         if (alreadyInstalled) {
             var descriptor = reg.getByUUID(value.uuid).get();
             var container = descriptor.getContainer();
             removable &= container.isDeletable();
+            upgradable = removable && value.isUpgradeFor(descriptor);
         }
                 
         // Now lets create some KeyValuePills
@@ -177,11 +182,10 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         // Action button enablement logic
         downloadButton.setEnabled(!alreadyInstalled && value.downloadUrl != null && !value.downloadUrl.isBlank());
         removeButton.setEnabled(alreadyInstalled && removable);
-        // TODO - check if the plugin is upgradable
-        //upgradeButton.setEnabled(alreadyInstalled && reg.getByUUID(value.uuid).get().);
-        upgradeButton.setEnabled(false); // Placeholder, implement actual upgrade logic
+        upgradeButton.setEnabled(upgradable); // Placeholder, implement actual upgrade logic
 
     }
+
 
 	@Override
 	public void setForeground(Color c) {

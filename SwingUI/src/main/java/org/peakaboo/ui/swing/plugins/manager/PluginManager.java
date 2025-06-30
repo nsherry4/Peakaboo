@@ -98,7 +98,7 @@ public class PluginManager extends JPanel {
 						return;
 					}
 					for (File file : optfiles.get()) {
-						controller.addPluginFile(file);
+						controller.install(file);
 					}
 				});
 				
@@ -109,7 +109,7 @@ public class PluginManager extends JPanel {
 			@Override
 			public void filesDropped(File[] files) {
 				for (File file : files) {
-					controller.addPluginFile(file);
+					controller.install(file);
 				}
 			}
 		});
