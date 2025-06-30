@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -54,13 +55,8 @@ public class PluginRepositoryBrowser extends JPanel {
         pluginTable.setIntercellSpacing(new Dimension(0, 0));
         pluginTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        JScrollPane scroller = new JScrollPane(pluginTable);
-        scroller.setBorder(Spacing.bNone());
-        this.setBorder(Spacing.bNone());
+        JScrollPane scroller = Stratus.scrolled(pluginTable);
         this.add(scroller, BorderLayout.CENTER);
-        scroller.getViewport().setBackground(Stratus.getTheme().getRecessedControl());
-        this.setOpaque(true);
-        this.setBackground(Color.red);
         loadPlugins();
         
         this.controller.addListener(() -> {
@@ -73,12 +69,38 @@ public class PluginRepositoryBrowser extends JPanel {
     }
 
     private void loadPlugins() {
-        try {
-            List<PluginMetadata> plugins = repository.listAvailablePlugins();
-            pluginTableModel.setPlugins(plugins);
-        } catch (PluginRepositoryException ex) {
-            JOptionPane.showMessageDialog(this, "Failed to load plugins: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        new javax.swing.SwingWorker<List<PluginMetadata>, Void>() {
+        	
+            private PluginRepositoryException exception;
+        	
+            @Override
+            protected List<PluginMetadata> doInBackground() {
+                try {
+                    return repository.listAvailablePlugins();
+                } catch (PluginRepositoryException ex) {
+                    // Pass exception to done()
+                    this.exception = ex;
+                    return List.of();
+                }
+            }
+                        
+            @Override
+            protected void done() {
+                try {
+                    if (exception != null) {
+                        throw exception;
+                    }
+                    List<PluginMetadata> plugins = get();
+                    pluginTableModel.setPlugins(plugins);
+                } catch (PluginRepositoryException | ExecutionException ex) {
+                    JOptionPane.showMessageDialog(PluginRepositoryBrowser.this, "Failed to load plugins: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (InterruptedException ex) {
+					Thread.currentThread().interrupt(); // Restore interrupted status
+					JOptionPane.showMessageDialog(PluginRepositoryBrowser.this, "Plugin loading was interrupted.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+            }
+            
+        }.execute();
     }
 
     private void handleDownload(PluginMetadata meta) {
