@@ -45,8 +45,8 @@ public class PluginRepositoryBrowser extends JPanel {
         this.pluginTable.setTableHeader(null);
         this.pluginTable.setRowHeight(80);
         this.pluginTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(this::handleDownload), pluginTable);
-        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(this::handleDownload));
+        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(this::handleDownload, this::handleRemove, this::handleUpgrade), pluginTable);
+        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(this::handleDownload, this::handleRemove, this::handleUpgrade));
         pluginTable.getColumnModel().getColumn(0).setCellRenderer(stencilRenderer);
         pluginTable.getColumnModel().getColumn(0).setCellEditor(stencilEditor);
         pluginTable.setRowSelectionAllowed(false);
@@ -104,24 +104,25 @@ public class PluginRepositoryBrowser extends JPanel {
     }
 
     private void handleDownload(PluginMetadata meta) {
+        // Get the download stream from the repository
+        InputStream downloadStream = repository.downloadPlugin(meta);
+        this.controller.downloadPluginFile(downloadStream);
+    }
+    
+    private void handleRemove(PluginMetadata meta) {
         // Get the registry
         var reg = DataSourceRegistry.system();
-        // Check if the plugin is installed locally. This will determine the action we take.
-        boolean alreadyInstalled = reg.hasUUID(meta.uuid);
-        if (alreadyInstalled) {
-            // If it's already installed, we are removing it.
-            var maybePlugin = reg.getByUUID(meta.uuid);
-            if (maybePlugin.isPresent()) {
-            	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
-            	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin);
-            } else {
-            	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        var maybePlugin = reg.getByUUID(meta.uuid);
+        if (maybePlugin.isPresent()) {
+        	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
+        	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin);
         } else {
-            // Get the download stream from the repository
-            InputStream downloadStream = repository.downloadPlugin(meta);
-            this.controller.downloadPluginFile(downloadStream);
+        	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    private void handleUpgrade(PluginMetadata meta) {
+    	// TODO
     }
 
     // Table model for plugins

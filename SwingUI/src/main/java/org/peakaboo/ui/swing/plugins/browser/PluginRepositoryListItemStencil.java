@@ -6,8 +6,10 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -25,6 +27,7 @@ import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.icons.IconSet;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
+import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -37,7 +40,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     private StatusBarPillStrip pills;
     private KeyValuePill pillVersion, pillCategory, pillRepository;
     private JLabel descriptionArea;
-    private FluentButton actionButton;
+    private FluentButton downloadButton, removeButton, upgradeButton;
     private JComponent separator;
     
     private PluginMetadata plugin;
@@ -45,7 +48,11 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     // Get the registry
     private DataSourceRegistry reg = DataSourceRegistry.system();
     
-    public PluginRepositoryListItemStencil(Consumer<PluginMetadata> action) {
+    public PluginRepositoryListItemStencil(
+    		Consumer<PluginMetadata> downloadAction,
+    		Consumer<PluginMetadata> removeAction,
+    		Consumer<PluginMetadata> upgradeAction
+    	) {
         setLayout(new GridBagLayout());
         setBorder(new CompoundBorder(
         		new MatteBorder(0, 0, 1, 0, Stratus.getTheme().getWidgetBorder()), 
@@ -74,9 +81,26 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         descriptionArea.setVerticalAlignment(SwingConstants.TOP);
                 
         
-        actionButton = new FluentButton().withIcon(StockIcon.GO_BOTTOM, IconSize.TOOLBAR_SMALL);
-        actionButton.withBordered(false);
-        actionButton.setFocusable(false);
+        downloadButton = new FluentButton()
+        		.withIcon(StockIcon.GO_BOTTOM, IconSize.TOOLBAR_SMALL)
+        		.withTooltip("Download Plugin")
+        		.withBordered(false);
+        downloadButton.setFocusable(false);
+        
+        removeButton = new FluentButton()
+        		.withIcon(StockIcon.EDIT_DELETE, IconSize.TOOLBAR_SMALL)
+        		.withTooltip("Remove Plugin")
+        		.withBordered(false);
+        removeButton.setFocusable(false);
+        
+        upgradeButton = new FluentButton()
+        		.withIcon(StockIcon.GO_LAST, IconSize.TOOLBAR_SMALL)
+        		.withTooltip("Upgrade Plugin")
+        		.withBordered(false);
+        upgradeButton.setFocusable(false);
+        
+        
+        ButtonLinker actionLinker = new ButtonLinker(downloadButton, removeButton, upgradeButton);       
         
         separator = new LineSeparator();
 
@@ -89,7 +113,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         c.ipadx = Spacing.small; c.ipady = Spacing.small;
         c.insets = Spacing.iMedium();
         c.gridx = 1; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
-        add(actionButton, c);
+        add(actionLinker, c);
         
         c.gridx = 0;
         c.gridy++;
@@ -101,9 +125,17 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         add(descriptionArea, c);
 
         //setPreferredSize(new Dimension(400, 90));
-        
-        actionButton.withAction(() -> {
-            action.accept(plugin);
+
+        downloadButton.withAction(() -> {
+        	downloadAction.accept(plugin);
+            getListWidgetParent().editingStopped();			
+		});
+        removeButton.withAction(() -> {
+        	removeAction.accept(plugin);
+            getListWidgetParent().editingStopped();			
+		});
+        upgradeButton.withAction(() -> {
+            upgradeAction.accept(plugin);
             getListWidgetParent().editingStopped();			
 		});
         
@@ -119,7 +151,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
             pillCategory.setValue("<Unknown>");
             pillRepository.setValue("<Unknown Repository>");
             descriptionArea.setText("");
-            actionButton.setEnabled(false);
+            downloadButton.setEnabled(false);
+            removeButton.setEnabled(false);
+            upgradeButton.setEnabled(false);
             return;
         }
         nameLabel.setText(value.name != null ? value.name : "<No Name>");
@@ -127,16 +161,25 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         
         // Check if the plugin is installed locally. This will determine the action we take.
         boolean alreadyInstalled = reg.hasUUID(value.uuid);
-        actionButton.withIcon(alreadyInstalled ? StockIcon.EDIT_DELETE : StockIcon.GO_BOTTOM, nameLabel.getForeground());
-        actionButton.withTooltip(alreadyInstalled ? "Remove Plugin" : "Download Plugin");
-        
+        boolean removable = true;
+        if (alreadyInstalled) {
+            var descriptor = reg.getByUUID(value.uuid).get();
+            var container = descriptor.getContainer();
+            removable &= container.isDeletable();
+        }
                 
         // Now lets create some KeyValuePills
         pillVersion.setValue(value.version);
         pillCategory.setValue(value.category != null ? value.category : "<Unknown>");
         pillRepository.setValue(value.repositoryName != null ? value.repositoryName : "<Unknown Repository>");
         descriptionArea.setText(value.description != null ? value.description : "");
-        actionButton.setEnabled(value.downloadUrl != null && !value.downloadUrl.isBlank());
+
+        // Action button enablement logic
+        downloadButton.setEnabled(!alreadyInstalled && value.downloadUrl != null && !value.downloadUrl.isBlank());
+        removeButton.setEnabled(alreadyInstalled && removable);
+        // TODO - check if the plugin is upgradable
+        //upgradeButton.setEnabled(alreadyInstalled && reg.getByUUID(value.uuid).get().);
+        upgradeButton.setEnabled(false); // Placeholder, implement actual upgrade logic
 
     }
 
@@ -152,9 +195,13 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 		if (pillRepository != null) pillRepository.setForeground(c);
 		if (separator != null) separator.setForeground(StratusColour.moreTransparent(c, 0.7f));		
 		if (descriptionArea != null) descriptionArea.setForeground(StratusColour.moreTransparent(c, 0.25f));
-		if (actionButton != null) {
-			var config = actionButton.getComponentConfig();
-			actionButton.withIcon(config.imagepath, config.imagename, IconSize.BUTTON, c);
+		for (var button : new FluentButton[] {downloadButton, removeButton, upgradeButton}) {
+			if (button != null) {
+				var config = button.getComponentConfig();
+				button.withIcon(config.imagepath, config.imagename, IconSize.BUTTON, c);
+			}
+			
+			
 		}
 	}
     
@@ -169,10 +216,6 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 			: icon.toImageIcon(IconSize.TOOLBAR_SMALL);
 		nameLabel.setIcon(imageIcon);
 	}
-	
-    public JButton getDownloadButton() {
-        return actionButton;
-    }
     
     private IconSet getStockIcon(String kind) {
     	if (kind == null) {
