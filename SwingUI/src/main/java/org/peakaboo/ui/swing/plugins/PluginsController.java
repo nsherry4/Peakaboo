@@ -17,6 +17,9 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
+import org.peakaboo.framework.bolt.repository.PluginMetadata;
+import org.peakaboo.framework.bolt.repository.PluginRepository;
+import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.stratus.api.StratusText;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
@@ -56,8 +59,6 @@ public class PluginsController extends EventfulBeacon {
 		new LayerDialog("Imported New Plugins", descriptorsToHTML(container.getPlugins())).showIn(parentLayer);
 
 		return true;
-
-
 	}
 	
 	
@@ -67,7 +68,7 @@ public class PluginsController extends EventfulBeacon {
 				return;
 			}
 			
-			addPluginFile(result.get());
+			install(result.get());
 
 		});
 	}
@@ -75,7 +76,7 @@ public class PluginsController extends EventfulBeacon {
 	/**
 	 * Add a jar file containing plugins
 	 */
-	public void addPluginFile(File file) {
+	public void install(File file) {
 		
 		boolean handled = false;
 		
@@ -110,8 +111,13 @@ public class PluginsController extends EventfulBeacon {
 
 	}
 	
-	
-	public void downloadPluginFile(InputStream stream) {
+	/**
+	 * Downloads a plugin from an InputStream, typically from a repository.
+	 * This will save the stream to a temporary file which will be deleted on exit.
+	 * @param stream the InputStream containing the plugin data
+	 * @return a File object pointing to the temporary file containing the downloaded plugin
+	 */
+	public File download(InputStream stream) {
 		
 		// Store it in a temp file so we can import in into a plugin registry
         File tempFile = null;
@@ -125,17 +131,19 @@ public class PluginsController extends EventfulBeacon {
                     out.write(buffer, 0, bytesRead);
                 }
             }
+            return tempFile;
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(getParentLayer(), "Failed to save plugin: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            return null;
         }
-        // Import the plugin into the DataSourceRegistry
-        this.addPluginFile(tempFile);
-		
 	}
 	
 	
 	public void remove(PluginDescriptor<BoltPlugin> plugin) {
+		remove(plugin, false);
+	}
+	
+	public void remove(PluginDescriptor<BoltPlugin> plugin, boolean silent) {
 		/*
 		 * This is a little tricky. There's no rule that says that each plugin is in 
 		 * it's own jar file. We need to confirm with the user that they want to 
@@ -156,15 +164,23 @@ public class PluginsController extends EventfulBeacon {
 			return;
 		}
 		
-		new LayerDialog("Delete Plugin Bundle?", descriptorsToHTML(container.getPlugins()))
-			.addRight(
-				new FluentButton("Delete").withAction(() -> {
-					plugin.getContainer().delete();
-					this.reload();
-				}).withStateCritical()
-				)
-			.addLeft(new FluentButton("Cancel"))
-			.showIn(parentLayer);
+		Runnable action = () -> {
+			plugin.getContainer().delete();
+			this.reload();
+		};
+		
+		if (silent) {
+			action.run();
+		} else {
+			new LayerDialog("Delete Plugin Bundle?", descriptorsToHTML(container.getPlugins()))
+				.addRight(
+					new FluentButton("Delete")
+						.withAction(action)
+						.withStateCritical()
+					)
+				.addLeft(new FluentButton("Cancel"))
+				.showIn(parentLayer);
+		}
 		
 		
 	}
@@ -183,6 +199,34 @@ public class PluginsController extends EventfulBeacon {
 		}
 		
 		this.updateListeners();
+	}
+
+	public void upgrade(PluginDescriptor<BoltPlugin> plugin, PluginMetadata meta) {
+		upgrade(plugin, meta, false);
+	}
+	
+	/**
+	 * We need to determine if the new plugin described by meta is actually a newer plugin for the one given.
+	 * Then we need to remove the old one and install the new one. We should try to minimize the chances that the old plugin 
+	 * is removed without the new one being installed properly.
+	 **/
+	public void upgrade(PluginDescriptor<BoltPlugin> plugin, PluginMetadata meta, boolean silent) {	
+		// Confirm that the plugin is actually an upgrade for the one we have
+		if (! meta.isUpgradeFor(plugin)) {
+			JOptionPane.showMessageDialog(getParentLayer(), "The plugin you are trying to upgrade is not compatible with the new version.", "Upgrade Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		// Download the new plugin file
+		// NB this will need to be changed if we want to support repositories which don't use unauthenticated HTTP for downloads 
+        InputStream downloadStream = PluginRepository.downloadPluginHttp(meta);
+        File upgrade = download(downloadStream);
+        if (upgrade == null) {
+			JOptionPane.showMessageDialog(getParentLayer(), "Failed to download the plugin for upgrade.", "Upgrade Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+        remove(plugin, silent);
+        install(upgrade);
 	}
 	
 	

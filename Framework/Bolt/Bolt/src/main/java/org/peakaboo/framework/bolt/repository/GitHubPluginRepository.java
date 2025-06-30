@@ -7,12 +7,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
@@ -38,34 +34,19 @@ public class GitHubPluginRepository implements PluginRepository {
 	}
 
 	@Override
-	public PluginMetadata getPluginMetadata(String pluginName, int version) throws PluginRepositoryException {
+	public InputStream downloadPlugin(PluginMetadata metadata) throws PluginRepositoryException {
+		return PluginRepository.downloadPluginHttp(metadata);
+	}	
+	
+	@Override
+	public PluginMetadata getPluginMetadata(String pluginName, String version) throws PluginRepositoryException {
 		fetchPluginsAsNeeded();
 		for (PluginMetadata plugin : plugins) {
-			if (plugin.name != null && plugin.name.equalsIgnoreCase(pluginName) && plugin.version == version) {
+			if (plugin.name != null && plugin.name.equalsIgnoreCase(pluginName) && plugin.version.equals(version)) {
 				return plugin;
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public InputStream downloadPlugin(PluginMetadata metadata) throws PluginRepositoryException {
-		if (metadata == null || metadata.downloadUrl == null || metadata.downloadUrl.isBlank()) {
-			throw new PluginRepositoryException("No download URL specified for plugin: " + (metadata != null ? metadata.name : "null"));
-		}
-		try {
-			System.out.println(metadata.downloadUrl);
-			URL url = new URL(metadata.downloadUrl);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			int responseCode = conn.getResponseCode();
-			if (responseCode != 200) {
-				throw new PluginRepositoryException("Failed to download plugin: HTTP " + responseCode);
-			}
-			return conn.getInputStream();
-		} catch (IOException e) {
-			throw new PluginRepositoryException("Error downloading plugin: " + metadata.downloadUrl, e);
-		}
 	}
 
 	@Override

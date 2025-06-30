@@ -3,8 +3,10 @@ package org.peakaboo.ui.swing.plugins.browser;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
@@ -106,13 +108,16 @@ public class PluginRepositoryBrowser extends JPanel {
     private void handleDownload(PluginMetadata meta) {
         // Get the download stream from the repository
         InputStream downloadStream = repository.downloadPlugin(meta);
-        this.controller.downloadPluginFile(downloadStream);
+        File tempFile = this.controller.download(downloadStream);
+        if (tempFile == null) {
+			JOptionPane.showMessageDialog(this, "Failed to download plugin: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+        this.controller.install(tempFile);
     }
     
     private void handleRemove(PluginMetadata meta) {
-        // Get the registry
-        var reg = DataSourceRegistry.system();
-        var maybePlugin = reg.getByUUID(meta.uuid);
+        var maybePlugin = DataSourceRegistry.system().getByUUID(meta.uuid);
         if (maybePlugin.isPresent()) {
         	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
         	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin);
@@ -122,9 +127,15 @@ public class PluginRepositoryBrowser extends JPanel {
     }
     
     private void handleUpgrade(PluginMetadata meta) {
-    	// TODO
+        var maybePlugin = DataSourceRegistry.system().getByUUID(meta.uuid);
+        if (maybePlugin.isPresent()) {
+        	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
+        	this.controller.upgrade((PluginDescriptor<BoltPlugin>) plugin, meta, true);
+        } else {
+        	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
-
+       
     // Table model for plugins
     private static class PluginTableModel extends AbstractTableModel {
         private List<PluginMetadata> plugins = List.of();
