@@ -16,6 +16,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -80,28 +81,26 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         separator = new LineSeparator();
 
         GridBagConstraints c = new GridBagConstraints();
+        c.ipadx = 0; c.ipady = Spacing.small;
+        c.insets = new Insets(Spacing.medium, 0, Spacing.medium, Spacing.medium);
         c.gridx = 0; c.gridy = 0; c.anchor = GridBagConstraints.WEST; c.fill = GridBagConstraints.NONE; c.weightx = 0.0;
-        c.insets = new Insets(0, 0, 2, 0);
         add(nameLabel, c);
 
-        c.gridx = 1;
-        c.weightx = 0.0; c.weighty = 1.0; c.insets = new Insets(0, 10, 0, 10); c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.WEST;
-        add(pills, c);
-
-        c.gridx = 2;
-        c.weightx = 100.0; // allow separator to expand
-        c.fill = GridBagConstraints.HORIZONTAL;
-        add(separator, c);
-        
-        c.gridx = 3; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
+        c.ipadx = Spacing.small; c.ipady = Spacing.small;
+        c.insets = Spacing.iMedium();
+        c.gridx = 1; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
         add(actionButton, c);
         
         c.gridx = 0;
         c.gridy++;
-        c.weightx = 1.0; c.weighty = 1.0; c.gridwidth = 2; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST; c.insets = new Insets(0, 0, 0, 0);
+        c.weightx = 1.0; c.weighty = 0.0; c.gridwidth = 2; c.insets = new Insets(0, 0, 0, 0); c.fill = GridBagConstraints.HORIZONTAL; c.anchor = GridBagConstraints.WEST;
+        add(pills, c);
+        
+        c.gridy++;
+        c.weightx = 1.0; c.weighty = 1.0; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST; c.insets = new Insets(0, 0, 0, 0);
         add(descriptionArea, c);
 
-        setPreferredSize(new Dimension(400, 48));
+        //setPreferredSize(new Dimension(400, 90));
         
         actionButton.withAction(() -> {
             action.accept(plugin);
@@ -179,14 +178,19 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     	if (kind == null) {
     		return StockIcon.BADGE_ERROR;
     	}
-    	return switch (kind) {
-    	case "DataSource" -> StockIcon.DOCUMENT_IMPORT_SYMBOLIC;
-    	case "DataSink" -> StockIcon.DOCUMENT_EXPORT_SYMBOLIC;
-    	case "PlotFilter" -> PeakabooIcons.PLOT;
-    	case "MapFilter" -> PeakabooIcons.MAP;
-		default -> StockIcon.BADGE_ERROR;
-    	};
-    
+    	
+    	
+    	if (DataSourceRegistry.system().getInterfaceName().equals(kind)) {
+    		return StockIcon.DOCUMENT_IMPORT_SYMBOLIC;
+    	}
+
+    	if (DataSinkRegistry.system().getInterfaceName().equals(kind)) {
+    		return StockIcon.DOCUMENT_EXPORT_SYMBOLIC;
+    	}
+    	
+    	// Failed to find a specific icon
+		return StockIcon.BADGE_ERROR;
+
     }
 
     // Custom separator that always paints a horizontal line
