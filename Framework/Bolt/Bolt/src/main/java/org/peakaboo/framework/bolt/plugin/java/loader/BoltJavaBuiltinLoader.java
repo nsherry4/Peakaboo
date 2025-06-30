@@ -29,6 +29,7 @@ public class BoltJavaBuiltinLoader<T extends BoltJavaPlugin> implements BoltLoad
 	
 	public BoltJavaBuiltinLoader(PluginRegistry<T> manager, Class<T> targetClass) {
 		this.targetClass = targetClass;
+		this.manager = manager;
 	}
 	
 	public void load(Class<? extends T> implClass) {
