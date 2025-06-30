@@ -99,7 +99,7 @@ public class GitHubPluginRepository implements PluginRepository {
             StringBuilder response = new StringBuilder();
             String line;
             while ((line = in.readLine()) != null) {
-                response.append(line);
+                response.append(line + "\n");
             }
             return response.toString();
         }
@@ -117,12 +117,13 @@ public class GitHubPluginRepository implements PluginRepository {
                 for (JsonNode asset : assets) {
                     String name = asset.path("name").asText("");
                     String downloadUrl = asset.path("browser_download_url").asText("");
-                    if (name.endsWith(".json")) {
+                    if (name.endsWith(".yaml")) {
                         try {
                             String metadataJson = fetchTextFromUrl(downloadUrl);
+                            System.out.println(metadataJson);
                             PluginMetadata meta = DruthersSerializer.deserialize(metadataJson, false, PluginMetadata.class);
                             // We don't set the download URL or repo name from metadata, we set it here
-                            meta.downloadUrl = downloadUrl.replace(".json", ".jar"); // By convention, the JAR is named similarly
+                            meta.downloadUrl = downloadUrl.replace(".yaml", ".jar"); // By convention, the JAR is named similarly
                             meta.repositoryName = getRepositoryName();
                             // Filter the plugins based on application version
                             if (meta.minAppVersion > applicationVersion) {
