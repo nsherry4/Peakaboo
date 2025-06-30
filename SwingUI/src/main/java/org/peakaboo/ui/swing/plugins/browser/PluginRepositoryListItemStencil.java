@@ -59,9 +59,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         nameLabel.setIcon(getStockIcon("").toImageIcon(IconSize.BUTTON));
         setPluginIcon(nameLabel.getForeground());
         
-        pillVersion = new KeyValuePill("Version", 3);      
-        pillCategory = new KeyValuePill("Kind", 10);       
-        pillRepository = new KeyValuePill("Source", 20);        
+        pillVersion = new KeyValuePill("Version", 3);
+        pillCategory = new KeyValuePill("Kind", 10);
+        pillRepository = new KeyValuePill("Source", 20);
         
         pills = new StatusBarPillStrip(Alignment.LEFT);
         pills.addPills(pillCategory, pillRepository, pillVersion);

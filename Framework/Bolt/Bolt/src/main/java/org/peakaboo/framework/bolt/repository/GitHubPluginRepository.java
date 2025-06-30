@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -53,6 +54,7 @@ public class GitHubPluginRepository implements PluginRepository {
 			throw new PluginRepositoryException("No download URL specified for plugin: " + (metadata != null ? metadata.name : "null"));
 		}
 		try {
+			System.out.println(metadata.downloadUrl);
 			URL url = new URL(metadata.downloadUrl);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
@@ -106,42 +108,18 @@ public class GitHubPluginRepository implements PluginRepository {
     }
 
     private List<PluginMetadata> fetchPluginsFromGitHub() {
-        List<PluginMetadata> fetchedPlugins = new ArrayList<>();
-        try {
-            String apiUrl = projectUrl.replace("https://github.com/", "https://api.github.com/repos/") + "/releases/tags/" + applicationVersion;
-            String json = fetchTextFromUrl(apiUrl);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode release = mapper.readTree(json);
-            JsonNode assets = release.get("assets");
-            if (assets != null && assets.isArray()) {
-                for (JsonNode asset : assets) {
-                    String name = asset.path("name").asText("");
-                    String downloadUrl = asset.path("browser_download_url").asText("");
-                    if (name.endsWith(".yaml")) {
-                        try {
-                            String metadataJson = fetchTextFromUrl(downloadUrl);
-                            System.out.println(metadataJson);
-                            PluginMetadata meta = DruthersSerializer.deserialize(metadataJson, false, PluginMetadata.class);
-                            // We don't set the download URL or repo name from metadata, we set it here
-                            meta.downloadUrl = downloadUrl.replace(".yaml", ".jar"); // By convention, the JAR is named similarly
-                            meta.repositoryName = getRepositoryName();
-                            // Filter the plugins based on application version
-                            if (meta.minAppVersion > applicationVersion) {
-								continue; // Skip plugins that require a higher app version
-							}
-                            fetchedPlugins.add(meta);
-                        } catch (IOException e) {
-                        	Bolt.logger().log(Level.WARNING, "Failed to retrieve plugin from server: " + name, e);
-                        }
-                    }
-                }
-            }
+    	List<PluginMetadata> fetchedPlugins = new ArrayList<>();
+    	try {
+	    	String contentsUrl = projectUrl + "/releases/download/" + applicationVersion + "/contents.yaml";
+	    	String contentsYaml = fetchTextFromUrl(contentsUrl);
+	    	PluginMetadata[] contents = DruthersSerializer.deserialize(contentsYaml, false, PluginMetadata[].class);
+	    	return List.of(contents);
         } catch (Exception e) {
             Bolt.logger().log(Level.WARNING, "Failed to retrieve plugin list from server", e);
         }
-        return fetchedPlugins;
+    	return fetchedPlugins;
     }
-
+    
     private void fetchPluginsAsNeeded() {
 		if (plugins == null) {
 			try {
