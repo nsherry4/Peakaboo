@@ -20,7 +20,7 @@ public class RepositoryMetadata implements DruthersStorable {
 	public String repositoryDescription = "<No Description>";
 	
     public boolean validate(String repoUrl) {
-    	final String REGEX_A1 = "^[a-zA-Z0-9_ ]+$"; // Alphanumeric, underscores, and spaces only
+    	final String REGEX_A1 = "^[a-zA-Z0-9_ -]+$"; // Alphanumeric, underscores, hyphens, and spaces only
     	
     	// Spec version must match
     	if (this.specVersion != 1) {
@@ -69,17 +69,12 @@ public class RepositoryMetadata implements DruthersStorable {
 			}
 			
 			if (! plugin.name.matches(REGEX_A1)) {
-				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid name. It must only contain alphanumeric characters, underscores, and spaces.");
-				return false;
-			}
-			
-			if (! plugin.description.matches(REGEX_A1)) {
-				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid description. It must only contain alphanumeric characters, underscores, and spaces.");
+				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid name. It must only contain alphanumeric characters, underscores, hyphens, and spaces.");
 				return false;
 			}
 			
 			if (! plugin.category.matches(REGEX_A1)) {
-				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid category. It must only contain alphanumeric characters, underscores, and spaces.");
+				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid category. It must only contain alphanumeric characters, underscores, hyphens, and spaces.");
 				return false;
 			}
 			

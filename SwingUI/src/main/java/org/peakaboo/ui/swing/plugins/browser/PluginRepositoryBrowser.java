@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComboBox;
@@ -21,6 +22,7 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
+import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginRepositoryException;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
@@ -35,6 +37,20 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
 
     private PluginsController controller;
     private ComponentStrip headerControls;
+    private JComboBox<SortOrder> sortOrder;
+    
+    public enum SortOrder {
+		NAME, KIND, SOURCE;
+
+		@Override
+		public String toString() {
+			return switch (this) {
+				case NAME -> "Sort by Name";
+				case KIND -> "Sort by Kind";
+				case SOURCE -> "Sort by Source";
+			};
+		}
+	}
     
     public PluginRepositoryBrowser(PluginsController controller) {
         super(new BorderLayout());
@@ -57,18 +73,68 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         
         JScrollPane scroller = Stratus.scrolled(pluginTable);
         this.add(scroller, BorderLayout.CENTER);
-        loadPlugins();
         
-        this.controller.addListener(() -> {
-        	// Submit this repaint on the Swing main thread
-        	javax.swing.SwingUtilities.invokeLater(() -> {
-                loadPlugins();
-			});
-        });
+        // Refresh the plugin table and set up the controller listener so it updates automatically on changes
+        refreshTable();
+        this.controller.addListener(() -> refreshTable());
         
-        headerControls = new ComponentStrip();
+        // Set up the header sort controls
+        sortOrder = new JComboBox<>(SortOrder.values());
+        sortOrder.addActionListener(e -> sortTable());
+        
+        headerControls = new ComponentStrip(sortOrder);
+        
+    }
+    
+    // Refresh the plugin table by reloading and resorting the plugins from the repository
+    // This method executes on the Event Dispatch Thread (EDT) to ensure the UI updates correctly
+    // and without blocking the UI.
+    private void refreshTable() {
+    	javax.swing.SwingUtilities.invokeLater(() -> loadPlugins());
+    }
+    
+    
+    private void sortTable() {
+    	SortOrder order = (SortOrder) sortOrder.getSelectedItem();
+    	
+    	switch (order) {
+			case NAME:
+				pluginTableModel.setPlugins(pluginTableModel.getPlugins().stream()
+						.sorted((p1, p2) -> p1.name.compareToIgnoreCase(p2.name))
+						.toList());
+				break;
+			case KIND:
+				pluginTableModel.setPlugins(pluginTableModel.getPlugins().stream()
+						.sorted((p1, p2) -> p1.category.compareToIgnoreCase(p2.category))
+						.toList());
+				break;
+			case SOURCE:
+				sortTableBySource();
+				break;
+		}
+	}
+
+	private void sortTableBySource() {
+ 			
+		var sortedPlugins = pluginTableModel.getPlugins().stream()
+				.sorted((p1, p2) -> {
+					Optional<PluginRepository> repo1 = controller.getRepositoryByUrl(p1.repositoryUrl);
+					Optional<PluginRepository> repo2 = controller.getRepositoryByUrl(p2.repositoryUrl);
+					String name1 = "Unknown";
+					String name2 = "Unknown";
+					if (repo1.isPresent()) {
+						name1 = repo1.get().getRepositoryName();
+					}
+					if (repo2.isPresent()) {
+						name2 = repo2.get().getRepositoryName();
+					}
+					return name1.compareToIgnoreCase(name2);
+				}).toList();
+		pluginTableModel.setPlugins(sortedPlugins);
+			
     }
 
+	// Clear the current plugins and reload them, sorting them afterwards
     private void loadPlugins() {
         new javax.swing.SwingWorker<List<PluginMetadata>, Void>() {
         	
@@ -93,6 +159,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
                     }
                     List<PluginMetadata> plugins = get();
                     pluginTableModel.setPlugins(plugins);
+                    sortTable();
                 } catch (PluginRepositoryException | ExecutionException ex) {
                     JOptionPane.showMessageDialog(PluginRepositoryBrowser.this, "Failed to load plugins: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (InterruptedException ex) {
@@ -149,6 +216,9 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
             this.plugins = plugins != null ? plugins : List.of();
             fireTableDataChanged();
         }
+        public List<PluginMetadata> getPlugins() {
+			return List.copyOf(plugins);
+		}
         @Override public boolean isCellEditable(int row, int col) { return true; }
     }
 
