@@ -97,7 +97,6 @@ public class HttpsPluginRepository implements PluginRepository {
     }
 
     private Optional<RepositoryMetadata> fetchRepoContents() {
-    	List<PluginMetadata> fetchedPlugins = new ArrayList<>();
     	try {
 	    	String contentsUrl = repoUrl + "contents.yaml";
 	    	String contentsYaml = fetchTextFromUrl(contentsUrl);
