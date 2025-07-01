@@ -20,6 +20,8 @@ public class RepositoryMetadata implements DruthersStorable {
 	public String repositoryDescription = "<No Description>";
 	
     public boolean validate(String repoUrl) {
+    	final String REGEX_A1 = "^[a-zA-Z0-9_ ]+$"; // Alphanumeric, underscores, and spaces only
+    	
     	// Spec version must match
     	if (this.specVersion != 1) {
     		Bolt.logger().log(Level.SEVERE, "Invalid repository contents: Unsupported spec version " + this.specVersion + ". Expected 1.");
@@ -44,10 +46,11 @@ public class RepositoryMetadata implements DruthersStorable {
     	}
     	
     	// Don't accept repository names that are too long, or which contain characters other than alphanumerics and hyphens
-    	if (this.repositoryName.length() > 50 || !this.repositoryName.matches("^[a-zA-Z0-9_ ]+$")) {
+    	if (this.repositoryName.length() > 50 || !this.repositoryName.matches(REGEX_A1)) {
     		Bolt.logger().log(Level.SEVERE, "Invalid repository contents: Repository name exceeds 50 characters.");
 			return false;
 		}
+    	
     	
     	
     	// Examine each plugin
@@ -63,7 +66,23 @@ public class RepositoryMetadata implements DruthersStorable {
 			if (! plugin.repositoryUrl.equals(this.repositoryUrl)) {
 				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid repository URL: " + plugin.repositoryUrl + ". It must match the repository inventory file URL.");
 				return false;
-			}			
+			}
+			
+			if (! plugin.name.matches(REGEX_A1)) {
+				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid name. It must only contain alphanumeric characters, underscores, and spaces.");
+				return false;
+			}
+			
+			if (! plugin.description.matches(REGEX_A1)) {
+				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid description. It must only contain alphanumeric characters, underscores, and spaces.");
+				return false;
+			}
+			
+			if (! plugin.category.matches(REGEX_A1)) {
+				Bolt.logger().log(Level.SEVERE, "Plugin '" + plugin.name + "' has an invalid category. It must only contain alphanumeric characters, underscores, and spaces.");
+				return false;
+			}
+			
 		}
 		return true;
 	}
