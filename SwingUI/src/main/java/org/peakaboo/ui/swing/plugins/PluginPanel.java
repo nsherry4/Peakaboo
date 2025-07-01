@@ -16,7 +16,7 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
-import org.peakaboo.framework.bolt.repository.GitHubPluginRepository;
+import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
@@ -61,9 +61,8 @@ public class PluginPanel extends HeaderLayer {
 
 		setBody(managerView);
 
-		// Set up browser view
-		var repository = new GitHubPluginRepository("Official Peakaboo Plugins", "https://github.com/PeakabooLabs/peakaboo-plugins", 600);
-		browserView = new PluginRepositoryBrowser(controller, repository);		
+		// Set up browser view	
+		browserView = new PluginRepositoryBrowser(controller);		
 		
 		
 		

@@ -6,12 +6,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.lang.ModuleLayer.Controller;
-import java.util.List;
 import java.util.function.Consumer;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -21,8 +17,6 @@ import javax.swing.border.MatteBorder;
 
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
-import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
@@ -34,9 +28,9 @@ import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
-import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip.Alignment;
+import org.peakaboo.ui.swing.plugins.PluginsController;
 
 class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     private JLabel nameLabel;
@@ -47,15 +41,19 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     private JComponent separator;
     
     private PluginMetadata plugin;
+    private PluginsController controller;
 
     // Get the registry
     private DataSourceRegistry reg = DataSourceRegistry.system();
     
     public PluginRepositoryListItemStencil(
+    		PluginsController controller,
     		Consumer<PluginMetadata> downloadAction,
     		Consumer<PluginMetadata> removeAction,
     		Consumer<PluginMetadata> upgradeAction
     	) {
+    	this.controller = controller;
+    	
         setLayout(new GridBagLayout());
         setBorder(new CompoundBorder(
         		new MatteBorder(0, 0, 1, 0, Stratus.getTheme().getWidgetBorder()), 
@@ -70,8 +68,8 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         setPluginIcon(nameLabel.getForeground());
         
         pillVersion = new KeyValuePill("Version", 3);
-        pillCategory = new KeyValuePill("Kind", 10);
-        pillRepository = new KeyValuePill("Source", 20);
+        pillCategory = new KeyValuePill("Kind", 1);
+        pillRepository = new KeyValuePill("Source", 1);
         
         pills = new StatusBarPillStrip(Alignment.LEFT);
         pills.addPills(pillCategory, pillRepository, pillVersion);
@@ -174,9 +172,18 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         }
                 
         // Now lets create some KeyValuePills
+        var repoUrl = value.repositoryUrl;
+        controller.getRepositoryByUrl(repoUrl).ifPresentOrElse(
+        		repo -> pillRepository.setValue(repo.getRepositoryName()),
+        		() -> pillRepository.setValue("<Unknown Repository>")
+        	);
+        
+        if (! removable) {
+        	pillRepository.setValue("Built-In");
+        }
+        
         pillVersion.setValue(value.version);
         pillCategory.setValue(value.category != null ? value.category : "<Unknown>");
-        pillRepository.setValue(value.repositoryName != null ? value.repositoryName : "<Unknown Repository>");
         descriptionArea.setText(value.description != null ? value.description : "");
 
         // Action button enablement logic

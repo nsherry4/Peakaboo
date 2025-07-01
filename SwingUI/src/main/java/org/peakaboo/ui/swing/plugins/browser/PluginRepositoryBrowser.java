@@ -1,12 +1,10 @@
 package org.peakaboo.ui.swing.plugins.browser;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
@@ -24,31 +22,28 @@ import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginRepositoryException;
-import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
 import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
 import org.peakaboo.ui.swing.plugins.PluginsController;
 
 public class PluginRepositoryBrowser extends JPanel {
-    private PluginRepository repository;
     private PluginTableModel pluginTableModel;
     private JTable pluginTable;
 
     private PluginsController controller;
     
-    public PluginRepositoryBrowser(PluginsController controller, PluginRepository repository) {
+    public PluginRepositoryBrowser(PluginsController controller) {
         super(new BorderLayout());
         this.controller = controller;
-        this.repository = repository;
         
         this.pluginTableModel = new PluginTableModel();
         this.pluginTable = new JTable(pluginTableModel);
         this.pluginTable.setTableHeader(null);
         this.pluginTable.setRowHeight(80);
         this.pluginTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(this::handleDownload, this::handleRemove, this::handleUpgrade), pluginTable);
-        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(this::handleDownload, this::handleRemove, this::handleUpgrade));
+        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(controller, this::handleDownload, this::handleRemove, this::handleUpgrade), pluginTable);
+        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(controller, this::handleDownload, this::handleRemove, this::handleUpgrade));
         pluginTable.getColumnModel().getColumn(0).setCellRenderer(stencilRenderer);
         pluginTable.getColumnModel().getColumn(0).setCellEditor(stencilEditor);
         pluginTable.setRowSelectionAllowed(false);
@@ -78,7 +73,7 @@ public class PluginRepositoryBrowser extends JPanel {
             @Override
             protected List<PluginMetadata> doInBackground() {
                 try {
-                    return repository.listAvailablePlugins();
+                    return controller.getRepository().listAvailablePlugins();
                 } catch (PluginRepositoryException ex) {
                     // Pass exception to done()
                     this.exception = ex;
@@ -107,7 +102,7 @@ public class PluginRepositoryBrowser extends JPanel {
 
     private void handleDownload(PluginMetadata meta) {
         // Get the download stream from the repository
-        InputStream downloadStream = repository.downloadPlugin(meta);
+        InputStream downloadStream = controller.getRepository().downloadPlugin(meta);
         File tempFile = this.controller.download(downloadStream);
         if (tempFile == null) {
 			JOptionPane.showMessageDialog(this, "Failed to download plugin: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
