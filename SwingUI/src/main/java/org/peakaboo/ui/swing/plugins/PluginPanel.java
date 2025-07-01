@@ -1,33 +1,26 @@
 package org.peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
+import java.util.ArrayList;
 
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
-import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderTabBuilder;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.plugins.browser.PluginRepositoryBrowser;
 import org.peakaboo.ui.swing.plugins.manager.PluginManager;
 
@@ -39,12 +32,16 @@ public class PluginPanel extends HeaderLayer {
 	
 	JButton browse, download;
 	
-	JPanel managerView;
-	JPanel browserView;
+	PluginManager managerView;
+	PluginRepositoryBrowser browserView;
 	
 	PluginsController controller;
 	
 	private static String noSelectionDescription = "Select a plugin or category from the sidebar to see information about available plugins.\n\nYou can add new plugins by dragging them into this window, or by using the 'Add' button in the toolbar";
+	
+	public static interface HeaderControlProvider {
+		ComponentStrip getHeaderControls();
+	}
 	
 	public PluginPanel(LayerPanel parent) {
 		super(parent, true);
@@ -64,41 +61,35 @@ public class PluginPanel extends HeaderLayer {
 		browserView = new PluginRepositoryBrowser(controller);		
 		
 		
-		
+		final String MANAGER_TITLE = "Classic"; 
 		var tabBuilder = new HeaderTabBuilder();
+		tabBuilder.addTab(MANAGER_TITLE, managerView);
 		tabBuilder.addTab("Simple (Beta)", browserView);
-		tabBuilder.addTab("Classic", managerView);
 		setBody(tabBuilder.getBody());
 		getHeader().setCentre(tabBuilder.getTabStrip());
 		
-		
-		//header controls
-	
-		browse = new FluentButton()
-				.withIcon(StockIcon.DOCUMENT_OPEN_SYMBOLIC, Stratus.getTheme().getControlText())
-				.withBordered(false)
-				.withButtonSize(FluentButtonSize.LARGE)
-				.withTooltip("Open Plugins Folder")
-				.withAction(this::browse);
-		download = new FluentButton()
-				.withIcon(StockIcon.GO_DOWN, Stratus.getTheme().getControlText())
-				.withBordered(false)
-				.withButtonSize(FluentButtonSize.LARGE)
-				.withTooltip("Get More Plugins")
-				.withAction(this::download);
-		
-		ComponentStrip tools = new ComponentStrip(browse, download);
-		
-		getHeader().setRight(tools);
-		//getHeader().setCentre("Manage Plugins");
+		// Listen for changes in the tab selection and update the header controls accordingly
+		tabBuilder.getButtonGroup().getSelection().addChangeListener(e -> {
+			var buttons = new ArrayList<AbstractButton>();
+			tabBuilder.getButtonGroup().getElements().asIterator().forEachRemaining(buttons::add);
+			for (var button : buttons) {
+				// Don't look at any buttons but the one with the MANAGER_TITLE
+				if (! button.getText().equals(MANAGER_TITLE) ) continue;
+				// If the button is selected, set the header controls to the manager view's controls
+				// Otherwise, set it to the browser view's controls
+				if (button.getModel().isSelected()) {
+					getHeader().setRight(managerView.getHeaderControls());
+				} else {
+					getHeader().setRight(browserView.getHeaderControls());	
+				}
+			}
+		});
+				
+		getHeader().setRight(managerView.getHeaderControls());
 		
 	}
 	
 
-	
-
-
-	
 	
 
 	public static boolean isPluginFile(File file) {
@@ -116,24 +107,8 @@ public class PluginPanel extends HeaderLayer {
 		return loadable;
 	}
 	
-	
 
-	
-	
-	private void browse() {
-		File appDataDir = DesktopApp.appDir("Plugins");
-		appDataDir.mkdirs();
-		Desktop desktop = Desktop.getDesktop();
-		try {
-			desktop.open(appDataDir);
-		} catch (IOException e1) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
-		}
-	}
-	
-	private void download() {
-		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
-	}
+
 	
 	private void browseRepository() {
 		setBody(browserView);

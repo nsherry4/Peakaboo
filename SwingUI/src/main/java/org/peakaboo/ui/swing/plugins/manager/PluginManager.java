@@ -1,11 +1,14 @@
 package org.peakaboo.ui.swing.plugins.manager;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -17,6 +20,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
@@ -39,15 +43,17 @@ import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.Fluent
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.plugins.PluginsController;
+import org.peakaboo.ui.swing.plugins.PluginPanel.HeaderControlProvider;
 
-public class PluginManager extends JPanel {
+public class PluginManager extends JPanel implements HeaderControlProvider {
 
 	private JTree tree;
 	private JPanel details;
 	
 	private JButton add, remove, reload;
-	
+	private ComponentStrip headerControls;
 
 	private PluginsController controller;
 	
@@ -117,9 +123,31 @@ public class PluginManager extends JPanel {
 		this.add(pluginTree(), BorderLayout.WEST);
 		this.add(details, BorderLayout.CENTER);
 
+        // Create the header controls for the parent when this compoonent is shown
+		var browse = new FluentButton()
+				.withIcon(StockIcon.DOCUMENT_OPEN_SYMBOLIC, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Open Plugins Folder")
+				.withAction(this::browse);
+		var download = new FluentButton()
+				.withIcon(StockIcon.GO_DOWN, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Get More Plugins")
+				.withAction(this::download);
+
+		headerControls = new ComponentStrip(browse, download);
+        
+		
 		
 	}
 
+	
+	@Override
+	public ComponentStrip getHeaderControls() {
+		return headerControls;
+	}
 	
 	private PluginDescriptor<BoltPlugin> selectedPlugin() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
@@ -149,6 +177,22 @@ public class PluginManager extends JPanel {
 
 	
 
+	
+	private void browse() {
+		File appDataDir = DesktopApp.appDir("Plugins");
+		appDataDir.mkdirs();
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			desktop.open(appDataDir);
+		} catch (IOException e1) {
+			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
+		}
+	}
+	
+	private void download() {
+		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
+	}
+	
 	
 	private DefaultMutableTreeNode createPluginManagerRootNode(PluginRegistry<? extends BoltPlugin> manager) {
 		DefaultMutableTreeNode sourcesNode = new DefaultMutableTreeNode(manager);

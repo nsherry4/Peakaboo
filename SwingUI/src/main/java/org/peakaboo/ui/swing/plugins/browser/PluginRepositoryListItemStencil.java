@@ -24,12 +24,10 @@ import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.icons.IconSet;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
-import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
-import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip.Alignment;
 import org.peakaboo.ui.swing.plugins.PluginsController;
@@ -86,18 +84,21 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         
         downloadButton = new FluentButton()
         		.withIcon(StockIcon.GO_BOTTOM, IconSize.BUTTON)
-        		.withTooltip("Download Plugin")
+        		.withText("Install")
+        		.withTooltip("Download and Install this Plugin")
         		.withBordered(true);
         downloadButton.setFocusable(false);
         
         removeButton = new FluentButton()
         		.withIcon(StockIcon.EDIT_DELETE, IconSize.BUTTON)
+        		.withText("Remove")
         		.withTooltip("Remove Plugin")
         		.withBordered(true);
         removeButton.setFocusable(false);
         
         upgradeButton = new FluentButton()
         		.withIcon(StockIcon.GO_UP, IconSize.BUTTON)
+        		.withText("Upgrade")
         		.withTooltip("Upgrade Plugin")
         		.withBordered(true);
         upgradeButton.setFocusable(false);
@@ -142,6 +143,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
             getListWidgetParent().editingStopped();			
 		});
         
+
         
     }
 
@@ -154,9 +156,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
             pillCategory.setValue("<Unknown>");
             pillRepository.setValue("<Unknown Repository>");
             descriptionArea.setText("");
-            downloadButton.setEnabled(false);
-            removeButton.setEnabled(false);
-            upgradeButton.setEnabled(false);
+            downloadButton.setVisible(false);
+            removeButton.setVisible(false);
+            upgradeButton.setVisible(false);
             return;
         }
         nameLabel.setText(value.name != null ? value.name : "<No Name>");
@@ -189,9 +191,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         descriptionArea.setText(value.description != null ? value.description : "");
 
         // Action button enablement logic
-        downloadButton.setEnabled(!alreadyInstalled && value.downloadUrl != null && !value.downloadUrl.isBlank());
-        removeButton.setEnabled(alreadyInstalled && removable);
-        upgradeButton.setEnabled(upgradable); // Placeholder, implement actual upgrade logic
+        downloadButton.setVisible(!alreadyInstalled && value.downloadUrl != null && !value.downloadUrl.isBlank());
+        removeButton.setVisible(alreadyInstalled && removable);
+        upgradeButton.setVisible(upgradable); // Placeholder, implement actual upgrade logic
 
     }
 
@@ -211,6 +213,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 		for (var button : new FluentButton[] {downloadButton, removeButton, upgradeButton}) {
 			if (button != null) {
 				var config = button.getComponentConfig();
+				button.setForeground(c);
 				button.withIcon(config.imagepath, config.imagename, IconSize.BUTTON, c);
 			}
 			
