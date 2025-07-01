@@ -39,7 +39,7 @@ public class ErrorDisplayPanel extends JPanel {
 			}
 		}
 		
-		this.t = Optional.of(t);
+		this.t = Optional.ofNullable(t);
 		
 		
 		setLayout(new BorderLayout(Spacing.huge, Spacing.huge));
