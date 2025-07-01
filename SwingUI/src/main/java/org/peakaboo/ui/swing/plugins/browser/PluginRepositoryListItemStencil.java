@@ -25,9 +25,11 @@ import org.peakaboo.framework.stratus.api.icons.IconSet;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
+import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip.Alignment;
 import org.peakaboo.ui.swing.plugins.PluginsController;
@@ -83,26 +85,26 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
                 
         
         downloadButton = new FluentButton()
-        		.withIcon(StockIcon.GO_BOTTOM, IconSize.TOOLBAR_SMALL)
+        		.withIcon(StockIcon.GO_BOTTOM, IconSize.BUTTON)
         		.withTooltip("Download Plugin")
-        		.withBordered(false);
+        		.withBordered(true);
         downloadButton.setFocusable(false);
         
         removeButton = new FluentButton()
-        		.withIcon(StockIcon.EDIT_DELETE, IconSize.TOOLBAR_SMALL)
+        		.withIcon(StockIcon.EDIT_DELETE, IconSize.BUTTON)
         		.withTooltip("Remove Plugin")
-        		.withBordered(false);
+        		.withBordered(true);
         removeButton.setFocusable(false);
         
         upgradeButton = new FluentButton()
-        		.withIcon(StockIcon.GO_LAST, IconSize.TOOLBAR_SMALL)
+        		.withIcon(StockIcon.GO_UP, IconSize.BUTTON)
         		.withTooltip("Upgrade Plugin")
-        		.withBordered(false);
+        		.withBordered(true);
         upgradeButton.setFocusable(false);
         
         
-        ButtonLinker actionLinker = new ButtonLinker(downloadButton, removeButton, upgradeButton);       
-        
+        ComponentStrip strip = new ComponentStrip(downloadButton, removeButton, upgradeButton);
+
         separator = new LineSeparator();
 
         GridBagConstraints c = new GridBagConstraints();
@@ -114,7 +116,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         c.ipadx = Spacing.small; c.ipady = Spacing.small;
         c.insets = Spacing.iMedium();
         c.gridx = 1; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
-        add(actionLinker, c);
+        add(strip, c);
         
         c.gridx = 0;
         c.gridy++;

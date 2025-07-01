@@ -16,7 +16,6 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
-import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
@@ -67,8 +66,8 @@ public class PluginPanel extends HeaderLayer {
 		
 		
 		var tabBuilder = new HeaderTabBuilder();
-		tabBuilder.addTab("Basic", browserView);
-		tabBuilder.addTab("Advanced", managerView);
+		tabBuilder.addTab("Simple (Beta)", browserView);
+		tabBuilder.addTab("Classic", managerView);
 		setBody(tabBuilder.getBody());
 		getHeader().setCentre(tabBuilder.getTabStrip());
 		
