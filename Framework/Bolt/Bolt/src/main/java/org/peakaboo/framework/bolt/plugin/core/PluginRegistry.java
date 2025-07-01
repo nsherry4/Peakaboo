@@ -2,6 +2,7 @@ package org.peakaboo.framework.bolt.plugin.core;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltLoader;
@@ -32,6 +33,7 @@ public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<
 	 */
 	void addLoader(BoltLoader<P> loader);
 
+	Set<String> getRestrictedPackagePrefixes();
 	
 	List<BoltIssue<P>> getIssues();
 

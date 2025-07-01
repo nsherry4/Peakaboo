@@ -14,6 +14,7 @@ import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
+import org.peakaboo.framework.bolt.plugin.java.classloader.RestrictedPluginClassLoader;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltBrokenJarIssue;
 import org.peakaboo.framework.bolt.plugin.java.issue.BoltEmptyJarIssue;
 
@@ -40,7 +41,11 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 				return;
 			}
 
-			URLClassLoader urlLoader = new URLClassLoader(new URL[] { url });
+			URLClassLoader urlLoader = new RestrictedPluginClassLoader(
+					new URL[] { url }, 
+					this.getClass().getClassLoader(), 
+					manager.getRestrictedPackagePrefixes()
+				);
 			ServiceLoader<T> loader = ServiceLoader.load(targetClass, urlLoader);
 			loader.reload();
 

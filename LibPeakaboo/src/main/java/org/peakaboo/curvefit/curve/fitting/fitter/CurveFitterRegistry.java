@@ -3,12 +3,13 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class CurveFitterRegistry extends BoltPluginRegistry<CurveFitter> implements PluginPreset<CurveFitter> {
+public class CurveFitterRegistry extends PeakabooPluginRegistry<CurveFitter> implements PluginPreset<CurveFitter> {
 
 	
 	private static CurveFitterRegistry SYSTEM;

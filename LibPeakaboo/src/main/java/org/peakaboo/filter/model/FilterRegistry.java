@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
 import org.peakaboo.filter.plugins.advanced.PeakDetectorFilter;
@@ -26,13 +27,12 @@ import org.peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 
-public class FilterRegistry extends BoltPluginRegistry<Filter> {
+public class FilterRegistry extends PeakabooPluginRegistry<Filter> {
 
 	private static FilterRegistry SYSTEM;
 	public static void init(File filterDir) {

@@ -4,6 +4,9 @@ import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 
+/** 
+ * This class represents a container for a Java plugin that is defined by a local class.
+ */
 public class BoltClassContainer<T extends BoltJavaPlugin> extends BoltJavaContainer<T> {
 		
 	protected Class<? extends T> implClass;
