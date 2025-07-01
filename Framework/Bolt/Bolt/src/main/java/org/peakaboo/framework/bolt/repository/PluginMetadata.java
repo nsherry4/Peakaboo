@@ -14,7 +14,7 @@ public class PluginMetadata implements DruthersStorable {
     public String uuid; //uuid of the plugin
     
     public String downloadUrl; // URL to download the plugin
-    public String repositoryName; // Name of the repository where this plugin is hosted, if applicable
+    public String repositoryUrl; // Url of the repository where this plugin is hosted, if applicable
     
     public String description;
     public String author;
@@ -53,7 +53,7 @@ public class PluginMetadata implements DruthersStorable {
     	meta.minAppVersion = 600;
     	meta.uuid = desc.getUUID();
     	meta.downloadUrl = null; // We can't know this from the descriptor
-    	meta.repositoryName = null; // We can't know this from the descriptor
+    	meta.repositoryUrl = null; // We can't know this from the descriptor
     	meta.description = desc.getDescription();
     	meta.author = null; // We can't know this from the descriptor
     	meta.checksum = null; // We can't know this from the descriptor

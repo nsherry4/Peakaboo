@@ -72,5 +72,11 @@ public interface PluginRepository {
      * @return Human-readable name for this repository
      */
     String getRepositoryName();
+
+    /**
+	 * Gets the URL of this repository
+	 * @return URL where this repository is hosted
+	 */
+	String getRepositoryUrl();
 	
 }

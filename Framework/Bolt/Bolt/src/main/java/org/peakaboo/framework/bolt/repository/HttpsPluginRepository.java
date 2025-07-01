@@ -8,29 +8,33 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 
-public class GitHubPluginRepository implements PluginRepository {
+public class HttpsPluginRepository implements PluginRepository {
 
-	private String repositoryName;
-	private int applicationVersion;
-	private String projectUrl;
-	private List<PluginMetadata> plugins;
+	private String repoUrl;
+	private RepositoryMetadata contents;
 	
-	public GitHubPluginRepository(String repositoryName, String projectUrl, int applicationVersion) {
-		this.projectUrl = projectUrl;
-		this.applicationVersion = applicationVersion;
-		this.repositoryName = repositoryName;
+	public HttpsPluginRepository(String repositoryBaseUrl) {
+		if (!repositoryBaseUrl.startsWith("https://")) {
+			throw new IllegalArgumentException("URL must start with https://");
+		}
+		// Always ensure the URL ends with a slash for consistency
+		if (!repositoryBaseUrl.endsWith("/")) {
+			repositoryBaseUrl += "/";
+		}
+		this.repoUrl = repositoryBaseUrl;
 	}
 	
 	@Override
 	public List<PluginMetadata> listAvailablePlugins() throws PluginRepositoryException {
-		fetchPluginsAsNeeded();
+		fetchRepoContentsAsNeeded();
 		// Return a copy of the list to prevent external modification
-		return new ArrayList<>(plugins);
+		return new ArrayList<>(contents.plugins);
 	}
 
 	@Override
@@ -40,8 +44,8 @@ public class GitHubPluginRepository implements PluginRepository {
 	
 	@Override
 	public PluginMetadata getPluginMetadata(String pluginName, String version) throws PluginRepositoryException {
-		fetchPluginsAsNeeded();
-		for (PluginMetadata plugin : plugins) {
+		fetchRepoContentsAsNeeded();
+		for (PluginMetadata plugin : contents.plugins) {
 			if (plugin.name != null && plugin.name.equalsIgnoreCase(pluginName) && plugin.version.equals(version)) {
 				return plugin;
 			}
@@ -51,7 +55,7 @@ public class GitHubPluginRepository implements PluginRepository {
 
 	@Override
 	public List<PluginMetadata> searchPlugins(String query, int limit) throws PluginRepositoryException {
-		fetchPluginsAsNeeded();
+		fetchRepoContentsAsNeeded();
 		if (query == null || query.isBlank()) {
 			return listAvailablePlugins();
 		}
@@ -72,7 +76,11 @@ public class GitHubPluginRepository implements PluginRepository {
 	}
 	
     private String fetchTextFromUrl(String urlString) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
+    	var url = new URL(urlString);
+    	if (!"https".equals(url.getProtocol())) {
+    		throw new IllegalArgumentException("Only HTTPS connections are allowed");
+    	}
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         int responseCode = conn.getResponseCode();
         if (responseCode != 200) {
@@ -88,49 +96,45 @@ public class GitHubPluginRepository implements PluginRepository {
         }
     }
 
-    private List<PluginMetadata> fetchPluginsFromGitHub() {
+    private Optional<RepositoryMetadata> fetchRepoContents() {
     	List<PluginMetadata> fetchedPlugins = new ArrayList<>();
     	try {
-	    	String contentsUrl = projectUrl + "/releases/download/" + applicationVersion + "/contents.yaml";
+	    	String contentsUrl = repoUrl + "contents.yaml";
 	    	String contentsYaml = fetchTextFromUrl(contentsUrl);
-	    	PluginMetadata[] contents = DruthersSerializer.deserialize(contentsYaml, false, PluginMetadata[].class);
-	    	return List.of(contents);
+	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, false, RepositoryMetadata.class);
+	    	if (!fetchedContents.validate(repoUrl)) {
+	    		return Optional.empty();
+	    	}
+	    	return Optional.of(fetchedContents);
         } catch (Exception e) {
             Bolt.logger().log(Level.WARNING, "Failed to retrieve plugin list from server", e);
         }
-    	return fetchedPlugins;
+    	return Optional.empty();
     }
     
-    private void fetchPluginsAsNeeded() {
-		if (plugins == null) {
-			try {
-				plugins = fetchPluginsFromGitHub();
-			} catch (Exception e) {
-				Bolt.logger().log(Level.WARNING, "Failed to fetch plugins from GitHub", e);
-				plugins = new ArrayList<>(); // Ensure we have an empty list to return
-			}
+
+
+	private void fetchRepoContentsAsNeeded() {
+		if (contents == null) {
+			contents = fetchRepoContents().orElse(new RepositoryMetadata());
 		}
 	}
     
 	@Override
 	public boolean isAvailable() {
-		fetchPluginsAsNeeded();
-		return plugins != null && !plugins.isEmpty();
+		fetchRepoContentsAsNeeded();
+		return contents != null && !contents.plugins.isEmpty();
 	}
 
 	@Override
 	public String getRepositoryName() {
-		return repositoryName;
+		fetchRepoContentsAsNeeded();
+		return contents.repositoryName;
 	}
-	
-	
-	public static void main(String[] args) {
-		var repo = new GitHubPluginRepository("Official Peakaboo Plugins", "https://github.com/PeakabooLabs/peakaboo-plugins", 600);
-		System.out.println("Listing available plugins from: " + repo.getRepositoryName());
-		repo.listAvailablePlugins().forEach(plugin -> {
-			System.out.println("Found plugin: " + plugin);
-			System.out.println("Download URL: " + plugin.downloadUrl);
-		});
+
+	@Override
+	public String getRepositoryUrl() {
+		return this.repoUrl;
 	}
 	
 }
