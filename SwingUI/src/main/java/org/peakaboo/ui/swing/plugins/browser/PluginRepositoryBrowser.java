@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,18 +21,20 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
-import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginRepositoryException;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
 import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
+import org.peakaboo.ui.swing.plugins.PluginPanel.HeaderControlProvider;
 import org.peakaboo.ui.swing.plugins.PluginsController;
 
-public class PluginRepositoryBrowser extends JPanel {
+public class PluginRepositoryBrowser extends JPanel implements HeaderControlProvider {
     private PluginTableModel pluginTableModel;
     private JTable pluginTable;
 
     private PluginsController controller;
+    private ComponentStrip headerControls;
     
     public PluginRepositoryBrowser(PluginsController controller) {
         super(new BorderLayout());
@@ -61,8 +64,9 @@ public class PluginRepositoryBrowser extends JPanel {
         	javax.swing.SwingUtilities.invokeLater(() -> {
                 loadPlugins();
 			});
-
         });
+        
+        headerControls = new ComponentStrip();
     }
 
     private void loadPlugins() {
@@ -147,4 +151,9 @@ public class PluginRepositoryBrowser extends JPanel {
         }
         @Override public boolean isCellEditable(int row, int col) { return true; }
     }
+
+	@Override
+	public ComponentStrip getHeaderControls() {
+		return headerControls;
+	}
 }
