@@ -1,8 +1,11 @@
 package org.peakaboo.framework.bolt.repository;
 
+import java.util.Optional;
+
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.druthers.DruthersStorable;
 
 public class PluginMetadata implements DruthersStorable {
@@ -67,7 +70,7 @@ public class PluginMetadata implements DruthersStorable {
 	 * This method tries to look up the plugin descriptor based on the category and the uuid.	
 	 * @return 
 	 */
-	public Optional<PluginDescriptor<? extends BoltPlugin>> lookupPluginDescriptor(PluginRegistry registry) {
+	public <T extends BoltPlugin> Optional<PluginDescriptor<T>> lookupPluginDescriptor(PluginRegistry<T> registry) {
 		// TODO do we have a way to look up all registries? Maybe it has to be done at the application level?
 
 		if (this.category == null || this.uuid == null) {
@@ -75,10 +78,10 @@ public class PluginMetadata implements DruthersStorable {
 		}
 
 		if (! registry.getInterfaceName().equals(category)) {
-			continue; // Not the right category
+			return Optional.empty(); // Not the right category
 		}
 		for (var desc : registry.getPlugins()) {
-			if (desc.getUUID().equals(uuid)) {
+			if (desc.getUUID().equals(this.uuid)) {
 				return Optional.of(desc);
 			}
 		}

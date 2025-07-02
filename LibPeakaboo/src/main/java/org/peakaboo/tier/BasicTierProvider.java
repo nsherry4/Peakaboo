@@ -8,11 +8,16 @@ import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.BasicCalibrationController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
+import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
+import org.peakaboo.framework.bolt.repository.LocalPluginRepository;
+import org.peakaboo.framework.bolt.repository.PluginRepository;
 
 public class BasicTierProvider implements TierProvider {
 	
@@ -29,6 +34,14 @@ public class BasicTierProvider implements TierProvider {
 		return new ArrayList<>();
 	}
 
+	public List<PluginRepository> getPluginRepositories() {
+		return List.of(
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/")
+				//new LocalPluginRepository(DataSourceRegistry.system()),
+				//new LocalPluginRepository(DataSinkRegistry.system())
+			);
+	}
+	
 	@Override
 	public <V, C> List<TierUIAction<V, C>> uiComponents(String location) {
 		return List.of();

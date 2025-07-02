@@ -6,8 +6,10 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Optional;
 import java.util.function.Consumer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -16,7 +18,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
+import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
+import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
@@ -36,10 +41,13 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     private JLabel nameLabel;
     private StatusBarPillStrip pills;
     private KeyValuePill pillVersion, pillCategory, pillRepository;
-    private KeyValuePill pillStatus;
+    private JLabel pillStatus;
     private JLabel descriptionArea;
     private FluentButton downloadButton, removeButton, upgradeButton;
     private JComponent separator;
+    
+    private static final ImageIcon PLUGIN_STATUS_HEALTHY = StockIcon.CHOOSE_OK.toImageIcon(IconSize.BUTTON);
+    private static final ImageIcon PLUGIN_STATUS_UNHEALTHY = StockIcon.CHOOSE_CANCEL.toImageIcon(IconSize.BUTTON);
     
     private PluginMetadata plugin;
     private PluginsController controller;
@@ -71,7 +79,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         pillVersion = new KeyValuePill("Version", 3);
         pillCategory = new KeyValuePill("Kind", 1);
         pillRepository = new KeyValuePill("Source", 1);
-        pillStatus = new KeyValuePill("Status", 1);
+        pillStatus = new JLabel();
+        pillStatus.setFont(pillStatus.getFont().deriveFont(Font.BOLD, 12f));
+        pillStatus.setBorder(new EmptyBorder(0, Spacing.huge, 0, Spacing.huge));
 
 
         pills = new StatusBarPillStrip(Alignment.LEFT);
@@ -107,33 +117,47 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         upgradeButton.setFocusable(false);
         
         
-        ComponentStrip strip = new ComponentStrip(downloadButton, removeButton, upgradeButton);
+        ComponentStrip strip = new ComponentStrip(pillStatus, downloadButton, removeButton, upgradeButton);
 
         separator = new LineSeparator();
 
+
         GridBagConstraints c = new GridBagConstraints();
+        
+        // ROW 1
+        // Title
+        c.gridy = 0; c.gridx = 0; 
         c.ipadx = 0; c.ipady = Spacing.small;
         c.insets = new Insets(Spacing.medium, 0, Spacing.medium, Spacing.medium);
-        c.gridx = 0; c.gridy = 0; c.anchor = GridBagConstraints.WEST; c.fill = GridBagConstraints.NONE; c.weightx = 0.0;
+        c.anchor = GridBagConstraints.WEST; c.fill = GridBagConstraints.NONE; c.weightx = 0.0; c.anchor = GridBagConstraints.WEST;
         add(nameLabel, c);
 
+        // Action Buttons
+        c.gridy = 0; c.gridx = 1;
         c.ipadx = Spacing.small; c.ipady = Spacing.small;
         c.insets = Spacing.iMedium();
-        c.gridx++; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.WEST;
-        add(pillStatus, c);
-
-        c.ipadx = Spacing.small; c.ipady = Spacing.small;
-        c.insets = Spacing.iMedium();
-        c.gridx++; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
+        c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
         add(strip, c);
         
-        c.gridx = 0;
-        c.gridy++;
-        c.weightx = 1.0; c.weighty = 0.0; c.gridwidth = 2; c.insets = new Insets(0, 0, 0, 0); c.fill = GridBagConstraints.HORIZONTAL; c.anchor = GridBagConstraints.WEST;
+        
+        // ROW 2
+        // Info Pills
+        c.gridy = 1; c.gridx = 0;
+        c.weightx = 1.0; c.weighty = 0.0; c.insets = new Insets(0, 0, 0, 0); c.fill = GridBagConstraints.HORIZONTAL; c.anchor = GridBagConstraints.WEST;
         add(pills, c);
         
-        c.gridy++;
-        c.weightx = 1.0; c.weighty = 1.0; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST; c.insets = new Insets(0, 0, 0, 0);
+        // Health Status Pill
+        c.gridy = 1; c.gridx = 1;
+        c.ipadx = Spacing.small; c.ipady = Spacing.small;
+        c.insets = Spacing.iMedium();
+        c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
+        //add(pillStatus, c);
+        
+        
+        // ROW 3
+        // Description
+        c.gridy = 2; c.gridx = 0;
+        c.weightx = 1.0; c.weighty = 1.0; c.gridwidth = 2; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST; c.insets = new Insets(0, 0, 0, 0);
         add(descriptionArea, c);
 
         //setPreferredSize(new Dimension(400, 90));
@@ -198,15 +222,14 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         removeButton.setVisible(alreadyInstalled && removable);
         upgradeButton.setVisible(upgradable); // Placeholder, implement actual upgrade logic
 
-        // TODO we can't get issues this way -- we need to get the plugin descriptor to do that
-        int issueCount = value.getIssues().getSize();
-        if (issueCount > 0) {
-            pillStatus.setValue(issueCount + " Issues");
-            pillStatus.setKey("🔴");
-        } else {
-            pillStatus.setValue("Healthy");
-            pillStatus.setKey("🟢");
-        }
+        
+        // TODO replace this with a generic version which goes through all registries
+        DataSourceRegistry registry = DataSourceRegistry.system();
+        Optional<PluginDescriptor<DataSourcePlugin>> maybePlugin = value.lookupPluginDescriptor(registry);
+        boolean healthy = maybePlugin.isPresent() && maybePlugin.get().getContainer().isHealthy();
+        pillStatus.setText(healthy ? "Healthy" : "Unhealthy");
+        pillStatus.setIcon(healthy ? PLUGIN_STATUS_HEALTHY : PLUGIN_STATUS_UNHEALTHY);
+        pillStatus.setVisible(alreadyInstalled);
 
     }
 
@@ -218,9 +241,11 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 			nameLabel.setForeground(c);
 			setPluginIcon();
 		}
-		if (pillVersion != null) pillVersion.setForeground(c);
-		if (pillCategory != null) pillCategory.setForeground(c);
-		if (pillRepository != null) pillRepository.setForeground(c);
+		for (var pill : new JComponent[] {pillVersion, pillCategory, pillRepository, pillStatus}) {
+			if (pill != null) {
+				pill.setForeground(c);
+			}
+		}
 		if (separator != null) separator.setForeground(StratusColour.moreTransparent(c, 0.7f));		
 		if (descriptionArea != null) descriptionArea.setForeground(StratusColour.moreTransparent(c, 0.25f));
 		for (var button : new FluentButton[] {downloadButton, removeButton, upgradeButton}) {
@@ -230,9 +255,6 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 				button.withIcon(config.imagepath, config.imagename, IconSize.BUTTON, c);
 			}
 		}
-
-        // The status pill will have the text foreground change, but the icon won't be recoloured
-        pillStatus.setForeground(c);
 	}
     
 	private void setPluginIcon() {
