@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
-import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
@@ -19,10 +18,11 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
+import org.peakaboo.framework.bolt.repository.AggregatingPluginRepository;
 import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
+import org.peakaboo.framework.bolt.repository.LocalPluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.bolt.repository.PluginRepository;
-import org.peakaboo.framework.cyclops.Mutable;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.stratus.api.StratusText;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
@@ -35,12 +35,16 @@ import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 
 public class PluginsController extends EventfulBeacon {
-
-	private LayerPanel parentLayer;
-	private HttpsPluginRepository repository = new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/");
 	
-	public HttpsPluginRepository getRepository() {
-		return repository;
+	private LayerPanel parentLayer;
+	private AggregatingPluginRepository aggregateRepo = new AggregatingPluginRepository(
+			new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/"),
+			new LocalPluginRepository(DataSourceRegistry.system()),
+			new LocalPluginRepository(DataSinkRegistry.system())
+		);
+	
+	public AggregatingPluginRepository getRepository() {
+		return aggregateRepo;
 	}
 
 	public LayerPanel getParentLayer() {
@@ -262,18 +266,8 @@ public class PluginsController extends EventfulBeacon {
 		return String.format("<div style='padding: 5px;'><div style='font-size: 20pt;'>%s</div><div style='font-size: 10pt; padding-bottom: 5px;'>version %s</div><div style=''>%s</div></div>", plugin.getName(), plugin.getVersion(), wrappedDescription);
 	}
 
-	public Optional<PluginRepository> getRepositoryByUrl(String repoUrl) {
-		if (repoUrl == null || repoUrl.isBlank()) {
-			return Optional.empty();
-		}
-	
-		// Right now, we only have the one repository, so we can just check that
-		if (repository.getRepositoryUrl().equals(repoUrl)) {
-			return Optional.of(repository);
-		} else {
-			// We don't have any other repositories at the moment, so we return empty
-			return Optional.empty();
-		}
+	public Optional<PluginRepository> getRepositoryForPlugin(PluginMetadata plugin) {
+		return aggregateRepo.findRepositoryForPlugin(plugin);
 	}
 	
 	

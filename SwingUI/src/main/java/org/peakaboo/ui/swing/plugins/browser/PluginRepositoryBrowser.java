@@ -118,8 +118,8 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
  			
 		var sortedPlugins = pluginTableModel.getPlugins().stream()
 				.sorted((p1, p2) -> {
-					Optional<PluginRepository> repo1 = controller.getRepositoryByUrl(p1.repositoryUrl);
-					Optional<PluginRepository> repo2 = controller.getRepositoryByUrl(p2.repositoryUrl);
+					Optional<PluginRepository> repo1 = controller.getRepositoryForPlugin(p1);
+					Optional<PluginRepository> repo2 = controller.getRepositoryForPlugin(p2);
 					String name1 = "Unknown";
 					String name2 = "Unknown";
 					if (repo1.isPresent()) {

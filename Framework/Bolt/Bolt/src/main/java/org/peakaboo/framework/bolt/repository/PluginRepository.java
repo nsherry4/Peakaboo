@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface PluginRepository {
@@ -22,7 +23,14 @@ public interface PluginRepository {
      * @return Plugin metadata or null if not found
      * @throws PluginRepositoryException if unable to fetch metadata
      */
-    PluginMetadata getPluginMetadata(String pluginName, String version) throws PluginRepositoryException;
+	default PluginMetadata getPluginMetadata(String pluginName, String version) throws PluginRepositoryException {
+		for (PluginMetadata plugin : listAvailablePlugins()) {
+			if (plugin.name != null && plugin.name.equalsIgnoreCase(pluginName) && plugin.version.equals(version)) {
+				return plugin;
+			}
+		}
+		return null;
+	}
     
     /**
      * Downloads a plugin JAR file
@@ -59,7 +67,25 @@ public interface PluginRepository {
      * @return List of matching plugin metadata
      * @throws PluginRepositoryException if unable to perform search
      */
-    List<PluginMetadata> searchPlugins(String query, int limit) throws PluginRepositoryException;
+	default List<PluginMetadata> searchPlugins(String query, int limit) throws PluginRepositoryException {
+		if (query == null || query.isBlank()) {
+			return listAvailablePlugins();
+		}
+		String q = query.toLowerCase();
+		List<PluginMetadata> allPlugins = listAvailablePlugins();
+		List<PluginMetadata> results = new ArrayList<>();
+		for (PluginMetadata plugin : allPlugins) {
+			if ((plugin.name != null && plugin.name.toLowerCase().contains(q)) ||
+				(plugin.description != null && plugin.description.toLowerCase().contains(q)) ||
+				(plugin.author != null && plugin.author.toLowerCase().contains(q))) {
+				results.add(plugin);
+				if (limit > 0 && results.size() >= limit) {
+					break;
+				}
+			}
+		}
+		return results;
+	}
     
     /**
      * Checks if the repository is accessible
