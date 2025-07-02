@@ -35,18 +35,15 @@ public class PluginMetadataBuilder {
 		meta.downloadUrl = downloadRoot + filename;
 		meta.repositoryUrl = downloadRoot;
 		meta.author = author;
-		meta.checksum = null; // TODO how to get the file for the plugin to calculate the checksum?
 		meta.releaseNotes = null; // TODO how to get the release notes for the plugin?
 		
 		
 		// Do an md5sumn from the filename
-		
 		try {
 			byte[] data = Files.readAllBytes(Paths.get(filepath));
 			byte[] hash = MessageDigest.getInstance("MD5").digest(data);
 			meta.checksum = new BigInteger(1, hash).toString(16);
 		} catch (IOException | NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

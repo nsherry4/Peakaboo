@@ -41,39 +41,8 @@ public class HttpsPluginRepository implements PluginRepository {
 	public InputStream downloadPlugin(PluginMetadata metadata) throws PluginRepositoryException {
 		return PluginRepository.downloadPluginHttp(metadata);
 	}	
-	
-	@Override
-	public PluginMetadata getPluginMetadata(String pluginName, String version) throws PluginRepositoryException {
-		fetchRepoContentsAsNeeded();
-		for (PluginMetadata plugin : contents.plugins) {
-			if (plugin.name != null && plugin.name.equalsIgnoreCase(pluginName) && plugin.version.equals(version)) {
-				return plugin;
-			}
-		}
-		return null;
-	}
 
-	@Override
-	public List<PluginMetadata> searchPlugins(String query, int limit) throws PluginRepositoryException {
-		fetchRepoContentsAsNeeded();
-		if (query == null || query.isBlank()) {
-			return listAvailablePlugins();
-		}
-		String q = query.toLowerCase();
-		List<PluginMetadata> allPlugins = listAvailablePlugins();
-		List<PluginMetadata> results = new ArrayList<>();
-		for (PluginMetadata plugin : allPlugins) {
-			if ((plugin.name != null && plugin.name.toLowerCase().contains(q)) ||
-				(plugin.description != null && plugin.description.toLowerCase().contains(q)) ||
-				(plugin.author != null && plugin.author.toLowerCase().contains(q))) {
-				results.add(plugin);
-				if (limit > 0 && results.size() >= limit) {
-					break;
-				}
-			}
-		}
-		return results;
-	}
+
 	
     private String fetchTextFromUrl(String urlString) throws IOException {
     	var url = new URL(urlString);
