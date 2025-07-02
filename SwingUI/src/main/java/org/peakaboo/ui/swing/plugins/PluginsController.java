@@ -37,11 +37,7 @@ import org.peakaboo.tier.Tier;
 public class PluginsController extends EventfulBeacon {
 	
 	private LayerPanel parentLayer;
-	private AggregatingPluginRepository aggregateRepo = new AggregatingPluginRepository(
-			new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/"),
-			new LocalPluginRepository(DataSourceRegistry.system()),
-			new LocalPluginRepository(DataSinkRegistry.system())
-		);
+	private AggregatingPluginRepository aggregateRepo = new AggregatingPluginRepository(Tier.provider().getPluginRepositories());
 	
 	public AggregatingPluginRepository getRepository() {
 		return aggregateRepo;

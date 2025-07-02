@@ -10,6 +10,7 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSource
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.repository.PluginRepository;
 
 //Interface for a factory class that creates pro/non-pro implementations of interfaces
 
@@ -23,6 +24,7 @@ public interface TierProvider {
 	public void initializePlugins();
 	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers();
 	public <V, C> List<TierUIAction<V, C>> uiComponents(String location);
+	public List<PluginRepository> getPluginRepositories();
 
 	// App info
 	public String appName();

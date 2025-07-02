@@ -11,6 +11,10 @@ public class AggregatingPluginRepository implements PluginRepository {
 	public AggregatingPluginRepository(PluginRepository... repositories) {
 		this.repositories = repositories;
 	}
+	
+	public AggregatingPluginRepository(List<PluginRepository> repositories) {
+		this.repositories = repositories.toArray(new PluginRepository[0]);
+	}
 
 	@Override
 	public List<PluginMetadata> listAvailablePlugins() throws PluginRepositoryException {
