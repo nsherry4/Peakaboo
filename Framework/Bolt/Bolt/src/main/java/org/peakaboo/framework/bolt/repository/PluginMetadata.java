@@ -62,4 +62,28 @@ public class PluginMetadata implements DruthersStorable {
     	
     }
 	
+
+	/**
+	 * This method tries to look up the plugin descriptor based on the category and the uuid.	
+	 * @return 
+	 */
+	public Optional<PluginDescriptor<? extends BoltPlugin>> lookupPluginDescriptor(PluginRegistry registry) {
+		// TODO do we have a way to look up all registries? Maybe it has to be done at the application level?
+
+		if (this.category == null || this.uuid == null) {
+			return Optional.empty(); // Can't look up without category and uuid
+		}
+
+		if (! registry.getInterfaceName().equals(category)) {
+			continue; // Not the right category
+		}
+		for (var desc : registry.getPlugins()) {
+			if (desc.getUUID().equals(uuid)) {
+				return Optional.of(desc);
+			}
+		}
+
+		return Optional.empty();
+	}
+
 }

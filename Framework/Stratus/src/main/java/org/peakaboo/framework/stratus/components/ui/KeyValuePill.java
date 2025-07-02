@@ -99,6 +99,10 @@ public class KeyValuePill extends JPanel {
 		
 		
 	}
+
+	public void setKey(String key) {
+		this.key.setText(key);
+	}
 	
 	public void setValue(String value) {
 		this.value.setText(value);

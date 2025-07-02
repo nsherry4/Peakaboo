@@ -36,6 +36,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     private JLabel nameLabel;
     private StatusBarPillStrip pills;
     private KeyValuePill pillVersion, pillCategory, pillRepository;
+    private KeyValuePill pillStatus;
     private JLabel descriptionArea;
     private FluentButton downloadButton, removeButton, upgradeButton;
     private JComponent separator;
@@ -70,7 +71,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         pillVersion = new KeyValuePill("Version", 3);
         pillCategory = new KeyValuePill("Kind", 1);
         pillRepository = new KeyValuePill("Source", 1);
-        
+        pillStatus = new KeyValuePill("Status", 1);
+
+
         pills = new StatusBarPillStrip(Alignment.LEFT);
         pills.addPills(pillCategory, pillRepository, pillVersion);
         pills.setPreferredSize(new Dimension(0, 24));
@@ -116,7 +119,12 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 
         c.ipadx = Spacing.small; c.ipady = Spacing.small;
         c.insets = Spacing.iMedium();
-        c.gridx = 1; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
+        c.gridx++; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.WEST;
+        add(pillStatus, c);
+
+        c.ipadx = Spacing.small; c.ipady = Spacing.small;
+        c.insets = Spacing.iMedium();
+        c.gridx++; c.gridy = 0; c.gridheight = 1; c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
         add(strip, c);
         
         c.gridx = 0;
@@ -190,6 +198,16 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         removeButton.setVisible(alreadyInstalled && removable);
         upgradeButton.setVisible(upgradable); // Placeholder, implement actual upgrade logic
 
+        // TODO we can't get issues this way -- we need to get the plugin descriptor to do that
+        int issueCount = value.getIssues().getSize();
+        if (issueCount > 0) {
+            pillStatus.setValue(issueCount + " Issues");
+            pillStatus.setKey("🔴");
+        } else {
+            pillStatus.setValue("Healthy");
+            pillStatus.setKey("🟢");
+        }
+
     }
 
 
@@ -211,9 +229,10 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 				button.setForeground(c);
 				button.withIcon(config.imagepath, config.imagename, IconSize.BUTTON, c);
 			}
-			
-			
 		}
+
+        // The status pill will have the text foreground change, but the icon won't be recoloured
+        pillStatus.setForeground(c);
 	}
     
 	private void setPluginIcon() {
