@@ -7,6 +7,7 @@ public abstract class TabbedLayerPanel extends LayerPanel {
 	private TabbedInterface<TabbedLayerPanel> tabbedInterface;
 	
 	public TabbedLayerPanel(TabbedInterface<TabbedLayerPanel> tabbed) {
+		super(true);
 		this.tabbedInterface = tabbed;
 	}
 
