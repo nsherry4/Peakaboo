@@ -13,11 +13,13 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.display.plot.Plotter;
+import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
 import org.peakaboo.framework.bolt.repository.LocalPluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginRepository;
+import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 
 public class BasicTierProvider implements TierProvider {
 	
@@ -31,7 +33,12 @@ public class BasicTierProvider implements TierProvider {
 	}
 	
 	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers() {
-		return new ArrayList<>();
+		return List.of(
+			DataSourceRegistry.system(),
+			DataSinkRegistry.system(),
+			FilterRegistry.system(),
+			MapFilterRegistry.system()
+		);
 	}
 
 	public List<PluginRepository> getPluginRepositories() {

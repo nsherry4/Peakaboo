@@ -89,11 +89,7 @@ public class PluginsController extends EventfulBeacon {
 		boolean handled = false;
 		
 		try {
-			handled |= addFileToManager(file, DataSourceRegistry.system());
-			handled |= addFileToManager(file, DataSinkRegistry.system());
-			handled |= addFileToManager(file, FilterRegistry.system());
-			handled |= addFileToManager(file, MapFilterRegistry.system());
-			
+
 			for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
 				handled |= addFileToManager(file, manager);
 			}
@@ -194,14 +190,7 @@ public class PluginsController extends EventfulBeacon {
 	}
 	
 	public void reload() {
-		
-		// We only refresh the registries which we show in this UI
-		DataSourceRegistry.system().reload();
-		DataSinkRegistry.system().reload();
-		FilterRegistry.system().reload();
-		MapFilterRegistry.system().reload();
-		
-		
+
 		for (var manager : Tier.provider().getPluginManagers()) {
 			manager.reload();
 		}
