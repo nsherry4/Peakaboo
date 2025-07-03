@@ -18,17 +18,19 @@ public class HeaderPanel extends LayerPanel {
 	private Component body;	
 		
 	public HeaderPanel() {
+		super(false);
 		header = new HeaderBox();
 		
 		content = getContentLayer();
 		content.setLayout(new GridBagLayout());
 		content.add(header, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, Spacing.iNone(), 0, 0));
 
-		setBody(new JPanel());	
+		setBody(new JPanel());
 	}
 	
 	
 	public HeaderPanel(HeaderBox header, Component body) {
+		super(false);
 		this.header = header;
 		
 		content = getContentLayer();
