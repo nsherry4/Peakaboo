@@ -69,6 +69,10 @@ public class HttpsPluginRepository implements PluginRepository {
     	try {
 	    	String contentsUrl = repoUrl + "contents.yaml";
 	    	String contentsYaml = fetchTextFromUrl(contentsUrl);
+	    	if (!validateRawYaml(contentsYaml)) {
+	    		Bolt.logger().log(Level.SEVERE, "Yaml failed validation for for repo " + repoUrl);
+	    		return Optional.empty();
+	    	}
 	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, false, RepositoryMetadata.class);
 	    	if (!fetchedContents.validate(repoUrl)) {
 	    		return Optional.empty();
@@ -80,7 +84,19 @@ public class HttpsPluginRepository implements PluginRepository {
     	return Optional.empty();
     }
     
-
+    private boolean validateRawYaml(String yaml) {
+    	if (yaml.contains("!!")) {
+    		// Do not accept any yaml which tries to deserialize to specific java classes
+    		return false;
+    	}
+    	
+    	if (yaml.length() > 102400) {
+    		// Do not accept any yaml longer than 100K
+    		return false;
+    	}
+    	
+    	return true;
+    }
 
 	private void fetchRepoContentsAsNeeded() {
 		if (contents == null) {
