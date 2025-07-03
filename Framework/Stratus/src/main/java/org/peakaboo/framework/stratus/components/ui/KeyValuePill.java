@@ -3,8 +3,10 @@ package org.peakaboo.framework.stratus.components.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.IOException;
 import java.text.Format;
 
 import javax.swing.Box;
@@ -63,7 +65,9 @@ public class KeyValuePill extends JPanel {
 				return this.getPreferredSize();
 			}
 		};
-		this.value.setFont(Font.decode(Font.MONOSPACED + " 11"));
+
+		Font font = Stratus.getTheme().getMonospaceFont();
+		this.value.setFont(font);
 		this.value.setHorizontalAlignment(SwingConstants.RIGHT);
 				
 		//Measure the width of a character in the value label to determine proper width

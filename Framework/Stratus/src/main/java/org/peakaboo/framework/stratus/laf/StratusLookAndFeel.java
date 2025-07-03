@@ -167,10 +167,24 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		if (DISABLE_FONT_HINTING) {
 			
 			try {
+				// Sans Serif
 				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansUnhinted.ttf");
 				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansBoldUnhinted.ttf");
 				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansObliqueUnhinted.ttf");
 				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansBoldObliqueUnhinted.ttf");
+
+				// Monospace
+				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf");
+				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Italic.ttf");
+				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Medium.ttf");
+				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-MediumItalic.ttf");
+				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf");
+				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-BoldItalic.ttf");
+
+
+				
+				
+				
 			} catch (FontFormatException | IOException e) {
 				Logger.getLogger("Stratus").log(Level.WARNING, "Failed to configure font", e);
 			}
