@@ -33,6 +33,7 @@ import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip.Alignment;
 import org.peakaboo.ui.swing.plugins.PluginsController;
@@ -74,7 +75,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         nameLabel.setFont(nameLabel.getFont().deriveFont(Font.BOLD, 20f));
         nameLabel.setBorder(new EmptyBorder(0, Spacing.medium, 0, 0));
         nameLabel.setIcon(getStockIcon("").toImageIcon(IconSize.BUTTON));
-        setPluginIcon(nameLabel.getForeground());
+        setPluginIcon();
         
         pillVersion = new KeyValuePill("Version", 3);
         pillCategory = new KeyValuePill("Kind", 1);
@@ -284,7 +285,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     	}
     	
     	// Failed to find a specific icon
-		return StockIcon.BADGE_ERROR;
+		return PeakabooIcons.PLUGIN_SYMBOLIC;
 
     }
 
