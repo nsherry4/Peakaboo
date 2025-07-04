@@ -44,7 +44,7 @@ public class BasicTierProvider implements TierProvider {
 	@Override
 	public List<PluginRepository> getPluginRepositories() {
 		return List.of(
-				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/", 601),
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/", 601)
 				//new LocalPluginRepository(DataSourceRegistry.system()),
 				//new LocalPluginRepository(DataSinkRegistry.system())
 			);
