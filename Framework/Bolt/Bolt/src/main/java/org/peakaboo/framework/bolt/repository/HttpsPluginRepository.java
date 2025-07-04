@@ -63,7 +63,12 @@ public class HttpsPluginRepository implements PluginRepository {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             StringBuilder response = new StringBuilder();
             String line;
+            long length = 0;
             while ((line = in.readLine()) != null) {
+            	length += line.length();
+            	if (length > 50_000_000) {
+            		throw new IOException("Too large, 50MB limit");
+            	}
                 response.append(line + "\n");
             }
             return response.toString();
@@ -84,6 +89,11 @@ public class HttpsPluginRepository implements PluginRepository {
 	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, false, RepositoryMetadata.class);
 	    	if (!fetchedContents.validate(repoUrl, this.appVersion)) {
 	    		return Optional.empty();
+	    	}
+	    	// Populate the PluginMetadata with a reference back to this PluginRepository.
+	    	// Being able to refer back to the repository simplifies the design.
+	    	for (var plugin : fetchedContents.plugins) {
+	    		plugin.pluginRepository = this;
 	    	}
 	    	return Optional.of(fetchedContents);
         } catch (Exception e) {

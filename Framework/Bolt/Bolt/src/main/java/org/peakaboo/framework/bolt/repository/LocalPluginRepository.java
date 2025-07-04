@@ -51,7 +51,6 @@ public class LocalPluginRepository implements PluginRepository {
 					meta.downloadUrl = ""; // Can't download a local plugin
 					meta.repositoryUrl = REPOSITORY_NAME;
 					meta.category = registry.getInterfaceName();
-					System.out.println(meta);
 					return meta;
 				}).toList();
 	}
