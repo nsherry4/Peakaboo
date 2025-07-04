@@ -4,9 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -18,6 +21,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
@@ -28,6 +32,7 @@ import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
 import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.plugins.PluginPanel.HeaderControlProvider;
 import org.peakaboo.ui.swing.plugins.PluginsController;
 
@@ -158,6 +163,17 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
                         throw exception;
                     }
                     List<PluginMetadata> plugins = get();
+                    Set<String> interfaceNames = Tier.provider().getExtensionPoints().getInterfaceNames();
+                    // Filter out plugins that do not implement an interface that we support
+                    List<PluginMetadata> filteredPlugins = new ArrayList<>();
+                    for (PluginMetadata plugin : plugins) {
+                    	if (interfaceNames.contains(plugin.category)) {
+                    		filteredPlugins.add(plugin);
+                    	} else {
+                    		PeakabooLog.get().log(Level.WARNING, "Plugin " + plugin.name + " is for unsupported catagory " + plugin.category);
+                    	}
+                    }
+                    plugins = filteredPlugins;
                     pluginTableModel.setPlugins(plugins);
                     sortTable();
                 } catch (PluginRepositoryException | ExecutionException ex) {

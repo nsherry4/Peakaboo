@@ -90,7 +90,7 @@ public class PluginsController extends EventfulBeacon {
 		
 		try {
 
-			for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+			for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getExtensionPoints().getRegistries()) {
 				handled |= addFileToManager(file, manager);
 			}
 			
@@ -191,7 +191,7 @@ public class PluginsController extends EventfulBeacon {
 	
 	public void reload() {
 
-		for (var manager : Tier.provider().getPluginManagers()) {
+		for (var manager : Tier.provider().getExtensionPoints().getRegistries()) {
 			manager.reload();
 		}
 		

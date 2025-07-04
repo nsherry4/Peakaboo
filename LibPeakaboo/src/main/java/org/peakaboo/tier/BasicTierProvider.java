@@ -1,6 +1,5 @@
 package org.peakaboo.tier;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
@@ -14,36 +13,38 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSource
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.filter.model.FilterRegistry;
-import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
-import org.peakaboo.framework.bolt.repository.LocalPluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 
 public class BasicTierProvider implements TierProvider {
+	
+	private ExtensionPointRegistry extensionPoints;
 	
 	@Override
 	public CalibrationController createPlotCalibrationController(PlotController plotController) {
 		return new BasicCalibrationController();
 	}
 	
+	@Override
 	public void initializePlugins() {
-		//nothing to do
+		extensionPoints = new ExtensionPointRegistry();
+		extensionPoints.addRegistry(DataSourceRegistry.system());
+		extensionPoints.addRegistry(DataSinkRegistry.system());
+		extensionPoints.addRegistry(FilterRegistry.system());
+		extensionPoints.addRegistry(MapFilterRegistry.system());
 	}
 	
-	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers() {
-		return List.of(
-			DataSourceRegistry.system(),
-			DataSinkRegistry.system(),
-			FilterRegistry.system(),
-			MapFilterRegistry.system()
-		);
+	@Override
+	public ExtensionPointRegistry getExtensionPoints() {
+		return extensionPoints;
 	}
 
+	@Override
 	public List<PluginRepository> getPluginRepositories() {
 		return List.of(
-				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/")
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/", 601),
 				//new LocalPluginRepository(DataSourceRegistry.system()),
 				//new LocalPluginRepository(DataSinkRegistry.system())
 			);
