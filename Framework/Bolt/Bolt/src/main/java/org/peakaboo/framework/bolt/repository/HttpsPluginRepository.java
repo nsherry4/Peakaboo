@@ -18,8 +18,13 @@ public class HttpsPluginRepository implements PluginRepository {
 
 	private String repoUrl;
 	private RepositoryMetadata contents;
+	private int appVersion;
 	
-	public HttpsPluginRepository(String repositoryBaseUrl) {
+	public HttpsPluginRepository(String repositoryBaseUrl, int appVersion) {
+		this.appVersion = appVersion;
+		if (!RepositoryMetadata.validateString(repositoryBaseUrl, 100)) {
+			throw new IllegalArgumentException("Invalid repository url");
+		}
 		if (!repositoryBaseUrl.startsWith("https://")) {
 			throw new IllegalArgumentException("URL must start with https://");
 		}
@@ -69,8 +74,15 @@ public class HttpsPluginRepository implements PluginRepository {
     	try {
 	    	String contentsUrl = repoUrl + "contents.yaml";
 	    	String contentsYaml = fetchTextFromUrl(contentsUrl);
+	    	
+	    	// Handle empty files without an exception
+	    	boolean isEmpty = contentsYaml.strip().isEmpty();
+	    	if (isEmpty) {
+	    		return Optional.empty();
+	    	}
+	    	
 	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, false, RepositoryMetadata.class);
-	    	if (!fetchedContents.validate(repoUrl)) {
+	    	if (!fetchedContents.validate(repoUrl, this.appVersion)) {
 	    		return Optional.empty();
 	    	}
 	    	return Optional.of(fetchedContents);
