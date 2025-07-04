@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -21,6 +22,7 @@ import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -33,6 +35,7 @@ import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip.Alignment;
@@ -221,18 +224,30 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         // Action button enablement logic
         downloadButton.setVisible(!alreadyInstalled && value.downloadUrl != null && !value.downloadUrl.isBlank());
         removeButton.setVisible(alreadyInstalled && removable);
-        upgradeButton.setVisible(upgradable); // Placeholder, implement actual upgrade logic
+        upgradeButton.setVisible(upgradable);
 
         
-        // TODO replace this with a generic version which goes through all registries
-        DataSourceRegistry registry = DataSourceRegistry.system();
-        Optional<PluginDescriptor<DataSourcePlugin>> maybePlugin = value.lookupPluginDescriptor(registry);
-        boolean healthy = maybePlugin.isPresent() && maybePlugin.get().getContainer().isHealthy();
+        
+        
+		// Get the registry for the plugin's category and (assuming we found one) check its health. If
+        // no value was found, we declare it unhealthy.
+        boolean healthy = Tier.provider().getExtensionPoints().findRegistryForInterface(value.category).map(r -> {
+        	return checkHealthInRegistry(r, value);
+        }).orElse(false);
+        // Update the status pill based on health
         pillStatus.setText(healthy ? "Healthy" : "Unhealthy");
         pillStatus.setIcon(healthy ? PLUGIN_STATUS_HEALTHY : PLUGIN_STATUS_UNHEALTHY);
         pillStatus.setVisible(alreadyInstalled);
 
     }
+    
+    // We can only report healthy if the plugin is registered in the registry, and if it's container has no issues
+    private <T extends BoltPlugin> boolean checkHealthInRegistry(BoltPluginRegistry<T> registry, PluginMetadata value) {
+		Optional<PluginDescriptor<T>> maybePlugin = value.lookupPluginDescriptor(registry);
+		if (maybePlugin.isEmpty()) return false;
+		PluginDescriptor<T> descriptor = maybePlugin.get();
+		return descriptor.getContainer().isHealthy();
+	}
 
 
 	@Override

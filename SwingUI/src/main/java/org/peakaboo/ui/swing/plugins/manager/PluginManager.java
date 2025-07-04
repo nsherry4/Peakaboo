@@ -210,8 +210,8 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 	private TreeModel buildTreeModel() {
 		
 		DefaultMutableTreeNode plugins = new DefaultMutableTreeNode("Plugins");
-				
-		for (var manager : Tier.provider().getPluginManagers()) {
+		
+		for (var manager : Tier.provider().getExtensionPoints().getRegistries()) {
 			DefaultMutableTreeNode customNode = createPluginManagerRootNode(manager);
 			plugins.add(customNode);		
 		}

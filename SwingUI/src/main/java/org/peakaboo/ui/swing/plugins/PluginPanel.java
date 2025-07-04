@@ -95,7 +95,7 @@ public class PluginPanel extends HeaderLayer {
 	public static boolean isPluginFile(File file) {
 		boolean loadable = false;
 		
-		for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getPluginManagers()) {
+		for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getExtensionPoints().getRegistries()) {
 			loadable |= manager.isImportable(file);
 		}
 		
