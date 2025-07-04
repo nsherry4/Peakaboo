@@ -89,7 +89,9 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         sortOrder = new JComboBox<>(SortOrder.values());
         sortOrder.addActionListener(e -> sortTable());
         
-        headerControls = new ComponentStrip(sortOrder);
+        // Don't show the sort order control yet
+        //headerControls = new ComponentStrip(sortOrder);
+        headerControls = new ComponentStrip();
         
     }
     

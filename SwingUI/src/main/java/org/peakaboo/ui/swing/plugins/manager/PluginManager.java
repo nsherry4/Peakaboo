@@ -124,12 +124,6 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 		this.add(details, BorderLayout.CENTER);
 
         // Create the header controls for the parent when this compoonent is shown
-		var browse = new FluentButton()
-				.withIcon(StockIcon.DOCUMENT_OPEN_SYMBOLIC, Stratus.getTheme().getControlText())
-				.withBordered(false)
-				.withButtonSize(FluentButtonSize.LARGE)
-				.withTooltip("Open Plugins Folder")
-				.withAction(this::browse);
 		var download = new FluentButton()
 				.withIcon(StockIcon.GO_DOWN, Stratus.getTheme().getControlText())
 				.withBordered(false)
@@ -137,7 +131,7 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 				.withTooltip("Get More Plugins")
 				.withAction(this::download);
 
-		headerControls = new ComponentStrip(browse, download);
+		headerControls = new ComponentStrip(add, remove, reload, download);
         
 		
 		
@@ -255,15 +249,10 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 		JScrollPane scroller = new JScrollPane(tree);
 		scroller.setPreferredSize(new Dimension(250, 300));
 		scroller.setBorder(Spacing.bNone());
-				
-		// Now build the toolbar at the bottom of the tree. We'll use a buttonbox
-		ComponentStrip tools = new ComponentStrip(add, remove, reload);
-		tools.setBorder(Spacing.bSmall());
 		
 		JPanel sidebar = new JPanel(new BorderLayout());
 		sidebar.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		sidebar.add(scroller, BorderLayout.CENTER);
-		sidebar.add(tools, BorderLayout.SOUTH);
 		
 		
 		return sidebar;
