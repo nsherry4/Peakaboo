@@ -212,11 +212,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         }
                 
         // Now lets create some KeyValuePills
-        controller.getRepositoryForPlugin(value).ifPresentOrElse(
-        		repo -> pillRepository.setValue(repo.getRepositoryName()),
-        		() -> pillRepository.setValue("<Unknown Repository>")
-        	);
-
+        pillRepository.setValue(value.sourceRepository().getRepositoryName());
         pillVersion.setValue(value.version);
         pillCategory.setValue(value.category != null ? value.category : "<Unknown>");
         descriptionArea.setText(value.description != null ? value.description : "");

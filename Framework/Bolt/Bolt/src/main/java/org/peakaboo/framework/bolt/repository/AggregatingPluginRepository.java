@@ -24,33 +24,10 @@ public class AggregatingPluginRepository implements PluginRepository {
 		}
 		return allPlugins;
 	}
-
-	/**
-	 * Finds the originating repository for the specified plugin metadata.
-	 * 
-	 * @param metadata The plugin metadata to search for.
-	 * @return An Optional containing the PluginRepository if found, or empty if not found.
-	 * @throws PluginRepositoryException If an error occurs while accessing the repositories.
-	 */
-	public Optional<PluginRepository> findRepositoryForPlugin(PluginMetadata metadata) throws PluginRepositoryException {
-		for (PluginRepository repo : repositories) {
-			var repoUrl = repo.getRepositoryUrl();
-			var pluginUrl = metadata.repositoryUrl;
-			
-			if (repoUrl.equals(pluginUrl)) {
-				return Optional.of(repo);
-			}
-		}
-		return Optional.empty(); // No repository found for this plugin
-	}
 	
 	@Override
 	public InputStream downloadPlugin(PluginMetadata metadata) throws PluginRepositoryException {
-		var repo = findRepositoryForPlugin(metadata);
-		if (repo.isPresent()) {
-			return repo.get().downloadPlugin(metadata);
-		}
-		throw new PluginRepositoryException("Plugin not found in any repository: " + metadata.name);
+		throw new PluginRepositoryException("This aggregating implementation does not implement download");
 	}
 
 	@Override

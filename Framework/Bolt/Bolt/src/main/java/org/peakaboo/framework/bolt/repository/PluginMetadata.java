@@ -1,7 +1,20 @@
 package org.peakaboo.framework.bolt.repository;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
+import java.util.logging.Level;
 
+import javax.swing.JOptionPane;
+
+import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
@@ -24,6 +37,9 @@ public class PluginMetadata implements DruthersStorable {
     
     public String checksum; //md5sum for now, but leave room for checksumType in the future
     public String releaseNotes;
+    
+    // This will be populated just after deserialization and validation of the repo contents
+    PluginRepository pluginRepository;
     
     public PluginMetadata() {
 		// Default constructor for deserialization
@@ -51,15 +67,15 @@ public class PluginMetadata implements DruthersStorable {
     public static PluginMetadata fromPluginDescriptor(PluginDescriptor<? extends BoltPlugin> desc) {
     	var meta = new PluginMetadata();
     	meta.name = desc.getName();
-    	meta.category = null; // TODO we need to find a way to map between the metadata categories and the plugin registries
+    	meta.category = desc.getRegistry().getInterfaceName();
     	meta.version = desc.getVersion();
-    	meta.minAppVersion = 600;
+    	meta.minAppVersion = 0; // We can't know this from the descriptor
     	meta.uuid = desc.getUUID();
     	meta.downloadUrl = null; // We can't know this from the descriptor
     	meta.repositoryUrl = null; // We can't know this from the descriptor
     	meta.description = desc.getDescription();
     	meta.author = null; // We can't know this from the descriptor
-    	meta.checksum = null; // We can't know this from the descriptor
+    	meta.checksum = checksum(desc.getContainer().getSourcePath());
     	meta.releaseNotes = null; // We can't know this from the descriptor
     	return meta;
     	
@@ -88,5 +104,59 @@ public class PluginMetadata implements DruthersStorable {
 
 		return Optional.empty();
 	}
+	
+	public static String checksum(String filename) {
+		// Do an md5sumn from the filename
+		try {
+			byte[] data = Files.readAllBytes(Paths.get(filename));
+			byte[] hash = MessageDigest.getInstance("MD5").digest(data);
+			return new BigInteger(1, hash).toString(16);
+		} catch (IOException | NoSuchAlgorithmException e) {
+			Bolt.logger().log(Level.WARNING, "Failed to calculate MD5SUM for " + filename, e);
+			return null;
+		}
+	}
+	
+	public boolean validateChecksum(String filename) {
+		String md5sum = checksum(filename);
+		if (md5sum == null) {
+			return false;
+		}
+		return this.checksum.equalsIgnoreCase(filename);
+	}
+	
 
+	/**
+	 * Downloads a plugin from an InputStream, typically from a repository.
+	 * This will save the stream to a temporary file which will be deleted on exit.
+	 * @param stream the InputStream containing the plugin data
+	 * @return a File object pointing to the temporary file containing the downloaded plugin
+	 * @throws IOException 
+	 */
+	public Optional<File> download() throws IOException {
+		
+		InputStream inStream = pluginRepository.downloadPlugin(this);
+		
+		// Store it in a temp file so we can import in into a plugin registry
+        File tempFile = null;
+
+        tempFile = File.createTempFile("plugin_", ".jar");
+        tempFile.deleteOnExit();
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while ((bytesRead = inStream.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+        }
+        
+        return Optional.of(tempFile);
+
+	}
+	
+	// We name this method differently than the property to throw off the serializer
+	public PluginRepository sourceRepository() {
+		return this.pluginRepository;
+	}
+	
 }

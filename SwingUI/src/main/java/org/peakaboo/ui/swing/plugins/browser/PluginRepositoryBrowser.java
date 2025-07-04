@@ -3,9 +3,11 @@ package org.peakaboo.ui.swing.plugins.browser;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -66,8 +68,8 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         this.pluginTable.setTableHeader(null);
         this.pluginTable.setRowHeight(80);
         this.pluginTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(controller, this::handleDownload, this::handleRemove, this::handleUpgrade), pluginTable);
-        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(controller, this::handleDownload, this::handleRemove, this::handleUpgrade));
+        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(controller, this::handleInstall, this::handleRemove, this::handleUpgrade), pluginTable);
+        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(controller, this::handleInstall, this::handleRemove, this::handleUpgrade));
         pluginTable.getColumnModel().getColumn(0).setCellRenderer(stencilRenderer);
         pluginTable.getColumnModel().getColumn(0).setCellEditor(stencilEditor);
         pluginTable.setRowSelectionAllowed(false);
@@ -123,16 +125,8 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
  			
 		var sortedPlugins = pluginTableModel.getPlugins().stream()
 				.sorted((p1, p2) -> {
-					Optional<PluginRepository> repo1 = controller.getRepositoryForPlugin(p1);
-					Optional<PluginRepository> repo2 = controller.getRepositoryForPlugin(p2);
-					String name1 = "Unknown";
-					String name2 = "Unknown";
-					if (repo1.isPresent()) {
-						name1 = repo1.get().getRepositoryName();
-					}
-					if (repo2.isPresent()) {
-						name2 = repo2.get().getRepositoryName();
-					}
+					String name1 = p1.sourceRepository().getRepositoryName();
+					String name2 = p2.sourceRepository().getRepositoryName();
 					return name1.compareToIgnoreCase(name2);
 				}).toList();
 		pluginTableModel.setPlugins(sortedPlugins);
@@ -187,15 +181,13 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         }.execute();
     }
 
-    private void handleDownload(PluginMetadata meta) {
-        // Get the download stream from the repository
-        InputStream downloadStream = controller.getRepository().downloadPlugin(meta);
-        File tempFile = this.controller.download(downloadStream);
-        if (tempFile == null) {
+    private void handleInstall(PluginMetadata meta) {
+		try {
+	        this.controller.install(meta.download().get());
+		} catch (NoSuchElementException | IOException e) {
 			JOptionPane.showMessageDialog(this, "Failed to download plugin: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
-			return;
 		}
-        this.controller.install(tempFile);
+
     }
     
     private void handleRemove(PluginMetadata meta) {
