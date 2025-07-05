@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -118,7 +119,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         removeButton.setFocusable(false);
         
         upgradeButton = new FluentButton()
-        		.withIcon(StockIcon.GO_UP, IconSize.BUTTON)
+        		.withIcon(StockIcon.GO_UP, IconSize.BUTTON, Stratus.getTheme().getHighlightText())
         		.withText("Upgrade")
         		.withTooltip("Upgrade Plugin")
         		.withStateDefault()
@@ -126,7 +127,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         upgradeButton.setFocusable(false);
         
         
-        ComponentStrip strip = new ComponentStrip(downloadButton, removeButton, upgradeButton);
+        ComponentStrip strip = new ComponentStrip(List.of(downloadButton, removeButton, upgradeButton), true, new Insets(0, Spacing.small, 0, 0), 0);
 
         separator = new LineSeparator();
 
@@ -274,7 +275,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 		if (pillStatus != null) pillStatus.setForeground(StratusColour.moreTransparent(pillStatus.getForeground(), 0.25f));
 		if (separator != null) separator.setForeground(StratusColour.moreTransparent(c, 0.7f));		
 		if (descriptionArea != null) descriptionArea.setForeground(StratusColour.moreTransparent(c, 0.25f));
-		for (var button : new FluentButton[] {downloadButton, removeButton, upgradeButton}) {
+		for (var button : new FluentButton[] {downloadButton, removeButton}) {
 			if (button != null) {
 				var config = button.getComponentConfig();
 				button.setForeground(c);
