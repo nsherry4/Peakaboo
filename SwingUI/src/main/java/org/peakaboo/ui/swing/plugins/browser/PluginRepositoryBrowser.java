@@ -186,7 +186,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     private void handleInstall(PluginMetadata meta) {
 		try {
 	        this.controller.install(meta.download().get(), true);
-		} catch (NoSuchElementException | IOException e) {
+		} catch (NoSuchElementException e) {
 			JOptionPane.showMessageDialog(this, "Failed to download plugin: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 

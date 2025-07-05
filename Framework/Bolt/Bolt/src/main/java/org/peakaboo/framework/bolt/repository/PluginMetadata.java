@@ -124,9 +124,14 @@ public class PluginMetadata implements DruthersStorable {
 	public boolean validateChecksum(String filename) {
 		String md5sum = checksum(filename);
 		if (md5sum == null) {
+			Bolt.logger().log(Level.WARNING, "Checksum failed to match for " + filename);
 			return false;
 		}
-		return this.checksum.equalsIgnoreCase(filename);
+		boolean matched = this.checksum.equalsIgnoreCase(md5sum);
+		if (!matched) {
+			Bolt.logger().log(Level.WARNING, "Checksum failed to match for " + filename);
+		}
+		return matched;
 	}
 	
 
@@ -137,34 +142,42 @@ public class PluginMetadata implements DruthersStorable {
 	 * @return a File object pointing to the temporary file containing the downloaded plugin
 	 * @throws IOException 
 	 */
-	public Optional<File> download() throws IOException {
-		
-		InputStream inStream = pluginRepository.downloadPlugin(this);
-		
-		Path tempDir = Files.createTempDirectory("peakaboo_plugin_");
-		String tempPath = tempDir.toFile().getAbsolutePath();
-		
-		
-		// Use the URL to determine the local filename
-		String basename;
+	public Optional<File> download() {
 		try {
-			basename = getBasename(this.downloadUrl);
-		} catch (URISyntaxException e) {
-			throw new IOException("Failed to parse URL");
+			InputStream inStream = pluginRepository.downloadPlugin(this);
+			
+			Path tempDir = Files.createTempDirectory("peakaboo_plugin_");
+			String tempPath = tempDir.toFile().getAbsolutePath();
+			
+			
+			// Use the URL to determine the local filename
+			String basename;
+			try {
+				basename = getBasename(this.downloadUrl);
+			} catch (URISyntaxException e) {
+				throw new IOException("Failed to parse URL");
+			}
+			// Build the filename out of the tempdir and the extracted basename
+			File tempFile = new File(tempPath + File.separator + basename);
+			tempFile.deleteOnExit();
+			// Download to the file
+	        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+	            byte[] buffer = new byte[8192];
+	            int bytesRead;
+	            while ((bytesRead = inStream.read(buffer)) != -1) {
+	                out.write(buffer, 0, bytesRead);
+	            }
+	        }
+	        
+			if (!validateChecksum(tempFile.getAbsolutePath())) {
+				throw new IOException("Checksum did not match for: " + name);
+			}
+	        
+	        return Optional.of(tempFile);
+		} catch (IOException e) {
+			Bolt.logger().log(Level.WARNING, "Failed to download plugin", e);
+			return Optional.empty();
 		}
-		// Build the filename out of the tempdir and the extracted basename
-		File tempFile = new File(tempPath + File.separator + basename);
-		tempFile.deleteOnExit();
-		// Download to the file
-        try (FileOutputStream out = new FileOutputStream(tempFile)) {
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = inStream.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-            }
-        }
-        
-        return Optional.of(tempFile);
 
 	}
 	

@@ -185,7 +185,7 @@ public class PluginsController extends EventfulBeacon {
 			File upgrade = meta.download().get();
 	        remove(plugin, silent);
 	        install(upgrade, silent);
-		} catch (IOException | NoSuchElementException ex) {
+		} catch (NoSuchElementException ex) {
             JOptionPane.showMessageDialog(getParentLayer(), "Failed to download upgrade: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
