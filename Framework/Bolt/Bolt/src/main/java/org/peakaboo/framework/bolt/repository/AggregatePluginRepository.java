@@ -48,4 +48,11 @@ public class AggregatePluginRepository implements PluginRepository {
 		this.repositories.add(newRepo);
 	}
 
+	@Override
+	public void refresh() {
+		for (var repo : repositories) {
+			repo.refresh();
+		}
+	}
+
 }

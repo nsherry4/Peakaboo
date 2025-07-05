@@ -106,7 +106,7 @@ public class HttpsPluginRepository implements PluginRepository {
 
 	private void fetchRepoContentsAsNeeded() {
 		if (contents == null) {
-			contents = fetchRepoContents().orElse(new RepositoryMetadata());
+			refresh();
 		}
 	}
     
@@ -119,6 +119,11 @@ public class HttpsPluginRepository implements PluginRepository {
 	@Override
 	public String getRepositoryUrl() {
 		return this.repoUrl;
+	}
+
+	@Override
+	public void refresh() {
+		contents = fetchRepoContents().orElse(new RepositoryMetadata());
 	}
 	
 }

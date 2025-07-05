@@ -99,4 +99,6 @@ public interface PluginRepository {
 	 */
 	String getRepositoryUrl();
 	
+	void refresh();
+	
 }

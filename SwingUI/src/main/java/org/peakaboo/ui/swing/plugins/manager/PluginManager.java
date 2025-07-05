@@ -52,7 +52,7 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 	private JTree tree;
 	private JPanel details;
 	
-	private JButton add, remove, reload;
+	private JButton add, remove;
 	private ComponentStrip headerControls;
 
 	private PluginsController controller;
@@ -85,13 +85,6 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 				.withTooltip("Remove Plugins")
 				.withAction(this::removeSelected);
 		remove.setEnabled(false);
-		
-		reload = new FluentButton()
-				.withIcon(StockIcon.ACTION_REFRESH_SYMBOLIC, Stratus.getTheme().getControlText())
-				.withBordered(false)
-				.withButtonSize(FluentButtonSize.LARGE)
-				.withTooltip("Reload Plugins")
-				.withAction(controller::reload);
 		
 		
 		new FileDrop(this, new FileDrop.Listener() {
@@ -131,7 +124,7 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 				.withTooltip("Get More Plugins")
 				.withAction(this::download);
 
-		headerControls = new ComponentStrip(add, remove, reload, download);
+		headerControls = new ComponentStrip(add, remove, download);
         
 		
 		
