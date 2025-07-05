@@ -27,7 +27,7 @@ import org.peakaboo.tier.Tier;
 public class PluginsController extends EventfulBeacon {
 	
 	private LayerPanel parentLayer;
-	private AggregatePluginRepository aggregateRepo = new AggregatePluginRepository(Tier.provider().getPluginRepositories());
+	private AggregatePluginRepository aggregateRepo = Tier.provider().getPluginRepositories();
 	
 	public AggregatePluginRepository getRepository() {
 		return aggregateRepo;
@@ -156,6 +156,8 @@ public class PluginsController extends EventfulBeacon {
 		for (var manager : Tier.provider().getExtensionPoints().getRegistries()) {
 			manager.reload();
 		}
+		
+		aggregateRepo.refresh();
 		
 		this.updateListeners();
 	}

@@ -36,7 +36,7 @@ public class ManualInstallPluginRepository implements PluginRepository {
 				.filter(p -> p.getContainer().isDeletable())
 				// The source path should exist
 				.filter(p -> p.getContainer().getSourcePath() != null)
-				// This plugin should not appear in the inventory of all plugins found in repos
+				// Looking for plugins that dont appear in the inventory of all plugins found in repos
 				.filter(p -> accountedFor.stream().filter(o -> {
 						if (o.sourceRepository() == this) return true;
 						return p.getUUID().equals(o.uuid);
@@ -59,8 +59,9 @@ public class ManualInstallPluginRepository implements PluginRepository {
 	public List<PluginMetadata> listAvailablePlugins() throws PluginRepositoryException {
 		return new ArrayList<>(metadataCache);
 	}
-		
-	private void refresh() {
+	
+	@Override
+	public void refresh() {
 		metadataCache = generateRepoContents();
 	}
 

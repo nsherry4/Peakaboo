@@ -46,7 +46,8 @@ public class BuiltinPluginRepository implements PluginRepository {
 		return new ArrayList<>(metadataCache);
 	}
 		
-	private void refresh() {
+	@Override
+	public void refresh() {
 		metadataCache = generateRepoContents();
 	}
 

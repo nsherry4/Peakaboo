@@ -89,7 +89,13 @@ public class PluginPanel extends HeaderLayer {
 				.withButtonSize(FluentButtonSize.LARGE)
 				.withTooltip("Open Plugins Folder")
 				.withAction(this::browse);
-		getHeader().setRight(browseButton);
+		var reloadButton = new FluentButton()
+				.withIcon(StockIcon.ACTION_REFRESH_SYMBOLIC, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Refresh Plugins")
+				.withAction(controller::reload);
+		getHeader().setRight(new ComponentStrip(reloadButton, browseButton));
 		
 	}
 	
