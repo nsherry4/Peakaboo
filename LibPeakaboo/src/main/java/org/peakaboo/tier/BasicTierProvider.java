@@ -14,13 +14,16 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
+import org.peakaboo.framework.bolt.repository.AggregatePluginRepository;
+import org.peakaboo.framework.bolt.repository.BuiltinPluginRepository;
 import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
-import org.peakaboo.framework.bolt.repository.PluginRepository;
+import org.peakaboo.framework.bolt.repository.ManualInstallPluginRepository;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 
 public class BasicTierProvider implements TierProvider {
 	
 	private ExtensionPointRegistry extensionPoints;
+	private AggregatePluginRepository pluginRepositories;
 	
 	@Override
 	public CalibrationController createPlotCalibrationController(PlotController plotController) {
@@ -34,6 +37,14 @@ public class BasicTierProvider implements TierProvider {
 		extensionPoints.addRegistry(DataSinkRegistry.system());
 		extensionPoints.addRegistry(FilterRegistry.system());
 		extensionPoints.addRegistry(MapFilterRegistry.system());
+		
+		pluginRepositories = new AggregatePluginRepository(List.of(
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/", 601),
+				new BuiltinPluginRepository(DataSourceRegistry.system()),
+				new BuiltinPluginRepository(DataSinkRegistry.system())
+			));
+		pluginRepositories.addRepository(new ManualInstallPluginRepository(DataSourceRegistry.system(), pluginRepositories::listAvailablePlugins));
+		
 	}
 	
 	@Override
@@ -42,12 +53,8 @@ public class BasicTierProvider implements TierProvider {
 	}
 
 	@Override
-	public List<PluginRepository> getPluginRepositories() {
-		return List.of(
-				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/", 601)
-				//new LocalPluginRepository(DataSourceRegistry.system()),
-				//new LocalPluginRepository(DataSinkRegistry.system())
-			);
+	public AggregatePluginRepository getPluginRepositories() {
+		return pluginRepositories;
 	}
 	
 	@Override

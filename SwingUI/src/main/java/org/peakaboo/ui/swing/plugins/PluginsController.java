@@ -12,7 +12,7 @@ import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
-import org.peakaboo.framework.bolt.repository.AggregatingPluginRepository;
+import org.peakaboo.framework.bolt.repository.AggregatePluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.stratus.api.StratusText;
@@ -27,9 +27,9 @@ import org.peakaboo.tier.Tier;
 public class PluginsController extends EventfulBeacon {
 	
 	private LayerPanel parentLayer;
-	private AggregatingPluginRepository aggregateRepo = new AggregatingPluginRepository(Tier.provider().getPluginRepositories());
+	private AggregatePluginRepository aggregateRepo = new AggregatePluginRepository(Tier.provider().getPluginRepositories());
 	
-	public AggregatingPluginRepository getRepository() {
+	public AggregatePluginRepository getRepository() {
 		return aggregateRepo;
 	}
 

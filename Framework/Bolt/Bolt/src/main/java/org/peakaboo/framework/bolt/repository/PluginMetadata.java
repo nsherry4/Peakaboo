@@ -67,8 +67,11 @@ public class PluginMetadata implements DruthersStorable {
 		return AlphaNumericComparitor.compareVersions(version, other.getVersion()) > 0;
 	}
     
-    
-    public static PluginMetadata fromPluginDescriptor(PluginDescriptor<? extends BoltPlugin> desc) {
+	public static PluginMetadata fromPluginDescriptor(PluginDescriptor<? extends BoltPlugin> desc) {
+		return fromPluginDescriptor(desc, false);
+	}
+	
+    public static PluginMetadata fromPluginDescriptor(PluginDescriptor<? extends BoltPlugin> desc, boolean localRepo) {
     	var meta = new PluginMetadata();
     	meta.name = desc.getName();
     	meta.category = desc.getRegistry().getInterfaceName();
@@ -79,7 +82,9 @@ public class PluginMetadata implements DruthersStorable {
     	meta.repositoryUrl = null; // We can't know this from the descriptor
     	meta.description = desc.getDescription();
     	meta.author = null; // We can't know this from the descriptor
-    	meta.checksum = checksum(desc.getContainer().getSourcePath());
+    	if (!localRepo) {
+    		meta.checksum = checksum(desc.getContainer().getSourcePath());
+    	}
     	meta.releaseNotes = null; // We can't know this from the descriptor
     	return meta;
     	

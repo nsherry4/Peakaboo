@@ -1,19 +1,19 @@
 package org.peakaboo.framework.bolt.repository;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class AggregatingPluginRepository implements PluginRepository {
+public class AggregatePluginRepository implements PluginRepository {
 
-	private final PluginRepository[] repositories;
+	private final List<PluginRepository> repositories;
 
-	public AggregatingPluginRepository(PluginRepository... repositories) {
-		this.repositories = repositories;
+	public AggregatePluginRepository(PluginRepository... repositories) {
+		this(List.of(repositories));
 	}
 	
-	public AggregatingPluginRepository(List<PluginRepository> repositories) {
-		this.repositories = repositories.toArray(new PluginRepository[0]);
+	public AggregatePluginRepository(List<PluginRepository> repositories) {
+		this.repositories = new ArrayList<>(repositories);
 	}
 
 	@Override
@@ -40,7 +40,12 @@ public class AggregatingPluginRepository implements PluginRepository {
 		return "Aggregate Plugin Repository URL";
 	}
 
-
-
+	public List<PluginRepository> getRepositories() {
+		return List.copyOf(repositories);
+	}
+	
+	public void addRepository(PluginRepository newRepo) {
+		this.repositories.add(newRepo);
+	}
 
 }
