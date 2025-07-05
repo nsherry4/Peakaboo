@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +47,24 @@ public class ExtensionPointRegistry {
 				.map(BoltPluginRegistry::getInterfaceName)
 				.collect(Collectors.toSet());
 	}
+
+	public boolean hasUUID(String uuid) {
+		for (var reg : getRegistries()) {
+			boolean result = reg.hasUUID(uuid);
+			if (result) return result;
+		}
+		return false;
+	}
+
+	public Optional<PluginDescriptor<? extends BoltPlugin>> getByUUID(String uuid) {
+		for (var reg : getRegistries()) {
+			Optional<?> result = reg.getByUUID(uuid);
+			if (result.isPresent()) return (Optional<PluginDescriptor<? extends BoltPlugin>>) result;
+		}
+		return Optional.empty();
+	}
+
+	
 }
 
 
