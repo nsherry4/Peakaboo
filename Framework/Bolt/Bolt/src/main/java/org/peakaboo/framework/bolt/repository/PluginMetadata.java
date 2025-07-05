@@ -5,7 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -137,11 +141,21 @@ public class PluginMetadata implements DruthersStorable {
 		
 		InputStream inStream = pluginRepository.downloadPlugin(this);
 		
-		// Store it in a temp file so we can import in into a plugin registry
-        File tempFile = null;
-
-        tempFile = File.createTempFile("plugin_", ".jar");
-        tempFile.deleteOnExit();
+		Path tempDir = Files.createTempDirectory("peakaboo_plugin_");
+		String tempPath = tempDir.toFile().getAbsolutePath();
+		
+		
+		// Use the URL to determine the local filename
+		String basename;
+		try {
+			basename = getBasename(this.downloadUrl);
+		} catch (URISyntaxException e) {
+			throw new IOException("Failed to parse URL");
+		}
+		// Build the filename out of the tempdir and the extracted basename
+		File tempFile = new File(tempPath + File.separator + basename);
+		tempFile.deleteOnExit();
+		// Download to the file
         try (FileOutputStream out = new FileOutputStream(tempFile)) {
             byte[] buffer = new byte[8192];
             int bytesRead;
@@ -153,6 +167,23 @@ public class PluginMetadata implements DruthersStorable {
         return Optional.of(tempFile);
 
 	}
+	
+    private static String getBasename(String urlString) throws URISyntaxException {
+        if (urlString == null || urlString.isEmpty()) {
+            return "";
+        }
+        
+        URI url = new URI(urlString);
+        String path = url.getPath();
+        
+        // Handle empty path
+        if (path == null || path.isEmpty() || path.equals("/")) {
+            return "";
+        }
+        
+        // Use Paths.get() to extract the filename
+        return Paths.get(path).getFileName().toString();
+    }
 	
 	// We name this method differently than the property to throw off the serializer
 	public PluginRepository sourceRepository() {
