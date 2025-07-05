@@ -52,7 +52,7 @@ public class PluginsController extends EventfulBeacon {
 	/**
 	 * Try adding a jar to a specific plugin manager. Return true if the given manager accepted the jar
 	 */
-	private boolean addFileToManager(File file, BoltPluginRegistry<? extends BoltPlugin> manager) throws BoltImportException {
+	private boolean addFileToManager(File file, BoltPluginRegistry<? extends BoltPlugin> manager, boolean silent) throws BoltImportException {
 		
 		if (!manager.isImportable(file)) {
 			return false;
@@ -61,7 +61,7 @@ public class PluginsController extends EventfulBeacon {
 		BoltContainer<? extends BoltPlugin> container = manager.importOrUpgradeFile(file);
 		
 		this.reload();
-		new LayerDialog("Imported New Plugins", descriptorsToHTML(container.getPlugins())).showIn(parentLayer);
+		if (!silent) new LayerDialog("Imported New Plugins", descriptorsToHTML(container.getPlugins())).showIn(parentLayer);
 
 		return true;
 	}
@@ -78,17 +78,21 @@ public class PluginsController extends EventfulBeacon {
 		});
 	}
 	
+	public void install(File file) {
+		install(file, false);
+	}
+	
 	/**
 	 * Add a jar file containing plugins
 	 */
-	public void install(File file) {
+	public void install(File file, boolean silent) {
 		
 		boolean handled = false;
 		
 		try {
 
 			for (BoltPluginRegistry<? extends BoltPlugin> manager : Tier.provider().getExtensionPoints().getRegistries()) {
-				handled |= addFileToManager(file, manager);
+				handled |= addFileToManager(file, manager, silent);
 			}
 			
 		} catch (BoltImportException e) {
@@ -163,10 +167,6 @@ public class PluginsController extends EventfulBeacon {
 		this.updateListeners();
 	}
 
-	public void upgrade(PluginDescriptor<BoltPlugin> plugin, PluginMetadata meta) {
-		upgrade(plugin, meta, false);
-	}
-	
 	/**
 	 * We need to determine if the new plugin described by meta is actually a newer plugin for the one given.
 	 * Then we need to remove the old one and install the new one. We should try to minimize the chances that the old plugin 
@@ -184,7 +184,7 @@ public class PluginsController extends EventfulBeacon {
 		try {
 			File upgrade = meta.download().get();
 	        remove(plugin, silent);
-	        install(upgrade);
+	        install(upgrade, silent);
 		} catch (IOException | NoSuchElementException ex) {
             JOptionPane.showMessageDialog(getParentLayer(), "Failed to download upgrade: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
