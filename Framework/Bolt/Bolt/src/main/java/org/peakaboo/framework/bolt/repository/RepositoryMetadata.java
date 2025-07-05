@@ -52,7 +52,7 @@ public class RepositoryMetadata implements DruthersStorable {
     	
     	// REPOSITORY URL
     	// Repo must report the same url as we have for it
-    	if (!validateString(this.repositoryUrl, 200) || !this.repositoryUrl.equals(repoUrl)) {
+    	if (!validateString(this.repositoryUrl, 200) || this.repositoryUrl.contains("..") || !this.repositoryUrl.equals(repoUrl)) {
 			Bolt.logger().log(Level.WARNING, "Invalid repository contents: Repository URL mismatch. Expected " + repoUrl + " but got " + this.repositoryUrl);
 			return false;
 		}
@@ -75,14 +75,14 @@ public class RepositoryMetadata implements DruthersStorable {
 			
 			// DOWNLOAD URL
 			// Ensure the plugin's download url starts with the repository URL
-			if (!validateString(plugin.downloadUrl, 200) || !plugin.downloadUrl.startsWith(this.repositoryUrl)) {
+			if (!validateString(plugin.downloadUrl, 200) || this.repositoryUrl.contains("..") || !plugin.downloadUrl.startsWith(this.repositoryUrl)) {
 				Bolt.logger().log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid download URL: " + plugin.downloadUrl + ". It must begin with same path as the repository inventory file.");
 				return false;
 			}
 			
 			// REPOSITORY URL
 			// Ensure the plugin's reference to the repository URL is correct
-			if (!validateString(plugin.repositoryUrl, 200) || !plugin.repositoryUrl.equals(this.repositoryUrl)) {
+			if (!validateString(plugin.repositoryUrl, 200) || this.repositoryUrl.contains("..") || !plugin.repositoryUrl.equals(this.repositoryUrl)) {
 				Bolt.logger().log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid repository URL: " + plugin.repositoryUrl + ". It must match the repository inventory file URL.");
 				return false;
 			}
