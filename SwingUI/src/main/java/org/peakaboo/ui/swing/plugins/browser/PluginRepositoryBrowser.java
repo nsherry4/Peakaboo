@@ -185,7 +185,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
 
     private void handleInstall(PluginMetadata meta) {
 		try {
-	        this.controller.install(meta.download().get());
+	        this.controller.install(meta.download().get(), true);
 		} catch (NoSuchElementException | IOException e) {
 			JOptionPane.showMessageDialog(this, "Failed to download plugin: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -196,7 +196,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         var maybePlugin = DataSourceRegistry.system().getByUUID(meta.uuid);
         if (maybePlugin.isPresent()) {
         	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
-        	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin);
+        	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin, true);
         } else {
         	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
         }
