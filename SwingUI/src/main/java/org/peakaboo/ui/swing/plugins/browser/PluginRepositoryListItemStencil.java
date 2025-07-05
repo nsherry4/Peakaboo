@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -25,6 +24,7 @@ import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -60,8 +60,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     
     private static final Map<String, Color> colorCache = new HashMap<>();
 
-    // Get the registry
-    private DataSourceRegistry reg = DataSourceRegistry.system();
+    private ExtensionPointRegistry reg = Tier.provider().getExtensionPoints();
     
     public PluginRepositoryListItemStencil(
     		PluginsController controller,
