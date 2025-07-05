@@ -1,26 +1,19 @@
 package org.peakaboo.ui.swing.plugins;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.logging.Level;
-
-import javax.swing.JOptionPane;
 
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
-import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
 import org.peakaboo.framework.bolt.repository.AggregatingPluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
-import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 import org.peakaboo.framework.stratus.api.StratusText;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
@@ -175,7 +168,7 @@ public class PluginsController extends EventfulBeacon {
 	public void upgrade(PluginDescriptor<BoltPlugin> plugin, PluginMetadata meta, boolean silent) {	
 		// Confirm that the plugin is actually an upgrade for the one we have
 		if (! meta.isUpgradeFor(plugin)) {
-			JOptionPane.showMessageDialog(getParentLayer(), "The listed plugin is not a valid upgrade.", "Upgrade Error", JOptionPane.ERROR_MESSAGE);
+			showError("Upgrade Error", "The listed plugin is not a valid upgrade.");
 			return;
 		}
 		
@@ -186,7 +179,7 @@ public class PluginsController extends EventfulBeacon {
 	        remove(plugin, silent);
 	        install(upgrade, silent);
 		} catch (NoSuchElementException ex) {
-            JOptionPane.showMessageDialog(getParentLayer(), "Failed to download upgrade: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			showError("Upgrade Error", "Failed to download upgrade: " + ex.getMessage());
 		}
 
 	}
@@ -214,6 +207,13 @@ public class PluginsController extends EventfulBeacon {
 		// The details panel is just a convenient component which hasn't had its default font properties changes
 		String wrappedDescription = StratusText.lineWrapHTMLInline(getParentLayer(), plugin.getDescription(), 400);
 		return String.format("<div style='padding: 5px;'><div style='font-size: 20pt;'>%s</div><div style='font-size: 10pt; padding-bottom: 5px;'>version %s</div><div style=''>%s</div></div>", plugin.getName(), plugin.getVersion(), wrappedDescription);
+	}
+	
+	public void showError(String message) {
+		showError("Error", message);
+	}
+	public void showError(String title, String message) {
+		new LayerDialog(title, message, StockIcon.BADGE_ERROR).showIn(parentLayer);
 	}
 	
 }
