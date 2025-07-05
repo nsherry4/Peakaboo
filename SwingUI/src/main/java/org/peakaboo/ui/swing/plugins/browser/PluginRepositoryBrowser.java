@@ -2,19 +2,14 @@ package org.peakaboo.ui.swing.plugins.browser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,7 +23,6 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
-import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginRepositoryException;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
@@ -45,7 +39,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     private PluginsController controller;
     private ComponentStrip headerControls;
     private JComboBox<SortOrder> sortOrder;
-    
+        
     public enum SortOrder {
 		NAME, KIND, SOURCE;
 
@@ -173,10 +167,10 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
                     pluginTableModel.setPlugins(plugins);
                     sortTable();
                 } catch (PluginRepositoryException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(PluginRepositoryBrowser.this, "Failed to load plugins: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                	controller.showError("Failed to load plugins: " + ex.getMessage());
                 } catch (InterruptedException ex) {
 					Thread.currentThread().interrupt(); // Restore interrupted status
-					JOptionPane.showMessageDialog(PluginRepositoryBrowser.this, "Plugin loading was interrupted.", "Error", JOptionPane.ERROR_MESSAGE);
+					controller.showError("Plugin loading was interrupted.");
 				}
             }
             
@@ -187,7 +181,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
 		try {
 	        this.controller.install(meta.download().get(), true);
 		} catch (NoSuchElementException e) {
-			JOptionPane.showMessageDialog(this, "Failed to download plugin: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
+			controller.showError("Install Error", "Failed to download plugin: " + meta.name);
 		}
 
     }
@@ -198,7 +192,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
         	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin, true);
         } else {
-        	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
+        	controller.showError("Failed to remove plugin: " + meta.name);
         }
     }
     
@@ -208,7 +202,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
         	this.controller.upgrade((PluginDescriptor<BoltPlugin>) plugin, meta, true);
         } else {
-        	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
+        	controller.showError("Upgrade Error", "Failed to remove plugin: " + meta.name);
         }
     }
        
@@ -236,4 +230,5 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
 	public ComponentStrip getHeaderControls() {
 		return headerControls;
 	}
+	
 }
