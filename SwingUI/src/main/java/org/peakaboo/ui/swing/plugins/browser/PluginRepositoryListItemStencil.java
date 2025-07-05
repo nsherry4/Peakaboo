@@ -6,7 +6,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -18,8 +20,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import org.jdesktop.swingx.graphics.ColorUtilities;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
-import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
@@ -55,6 +57,8 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     
     private PluginMetadata plugin;
     private PluginsController controller;
+    
+    private static final Map<String, Color> colorCache = new HashMap<>();
 
     // Get the registry
     private DataSourceRegistry reg = DataSourceRegistry.system();
@@ -218,6 +222,10 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         pillCategory.setValue(value.category != null ? value.category : "<Unknown>");
         descriptionArea.setText(value.description != null ? value.description : "");
 
+        pillCategory.setBackground(stringToPastelColor(pillCategory.getValue(), 0.3f));
+        
+        
+        
         // Action button enablement logic
         downloadButton.setVisible(!alreadyInstalled && value.downloadUrl != null && !value.downloadUrl.isBlank());
         removeButton.setVisible(alreadyInstalled && removable);
@@ -323,4 +331,58 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
             return new java.awt.Dimension(1, 24); // allow shrinking
         }
     }
+    
+    
+    
+    /**
+     * Alternative method with customizable lightness for different UI contexts.
+     * 
+     * @param input The string to map to a color
+     * @param lightness Lightness value (0.0 to 1.0). Higher values = lighter colors
+     * @return A pastel Color object
+     */
+    public static Color stringToPastelColor(String input, float lightness) {
+        if (input == null) {
+            input = "";
+        }
+        
+        String cacheKey = input + "_" + lightness;
+        if (colorCache.containsKey(cacheKey)) {
+            return colorCache.get(cacheKey);
+        }
+        
+        long hash = betterStringHash(input);
+        int steps = 100;
+        float hue = Math.abs(hash % steps) / (float)steps;
+        
+        Color color = ColorUtilities.HSLtoRGB(hue, 1f, Math.max(0.0f, Math.min(1.0f, lightness)));
+        colorCache.put(cacheKey, color);
+        
+        
+        return color;
+    }
+    
+    /**
+     * Improved hash function for better color distribution.
+     * Uses FNV-1a hash algorithm which provides excellent distribution.
+     * 
+     * @param input The string to hash
+     * @return A well-distributed hash value
+     */
+    private static long betterStringHash(String input) {
+        // FNV-1a hash constants
+        final long FNV_OFFSET_BASIS = 0xcbf29ce484222325L;
+        final long FNV_PRIME = 0x100000001b3L;
+        
+        long hash = FNV_OFFSET_BASIS;
+        byte[] bytes = input.getBytes();
+        
+        for (byte b : bytes) {
+        	hash *= FNV_PRIME;
+        	hash ^= (b & 0xff);
+        }
+        
+        return hash;
+    }
+    
 }
