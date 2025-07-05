@@ -79,7 +79,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 
         nameLabel = new JLabel();
         nameLabel.setFont(nameLabel.getFont().deriveFont(Font.BOLD, 20f));
-        nameLabel.setBorder(new EmptyBorder(0, Spacing.medium, 0, 0));
+        nameLabel.setBorder(new EmptyBorder(0, Spacing.medium, Spacing.small, 0));
         nameLabel.setIcon(getStockIcon("").toImageIcon(IconSize.BUTTON));
         setPluginIcon();
         
@@ -87,8 +87,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         pillCategory = new KeyValuePill("Kind", 1);
         pillRepository = new KeyValuePill("Source", 1);
         pillStatus = new JLabel();
-        pillStatus.setFont(pillStatus.getFont().deriveFont(Font.BOLD, 12f));
-        pillStatus.setBorder(new EmptyBorder(0, Spacing.huge, 0, Spacing.huge));
+        pillStatus.setFont(pillStatus.getFont().deriveFont(Font.PLAIN, 12f));
+        pillStatus.setBorder(new EmptyBorder(0, Spacing.small, 0, Spacing.small));
+        pillStatus.setForeground(StratusColour.moreTransparent(pillStatus.getForeground(), 0.25f));
 
 
         pills = new StatusBarPillStrip(Alignment.LEFT);
@@ -125,25 +126,25 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         upgradeButton.setFocusable(false);
         
         
-        ComponentStrip strip = new ComponentStrip(pillStatus, downloadButton, removeButton, upgradeButton);
+        ComponentStrip strip = new ComponentStrip(downloadButton, removeButton, upgradeButton);
 
         separator = new LineSeparator();
 
 
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(0, 0, 0, 0);
+        c.ipadx = Spacing.small; c.ipady = Spacing.medium;
         
         // ROW 1
         // Title
-        c.gridy = 0; c.gridx = 0; 
-        c.ipadx = 0; c.ipady = Spacing.small;
-        c.insets = new Insets(Spacing.medium, 0, Spacing.medium, Spacing.medium);
+        c.gridy = 0; c.gridx = 0;
         c.anchor = GridBagConstraints.WEST; c.fill = GridBagConstraints.NONE; c.weightx = 0.0; c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(Spacing.small, 0, 0, 0);
         add(nameLabel, c);
+        c.insets = new Insets(0, 0, 0, 0);
 
         // Action Buttons
         c.gridy = 0; c.gridx = 1;
-        c.ipadx = Spacing.small; c.ipady = Spacing.small;
-        c.insets = Spacing.iMedium();
         c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
         add(strip, c);
         
@@ -151,22 +152,24 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         // ROW 2
         // Info Pills
         c.gridy = 1; c.gridx = 0;
-        c.weightx = 1.0; c.weighty = 0.0; c.insets = new Insets(0, 0, 0, 0); c.fill = GridBagConstraints.HORIZONTAL; c.anchor = GridBagConstraints.WEST;
+        c.weightx = 1.0; c.weighty = 0.0; c.fill = GridBagConstraints.HORIZONTAL; c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(0, Spacing.medium-1, 0, 0);
         add(pills, c);
+        c.insets = new Insets(0, 0, 0, 0);
         
         // Health Status Pill
         c.gridy = 1; c.gridx = 1;
-        c.ipadx = Spacing.small; c.ipady = Spacing.small;
-        c.insets = Spacing.iMedium();
         c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
-        //add(pillStatus, c);
+        add(pillStatus, c);
         
         
         // ROW 3
         // Description
         c.gridy = 2; c.gridx = 0;
-        c.weightx = 1.0; c.weighty = 1.0; c.gridwidth = 2; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST; c.insets = new Insets(0, 0, 0, 0);
+        c.weightx = 1.0; c.weighty = 1.0; c.gridwidth = 2; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST;
+        c.insets = new Insets(Spacing.small, Spacing.small, 0, 0);
         add(descriptionArea, c);
+        c.insets = new Insets(0, 0, 0, 0);
 
         //setPreferredSize(new Dimension(400, 90));
 
@@ -241,7 +244,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         // Update the status pill based on health
         pillStatus.setText(healthy ? "Healthy" : "Unhealthy");
         pillStatus.setIcon(healthy ? PLUGIN_STATUS_HEALTHY : PLUGIN_STATUS_UNHEALTHY);
+        pillStatus.setFont(pillStatus.getFont().deriveFont(healthy ? Font.PLAIN : Font.BOLD));
         pillStatus.setVisible(alreadyInstalled);
+        
 
     }
     
@@ -266,6 +271,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 				pill.setForeground(c);
 			}
 		}
+		if (pillStatus != null) pillStatus.setForeground(StratusColour.moreTransparent(pillStatus.getForeground(), 0.25f));
 		if (separator != null) separator.setForeground(StratusColour.moreTransparent(c, 0.7f));		
 		if (descriptionArea != null) descriptionArea.setForeground(StratusColour.moreTransparent(c, 0.25f));
 		for (var button : new FluentButton[] {downloadButton, removeButton, upgradeButton}) {
@@ -350,8 +356,8 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
             return colorCache.get(cacheKey);
         }
         
-        long hash = betterStringHash(input);
-        int steps = 100;
+        long hash = djb2(input);
+        int steps = 180;
         float hue = Math.abs(hash % steps) / (float)steps;
         
         Color color = ColorUtilities.HSLtoRGB(hue, 1f, Math.max(0.0f, Math.min(1.0f, lightness)));
@@ -361,27 +367,13 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         return color;
     }
     
-    /**
-     * Improved hash function for better color distribution.
-     * Uses FNV-1a hash algorithm which provides excellent distribution.
-     * 
-     * @param input The string to hash
-     * @return A well-distributed hash value
-     */
-    private static long betterStringHash(String input) {
-        // FNV-1a hash constants
-        final long FNV_OFFSET_BASIS = 0xcbf29ce484222325L;
-        final long FNV_PRIME = 0x100000001b3L;
-        
-        long hash = FNV_OFFSET_BASIS;
-        byte[] bytes = input.getBytes();
-        
-        for (byte b : bytes) {
-        	hash *= FNV_PRIME;
-        	hash ^= (b & 0xff);
+    // Better hash function for strings to get better colour autoselection
+    public static int djb2(String str) {
+        int hash = 5381;
+        for (int i = 0; i < str.length(); i++) {
+            hash = ((hash << 5) + hash) + str.charAt(i);
         }
-        
         return hash;
     }
-    
+        
 }

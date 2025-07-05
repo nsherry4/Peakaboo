@@ -98,8 +98,10 @@ public class KeyValuePill extends JPanel {
 		Color bg = Stratus.getTheme().getWidgetAlpha();
 		if (originalBackground != null) {
 			// A custom background colour has been set
-			float alpha = bg.getAlpha() / 255f;
-			bg = StratusColour.moreTransparent(this.getBackground(), 1f-alpha);
+			float alpha = 1f - (bg.getAlpha() / 255f);
+			// We skimp on the transparency a bit -- the background colours tend 
+			// to be a bit lighter than the semi-transparent black we use normally
+			bg = StratusColour.moreTransparent(this.getBackground(), alpha * 0.93f);
 		}
 		int r = (int)(getHeight() / 2f);
 
