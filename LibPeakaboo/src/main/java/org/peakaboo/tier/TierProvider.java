@@ -9,7 +9,7 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
-import org.peakaboo.framework.bolt.repository.PluginRepository;
+import org.peakaboo.framework.bolt.repository.AggregatePluginRepository;
 
 //Interface for a factory class that creates pro/non-pro implementations of interfaces
 
@@ -23,7 +23,7 @@ public interface TierProvider {
 	public void initializePlugins();
 	public ExtensionPointRegistry getExtensionPoints();
 	public <V, C> List<TierUIAction<V, C>> uiComponents(String location);
-	public List<PluginRepository> getPluginRepositories();
+	public AggregatePluginRepository getPluginRepositories();
 
 	// App info
 	public String appName();

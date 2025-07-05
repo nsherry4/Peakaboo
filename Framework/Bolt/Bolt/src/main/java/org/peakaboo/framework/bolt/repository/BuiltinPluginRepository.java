@@ -10,28 +10,42 @@ import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 /**
  * This class exposes built-in plugins through the PluginRepository interface.
  */
-public class LocalPluginRepository implements PluginRepository {
-
+public class BuiltinPluginRepository implements PluginRepository {
+	
 	private PluginRegistry<? extends BoltPlugin> registry;
 	private List<PluginMetadata> metadataCache;
+	private String repositoryName = "Built-in";
 	
-	private static final String REPOSITORY_NAME = "Built-in";
-	
-	public LocalPluginRepository(PluginRegistry<? extends BoltPlugin> registry) {
+	public BuiltinPluginRepository(PluginRegistry<? extends BoltPlugin> registry) {
 		if (registry == null) {
 			throw new IllegalArgumentException("PluginRegistry cannot be null");
 		}
 		this.registry = registry;
 		init();
 	}
+
+	protected List<PluginMetadata> generateRepoContents() {
+		// get local plugins, filter for undeletable containers, then transform to PluginMetadata
+		return registry.getPlugins().stream()
+				.filter(p -> !p.getContainer().isDeletable())
+				.filter(p -> p.getContainer().getSourcePath() != null)
+				.map(p -> {
+					var meta = PluginMetadata.fromPluginDescriptor(p, true);
+					meta.downloadUrl = ""; // Can't download a local plugin
+					meta.repositoryUrl = repositoryName;
+					meta.category = registry.getInterfaceName();
+					meta.pluginRepository = this;
+			    	meta.author = "";
+			    	meta.releaseNotes = ""; // We can't know this from the descriptor
+					return meta;
+				}).toList();
+	}
 	
 	@Override
 	public List<PluginMetadata> listAvailablePlugins() throws PluginRepositoryException {
 		return new ArrayList<>(metadataCache);
 	}
-	
-
-	
+		
 	private void refresh() {
 		metadataCache = generateRepoContents();
 	}
@@ -42,18 +56,6 @@ public class LocalPluginRepository implements PluginRepository {
 		}
 	}
 	
-	private List<PluginMetadata> generateRepoContents() {
-		// get local plugins, filter for undeletable containers, then transform to PluginMetadata
-		return registry.getPlugins().stream()
-				.filter(p -> !p.getContainer().isDeletable())
-				.map(p -> {
-					var meta = PluginMetadata.fromPluginDescriptor(p);
-					meta.downloadUrl = ""; // Can't download a local plugin
-					meta.repositoryUrl = REPOSITORY_NAME;
-					meta.category = registry.getInterfaceName();
-					return meta;
-				}).toList();
-	}
 	
 	@Override
 	public InputStream downloadPlugin(PluginMetadata metadata) throws PluginRepositoryException {
@@ -62,14 +64,13 @@ public class LocalPluginRepository implements PluginRepository {
 
 	@Override
 	public String getRepositoryName() {
-		return REPOSITORY_NAME;
+		return repositoryName;
 	}
 
 	@Override
 	public String getRepositoryUrl() {
 		// Repository URL is used for identifying the repos, we don't return null here.
-		return REPOSITORY_NAME;
+		return repositoryName;
 	}
-
 
 }
