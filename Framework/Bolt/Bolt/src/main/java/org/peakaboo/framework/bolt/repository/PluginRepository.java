@@ -88,12 +88,6 @@ public interface PluginRepository {
 	}
     
     /**
-     * Checks if the repository is accessible
-     * @return true if repository can be reached and is functional
-     */
-    boolean isAvailable();
-    
-    /**
      * Gets the display name of this repository
      * @return Human-readable name for this repository
      */

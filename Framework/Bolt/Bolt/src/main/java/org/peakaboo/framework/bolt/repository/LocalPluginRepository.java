@@ -61,11 +61,6 @@ public class LocalPluginRepository implements PluginRepository {
 	}
 
 	@Override
-	public boolean isAvailable() {
-		return true;
-	}
-
-	@Override
 	public String getRepositoryName() {
 		return REPOSITORY_NAME;
 	}

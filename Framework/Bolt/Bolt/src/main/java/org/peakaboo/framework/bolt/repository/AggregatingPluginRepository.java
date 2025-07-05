@@ -31,11 +31,6 @@ public class AggregatingPluginRepository implements PluginRepository {
 	}
 
 	@Override
-	public boolean isAvailable() {
-		return true; // Aggregating repository is always available
-	}
-
-	@Override
 	public String getRepositoryName() {
 		return "Aggregate Plugin Repository Name";
 	}

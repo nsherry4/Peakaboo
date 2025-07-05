@@ -111,12 +111,6 @@ public class HttpsPluginRepository implements PluginRepository {
 	}
     
 	@Override
-	public boolean isAvailable() {
-		fetchRepoContentsAsNeeded();
-		return contents != null && !contents.plugins.isEmpty();
-	}
-
-	@Override
 	public String getRepositoryName() {
 		fetchRepoContentsAsNeeded();
 		return contents.repositoryName;
