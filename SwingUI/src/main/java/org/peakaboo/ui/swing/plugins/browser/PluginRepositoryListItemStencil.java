@@ -117,6 +117,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         		.withIcon(StockIcon.GO_UP, IconSize.BUTTON)
         		.withText("Upgrade")
         		.withTooltip("Upgrade Plugin")
+        		.withStateDefault()
         		.withBordered(true);
         upgradeButton.setFocusable(false);
         
