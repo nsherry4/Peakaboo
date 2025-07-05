@@ -3,6 +3,7 @@ package org.peakaboo.ui.swing.plugins;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.event.ItemEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,31 +58,26 @@ public class PluginPanel extends HeaderLayer {
 		browserView = new PluginRepositoryBrowser(controller);		
 		
 		
-		final String MANAGER_TITLE = "Classic"; 
+		final String MANAGER_TITLE = "Classic";
+		final String BROWSER_TITLE = "Modern";
+		
 		var tabBuilder = new HeaderTabBuilder();
+		tabBuilder.addTab(BROWSER_TITLE, browserView);
 		tabBuilder.addTab(MANAGER_TITLE, managerView);
-		tabBuilder.addTab("Modern (Beta)", browserView);
 		setBody(tabBuilder.getBody());
 		getHeader().setCentre(tabBuilder.getTabStrip());
 		
-		// Listen for changes in the tab selection and update the header controls accordingly
-		tabBuilder.getButtonGroup().getSelection().addItemListener(e -> {
-			var buttons = new ArrayList<AbstractButton>();
-			tabBuilder.getButtonGroup().getElements().asIterator().forEachRemaining(buttons::add);
-			for (var button : buttons) {
-				// Don't look at any buttons but the one with the MANAGER_TITLE
-				if (! button.getText().equals(MANAGER_TITLE) ) continue;
-				// If the button is selected, set the header controls to the manager view's controls
-				// Otherwise, set it to the browser view's controls
-				if (button.getModel().isSelected()) {
-					getHeader().setLeft(managerView.getHeaderControls());
-				} else {
-					getHeader().setLeft(browserView.getHeaderControls());	
+		for (var button : tabBuilder.getButtons().values()) {
+			button.addItemListener(e -> {
+				if (e.getStateChange() != ItemEvent.SELECTED) return;
+				switch (button.getText()) {
+					case MANAGER_TITLE -> getHeader().setLeft(managerView.getHeaderControls());
+					case BROWSER_TITLE -> getHeader().setLeft(browserView.getHeaderControls());
 				}
-			}
-		});
-				
-		getHeader().setLeft(managerView.getHeaderControls());
+			});
+		}
+						
+		getHeader().setLeft(browserView.getHeaderControls());
 		
 		var browseButton = new FluentButton()
 				.withIcon(StockIcon.DOCUMENT_OPEN_SYMBOLIC, Stratus.getTheme().getControlText())
