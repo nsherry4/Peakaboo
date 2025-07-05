@@ -43,7 +43,7 @@ public class BasicTierProvider implements TierProvider {
 				new BuiltinPluginRepository(DataSourceRegistry.system()),
 				new BuiltinPluginRepository(DataSinkRegistry.system())
 			));
-		pluginRepositories.addRepository(new ManualInstallPluginRepository(DataSourceRegistry.system(), pluginRepositories::listAvailablePlugins));
+		pluginRepositories.addRepository(new ManualInstallPluginRepository(extensionPoints, pluginRepositories::listAvailablePlugins));
 		
 	}
 	

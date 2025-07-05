@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 
 public class ManualInstallPluginRepository implements PluginRepository {
 
-	private PluginRegistry<? extends BoltPlugin> registry;
+	//private PluginRegistry<? extends BoltPlugin> registry;
+	private ExtensionPointRegistry registries;
 	private String repositoryName = "Manually Installed";
 	private Supplier<List<PluginMetadata>> inventory;
 	
@@ -18,11 +20,11 @@ public class ManualInstallPluginRepository implements PluginRepository {
 	private List<PluginMetadata> metadataCache;
 	
 	
-	public ManualInstallPluginRepository(PluginRegistry<? extends BoltPlugin> registry, Supplier<List<PluginMetadata>> inventory) {
-		if (registry == null) {
-			throw new IllegalArgumentException("PluginRegistry cannot be null");
+	public ManualInstallPluginRepository(ExtensionPointRegistry registries, Supplier<List<PluginMetadata>> inventory) {
+		if (registries == null) {
+			throw new IllegalArgumentException("ExtensionPointRegistry cannot be null");
 		}
-		this.registry = registry;
+		this.registries = registries;
 		this.inventory = inventory;
 		init();
 	}
@@ -31,27 +33,36 @@ public class ManualInstallPluginRepository implements PluginRepository {
 		// get local plugins, filter for undeletable containers and plugins from this own repo. 
 		// Then transform the descriptor into PluginMetadata
 		var accountedFor = inventory.get();
-		return registry.getPlugins().stream()
-				// Manual installs should be deletable, these are not builtins
-				.filter(p -> p.getContainer().isDeletable())
-				// The source path should exist
-				.filter(p -> p.getContainer().getSourcePath() != null)
-				// Looking for plugins that dont appear in the inventory of all plugins found in repos
-				.filter(p -> accountedFor.stream().filter(o -> {
-						if (o.sourceRepository() == this) return true;
-						return p.getUUID().equals(o.uuid);
-					}).toList().isEmpty())
-				// Build our local metadata instance
-				.map(p -> {
-					var meta = PluginMetadata.fromPluginDescriptor(p, true);
-					meta.downloadUrl = ""; // Can't download a local plugin
-					meta.repositoryUrl = repositoryName;
-					meta.category = registry.getInterfaceName();
-					meta.pluginRepository = this;
-			    	meta.author = "";
-			    	meta.releaseNotes = ""; // We can't know this from the descriptor
-					return meta;
-				}).toList();
+		List<PluginMetadata> plugins = new ArrayList<>();
+		for (var registry : this.registries.getRegistries()) {
+		
+			 var results = registry.getPlugins().stream()
+					// Manual installs should be deletable, these are not builtins
+					.filter(p -> p.getContainer().isDeletable())
+					// The source path should exist
+					.filter(p -> p.getContainer().getSourcePath() != null)
+					// Looking for plugins that dont appear in the inventory of all plugins found in repos
+					.filter(p -> accountedFor.stream().filter(o -> {
+							if (o.sourceRepository() == this) return true;
+							return p.getUUID().equals(o.uuid);
+						}).toList().isEmpty())
+					// Build our local metadata instance
+					.map(p -> {
+						var meta = PluginMetadata.fromPluginDescriptor(p, true);
+						meta.downloadUrl = ""; // Can't download a local plugin
+						meta.repositoryUrl = repositoryName;
+						meta.category = registry.getInterfaceName();
+						meta.pluginRepository = this;
+				    	meta.author = "";
+				    	meta.releaseNotes = ""; // We can't know this from the descriptor
+						return meta;
+					}).toList();
+			 
+			 plugins.addAll(results);
+			 
+		}
+		
+		return plugins;
 	}
 
 
