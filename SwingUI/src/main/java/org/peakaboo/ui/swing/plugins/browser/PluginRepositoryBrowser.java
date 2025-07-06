@@ -21,6 +21,7 @@ import javax.swing.table.TableCellRenderer;
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.bolt.repository.PluginRepositoryException;
@@ -84,8 +85,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         sortOrder.addActionListener(e -> sortTable());
         
         // Don't show the sort order control yet
-        //headerControls = new ComponentStrip(sortOrder);
-        headerControls = new ComponentStrip();
+        headerControls = new ComponentStrip(sortOrder);
         
     }
     
@@ -100,34 +100,38 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     private void sortTable() {
     	SortOrder order = (SortOrder) sortOrder.getSelectedItem();
     	
+    	List<PluginMetadata> sorted = pluginTableModel.getPlugins();
+    	ExtensionPointRegistry reg = Tier.provider().getExtensionPoints();
+    	
     	switch (order) {
 			case NAME:
-				pluginTableModel.setPlugins(pluginTableModel.getPlugins().stream()
+				sorted = sorted.stream()
 						.sorted((p1, p2) -> p1.name.compareToIgnoreCase(p2.name))
-						.toList());
+						.toList();
 				break;
 			case KIND:
-				pluginTableModel.setPlugins(pluginTableModel.getPlugins().stream()
+				sorted = sorted.stream()
 						.sorted((p1, p2) -> p1.category.compareToIgnoreCase(p2.category))
-						.toList());
+						.toList();
 				break;
 			case SOURCE:
-				sortTableBySource();
+				sorted = sorted.stream()
+						.sorted((p1, p2) -> {
+							String name1 = p1.sourceRepository().getRepositoryName();
+							String name2 = p2.sourceRepository().getRepositoryName();
+							return name1.compareToIgnoreCase(name2);
+						}).toList();
 				break;
 		}
+    	
+    	sorted = sorted.stream().sorted((p1, p2) -> Boolean.compare(
+				!p1.getUpgradeTarget(reg).isPresent(), 
+				!p2.getUpgradeTarget(reg).isPresent())).toList();
+    	
+    	pluginTableModel.setPlugins(sorted);
+    	
 	}
 
-	private void sortTableBySource() {
- 			
-		var sortedPlugins = pluginTableModel.getPlugins().stream()
-				.sorted((p1, p2) -> {
-					String name1 = p1.sourceRepository().getRepositoryName();
-					String name2 = p2.sourceRepository().getRepositoryName();
-					return name1.compareToIgnoreCase(name2);
-				}).toList();
-		pluginTableModel.setPlugins(sortedPlugins);
-			
-    }
 
 	// Clear the current plugins and reload them, sorting them afterwards
     private void loadPlugins() {
