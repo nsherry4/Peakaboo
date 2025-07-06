@@ -138,7 +138,7 @@ class FilterList extends ClearPanel {
 				});
 		
 		FluentButton clearButton = new FluentButton()
-				.withIcon(StockIcon.EDIT_CLEAR, Stratus.getTheme().getControlText())
+				.withIcon(StockIcon.EDIT_DELETE, Stratus.getTheme().getControlText())
 				.withTooltip("Clear All Filters")
 				.withAction(() -> controller.clearFilters());
 		
