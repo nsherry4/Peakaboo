@@ -188,7 +188,7 @@ public class FiltersPanel extends JPanel {
 				if (index < 0 || index >= controller.size()) { return; }
 				controller.remove(index);
 		});
-		FluentButton clear = new FluentButton(StockIcon.EDIT_CLEAR)
+		FluentButton clear = new FluentButton(StockIcon.EDIT_DELETE)
 			.withTooltip("Clear Filters")
 			.withAction(controller::clear);
 		

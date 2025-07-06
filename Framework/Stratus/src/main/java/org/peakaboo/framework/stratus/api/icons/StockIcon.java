@@ -109,9 +109,7 @@ public enum StockIcon implements IconSet {
 	WINDOW_CLOSE,
 	WINDOW_TAB_NEW,
 	
-	ZOOM_BEST_FIT,
 	ZOOM_IN,
-	ZOOM_ORIGINAL,
 	ZOOM_OUT, 
 	
 	PROCESS_COMPLETED,
