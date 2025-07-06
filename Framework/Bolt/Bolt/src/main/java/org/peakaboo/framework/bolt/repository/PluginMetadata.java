@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -16,11 +15,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import javax.swing.JOptionPane;
-
 import org.peakaboo.framework.bolt.Bolt;
 import org.peakaboo.framework.bolt.plugin.core.AlphaNumericComparitor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.druthers.DruthersStorable;
@@ -60,13 +58,50 @@ public class PluginMetadata implements DruthersStorable {
 	 * @param other the plugin to test against
 	 * @return true if this plugin's version is newer or the same, false if this plugin version is older, or if the UUIDs don't match
 	 */
-	public boolean isUpgradeFor(PluginDescriptor<?> other) {
+	public boolean isUpgradeFor(PluginDescriptor<? extends BoltPlugin> other) {
 		if (!uuid.equals(other.getUUID())) {
 			return false;
 		}
 		return AlphaNumericComparitor.compareVersions(version, other.getVersion()) > 0;
 	}
-    
+	
+	/**
+	 * Finds the installed plugin for which this repo plugin represents an upgrade, if one exists. 
+	 * @param reg The plugin registry in which to check for a match
+	 * @return The plugin descriptor, if one is found
+	 */
+	public <T extends BoltPlugin> Optional<PluginDescriptor<T>> getUpgradeTarget(PluginRegistry<T> reg) {
+		if (!reg.getInterfaceName().equals(category)) {
+			return Optional.empty();
+		}
+		Optional<PluginDescriptor<T>> maybeInstalled = reg.getByUUID(uuid);
+		if (maybeInstalled.isEmpty()) {
+			return maybeInstalled;
+		}
+		PluginDescriptor<T> installed = maybeInstalled.get();
+		if (this.isUpgradeFor(installed)) {
+			return maybeInstalled;
+		}
+		return Optional.empty();
+		
+	}
+	
+	/**
+	 * Finds the installed plugin for which this repo plugin represents an upgrade, if one exists. 
+	 * @param reg The extension point registry (~ plugin registry set) in which to check for a match
+	 * @return The plugin descriptor, if one is found
+	 */
+	public <T extends BoltPlugin> Optional<PluginDescriptor<T>> getUpgradeTarget(ExtensionPointRegistry reg) {
+		for (var subreg : reg.getRegistries()) {
+			var result = getUpgradeTarget(subreg);
+			if (result.isPresent()) {
+				return (Optional<PluginDescriptor<T>>) result;
+			}
+		}
+		return Optional.empty();
+	}
+	
+	
 	public static PluginMetadata fromPluginDescriptor(PluginDescriptor<? extends BoltPlugin> desc) {
 		return fromPluginDescriptor(desc, false);
 	}

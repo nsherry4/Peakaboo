@@ -26,13 +26,14 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderTabBuilder;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 import org.peakaboo.ui.swing.plugins.browser.PluginRepositoryBrowser;
 import org.peakaboo.ui.swing.plugins.manager.PluginManager;
 
 public class PluginPanel extends HeaderLayer {
 
 	private JPanel details;
-	private LayerPanel parent;
+	private PlotPanel parent;
 	
 	private PluginManager managerView;
 	private PluginRepositoryBrowser browserView;
@@ -43,7 +44,7 @@ public class PluginPanel extends HeaderLayer {
 		ComponentStrip getHeaderControls();
 	}
 	
-	public PluginPanel(LayerPanel parent) {
+	public PluginPanel(PlotPanel parent) {
 		super(parent, true);
 		this.parent = parent;
 		getContentRoot().setPreferredSize(new Dimension(850, 400));
@@ -121,5 +122,11 @@ public class PluginPanel extends HeaderLayer {
 		}
 	}
 	
+	
+	@Override
+	public void remove() {
+		super.remove();
+		parent.setWidgetsState();
+	}
 	
 }

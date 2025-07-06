@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
+
 public interface PluginRepository {
 
     /**
@@ -100,5 +102,11 @@ public interface PluginRepository {
 	String getRepositoryUrl();
 	
 	void refresh();
+
+	default boolean hasUpgrades(ExtensionPointRegistry reg) {
+		return listAvailablePlugins().stream()
+				.map(p -> p.getUpgradeTarget(reg).isPresent())
+				.reduce((a, b) -> a || b).orElse(false);
+	}
 	
 }

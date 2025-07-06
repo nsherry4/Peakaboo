@@ -184,7 +184,8 @@ public class PlotPanel extends TabbedLayerPanel {
 		return controller;
 	}
 
-	private void setWidgetsState() {
+	// This is public to allow the plugins UI to advice of updates.
+	public void setWidgetsState() {
 
 		boolean hasData = controller.data().hasDataSet();
 
