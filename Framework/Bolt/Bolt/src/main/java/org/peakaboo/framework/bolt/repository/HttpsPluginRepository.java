@@ -93,7 +93,7 @@ public class HttpsPluginRepository implements PluginRepository {
 	    	}
 	    	
 	    	// Attempt to deserialize the yaml
-	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, true, RepositoryMetadata.class);
+	    	RepositoryMetadata fetchedContents = SecureRepositoryLoader.loadRepositoryMetadata(contentsYaml);
 	    	
 	    	// Validate the data we deserialized from the yaml
 	    	if (!fetchedContents.validate(repoUrl, this.appVersion)) {
