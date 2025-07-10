@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.peakaboo.app.Version;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
@@ -27,7 +28,7 @@ public class PluginMetadataBuilder {
 			String author
 		) {
 		
-		var filepath = descriptor.getContainer().getSourcePath();
+		
 		var filename = descriptor.getContainer().getSourceName();
 		
 		var meta = PluginMetadata.fromPluginDescriptor(descriptor);
@@ -35,10 +36,14 @@ public class PluginMetadataBuilder {
 		meta.downloadUrl = downloadRoot + filename;
 		meta.repositoryUrl = downloadRoot;
 		meta.author = author;
-		meta.releaseNotes = null; // TODO how to get the release notes for the plugin?
+		meta.releaseNotes = "No Release Notes"; // TODO how to get the release notes for the plugin?
+		meta.minAppVersion = Version.VERSION_MAJOR * 100; // Default to the beginning of the current major release series
+
+		
 		
 		
 		// Do an md5sumn from the filename
+		String filepath = descriptor.getContainer().getSourcePath();
 		try {
 			byte[] data = Files.readAllBytes(Paths.get(filepath));
 			byte[] hash = MessageDigest.getInstance("MD5").digest(data);

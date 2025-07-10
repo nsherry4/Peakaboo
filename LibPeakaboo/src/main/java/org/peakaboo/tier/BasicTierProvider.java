@@ -1,6 +1,5 @@
 package org.peakaboo.tier;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
@@ -14,39 +13,48 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSource
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.filter.model.FilterRegistry;
-import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
+import org.peakaboo.framework.bolt.repository.AggregatePluginRepository;
+import org.peakaboo.framework.bolt.repository.BuiltinPluginRepository;
 import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
-import org.peakaboo.framework.bolt.repository.LocalPluginRepository;
-import org.peakaboo.framework.bolt.repository.PluginRepository;
+import org.peakaboo.framework.bolt.repository.ManualInstallPluginRepository;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 
 public class BasicTierProvider implements TierProvider {
+	
+	private ExtensionPointRegistry extensionPoints;
+	private AggregatePluginRepository pluginRepositories;
 	
 	@Override
 	public CalibrationController createPlotCalibrationController(PlotController plotController) {
 		return new BasicCalibrationController();
 	}
 	
+	@Override
 	public void initializePlugins() {
-		//nothing to do
+		extensionPoints = new ExtensionPointRegistry();
+		extensionPoints.addRegistry(DataSourceRegistry.system());
+		extensionPoints.addRegistry(DataSinkRegistry.system());
+		extensionPoints.addRegistry(FilterRegistry.system());
+		extensionPoints.addRegistry(MapFilterRegistry.system());
+		
+		pluginRepositories = new AggregatePluginRepository(List.of(
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/", 601),
+				new BuiltinPluginRepository(DataSourceRegistry.system()),
+				new BuiltinPluginRepository(DataSinkRegistry.system())
+			));
+		pluginRepositories.addRepository(new ManualInstallPluginRepository(extensionPoints, pluginRepositories::listAvailablePlugins));
+		
 	}
 	
-	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers() {
-		return List.of(
-			DataSourceRegistry.system(),
-			DataSinkRegistry.system(),
-			FilterRegistry.system(),
-			MapFilterRegistry.system()
-		);
+	@Override
+	public ExtensionPointRegistry getExtensionPoints() {
+		return extensionPoints;
 	}
 
-	public List<PluginRepository> getPluginRepositories() {
-		return List.of(
-				new HttpsPluginRepository("https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/")
-				//new LocalPluginRepository(DataSourceRegistry.system()),
-				//new LocalPluginRepository(DataSinkRegistry.system())
-			);
+	@Override
+	public AggregatePluginRepository getPluginRepositories() {
+		return pluginRepositories;
 	}
 	
 	@Override

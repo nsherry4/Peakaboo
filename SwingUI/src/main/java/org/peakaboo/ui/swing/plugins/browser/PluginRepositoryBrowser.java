@@ -2,14 +2,14 @@ package org.peakaboo.ui.swing.plugins.browser;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.File;
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
 import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,16 +18,18 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
-import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.framework.bolt.repository.PluginRepositoryException;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.StencilCellEditor;
 import org.peakaboo.framework.stratus.components.stencil.StencilTableCellRenderer;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.plugins.PluginPanel.HeaderControlProvider;
 import org.peakaboo.ui.swing.plugins.PluginsController;
 
@@ -38,7 +40,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     private PluginsController controller;
     private ComponentStrip headerControls;
     private JComboBox<SortOrder> sortOrder;
-    
+        
     public enum SortOrder {
 		NAME, KIND, SOURCE;
 
@@ -61,8 +63,8 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         this.pluginTable.setTableHeader(null);
         this.pluginTable.setRowHeight(80);
         this.pluginTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(controller, this::handleDownload, this::handleRemove, this::handleUpgrade), pluginTable);
-        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(controller, this::handleDownload, this::handleRemove, this::handleUpgrade));
+        TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(new PluginRepositoryListItemStencil(controller, this::handleInstall, this::handleRemove, this::handleUpgrade), pluginTable);
+        TableCellEditor stencilEditor = new StencilCellEditor<>(new PluginRepositoryListItemStencil(controller, this::handleInstall, this::handleRemove, this::handleUpgrade));
         pluginTable.getColumnModel().getColumn(0).setCellRenderer(stencilRenderer);
         pluginTable.getColumnModel().getColumn(0).setCellEditor(stencilEditor);
         pluginTable.setRowSelectionAllowed(false);
@@ -82,6 +84,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         sortOrder = new JComboBox<>(SortOrder.values());
         sortOrder.addActionListener(e -> sortTable());
         
+        // Don't show the sort order control yet
         headerControls = new ComponentStrip(sortOrder);
         
     }
@@ -97,42 +100,38 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     private void sortTable() {
     	SortOrder order = (SortOrder) sortOrder.getSelectedItem();
     	
+    	List<PluginMetadata> sorted = pluginTableModel.getPlugins();
+    	ExtensionPointRegistry reg = Tier.provider().getExtensionPoints();
+    	
     	switch (order) {
 			case NAME:
-				pluginTableModel.setPlugins(pluginTableModel.getPlugins().stream()
+				sorted = sorted.stream()
 						.sorted((p1, p2) -> p1.name.compareToIgnoreCase(p2.name))
-						.toList());
+						.toList();
 				break;
 			case KIND:
-				pluginTableModel.setPlugins(pluginTableModel.getPlugins().stream()
+				sorted = sorted.stream()
 						.sorted((p1, p2) -> p1.category.compareToIgnoreCase(p2.category))
-						.toList());
+						.toList();
 				break;
 			case SOURCE:
-				sortTableBySource();
+				sorted = sorted.stream()
+						.sorted((p1, p2) -> {
+							String name1 = p1.sourceRepository().getRepositoryName();
+							String name2 = p2.sourceRepository().getRepositoryName();
+							return name1.compareToIgnoreCase(name2);
+						}).toList();
 				break;
 		}
+    	
+    	sorted = sorted.stream().sorted((p1, p2) -> Boolean.compare(
+				!p1.getUpgradeTarget(reg).isPresent(), 
+				!p2.getUpgradeTarget(reg).isPresent())).toList();
+    	
+    	pluginTableModel.setPlugins(sorted);
+    	
 	}
 
-	private void sortTableBySource() {
- 			
-		var sortedPlugins = pluginTableModel.getPlugins().stream()
-				.sorted((p1, p2) -> {
-					Optional<PluginRepository> repo1 = controller.getRepositoryForPlugin(p1);
-					Optional<PluginRepository> repo2 = controller.getRepositoryForPlugin(p2);
-					String name1 = "Unknown";
-					String name2 = "Unknown";
-					if (repo1.isPresent()) {
-						name1 = repo1.get().getRepositoryName();
-					}
-					if (repo2.isPresent()) {
-						name2 = repo2.get().getRepositoryName();
-					}
-					return name1.compareToIgnoreCase(name2);
-				}).toList();
-		pluginTableModel.setPlugins(sortedPlugins);
-			
-    }
 
 	// Clear the current plugins and reload them, sorting them afterwards
     private void loadPlugins() {
@@ -158,37 +157,46 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
                         throw exception;
                     }
                     List<PluginMetadata> plugins = get();
+                    Set<String> interfaceNames = Tier.provider().getExtensionPoints().getInterfaceNames();
+                    // Filter out plugins that do not implement an interface that we support
+                    List<PluginMetadata> filteredPlugins = new ArrayList<>();
+                    for (PluginMetadata plugin : plugins) {
+                    	if (interfaceNames.contains(plugin.category)) {
+                    		filteredPlugins.add(plugin);
+                    	} else {
+                    		PeakabooLog.get().log(Level.WARNING, "Plugin " + plugin.name + " is for unsupported catagory " + plugin.category);
+                    	}
+                    }
+                    plugins = filteredPlugins;
                     pluginTableModel.setPlugins(plugins);
                     sortTable();
                 } catch (PluginRepositoryException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(PluginRepositoryBrowser.this, "Failed to load plugins: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                	controller.showError("Failed to load plugins: " + ex.getMessage());
                 } catch (InterruptedException ex) {
 					Thread.currentThread().interrupt(); // Restore interrupted status
-					JOptionPane.showMessageDialog(PluginRepositoryBrowser.this, "Plugin loading was interrupted.", "Error", JOptionPane.ERROR_MESSAGE);
+					controller.showError("Plugin loading was interrupted.");
 				}
             }
             
         }.execute();
     }
 
-    private void handleDownload(PluginMetadata meta) {
-        // Get the download stream from the repository
-        InputStream downloadStream = controller.getRepository().downloadPlugin(meta);
-        File tempFile = this.controller.download(downloadStream);
-        if (tempFile == null) {
-			JOptionPane.showMessageDialog(this, "Failed to download plugin: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
-			return;
+    private void handleInstall(PluginMetadata meta) {
+		try {
+	        this.controller.install(meta.download().get(), true);
+		} catch (NoSuchElementException e) {
+			controller.showError("Install Error", "Failed to download plugin: " + meta.name);
 		}
-        this.controller.install(tempFile);
+
     }
     
     private void handleRemove(PluginMetadata meta) {
         var maybePlugin = DataSourceRegistry.system().getByUUID(meta.uuid);
         if (maybePlugin.isPresent()) {
         	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
-        	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin);
+        	this.controller.remove((PluginDescriptor<BoltPlugin>) plugin, true);
         } else {
-        	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
+        	controller.showError("Failed to remove plugin: " + meta.name);
         }
     }
     
@@ -198,7 +206,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
         	this.controller.upgrade((PluginDescriptor<BoltPlugin>) plugin, meta, true);
         } else {
-        	JOptionPane.showMessageDialog(this, "Failed to remove plugins: " + meta.name, "Error", JOptionPane.ERROR_MESSAGE);
+        	controller.showError("Upgrade Error", "Failed to remove plugin: " + meta.name);
         }
     }
        
@@ -226,4 +234,5 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
 	public ComponentStrip getHeaderControls() {
 		return headerControls;
 	}
+	
 }

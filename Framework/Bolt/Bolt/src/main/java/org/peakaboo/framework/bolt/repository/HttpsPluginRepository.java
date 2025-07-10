@@ -18,8 +18,13 @@ public class HttpsPluginRepository implements PluginRepository {
 
 	private String repoUrl;
 	private RepositoryMetadata contents;
+	private int appVersion;
 	
-	public HttpsPluginRepository(String repositoryBaseUrl) {
+	public HttpsPluginRepository(String repositoryBaseUrl, int appVersion) {
+		this.appVersion = appVersion;
+		if (!RepositoryMetadata.validateString(repositoryBaseUrl, 100)) {
+			throw new IllegalArgumentException("Invalid repository url");
+		}
 		if (!repositoryBaseUrl.startsWith("https://")) {
 			throw new IllegalArgumentException("URL must start with https://");
 		}
@@ -58,7 +63,12 @@ public class HttpsPluginRepository implements PluginRepository {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             StringBuilder response = new StringBuilder();
             String line;
+            long length = 0;
             while ((line = in.readLine()) != null) {
+            	length += line.length();
+            	if (length > 50_000_000) {
+            		throw new IOException("Too large, 50MB limit");
+            	}
                 response.append(line + "\n");
             }
             return response.toString();
@@ -69,15 +79,35 @@ public class HttpsPluginRepository implements PluginRepository {
     	try {
 	    	String contentsUrl = repoUrl + "contents.yaml";
 	    	String contentsYaml = fetchTextFromUrl(contentsUrl);
+	    	
+	    	// Handle empty files without an exception
+	    	boolean isEmpty = contentsYaml.strip().isEmpty();
+	    	if (isEmpty) {
+	    		return Optional.empty();
+	    	}
+
+	    	// Validate the raw yaml string
 	    	if (!validateRawYaml(contentsYaml)) {
 	    		Bolt.logger().log(Level.SEVERE, "Yaml failed validation for for repo " + repoUrl);
 	    		return Optional.empty();
 	    	}
-	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, false, RepositoryMetadata.class);
-	    	if (!fetchedContents.validate(repoUrl)) {
+	    	
+	    	// Attempt to deserialize the yaml
+	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, true, RepositoryMetadata.class);
+	    	
+	    	// Validate the data we deserialized from the yaml
+	    	if (!fetchedContents.validate(repoUrl, this.appVersion)) {
 	    		return Optional.empty();
 	    	}
+	    	
+	    	// Populate the PluginMetadata with a reference back to this PluginRepository.
+	    	// Being able to refer back to the repository simplifies the design.
+	    	for (var plugin : fetchedContents.plugins) {
+	    		plugin.pluginRepository = this;
+	    	}
+	    	
 	    	return Optional.of(fetchedContents);
+	    	
         } catch (Exception e) {
             Bolt.logger().log(Level.WARNING, "Failed to retrieve plugin list from server", e);
         }
@@ -100,16 +130,10 @@ public class HttpsPluginRepository implements PluginRepository {
 
 	private void fetchRepoContentsAsNeeded() {
 		if (contents == null) {
-			contents = fetchRepoContents().orElse(new RepositoryMetadata());
+			refresh();
 		}
 	}
     
-	@Override
-	public boolean isAvailable() {
-		fetchRepoContentsAsNeeded();
-		return contents != null && !contents.plugins.isEmpty();
-	}
-
 	@Override
 	public String getRepositoryName() {
 		fetchRepoContentsAsNeeded();
@@ -119,6 +143,11 @@ public class HttpsPluginRepository implements PluginRepository {
 	@Override
 	public String getRepositoryUrl() {
 		return this.repoUrl;
+	}
+
+	@Override
+	public void refresh() {
+		contents = fetchRepoContents().orElse(new RepositoryMetadata());
 	}
 	
 }

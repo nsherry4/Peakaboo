@@ -18,12 +18,15 @@ import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class KeyValuePill extends JPanel {
 
 	private JLabel key, value;
 	private int padOuter, padInner;
 	private Format format;
+	
+	private Color originalBackground = null;
 	
 	public KeyValuePill(String title) {
 		this(title, null, -1);
@@ -92,7 +95,14 @@ public class KeyValuePill extends JPanel {
 		Graphics2D g2d = Stratus.g2d(g);
 		g2d = (Graphics2D) g2d.create();
 		
-		Color bg =  Stratus.getTheme().getWidgetAlpha();
+		Color bg = Stratus.getTheme().getWidgetAlpha();
+		if (originalBackground != null) {
+			// A custom background colour has been set
+			float alpha = 1f - (bg.getAlpha() / 255f);
+			// We skimp on the transparency a bit -- the background colours tend 
+			// to be a bit lighter than the semi-transparent black we use normally
+			bg = StratusColour.moreTransparent(this.getBackground(), alpha * 0.93f);
+		}
 		int r = (int)(getHeight() / 2f);
 
 		g2d.setColor(bg);
@@ -137,6 +147,18 @@ public class KeyValuePill extends JPanel {
 		super.setForeground(color);
 		if (this.key != null) this.key.setForeground(color);
 		if (this.value != null) this.value.setForeground(color);
+	}
+	
+	@Override
+	public void setBackground(Color color) {
+		originalBackground = this.getBackground();
+		super.setBackground(color);
+		if (this.key != null) this.key.setBackground(color);
+		if (this.value != null) this.value.setBackground(color);
+	}
+
+	public String getValue() {
+		return this.value.getText();
 	}
 	
 }

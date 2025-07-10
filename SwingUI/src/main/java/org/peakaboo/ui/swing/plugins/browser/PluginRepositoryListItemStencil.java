@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -17,10 +20,12 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
+import org.jdesktop.swingx.graphics.ColorUtilities;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
-import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
+import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.stratus.api.Spacing;
@@ -33,6 +38,7 @@ import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip.Alignment;
@@ -52,9 +58,10 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
     
     private PluginMetadata plugin;
     private PluginsController controller;
+    
+    private static final Map<String, Color> colorCache = new HashMap<>();
 
-    // Get the registry
-    private DataSourceRegistry reg = DataSourceRegistry.system();
+    private ExtensionPointRegistry reg = Tier.provider().getExtensionPoints();
     
     public PluginRepositoryListItemStencil(
     		PluginsController controller,
@@ -73,7 +80,7 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 
         nameLabel = new JLabel();
         nameLabel.setFont(nameLabel.getFont().deriveFont(Font.BOLD, 20f));
-        nameLabel.setBorder(new EmptyBorder(0, Spacing.medium, 0, 0));
+        nameLabel.setBorder(new EmptyBorder(0, Spacing.medium, Spacing.small, 0));
         nameLabel.setIcon(getStockIcon("").toImageIcon(IconSize.BUTTON));
         setPluginIcon();
         
@@ -81,8 +88,9 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         pillCategory = new KeyValuePill("Kind", 1);
         pillRepository = new KeyValuePill("Source", 1);
         pillStatus = new JLabel();
-        pillStatus.setFont(pillStatus.getFont().deriveFont(Font.BOLD, 12f));
-        pillStatus.setBorder(new EmptyBorder(0, Spacing.huge, 0, Spacing.huge));
+        pillStatus.setFont(pillStatus.getFont().deriveFont(Font.PLAIN, 12f));
+        pillStatus.setBorder(new EmptyBorder(0, Spacing.small, 0, Spacing.small));
+        pillStatus.setForeground(StratusColour.moreTransparent(pillStatus.getForeground(), 0.25f));
 
 
         pills = new StatusBarPillStrip(Alignment.LEFT);
@@ -111,32 +119,33 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         removeButton.setFocusable(false);
         
         upgradeButton = new FluentButton()
-        		.withIcon(StockIcon.GO_UP, IconSize.BUTTON)
+        		.withIcon(StockIcon.GO_UP, IconSize.BUTTON, Stratus.getTheme().getHighlightText())
         		.withText("Upgrade")
         		.withTooltip("Upgrade Plugin")
+        		.withStateDefault()
         		.withBordered(true);
         upgradeButton.setFocusable(false);
         
         
-        ComponentStrip strip = new ComponentStrip(pillStatus, downloadButton, removeButton, upgradeButton);
+        ComponentStrip strip = new ComponentStrip(List.of(downloadButton, removeButton, upgradeButton), true, new Insets(0, Spacing.small, 0, 0), 0);
 
         separator = new LineSeparator();
 
 
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(0, 0, 0, 0);
+        c.ipadx = Spacing.small; c.ipady = Spacing.medium;
         
         // ROW 1
         // Title
-        c.gridy = 0; c.gridx = 0; 
-        c.ipadx = 0; c.ipady = Spacing.small;
-        c.insets = new Insets(Spacing.medium, 0, Spacing.medium, Spacing.medium);
+        c.gridy = 0; c.gridx = 0;
         c.anchor = GridBagConstraints.WEST; c.fill = GridBagConstraints.NONE; c.weightx = 0.0; c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(Spacing.small, 0, 0, 0);
         add(nameLabel, c);
+        c.insets = new Insets(0, 0, 0, 0);
 
         // Action Buttons
         c.gridy = 0; c.gridx = 1;
-        c.ipadx = Spacing.small; c.ipady = Spacing.small;
-        c.insets = Spacing.iMedium();
         c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
         add(strip, c);
         
@@ -144,22 +153,24 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         // ROW 2
         // Info Pills
         c.gridy = 1; c.gridx = 0;
-        c.weightx = 1.0; c.weighty = 0.0; c.insets = new Insets(0, 0, 0, 0); c.fill = GridBagConstraints.HORIZONTAL; c.anchor = GridBagConstraints.WEST;
+        c.weightx = 1.0; c.weighty = 0.0; c.fill = GridBagConstraints.HORIZONTAL; c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(0, Spacing.medium-1, 0, 0);
         add(pills, c);
+        c.insets = new Insets(0, 0, 0, 0);
         
         // Health Status Pill
         c.gridy = 1; c.gridx = 1;
-        c.ipadx = Spacing.small; c.ipady = Spacing.small;
-        c.insets = Spacing.iMedium();
         c.weightx = 0; c.weighty = 0; c.fill = GridBagConstraints.NONE; c.anchor = GridBagConstraints.EAST;
-        //add(pillStatus, c);
+        add(pillStatus, c);
         
         
         // ROW 3
         // Description
         c.gridy = 2; c.gridx = 0;
-        c.weightx = 1.0; c.weighty = 1.0; c.gridwidth = 2; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST; c.insets = new Insets(0, 0, 0, 0);
+        c.weightx = 1.0; c.weighty = 1.0; c.gridwidth = 2; c.fill = GridBagConstraints.BOTH; c.anchor = GridBagConstraints.NORTHWEST;
+        c.insets = new Insets(Spacing.small, Spacing.small, 0, 0);
         add(descriptionArea, c);
+        c.insets = new Insets(0, 0, 0, 0);
 
         //setPreferredSize(new Dimension(400, 90));
 
@@ -209,30 +220,44 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         }
                 
         // Now lets create some KeyValuePills
-        controller.getRepositoryForPlugin(value).ifPresentOrElse(
-        		repo -> pillRepository.setValue(repo.getRepositoryName()),
-        		() -> pillRepository.setValue("<Unknown Repository>")
-        	);
-
+        pillRepository.setValue(value.sourceRepository().getRepositoryName());
         pillVersion.setValue(value.version);
         pillCategory.setValue(value.category != null ? value.category : "<Unknown>");
         descriptionArea.setText(value.description != null ? value.description : "");
 
+        pillCategory.setBackground(stringToPastelColor(pillCategory.getValue(), 0.3f));
+        
+        
+        
         // Action button enablement logic
         downloadButton.setVisible(!alreadyInstalled && value.downloadUrl != null && !value.downloadUrl.isBlank());
         removeButton.setVisible(alreadyInstalled && removable);
-        upgradeButton.setVisible(upgradable); // Placeholder, implement actual upgrade logic
+        upgradeButton.setVisible(upgradable);
 
         
-        // TODO replace this with a generic version which goes through all registries
-        DataSourceRegistry registry = DataSourceRegistry.system();
-        Optional<PluginDescriptor<DataSourcePlugin>> maybePlugin = value.lookupPluginDescriptor(registry);
-        boolean healthy = maybePlugin.isPresent() && maybePlugin.get().getContainer().isHealthy();
+        
+        
+		// Get the registry for the plugin's category and (assuming we found one) check its health. If
+        // no value was found, we declare it unhealthy.
+        boolean healthy = Tier.provider().getExtensionPoints().findRegistryForInterface(value.category).map(r -> {
+        	return checkHealthInRegistry(r, value);
+        }).orElse(false);
+        // Update the status pill based on health
         pillStatus.setText(healthy ? "Healthy" : "Unhealthy");
         pillStatus.setIcon(healthy ? PLUGIN_STATUS_HEALTHY : PLUGIN_STATUS_UNHEALTHY);
+        pillStatus.setFont(pillStatus.getFont().deriveFont(healthy ? Font.PLAIN : Font.BOLD));
         pillStatus.setVisible(alreadyInstalled);
+        
 
     }
+    
+    // We can only report healthy if the plugin is registered in the registry, and if it's container has no issues
+    private <T extends BoltPlugin> boolean checkHealthInRegistry(BoltPluginRegistry<T> registry, PluginMetadata value) {
+		Optional<PluginDescriptor<T>> maybePlugin = value.lookupPluginDescriptor(registry);
+		if (maybePlugin.isEmpty()) return false;
+		PluginDescriptor<T> descriptor = maybePlugin.get();
+		return descriptor.getContainer().isHealthy();
+	}
 
 
 	@Override
@@ -247,9 +272,10 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 				pill.setForeground(c);
 			}
 		}
+		if (pillStatus != null) pillStatus.setForeground(StratusColour.moreTransparent(pillStatus.getForeground(), 0.25f));
 		if (separator != null) separator.setForeground(StratusColour.moreTransparent(c, 0.7f));		
 		if (descriptionArea != null) descriptionArea.setForeground(StratusColour.moreTransparent(c, 0.25f));
-		for (var button : new FluentButton[] {downloadButton, removeButton, upgradeButton}) {
+		for (var button : new FluentButton[] {downloadButton, removeButton}) {
 			if (button != null) {
 				var config = button.getComponentConfig();
 				button.setForeground(c);
@@ -311,4 +337,44 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
             return new java.awt.Dimension(1, 24); // allow shrinking
         }
     }
+    
+    
+    
+    /**
+     * Alternative method with customizable lightness for different UI contexts.
+     * 
+     * @param input The string to map to a color
+     * @param lightness Lightness value (0.0 to 1.0). Higher values = lighter colors
+     * @return A pastel Color object
+     */
+    public static Color stringToPastelColor(String input, float lightness) {
+        if (input == null) {
+            input = "";
+        }
+        
+        String cacheKey = input + "_" + lightness;
+        if (colorCache.containsKey(cacheKey)) {
+            return colorCache.get(cacheKey);
+        }
+        
+        long hash = djb2(input);
+        int steps = 180;
+        float hue = Math.abs(hash % steps) / (float)steps;
+        
+        Color color = ColorUtilities.HSLtoRGB(hue, 1f, Math.max(0.0f, Math.min(1.0f, lightness)));
+        colorCache.put(cacheKey, color);
+        
+        
+        return color;
+    }
+    
+    // Better hash function for strings to get better colour autoselection
+    public static int djb2(String str) {
+        int hash = 5381;
+        for (int i = 0; i < str.length(); i++) {
+            hash = ((hash << 5) + hash) + str.charAt(i);
+        }
+        return hash;
+    }
+        
 }

@@ -181,6 +181,14 @@ public class PlotToolbar extends JToolBar {
 			energyMenuButton.withNotificationDot(NotificationDotState.PROBLEM);
 		}
 		
+		if (Tier.provider().getPluginRepositories().hasUpgrades(Tier.provider().getExtensionPoints())) {
+			pluginsMenuButton.withNotificationDot(NotificationDotState.EVENT);
+			pluginsMenuButton.withBordered(BorderStyle.ALWAYS);
+		} else {
+			pluginsMenuButton.withNotificationDot(NotificationDotState.OFF);
+			pluginsMenuButton.withBordered(BorderStyle.ACTIVE);
+		}
+		
 		
 	}
 	
