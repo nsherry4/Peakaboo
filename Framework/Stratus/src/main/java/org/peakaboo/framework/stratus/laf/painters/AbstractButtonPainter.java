@@ -148,7 +148,7 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     	if (dot != null && dot.isPresent()) {
     		int size = 8;
     		g.setColor(dot.get());
-    		g.fillArc(width-size, height-size, size, size, 0, 360);
+    		g.fillArc(width-size, 0, size, size, 0, 360);
     	}
 		
     }
