@@ -45,8 +45,8 @@ public class Mapping {
 	public static final List<Gradient> MAP_PALETTES = List.of(
 			Gradients.SPECTRUM,
 			Gradients.GOULDIAN,
-			Gradients.IRON,
-			Gradients.REDHOT,
+			Gradients.VIRIDIS,
+			Gradients.MAGMA,
 			Gradients.MONOCHROME,
 			Gradients.GEORGIA,
 			Gradients.CRANBERRY,
