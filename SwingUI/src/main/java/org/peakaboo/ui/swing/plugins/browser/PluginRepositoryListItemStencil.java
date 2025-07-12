@@ -212,16 +212,18 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         boolean alreadyInstalled = reg.hasUUID(value.uuid);
         boolean removable = true;
         boolean upgradable = false;
+        PluginDescriptor<? extends BoltPlugin> descriptor = null;
         if (alreadyInstalled) {
-            var descriptor = reg.getByUUID(value.uuid).get();
+            descriptor = reg.getByUUID(value.uuid).get();
             var container = descriptor.getContainer();
             removable &= container.isDeletable();
             upgradable = removable && value.isUpgradeFor(descriptor);
         }
-                
+        
+        
         // Now lets create some KeyValuePills
         pillRepository.setValue(value.sourceRepository().getRepositoryName());
-        pillVersion.setValue(value.version);
+        pillVersion.setValue(upgradable ? descriptor.getVersion() + " → " + value.version : value.version);
         pillCategory.setValue(value.category != null ? value.category : "<Unknown>");
         descriptionArea.setText(value.description != null ? value.description : "");
 
