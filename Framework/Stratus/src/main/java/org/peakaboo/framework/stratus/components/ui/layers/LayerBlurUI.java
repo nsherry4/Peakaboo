@@ -115,7 +115,8 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				//Then darken the background
 				bg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
 				bg.setColor(Color.BLACK);
-				final int GRADIENT_HEIGHT = 4;
+				final int GRADIENT_HEIGHT = 3;
+
 				if (!topFade) {
 					bg.fillRect(0, 0, c.getWidth(), c.getHeight());
 				} else {

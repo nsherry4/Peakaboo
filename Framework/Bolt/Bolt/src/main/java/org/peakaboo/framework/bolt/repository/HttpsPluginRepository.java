@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.bolt.Bolt;
-import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 
 public class HttpsPluginRepository implements PluginRepository {
 
@@ -85,24 +84,49 @@ public class HttpsPluginRepository implements PluginRepository {
 	    	if (isEmpty) {
 	    		return Optional.empty();
 	    	}
+
+	    	// Validate the raw yaml string
+	    	if (!validateRawYaml(contentsYaml)) {
+	    		Bolt.logger().log(Level.SEVERE, "Yaml failed validation for for repo " + repoUrl);
+	    		return Optional.empty();
+	    	}
 	    	
-	    	RepositoryMetadata fetchedContents = DruthersSerializer.deserialize(contentsYaml, false, RepositoryMetadata.class);
+	    	// Attempt to deserialize the yaml
+	    	RepositoryMetadata fetchedContents = SecureRepositoryLoader.loadRepositoryMetadata(contentsYaml);
+	    	
+	    	// Validate the data we deserialized from the yaml
 	    	if (!fetchedContents.validate(repoUrl, this.appVersion)) {
 	    		return Optional.empty();
 	    	}
+	    	
+
 	    	// Populate the PluginMetadata with a reference back to this PluginRepository.
 	    	// Being able to refer back to the repository simplifies the design.
 	    	for (var plugin : fetchedContents.plugins) {
 	    		plugin.pluginRepository = this;
 	    	}
+	    	
 	    	return Optional.of(fetchedContents);
-        } catch (Exception e) {
+	    	        } catch (Exception e) {
             Bolt.logger().log(Level.WARNING, "Failed to retrieve plugin list from server", e);
         }
     	return Optional.empty();
     }
     
 
+    private boolean validateRawYaml(String yaml) {
+    	if (yaml.contains("!!")) {
+    		// Do not accept any yaml which tries to deserialize to specific java classes
+    		return false;
+    	}
+    	
+    	if (yaml.length() > 102400) {
+    		// Do not accept any yaml longer than 100K
+    		return false;
+    	}
+    	
+    	return true;
+    }
 
 	private void fetchRepoContentsAsNeeded() {
 		if (contents == null) {
