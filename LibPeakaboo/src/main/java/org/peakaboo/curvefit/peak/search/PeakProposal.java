@@ -4,6 +4,7 @@ package org.peakaboo.curvefit.peak.search;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.cyclops.Pair;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.plural.executor.DummyExecutor;
@@ -112,7 +114,7 @@ public class PeakProposal {
 						continue;
 					}
 					
-					List<Pair<ITransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5);
+					List<Pair<ITransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5, Optional.empty());
 					
 					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
 					
@@ -206,7 +208,8 @@ public class PeakProposal {
 			FittingSolver solver,
 			final int channel, 
 			ITransitionSeries currentTS,
-			int guessCount
+			int guessCount,
+			Optional<TransitionShell> shellFilter
 		) {
 		
 		
@@ -304,6 +307,8 @@ public class PeakProposal {
 		
 		//now sort by score
 		return tss.stream()
+			// If a shell filter is set, filter out any TS not from that shell
+			.filter(ts -> shellFilter.isEmpty() || shellFilter.get().equals(ts.getShell()))
 			//fast scorer to shrink downthe list
 			.map(ts -> new Pair<>(ts, fastCompoundScorer.score(ts)))
 			.sorted((p1, p2) -> p2.second.compareTo(p1.second))
