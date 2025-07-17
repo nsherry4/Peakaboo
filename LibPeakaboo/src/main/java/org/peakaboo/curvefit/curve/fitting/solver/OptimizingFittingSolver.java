@@ -62,15 +62,16 @@ public class OptimizingFittingSolver implements FittingSolver {
 			return FittingSolverUtils.getEmptyResult(ctx);
 		}
 
-		Context octx = new Context(ctx);
-		double[] weights = calculateWeights(octx);
+		FittingSolverContext octx = new FittingSolverContext(ctx);
+		PowellContext powell = new PowellContext(ctx.curves.size(), ctx.data.size());
+		double[] weights = calculateWeights(octx, powell);
 		return FittingSolverUtils.generateFinalResults(weights, ctx);
 		
 	}
 	
-	public double[] calculateWeights(Context ctx) {
+	public double[] calculateWeights(FittingSolverContext ctx, PowellContext powell) {
 		ScoringContext eval = new ScoringContext(ctx.data.size());
-		MultivariateFunction cost = getCostFunction(ctx, eval);
+		MultivariateFunction cost = getCostFunction(ctx, eval, powell);
 		double[] guess = FittingSolverUtils.getInitialGuess(ctx);
 		
 		PointValuePair result = optimizeCostFunction(cost, guess, costFnPrecision);
@@ -120,7 +121,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	}
 
 	
-	protected MultivariateFunction getCostFunction(Context ctx, ScoringContext scoreCtx) {
+	protected MultivariateFunction getCostFunction(FittingSolverContext ctx, ScoringContext scoreCtx, PowellContext powell) {
 		return new MultivariateFunction() {
 					
 			@Override
@@ -134,7 +135,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 					}
 				}
 
-				calculateResidualPowell(point, ctx, scoreCtx);
+				calculateResidualPowell(point, ctx, scoreCtx, powell);
 				float score = FittingSolverUtils.scoreResidual(point, ctx, scoreCtx.residual);
 				if (containsNegatives > 0) {
 					return score * (1f+containsNegatives);
@@ -152,7 +153,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 	 * Because PowellOptimizer tunes one weight at a time, we can save a lot of processing by caching
 	 * the result of curves 1 through n-1 when it's tuning curve n.
 	 */
-	private void calculateResidualPowell(double[] weights, Context ctx, ScoringContext scoreCtx) {
+	private void calculateResidualPowell(double[] weights, FittingSolverContext ctx, ScoringContext scoreCtx, PowellContext powell) {
 
 		//When there are no intense channels to consider, the residual will be equal to the data
 		if (ctx.channels.length == 0) {
@@ -161,7 +162,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		}
 		
 		int curvesLength = weights.length;
-		double[] lastWeights = ctx.lastWeights;
+		double[] lastWeights = powell.lastWeights;
 		
 		// First we check if the weights up to partialIndex are a match
 		int lastMatchingIndex = -1;
@@ -177,16 +178,16 @@ public class OptimizingFittingSolver implements FittingSolver {
 		Spectrum total = scoreCtx.total;
 		int first = ctx.channels[0];
 		int last = ctx.channels[ctx.channels.length-1];
-		if (lastMatchingIndex >= ctx.partialIndex && ctx.partialIndex > -1) {
+		if (lastMatchingIndex >= powell.partialIndex && powell.partialIndex > -1) {
 			// If the weights are a match up to and including the index at which we have
 			// cached a partial sum, then we can skip some of the work and jump part way
 			// into the calculations
-			total.copy(ctx.partial, first, last);
-			startingCurveIndex = ctx.partialIndex+1;
+			total.copy(powell.partial, first, last);
+			startingCurveIndex = powell.partialIndex+1;
 		} else {
 			// If the weights aren't a match up to and including the index at which we have
 			// a cached partial value, then we must discard the cached value and start over
-			ctx.partialIndex = -1;
+			powell.partialIndex = -1;
 			total.zero(first, last);
 		}
 		
@@ -204,8 +205,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 				// save the totals up to but not including this point before adding this curve.
 				// NB: We skip doing this if this is the first curve in this (partial?) loop, as
 				// we'll have nothing to add to what's already cached
-				ctx.partial.copy(total, first, last);
-				ctx.partialIndex = i-1;
+				powell.partial.copy(total, first, last);
+				powell.partialIndex = i-1;
 			}
 
 			// Update matching with this rounds weight match check
@@ -223,7 +224,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		// Update the weights to the ones from this pass so that the next loop through
 		// will be able to compare its values to these this runs values
-		System.arraycopy(weights, 0, ctx.lastWeights, 0, weights.length);
+		System.arraycopy(weights, 0, powell.lastWeights, 0, weights.length);
 		
 		SpectrumCalculations.subtractLists_target(ctx.data, scoreCtx.total, scoreCtx.residual, first, last);
 
@@ -233,27 +234,17 @@ public class OptimizingFittingSolver implements FittingSolver {
 	
 	// We extend FittingSolverContext so that it will have extra fields we need for optimizing the powell
 	// fitting in particular
-	public static class Context extends FittingSolverContext {
+	public static class PowellContext {
 
 		public Spectrum partial;
 		double[] lastWeights;
 		int partialIndex = -1;
 		
-		public Context(SpectrumView data, FittingSetView fittings, CurveFitter fitter) {
-			super(data, fittings, fitter);
-			init();
+		public PowellContext(int curveCount, int dataChannels) {
+			this.lastWeights = new double[curveCount];
+			this.partial = new ArraySpectrum(dataChannels);
 		}
-		
-		public Context(FittingSolverContext copy) {
-			super(copy);
-			init();
-		}
-		
-		private void init() {
-			this.lastWeights = new double[curves.size()];
-			this.partial = new ArraySpectrum(data.size());
-		}
-		
+				
 	}
 	
 }
