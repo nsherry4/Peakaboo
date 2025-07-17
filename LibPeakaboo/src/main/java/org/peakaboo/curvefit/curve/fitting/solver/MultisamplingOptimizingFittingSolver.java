@@ -40,13 +40,13 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 
 
 	@Override
-	public double[] calculateWeights(OptimizingFittingSolver.Context inputCtx) {
+	public double[] calculateWeights(FittingSolverContext inputCtx, PowellContext powell) {
 		
 		int size = inputCtx.fittings.getVisibleCurves().size();
 		
 		// Create a shallow copy of the input context and then make a deep copy of the
 		// curve list so that we can permute it without impacting the original
-		OptimizingFittingSolver.Context permCtx = new OptimizingFittingSolver.Context(inputCtx);
+		FittingSolverContext permCtx = new FittingSolverContext(inputCtx);
 		permCtx.curves = new ArrayList<>(permCtx.curves);
 		
 		int counter = 0;
@@ -57,7 +57,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			
 			
 			double[] guess = FittingSolverUtils.getInitialGuess(permCtx);
-			MultivariateFunction cost = getCostFunction(permCtx, eval);
+			MultivariateFunction cost = getCostFunction(permCtx, eval, powell);
 			PointValuePair result = optimizeCostFunction(cost, guess, 0.02d);
 			double[] permScalings = result.getPoint();
 			
