@@ -1,7 +1,6 @@
 package org.peakaboo.curvefit.curve.fitting.solver;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
@@ -20,7 +19,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverUtils.ScoringContext;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
@@ -60,34 +59,25 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		int size = ctx.fittings.getVisibleCurves().size();
 		if (size == 0) {
-			return getEmptyResult(ctx);
+			return FittingSolverUtils.getEmptyResult(ctx);
 		}
 
 		Context octx = new Context(ctx);
 		double[] weights = calculateWeights(octx);
-		return evaluate(weights, ctx);
+		return FittingSolverUtils.generateFinalResults(weights, ctx);
 		
 	}
 	
 	public double[] calculateWeights(Context ctx) {
-		EvaluationSpace eval = new EvaluationSpace(ctx.data.size());
+		ScoringContext eval = new ScoringContext(ctx.data.size());
 		MultivariateFunction cost = getCostFunction(ctx, eval);
-		double[] guess = getInitialGuess(ctx);
+		double[] guess = FittingSolverUtils.getInitialGuess(ctx);
 		
 		PointValuePair result = optimizeCostFunction(cost, guess, costFnPrecision);
 		
 		return result.getPoint();
 	}
-	
-	protected FittingResultSet getEmptyResult(FittingSolverContext ctx) {
-		return new FittingResultSet(
-				new ArraySpectrum(ctx.data.size()), 
-				new ArraySpectrum(ctx.data), 
-				Collections.emptyList(), 
-				ctx.fittings.getFittingParameters().copy()
-			);
-	}
-	
+		
 	protected PointValuePair optimizeCostFunction(MultivariateFunction cost, double[] guess, double tolerance) {
 		//1358 reps on test session
 		//optimizer = new SimplexOptimizer(-1d, 1d);
@@ -128,30 +118,9 @@ public class OptimizingFittingSolver implements FittingSolver {
 		
 		
 	}
-	
-	public static double[] getInitialGuess(FittingSolverContext ctx) {
-		int curveCount = ctx.curves.size();
-		double[] guess = new double[curveCount];
-		for (int i = 0; i < curveCount; i++) {
-			CurveView curve = ctx.curves.get(i);
-			FittingResultView guessFittingResult = ctx.fitter.fit(new CurveFitterContext(ctx.data, curve));
-			
-			//there will usually be some overlap between elements, so
-			//we use 80% of the independently fitted guess.
-			guess[i] = guessFittingResult.getCurveScale() * 0.80f;
-			
-			//guesses shouldn't be zero
-			if (guess[i] == 0) {
-				guess[i] = 0.00001d;
-			}
-		}
-		return guess;
-	}
-	
 
 	
-	
-	protected MultivariateFunction getCostFunction(Context ctx, EvaluationSpace eval) {
+	protected MultivariateFunction getCostFunction(Context ctx, ScoringContext scoreCtx) {
 		return new MultivariateFunction() {
 					
 			@Override
@@ -165,8 +134,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 					}
 				}
 
-				testPowell(point, ctx, eval);
-				float score = score(point, ctx, eval.residual);
+				calculateResidualPowell(point, ctx, scoreCtx);
+				float score = FittingSolverUtils.scoreResidual(point, ctx, scoreCtx.residual);
 				if (containsNegatives > 0) {
 					return score * (1f+containsNegatives);
 				}		
@@ -176,43 +145,18 @@ public class OptimizingFittingSolver implements FittingSolver {
 		};
 	}
 	
-	
-
 
 	/** 
 	 * Calculate the residual from data (signal) and total (fittings). Store the result in residual.
-	 * This is a generic version of the test method, untuned for any specific optimizing method
+	 * Note that this version of the test function has been tuned for the PowellOptimizer.
+	 * Because PowellOptimizer tunes one weight at a time, we can save a lot of processing by caching
+	 * the result of curves 1 through n-1 when it's tuning curve n.
 	 */
-	private void testGeneric(double[] weights, FittingSolverContext ctx, EvaluationSpace eval) {
-		Spectrum total = eval.total;
-		total.zero();
-		
-		//When there are no intense channels to consider, the residual will be equal to the data
-		if (ctx.channels.length == 0) {
-			SpectrumCalculations.subtractFromList_target(ctx.data, eval.residual, 0f);
-			return;
-		}
-
-		List<CurveView> curves = ctx.curves;
-		int curvesLength = weights.length;
-		int first = ctx.channels[0];
-		int last = ctx.channels[ctx.channels.length-1];
-		for (int i = 0; i < curvesLength; i++) {
-			curves.get(i).scaleOnto((float) weights[i], total, first, last);
-		}
-		SpectrumCalculations.subtractLists_target(ctx.data, eval.total, eval.residual, first, last);
-
-	}
-
-	/** 
-	 * Calculate the residual from data (signal) and total (fittings). Store the result in residual.
-	 * Note that this version of the test function has been tuned for the PowellOptimizer. 
-	 */
-	private void testPowell(double[] weights, Context ctx, EvaluationSpace eval) {
+	private void calculateResidualPowell(double[] weights, Context ctx, ScoringContext scoreCtx) {
 
 		//When there are no intense channels to consider, the residual will be equal to the data
 		if (ctx.channels.length == 0) {
-			SpectrumCalculations.subtractFromList_target(ctx.data, eval.residual, 0f);
+			SpectrumCalculations.subtractFromList_target(ctx.data, scoreCtx.residual, 0f);
 			return;
 		}
 		
@@ -230,7 +174,7 @@ public class OptimizingFittingSolver implements FittingSolver {
 		}
 				
 		int startingCurveIndex = 0;
-		Spectrum total = eval.total;
+		Spectrum total = scoreCtx.total;
 		int first = ctx.channels[0];
 		int last = ctx.channels[ctx.channels.length-1];
 		if (lastMatchingIndex >= ctx.partialIndex && ctx.partialIndex > -1) {
@@ -281,66 +225,14 @@ public class OptimizingFittingSolver implements FittingSolver {
 		// will be able to compare its values to these this runs values
 		System.arraycopy(weights, 0, ctx.lastWeights, 0, weights.length);
 		
-		SpectrumCalculations.subtractLists_target(ctx.data, eval.total, eval.residual, first, last);
+		SpectrumCalculations.subtractLists_target(ctx.data, scoreCtx.total, scoreCtx.residual, first, last);
 
 	}
+
+
 	
-	
-	/**
-	 * Score the context's residual spectrum
-	 */
-	// NB: Bytecode-optimized function. Take care making changes
-	private float score(double[] point, FittingSolverContext ctx, Spectrum residual) {
-		float[] ra = residual.backingArray();
-		float score = 0;
-		int length = ctx.channels.length;
-		int[] channels = ctx.channels;
-		for (int i = 0; i < length; i++) {
-			float value = ra[channels[i]];
-			
-			//Negative values mean that we've fit more signal than exists
-			//We penalize this to prevent making up data where none exists.
-			if (value < 0) {
-				value = value*-50f;
-			}
-			
-			score += value;	
-		}
-		
-		return score;
-	}
-	
-	/**
-	 * Accepts an array of doubles (the weights from the solver, one per fitting)
-	 * and a context. Scales the context.curves by the weights. Returns a new
-	 * FittingResultSet containing the fitted curves and other totals.
-	 */
-	public static FittingResultSetView evaluate(double[] point, FittingSolverContext ctx) {
-		int index = 0;
-		List<FittingResultView> fits = new ArrayList<>();
-		Spectrum total = new ArraySpectrum(ctx.data.size());
-		Spectrum scaled = new ArraySpectrum(ctx.data.size());
-		for (CurveView curve : ctx.curves) {
-			float scale = (float) point[index++];
-			curve.scaleInto(scale, scaled);
-			fits.add(new FittingResult(curve, scale));
-			SpectrumCalculations.addLists_inplace(total, scaled);
-		}
-		Spectrum residual = SpectrumCalculations.subtractLists(ctx.data, total);
-		
-		return new FittingResultSet(total, residual, fits, ctx.fittings.getFittingParameters().copy());
-	}
-	
-	public static class EvaluationSpace {
-		public Spectrum total;
-		public Spectrum residual;
-		public EvaluationSpace(int size) {
-			this.total = new ArraySpectrum(size);
-			this.residual = new ArraySpectrum(size);
-		}
-	}
-	
-	
+	// We extend FittingSolverContext so that it will have extra fields we need for optimizing the powell
+	// fitting in particular
 	public static class Context extends FittingSolverContext {
 
 		public Spectrum partial;
