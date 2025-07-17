@@ -7,6 +7,7 @@ import java.util.Random;
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverUtils.ScoringContext;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 
@@ -50,12 +51,12 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 		
 		int counter = 0;
 		double[] scalings = new double[size];
-		EvaluationSpace eval = new EvaluationSpace(permCtx.data.size());
+		ScoringContext eval = new ScoringContext(permCtx.data.size());
 		while (counter <= MULTISAMPLE_COUNT) {
 			Collections.shuffle(permCtx.curves, new Random(12345654321l));
 			
 			
-			double[] guess = getInitialGuess(permCtx);
+			double[] guess = FittingSolverUtils.getInitialGuess(permCtx);
 			MultivariateFunction cost = getCostFunction(permCtx, eval);
 			PointValuePair result = optimizeCostFunction(cost, guess, 0.02d);
 			double[] permScalings = result.getPoint();
