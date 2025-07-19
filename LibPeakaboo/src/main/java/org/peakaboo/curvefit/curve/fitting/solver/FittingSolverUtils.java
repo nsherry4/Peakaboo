@@ -10,6 +10,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter.CurveFitterContext;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
@@ -25,8 +26,6 @@ public abstract class FittingSolverUtils implements FittingSolver {
 		}
 	}
 	
-
-
 	/** 
 	 * Calculate the residual from data (signal) and total (fittings). Store the result in residual.
 	 * This is a generic version of the test method, untuned for any specific optimizing method

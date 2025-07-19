@@ -1,31 +1,22 @@
 package org.peakaboo.curvefit.curve.fitting.solver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.optim.InitialGuess;
 import org.apache.commons.math3.optim.MaxEval;
 import org.apache.commons.math3.optim.MaxIter;
-import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import org.apache.commons.math3.optim.nonlinear.scalar.ObjectiveFunction;
 import org.apache.commons.math3.optim.nonlinear.scalar.noderiv.PowellOptimizer;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
-import org.peakaboo.curvefit.curve.fitting.FittingResult;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSet;
-import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
-import org.peakaboo.curvefit.curve.fitting.FittingResultView;
-import org.peakaboo.curvefit.curve.fitting.FittingSetView;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverUtils.ScoringContext;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
-import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
-public class OptimizingFittingSolver implements FittingSolver {
+public class OptimizingFittingSolver extends ApacheFittingSolver {
 
 	protected double costFnPrecision = 0.015d;
 	
@@ -53,36 +44,43 @@ public class OptimizingFittingSolver implements FittingSolver {
 	public String pluginUUID() {
 		return "5d3b18d6-3b79-40f2-9cd2-54249aa376a0";
 	}
-
+	
+	/**
+	 * Takes a {@link FittingSolverContext} and a {@link PowellContext} and returns the 
+	 * optimized weights for best fitting
+	 */
 	@Override
-	public FittingResultSetView solve(FittingSolverContext ctx) {
-		
-		int size = ctx.fittings.getVisibleCurves().size();
-		if (size == 0) {
-			return FittingSolverUtils.getEmptyResult(ctx);
-		}
-
-		FittingSolverContext octx = new FittingSolverContext(ctx);
-		PowellContext powell = new PowellContext(ctx.curves.size(), ctx.data.size());
-		double[] weights = calculateWeights(octx, powell);
-		return FittingSolverUtils.generateFinalResults(weights, ctx);
-		
+	protected double[] calculateWeights(FittingSolverContext ctx) {
+		ScoringContext eval = new ScoringContext(ctx.data.size());
+		MultivariateFunction cost = getCostFunction(ctx, eval);
+		double[] guess = FittingSolverUtils.getInitialGuess(ctx);		
+		return optimizeCostFunction(cost, guess, costFnPrecision);
 	}
 	
-	public double[] calculateWeights(FittingSolverContext ctx, PowellContext powell) {
-		ScoringContext eval = new ScoringContext(ctx.data.size());
-		MultivariateFunction cost = getCostFunction(ctx, eval, powell);
-		double[] guess = FittingSolverUtils.getInitialGuess(ctx);
-		
-		PointValuePair result = optimizeCostFunction(cost, guess, costFnPrecision);
-		
-		return result.getPoint();
+	
+	protected MultivariateFunction getCostFunction(FittingSolverContext ctx, ScoringContext scoreCtx) {
+		PowellContext powell = new PowellContext(ctx.curves.size(), ctx.data.size());
+		return (double[] point) -> {
+
+			//We really don't like negative scaling factors, they don't make any logical sense.
+			float containsNegatives = 0;
+			for (double v : point) {
+				if (v < 0) {
+					containsNegatives++;
+				}
+			}
+
+			calculateResidualPowell(point, ctx, scoreCtx, powell);
+			float score = FittingSolverUtils.scoreResidual(point, ctx, scoreCtx.residual);
+			if (containsNegatives > 0) {
+				return score * (1f+containsNegatives);
+			}		
+			return score;
+			
+		};
 	}
-		
-	protected PointValuePair optimizeCostFunction(MultivariateFunction cost, double[] guess, double tolerance) {
-		//1358 reps on test session
-		//optimizer = new SimplexOptimizer(-1d, 1d);
-		
+	
+	protected double[] optimizeCostFunction(MultivariateFunction cost, double[] guess, double tolerance) {
 		//308 reps on test session
 		return new PowellOptimizer(tolerance, 1d).optimize(
 				new ObjectiveFunction(cost), 
@@ -90,60 +88,8 @@ public class OptimizingFittingSolver implements FittingSolver {
 				new MaxIter(1000000),
 				new MaxEval(1000000),
 				new NonNegativeConstraint(true), 
-				GoalType.MINIMIZE);
-		
-		
-		//? reps on test session but occasionally dies?
-//		int size = guess.length;
-//		var optimizer = new BOBYQAOptimizer(Math.max(size+2, size*2));
-//		return optimizer.optimize(
-//				new ObjectiveFunction(cost),
-//				new InitialGuess(guess),
-//				new MaxIter(1000000),
-//				new MaxEval(1000000),
-//				new NonNegativeConstraint(true),
-//				SimpleBounds.unbounded(size),
-//				GoalType.MINIMIZE
-//			);
-		
-		//-1 for rel means don't use rel, just use abs difference
-//		PointValuePair result = new SimplexOptimizer(-1d, 1d).optimize(
-//				new ObjectiveFunction(cost), 
-//				new InitialGuess(guess),
-//				new MaxIter(100000),
-//				new MaxEval(100000),
-//				new NonNegativeConstraint(true), 
-//				GoalType.MINIMIZE,
-//				new MultiDirectionalSimplex(guess)
-//				);
-		
-		
-	}
-
-	
-	protected MultivariateFunction getCostFunction(FittingSolverContext ctx, ScoringContext scoreCtx, PowellContext powell) {
-		return new MultivariateFunction() {
-					
-			@Override
-			public double value(double[] point) {
+				GoalType.MINIMIZE).getPoint();
 				
-				//We really don't like negative scaling factors, they don't make any logical sense.
-				float containsNegatives = 0;
-				for (double v : point) {
-					if (v < 0) {
-						containsNegatives++;
-					}
-				}
-
-				calculateResidualPowell(point, ctx, scoreCtx, powell);
-				float score = FittingSolverUtils.scoreResidual(point, ctx, scoreCtx.residual);
-				if (containsNegatives > 0) {
-					return score * (1f+containsNegatives);
-				}		
-				return score;
-				
-			}
-		};
 	}
 	
 

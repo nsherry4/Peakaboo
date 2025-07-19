@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Random;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
-import org.apache.commons.math3.optim.PointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverUtils.ScoringContext;
 
@@ -40,8 +39,8 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 
 
 	@Override
-	public double[] calculateWeights(FittingSolverContext inputCtx, PowellContext powell) {
-		
+	public double[] calculateWeights(FittingSolverContext inputCtx) {
+	
 		int size = inputCtx.fittings.getVisibleCurves().size();
 		
 		// Create a shallow copy of the input context and then make a deep copy of the
@@ -57,9 +56,8 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 			
 			
 			double[] guess = FittingSolverUtils.getInitialGuess(permCtx);
-			MultivariateFunction cost = getCostFunction(permCtx, eval, powell);
-			PointValuePair result = optimizeCostFunction(cost, guess, 0.02d);
-			double[] permScalings = result.getPoint();
+			MultivariateFunction cost = getCostFunction(permCtx, eval);
+			double[] permScalings = optimizeCostFunction(cost, guess, 0.02d);
 			
 			//DON'T DO THIS, IT CAUSES ALL THE REST OF THE FITS TO BE BIASED TOWARDS THE FIRST ONE
 			//next iteration's guess will be this iterations results
