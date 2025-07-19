@@ -12,7 +12,7 @@ public class ContentLayer implements Layer {
 	private JPanel contentPanel = new JPanel();
 	private final JLayer<JComponent> contentJLayer;
 	
-	public ContentLayer(LayerPanel parent) {
+	public ContentLayer(LayerPanel parent, boolean topFade) {
 		//set blur in case another layer is placed on top of this one
 		LayerBlurUI<JComponent> blurUI = new LayerBlurUI<JComponent>(parent, contentPanel) {
 			@Override
@@ -20,6 +20,7 @@ public class ContentLayer implements Layer {
 				((InputEvent) e).consume();
 			}
 		};
+		blurUI.setTopFade(topFade);
 		contentJLayer = new JLayer<JComponent>(contentPanel, blurUI);
 	}
 	

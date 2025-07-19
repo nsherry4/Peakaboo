@@ -18,6 +18,7 @@ public enum PeakabooIcons implements IconSet {
 	
 	AUTO,
 	FILTER,
+	PLUGIN_SYMBOLIC,
 	
 	SELECT_CONTINUOUS_AREA,
 	SELECT_ELLIPSE,
@@ -28,6 +29,8 @@ public enum PeakabooIcons implements IconSet {
 	MENU_ENERGY,
 	MENU_SETTINGS,
 	MENU_PALETTE,
+	MENU_PLUGIN,
+	MENU_MAIN,
 	
 	;
 

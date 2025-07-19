@@ -8,8 +8,8 @@ import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
 import org.peakaboo.display.plot.Plotter;
-import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
+import org.peakaboo.framework.bolt.repository.AggregatePluginRepository;
 
 //Interface for a factory class that creates pro/non-pro implementations of interfaces
 
@@ -21,8 +21,9 @@ public interface TierProvider {
 	
 	// Plugins
 	public void initializePlugins();
-	public List<BoltPluginRegistry<? extends BoltPlugin>> getPluginManagers();
+	public ExtensionPointRegistry getExtensionPoints();
 	public <V, C> List<TierUIAction<V, C>> uiComponents(String location);
+	public AggregatePluginRepository getPluginRepositories();
 
 	// App info
 	public String appName();
@@ -45,5 +46,6 @@ public interface TierProvider {
 	
 	// Drawing overrides
 	public Plotter createPlotter();
+	
 	
 }

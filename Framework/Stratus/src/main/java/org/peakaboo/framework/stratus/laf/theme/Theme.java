@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.laf.theme;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,6 +43,8 @@ public interface Theme {
 	
 	ColourPalette getPalette();
 	Color getAccent(Accent accent);
+	
+	Font getMonospaceFont();
 	
 	default Map<Accent, Color> getAccents() {
 		var map = new LinkedHashMap<Accent, Color>();

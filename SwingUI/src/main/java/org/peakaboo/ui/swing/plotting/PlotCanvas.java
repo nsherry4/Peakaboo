@@ -34,7 +34,7 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
-import org.peakaboo.ui.swing.plugins.PluginManager;
+import org.peakaboo.ui.swing.plugins.PluginPanel;
 
 
 

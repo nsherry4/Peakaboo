@@ -19,9 +19,9 @@ public class LayerPanel extends JLayeredPane {
 	private Layer contentLayer;
 	
 	
-	public LayerPanel() {
+	public LayerPanel(boolean topFade) {
 		setLayout(new LayerLayout());	
-		contentLayer = new ContentLayer(this);
+		contentLayer = new ContentLayer(this, topFade);
 		add(contentLayer.getJLayer(), new StackConstraints(JLayeredPane.DEFAULT_LAYER, "content"));
 				
 	}

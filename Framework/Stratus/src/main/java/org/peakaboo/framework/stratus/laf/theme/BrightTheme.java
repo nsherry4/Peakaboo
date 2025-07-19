@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.laf.theme;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import org.peakaboo.framework.stratus.api.ColourPalette;
 import org.peakaboo.framework.stratus.api.StratusColour;
@@ -198,5 +199,10 @@ public class BrightTheme implements Theme {
 	@Override
 	public int widgetMargins() {
 		return 0;
+	}
+
+	@Override
+	public Font getMonospaceFont() {
+		return new Font("JetBrains Mono Medium", Font.PLAIN, 11);
 	}
 }

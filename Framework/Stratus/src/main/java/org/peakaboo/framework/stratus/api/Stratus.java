@@ -143,6 +143,8 @@ public class Stratus {
 		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		scroller.getVerticalScrollBar().setUnitIncrement(10);
+		scroller.getHorizontalScrollBar().setUnitIncrement(10);
 		return scroller;
 	}		
 	

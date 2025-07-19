@@ -92,7 +92,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 		});
 		
 		FluentButton clearButton = new FluentButton()
-			.withIcon(StockIcon.EDIT_CLEAR, Stratus.getTheme().getControlText())
+			.withIcon(StockIcon.EDIT_DELETE, Stratus.getTheme().getControlText())
 			.withTooltip("Clear All Fittings")
 			.withAction(() -> {
 				controller.clearTransitionSeries();

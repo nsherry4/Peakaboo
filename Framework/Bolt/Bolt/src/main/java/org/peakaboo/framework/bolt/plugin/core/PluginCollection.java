@@ -22,6 +22,10 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 	
 	List<BoltIssue<T>> getIssues();
 	
+	default boolean isHealthy() {
+		return getIssues().isEmpty();
+	}
+	
 	default List<T> newInstances() {
 		List<T> insts = getPlugins()
 				.stream()

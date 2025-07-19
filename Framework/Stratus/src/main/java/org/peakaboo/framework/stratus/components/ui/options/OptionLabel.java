@@ -7,6 +7,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 
+import org.peakaboo.framework.stratus.api.StratusColour;
+
 public class OptionLabel extends OptionComponent implements OptionFluentAPI {
 
 	private final int LINE_SPACING = 2;
@@ -23,7 +25,7 @@ public class OptionLabel extends OptionComponent implements OptionFluentAPI {
 		this.add(Box.createVerticalStrut(LINE_SPACING));
 		
 		lblDesc = new JLabel(description);
-		lblDesc.setForeground(fgDisabled);
+		lblDesc.setForeground(StratusColour.moreTransparent(fg, 0.3f));
 		this.add(lblDesc);
 		
 		this.withSize(OptionSize.MEDIUM);

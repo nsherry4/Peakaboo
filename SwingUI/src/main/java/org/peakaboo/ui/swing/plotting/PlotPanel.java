@@ -111,7 +111,7 @@ import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import org.peakaboo.ui.swing.plotting.guides.FirstRun;
 import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
-import org.peakaboo.ui.swing.plugins.PluginManager;
+import org.peakaboo.ui.swing.plugins.PluginPanel;
 
 public class PlotPanel extends TabbedLayerPanel {
 
@@ -184,7 +184,8 @@ public class PlotPanel extends TabbedLayerPanel {
 		return controller;
 	}
 
-	private void setWidgetsState() {
+	// This is public to allow the plugins UI to advice of updates.
+	public void setWidgetsState() {
 
 		boolean hasData = controller.data().hasDataSet();
 
@@ -767,7 +768,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionShowPlugins() {
-		pushLayer(new PluginManager(this));
+		pushLayer(new PluginPanel(this));
 	}
 
 	public void actionShowLogs() {
