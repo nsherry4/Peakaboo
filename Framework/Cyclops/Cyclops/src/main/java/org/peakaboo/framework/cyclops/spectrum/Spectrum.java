@@ -58,8 +58,6 @@ public interface Spectrum extends SpectrumView {
 	 */
 	float[] backingArray();
 
-	void map_i(Function<Float, Float> f);
-	
 	//narrow the return type
 	Spectrum subSpectrum(int start, int stop);
 

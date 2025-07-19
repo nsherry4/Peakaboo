@@ -312,16 +312,6 @@ public class ArraySpectrum implements Spectrum
 		};
 	}
 
-		
-	@Override
-	public void map_i(Function<Float, Float> f)
-	{
-		for (int i = 0; i < size; i++)
-		{
-			set(i, f.apply(data[i]));
-		}
-	}
-	
 
 	public static Function<ArraySpectrum, byte[]> getEncoder()
 	{
