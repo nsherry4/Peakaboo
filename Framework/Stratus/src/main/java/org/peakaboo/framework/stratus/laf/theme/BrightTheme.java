@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import org.peakaboo.framework.stratus.api.ColourPalette;
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.palettes.BrightPalette;
 
@@ -15,14 +16,14 @@ public class BrightTheme implements Theme {
 	protected Color highlight = PALETTE.getColour("Blue", "3");
 	protected Color highlightText = PALETTE.getColour("Light", "1");
 	
-	protected Color control = new Color(0xfafafa);
+	protected Color control = new Color(0xfbfbfb);
 	protected Color controlText = PALETTE.getColour("Dark", "3");
 	protected Color controlTextDisabled = PALETTE.getColour("Light", "5");
 	protected Color negative = new Color(0xebebeb);
 	protected Color border = new Color(0xdadada);
 	
-	protected Color widget = new Color(0xe6e6e6);
-	protected Color widgetAlpha = new Color(0x13000000, true);
+	protected Color widget = new Color(0xebebeb);
+	protected Color widgetAlpha = new Color(0x12000000, true);
 	protected Color widgetBevel = widget;
 	
 	protected Color selectionAlpha = new Color(0x3f498ed8, true);
@@ -188,7 +189,7 @@ public class BrightTheme implements Theme {
 	
 	@Override
 	public float borderRadius() {
-		return 12f;
+		return Spacing.huge;
 	}
 	
 	@Override

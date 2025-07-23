@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.peakaboo.framework.stratus.api.ColourPalette;
+import org.peakaboo.framework.stratus.api.Spacing;
 
 public interface Theme {
 
@@ -98,7 +99,7 @@ public interface Theme {
 	 * Radius of various rounded corners for widgets
 	 */
 	default float borderRadius() {
-		return 5f;
+		return Spacing.medium;
 	}
 	
 	default float selectionStrength() {

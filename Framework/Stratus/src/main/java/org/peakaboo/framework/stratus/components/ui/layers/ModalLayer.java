@@ -186,7 +186,7 @@ public class ModalLayer implements Layer {
 	
 	@Override
 	public int getCornerRadius() {
-		return Spacing.huge;
+		return (int) Stratus.getTheme().borderRadius();
 	}
 	
 	protected void remove() {
