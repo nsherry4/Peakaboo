@@ -81,6 +81,7 @@ public class OptimizingFittingSolver extends ApacheFittingSolver {
 	}
 	
 	protected double[] optimizeCostFunction(MultivariateFunction cost, double[] guess, double tolerance) {
+
 		//308 reps on test session
 		return new PowellOptimizer(tolerance, 1d).optimize(
 				new ObjectiveFunction(cost), 
@@ -90,6 +91,7 @@ public class OptimizingFittingSolver extends ApacheFittingSolver {
 				new NonNegativeConstraint(true), 
 				GoalType.MINIMIZE).getPoint();
 				
+
 	}
 	
 

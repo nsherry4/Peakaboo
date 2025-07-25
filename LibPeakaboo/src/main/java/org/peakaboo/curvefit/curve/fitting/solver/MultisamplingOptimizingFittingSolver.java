@@ -40,7 +40,7 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 
 	@Override
 	public double[] calculateWeights(FittingSolverContext inputCtx) {
-	
+
 		int size = inputCtx.fittings.getVisibleCurves().size();
 		
 		// Create a shallow copy of the input context and then make a deep copy of the
