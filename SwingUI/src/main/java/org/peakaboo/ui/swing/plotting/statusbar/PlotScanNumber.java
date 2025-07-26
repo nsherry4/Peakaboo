@@ -65,15 +65,15 @@ public class PlotScanNumber extends ClearPanel {
 			if (controller.view().getChannelViewMode().equals(new SingleViewMode())) {
 				scanNo.setValue(controller.view().getScanNumber() + 1);
 				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.view().getScanNumber()));
-				this.setEnabled(true);
+				this.setVisible(true);
 				/*
 				 * currently bad scans are tracked by their order in a list of good scans, but
 				 * this makes it difficult to link a scan index to the right point in a map when
 				 * it comes time for interpolation.
 				 */
-				scanBlock.setEnabled(controller.data().getDataSet().getDataSource().isRectangular());
+				scanBlock.setVisible(controller.data().getDataSet().getDataSource().isRectangular());
 			} else {
-				this.setEnabled(false);
+				this.setVisible(false);
 			}
 
 		}
