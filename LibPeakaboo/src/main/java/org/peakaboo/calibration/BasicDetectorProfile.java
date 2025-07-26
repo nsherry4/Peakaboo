@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
+import org.peakaboo.framework.druthers.DruthersStorable;
 
 
 public class BasicDetectorProfile implements DetectorProfile {
@@ -55,5 +56,10 @@ public class BasicDetectorProfile implements DetectorProfile {
 	public DetectorProfile load(String yaml) throws IOException {
 		return this;
 	}
-	
+
+	@Override
+	public String save() {
+		return "";
+	}
+
 }
