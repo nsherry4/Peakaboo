@@ -40,12 +40,12 @@ public class ListTest{
 
 	@Test
 	public void twolists() throws IOException {
-		List<String> l1 = ScratchLists.diskBacked(new CompoundEncoder<>(Serializers.fstUnsafe(String.class), Compressors.lz4fast()));
+		List<String> l1 = ScratchLists.diskBacked(new CompoundEncoder<>(Serializers.kryo(String.class), Compressors.lz4fast()));
 		
 		l1.add("A");
 		l1.add("B");
 		
-		List<Integer> l2 = ScratchLists.diskBacked(new CompoundEncoder<>(Serializers.fstUnsafe(Integer.class), Compressors.lz4fast()));
+		List<Integer> l2 = ScratchLists.diskBacked(new CompoundEncoder<>(Serializers.kryo(Integer.class), Compressors.lz4fast()));
 		
 		l2.add(1);
 		l2.add(2);

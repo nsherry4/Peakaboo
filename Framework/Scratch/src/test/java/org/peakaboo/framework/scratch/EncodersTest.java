@@ -12,7 +12,6 @@ public class EncodersTest {
 	@Test
 	public void test() {
 		 testEncoder(Serializers.java());
-		 testEncoder(Serializers.fstUnsafe(String.class).then(Compressors.snappy()));
 		 testEncoder(Serializers.kryo(String.class).then(Compressors.lz4fast()));
 		 testEncoder(Serializers.kryo(String.class).then(Compressors.lz4good()));
 	}
