@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.Random;
 
 import org.apache.commons.math3.analysis.MultivariateFunction;
-import org.apache.commons.math3.optim.PointValuePair;
 import org.peakaboo.curvefit.curve.fitting.CurveView;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverUtils.ScoringContext;
 
 public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolver {
 
@@ -39,26 +39,25 @@ public class MultisamplingOptimizingFittingSolver extends OptimizingFittingSolve
 
 
 	@Override
-	public double[] calculateWeights(OptimizingFittingSolver.Context inputCtx) {
-		
+	public double[] calculateWeights(FittingSolverContext inputCtx) {
+
 		int size = inputCtx.fittings.getVisibleCurves().size();
 		
 		// Create a shallow copy of the input context and then make a deep copy of the
 		// curve list so that we can permute it without impacting the original
-		OptimizingFittingSolver.Context permCtx = new OptimizingFittingSolver.Context(inputCtx);
+		FittingSolverContext permCtx = new FittingSolverContext(inputCtx);
 		permCtx.curves = new ArrayList<>(permCtx.curves);
 		
 		int counter = 0;
 		double[] scalings = new double[size];
-		EvaluationSpace eval = new EvaluationSpace(permCtx.data.size());
+		ScoringContext eval = new ScoringContext(permCtx.data.size());
 		while (counter <= MULTISAMPLE_COUNT) {
 			Collections.shuffle(permCtx.curves, new Random(12345654321l));
 			
 			
-			double[] guess = getInitialGuess(permCtx);
+			double[] guess = FittingSolverUtils.getInitialGuess(permCtx);
 			MultivariateFunction cost = getCostFunction(permCtx, eval);
-			PointValuePair result = optimizeCostFunction(cost, guess, 0.02d);
-			double[] permScalings = result.getPoint();
+			double[] permScalings = optimizeCostFunction(cost, guess, 0.02d);
 			
 			//DON'T DO THIS, IT CAUSES ALL THE REST OF THE FITS TO BE BIASED TOWARDS THE FIRST ONE
 			//next iteration's guess will be this iterations results

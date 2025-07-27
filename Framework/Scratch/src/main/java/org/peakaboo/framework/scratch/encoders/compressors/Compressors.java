@@ -19,5 +19,9 @@ public class Compressors {
 	public static ScratchEncoder<byte[]> snappy() {
 		return new SnappyCompressionEncoder();
 	}
+
+	public static ScratchEncoder<byte[]> zstd() { return new ZStdCompressionEncoder(); }
+
+	public static ScratchEncoder<byte[]> none() { return new NoCompressionEncoder(); }
 	
 }

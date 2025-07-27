@@ -30,7 +30,7 @@ public class SimplePhysicalSize implements PhysicalSize {
 			//warrant disk-based storage when we're low on memory 
 			//We use fst instead of fstUnsafe since there seems to be a bug somewhere 
 			//when using unsafe for different lists with different contents?
-			ScratchEncoder<?> fst = Serializers.fst(Coord.class);
+			ScratchEncoder<?> fst = Serializers.kryo(Coord.class);
 			scratch = (List<Coord<Number>>) PeakabooLists.create(fst);
 		}
 		points = new SparsedList<>(scratch);

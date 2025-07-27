@@ -1,6 +1,5 @@
 package org.peakaboo.ui.swing;
 
-import java.awt.Color;
 import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +32,6 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.table.PeakTable;
-import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
@@ -248,20 +246,10 @@ public class Peakaboo {
 	}
 	
 	private static void initPeakTable() {
-		PeakTable original = PeakTable.SYSTEM.getSource();
-		String filename;
-		if (Version.RELEASE_TYPE == ReleaseType.RELEASE) {
-			filename = "derived-peakfile-" + Version.LONG_VERSION + ".dat";
-		} else {
-			filename = "derived-peakfile-" + Version.LONG_VERSION + "-" + Version.buildDate + ".dat";
-		}
-		File peakdir = DesktopApp.appDir("PeakTable");
-		peakdir.mkdirs();
-		File peakfile = new File(DesktopApp.appDir("PeakTable") + "/" + filename);
-		
-		PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
+		// Force the peak table to generate data
+		PeakTable.SYSTEM.getAll();
 	}
-	
+
 	private static void initPluginSystem() {
 		FilterRegistry.init(DesktopApp.appDir("Plugins/Filter"));
 		MapFilterRegistry.init(DesktopApp.appDir("Plugins/MapFilter"));
