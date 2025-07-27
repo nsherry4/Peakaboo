@@ -19,7 +19,7 @@ import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
 
 public class SerializedPeakTable implements PeakTable {
 
-	private static ScratchEncoder encoder = Serializers.fst(
+	private static ScratchEncoder encoder = Serializers.kryo(
 			PrimaryTransitionSeries.class,
 			PrimaryTransitionSeries[].class,
 			Transition.class,
