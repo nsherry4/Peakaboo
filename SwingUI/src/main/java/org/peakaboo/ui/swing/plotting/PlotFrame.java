@@ -5,6 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
@@ -63,15 +65,22 @@ public class PlotFrame extends LiveFrame
 	private TabbedInterface<TabbedLayerPanel> createTabControl() {
 		return new TabbedInterface<TabbedLayerPanel>(this, p -> "No Data", 180) {
 
+			private PlotPanel plot;
+
 			@Override
 			protected PlotPanel createComponent() {
-				return new PlotPanel(this);
+				this.plot = new PlotPanel(this);
+				return this.plot;
 			}
 
 			@Override
 			protected void destroyComponent(TabbedLayerPanel component){
-				//NOOP
-			}
+                try {
+                    this.plot.close();
+                } catch (Exception e) {
+					PeakabooLog.get().log(Level.WARNING, "Failed to close plot with tab");
+                }
+            }
 
 			@Override
 			protected void titleChanged(String title) {

@@ -53,7 +53,7 @@ import org.peakaboo.tier.Tier;
  * @author Nathaniel Sherry, 2009
  */
 
-public class PlotController extends EventfulType<PlotUpdateType> 
+public class PlotController extends EventfulType<PlotUpdateType> implements AutoCloseable
 {
 		
 	private UndoController					undoController;
@@ -391,6 +391,10 @@ public class PlotController extends EventfulType<PlotUpdateType>
 
 	public NotificationController notifications() {
 		return notificationController;
-	}	
-	
+	}
+
+	@Override
+	public void close() throws Exception {
+		data().close();
+	}
 }

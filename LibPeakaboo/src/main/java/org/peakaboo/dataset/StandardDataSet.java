@@ -316,6 +316,10 @@ public class StandardDataSet implements DataSet
 	}
 
 
-	
+	@Override
+	public void close() throws Exception {
+		// No-op
+	}
+
 }
 

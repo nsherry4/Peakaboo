@@ -66,4 +66,8 @@ public class EmptyDataSet implements DataSet {
 	}
 
 
+	@Override
+	public void close() throws Exception {
+		// No-op
+	}
 }

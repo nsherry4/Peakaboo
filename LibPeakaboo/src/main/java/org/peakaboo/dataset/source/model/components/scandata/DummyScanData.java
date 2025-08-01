@@ -5,6 +5,8 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.tier.Tier;
 
+import java.io.IOException;
+
 public class DummyScanData implements ScanData {
 
 	
@@ -51,6 +53,11 @@ public class DummyScanData implements ScanData {
 	@Override
 	public Analysis getAnalysis() {
 		return Tier.provider().createDataSourceAnalysis();
+	}
+
+	@Override
+	public void close() throws IOException {
+		// No-op
 	}
 
 }

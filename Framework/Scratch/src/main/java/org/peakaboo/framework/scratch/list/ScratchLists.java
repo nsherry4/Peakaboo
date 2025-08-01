@@ -16,6 +16,16 @@ public class ScratchLists {
 		return new ScratchArrayList<T>(encoder);
 	}
 	
+	/**
+	 * Creates a disk-backed ScratchList. The returned list implements AutoCloseable and
+	 * should be explicitly closed when no longer needed to ensure proper cleanup of
+	 * temporary files and file handles.
+	 * 
+	 * @param <T> the type of elements in the list
+	 * @param encoder the encoder to use for serializing/deserializing elements
+	 * @return a new disk-backed ScratchList
+	 * @throws IOException if temporary file creation fails
+	 */
 	public static <T> ScratchList<T> diskBacked(ScratchEncoder<T> encoder) throws IOException {
 		return new ScratchDiskList<>(encoder);
 	}

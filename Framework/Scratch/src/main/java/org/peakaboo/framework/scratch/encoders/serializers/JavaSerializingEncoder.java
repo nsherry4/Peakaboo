@@ -10,7 +10,7 @@ import java.io.Serializable;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.ScratchException;
 
-public class SerializingEncoder<T extends Serializable> implements ScratchEncoder<T> {
+public class JavaSerializingEncoder<T extends Serializable> implements ScratchEncoder<T> {
 
 
 	@Override

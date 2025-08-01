@@ -20,7 +20,7 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
  * 
  * @author Nathaniel Sherry, 2009-2018
  */
-public interface DataSet {
+public interface DataSet extends AutoCloseable {
 
 
 	Analysis getAnalysis();

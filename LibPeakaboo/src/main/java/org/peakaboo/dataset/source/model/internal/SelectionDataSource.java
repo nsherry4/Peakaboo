@@ -342,6 +342,9 @@ public class SelectionDataSource implements SubsetDataSource, ScanData, DataSize
 		return true;
 	}
 
-	
-	
+
+	@Override
+	public void close() throws Exception {
+		// No-op. We don't close the backing, as it will usually represent another session.
+	}
 }

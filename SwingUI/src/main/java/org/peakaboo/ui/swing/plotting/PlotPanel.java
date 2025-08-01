@@ -113,7 +113,7 @@ import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
 import org.peakaboo.ui.swing.plugins.PluginPanel;
 
-public class PlotPanel extends TabbedLayerPanel {
+public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 	// Non-UI
 	private PlotController controller;
@@ -903,6 +903,11 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	PlotCanvas getCanvas() {
 		return canvas;
+	}
+
+	@Override
+	public void close() throws Exception {
+		this.controller.close();
 	}
 
 	public static class SessionFileExtension extends SimpleFileExtension {
