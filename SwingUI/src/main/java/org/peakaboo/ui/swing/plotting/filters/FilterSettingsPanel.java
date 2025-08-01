@@ -60,7 +60,7 @@ class FilterSettingsPanel extends ClearPanel {
 			});
 			//Wrap for layout
 			component = new ClearPanel(new BorderLayout());
-			component.add(autopanel, BorderLayout.NORTH);
+			component.add(autopanel, BorderLayout.CENTER);
 			
 			//Stash for later use
 			editorUIs.put(filter, component);
