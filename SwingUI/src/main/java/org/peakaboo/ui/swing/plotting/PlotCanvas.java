@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.display.plot.PlotData;
@@ -247,7 +248,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		float zoom = controller.view().getZoom();
 
 		//Transform zoom
-		// UI zoom is from 0.1 to 10
+		// UI zoom range is defined by ViewController constants
 		/**
 		 * We want most of the control for the zoom to be around normal zoom levels, so
 		 * we re-center the zoom value from -1 to 1 and apply an exponential function to
@@ -257,10 +258,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		 * zooming out and so we mirror the curve for zooming in 
 		 */
 		
-		//convert to 0 - 9.9
-		zoom -= 0.1f;
+		//convert to 0 - (ZOOM_MAX - ZOOM_MIN)
+		zoom -= ViewController.ZOOM_MIN;
 		//convert to 0 - 1
-		zoom /= 9.9f;
+		zoom /= (ViewController.ZOOM_MAX - ViewController.ZOOM_MIN);
 		//convert to -1 to 1
 		zoom = (zoom * 2f) - 1f;
 		boolean invert = zoom < 0;

@@ -9,10 +9,13 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
@@ -43,6 +47,7 @@ import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import org.peakaboo.controller.session.v2.SavedSession;
@@ -241,8 +246,25 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		scrolledCanvas.setBorder(Spacing.bNone());
 
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas, Buttons.LEFT, Buttons.MIDDLE);
+
+		// Disable default mouse wheel scrolling on the JScrollPane to prevent conflicts
+		scrolledCanvas.setWheelScrollingEnabled(false);
+
+		// Add mouse wheel listener for Ctrl+Scroll zoom and regular scrolling
+		scrolledCanvas.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if (e.isControlDown()) {
+					// Handle zoom - consume event to prevent default scrolling
+					onMouseWheelMoved(e);
+				} else {
+					// Handle regular scrolling manually to ensure proper behavior
+					handleRegularScroll(e);
+				}
+			}
+		});
 
 		statusBar = new PlotStatusBar(controller);
 
@@ -350,6 +372,95 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 	public void setNeedsRedraw() {
 		canvas.setNeedsRedraw();
+	}
+	
+	private void onMouseWheelMoved(MouseWheelEvent e) {
+		if (!controller.data().hasDataSet()) {
+			return;
+		}
+		
+		// Consume the event immediately to prevent default scrolling behavior
+		e.consume();
+		
+		// Get current zoom level and calculate new zoom
+		float currentZoom = controller.view().getZoom();
+		int wheelRotation = e.getWheelRotation();
+		
+		// Zoom factor: smaller steps for finer control
+		float zoomFactor = 1.025f;
+		float newZoom;
+		
+		if (wheelRotation < 0) {
+			// Scroll up = zoom in
+			newZoom = currentZoom * zoomFactor;
+		} else {
+			// Scroll down = zoom out  
+			newZoom = currentZoom / zoomFactor;
+		}
+		
+		// Clamp zoom to valid range using ViewController constants
+		newZoom = Math.max(ViewController.ZOOM_MIN, Math.min(ViewController.ZOOM_MAX, newZoom));
+		
+		// Only proceed if zoom actually changed
+		if (Math.abs(newZoom - currentZoom) < 0.001f) {
+			return; // No change needed
+		}
+		
+		// Get mouse position before zoom change
+		Rectangle visibleRect = canvas.getVisibleRect();
+		int mouseCanvasX = e.getX() + visibleRect.x; // Absolute position in canvas
+		int mouseViewportX = e.getX(); // Position relative to visible viewport
+		
+		// Calculate zoom ratio for use in lambda
+		final float zoomRatio = newZoom / currentZoom;
+		
+		// Apply the new zoom
+		controller.view().setZoom(newZoom);
+		
+		// After zoom change, calculate new scroll position to center on mouse
+		SwingUtilities.invokeLater(() -> {
+			Rectangle newVisibleRect = canvas.getVisibleRect();
+			Dimension newSize = canvas.getPreferredSize(); // Get size AFTER zoom change
+			
+			// Calculate where the mouse position should be in the new canvas
+			int newMouseCanvasX = (int) (mouseCanvasX * zoomRatio);
+			
+			// Calculate new scroll position to keep mouse at same viewport position
+			int newScrollX = newMouseCanvasX - mouseViewportX;
+			
+			// Ensure we don't scroll beyond bounds
+			newScrollX = Math.max(0, Math.min(newScrollX, newSize.width - newVisibleRect.width));
+			
+			// Update scroll position
+			Rectangle targetRect = new Rectangle(newScrollX, newVisibleRect.y, 
+												newVisibleRect.width, newVisibleRect.height);
+			canvas.scrollRectToVisible(targetRect);
+		});
+	}
+	
+	private void handleRegularScroll(MouseWheelEvent e) {
+		// Manually handle regular mouse wheel scrolling to avoid conflicts with zoom
+		e.consume(); // Consume to prevent default handler
+		
+		if (!controller.data().hasDataSet()) {
+			return;
+		}
+		
+		// Get current scroll position
+		Rectangle visibleRect = canvas.getVisibleRect();
+		int scrollAmount = e.getWheelRotation() * canvas.getScrollableUnitIncrement(visibleRect, SwingConstants.HORIZONTAL, e.getWheelRotation());
+		
+		// Calculate new scroll position
+		int newScrollX = visibleRect.x + scrollAmount;
+		
+		// Ensure we don't scroll beyond bounds
+		Dimension canvasSize = canvas.getPreferredSize();
+		int maxScrollX = Math.max(0, canvasSize.width - visibleRect.width);
+		newScrollX = Math.max(0, Math.min(newScrollX, maxScrollX));
+		
+		// Update scroll position
+		Rectangle targetRect = new Rectangle(newScrollX, visibleRect.y, visibleRect.width, visibleRect.height);
+		canvas.scrollRectToVisible(targetRect);
 	}
 
 	// ////////////////////////////////////////////////////////
