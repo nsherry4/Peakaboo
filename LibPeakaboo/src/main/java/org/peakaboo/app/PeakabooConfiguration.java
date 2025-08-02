@@ -1,24 +1,12 @@
 package org.peakaboo.app;
 
-import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
+import org.peakaboo.dataset.encoder.QOXRF;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.ScratchEncoder;
-import org.peakaboo.framework.scratch.ScratchException;
-import org.peakaboo.framework.scratch.encoders.CompoundEncoder;
-import org.peakaboo.framework.scratch.encoders.compressors.Compressors;
-import org.peakaboo.framework.scratch.encoders.serializers.Serializers;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
 public class PeakabooConfiguration {
 
-	public static ScratchEncoder<Spectrum> spectrumEncoder = new CompoundEncoder<>(
-			new SpectrumEncoder(),
-			Compressors.lz4fast()
-		);
-
+	public static ScratchEncoder<Spectrum> spectrumEncoder = new QOXRF();
 	
 	public static final MemorySize memorySize = calcMemoryFootprint();
 

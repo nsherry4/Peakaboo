@@ -1,4 +1,4 @@
-package org.peakaboo.app;
+package org.peakaboo.dataset.encoder;
 
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
@@ -9,6 +9,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/**
+ * This class (en|de)codes a Spectrum (to|from) a byte array. It is intended
+ * to be used with a generic compressor like the
+ * {@link org.peakaboo.framework.scratch.encoders.compressors.LZ4FastCompressionEncoder}
+ */
 public class SpectrumEncoder implements ScratchEncoder<Spectrum> {
 
     @Override
