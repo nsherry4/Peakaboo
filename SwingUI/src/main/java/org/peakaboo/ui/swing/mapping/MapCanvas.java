@@ -109,6 +109,11 @@ public class MapCanvas extends GraphicsPanel
 	
 	public void updateCanvasSize()
 	{
+		updateCanvasSize(null);
+	}
+	
+	public void updateCanvasSize(Coord<Integer> zoomCenter)
+	{
 			
 		//Width
 		double parentWidth = 1.0;
@@ -144,9 +149,19 @@ public class MapCanvas extends GraphicsPanel
 		float dx = (float)newSize.width / (float)oldSize.width;
 		float dy = (float)newSize.height / (float)oldSize.height;
 
-		//Scale view by size ratio
-		newView.x = (int) (oldView.x * dx);
-		newView.y = (int) (oldView.y * dy);
+		if (zoomCenter != null) {
+			// Zoom from the specified center point
+			int centerX = zoomCenter.x;
+			int centerY = zoomCenter.y;
+			
+			// Calculate the new viewport position to keep the zoom center in the same relative position
+			newView.x = (int) (centerX * dx - (centerX - oldView.x));
+			newView.y = (int) (centerY * dy - (centerY - oldView.y));
+		} else {
+			// Default behavior: scale view by size ratio from top-left
+			newView.x = (int) (oldView.x * dx);
+			newView.y = (int) (oldView.y * dy);
+		}
 
 		//Set new size and update
 		this.setPreferredSize(newSize);

@@ -110,7 +110,14 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 			// Scrolled Down
 			zoom /= factor;
 		}
+		
+		// Get mouse position for zoom center
+		Coord<Integer> zoomCenter = new Coord<>(wheel.getX(), wheel.getY());
+		
 		controller.getSettings().setZoom(zoom);
+		
+		// Update canvas size with the zoom center
+		canvas.updateCanvasSize(zoomCenter);
 		
 	}
 	
