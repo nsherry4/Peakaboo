@@ -11,10 +11,19 @@ import java.util.Arrays;
 /**
  * Inspired by the QOI image format (https://qoiformat.org/), this is the QOXRF
  * or Quite Okay XRF format. It uses delta encoding plus simple compression
- * methods like run length encoding and a 64 entry recent value cache. Two-bit
- * opcodes leave 6 bits for length of run or recent value offset. This is
- * enough that we can pack most channel values into a single byte. The raw,
- * uncompressable float values are packed into four dedicated bytes.<br><br>
+ * methods like:
+ * <ul>
+ * <li>Run Length Encoding (RLE) for delta-encoded zeros (meaning no change in
+ * signal value from the previous channel) are packed as 1 byte.</li>
+ * <li>Small integer(ish) changes from the previous value are packed as 1 byte.
+ * </li>
+ * <li>Values repeated from recent channels are packed as 1 byte.</li>
+ * </ul>
+ * <br>
+ * Two-bit opcodes leave 6 bits for length of run, value of small integer
+ * offset, or recent value cache index. This is enough that we can pack most
+ * channel values into a single byte. The raw, uncompressable float values are
+ * packed into four dedicated bytes.<br><br>
  *
  * In several test datasets, this compression algorithm outperforms a native
  * implementation of LZ4 in both speed and compression size for this specific
@@ -28,10 +37,11 @@ import java.util.Arrays;
  * While most of the data sets we see have integer count values, there are data
  * sets which are expressed as floats, and may have values *near* zero but, due
  * to noise, not close enough for RLE compression and too random for a cache
- * reference. In those cases, rounding off values near zero *before* delta
- * encoding may improve compression on float data sets without a significant
- * loss in precision.
- *
+ * reference. Particularly low noise levels may get rounded off by the small
+ * integer(ish) delta opcode, but stronger noise won't be coerced to an integer.
+ * In those cases, rounding off values near zero *before* delta encoding may
+ * improve compression on float data sets without a significant loss in
+ * precision.
  */
 
 public class QOXRF implements ScratchEncoder<Spectrum> {
