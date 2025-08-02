@@ -46,10 +46,10 @@ import java.util.Arrays;
 
 public class QOXRF implements ScratchEncoder<Spectrum> {
     
-    private static final int OP_RLE_ZERO = 0;      // 00
-    private static final int OP_CACHE_REF = 1;     // 01
-    private static final int OP_SMALL_INT_DELTA = 2; // 11
-    private static final int OP_RAW_VALUE = 3;     // 10
+    private static final int OP_RLE_ZERO = 0;        // 00
+    private static final int OP_CACHE_REF = 1;       // 01
+    private static final int OP_SMALL_INT_DELTA = 2; // 10
+    private static final int OP_RAW_VALUE = 3;       // 11
 
     
     private static final int CACHE_SIZE = 64;
@@ -101,9 +101,8 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
             // Check for zero run-length encoding
             if (current == 0) {
                 int runLength = 1;
-                while (i + runLength < values.length && 
-                       values[i + runLength] == 0 && 
-                       runLength < MAX_RLE_LENGTH) {
+                int maxLength = Math.min(values.length - i, MAX_RLE_LENGTH);
+                while (runLength < maxLength && values[i + runLength] == 0) {
                     runLength++;
                 }
                 // Encode: 00xxxxxx (RLE_ZERO with 6-bit length) - 1 byte total
@@ -116,7 +115,7 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
             float currentFloat = Float.intBitsToFloat(current);
             int rounded = Math.round(currentFloat);
             if (rounded >= -31 && rounded <= 32 && Math.abs(currentFloat - rounded) < 1e-7f) {
-                // Encode: 11xxxxxx (SMALL_INT_DELTA with 6-bit signed offset)
+                // Encode: 10xxxxxx (SMALL_INT_DELTA with 6-bit signed offset)
                 // Map -31..+32 to 0..63 by adding 31
                 int encoded = rounded + 31;
                 compressed.put((byte) ((OP_SMALL_INT_DELTA << 6) | encoded));
