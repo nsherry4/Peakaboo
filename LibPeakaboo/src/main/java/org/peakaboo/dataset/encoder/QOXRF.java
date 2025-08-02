@@ -35,10 +35,11 @@ import java.nio.ByteBuffer;
 
 public class QOXRF implements ScratchEncoder<Spectrum> {
     
-    private static final int OP_RLE_ZERO = 0;    // 00
-    private static final int OP_CACHE_REF = 1;   // 01
-    private static final int OP_RAW_VALUE = 2;   // 10
-    private static final int OP_RESERVED = 3;    // 11
+    private static final int OP_RLE_ZERO = 0;      // 00
+    private static final int OP_CACHE_REF = 1;     // 01
+    private static final int OP_SMALL_INT_DELTA = 2; // 11
+    private static final int OP_RAW_VALUE = 3;     // 10
+
     
     private static final int CACHE_SIZE = 64;
     private static final int MAX_RLE_LENGTH = 64;
@@ -81,9 +82,8 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
         ByteBuffer compressed = ByteBuffer.allocate(values.length * 5);
         int[] cache = new int[CACHE_SIZE];
         int cacheIndex = 0;
-        
+
         int i = 0;
-        int totalEncoded = 0;
         while (i < values.length) {
             int current = values[i];
 
@@ -97,11 +97,22 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
                 }
                 // Encode: 00xxxxxx (RLE_ZERO with 6-bit length) - 1 byte total
                 compressed.put((byte) ((OP_RLE_ZERO << 6) | (runLength - 1)));
-                totalEncoded += runLength;
                 i += runLength;
                 continue;
             }
-            
+
+            // Check for small integer delta: -31 to +32
+            float currentFloat = Float.intBitsToFloat(current);
+            int rounded = Math.round(currentFloat);
+            if (rounded >= -31 && rounded <= 32 && Math.abs(currentFloat - rounded) < 1e-7f) {
+                // Encode: 11xxxxxx (SMALL_INT_DELTA with 6-bit signed offset)
+                // Map -31..+32 to 0..63 by adding 31
+                int encoded = rounded + 31;
+                compressed.put((byte) ((OP_SMALL_INT_DELTA << 6) | encoded));
+                i++;
+                continue;
+            }
+
             // Check cache for recent values
             int cacheOffset = findInCache(cache, cacheIndex, current);
             if (cacheOffset != -1) {
@@ -111,12 +122,10 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
                 // Add to cache (maintain same order as decoder)
                 cache[cacheIndex] = current;
                 cacheIndex = (cacheIndex + 1) % CACHE_SIZE;
-                
-                totalEncoded++;
                 i++;
                 continue;
             }
-            
+
             // Raw value encoding: 1 byte opcode + 4 bytes full float32 (no precision loss)
             compressed.put((byte) (OP_RAW_VALUE << 6)); // 6 padding bits are 0
             compressed.put((byte) (current & 0xFF));         // Byte 0 (LSB)
@@ -128,12 +137,11 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
             cache[cacheIndex] = current;
             cacheIndex = (cacheIndex + 1) % CACHE_SIZE;
             
-            totalEncoded++;
             i++;
         }
 
-        if (totalEncoded != values.length) {
-            throw new IllegalStateException("Encoder bug: expected to encode " + values.length + " values, but encoded " + totalEncoded);
+        if (i != values.length) {
+            throw new IllegalStateException("Encoder bug: expected to encode " + values.length + " values, but encoded " + i);
         }
         
         // Return only the used portion
@@ -193,6 +201,7 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
             // Check bounds based on opcode BEFORE trying to read additional bytes
             switch (opcode) {
                 case OP_RLE_ZERO:
+                case OP_SMALL_INT_DELTA:
                 case OP_CACHE_REF:
                     // These are 1 byte total - we already have what we need
                     break;
@@ -201,8 +210,6 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
                         throw new ScratchException(new IllegalStateException("Incomplete raw value in compressed data"));
                     }
                     break;
-                case OP_RESERVED:
-                    throw new ScratchException(new IllegalArgumentException("Reserved opcode encountered"));
             }
             
             // Now process the opcode safely
@@ -216,7 +223,18 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
                     }
                     i++; // Advance by 1 byte
                     break;
-                    
+
+                case OP_SMALL_INT_DELTA:
+                    // Decode small integer delta: 6 bits encode -31..+32
+                    int encoded = firstByte & 0x3F;
+                    int intDelta = encoded - 31; // Map 0..63 back to -31..+32
+                    float smallDelta = (float) intDelta;
+
+                    previousValue = (floatsIndex == 0) ? smallDelta : previousValue + smallDelta;
+                    floats[floatsIndex++] = previousValue;
+                    i++; // Advance by 1 byte
+                    break;
+
                 case OP_CACHE_REF:
                     int cacheOffset = firstByte & 0x3F;
                     int cachePos = (cacheIndex - 1 - cacheOffset + CACHE_SIZE) % CACHE_SIZE;
