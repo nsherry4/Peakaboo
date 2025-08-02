@@ -175,14 +175,19 @@ public class QOXRFTest {
     public void testSmallIntegerDeltas() throws ScratchException {
         // Tests small integer delta compression: values that differ by small integers
         // should compress to 1 byte each (except the first value)
-        float[] data = {100.0f, 101.0f, 103.0f, 100.0f, 97.0f, 132.0f, 131.0f};
-        
+        float[] data = new float[200];
+        float[] pattern = {100.0f, 101.0f, 103.0f, 100.0f, 97.0f, 132.0f, 131.0f};
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] = pattern[i % pattern.length];
+        }
+
         assertRoundTrip(data);
         
         // Should achieve good compression since most deltas are small integers
         double ratio = getCompressionRatio(data);
         System.out.println("Small integer delta compression ratio: " + String.format("%.2f", ratio) + ":1");
-        Assert.assertTrue("Should achieve good compression with small integer deltas", ratio > 2.0);
+        Assert.assertTrue("Should achieve good compression with small integer deltas", ratio > 2f);
     }
 
     @Test

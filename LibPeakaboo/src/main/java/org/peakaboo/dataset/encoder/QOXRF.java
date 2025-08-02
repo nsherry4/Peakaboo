@@ -6,6 +6,7 @@ import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.ScratchException;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Inspired by the QOI image format (https://qoiformat.org/), this is the QOXRF
@@ -189,68 +190,45 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
         
         int i = 4; // Start after header
         while (i < data.length && floatsIndex < expectedLength) {
-            // Ensure we can read at least the opcode byte
-            if (i >= data.length) {
-                throw new ScratchException(new IllegalStateException("Unexpected end of data"));
-            }
-            
+
             // Read first byte to determine opcode
             int firstByte = data[i] & 0xFF;
             int opcode = (firstByte >>> 6) & 0x3;
-            
-            // Check bounds based on opcode BEFORE trying to read additional bytes
-            switch (opcode) {
-                case OP_RLE_ZERO:
-                case OP_SMALL_INT_DELTA:
-                case OP_CACHE_REF:
-                    // These are 1 byte total - we already have what we need
-                    break;
-                case OP_RAW_VALUE:
-                    if (i + 5 > data.length) {
-                        throw new ScratchException(new IllegalStateException("Incomplete raw value in compressed data"));
-                    }
-                    break;
-            }
-            
+
             // Now process the opcode safely
             switch (opcode) {
                 case OP_RLE_ZERO:
                     int runLength = (firstByte & 0x3F) + 1;
-                    for (int j = 0; j < runLength && floatsIndex < expectedLength; j++) {
-                        // Zero delta means same value as previous
-                        floats[floatsIndex] = previousValue;
-                        floatsIndex++;
-                    }
+                    int endIndex = Math.min(floatsIndex + runLength, expectedLength);
+                    Arrays.fill(floats, floatsIndex, endIndex, previousValue);
+                    floatsIndex = endIndex;
                     i++; // Advance by 1 byte
                     break;
 
                 case OP_SMALL_INT_DELTA:
-                    // Decode small integer delta: 6 bits encode -31..+32
-                    int encoded = firstByte & 0x3F;
-                    int intDelta = encoded - 31; // Map 0..63 back to -31..+32
-                    float smallDelta = (float) intDelta;
-
-                    previousValue = (floatsIndex == 0) ? smallDelta : previousValue + smallDelta;
+                    // Decode small integer delta: 6 bits encode -31..+32, map 0..63 back to -31..+32
+                    previousValue += (float) ((firstByte & 0x3F) - 31);
                     floats[floatsIndex++] = previousValue;
                     i++; // Advance by 1 byte
                     break;
 
                 case OP_CACHE_REF:
-                    int cacheOffset = firstByte & 0x3F;
-                    int cachePos = (cacheIndex - 1 - cacheOffset + CACHE_SIZE) % CACHE_SIZE;
-                    int cachedValue = cache[cachePos];
+                    int cachePos = (cacheIndex - 1 - (firstByte & 0x3F) + CACHE_SIZE) % CACHE_SIZE;
                     
                     // Convert int bits back to float delta and apply delta decoding
-                    float delta = Float.intBitsToFloat(cachedValue);
-                    previousValue = (floatsIndex == 0) ? delta : previousValue + delta;
+                    previousValue += Float.intBitsToFloat(cache[cachePos]);
                     floats[floatsIndex++] = previousValue;
                     
-                    cache[cacheIndex] = cachedValue;
+                    cache[cacheIndex] = cache[cachePos];
                     cacheIndex = (cacheIndex + 1) % CACHE_SIZE;
                     i++; // Advance by 1 byte
                     break;
                     
                 case OP_RAW_VALUE:
+                    // Make sure we don't try to read past the end of the data
+                    if (i + 5 > data.length) {
+                        throw new ScratchException(new IllegalStateException("Incomplete raw value in compressed data"));
+                    }
                     // We already checked bounds above, safe to read 4 more bytes
                     int rawValue = (data[i + 1] & 0xFF) |
                                   ((data[i + 2] & 0xFF) << 8) |
@@ -258,8 +236,7 @@ public class QOXRF implements ScratchEncoder<Spectrum> {
                                   ((data[i + 4] & 0xFF) << 24);
                     
                     // Convert int bits back to float delta and apply delta decoding
-                    float rawDelta = Float.intBitsToFloat(rawValue);
-                    previousValue = (floatsIndex == 0) ? rawDelta : previousValue + rawDelta;
+                    previousValue += Float.intBitsToFloat(rawValue);
                     floats[floatsIndex++] = previousValue;
                     
                     cache[cacheIndex] = rawValue;
