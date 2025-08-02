@@ -69,12 +69,10 @@ public class Benchmark {
 		bench_encoder(null);
 		
 		bench_encoder(Serializers.java());
-		bench_encoder(Serializers.java().then(Compressors.snappy()));
 		bench_encoder(Serializers.java().then(Compressors.lz4fast()));
 		bench_encoder(Serializers.java().then(Compressors.lz4good()));
 		
 		bench_encoder(Serializers.kryo(clazz));
-		bench_encoder(Serializers.kryo(clazz).then(Compressors.snappy()));
 		bench_encoder(Serializers.kryo(clazz).then(Compressors.lz4fast()));
 		bench_encoder(Serializers.kryo(clazz).then(Compressors.lz4good()));
 		
@@ -131,7 +129,6 @@ public class Benchmark {
 		bench_roundtrip(null);
 		
 		bench_roundtrip(Serializers.kryo(clazz));
-		bench_roundtrip(Serializers.kryo(clazz).then(Compressors.snappy()));
 		bench_roundtrip(Serializers.kryo(clazz).then(Compressors.lz4fast()));
 		bench_roundtrip(Serializers.kryo(clazz).then(Compressors.lz4good()));
 

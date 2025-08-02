@@ -49,28 +49,6 @@ public class CompressorsTest {
 	}
 
 	@Test
-	public void testSnappyCompression() {
-		ScratchEncoder<byte[]> compressor = Compressors.snappy();
-		
-		byte[] compressed = compressor.encode(TEST_DATA);
-		byte[] decompressed = compressor.decode(compressed);
-		
-		assertArrayEquals(TEST_DATA, decompressed);
-		assertEquals("Snappy Compressor", compressor.toString());
-	}
-
-	@Test
-	public void testZStdCompression() {
-		ScratchEncoder<byte[]> compressor = Compressors.zstd();
-		
-		byte[] compressed = compressor.encode(TEST_DATA);
-		byte[] decompressed = compressor.decode(compressed);
-		
-		assertArrayEquals(TEST_DATA, decompressed);
-		assertEquals("ZStd Compressor", compressor.toString());
-	}
-
-	@Test
 	public void testNoCompression() {
 		ScratchEncoder<byte[]> compressor = Compressors.none();
 		
@@ -188,8 +166,6 @@ public class CompressorsTest {
 			Compressors.deflate(),
 			Compressors.lz4fast(),
 			Compressors.lz4good(),
-			Compressors.snappy(),
-			Compressors.zstd(),
 			Compressors.none()
 		};
 		return compressors;
