@@ -2,7 +2,6 @@ package org.peakaboo.framework.scratch.encoders.compressors;
 
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.ScratchException;
-import org.xerial.snappy.Snappy;
 
 import java.io.IOException;
 import java.util.Arrays;
