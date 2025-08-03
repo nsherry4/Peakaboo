@@ -101,6 +101,7 @@ import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.laf.painters.scrollbar.ScrollBarTrackPainter;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
@@ -244,8 +245,12 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		JScrollPane scrolledCanvas = new JScrollPane(canvas);
 		scrolledCanvas.setAutoscrolls(true);
 		scrolledCanvas.setBorder(Spacing.bNone());
+		
+		// Set scrollbar track color to match plot background
+		Color plotBg = canvas.getPlotBackgroundColor();
+		scrolledCanvas.getHorizontalScrollBar().putClientProperty(ScrollBarTrackPainter.KEY_BACKGROUND, plotBg);
 
-		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas, Buttons.LEFT, Buttons.MIDDLE);
 

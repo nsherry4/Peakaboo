@@ -2,8 +2,7 @@ package org.peakaboo.ui.swing.plotting;
 
 
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -27,6 +26,7 @@ import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
@@ -457,6 +457,15 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	
 	public void setNeedsRedraw() {
 		plotter.invalidate();
+	}
+	
+	/**
+	 * Gets the background color currently used by the plot
+	 */
+	public Color getPlotBackgroundColor() {
+		PlotSettings settings = controller.view().getPlotSettings();
+		PaletteColour plotBg = plotter.getPlotBackground(settings);
+		return new java.awt.Color(plotBg.getARGB(), true);
 	}
 
 
