@@ -99,7 +99,8 @@ public class MapCanvas extends GraphicsPanel
 	{
 
 		if (mapper == null) return null;
-		return mapper.getCoordinate(x, y, allowOutOfBounds);
+		Coord<Integer> canvasSize = new Coord<>(getWidth(), getHeight());
+		return mapper.getCoordinate(x, y, allowOutOfBounds, canvasSize);
 
 	}
 
@@ -167,6 +168,15 @@ public class MapCanvas extends GraphicsPanel
 		this.setPreferredSize(newSize);
 		this.revalidate();
 		this.scrollRectToVisible(newView);
+		
+		// Delay the redraw operations to ensure canvas size is fully updated
+		SwingUtilities.invokeLater(() -> {
+			// Force redraw with new centering when size changes
+			setNeedsRedraw(true);
+			// Also force buffer cache clearing by invalidating the mapper
+			mapper.setNeedsRedraw(true);
+			repaint();
+		});
 		
 		
 

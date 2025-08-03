@@ -146,8 +146,8 @@ public class MapperPanel extends TabbedLayerPanel {
 	private JPanel createCanvasPanel() {
 		canvas = new MapCanvas(controller, true);
 		JScrollPane canvasScroller = new JScrollPane(canvas);
-		canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		canvasScroller.setBorder(new EmptyBorder(0, 0, 0, 0));
 		canvasScroller.setWheelScrollingEnabled(false);
 		new DraggingScrollPaneListener(canvasScroller.getViewport(), canvas, Buttons.MIDDLE, Buttons.RIGHT);
