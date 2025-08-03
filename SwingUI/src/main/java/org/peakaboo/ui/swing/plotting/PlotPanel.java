@@ -271,7 +271,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 			}
 		});
 
-		statusBar = new PlotStatusBar(controller);
+		statusBar = new PlotStatusBar(controller, this);
 
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);

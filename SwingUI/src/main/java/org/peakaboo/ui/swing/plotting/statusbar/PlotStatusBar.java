@@ -2,20 +2,30 @@ package org.peakaboo.ui.swing.plotting.statusbar;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayout;
+import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
+import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class PlotStatusBar extends ClearPanel {
 
@@ -23,13 +33,17 @@ public class PlotStatusBar extends ClearPanel {
 	private JLabel channelLabel;
 	private PlotZoomControls zoom;
 	private PlotScanNumber scanSelector;
+	private FluentButton clipboardButton;
 	
 	private KeyValuePill pView, pChannel, pEnergy, pValue, pRaw;
 
 	private PlotController controller;
+	private PlotPanel plotPanel;
+	private Timer toastDebounceTimer;
 	
-	public PlotStatusBar(PlotController controller) {
+	public PlotStatusBar(PlotController controller, PlotPanel plotPanel) {
 		this.controller = controller;
+		this.plotPanel = plotPanel;
 		
 		channelLabel = new JLabel("");
 		channelLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -49,15 +63,46 @@ public class PlotStatusBar extends ClearPanel {
 		
 
 		channelLabel.setBorder(Spacing.bSmall());
-		this.add(pillstrip, BorderLayout.CENTER);
 
 		zoom = new PlotZoomControls(controller);
-		this.add(zoom, BorderLayout.EAST);
+		
+		clipboardButton = new FluentButton()
+				.withIcon(StockIcon.EDIT_COPY)
+				.withTooltip("Copy single spectrum to clipboard as CSV")
+				.withBordered(FluentButtonConfig.BorderStyle.ACTIVE)
+				.withAction(() -> {
+					SpectrumView spectrum = this.controller.getPlotDataSpectra().filtered();
+					float[] data = spectrum.backingArrayCopy();
+
+					// Convert to CSV format - single row of values
+					StringBuilder csv = new StringBuilder();
+					for (int i = 0; i < data.length; i++) {
+						if (i > 0) {
+							csv.append(",");
+						}
+						csv.append(data[i]);
+					}
+
+					// Copy to clipboard
+					StringSelection stringSelection = new StringSelection(csv.toString());
+					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					clipboard.setContents(stringSelection, null);
+					
+					// Show confirmation toast with debouncing
+					showDebouncedToast();
+				}
+		);
+
+		ClearPanel eastPanel = new ClearPanel(new BorderLayout());
+		eastPanel.add(clipboardButton, BorderLayout.WEST);
+		eastPanel.add(zoom, BorderLayout.EAST);
 
 		scanSelector = new PlotScanNumber(controller);
-		this.add(scanSelector, BorderLayout.WEST);
 
-		this.setLayout(new HeaderLayout(scanSelector, pillstrip, zoom));
+		this.add(scanSelector);
+		this.add(pillstrip);
+		this.add(eastPanel);
+		this.setLayout(new HeaderLayout(scanSelector, pillstrip, eastPanel));
 		this.setBorder(new MatteBorder(1, 0, 0, 0, Stratus.getTheme().getWidgetBorder()));
 		
 		
@@ -70,6 +115,7 @@ public class PlotStatusBar extends ClearPanel {
 		
 		scanSelector.setWidgetState(hasData);
 		zoom.setWidgetState(hasData);
+		clipboardButton.setEnabled(hasData);
 		
 	}
 
@@ -103,6 +149,23 @@ public class PlotStatusBar extends ClearPanel {
 		if (pRaw.isVisible()) pRaw.setVisible(false);
 	}
 	
+	private void showDebouncedToast() {
+		// If timer is already running, suppress this toast
+		if (toastDebounceTimer != null && toastDebounceTimer.isRunning()) {
+			return;
+		}
+		
+		// Show the toast immediately
+		ToastLayer toast = new ToastLayer(plotPanel, "Spectrum copied to clipboard as CSV");
+		plotPanel.pushLayer(toast);
+		
+		// Start debounce timer to suppress future toasts for 5 seconds
+		toastDebounceTimer = new Timer(5000, e -> {
+			// Timer finished, next toast can be shown
+		});
+		toastDebounceTimer.setRepeats(false);
+		toastDebounceTimer.start();
+	}
 
 
 }
