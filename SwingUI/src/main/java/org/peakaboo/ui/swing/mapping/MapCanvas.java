@@ -18,16 +18,14 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 
 
-public class MapCanvas extends GraphicsPanel
-{
+public class MapCanvas extends GraphicsPanel {
 
 	private MappingController mapController;
 	private MapSettingsController settingsController;
 	private Mapper mapper;
 	
 	
-	public MapCanvas(MappingController controller, boolean resizable)
-	{
+	public MapCanvas(MappingController controller, boolean resizable) {
 		this.mapController = controller;
 		this.settingsController = controller.getSettings();
 		
@@ -40,8 +38,7 @@ public class MapCanvas extends GraphicsPanel
 				 * for parameter 'deep'
 				 */
 				setNeedsRedraw(false);
-			}
-			else {
+			} else {
 				setNeedsRedraw(true);
 			}
 
@@ -58,8 +55,7 @@ public class MapCanvas extends GraphicsPanel
 	}
 	
 	@Override
-	protected void drawGraphics(Surface backend, Coord<Integer> size)
-	{
+	protected void drawGraphics(Surface backend, Coord<Integer> size) {
 		try {
 			drawMap(backend, size);
 		} catch (Exception e) {
@@ -68,14 +64,12 @@ public class MapCanvas extends GraphicsPanel
 	}
 
 	@Override
-	public float getUsedHeight()
-	{
+	public float getUsedHeight() {
 		return getUsedHeight(1f);
 	}
 
 	@Override
-	public float getUsedWidth()
-	{
+	public float getUsedWidth() {
 		return getUsedWidth(1f);
 	}
 
@@ -95,46 +89,29 @@ public class MapCanvas extends GraphicsPanel
 	
 	
 
-	public Coord<Integer> getMapCoordinateAtPoint(float x, float y, boolean allowOutOfBounds)
-	{
-
+	public Coord<Integer> getMapCoordinateAtPoint(float x, float y, boolean allowOutOfBounds) {
 		if (mapper == null) return null;
 		Coord<Integer> canvasSize = new Coord<>(getWidth(), getHeight());
 		return mapper.getCoordinate(x, y, allowOutOfBounds, canvasSize);
-
 	}
 
 	
 	
 
 	
-	public void updateCanvasSize()
-	{
+	public void updateCanvasSize() {
 		updateCanvasSize(null);
 	}
 	
-	public void updateCanvasSize(Coord<Integer> zoomCenter)
-	{
+	public void updateCanvasSize(Coord<Integer> zoomCenter) {
 			
 		//Width
-		double parentWidth = 1.0;
-		if (this.getParent() != null)
-		{
-			parentWidth = this.getParent().getWidth();
-		}
-
+		double parentWidth = this.getParent() == null ? 1.0 : this.getParent().getWidth();
 		int newWidth = (int) (parentWidth * settingsController.getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
-		
-		
 		//Height
-		double parentHeight = 1.0;
-		if (this.getParent() != null)
-		{
-			parentHeight = this.getParent().getHeight();
-		}
-
+		double parentHeight = this.getParent() == null ? 1.0 : this.getParent().getHeight();
 		int newHeight = (int) (parentHeight * settingsController.getZoom());
 		if (newHeight < parentHeight) newHeight = (int) parentHeight;
 		
@@ -173,8 +150,6 @@ public class MapCanvas extends GraphicsPanel
 		SwingUtilities.invokeLater(() -> {
 			// Force redraw with new centering when size changes
 			setNeedsRedraw(true);
-			// Also force buffer cache clearing by invalidating the mapper
-			mapper.setNeedsRedraw(true);
 			repaint();
 		});
 		

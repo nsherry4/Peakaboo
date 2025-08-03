@@ -1,6 +1,7 @@
 package org.peakaboo.display.map;
 
 
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -50,24 +51,30 @@ public class Mapper {
 		 * take the performance hit to save space
 		 */
 		boolean doBuffer = Display.useBuffer(size);
-		
-		
-		
+
+		// Because we horizontally centre the map, we need to paint the background blank here
+		// because the map drawing won't always blank out the whole component
+		context.save();
+		context.rectAt(0, 0, (float)size.x, (float)size.y);
+		context.setSource(settings.getBg());
+		context.fill();
+		context.restore();
+
 		if (context.getSurfaceDescriptor().isVector()) {
 			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
 			
-			// Apply centering transform
-			Coord<Integer> offset = calculateCenteringOffset(size);
+			// Apply horizontal centering transform
+			int offsetX = calculateHorizontalCenteringOffset(size);
 			context.save();
-			context.translate(offset.x, offset.y);
+			context.translate(offsetX, 0);
 			mapmode.draw(size, data, settings, context, spectrumSteps);
 			context.restore();
 		} else if (doBuffer) {
 
 			Buffer buffer = bufferer.get(size.x, size.y);
-			Coord<Integer> currentOffset = calculateCenteringOffset(size);
-			boolean offsetChanged = lastOffset == null || !lastOffset.equals(currentOffset);
+			int currentOffsetX = calculateHorizontalCenteringOffset(size);
+			boolean offsetChanged = lastOffset == null || lastOffset.x != currentOffsetX;
 			boolean needsRedraw = buffer == null || lastSize == null || !lastSize.equals(size) || invalidated || offsetChanged;
 			
 			//if there is no cached buffer meeting our size requirements, create it and draw to it
@@ -78,28 +85,29 @@ public class Mapper {
 				// Clear the buffer first to remove any old content
 				buffer.clear();
 				
-				// Apply centering when drawing to buffer
-				buffer.save();
-				buffer.translate(currentOffset.x, currentOffset.y);
+				// Draw map to buffer at original position
 				mapmode.draw(size, data, settings, buffer, spectrumSteps);
-				buffer.restore();
 				lastSize = new Coord<>(size);
-				lastOffset = new Coord<>(currentOffset);
+				lastOffset = new Coord<>(currentOffsetX, 0);
 				invalidated = false;
 			}
-						
+
+			context.save();
+
 			context.rectAt(0, 0, size.x, size.y);
 			context.clip();
-			
-			// Buffer already has centering applied, compose at origin
-			context.compose(buffer, 0, 0, 1f);
+			// Compose buffer with horizontal centering offset applied
+			context.compose(buffer, currentOffsetX, 0, 1f);
+
+			context.restore();
+
 		} else {
 			lastSize = null;
 			
-			// Apply centering transform
-			Coord<Integer> offset = calculateCenteringOffset(size);
+			// Apply horizontal centering transform
+			int offsetX = calculateHorizontalCenteringOffset(size);
 			context.save();
-			context.translate(offset.x, offset.y);
+			context.translate(offsetX, 0);
 			mapmode.draw(size, data, settings, context, spectrumSteps);
 			context.restore();
 		}
@@ -110,17 +118,15 @@ public class Mapper {
 		return mapmode.getMap();
 	}
 	
-	private Coord<Integer> calculateCenteringOffset(Coord<Integer> canvasSize) {
+	private int calculateHorizontalCenteringOffset(Coord<Integer> canvasSize) {
 		Coord<Float> mapSize = getMap().calcTotalSize();
-		int offsetX = Math.max(0, (int)((canvasSize.x - mapSize.x) / 2));
-		int offsetY = Math.max(0, (int)((canvasSize.y - mapSize.y) / 2));
-		return new Coord<>(offsetX, offsetY);
+		return Math.max(0, (int)((canvasSize.x - mapSize.x) / 2));
 	}
 	
 	public Coord<Integer> getCoordinate(float x, float y, boolean allowOutOfBounds, Coord<Integer> canvasSize) {
-		// Adjust coordinates to account for centering offset
-		Coord<Integer> offset = calculateCenteringOffset(canvasSize);
-		return getMap().getMapCoordinateAtPoint(x - offset.x, y - offset.y, allowOutOfBounds);
+		// Adjust coordinates to account for horizontal centering offset
+		int offsetX = calculateHorizontalCenteringOffset(canvasSize);
+		return getMap().getMapCoordinateAtPoint(x - offsetX, y, allowOutOfBounds);
 	}
 	
 	/**

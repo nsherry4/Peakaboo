@@ -2,7 +2,11 @@ package org.peakaboo.ui.swing.mapping;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Collections;
+
+import javax.swing.SwingUtilities;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -119,6 +123,18 @@ public class QuickMapPanel extends HeaderLayer {
 		MapSelectionListener selectionListener = new MapSelectionListener(canvas, controller);
 		canvas.addMouseMotionListener(selectionListener);
 		canvas.addMouseListener(selectionListener);
+		
+		// Add component resize listener to force redraw with correct centering on window resize
+		canvas.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				// Delay the redraw operations to ensure canvas size is fully updated
+				SwingUtilities.invokeLater(() -> {
+					canvas.setNeedsRedraw(true);
+					canvas.repaint();
+				});
+			}
+		});
 		
 	}
 	

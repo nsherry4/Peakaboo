@@ -392,10 +392,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	public void compose(Buffer buffer, int x, int y, float scale)
 	{
 		BufferedImage image = (BufferedImage) buffer.getImageSource();
-
-		graphics.drawImage(image, 0, 0, (int)(image.getWidth()*scale), (int)(image.getHeight()*scale), null);
-
-		
+		graphics.drawImage(image, x, y, (int)(image.getWidth()*scale), (int)(image.getHeight()*scale), null);
 	}
 	
 	
