@@ -1,5 +1,9 @@
 package org.peakaboo.framework.cyclops.visualization.palette;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +35,17 @@ public class Gradient {
 	public Gradient(String name, Stop... stops) {
 		this.stops = List.of(stops);
 		this.name = name;
+	}
+
+	public Gradient(String name, String resourcePath) {
+		this.name = name;
+		try {
+			String csvContent = Files.readString(Paths.get(getClass().getResource(resourcePath).toURI()));
+			this.stops = parseCSVContent(csvContent);
+		} catch (IOException | URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 	
 	public List<PaletteColour> toList(int steps) {
@@ -124,6 +139,57 @@ public class Gradient {
 
 	public String getName() {
 		return name;
+	}
+	
+	private static List<Stop> parseCSVContent(String csvContent) {
+		List<Stop> stops = new ArrayList<>();
+		String[] lines = csvContent.trim().split("\\r?\\n");
+		
+		// Auto-detect format based on whether CSV contains decimal points
+		boolean useFloatFormat = csvContent.contains(".");
+		
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i].trim();
+			if (line.isEmpty()) {
+				continue;
+			}
+			
+			String[] values = line.split(",");
+			if (values.length != 3) {
+				throw new IllegalArgumentException("Each line must contain exactly 3 comma-separated values (R,G,B)");
+			}
+			
+			try {
+				int r, g, b;
+				
+				if (useFloatFormat) {
+					r = (int) Math.round(Double.parseDouble(values[0].trim()) * 255);
+					g = (int) Math.round(Double.parseDouble(values[1].trim()) * 255);
+					b = (int) Math.round(Double.parseDouble(values[2].trim()) * 255);
+				} else {
+					r = Integer.parseInt(values[0].trim());
+					g = Integer.parseInt(values[1].trim());
+					b = Integer.parseInt(values[2].trim());
+				}
+
+                if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+                    throw new IllegalArgumentException("RGB values must be between 0 and 255");
+                }
+				
+				int argb = 0xff000000 | (r << 16) | (g << 8) | b;
+				float position = lines.length == 1 ? 0.0f : (float) i / (lines.length - 1);
+				
+				stops.add(new Stop(argb, position));
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Invalid number format in CSV content: " + line, e);
+			}
+		}
+		
+		if (stops.isEmpty()) {
+			throw new IllegalArgumentException("CSV content must contain at least one RGB line");
+		}
+		
+		return stops;
 	}
 	
 	
