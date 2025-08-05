@@ -284,7 +284,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	@Override
 	public void writeText(String text, float x, float y)
 	{
-		graphics.drawString(text, (int) x, (int) y);
+		graphics.drawString(text, x, y);
 	}
 
 
@@ -346,6 +346,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	{
 		Font f = graphics.getFont();
 		f = new Font(f.getName(), f.getStyle(), (int) (size));
+		f = f.deriveFont(size);
 		graphics.setFont(f);
 	}
 

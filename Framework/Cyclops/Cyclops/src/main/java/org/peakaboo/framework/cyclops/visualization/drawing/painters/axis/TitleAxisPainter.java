@@ -40,7 +40,9 @@ public class TitleAxisPainter extends AxisPainter
 	public void drawElement(PainterData p)
 	{
 		Pair<Float, Float> otherAxis;
-	
+
+		// 0.05f was too large, causing jitter
+		final float FONT_SCALE_FACTOR = 0.01f;
 	
 		/*==============================================
 		 * X Axis
@@ -63,7 +65,7 @@ public class TitleAxisPainter extends AxisPainter
 					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(topTitle);
 					if (titleWidth < plotWidth) break;
-					titleFitting -= 0.05;
+					titleFitting -= FONT_SCALE_FACTOR;
 					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
@@ -81,7 +83,7 @@ public class TitleAxisPainter extends AxisPainter
 					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(bottomTitle);
 					if (titleWidth < plotWidth) break;
-					titleFitting -= 0.05;
+					titleFitting -= FONT_SCALE_FACTOR;
 					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
@@ -117,7 +119,7 @@ public class TitleAxisPainter extends AxisPainter
 					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(leftTitle);
 					if (titleWidth < plotHeight) break;
-					titleFitting -= 0.05;
+					titleFitting -= FONT_SCALE_FACTOR;
 					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
@@ -155,7 +157,7 @@ public class TitleAxisPainter extends AxisPainter
 					p.context.setFontSize(FONTSIZE_TEXT * titleScale * titleFitting);
 					titleWidth = p.context.getTextWidth(rightTitle);
 					if (titleWidth < plotHeight) break;
-					titleFitting -= 0.05;
+					titleFitting -= FONT_SCALE_FACTOR;
 					if (titleFitting * titleScale * FONTSIZE_TEXT <= 1.0) break;
 				}
 				
