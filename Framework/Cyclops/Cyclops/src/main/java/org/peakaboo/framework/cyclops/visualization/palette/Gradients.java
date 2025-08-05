@@ -40,6 +40,10 @@ public class Gradients {
 	);
 
 
+	public static final Gradient RATIO_THERMAL = new Gradient(
+			"Ratio Thermal",
+			"/org/peakaboo/framework/cyclops/visualization/palette/CET-D04.csv");
+
 	// https://colorcet.com
 	public static final Gradient REDHOT = new Gradient(
 			"Red Hot",

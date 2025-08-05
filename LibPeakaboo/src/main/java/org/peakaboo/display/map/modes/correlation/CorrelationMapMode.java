@@ -62,15 +62,14 @@ public class CorrelationMapMode extends MapMode {
 		
 		map.setDrawingRequest(dr);
 
-		List<Palette> paletteList = new ArrayList<>();
-		paletteList.add(new ColourStopPalette(settings.gradient));
+		Palette palette = new ColourStopPalette(settings.gradient);
 		
 		List<AxisPainter> axisPainters = new ArrayList<>();
 		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 
 		axisPainters.add(getDescriptionPainter(settings));
-		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, paletteList));
+		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, palette));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 0));
 		
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, new PaletteColour(0xff000000), correlationData.yAxisTitle, "", "", correlationData.xAxisTitle));
@@ -86,10 +85,10 @@ public class CorrelationMapMode extends MapMode {
 		
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (correlationMapPainter == null) {
-			correlationMapPainter = MapTechniqueFactory.getTechnique(paletteList, correlationData.data); 
+			correlationMapPainter = MapTechniqueFactory.getTechnique(palette, correlationData.data);
 		} else {
 			correlationMapPainter.setData(correlationData.data);
-			correlationMapPainter.setPalettes(paletteList);
+			correlationMapPainter.setPalette(palette);
 		}
 		mapPainters.add(correlationMapPainter);
 		
