@@ -41,17 +41,28 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 	{
 		
 		p.context.save();
-	
-			Spectrum modData = transformDataForMap(p.dr, data);
-			float maxIntensity = calcMaxIntensity(p);
-			
-			if (p.dr.drawToVectorSurface) {
-				drawAsScalar(p, modData, cellSize, maxIntensity);
-			} else {
-				if (buffer == null) {
-					buffer = drawAsRaster(p, modData, maxIntensity, p.dr.dataHeight * p.dr.dataWidth);
-				}
+
+			boolean isVector = p.dr.drawToVectorSurface;
+
+			// Fast path for UI frame rate
+			if (!isVector && buffer != null) {
+				// Raster backend that we already have buffered
 				p.context.compose(buffer, 0, 0, cellSize);
+			} else {
+
+				// We don't want to spend time on this unless we're really drawing
+				Spectrum modData = transformDataForMap(p.dr, data);
+				float maxIntensity = calcMaxIntensity(p);
+
+				if (isVector) {
+					// Vector backend
+					drawAsScalar(p, modData, cellSize, maxIntensity);
+				} else {
+					// Raster backend, but no buffer
+					buffer = drawAsRaster(p, modData, maxIntensity, p.dr.dataHeight * p.dr.dataWidth);
+					p.context.compose(buffer, 0, 0, cellSize);
+				}
+
 			}
 
 		p.context.restore();
