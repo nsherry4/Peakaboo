@@ -365,8 +365,11 @@ public abstract class AbstractGraphicsSurface implements Surface
 	@Override
 	public void setFont(String name)
 	{
-		Font f = graphics.getFont();
-		graphics.setFont(new Font(name, f.getStyle(), f.getSize()));
+		Font current = graphics.getFont();
+		Font font = new Font(name, current.getStyle(), current.getSize());
+		// Important! Don't let the API round the font size to the nearest integer
+		font = font.deriveFont(current.getSize2D());
+		graphics.setFont(font);
 	}
 	
 	@Override
