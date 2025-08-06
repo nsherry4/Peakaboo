@@ -411,36 +411,38 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 			return; // No change needed
 		}
 		
-		// Get mouse position before zoom change
+		// Get current state before zoom
 		Rectangle visibleRect = canvas.getVisibleRect();
-		int mouseCanvasX = e.getX() + visibleRect.x; // Absolute position in canvas
-		int mouseViewportX = e.getX(); // Position relative to visible viewport
+		Dimension currentSize = canvas.getPreferredSize();
+		int mouseViewportX = e.getX();
 		
-		// Calculate zoom ratio for use in lambda
-		final float zoomRatio = newZoom / currentZoom;
+		// Calculate what fraction of the total canvas width the mouse is pointing to
+		double mouseFraction = (double)(visibleRect.x + mouseViewportX) / currentSize.width;
 		
 		// Apply the new zoom
 		controller.view().setZoom(newZoom);
 		
-		// After zoom change, calculate new scroll position to center on mouse
-		SwingUtilities.invokeLater(() -> {
-			Rectangle newVisibleRect = canvas.getVisibleRect();
-			Dimension newSize = canvas.getPreferredSize(); // Get size AFTER zoom change
-			
-			// Calculate where the mouse position should be in the new canvas
-			int newMouseCanvasX = (int) (mouseCanvasX * zoomRatio);
-			
-			// Calculate new scroll position to keep mouse at same viewport position
-			int newScrollX = newMouseCanvasX - mouseViewportX;
-			
-			// Ensure we don't scroll beyond bounds
-			newScrollX = Math.max(0, Math.min(newScrollX, newSize.width - newVisibleRect.width));
-			
-			// Update scroll position
-			Rectangle targetRect = new Rectangle(newScrollX, newVisibleRect.y, 
-												newVisibleRect.width, newVisibleRect.height);
-			canvas.scrollRectToVisible(targetRect);
-		});
+		// Force canvas to update its size immediately
+		canvas.updateCanvasSize();
+		canvas.revalidate();
+		
+		// Get the new canvas size after zoom
+		Dimension newSize = canvas.getPreferredSize();
+		
+		// Calculate where that same data point (fraction) should be in the new canvas
+		int newMouseCanvasX = (int)(mouseFraction * newSize.width);
+		
+		// Calculate new scroll position to keep the mouse pointing to the same data point
+		int newScrollX = newMouseCanvasX - mouseViewportX;
+		
+		// Ensure we don't scroll beyond bounds
+		int maxScrollX = Math.max(0, newSize.width - visibleRect.width);
+		newScrollX = Math.max(0, Math.min(newScrollX, maxScrollX));
+		
+		// Update scroll position
+		Rectangle targetRect = new Rectangle(newScrollX, visibleRect.y, 
+											visibleRect.width, visibleRect.height);
+		canvas.scrollRectToVisible(targetRect);
 	}
 	
 	private void handleRegularScroll(MouseWheelEvent e) {
