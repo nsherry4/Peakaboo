@@ -23,12 +23,6 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 
 	protected Buffer buffer;
 
-	
-	public RasterSpectrumMapPainter(List<Palette> colourRules, Spectrum data)
-	{
-		super(colourRules, data);	
-	}
-
 
 	public RasterSpectrumMapPainter(Palette colourRule, Spectrum data)
 	{
@@ -41,17 +35,28 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 	{
 		
 		p.context.save();
-	
-			Spectrum modData = transformDataForMap(p.dr, data);
-			float maxIntensity = calcMaxIntensity(p);
-			
-			if (p.dr.drawToVectorSurface) {
-				drawAsScalar(p, modData, cellSize, maxIntensity);
-			} else {
-				if (buffer == null) {
-					buffer = drawAsRaster(p, modData, maxIntensity, p.dr.dataHeight * p.dr.dataWidth);
-				}
+
+			boolean isVector = p.dr.drawToVectorSurface;
+
+			// Fast path for UI frame rate
+			if (!isVector && buffer != null) {
+				// Raster backend that we already have buffered
 				p.context.compose(buffer, 0, 0, cellSize);
+			} else {
+
+				// We don't want to spend time on this unless we're really drawing
+				Spectrum modData = transformDataForMap(p.dr, data);
+				float maxIntensity = calcMaxIntensity(p);
+
+				if (isVector) {
+					// Vector backend
+					drawAsScalar(p, modData, cellSize, maxIntensity);
+				} else {
+					// Raster backend, but no buffer
+					buffer = drawAsRaster(p, modData, maxIntensity, p.dr.dataHeight * p.dr.dataWidth);
+					p.context.compose(buffer, 0, 0, cellSize);
+				}
+
 			}
 
 		p.context.restore();
@@ -78,9 +83,9 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 			//intensity will already have been log'd, we just have to log the max
 			maxIntensity = (float) Math.log1p(maxIntensity);
 		}
-		
+
 		for (int ordinal = 0; ordinal < size; ordinal++) {
-			b.setPixelValue(ordinal, getColourFromRules(data.get(ordinal), maxIntensity));
+			b.setPixelARGB(ordinal, getARGBColourFromRules(data.get(ordinal), maxIntensity));
 		}	
 		
 		return b;
@@ -90,7 +95,7 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 	private void drawAsScalar(PainterData p, Spectrum data, float cellSize, float maxIntensity)
 	{
 		float intensity;
-		PaletteColour c;
+		int c;
 		int index;
 
 		p.context.save();
@@ -108,7 +113,7 @@ public class RasterSpectrumMapPainter extends SpectrumMapPainter
 				index = y * p.dr.dataWidth + x;
 				intensity = data.get(index);
 
-				c = getColourFromRules(intensity, maxIntensity);
+				c = getARGBColourFromRules(intensity, maxIntensity);
 
 				p.context.rectAt(x * cellSize, y * cellSize, cellSize + 1, cellSize + 1);
 

@@ -17,9 +17,7 @@ public class ScrollBarTrackPainter extends SimpleThemed implements Painter<JComp
 		super(theme);
 	}
 
-
-	Color c = StratusColour.darken(getTheme().getControl(), 0.1f);
-
+	public static final String KEY_BACKGROUND = "background.colour";
 
 	@Override
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
@@ -27,7 +25,16 @@ public class ScrollBarTrackPainter extends SimpleThemed implements Painter<JComp
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
     	
-    	g.setPaint(c);    
+		// Check for custom background color client property
+		Color baseColour;
+		Color customBg = (Color) object.getClientProperty(KEY_BACKGROUND);
+		if (customBg != null) {
+			baseColour = customBg;
+		} else {
+			baseColour = StratusColour.darken(getTheme().getControl(), 0.1f);
+		}
+		
+    	g.setPaint(baseColour);    
     	g.fillRect(0, 0, width, height);
 		
 	}

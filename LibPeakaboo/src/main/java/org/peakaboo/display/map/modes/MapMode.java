@@ -98,7 +98,7 @@ public abstract class MapMode {
 		return selectionPainter;
 	}
 	
-	protected static SpectrumCoordsAxisPainter getSpectrumPainter(MapRenderSettings settings, int spectrumSteps, List<Palette> paletteList) {
+	protected static SpectrumCoordsAxisPainter getSpectrumPainter(MapRenderSettings settings, int spectrumSteps, Palette palette) {
 		return new SpectrumCoordsAxisPainter (
 
 				settings.drawCoord,
@@ -112,7 +112,7 @@ public abstract class MapMode {
 				settings.showSpectrum,
 				settings.spectrumHeight,
 				spectrumSteps,
-				paletteList,
+				palette,
 
 				settings.physicalCoord,
 				settings.showScaleBar
@@ -122,7 +122,7 @@ public abstract class MapMode {
 	protected SpectrumCoordsAxisPainter getSpectrumPainter(
 			MapRenderSettings settings, 
 			int spectrumSteps, 
-			List<Palette> paletteList, 
+			Palette palette,
 			boolean hasNegatives, 
 			List<Pair<Float, String>> spectrumMarkers
 		) {
@@ -139,7 +139,7 @@ public abstract class MapMode {
 			settings.showSpectrum,
 			settings.spectrumHeight,
 			spectrumSteps,
-			paletteList,
+			palette,
 
 			settings.physicalCoord,
 			settings.showScaleBar,

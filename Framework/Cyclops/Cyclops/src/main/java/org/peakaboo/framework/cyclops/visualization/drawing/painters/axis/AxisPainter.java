@@ -102,12 +102,9 @@ public abstract class AxisPainter extends Painter
 
 			for (AxisPainter axisPainter : axisPainters) {
 
-
 				axisPainter.setDimensions(
-
-				new Bounds<>(availableX.start, availableX.end),
-						new Bounds<>(availableY.start, availableY.end)
-
+					new Bounds<>(availableX.start, availableX.end),
+					new Bounds<>(availableY.start, availableY.end)
 				);
 
 				axisSizeX = axisPainter.getAxisSizeX(p);

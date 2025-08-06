@@ -18,16 +18,14 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 
 
-public class MapCanvas extends GraphicsPanel
-{
+public class MapCanvas extends GraphicsPanel {
 
 	private MappingController mapController;
 	private MapSettingsController settingsController;
 	private Mapper mapper;
 	
 	
-	public MapCanvas(MappingController controller, boolean resizable)
-	{
+	public MapCanvas(MappingController controller, boolean resizable) {
 		this.mapController = controller;
 		this.settingsController = controller.getSettings();
 		
@@ -40,8 +38,7 @@ public class MapCanvas extends GraphicsPanel
 				 * for parameter 'deep'
 				 */
 				setNeedsRedraw(false);
-			}
-			else {
+			} else {
 				setNeedsRedraw(true);
 			}
 
@@ -58,8 +55,7 @@ public class MapCanvas extends GraphicsPanel
 	}
 	
 	@Override
-	protected void drawGraphics(Surface backend, Coord<Integer> size)
-	{
+	protected void drawGraphics(Surface backend, Coord<Integer> size) {
 		try {
 			drawMap(backend, size);
 		} catch (Exception e) {
@@ -68,14 +64,12 @@ public class MapCanvas extends GraphicsPanel
 	}
 
 	@Override
-	public float getUsedHeight()
-	{
+	public float getUsedHeight() {
 		return getUsedHeight(1f);
 	}
 
 	@Override
-	public float getUsedWidth()
-	{
+	public float getUsedWidth() {
 		return getUsedWidth(1f);
 	}
 
@@ -95,40 +89,29 @@ public class MapCanvas extends GraphicsPanel
 	
 	
 
-	public Coord<Integer> getMapCoordinateAtPoint(float x, float y, boolean allowOutOfBounds)
-	{
-
+	public Coord<Integer> getMapCoordinateAtPoint(float x, float y, boolean allowOutOfBounds) {
 		if (mapper == null) return null;
-		return mapper.getCoordinate(x, y, allowOutOfBounds);
-
+		Coord<Integer> canvasSize = new Coord<>(getWidth(), getHeight());
+		return mapper.getCoordinate(x, y, allowOutOfBounds, canvasSize);
 	}
 
 	
 	
 
 	
-	public void updateCanvasSize()
-	{
+	public void updateCanvasSize() {
+		updateCanvasSize(null);
+	}
+	
+	public void updateCanvasSize(Coord<Integer> zoomCenter) {
 			
 		//Width
-		double parentWidth = 1.0;
-		if (this.getParent() != null)
-		{
-			parentWidth = this.getParent().getWidth();
-		}
-
+		double parentWidth = this.getParent() == null ? 1.0 : this.getParent().getWidth();
 		int newWidth = (int) (parentWidth * settingsController.getZoom());
 		if (newWidth < parentWidth) newWidth = (int) parentWidth;
 
-		
-		
 		//Height
-		double parentHeight = 1.0;
-		if (this.getParent() != null)
-		{
-			parentHeight = this.getParent().getHeight();
-		}
-
+		double parentHeight = this.getParent() == null ? 1.0 : this.getParent().getHeight();
 		int newHeight = (int) (parentHeight * settingsController.getZoom());
 		if (newHeight < parentHeight) newHeight = (int) parentHeight;
 		
@@ -144,14 +127,31 @@ public class MapCanvas extends GraphicsPanel
 		float dx = (float)newSize.width / (float)oldSize.width;
 		float dy = (float)newSize.height / (float)oldSize.height;
 
-		//Scale view by size ratio
-		newView.x = (int) (oldView.x * dx);
-		newView.y = (int) (oldView.y * dy);
+		if (zoomCenter != null) {
+			// Zoom from the specified center point
+			int centerX = zoomCenter.x;
+			int centerY = zoomCenter.y;
+			
+			// Calculate the new viewport position to keep the zoom center in the same relative position
+			newView.x = (int) (centerX * dx - (centerX - oldView.x));
+			newView.y = (int) (centerY * dy - (centerY - oldView.y));
+		} else {
+			// Default behavior: scale view by size ratio from top-left
+			newView.x = (int) (oldView.x * dx);
+			newView.y = (int) (oldView.y * dy);
+		}
 
 		//Set new size and update
 		this.setPreferredSize(newSize);
 		this.revalidate();
 		this.scrollRectToVisible(newView);
+		
+		// Delay the redraw operations to ensure canvas size is fully updated
+		SwingUtilities.invokeLater(() -> {
+			// Force redraw with new centering when size changes
+			setNeedsRedraw(true);
+			repaint();
+		});
 		
 		
 

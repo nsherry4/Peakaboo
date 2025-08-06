@@ -15,13 +15,7 @@ public abstract class SpectrumMapPainter extends MapPainter
 		super(colourRule);
 		this.data = data;
 	}
-	
-	protected SpectrumMapPainter(List<Palette> colourRules, Spectrum data)
-	{
-		super(colourRules);
-		this.data = data;
-	}
-	
+
 	public void setData(Spectrum data)
 	{
 		this.data = data;

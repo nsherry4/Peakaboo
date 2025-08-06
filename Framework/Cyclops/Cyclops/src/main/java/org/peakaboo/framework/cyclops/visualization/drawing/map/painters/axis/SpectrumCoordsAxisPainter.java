@@ -19,7 +19,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 {
 	private int							spectrumSteps;
-	private List<Palette>				colourRules;
+	private Palette						colourRule;
 	private boolean						negativeValues;
 	private List<Pair<Float, String>>	markings;
 	private int 						decimalPoints;
@@ -27,7 +27,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 	
 	public SpectrumCoordsAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<Palette> palettes,
+			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, Palette palette,
 			boolean realDimensionsProvided, boolean drawScaleBar)
 	{
 		super(
@@ -47,7 +47,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		this.negativeValues = false;
 		
 		this.spectrumSteps = spectrumSteps;
-		this.colourRules = palettes;
+		this.colourRule = palette;
 		
 		this.decimalPoints = 1;
 
@@ -56,7 +56,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	public SpectrumCoordsAxisPainter(boolean drawCoords, PaletteColour colour, Coord<Number> coordLoXLoY, Coord<Number> coordHiXLoY,
 			Coord<Number> coordLoXHiY, Coord<Number> coordHiXHiY, SISize coordinateUnits,
-			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, List<Palette> palettes,
+			boolean drawSpectrum, int spectrumHeight, int spectrumSteps, Palette palette,
 			boolean realDimensionsProvided, boolean drawScaleBar, int decimalPoints, boolean negativeValues, List<Pair<Float, String>> markings)
 	{
 		super(
@@ -76,7 +76,7 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 		this.negativeValues = negativeValues;
 
 		this.spectrumSteps = spectrumSteps;
-		this.colourRules = palettes;
+		this.colourRule = palette;
 		
 		this.decimalPoints = decimalPoints;
 		
@@ -173,23 +173,12 @@ public class SpectrumCoordsAxisPainter extends AbstractKeyCoordAxisPainter
 
 	}
 
-
-	public PaletteColour getColourFromRules(float intensity, float maximum, ViewTransform transform) {
-
-		PaletteColour c;
-
+	private PaletteColour getColourFromRules(float intensity, float maximum, ViewTransform transform) {
 		if (transform == ViewTransform.LOG) {
 			intensity = (float)Math.log1p(intensity);
 			maximum = (float)Math.log1p(maximum);
 		}
-		
-		for (Palette r : colourRules) {
-			c = r.getFillColour(intensity, maximum);
-			if (c != null) return c;
-		}
-
-		return new PaletteColour(0x00000000);
-
+		return colourRule.getFillColour(intensity, maximum);
 	}
 
 }

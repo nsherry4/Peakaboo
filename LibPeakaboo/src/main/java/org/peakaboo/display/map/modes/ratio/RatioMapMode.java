@@ -19,10 +19,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.Selecti
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
-import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
-import org.peakaboo.framework.cyclops.visualization.palette.Palette;
-import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.SaturationPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.*;
 
 public class RatioMapMode extends MapMode {
 
@@ -34,13 +31,10 @@ public class RatioMapMode extends MapMode {
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
 		
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
-		
-		List<Palette> paletteList = new ArrayList<>();
-		
+
 
 		Pair<Spectrum, Spectrum> ratiodata = ((RatioModeData)data.mapModeData).getData();
 		
@@ -63,9 +57,11 @@ public class RatioMapMode extends MapMode {
 		
 		
 		
-		//if this is a valid ratio, make a real colour palette -- otherwise, just a black palette
+		// if this is a valid ratio, make a real colour palette,
+		// otherwise, just a transparent black palette
+		Palette palette = new SingleColourPalette(new PaletteColour(0x00000000));
 		if (validRatio) {
-			paletteList.add(new RatioPalette(settings.gradient));
+			palette = new RatioPalette(Gradients.RATIO_THERMAL);
 		}
 		
 		
@@ -93,23 +89,21 @@ public class RatioMapMode extends MapMode {
 		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
-		axisPainters.add(super.getSpectrumPainter(settings, spectrumSteps, paletteList, true, spectrumMarkers));
+		axisPainters.add(super.getSpectrumPainter(settings, spectrumSteps, palette, true, spectrumMarkers));
 		map.setAxisPainters(axisPainters);
 		
 		
 		
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
-		map.setDrawingRequest(dr);
-
 
 		
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (ratioMapPainter == null) {
-			ratioMapPainter = MapTechniqueFactory.getTechnique(paletteList, ratiodata.first); 
+			ratioMapPainter = MapTechniqueFactory.getTechnique(palette, ratiodata.first);
 		} else {
 			ratioMapPainter.setData(ratiodata.first);
-			ratioMapPainter.setPalettes(paletteList);
+			ratioMapPainter.setPalette(palette);
 		}
 		mapPainters.add(ratioMapPainter);
 		

@@ -61,6 +61,9 @@ public abstract class AbstractGraphicsSurface implements Surface
 
 		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 
+		// In case we inherit from a graphics context with a non-standard font set.
+		graphics.setFont(new Font("Dialog", Font.PLAIN, 12));
+
 		saveStack = new Stack<>();
 
 		path = newPath();
@@ -284,7 +287,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	@Override
 	public void writeText(String text, float x, float y)
 	{
-		graphics.drawString(text, (int) x, (int) y);
+		graphics.drawString(text, x, y);
 	}
 
 
@@ -346,6 +349,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	{
 		Font f = graphics.getFont();
 		f = new Font(f.getName(), f.getStyle(), (int) (size));
+		f = f.deriveFont(size);
 		graphics.setFont(f);
 	}
 
@@ -364,8 +368,11 @@ public abstract class AbstractGraphicsSurface implements Surface
 	@Override
 	public void setFont(String name)
 	{
-		Font f = graphics.getFont();
-		graphics.setFont(new Font(name, f.getStyle(), f.getSize()));
+		Font current = graphics.getFont();
+		Font font = new Font(name, current.getStyle(), current.getSize());
+		// Important! Don't let the API round the font size to the nearest integer
+		font = font.deriveFont(current.getSize2D());
+		graphics.setFont(font);
 	}
 	
 	@Override
@@ -392,10 +399,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 	public void compose(Buffer buffer, int x, int y, float scale)
 	{
 		BufferedImage image = (BufferedImage) buffer.getImageSource();
-
-		graphics.drawImage(image, 0, 0, (int)(image.getWidth()*scale), (int)(image.getHeight()*scale), null);
-
-		
+		graphics.drawImage(image, x, y, (int)(image.getWidth()*scale), (int)(image.getHeight()*scale), null);
 	}
 	
 	

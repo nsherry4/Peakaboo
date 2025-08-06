@@ -34,15 +34,12 @@ public class CompositeMapMode extends MapMode{
 		CompositeModeData compositedata = (CompositeModeData) data.mapModeData;
 		
 		//clear surface	
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, size.x, size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
 		
 		Palette palette	= new ColourStopPalette(settings.gradient);
-		List<Palette> paletteList = new ArrayList<>();
-		
-				
+
 		dr.uninterpolatedWidth = settings.filteredDataWidth;
 		dr.uninterpolatedHeight = settings.filteredDataHeight;
 		dr.dataWidth = settings.filteredDataWidth;
@@ -61,7 +58,7 @@ public class CompositeMapMode extends MapMode{
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
 		
-		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, paletteList));
+		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, palette));
 		map.setAxisPainters(axisPainters);
 		
 		
@@ -69,14 +66,13 @@ public class CompositeMapMode extends MapMode{
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
 
-		paletteList.add(palette);
-		
+
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (contourMapPainter == null) {
-			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, compositedata.getData()); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(palette, compositedata.getData());
 		} else {
 			contourMapPainter.setData(compositedata.getData());
-			contourMapPainter.setPalettes(paletteList);
+			contourMapPainter.setPalette(palette);
 		}
 		mapPainters.add(contourMapPainter);
 		

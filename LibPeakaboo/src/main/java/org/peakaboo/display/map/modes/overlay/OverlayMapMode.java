@@ -42,7 +42,6 @@ public class OverlayMapMode extends MapMode {
 		
 		OverlayModeData overlayData = (OverlayModeData) data.mapModeData;
 		
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
@@ -127,7 +126,6 @@ public class OverlayMapMode extends MapMode {
 		axisPainters.add(getDescriptionPainter(settings));
 		axisPainters.add(spectrumCoordPainter);
 		map.setAxisPainters(axisPainters);
-		map.setDrawingRequest(dr);
 
 
 		

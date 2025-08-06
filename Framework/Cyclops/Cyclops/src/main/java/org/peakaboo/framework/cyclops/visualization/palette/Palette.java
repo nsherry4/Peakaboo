@@ -11,16 +11,27 @@ package org.peakaboo.framework.cyclops.visualization.palette;
 public interface Palette {
 
 	/**
-	 * Returns a PaletteColour if this palette defines a colour for the given intensity, or null if it does
-	 * not.
+	 * Returns a PaletteColour for the given intensity
 	 * 
 	 * @param intensity
 	 *            an intensity between 0 and maximum for a portion of the map
 	 * @param maximum
 	 *            the maximum intensity for this map
-	 * @return a PaletteColour, or null
+	 * @return a PaletteColour
 	 */
-	public PaletteColour getFillColour(double intensity, double maximum);
+	default PaletteColour getFillColour(double intensity, double maximum) {
+		return new PaletteColour(getARGBFillColour(intensity, maximum));
+	}
 
+	/**
+	 * Returns an ARGB int for the given intensity
+	 *
+	 * @param intensity
+	 *            an intensity between 0 and maximum for a portion of the map
+	 * @param maximum
+	 *            the maximum intensity for this map
+	 * @return an ARGB int
+	 */
+	public int getARGBFillColour(double intensity, double maximum);
 
 }
