@@ -41,9 +41,6 @@ public class CorrelationMapMode extends MapMode {
 		settings.drawCoord = false;
 		settings.physicalCoord = false;
 		
-		
-		//TODO: move this call to Mapper
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
@@ -59,8 +56,6 @@ public class CorrelationMapMode extends MapMode {
 		//why are we resetting this value?
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
-		
-		map.setDrawingRequest(dr);
 
 		Palette palette = new ColourStopPalette(settings.gradient);
 		

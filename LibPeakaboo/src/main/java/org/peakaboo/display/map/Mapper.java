@@ -17,8 +17,6 @@ import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
 
 public class Mapper {
 
-	
-	
 	private boolean invalidated;
 	private ManagedBuffer bufferer = new ManagedBuffer(Display.OVERSIZE);
 	private Coord<Integer> lastSize;
@@ -46,6 +44,11 @@ public class Mapper {
 			mapmode = modecache.get(settings.mode);
 		}
 		
+		// Update dimensions to sync DrawingRequest with current component size
+		// We must set this early so that when we calculate the horizontal offset
+		// required to centre the map in the view, we get the new, correct values
+		size = mapmode.setDimensions(settings, size);
+		
 		/*
 		 * Determine if we want to buffer the drawing or not. When memory is tight, we
 		 * take the performance hit to save space
@@ -67,8 +70,8 @@ public class Mapper {
 			// Apply horizontal centering transform
 			int offsetX = calculateHorizontalCenteringOffset(size);
 			context.save();
-			context.translate(offsetX, 0);
-			mapmode.draw(size, data, settings, context, spectrumSteps);
+				context.translate(offsetX, 0);
+				mapmode.draw(size, data, settings, context, spectrumSteps);
 			context.restore();
 		} else if (doBuffer) {
 
@@ -76,7 +79,7 @@ public class Mapper {
 			int currentOffsetX = calculateHorizontalCenteringOffset(size);
 			boolean offsetChanged = lastOffset == null || lastOffset.x != currentOffsetX;
 			boolean needsRedraw = buffer == null || lastSize == null || !lastSize.equals(size) || invalidated || offsetChanged;
-			
+
 			//if there is no cached buffer meeting our size requirements, create it and draw to it
 			if (needsRedraw) {
 				if (buffer == null) {
@@ -84,7 +87,7 @@ public class Mapper {
 				}
 				// Clear the buffer first to remove any old content
 				buffer.clear();
-				
+
 				// Draw map to buffer at original position
 				mapmode.draw(size, data, settings, buffer, spectrumSteps);
 				lastSize = new Coord<>(size);
@@ -93,22 +96,21 @@ public class Mapper {
 			}
 
 			context.save();
-
-			context.rectAt(0, 0, size.x, size.y);
-			context.clip();
-			// Compose buffer with horizontal centering offset applied
-			context.compose(buffer, currentOffsetX, 0, 1f);
-
+				context.rectAt(0, 0, size.x, size.y);
+				context.clip();
+				// Compose buffer with horizontal centering offset applied
+				context.compose(buffer, currentOffsetX, 0, 1f);
 			context.restore();
 
 		} else {
 			lastSize = null;
-			
+
 			// Apply horizontal centering transform
 			int offsetX = calculateHorizontalCenteringOffset(size);
+
 			context.save();
-			context.translate(offsetX, 0);
-			mapmode.draw(size, data, settings, context, spectrumSteps);
+				context.translate(offsetX, 0);
+				mapmode.draw(size, data, settings, context, spectrumSteps);
 			context.restore();
 		}
 

@@ -31,7 +31,6 @@ public class RatioMapMode extends MapMode {
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
 		
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
@@ -97,8 +96,6 @@ public class RatioMapMode extends MapMode {
 		
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
-		map.setDrawingRequest(dr);
-
 
 		
 		List<MapPainter> mapPainters = new ArrayList<>();

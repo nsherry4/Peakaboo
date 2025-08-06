@@ -34,7 +34,6 @@ public class CompositeMapMode extends MapMode{
 		CompositeModeData compositedata = (CompositeModeData) data.mapModeData;
 		
 		//clear surface	
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, size.x, size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
