@@ -61,6 +61,9 @@ public abstract class AbstractGraphicsSurface implements Surface
 
 		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 
+		// In case we inherit from a graphics context with a non-standard font set.
+		graphics.setFont(new Font("Dialog", Font.PLAIN, 12));
+
 		saveStack = new Stack<>();
 
 		path = newPath();
