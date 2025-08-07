@@ -70,7 +70,7 @@ public class Gradients {
 			"/org/peakaboo/framework/cyclops/visualization/palette/lipari.csv");
 
 
-	public static final Gradient DEFAULT = RAINBOW;
+	public static final Gradient DEFAULT = GOULDIAN;
 	
 	public static Optional<Gradient> forName(String colourPalette) {
 		var gs = List.of(MONOCHROME, INV_MONOCHROME, RAINBOW, GOULDIAN, REDHOT, NAVIA, CRANBERRY, AMBER, LIPARI);

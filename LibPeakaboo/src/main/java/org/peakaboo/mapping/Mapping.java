@@ -43,11 +43,11 @@ public class Mapping {
 	}
 
 	public static final List<Gradient> MAP_PALETTES = List.of(
-			Gradients.RAINBOW,
 			Gradients.GOULDIAN,
 			Gradients.LIPARI,
 			Gradients.NAVIA,
 			Gradients.REDHOT,
+			Gradients.RAINBOW,
 			Gradients.MONOCHROME,
 			Gradients.AMBER,
 			Gradients.CRANBERRY,
