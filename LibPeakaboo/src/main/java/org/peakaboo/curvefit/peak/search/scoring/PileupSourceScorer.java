@@ -42,7 +42,7 @@ public class PileupSourceScorer implements FittingScorer {
 		float smallPileupScore = 1f;
 		if (sourceScore != 0) {
 			smallPileupScore = 1f - (thisScore / sourceScore);
-			smallPileupScore = Math.max(1f, Math.min(0f, smallPileupScore));
+			smallPileupScore = Math.min(1f, Math.max(0f, smallPileupScore));
 		}
 		
 
