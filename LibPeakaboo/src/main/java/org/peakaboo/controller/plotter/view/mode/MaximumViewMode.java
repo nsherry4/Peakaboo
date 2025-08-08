@@ -9,18 +9,18 @@ public class MaximumViewMode implements ChannelViewMode {
 	public static final String UUID = "5daddb84-aa3f-46a6-af1c-f232d011f01d";
 	
 	@Override
-	public String shortName() {
-		return "Max";
-	}
-
-	@Override
-	public String longName() {
-		return "Max per Channel";
+	public String name() {
+		return "Maximum";
 	}
 
 	@Override
 	public String description() {
-		return "Maximum count per channel from all spectra";
+		return "Max channel values";
+	}
+
+	@Override
+	public String tooltip() {
+		return "A synthetic spectrum made from the per-channel maximum counts across all spectra";
 	}
 
 	@Override

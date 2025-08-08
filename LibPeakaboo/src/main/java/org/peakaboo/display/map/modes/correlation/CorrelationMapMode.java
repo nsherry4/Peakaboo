@@ -20,11 +20,10 @@ import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleA
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.RangeTickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickFormatter;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis.TickMarkAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.ColourStopPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.Spectrums;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.ColourListPalette;
 
 public class CorrelationMapMode extends MapMode {
 
@@ -42,9 +41,6 @@ public class CorrelationMapMode extends MapMode {
 		settings.drawCoord = false;
 		settings.physicalCoord = false;
 		
-		
-		//TODO: move this call to Mapper
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, (float)size.x, (float)size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
@@ -60,22 +56,15 @@ public class CorrelationMapMode extends MapMode {
 		//why are we resetting this value?
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
-		
-		map.setDrawingRequest(dr);
 
-		List<AbstractPalette> paletteList = new ArrayList<>();
-		if (settings.monochrome) {
-			paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.MONOCHROME_INVERTED.getPaletteData(), 1f, 1f), false));
-		} else {
-			paletteList.add(new ColourListPalette(Spectrums.generateSpectrum(spectrumSteps, Palette.GEORGIA.getPaletteData(), 1f, 1f), false));
-		}
+		Palette palette = new ColourStopPalette(settings.gradient);
 		
 		List<AxisPainter> axisPainters = new ArrayList<>();
 		super.setupTitleAxisPainters(settings, axisPainters);
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 
 		axisPainters.add(getDescriptionPainter(settings));
-		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, paletteList));
+		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, palette));
 		axisPainters.add(new PaddingAxisPainter(0, 0, 2, 0));
 		
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, new PaletteColour(0xff000000), correlationData.yAxisTitle, "", "", correlationData.xAxisTitle));
@@ -91,10 +80,10 @@ public class CorrelationMapMode extends MapMode {
 		
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (correlationMapPainter == null) {
-			correlationMapPainter = MapTechniqueFactory.getTechnique(paletteList, correlationData.data); 
+			correlationMapPainter = MapTechniqueFactory.getTechnique(palette, correlationData.data);
 		} else {
 			correlationMapPainter.setData(correlationData.data);
-			correlationMapPainter.setPalettes(paletteList);
+			correlationMapPainter.setPalette(palette);
 		}
 		mapPainters.add(correlationMapPainter);
 		

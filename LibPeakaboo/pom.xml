@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.peakaboo</groupId>
 		<artifactId>peakaboo</artifactId>
-		<version>6.0.1</version>
+		<version>6.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>libpeakaboo</artifactId>
 	<packaging>jar</packaging>
@@ -51,23 +51,6 @@
 			<version>4.1.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-math3</artifactId>
-			<version>3.6.1</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.4</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.15.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>scratch</artifactId>
 			<version>${project.version}</version>
@@ -83,18 +66,41 @@
 			<artifactId>univocity-parsers</artifactId>
 			<version>2.9.1</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.peakaboo.framework</groupId>
 			<artifactId>druthers</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
 		<!-- https://mvnrepository.com/artifact/ch.systemsx.cisd/sis-jhdf5-batteries_included -->
 		<dependency>
 			<groupId>cisd</groupId>
 			<artifactId>jhdf5</artifactId>
 			<version>19.04.1</version>
+		</dependency>
+
+		<!-- We pull in the latest commons-* so that various out of date references in other deps get replaced -->
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.18.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.6.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.5.0</version>
 		</dependency>
 
 	</dependencies>

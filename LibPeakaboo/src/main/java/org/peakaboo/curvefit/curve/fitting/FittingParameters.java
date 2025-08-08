@@ -13,7 +13,7 @@ public class FittingParameters implements FittingParametersView {
 	private float fwhmBase = 0.080f;
 	private EnergyCalibration calibration = new EnergyCalibration(0, 0, 0);
 	private DetectorMaterialType detectorMaterial = DetectorMaterialType.SILICON;
-	private PluginDescriptor<? extends FittingFunction> fittingFunction = FittingFunctionRegistry.system().getPreset();
+	private PluginDescriptor<FittingFunction> fittingFunction = FittingFunctionRegistry.system().getPreset();
 	private boolean showEscapePeaks = true;
 
 	FittingParameters(FittingSet fits) {
@@ -122,13 +122,13 @@ public class FittingParameters implements FittingParametersView {
 		invalidate();
 	}
 	
-	public void setFittingFunction(PluginDescriptor<? extends FittingFunction> proto) {
+	public void setFittingFunction(PluginDescriptor<FittingFunction> proto) {
 		this.fittingFunction = proto;
 		invalidate();
 	}
 
 	@Override
-	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<FittingFunction> getFittingFunction() {
 		return fittingFunction;
 	}
 

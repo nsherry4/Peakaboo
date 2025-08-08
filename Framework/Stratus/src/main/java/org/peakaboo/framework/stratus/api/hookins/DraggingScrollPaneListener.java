@@ -2,6 +2,8 @@ package org.peakaboo.framework.stratus.api.hookins;
 
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -11,6 +13,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public class DraggingScrollPaneListener implements MouseMotionListener, MouseListener {
 
@@ -28,6 +31,21 @@ public class DraggingScrollPaneListener implements MouseMotionListener, MouseLis
 	private JComponent		canvas;
 
 	private List<Buttons>	buttons;
+	
+	// Momentum-related fields
+	private long lastDragTime;
+	private double velocityX, velocityY;
+	private Timer momentumTimer;
+	// Velocity reduction per frame (15% decay)
+	private static final double MOMENTUM_DECAY = 0.85;
+	// Minimum velocity threshold to stop animation
+	private static final double MIN_VELOCITY = 1;
+	// Animation frame delay (~40 FPS)
+	private static final int MOMENTUM_TIMER_DELAY = 25;
+	// Velocity smoothing factor (higher = more smoothing)
+	private static final double VELOCITY_SMOOTHING = 0.7;
+	// Maximum time gap between samples before resetting velocity (ms)
+	private static final long MAX_VELOCITY_TIME_GAP = 100;
 	
 	
 	Cursor oldCursor;
@@ -73,6 +91,25 @@ public class DraggingScrollPaneListener implements MouseMotionListener, MouseLis
 		Point p1 = getPoint(e);
 		int dx = p1.x - p0.x;
 		int dy = p1.y - p0.y;
+		
+		// Calculate velocity for momentum with smoothing
+		long currentTime = System.currentTimeMillis();
+		if (lastDragTime > 0) {
+			long deltaTime = currentTime - lastDragTime;
+			if (deltaTime > 0 && deltaTime < MAX_VELOCITY_TIME_GAP) {
+				double newVelocityX = dx / (double) deltaTime * 1000; // pixels per second
+				double newVelocityY = dy / (double) deltaTime * 1000; // pixels per second
+				
+				// Smooth velocity using weighted average
+				velocityX = velocityX * VELOCITY_SMOOTHING + newVelocityX * (1 - VELOCITY_SMOOTHING);
+				velocityY = velocityY * VELOCITY_SMOOTHING + newVelocityY * (1 - VELOCITY_SMOOTHING);
+			} else if (deltaTime >= MAX_VELOCITY_TIME_GAP) {
+				// Reset velocity if too much time has passed
+				velocityX = 0;
+				velocityY = 0;
+			}
+		}
+		lastDragTime = currentTime;
 		
 		p0 = getPoint(e);
 		
@@ -145,9 +182,17 @@ public class DraggingScrollPaneListener implements MouseMotionListener, MouseLis
 		if (!buttonsMatch(e)) return;
 		if (dragging) return;
 		
+		// Stop any ongoing momentum animation
+		if (momentumTimer != null && momentumTimer.isRunning()) {
+			momentumTimer.stop();
+		}
+		
 		p0 = getPoint(e);
 		scrollPosition = viewPort.getViewPosition();
 		dragging = true;
+		lastDragTime = System.currentTimeMillis();
+		velocityX = 0;
+		velocityY = 0;
 		oldCursor = canvas.getCursor();
 		canvas.setCursor(new Cursor(Cursor.MOVE_CURSOR));
 	}
@@ -161,6 +206,11 @@ public class DraggingScrollPaneListener implements MouseMotionListener, MouseLis
 		dragging = false;
 		p0 = null;
 		canvas.setCursor(oldCursor);
+		
+		// Start momentum animation if velocity is significant
+		if (Math.abs(velocityX) > MIN_VELOCITY || Math.abs(velocityY) > MIN_VELOCITY) {
+			startMomentumAnimation();
+		}
 	}
 
 	private boolean buttonsMatch(MouseEvent e) {
@@ -168,6 +218,68 @@ public class DraggingScrollPaneListener implements MouseMotionListener, MouseLis
 		if (SwingUtilities.isMiddleMouseButton(e) && buttons.contains(Buttons.MIDDLE)) return true;
 		if (SwingUtilities.isRightMouseButton(e) && buttons.contains(Buttons.RIGHT)) return true;
 		return false;
+	}
+	
+	private void startMomentumAnimation() {
+		if (momentumTimer != null) {
+			momentumTimer.stop();
+		}
+		
+		momentumTimer = new Timer(MOMENTUM_TIMER_DELAY, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Apply momentum scrolling
+				Point currentPos = viewPort.getViewPosition();
+				int newX = currentPos.x;
+				int newY = currentPos.y;
+				
+				if (dragX && Math.abs(velocityX) > MIN_VELOCITY) {
+					newX -= (int) (velocityX * MOMENTUM_TIMER_DELAY / 1000.0);
+					velocityX *= MOMENTUM_DECAY;
+				}
+				
+				if (dragY && Math.abs(velocityY) > MIN_VELOCITY) {
+					newY -= (int) (velocityY * MOMENTUM_TIMER_DELAY / 1000.0);
+					velocityY *= MOMENTUM_DECAY;
+				}
+				
+				// Apply bounds checking similar to update() method
+				if (dragX) {
+					if (newX < 0) {
+						newX = 0;
+						velocityX = 0;
+					} else if (canvas.getWidth() <= viewPort.getWidth()) {
+						newX = 0;
+						velocityX = 0;
+					} else if (newX > canvas.getWidth() - viewPort.getWidth()) {
+						newX = canvas.getWidth() - viewPort.getWidth();
+						velocityX = 0;
+					}
+				}
+				
+				if (dragY) {
+					if (newY < 0) {
+						newY = 0;
+						velocityY = 0;
+					} else if (canvas.getHeight() <= viewPort.getHeight()) {
+						newY = 0;
+						velocityY = 0;
+					} else if (newY > canvas.getHeight() - viewPort.getHeight()) {
+						newY = canvas.getHeight() - viewPort.getHeight();
+						velocityY = 0;
+					}
+				}
+				
+				viewPort.setViewPosition(new Point(newX, newY));
+				
+				// Stop animation if velocity is too low
+				if (Math.abs(velocityX) <= MIN_VELOCITY && Math.abs(velocityY) <= MIN_VELOCITY) {
+					momentumTimer.stop();
+				}
+			}
+		});
+		
+		momentumTimer.start();
 	}
 	
 }

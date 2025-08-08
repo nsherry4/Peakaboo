@@ -54,6 +54,7 @@ import org.peakaboo.ui.swing.plotting.ExportPanel;
 public class MapperPanel extends TabbedLayerPanel {
 
 	private MapCanvas				canvas;
+	private JScrollPane 			canvasScroller;
 	
 	protected MappingController		controller;
 	protected TabbedInterface<TabbedLayerPanel> parentPlotter;
@@ -123,6 +124,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		canvas.addMouseMotionListener(movementListener);
 		canvas.addMouseMotionListener(selectionListener);
 		canvas.addMouseListener(selectionListener);
+		canvas.addMouseWheelListener(selectionListener);
 		
 
 		controller.addListener(t -> {
@@ -130,6 +132,14 @@ public class MapperPanel extends TabbedLayerPanel {
 				warnOnTooSmallDataset.hideBanner();
 			} else {
 				warnOnTooSmallDataset.showBanner();
+			}
+
+			if (controller.getSettings().getZoom() > 1f) {
+				canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+				canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			} else {
+				canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+				canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 			}
 
 			fullRedraw();
@@ -144,10 +154,11 @@ public class MapperPanel extends TabbedLayerPanel {
 
 	private JPanel createCanvasPanel() {
 		canvas = new MapCanvas(controller, true);
-		JScrollPane canvasScroller = new JScrollPane(canvas);
-		canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		canvasScroller = new JScrollPane(canvas);
+		canvasScroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		canvasScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		canvasScroller.setBorder(new EmptyBorder(0, 0, 0, 0));
+		canvasScroller.setWheelScrollingEnabled(false);
 		new DraggingScrollPaneListener(canvasScroller.getViewport(), canvas, Buttons.MIDDLE, Buttons.RIGHT);
 		
 		JPanel canvasContainer = new JPanel(new GridBagLayout());

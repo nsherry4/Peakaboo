@@ -3,16 +3,16 @@ package org.peakaboo.curvefit.peak.fitting;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction> implements PluginPreset<FittingFunction> {
+public class FittingFunctionRegistry extends PeakabooPluginRegistry<FittingFunction> implements PluginPreset<FittingFunction> {
 
 
 	private static FittingFunctionRegistry SYSTEM;
@@ -54,7 +54,7 @@ public class FittingFunctionRegistry extends BoltPluginRegistry<FittingFunction>
 		return "Fitting functions describe an ideal shape for a peak";
 	}
 	@Override
-	public PluginDescriptor<? extends FittingFunction> getPreset() {
+	public PluginDescriptor<FittingFunction> getPreset() {
 		return this.getByClass(PseudoVoigtFittingFunction.class).orElseThrow();
 	}
 	

@@ -2,6 +2,7 @@ package org.peakaboo.framework.bolt.plugin.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.logging.Level;
 
@@ -10,6 +11,7 @@ import org.peakaboo.framework.bolt.plugin.config.container.BoltConfigContainer;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
+import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltException;
 
 public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements PluginDescriptor<T> {
 
@@ -20,13 +22,20 @@ public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements P
 	private PluginRegistry<T> registry;
 	private int weight = PluginDescriptor.WEIGHT_MEDIUM;
 	
-	public BoltConfigPluginDescriptor(PluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container, int weight) {
+	public BoltConfigPluginDescriptor(PluginRegistry<T> registry, BoltConfigPluginBuilder<T> builder, Class<T> pluginClass, BoltConfigContainer<T> container, int weight) throws BoltException {
 		this.builder = builder;
 		this.pluginClass = pluginClass;
 		this.container = container;
 		this.registry = registry;
 		this.weight = weight;
-		this.reference = create();
+		
+		var creation = create();
+		if (creation.isPresent()) {
+			this.reference = creation.get();
+		} else {
+			throw new BoltException("Coult not create reference instance for plugin " + pluginClass.getName());
+		}
+		
 	}
 	
 	@Override
@@ -40,7 +49,7 @@ public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements P
 	}
 
 	@Override
-	public T create() {
+	public Optional<T> create() {
 		
 		try (InputStream stream = container.openStream()) {
 			
@@ -54,10 +63,10 @@ public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements P
 				throw new IOException("Could not read file contents");
 			}
 			s.close();
-			return plugin;
+			return Optional.of(plugin);
 		} catch (IOException e) {
-			Bolt.logger().log(Level.WARNING, "Could not create plugin instance: " + container.getSourceName(), e);
-			return null;
+			Bolt.logger().log(Level.FINE, "Could not create plugin instance: " + container.getSourceName(), e);
+			return Optional.empty();
 		}
 
 		

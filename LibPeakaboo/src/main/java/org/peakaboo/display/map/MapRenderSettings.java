@@ -1,10 +1,13 @@
 package org.peakaboo.display.map;
 
+import org.peakaboo.app.Settings;
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.display.map.modes.MapModeRegistry;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.SISize;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -22,7 +25,7 @@ public class MapRenderSettings {
 	public String mapTitle = "";
 	
 	public MapScaleMode scalemode = MapScaleMode.ABSOLUTE;
-	public boolean monochrome = false;
+	public Gradient gradient = Settings.getDefaultMapPalette();
 	public boolean darkmode = false;
 	public boolean contours = false;
 	public int contourSteps = 15;

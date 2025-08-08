@@ -85,11 +85,11 @@ public abstract class TSSelectorGroup extends JPanel implements Scrollable {
 	}
 	
 	
-	public final void resetSelectors(boolean active) {
+	public final void clearSelectors(boolean active) {
 		selectors.clear();
 		
 		for (int i = 0; i < minSelectors; i++) {
-			addTSSelector(active);	
+			addTSSelector(active);
 		}
 		
 

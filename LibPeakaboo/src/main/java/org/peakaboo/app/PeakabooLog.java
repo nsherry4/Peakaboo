@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.ConsoleHandler;
@@ -37,7 +38,7 @@ public class PeakabooLog {
 		// No setup required
 	}
 	
-	public synchronized static void init(File logDir) {
+	public static synchronized void init(File logDir) {
 		if (initted) {
 			return;
 		}
@@ -46,6 +47,7 @@ public class PeakabooLog {
 		Properties props = new Properties();
 		props.setProperty("java.util.logging.loglevel", getLevel().getName());
 		props.setProperty("java.util.logging.ConsoleHandler.level", getLevel().getName());
+		
 		ByteArrayOutputStream bos = new ByteArrayOutputStream(512);
 		try {
 			props.store(bos, "No Comment");
@@ -54,8 +56,7 @@ public class PeakabooLog {
 		} catch (IOException e1) {
 			get().log(Level.SEVERE, "Failed to configure logging", e1);
 		}
-		
-		
+			
 		//Set default behaviour for uncaught errors to here
 		Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e) -> {
 			get().log(Level.SEVERE, "Uncaught Exception", e);

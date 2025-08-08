@@ -7,7 +7,7 @@ import javax.swing.JComponent;
 
 public class ColourComponent extends JComponent {
 
-	public static final int DEFAULT_SIZE = 32;
+	public static final int DEFAULT_SIZE = 28;
 	protected int size = DEFAULT_SIZE;
 	protected Color colour = Color.BLACK;
 	

@@ -8,9 +8,9 @@ import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
  */
 public class BoltOldPluginIssue<T extends BoltPlugin> implements BoltPluginIssue<T> {
 
-	protected PluginDescriptor<? extends T> proto;
+	protected PluginDescriptor<T> proto;
 	
-	public BoltOldPluginIssue(PluginDescriptor<? extends T> proto) {
+	public BoltOldPluginIssue(PluginDescriptor<T> proto) {
 		this.proto = proto;
 	}
 	

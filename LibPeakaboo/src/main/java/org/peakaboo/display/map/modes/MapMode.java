@@ -14,8 +14,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.Selecti
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis.SpectrumCoordsAxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.TitleAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -98,7 +98,7 @@ public abstract class MapMode {
 		return selectionPainter;
 	}
 	
-	protected static SpectrumCoordsAxisPainter getSpectrumPainter(MapRenderSettings settings, int spectrumSteps, List<AbstractPalette> paletteList) {
+	protected static SpectrumCoordsAxisPainter getSpectrumPainter(MapRenderSettings settings, int spectrumSteps, Palette palette) {
 		return new SpectrumCoordsAxisPainter (
 
 				settings.drawCoord,
@@ -112,7 +112,7 @@ public abstract class MapMode {
 				settings.showSpectrum,
 				settings.spectrumHeight,
 				spectrumSteps,
-				paletteList,
+				palette,
 
 				settings.physicalCoord,
 				settings.showScaleBar
@@ -122,7 +122,7 @@ public abstract class MapMode {
 	protected SpectrumCoordsAxisPainter getSpectrumPainter(
 			MapRenderSettings settings, 
 			int spectrumSteps, 
-			List<AbstractPalette> paletteList, 
+			Palette palette,
 			boolean hasNegatives, 
 			List<Pair<Float, String>> spectrumMarkers
 		) {
@@ -139,7 +139,7 @@ public abstract class MapMode {
 			settings.showSpectrum,
 			settings.spectrumHeight,
 			spectrumSteps,
-			paletteList,
+			palette,
 
 			settings.physicalCoord,
 			settings.showScaleBar,

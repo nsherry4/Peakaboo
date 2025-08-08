@@ -2,8 +2,7 @@ package org.peakaboo.ui.swing.plotting;
 
 
 
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -21,11 +20,13 @@ import javax.swing.SwingUtilities;
 
 import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
+import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.cyclops.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
@@ -34,6 +35,7 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
+import org.peakaboo.ui.swing.plugins.PluginPanel;
 
 
 
@@ -127,7 +129,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			onSingleClickCallback.accept(channel, mouseCoords);
 		} else {
 			ITransitionSeries bestFit = controller.fitting().selectTransitionSeriesAtChannel(channel);
-	        controller.fitting().clearProposedTransitionSeries();
+			
 	        controller.fitting().setHighlightedTransitionSeries(Collections.emptyList());
 	        if (bestFit != null) {
 	            controller.fitting().setHighlightedTransitionSeries(Collections.singletonList(bestFit));
@@ -177,18 +179,16 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			@Override
 			public void urlsDropped(URL[] urls) {
+				PeakabooLog.get().log(Level.INFO, "Received dropped URLs: " + Arrays.toString(urls));
 				PlotCanvas.this.urlsDropped(urls);
 			}
 			
 			@Override
 			public void filesDropped(File[] files) {
-				PlotCanvas.this.filesDropped(files);
+				PeakabooLog.get().log(Level.INFO, "Received dropped Files: " + Arrays.toString(files));
+				PlotCanvas.this.filesDropped(List.of(files));
 			}
 		};
-	}
-	
-	void filesDropped(File[] files) {
-		plotPanel.load(Arrays.asList(files).stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
 	}
 	
 	void urlsDropped(URL[] urls) {
@@ -196,7 +196,8 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
 				if (!optfiles.isPresent()) { return; }
-				plotPanel.load(optfiles.get().stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
+				PeakabooLog.get().log(Level.INFO, "Downloaded URLs to files: " + optfiles.get().toString());
+				filesDropped(optfiles.get());
 			});
 
 			TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
@@ -206,6 +207,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		}
 	}
 	
+
+	void filesDropped(List<File> files) {
+		plotPanel.load(files.stream().map(PathDataInputAdapter::new).collect(Collectors.toList()));
+	}
 
 
 
@@ -243,7 +248,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		float zoom = controller.view().getZoom();
 
 		//Transform zoom
-		// UI zoom is from 0.1 to 10
+		// UI zoom range is defined by ViewController constants
 		/**
 		 * We want most of the control for the zoom to be around normal zoom levels, so
 		 * we re-center the zoom value from -1 to 1 and apply an exponential function to
@@ -253,10 +258,10 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 		 * zooming out and so we mirror the curve for zooming in 
 		 */
 		
-		//convert to 0 - 9.9
-		zoom -= 0.1f;
+		//convert to 0 - (ZOOM_MAX - ZOOM_MIN)
+		zoom -= ViewController.ZOOM_MIN;
 		//convert to 0 - 1
-		zoom /= 9.9f;
+		zoom /= (ViewController.ZOOM_MAX - ViewController.ZOOM_MIN);
 		//convert to -1 to 1
 		zoom = (zoom * 2f) - 1f;
 		boolean invert = zoom < 0;
@@ -452,6 +457,15 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	
 	public void setNeedsRedraw() {
 		plotter.invalidate();
+	}
+	
+	/**
+	 * Gets the background color currently used by the plot
+	 */
+	public Color getPlotBackgroundColor() {
+		PlotSettings settings = controller.view().getPlotSettings();
+		PaletteColour plotBg = plotter.getPlotBackground(settings);
+		return new java.awt.Color(plotBg.getARGB(), true);
 	}
 
 

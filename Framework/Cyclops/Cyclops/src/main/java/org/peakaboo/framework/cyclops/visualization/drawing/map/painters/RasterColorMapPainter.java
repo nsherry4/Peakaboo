@@ -11,7 +11,7 @@ import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.SingleColourPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.SingleColourPalette;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -144,27 +144,37 @@ public class RasterColorMapPainter extends MapPainter
 			 */
 			
 			//We have to accommodate interpolated and uninterpolated data here
-			GridPerspective<Float> grid;
 			int height = 0;
+			int width = 0;
 			if (list.size() == dr.dataHeight * dr.dataWidth) {
-				grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
+				width = dr.dataWidth;
 				height = dr.dataHeight;
 			} else if (list.size() == dr.uninterpolatedWidth * dr.uninterpolatedHeight) {
-				grid = new GridPerspective<>(dr.uninterpolatedWidth, dr.uninterpolatedHeight, 0f);
+				width = dr.uninterpolatedWidth;
 				height = dr.uninterpolatedHeight;
 			} else {
 				CyclopsLog.get().log(Level.WARNING, "List has wrong dimensions");
-				grid = new GridPerspective<>(dr.dataWidth, dr.dataHeight, 0f);
+				width = dr.dataWidth;
+				height = dr.dataHeight;
 			}
-			
-			for (int i = 0; i < flip.size(); i++) {
-				IntPair xy = grid.getXYFromIndex(i);
-				int x = xy.first;
-				int y = xy.second;
-				y = (height-1) - y;
-				int index = grid.getIndexFromXY(x, y);
-				if (index == -1) continue;
+
+
+			int x = 0;
+			int y = 0;
+			int length = flip.size();
+			for (int i = 0; i < length; i++) {
+				// Index with vertical flip: y * width + x but with a flipped y value
+				int index = ((height-1) - y) * width + x;
+
+				// Copy the value to a new index
 				flip.set(index, list.getInt(i));
+
+				// Increment the x and y counters to avoid division and modulo
+				if (++x == width) {
+					x = 0;
+					y++;
+				}
+
 			}
 		}		
 		

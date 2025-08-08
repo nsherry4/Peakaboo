@@ -1,5 +1,8 @@
 package org.peakaboo.controller.mapper.settings;
 
+import org.peakaboo.app.Settings;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
+
 public class SavedMapSettingsController {
 
 	public boolean	drawCoordinates		= true;
@@ -10,7 +13,7 @@ public class SavedMapSettingsController {
 	
 	public int		spectrumSteps		= 15;
 	public boolean	contour				= false;
-	public boolean	monochrome			= false;
+	public String   colourPalette       = "";
 
 	public void loadInto(MapSettingsController controller) {
 		controller.setShowCoords(drawCoordinates);
@@ -20,7 +23,8 @@ public class SavedMapSettingsController {
 		controller.setShowDatasetTitle(drawDataSetTitle);
 		controller.setSpectrumSteps(spectrumSteps);
 		controller.setContours(contour);
-		controller.setMonochrome(monochrome);
+		controller.setColourGradient(Gradients.forName(colourPalette).orElse(Settings.getDefaultMapPalette()));
+		
 	}
 	
 	public SavedMapSettingsController storeFrom(MapSettingsController controller) {
@@ -32,7 +36,7 @@ public class SavedMapSettingsController {
 		drawDataSetTitle = controller.getShowDatasetTitle();
 		spectrumSteps = controller.getSpectrumSteps();
 		contour = controller.getContours();
-		monochrome = controller.getMonochrome();
+		colourPalette = controller.getColourGradient().getName();
 		
 		return this;
 	}

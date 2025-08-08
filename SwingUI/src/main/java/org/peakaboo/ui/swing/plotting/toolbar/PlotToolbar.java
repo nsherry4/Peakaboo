@@ -23,6 +23,7 @@ import org.peakaboo.tier.TierUIAction;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 import org.peakaboo.ui.swing.app.TierWidgetFactory;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plugins.browser.PluginRepositoryBrowser;
 
 public class PlotToolbar extends JToolBar {
 
@@ -33,7 +34,7 @@ public class PlotToolbar extends JToolBar {
 	private FluentToolbarButton saveButton;
 	private FluentToolbarButton toolbarMap;
 	private FluentToolbarButton toolbarInfo;
-	private FluentToolbarButton energyMenuButton, viewMenuButton, settingsMenuButton;
+	private FluentToolbarButton energyMenuButton, viewMenuButton, settingsMenuButton, pluginsMenuButton;
 
 	
 	private PlotMenuEnergy energyMenu;
@@ -135,15 +136,17 @@ public class PlotToolbar extends JToolBar {
 		settingsMenuButton = createSettingsMenuButton();
 		this.add(settingsMenuButton, c);
 		
-		
-		c.gridx += 1;
-		this.add(new JToolBar.Separator( null ), c);
+		c.gridx++;
+		pluginsMenuButton = createPluginsMenuButton();
+		this.add(pluginsMenuButton, c);
 		
 		c.gridx++;
 		this.add(createMainMenuButton(), c);
 		
 	}
 	
+
+
 	public void setWidgetState(boolean hasData) {
 		
 		toolbarInfo.setEnabled(hasData);
@@ -180,6 +183,21 @@ public class PlotToolbar extends JToolBar {
 		}
 		
 		
+		var pluginsRepo = Tier.provider().getPluginRepositories();
+		boolean hasPluginNotifications = pluginsRepo.listAvailablePlugins()
+				.stream()
+				.map(PluginRepositoryBrowser::hasNotification)
+				.anyMatch(b -> b);
+		
+		if (hasPluginNotifications) {
+			pluginsMenuButton.withNotificationDot(NotificationDotState.EVENT);
+			pluginsMenuButton.withBordered(BorderStyle.ALWAYS);
+		} else {
+			pluginsMenuButton.withNotificationDot(NotificationDotState.OFF);
+			pluginsMenuButton.withBordered(BorderStyle.ACTIVE);
+		}
+		
+		
 	}
 	
 	private FluentToolbarButton createExportMenuButton() {
@@ -204,7 +222,7 @@ public class PlotToolbar extends JToolBar {
 		mainMenu = new PlotMenuMain(plot, controller);
 		var colour = Stratus.getTheme().getControlText();
 		return new FluentToolbarButton()
-				.withIcon(StockIcon.MENU_MAIN, colour)
+				.withIcon(PeakabooIcons.MENU_MAIN, colour)
 				.withTooltip("Main Menu")
 				.withPopupMenuAction(mainMenu, true);
 	}
@@ -227,6 +245,14 @@ public class PlotToolbar extends JToolBar {
 				.withAction(() -> plot.actionShowAdvancedOptions());
 	}
 	
+	
+	private FluentToolbarButton createPluginsMenuButton() {
+		var colour = Stratus.getTheme().getControlText();
+		return new FluentToolbarButton()
+				.withIcon(PeakabooIcons.MENU_PLUGIN, colour)
+				.withTooltip("Plugins")
+				.withAction(() -> plot.actionShowPlugins());
+	}
 	
 
 	

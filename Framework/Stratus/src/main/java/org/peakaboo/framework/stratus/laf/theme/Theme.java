@@ -1,8 +1,13 @@
 package org.peakaboo.framework.stratus.laf.theme;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.peakaboo.framework.stratus.api.ColourPalette;
+import org.peakaboo.framework.stratus.api.Spacing;
 
 public interface Theme {
 
@@ -38,6 +43,24 @@ public interface Theme {
 	Color getShadow();
 	
 	ColourPalette getPalette();
+	Color getAccent(Accent accent);
+	
+	Font getMonospaceFont();
+	
+	default Map<Accent, Color> getAccents() {
+		var map = new LinkedHashMap<Accent, Color>();
+		Arrays.stream(Accent.values()).forEach(accent -> map.put(accent, getAccent(accent)));
+		return map; 
+	}
+	
+	default String getColourAccentName(Color color) {
+		return getAccents().entrySet().stream()
+				.filter(entry -> entry.getValue().equals(color))
+				.map(Map.Entry::getKey)
+				.map(Accent::toString)
+				.findFirst()
+				.orElse("Unknown");
+	}
 	
 	/**
 	 * Colour for control components representing negative space around widgets (eg
@@ -76,7 +99,7 @@ public interface Theme {
 	 * Radius of various rounded corners for widgets
 	 */
 	default float borderRadius() {
-		return 5f;
+		return Spacing.medium;
 	}
 	
 	default float selectionStrength() {
@@ -91,7 +114,27 @@ public interface Theme {
 		return 1;
 	}
 	
-	 
+
+	public enum Accent {
+		RED, ORANGE, YELLOW, GREEN, TEAL, BLUE, PURPLE, PINK, GREY;
+		
+		// Name with capitalized first letter
+		@Override
+		public String toString() {
+			var name = this.name().toLowerCase();
+			name = name.substring(0, 1).toUpperCase() + name.substring(1);
+			return name;
+		}
+		
+		// Safe version of valueOf which handles capitalization and fallback value
+		public static Accent forName(String accentName) {
+			try {
+				return Accent.valueOf(accentName.toUpperCase());
+			} catch (IllegalArgumentException e) {
+				return Accent.BLUE;
+			}
+		}
+	}
 	
 	
 	

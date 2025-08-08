@@ -25,15 +25,18 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 		this.targetClass = targetClass;
 		this.plugins = new BoltPluginSet<>(manager);
 		this.manager = manager;
+		if (this.manager == null) {
+			throw new RuntimeException("Plugin registry cannot be null");
+		}
 	}
 
 	@Override
-	public List<PluginDescriptor<? extends T>> getPlugins() {
+	public List<PluginDescriptor<T>> getPlugins() {
 		return plugins.getPlugins();
 	}
 
 	@Override
-	public List<BoltIssue<? extends T>> getIssues() {
+	public List<BoltIssue<T>> getIssues() {
 		return plugins.getIssues();
 	}
 

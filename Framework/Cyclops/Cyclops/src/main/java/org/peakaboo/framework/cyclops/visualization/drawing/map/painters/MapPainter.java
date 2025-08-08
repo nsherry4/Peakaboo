@@ -13,8 +13,8 @@ import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.Painter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
 
 /**
  * 
@@ -29,53 +29,29 @@ public abstract class MapPainter extends Painter
 {
 
 	
-	protected List<AbstractPalette>	colourRules;
+	protected Palette colourRule;
 
-
-	protected MapPainter(List<AbstractPalette> colourRules)
-	{
-		this.colourRules = colourRules;
+	protected MapPainter(Palette colourRule) {
+		this.colourRule = colourRule;
 	}
-	
-	protected MapPainter(AbstractPalette colourRule)
-	{
-		List<AbstractPalette> rules = new ArrayList<>();
-		rules.add(colourRule);
-		this.colourRules = rules;
-	}
-
 
 	@Override
-	protected float getBaseUnitSize(org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest dr)
-	{
-		// TODO Auto-generated method stub
+	protected float getBaseUnitSize(org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest dr) {
 		return 1;
 	}
-	
-	public PaletteColour getColourFromRules(double intensity, double maximum)
-	{
 
-		PaletteColour c;
-		
-		for (AbstractPalette r : colourRules) {
-			c = r.getFillColour(intensity, maximum);
-			if (c != null) return c;
-		}
+	public PaletteColour getColourFromRules(double intensity, double maximum) {
+		return colourRule.getFillColour(intensity, maximum);
+	}
 
-		return new PaletteColour(0x00000000);
+	public int getARGBColourFromRules(double intensity, double maximum) {
+		return colourRule.getARGBFillColour(intensity, maximum);
+	}
 
+	public void setPalette(Palette palette) {
+		colourRule = palette;
 	}
-	
-	public void setPalette(AbstractPalette palette)
-	{
-		colourRules.clear();
-		colourRules.add(palette);
-	}
-	public void setPalettes(List<AbstractPalette> palettes)
-	{
-		colourRules.clear();
-		colourRules.addAll(palettes);
-	}
+
 
 
 	

@@ -9,7 +9,7 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 
 
-public interface ScanData extends Iterable<SpectrumView> {
+public interface ScanData extends Iterable<SpectrumView>, AutoCloseable {
 	
 	/**
 	 * Retrieves the values from the scan at the given index

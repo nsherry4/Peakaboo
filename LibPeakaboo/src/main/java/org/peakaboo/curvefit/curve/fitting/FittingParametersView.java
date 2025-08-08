@@ -37,7 +37,7 @@ public interface FittingParametersView {
 
 	DetectorMaterialType getDetectorMaterial();
 
-	PluginDescriptor<? extends FittingFunction> getFittingFunction();
+	PluginDescriptor<FittingFunction> getFittingFunction();
 
 	boolean getShowEscapePeaks();
 
@@ -53,10 +53,14 @@ public interface FittingParametersView {
 	}
 	
 	public static FittingFunction buildFunction(FittingParametersView params, FittingContext context) {
-		FittingFunction function = params.getFittingFunction().create();
-		if (function == null) {
+		FittingFunction function;
+		
+		var created = params.getFittingFunction().create();
+		if (created.isPresent()) {
+			function = created.get();
+		} else {
 			PeakabooLog.get().log(Level.SEVERE, "Failed to create fitting function, using default");
-			function = FittingFunctionRegistry.system().getPresetInstance();
+			function = FittingFunctionRegistry.system().getPresetInstance();		
 		}
 		function.initialize(context);
 		return function;

@@ -25,6 +25,7 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 	private Component component;
 	private long lastTime;
 	private Optional<Layer> lastBlocker;
+	private boolean topFade;
 	
 	public LayerBlurUI(LayerPanel parent, Component component) {
 		this.parent = parent;
@@ -32,8 +33,17 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 		mOperation = new StackBlurFilter(2, 2);
 		paintBufferer = new ManagedImageBuffer();
 		blurBufferer = new ManagedImageBuffer();
+		this.topFade = false;
 	}
 
+	public void setTopFade(boolean topFade) {
+		this.topFade = topFade;
+	}
+	
+	public boolean isTopFade() {
+		return topFade;
+	}
+	
 	@Override
 	public void paint(Graphics g, JComponent c) {
 		Layer layer = parent.layerForComponent(this.component);
@@ -105,7 +115,17 @@ class LayerBlurUI<T extends Component> extends LayerUI<T> {
 				//Then darken the background
 				bg.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
 				bg.setColor(Color.BLACK);
-				bg.fillRect(0, 0, c.getWidth(), c.getHeight());
+				final int GRADIENT_HEIGHT = 3;
+
+				if (!topFade) {
+					bg.fillRect(0, 0, c.getWidth(), c.getHeight());
+				} else {
+					// If we are fading from the top 16 pixels, we need to draw a gradient
+					// with a GradientPaint
+					bg.setPaint(new java.awt.GradientPaint(0, 0, new Color(0, 0, 0, 0), 0, GRADIENT_HEIGHT, new Color(0, 0, 0, 255)));
+					bg.fillRect(0, 0, c.getWidth(), GRADIENT_HEIGHT);
+					bg.fillRect(0, GRADIENT_HEIGHT, c.getWidth(), c.getHeight());
+				}
 				
 				//Mark this buffer as freshly painted
 				bg.dispose();

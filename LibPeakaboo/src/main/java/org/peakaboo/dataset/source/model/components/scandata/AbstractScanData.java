@@ -57,5 +57,10 @@ public abstract class AbstractScanData implements ScanData {
 	public String datasetName() {
 		return name;
 	}
-	
+
+	@Override
+	public void close() throws Exception {
+		spectra.close();
+	}
+
 }

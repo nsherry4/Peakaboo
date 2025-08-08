@@ -1,26 +1,29 @@
 package org.peakaboo.framework.stratus.laf.theme;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import org.peakaboo.framework.stratus.api.ColourPalette;
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.palettes.BrightPalette;
 
 public class BrightTheme implements Theme {
 
 	protected static final ColourPalette PALETTE = new BrightPalette();
+	protected Accent accent;
 	
 	protected Color highlight = PALETTE.getColour("Blue", "3");
 	protected Color highlightText = PALETTE.getColour("Light", "1");
 	
-	protected Color control = new Color(0xfafafa);
+	protected Color control = new Color(0xfbfbfb);
 	protected Color controlText = PALETTE.getColour("Dark", "3");
 	protected Color controlTextDisabled = PALETTE.getColour("Light", "5");
 	protected Color negative = new Color(0xebebeb);
 	protected Color border = new Color(0xdadada);
 	
-	protected Color widget = new Color(0xe6e6e6);
-	protected Color widgetAlpha = new Color(0x13000000, true);
+	protected Color widget = new Color(0xebebeb);
+	protected Color widgetAlpha = new Color(0x12000000, true);
 	protected Color widgetBevel = widget;
 	
 	protected Color selectionAlpha = new Color(0x3f498ed8, true);
@@ -37,10 +40,43 @@ public class BrightTheme implements Theme {
 	protected Color scrollHandle = StratusColour.darken(getWidgetBorder(), 0.1f);
 	
 	
+	public BrightTheme() {
+		this(Accent.BLUE);
+	}
+	
+	public BrightTheme(String accentName) {
+		this(Accent.forName(accentName));
+	}
+	
+	public BrightTheme(Accent accent) {
+		this.accent = accent;
+		this.highlight = getAccent(accent);
+	}
+	
 	@Override
 	public ColourPalette getPalette() {
 		return PALETTE;
 	}
+	
+	@Override
+	public Color getAccent(Accent accent) {
+			
+		return switch (accent) {
+			case BLUE -> new Color(0x5080df);
+			case GREEN -> new Color(0x4c8e4b);
+			case GREY -> new Color(0x728194);
+			case ORANGE -> new Color(0xdc6823);
+			case PINK -> new Color(0xc76996);
+			case PURPLE -> new Color(0x8e47ab);
+			case RED -> new Color(0xd64848);
+			case TEAL -> new Color(0x3e8889);
+			case YELLOW -> new Color(0xbd8b25);
+			
+			default -> getAccent(Accent.BLUE);
+		};
+		
+	}
+	
 	
 	@Override
 	public Color getHighlight() {
@@ -153,7 +189,7 @@ public class BrightTheme implements Theme {
 	
 	@Override
 	public float borderRadius() {
-		return 12f;
+		return Spacing.huge;
 	}
 	
 	@Override
@@ -164,5 +200,10 @@ public class BrightTheme implements Theme {
 	@Override
 	public int widgetMargins() {
 		return 0;
+	}
+
+	@Override
+	public Font getMonospaceFont() {
+		return new Font("JetBrains Mono Medium", Font.PLAIN, 11);
 	}
 }

@@ -10,9 +10,9 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 public interface ChannelViewMode extends BoltJavaPlugin {
 
-	String shortName();
-	String longName();
+	String name();
 	String description();
+	String tooltip();
 	
 	SpectrumView primaryScan(DataController data, ViewController view);
 	default Map<String, SpectrumView> otherScans(DataController data, ViewController view) {
@@ -20,11 +20,11 @@ public interface ChannelViewMode extends BoltJavaPlugin {
 	}
 	
 	default String pluginName() {
-		return longName();
+		return name();
 	}
 	
 	default String pluginDescription() {
-		return description();
+		return tooltip();
 	}
 	
 }

@@ -12,6 +12,7 @@ import org.peakaboo.controller.plotter.view.mode.SingleViewMode;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig.BorderStyle;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 
 public class PlotScanNumber extends ClearPanel {
@@ -33,12 +34,10 @@ public class PlotScanNumber extends ClearPanel {
 		scanLabel.setBorder(Spacing.bSmall());
 		scanBlock = new FluentToggleButton(StockIcon.CHOOSE_CANCEL)
 				.withTooltip("Flag this scan to exclude it and extrapolate it from neighbouring points in maps")
+				.withBordered(BorderStyle.ACTIVE)
 				.withAction(selected -> {
-					if (selected) {
-						controller.data().getDiscards().discard(controller.view().getScanNumber());
-					} else {
-						controller.data().getDiscards().undiscard(controller.view().getScanNumber());
-					}
+					int scanNumber = controller.view().getScanNumber();
+					controller.data().getDiscards().setDiscarded(scanNumber, selected);
 				});
 		
 		this.add(scanLabel);
@@ -66,15 +65,15 @@ public class PlotScanNumber extends ClearPanel {
 			if (controller.view().getChannelViewMode().equals(new SingleViewMode())) {
 				scanNo.setValue(controller.view().getScanNumber() + 1);
 				scanBlock.setSelected(controller.data().getDiscards().isDiscarded(controller.view().getScanNumber()));
-				this.setEnabled(true);
+				this.setVisible(true);
 				/*
 				 * currently bad scans are tracked by their order in a list of good scans, but
 				 * this makes it difficult to link a scan index to the right point in a map when
 				 * it comes time for interpolation.
 				 */
-				scanBlock.setEnabled(controller.data().getDataSet().getDataSource().isRectangular());
+				scanBlock.setVisible(controller.data().getDataSet().getDataSource().isRectangular());
 			} else {
-				this.setEnabled(false);
+				this.setVisible(false);
 			}
 
 		}

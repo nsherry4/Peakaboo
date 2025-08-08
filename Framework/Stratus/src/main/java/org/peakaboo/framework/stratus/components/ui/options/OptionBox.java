@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusColour;
 
 /**
@@ -71,11 +72,13 @@ public class OptionBox extends OptionComponent {
 	@Override
 	public void paintBackground(Graphics2D g) {
 	
+		Color highlight = new Color(0x0A000000, true);
+		
 		if (block == null) {
 			g.setColor(bg);
 			g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			if (hover && isEnabled()) {
-				g.setColor(new Color(0x08000000, true));
+				g.setColor(highlight);
 				g.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 0, 0);
 			}
 			g.setColor(borderAlpha);
@@ -114,7 +117,7 @@ public class OptionBox extends OptionComponent {
 					area.add(new Area(outline));
 				}
 				
-				g.setColor(new Color(0x08000000, true));
+				g.setColor(highlight);
 				g.fill(area);
 			}
 			

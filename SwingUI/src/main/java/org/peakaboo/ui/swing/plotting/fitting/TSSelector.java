@@ -49,13 +49,14 @@ public class TSSelector extends JPanel implements IEventfulBeacon {
 	public TSSelector() {
 		listenee = new EventfulBeacon();
 		setLayout(new BorderLayout());
-
+		setOpaque(false);
+		
 		tsCombo = new JComboBox<>();
 		
 		tsLabel = new JLabel();
 		tsLabel.setPreferredSize(tsCombo.getPreferredSize());
 		tsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
+		tsLabel.setOpaque(false);
 		
 		tsComboListener = e -> {
 			updateLabelText();
@@ -75,14 +76,14 @@ public class TSSelector extends JPanel implements IEventfulBeacon {
 		tsCombo.removeActionListener(tsComboListener);
 		tsCombo.removeAllItems();
 				
-		if (tss == null) return;
+		if (tss != null) {
+			for (ITransitionSeries ts : tss) { tsCombo.addItem(ts); }
+			if (!tss.isEmpty()) tsCombo.setSelectedIndex(0);
+			
+			updateLabelText();
+			tsCombo.addActionListener(tsComboListener);
+		}
 		
-		for (ITransitionSeries ts : tss) { tsCombo.addItem(ts); }
-		if (!tss.isEmpty()) tsCombo.setSelectedIndex(0);
-		
-		updateLabelText();
-		
-		tsCombo.addActionListener(tsComboListener);
 		updateListeners();
 		
 	}

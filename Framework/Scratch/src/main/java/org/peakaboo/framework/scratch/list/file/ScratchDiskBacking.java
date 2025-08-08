@@ -5,17 +5,19 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
-class ScratchDiskBacking {
+class ScratchDiskBacking implements AutoCloseable {
 
 	//stores the locations of all entries as offset/length pairs
 	private List<LongRange> elementPositions;
 	private LongRangeSet discardedRanges;
 	
 	private File file;
-	private RandomAccessFile raf;
+	private RandomAccessFile writeRaf; // Single RAF for writes
+	private final ConcurrentLinkedQueue<RandomAccessFile> readRafPool = new ConcurrentLinkedQueue<>();
+	private volatile boolean closing = false;
 		
 	
 	/**
@@ -28,7 +30,12 @@ class ScratchDiskBacking {
 		file.deleteOnExit();
 		elementPositions = new ArrayList<LongRange>();
 		discardedRanges = new LongRangeSet();
-		raf = new RandomAccessFile(file, "rw");
+		writeRaf = new RandomAccessFile(file, "rw");
+		
+		// Pre-populate pool with a few read handles
+		for (int i = 0; i < 4; i++) {
+			readRafPool.offer(new RandomAccessFile(file, "r"));
+		}
 	}
 
 	
@@ -38,26 +45,16 @@ class ScratchDiskBacking {
 
 		try {
 			
-			long currentLength = raf.length();
-			long writePosition = currentLength;
+			long writePosition = writeRaf.length();
 					
-			List<LongRange> bigRanges = discardedRanges.getRanges().stream().filter(r -> r.size() >= data.length).collect(Collectors.toList());			
-			
-						
-			bigRanges.sort((o1, o2) -> {
-				Long s1 = o1.size();
-				Long s2 = o2.size();
-				return s2.compareTo(s1);
-			});
-			
-			
-			if (bigRanges.size() != 0)
-			{
-				writePosition = bigRanges.get(0).getStart();
+			// Try to find a suitable discarded range
+			LongRange suitableRange = findDiscardedRange(data.length);
+			if (suitableRange != null) {
+				writePosition = suitableRange.getStart();
 			}
 			
-			raf.seek(writePosition);
-			raf.write(data);
+			writeRaf.seek(writePosition);
+			writeRaf.write(data);
 			
 			if (index >= elementPositions.size())
 			{
@@ -80,7 +77,7 @@ class ScratchDiskBacking {
 	}
 	
 		
-	public synchronized void add(int index, byte[] element)
+	public void add(int index, byte[] element)
 	{		
 		addEntry(index, element);
 	}
@@ -91,14 +88,74 @@ class ScratchDiskBacking {
 		elementPositions.clear();
 		discardedRanges.clear();
 		try {
-			raf.seek(0);
+			writeRaf.seek(0);
 		} catch (IOException e)
 		{
 			throw new UnsupportedOperationException("Cannot write to backend file");
 		}
 	}
 
-	public synchronized byte[] get(int index)
+	/**
+	 * Get a read RAF handle from pool or create new one. Returns null if closing.
+	 */
+	private RandomAccessFile getReadRaf() {
+		if (closing) return null;
+		
+		RandomAccessFile readRaf = readRafPool.poll();
+		if (readRaf == null) {
+			if (closing) return null; // Check again after poll
+			try {
+				readRaf = new RandomAccessFile(file, "r");
+			} catch (IOException e) {
+				return null;
+			}
+		}
+		return readRaf;
+	}
+	
+	/**
+	 * Find a suitable discarded range for the given size using bounded best-fit.
+	 * @param minSize minimum size needed
+	 * @return LongRange that can fit the data, or null if none found
+	 */
+	private LongRange findDiscardedRange(int minSize) {
+		List<LongRange> allRanges = discardedRanges.getRanges();
+		// Until we have a good number of spaces to fill, don't bother spending the time on it
+		if (allRanges.size() < 10) { return null; }
+
+		LongRange bestFit = null;
+		int candidatesFound = 0;
+		int maxCandidates = 10; // Limit search to keep O(1) time complexity
+		
+		for (LongRange range : allRanges) {
+			if (range.size() >= minSize) {
+				if (bestFit == null || range.size() < bestFit.size()) {
+					bestFit = range;
+				}
+				candidatesFound++;
+				if (candidatesFound >= maxCandidates) {
+					break; // Stop after finding enough candidates
+				}
+			}
+		}
+		
+		return bestFit;
+	}
+	
+	/**
+	 * Return a read RAF handle to pool or close it if shutting down.
+	 */
+	private void returnReadRaf(RandomAccessFile readRaf) {
+		if (closing) {
+			try { 
+				readRaf.close(); 
+			} catch (IOException ignored) {}
+		} else {
+			readRafPool.offer(readRaf);
+		}
+	}
+	
+	public byte[] get(int index)
 	{
 		if (index >= elementPositions.size()) return null;
 		LongRange position = elementPositions.get(index);
@@ -108,29 +165,34 @@ class ScratchDiskBacking {
 		//The positions may be >MAXINT, but the length really shouldn't be
 		int length = (int)(position.getStop() - position.getStart() + 1);
 		
-		byte[] data = new byte[length];
-		try
-		{
-			raf.seek(offset);
-			raf.read(data, 0, length);
-						
-			return data;
-		}
-		catch (IOException e)
-		{
-			return null;
-		}
+		RandomAccessFile readRaf = getReadRaf();
+		if (readRaf == null) return null; // Shutting down
 		
+		byte[] data = new byte[length];
+		try {
+			readRaf.seek(offset);
+			readRaf.read(data, 0, length);
+			return data;
+		} catch (IOException e) {
+			return null;
+		} finally {
+			returnReadRaf(readRaf);
+		}
 	}
 	
 
 	public void remove(int index)
 	{
-		discardedRanges.addRange(  elementPositions.remove(index)  );
+		if (index >= elementPositions.size()) return;
+		
+		LongRange removedRange = elementPositions.remove(index);
+		if (removedRange != null) {
+			discardedRanges.addRange(removedRange);
+		}
 	}
 
 
-	public synchronized void set(int index, byte[] data)
+	public void set(int index, byte[] data)
 	{
 		
 		if (elementPositions.size() > index)
@@ -151,15 +213,27 @@ class ScratchDiskBacking {
 
 	
 	@Override
-	protected void finalize()
-	{
-		try
-		{
-			raf.close();			
+	public void close() throws IOException {
+		closing = true;
+		
+		// Close write handle
+		if (writeRaf != null) {
+			writeRaf.close();
+			writeRaf = null;
 		}
-		catch (IOException e)
-		{
-			
+		
+		// Close all read handles currently in pool
+		RandomAccessFile readRaf;
+		while ((readRaf = readRafPool.poll()) != null) {
+			try {
+				readRaf.close();
+			} catch (IOException ignored) {
+				// Ignore cleanup errors
+			}
+		}
+		
+		if (file != null && file.exists()) {
+			file.delete();
 		}
 	}
 	

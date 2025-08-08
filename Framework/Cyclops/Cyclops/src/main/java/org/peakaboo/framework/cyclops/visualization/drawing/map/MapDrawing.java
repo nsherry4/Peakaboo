@@ -14,7 +14,7 @@ import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 
 /**
  * 
@@ -44,7 +44,7 @@ public class MapDrawing extends Drawing
 	 *            the {@link Color} palettes for drawing maps
 	 * @see DrawingRequest
 	 * @see Color
-	 * @see AbstractPalette
+	 * @see Palette
 	 */
 	public MapDrawing(Surface context, DrawingRequest dr, List<AxisPainter> axisPainters)
 	{

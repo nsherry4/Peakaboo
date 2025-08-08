@@ -84,20 +84,12 @@ public class ColourChoice extends ColourView implements ItemSelectable {
 		Graphics2D g = Stratus.g2d(g0);
 		
 		if (isSelected()) {
-			Path2D shape = new Path2D.Float();
-			float pad = this.settings.pad() + (size/4);
-			float voffset = 0;
-			float inner = size - (pad*2);
-			float halfin= inner/2;
 			
-			shape.moveTo(pad, pad+halfin+voffset);
-			shape.lineTo(pad+(inner/3), pad+inner+voffset);
-			shape.lineTo(pad+inner, pad+voffset);
-
-			g.setColor(StratusColour.blackOrWhite(this.colour));
-			g.setStroke(new BasicStroke(2.5f));
-			g.draw(shape);
-
+			// Fill a white circle in the middle of the component when selected
+			float pad = this.settings.pad() + (size / 4f);
+			float inner = size - (pad * 2f);
+			g.setColor(Color.WHITE);
+			g.fillOval((int)pad, (int)pad, (int)inner, (int)inner);
 
 		}
 		

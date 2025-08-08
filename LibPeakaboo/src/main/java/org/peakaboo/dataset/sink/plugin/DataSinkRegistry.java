@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.dataset.sink.plugin.plugins.CSV;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class DataSinkRegistry extends BoltPluginRegistry<DataSinkPlugin> {
+public class DataSinkRegistry extends PeakabooPluginRegistry<DataSinkPlugin> {
 
 	private static DataSinkRegistry SYSTEM;
 	public static void init(File dataSinkDir) {

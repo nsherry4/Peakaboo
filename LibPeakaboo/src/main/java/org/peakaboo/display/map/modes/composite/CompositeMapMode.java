@@ -16,10 +16,11 @@ import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.Selecti
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SpectrumMapPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.PaddingAxisPainter;
+import org.peakaboo.framework.cyclops.visualization.palette.ColourStopPalette;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
+import org.peakaboo.framework.cyclops.visualization.palette.Palette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.AbstractPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.SaturationPalette;
-import org.peakaboo.framework.cyclops.visualization.palette.palettes.ThermalScalePalette;
+import org.peakaboo.framework.cyclops.visualization.palette.SaturationPalette;
 
 public class CompositeMapMode extends MapMode{
 
@@ -33,15 +34,12 @@ public class CompositeMapMode extends MapMode{
 		CompositeModeData compositedata = (CompositeModeData) data.mapModeData;
 		
 		//clear surface	
-		size = this.setDimensions(settings, size);
 		backend.rectAt(0, 0, size.x, size.y);
 		backend.setSource(settings.getBg());
 		backend.fill();
 		
-		AbstractPalette palette				=		new ThermalScalePalette(spectrumSteps, settings.monochrome);
-		List<AbstractPalette> paletteList	=		new ArrayList<>();
-		
-				
+		Palette palette	= new ColourStopPalette(settings.gradient);
+
 		dr.uninterpolatedWidth = settings.filteredDataWidth;
 		dr.uninterpolatedHeight = settings.filteredDataHeight;
 		dr.dataWidth = settings.filteredDataWidth;
@@ -60,7 +58,7 @@ public class CompositeMapMode extends MapMode{
 		axisPainters.add(new PaddingAxisPainter(0, 0, 10, 0));
 		axisPainters.add(getDescriptionPainter(settings));
 		
-		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, paletteList));
+		axisPainters.add(MapMode.getSpectrumPainter(settings, spectrumSteps, palette));
 		map.setAxisPainters(axisPainters);
 		
 		
@@ -68,14 +66,13 @@ public class CompositeMapMode extends MapMode{
 		boolean oldVector = dr.drawToVectorSurface;
 		dr.drawToVectorSurface = backend.isVectorSurface();
 
-		paletteList.add(palette);
-		
+
 		List<MapPainter> mapPainters = new ArrayList<>();
 		if (contourMapPainter == null) {
-			contourMapPainter = MapTechniqueFactory.getTechnique(paletteList, compositedata.getData()); 
+			contourMapPainter = MapTechniqueFactory.getTechnique(palette, compositedata.getData());
 		} else {
 			contourMapPainter.setData(compositedata.getData());
-			contourMapPainter.setPalettes(paletteList);
+			contourMapPainter.setPalette(palette);
 		}
 		mapPainters.add(contourMapPainter);
 		

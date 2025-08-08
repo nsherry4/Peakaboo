@@ -9,18 +9,18 @@ public class AverageViewMode implements ChannelViewMode {
 	public static final String UUID = "b9e5b5b6-0b86-4f64-ba20-c610f38a65f8";
 	
 	@Override
-	public String shortName() {
+	public String name() {
 		return "Mean";
 	}
 
 	@Override
-	public String longName() {
-		return "Mean per Channel";
+	public String description() {
+		return "Average of all spectra";
 	}
 
 	@Override
-	public String description() {
-		return "An average of all spectra";
+	public String tooltip() {
+		return "A synthetic spectrum made from the average of all spectra";
 	}
 
 	@Override

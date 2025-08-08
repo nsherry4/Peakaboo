@@ -76,7 +76,6 @@ public class MapperToolbar extends JToolBar {
 		
 		
 		
-		
 		controller.addListener(t -> {
 			examineSubset.setEnabled(controller.getSelection().isReplottable());
 			
@@ -91,14 +90,14 @@ public class MapperToolbar extends JToolBar {
 		
 	}
 	
-
+	
 	public static FluentToolbarButton createOptionsButton(MappingController controller) {
 		
 		JPopupMenu menu = new MapMenuView(controller);
 		
 		FluentToolbarButton opts = new FluentToolbarButton()
 				.withIcon(PeakabooIcons.MENU_VIEW, Stratus.getTheme().getControlText())
-				.withTooltip("Map Settings Menu");
+				.withTooltip("Map Display Options");
 		
 		opts.withAction(() -> {
 			int x = (int)(opts.getWidth() - menu.getPreferredSize().getWidth());
@@ -108,6 +107,7 @@ public class MapperToolbar extends JToolBar {
 		
 		return opts;
 	}
+
 	
 	
 	private FluentToolbarButton createExportMenuButton(MapperPanel panel) {

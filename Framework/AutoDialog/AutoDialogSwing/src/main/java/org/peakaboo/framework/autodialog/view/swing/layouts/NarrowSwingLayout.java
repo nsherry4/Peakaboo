@@ -1,6 +1,6 @@
 package org.peakaboo.framework.autodialog.view.swing.layouts;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -31,6 +31,9 @@ public class NarrowSwingLayout extends SimpleSwingLayout {
 		for (Value<?> param : group.getValue()) {
 			layoutValue(param);
 		}
+
+		// Add glue to push all components to the top and prevent expansion
+		root.add(Box.createVerticalGlue());
 
 		root.doLayout();
 	}
@@ -71,6 +74,12 @@ public class NarrowSwingLayout extends SimpleSwingLayout {
 			rowpanel.setLayout(new BorderLayout(spacing, spacing));
 			rowpanel.add(editorComponent, BorderLayout.CENTER);
 		}
+
+		// Prevent the row panel from expanding vertically
+		Dimension prefSize = rowpanel.getPreferredSize();
+		rowpanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, prefSize.height));
+
+
 		this.root.add(rowpanel);
 		this.root.add(Box.createVerticalStrut(Spacing.medium));
 		

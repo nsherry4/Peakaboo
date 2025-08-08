@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
+import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.discards.Discards;
 import org.peakaboo.controller.plotter.data.discards.DiscardsList;
@@ -17,6 +19,7 @@ import org.peakaboo.dataset.EmptyDataSet;
 import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.dataset.source.model.PeakabooLists;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
@@ -33,7 +36,7 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
  * DataController wraps a DataSet in a UI-aware layer which integrates with the {@link IPlotController}
  * 
  */
-public class DataController extends EventfulBeacon
+public class DataController extends EventfulBeacon implements AutoCloseable
 {
 
 	private DataSet 			dataModel;
@@ -138,7 +141,14 @@ public class DataController extends EventfulBeacon
 			
 		// really shouldn't have to do this, but there is a reference to old datasets floating around somewhere
 		// (task listener?) which is preventing them from being garbage-collected
-		if (old != null && old != dsp) old.discard();
+		if (old != null && old != dsp) {
+			try {
+				old.close();
+			} catch (Exception e) {
+				PeakabooLog.get().log(Level.WARNING, "Could not close old DataSet " + old.toString());
+			}
+			old.discard();
+		}
 	
 		updateListeners();
 
@@ -266,5 +276,9 @@ public class DataController extends EventfulBeacon
 		this.setDataPaths(DataInputAdapter.fromFilenames(data.files));
 		this.setTitle(data.title);
 	}
-	
+
+	@Override
+	public void close() throws Exception {
+		if (dataModel != null) dataModel.close();
+	}
 }

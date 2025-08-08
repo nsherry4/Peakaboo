@@ -24,6 +24,8 @@ import org.peakaboo.framework.cyclops.Range;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
+import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.mapping.rawmap.RawMap;
 import org.peakaboo.mapping.rawmap.RawMapSet;
@@ -40,6 +42,18 @@ public class Mapping {
 		//Not Constructable
 	}
 
+	public static final List<Gradient> MAP_PALETTES = List.of(
+			Gradients.GOULDIAN,
+			Gradients.LIPARI,
+			Gradients.NAVIA,
+			Gradients.REDHOT,
+			Gradients.RAINBOW,
+			Gradients.MONOCHROME,
+			Gradients.AMBER,
+			Gradients.CRANBERRY,
+			Gradients.INV_MONOCHROME
+	);
+	
 	/**
 	 * Generates a map based on the given inputs. Returns a {@link StreamExecutor} which can execute this task asynchronously and return the result
 	 * @param dataset the {@link DataSet} providing access to data

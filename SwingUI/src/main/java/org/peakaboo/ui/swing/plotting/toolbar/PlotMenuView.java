@@ -44,8 +44,9 @@ public class PlotMenuView extends JPopupMenu {
 		
 		ChannelViewMode viewSingle = new SingleViewMode();
 		oInd = new OptionRadioButton(compositeBlock, compositeGroup)
-				.withTitle(viewSingle.longName())
-				.withTooltip(viewSingle.description())
+				.withTitle(viewSingle.name())
+				.withDescription(viewSingle.description())
+				.withTooltip(viewSingle.tooltip())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK), plot)
 				.withSelection(controller.view().getChannelViewMode().equals(viewSingle))
 				.withListener(() -> controller.view().setChannelViewMode(viewSingle));
@@ -55,8 +56,9 @@ public class PlotMenuView extends JPopupMenu {
 		
 		ChannelViewMode viewAverage = ChannelViewModeRegistry.system().getPresetInstance();
 		oAvg = new OptionRadioButton(compositeBlock, compositeGroup)
-				.withTitle(viewAverage.longName())
-				.withTooltip(viewAverage.description())
+				.withTitle(viewAverage.name())
+				.withDescription(viewAverage.description())
+				.withTooltip(viewAverage.tooltip())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK), plot)
 				.withSelection(controller.view().getChannelViewMode().equals(viewAverage))
 				.withListener(() -> controller.view().setChannelViewMode(viewAverage));
@@ -66,8 +68,9 @@ public class PlotMenuView extends JPopupMenu {
 		
 		ChannelViewMode viewMax = new MaximumViewMode();
 		oMax = new OptionRadioButton(compositeBlock, compositeGroup)
-				.withTitle(viewMax.longName())
-				.withTooltip(viewMax.description())
+				.withTitle(viewMax.name())
+				.withDescription(viewMax.description())
+				.withTooltip(viewMax.tooltip())
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK), plot)
 				.withSelection(controller.view().getChannelViewMode().equals(viewMax))
 				.withListener(() -> controller.view().setChannelViewMode(viewMax));
@@ -76,18 +79,25 @@ public class PlotMenuView extends JPopupMenu {
 		scanmodes.put(viewMax, oMax);
 		
 		
+		int customViews = 0;
 		for (var proto : ChannelViewModeRegistry.system().getPlugins()) {
-			var viewmode = proto.create();
+			var created = proto.create();
+			if (created.isEmpty()) {
+				continue;
+			}
+			var viewmode = created.get();
 			if (scanmodes.keySet().contains(viewmode)) { continue; }
 			
 			var oMode = new OptionRadioButton(compositeBlock, compositeGroup)
-					.withTitle(viewmode.longName())
-					.withTooltip(viewmode.description())
+					.withTitle(viewmode.name())
+					.withDescription(viewmode.description())
+					.withTooltip(viewmode.tooltip())
 					.withSelection(controller.view().getChannelViewMode().equals(viewmode))
 					.withListener(() -> controller.view().setChannelViewMode(viewmode));
 			compositeBlock.add(oMode);
 			compositeGroup.add(oMode.getButton());
 			scanmodes.put(viewmode, oMode);
+			customViews++;
 			
 		}
 		
@@ -95,31 +105,29 @@ public class PlotMenuView extends JPopupMenu {
 		
 		
 		OptionBlock scaleBlock = new OptionBlock().withDividers(false).withBorder(false);
+		OptionBlock viewBlock = new OptionBlock().withDividers(false).withBorder(false);
 		
-		oLog = new OptionCheckBox(scaleBlock)
+		
+		boolean splitColumn = customViews < 1;
+		OptionBlock block = splitColumn ? scaleBlock : viewBlock;
+		
+		oLog = new OptionCheckBox(block)
 				.withTitle("Logarithmic Scale")
 				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK), plot)
 				.withSelection(controller.view().getViewLog())
 				.withTooltip("Toggles the plot between a linear and logarithmic scale")
 				.withListener(controller.view()::setViewLog);
-		scaleBlock.add(oLog);
+		block.add(oLog);
 		
 		
-		oConsist = new OptionCheckBox(scaleBlock)
+		oConsist = new OptionCheckBox(block)
 				.withTitle("Consistent Scale")
 				.withTooltip("All spectra in a dataset will be displayed with a consisntent scale")
 				.withSelection(controller.view().getConsistentScale())
 				.withListener(controller.view()::setConsistentScale);
-		scaleBlock.add(oConsist);
-		
-		
-		
-		OptionBlock viewBlock = new OptionBlock().withDividers(false).withBorder(false);
-		
+		block.add(oConsist);
 		
 
-		
-		
 				
 		oFit = new OptionCheckBox(viewBlock)
 				.withTitle("Individual Fittings")
@@ -170,7 +178,7 @@ public class PlotMenuView extends JPopupMenu {
 
 
 		
-		OptionBlocksPanel leftPanel = new OptionBlocksPanel(compositeBlock, scaleBlock);
+		OptionBlocksPanel leftPanel = splitColumn ? new OptionBlocksPanel(compositeBlock, scaleBlock) : new OptionBlocksPanel(compositeBlock);
 		OptionBlocksPanel rightPanel = new OptionBlocksPanel(viewBlock);
 		ClearPanel twoPaneMenu = new ClearPanel(new BorderLayout());
 		twoPaneMenu.add(leftPanel, BorderLayout.WEST);

@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.dataset.source.plugin.plugins.SingleColumn;
 import org.peakaboo.dataset.source.plugin.plugins.universalhdf5.UniversalHDF5DataSource;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
-public class DataSourceRegistry extends BoltPluginRegistry<DataSourcePlugin> {
+public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin> {
 
 	private static DataSourceRegistry SYSTEM;
 	public static synchronized void init(File dataSourceDir) {

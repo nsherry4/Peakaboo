@@ -122,12 +122,7 @@ public class PlotMenuMain extends JPopupMenu {
 
 		
 		//HELP Menu
-		JMenuItem plugins = new FluentMenuItem()
-				.withText("Plugins")
-				.withTooltip("Manage Peakaboo's plugins")
-				.withAction(plot::actionShowPlugins);
-		this.add(plugins);
-		
+	
 		
 		JMenu debug = new JMenu("Logs & Bugs");
 		

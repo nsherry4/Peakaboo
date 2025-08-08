@@ -9,10 +9,13 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.MatteBorder;
 
@@ -43,6 +47,7 @@ import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import org.peakaboo.controller.session.v2.SavedSession;
@@ -96,6 +101,7 @@ import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
+import org.peakaboo.framework.stratus.laf.painters.scrollbar.ScrollBarTrackPainter;
 import org.peakaboo.mapping.Mapping;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 import org.peakaboo.tier.Tier;
@@ -111,9 +117,9 @@ import org.peakaboo.ui.swing.plotting.fitting.CurveFittingView;
 import org.peakaboo.ui.swing.plotting.guides.FirstRun;
 import org.peakaboo.ui.swing.plotting.statusbar.PlotStatusBar;
 import org.peakaboo.ui.swing.plotting.toolbar.PlotToolbar;
-import org.peakaboo.ui.swing.plugins.PluginManager;
+import org.peakaboo.ui.swing.plugins.PluginPanel;
 
-public class PlotPanel extends TabbedLayerPanel {
+public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 	// Non-UI
 	private PlotController controller;
@@ -184,7 +190,8 @@ public class PlotPanel extends TabbedLayerPanel {
 		return controller;
 	}
 
-	private void setWidgetsState() {
+	// This is public to allow the plugins UI to advice of updates.
+	public void setWidgetsState() {
 
 		boolean hasData = controller.data().hasDataSet();
 
@@ -239,11 +246,32 @@ public class PlotPanel extends TabbedLayerPanel {
 		scrolledCanvas.setAutoscrolls(true);
 		scrolledCanvas.setBorder(Spacing.bNone());
 
+		// Set scrollbar track color to match plot background
+		Color plotBg = canvas.getPlotBackgroundColor();
+		scrolledCanvas.getHorizontalScrollBar().putClientProperty(ScrollBarTrackPainter.KEY_BACKGROUND, plotBg);
+
 		scrolledCanvas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrolledCanvas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 		new DraggingScrollPaneListener(scrolledCanvas.getViewport(), canvas, Buttons.LEFT, Buttons.MIDDLE);
 
-		statusBar = new PlotStatusBar(controller);
+		// Disable default mouse wheel scrolling on the JScrollPane to prevent conflicts
+		scrolledCanvas.setWheelScrollingEnabled(false);
+
+		// Add mouse wheel listener for Ctrl+Scroll zoom and regular scrolling
+		scrolledCanvas.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if (e.isControlDown()) {
+					// Handle zoom - consume event to prevent default scrolling
+					onMouseWheelMoved(e);
+				} else {
+					// Handle regular scrolling manually to ensure proper behavior
+					handleRegularScroll(e);
+				}
+			}
+		});
+
+		statusBar = new PlotStatusBar(controller, this);
 
 		JPanel canvasPanel = new JPanel(new BorderLayout());
 		canvasPanel.add(scrolledCanvas, BorderLayout.CENTER);
@@ -285,7 +313,7 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
 		ClearPanel split = new ClearPanel(new BorderLayout());
-		sidebarTabs.setPreferredSize(new Dimension(230, sidebarTabs.getPreferredSize().height));
+		sidebarTabs.setPreferredSize(new Dimension(250, sidebarTabs.getPreferredSize().height));
 		split.add(blankCanvas, BorderLayout.CENTER);
 
 		split.setBorder(Spacing.bNone());
@@ -351,6 +379,101 @@ public class PlotPanel extends TabbedLayerPanel {
 		canvas.setNeedsRedraw();
 	}
 
+	private void onMouseWheelMoved(MouseWheelEvent e) {
+		if (!controller.data().hasDataSet()) {
+			return;
+		}
+
+		// Consume the event immediately to prevent default scrolling behavior
+		e.consume();
+
+		// Get current zoom level and calculate new zoom
+		float currentZoom = controller.view().getZoom();
+		int wheelRotation = e.getWheelRotation();
+
+		// Adaptive zoom factor: larger changes when zoomed out, smaller when zoomed in
+		// Uses inverse scaling across full zoom range (0.1 to 10.0)
+		float baseZoomFactor = 1.025f;
+		// Scale from ~4.0 at zoom=0.1 down to 1 at zoom=10.0
+		float zoomScale = 4.0f / (1.0f + currentZoom * 0.3f);
+		float adaptiveFactor = 1.0f + (baseZoomFactor - 1.0f) * zoomScale;
+
+		float newZoom;
+		if (wheelRotation < 0) {
+			// Scroll up = zoom in
+			newZoom = currentZoom * adaptiveFactor;
+		} else {
+			// Scroll down = zoom out
+			newZoom = currentZoom / adaptiveFactor;
+		}
+
+		// Clamp zoom to valid range using ViewController constants
+		newZoom = Math.max(ViewController.ZOOM_MIN, Math.min(ViewController.ZOOM_MAX, newZoom));
+
+		// Only proceed if zoom actually changed
+		if (Math.abs(newZoom - currentZoom) < 0.001f) {
+			return; // No change needed
+		}
+
+		// Get current state before zoom
+		Rectangle visibleRect = canvas.getVisibleRect();
+		Dimension currentSize = canvas.getPreferredSize();
+		int mouseViewportX = e.getX();
+
+		// Calculate what fraction of the total canvas width the mouse is pointing to
+		double mouseFraction = (double)(visibleRect.x + mouseViewportX) / currentSize.width;
+
+		// Apply the new zoom
+		controller.view().setZoom(newZoom);
+
+		// Force canvas to update its size immediately
+		canvas.updateCanvasSize();
+		canvas.revalidate();
+
+		// Get the new canvas size after zoom
+		Dimension newSize = canvas.getPreferredSize();
+
+		// Calculate where that same data point (fraction) should be in the new canvas
+		int newMouseCanvasX = (int)(mouseFraction * newSize.width);
+
+		// Calculate new scroll position to keep the mouse pointing to the same data point
+		int newScrollX = newMouseCanvasX - mouseViewportX;
+
+		// Ensure we don't scroll beyond bounds
+		int maxScrollX = Math.max(0, newSize.width - visibleRect.width);
+		newScrollX = Math.max(0, Math.min(newScrollX, maxScrollX));
+
+		// Update scroll position
+		Rectangle targetRect = new Rectangle(newScrollX, visibleRect.y,
+				visibleRect.width, visibleRect.height);
+		canvas.scrollRectToVisible(targetRect);
+	}
+
+	private void handleRegularScroll(MouseWheelEvent e) {
+		// Manually handle regular mouse wheel scrolling to avoid conflicts with zoom
+		e.consume(); // Consume to prevent default handler
+
+		if (!controller.data().hasDataSet()) {
+			return;
+		}
+
+		// Get current scroll position
+		Rectangle visibleRect = canvas.getVisibleRect();
+		int scrollAmount = e.getWheelRotation() * canvas.getScrollableUnitIncrement(visibleRect, SwingConstants.HORIZONTAL, e.getWheelRotation());
+
+		// Calculate new scroll position
+		int newScrollX = visibleRect.x + scrollAmount;
+
+		// Ensure we don't scroll beyond bounds
+		Dimension canvasSize = canvas.getPreferredSize();
+		int maxScrollX = Math.max(0, canvasSize.width - visibleRect.width);
+		newScrollX = Math.max(0, Math.min(newScrollX, maxScrollX));
+
+		// Update scroll position
+		Rectangle targetRect = new Rectangle(newScrollX, visibleRect.y, visibleRect.width, visibleRect.height);
+		canvas.scrollRectToVisible(targetRect);
+	}
+
 	// ////////////////////////////////////////////////////////
 	// UI ACTIONS
 	// ////////////////////////////////////////////////////////
@@ -358,31 +481,31 @@ public class PlotPanel extends TabbedLayerPanel {
 	public void actionAbout() {
 		ImageIcon logo = IconFactory.getImageIcon(Tier.provider().iconPath(), Version.LOGO);
 		logo = new ImageIcon(logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
-			
+
 		AboutLayer.Contents contents = new AboutLayer.Contents();
 		contents.name = Tier.provider().appName();
 		contents.description = "XRF Analysis Software";
 		contents.linkAction = () -> DesktopApp.browser("http://peakaboo.org");
 		contents.linktext = "Website";
 		contents.copyright = "2009-2024 by The University of Western Ontario and The Canadian Light Source Inc.";
-		
+
 		try {
 			contents.licence = IOUtils.toString( getClass().getResourceAsStream("/org/peakaboo/licence.txt"), StandardCharsets.UTF_8 );
 			contents.credits = IOUtils.toString( getClass().getResourceAsStream("/org/peakaboo/credits.txt"), StandardCharsets.UTF_8 );
 		} catch (IOException e) {
 			PeakabooLog.get().log(Level.WARNING, "Failed to load asset from classloader", e);
 		}
-		
+
 		contents.logo = logo;
 		contents.version = Version.VERSION_MAJOR + "." + Version.VERSION_MINOR;
 		contents.longVersion = Version.LONG_VERSION;
 		contents.releaseDescription = Version.RELEASE_DESCRIPTION;
 		contents.date = Version.buildDate;
 		contents.titleStyle = "font-family: Springsteel-Light; font-size: 350%;";
-		
+
 		AboutLayer about = new AboutLayer(this, contents);
 		this.pushLayer(about);
-		
+
 	}
 
 	public void actionHelp() {
@@ -551,20 +674,20 @@ public class PlotPanel extends TabbedLayerPanel {
 
 		export.set(new ExportPanel(this, canvas, () ->
 
-		StratusFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(),
-				new SimpleFileExtension("Zip Archive", "zip"), file -> {
-					if (!file.isPresent()) {
-						return;
-					}
-					controller.io().setLastFolder(file.get().getParentFile());
+				StratusFilePanels.saveFile(this, "Save Archive", controller.io().getLastFolder(),
+						new SimpleFileExtension("Zip Archive", "zip"), file -> {
+							if (!file.isPresent()) {
+								return;
+							}
+							controller.io().setLastFolder(file.get().getParentFile());
 
-					SurfaceDescriptor format = export.get().getPlotFormat();
-					int width = export.get().getImageWidth();
-					int height = export.get().getImageHeight();
+							SurfaceDescriptor format = export.get().getPlotFormat();
+							int width = export.get().getImageWidth();
+							int height = export.get().getImageHeight();
 
-					actionExportArchiveToZip(file.get(), format, width, height);
+							actionExportArchiveToZip(file.get(), format, width, height);
 
-				})));
+						})));
 	}
 
 	private void actionExportArchiveToZip(File file, SurfaceDescriptor format, int width, int height) {
@@ -587,7 +710,7 @@ public class PlotPanel extends TabbedLayerPanel {
 			if (controller.calibration().hasDetectorProfile()) {
 				e = new ZipEntry("detector-profile.pbdp");
 				zos.putNextEntry(e);
-				String profileYaml = controller.calibration().getDetectorProfile().storeV1();
+				String profileYaml = controller.calibration().getDetectorProfile().save();
 				zos.write(profileYaml.getBytes());
 				zos.closeEntry();
 			}
@@ -767,7 +890,7 @@ public class PlotPanel extends TabbedLayerPanel {
 	}
 
 	public void actionShowPlugins() {
-		pushLayer(new PluginManager(this));
+		pushLayer(new PluginPanel(this));
 	}
 
 	public void actionShowLogs() {
@@ -826,31 +949,31 @@ public class PlotPanel extends TabbedLayerPanel {
 		StreamExecutor<RawMapSet> quickmapper = Mapping.quickMapTask(controller.data(), channel);
 		var layer = new TaskMonitorLayer(this, "Generating Quick Map", quickmapper);
 		pushLayer(layer);
-		
+
 		quickmapper.addListener(event -> {
-			
+
 			switch(event) {
-			case ABORTED:
-				removeLayer(layer);
-				break;
-			case COMPLETED:
-				removeLayer(layer);
-				var result = quickmapper.getResult();
-				if (result.isPresent()) {
-					QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, result.get(), mapSession, controller);
-					this.pushLayer(maplayer);
-				}
-				break;
-			case PROGRESS:
-				break;
-			default:
-				break;
+				case ABORTED:
+					removeLayer(layer);
+					break;
+				case COMPLETED:
+					removeLayer(layer);
+					var result = quickmapper.getResult();
+					if (result.isPresent()) {
+						QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, result.get(), mapSession, controller);
+						this.pushLayer(maplayer);
+					}
+					break;
+				case PROGRESS:
+					break;
+				default:
+					break;
 			}
-			
+
 		});
-		
+
 		quickmapper.start();
-		
+
 	}
 
 	@Override
@@ -902,6 +1025,11 @@ public class PlotPanel extends TabbedLayerPanel {
 
 	PlotCanvas getCanvas() {
 		return canvas;
+	}
+
+	@Override
+	public void close() throws Exception {
+		this.controller.close();
 	}
 
 	public static class SessionFileExtension extends SimpleFileExtension {

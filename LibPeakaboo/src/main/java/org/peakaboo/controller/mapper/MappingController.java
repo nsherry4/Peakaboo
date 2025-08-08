@@ -141,7 +141,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 		settings.mapTitle = this.getFitting().mapLongTitle();
 		
 		settings.scalemode = this.getFitting().getMapScaleMode();
-		settings.monochrome = this.getSettings().getMonochrome();
+		settings.gradient = this.getSettings().getColourGradient();
 		settings.darkmode = this.getParentPlotController().view().getDarkMode();
 		settings.contours = this.getSettings().getContours();
 		settings.contourSteps = this.getSettings().getSpectrumSteps();

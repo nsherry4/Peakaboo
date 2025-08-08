@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.peakaboo</groupId>
 		<artifactId>framework</artifactId>
-		<version>6.0.1</version>
+		<version>6.1-SNAPSHOT</version>
 	</parent>
 	<groupId>org.peakaboo.framework</groupId>
 	<artifactId>scratch</artifactId>
@@ -34,11 +34,10 @@
 			<version>2.2</version>
 		</dependency>
 
-		<!-- Note that while Kryo 5.x is out, it requires changes to Scratch which will require more time -->
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
 			<artifactId>kryo</artifactId>
-			<version>5.6.0</version>
+			<version>5.6.2</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.lz4/lz4-java -->
@@ -47,29 +46,6 @@
 			<artifactId>lz4-java</artifactId>
 			<version>1.8.0</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.xerial.snappy/snappy-java -->
-		<dependency>
-			<groupId>org.xerial.snappy</groupId>
-			<artifactId>snappy-java</artifactId>
-			<version>1.1.10.5</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/de.ruedigermoeller/fst -->
-		<dependency>
-			<groupId>de.ruedigermoeller</groupId>
-			<artifactId>fst</artifactId>
-			<version>3.0.4-jdk17</version>
-
-			<exclusions>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-core</artifactId>
-				</exclusion>
-			</exclusions>
-			
-		</dependency>
-
 
 	</dependencies>
 

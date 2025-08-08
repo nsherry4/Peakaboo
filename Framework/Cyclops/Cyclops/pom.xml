@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.peakaboo.framework</groupId>
 		<artifactId>cyclops</artifactId>
-		<version>6.0.1</version>
+		<version>6.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>cyclops-core</artifactId>
 	<name>cyclops-core</name>
@@ -24,12 +24,12 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/it.unimi.dsi/fastutil -->
+
+		<!-- https://mvnrepository.com/artifact/it.unimi.dsi/fastutil-core -->
 		<dependency>
 			<groupId>it.unimi.dsi</groupId>
 			<artifactId>fastutil-core</artifactId>
-			<version>8.5.13</version>
+			<version>8.5.16</version>
 		</dependency>
 		
 	</dependencies>

@@ -2,6 +2,7 @@ package org.peakaboo.framework.bolt.plugin.core;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.bolt.plugin.core.loader.BoltLoader;
@@ -30,10 +31,11 @@ public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<
 	 * 
 	 * @param loader
 	 */
-	void addLoader(BoltLoader<? extends P> loader);
+	void addLoader(BoltLoader<P> loader);
 
+	Set<String> getRestrictedPackagePrefixes();
 	
-	List<BoltIssue<? extends P>> getIssues();
+	List<BoltIssue<P>> getIssues();
 
 	String getAssetPath();
 
@@ -45,12 +47,11 @@ public interface PluginRegistry <P extends BoltPlugin> extends PluginCollection<
 	
 	
 	default Optional<P> fromSaved(SavedPlugin saved) {
-		var proto = this.getByUUID(saved.uuid);
-		if (proto == null) {
+		Optional<PluginDescriptor<P>> lookup = this.getByUUID(saved.uuid);
+		if (lookup.isEmpty()) {
 			return Optional.empty();
 		}
-		var solver = proto.create();
-		return Optional.of(solver);
+		return lookup.get().create();
 	}
 	
 	default PluginRegistry<P> getManager() {

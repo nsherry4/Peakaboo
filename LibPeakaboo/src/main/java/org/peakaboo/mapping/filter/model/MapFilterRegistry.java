@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooLog;
-import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
@@ -30,7 +30,7 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate270MapFilte
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.Rotate90MapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
 
-public class MapFilterRegistry extends BoltPluginRegistry<MapFilterPlugin> {
+public class MapFilterRegistry extends PeakabooPluginRegistry<MapFilterPlugin> {
 
 	private static MapFilterRegistry SYSTEM;
 	public static void init(File filterDir) {

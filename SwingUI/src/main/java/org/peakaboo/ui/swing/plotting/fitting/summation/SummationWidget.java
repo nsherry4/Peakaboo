@@ -23,7 +23,7 @@ class SummationWidget extends TSSelectorGroup {
 	public SummationWidget(FittingController controller, SummationPanel parent) {
 		super(controller, 2);
 		this.summationPanel = parent;
-		resetSelectors(true);
+		clearSelectors(true);
 		refreshGUI();		
 	}
 		

@@ -363,12 +363,16 @@ public class Plotter {
 
 	private void clearSurface(Surface context, PlotSettings settings, Coord<Integer> size) {
 		context.rectAt(0, 0, (float)size.x, (float)size.y);
-		if (settings.darkmode) {
-			context.setSource(new PaletteColour(0xff202020));
-		} else {
-			context.setSource(new PaletteColour(0xffffffff));
-		}
+		context.setSource(getPlotBackground(settings));
 		context.fill();
+	}
+
+	public PaletteColour getPlotBackground(PlotSettings settings) {
+		if (settings.darkmode) {
+			return new PaletteColour(0xff202020);
+		} else {
+			return new PaletteColour(0xffffffff);
+		}
 	}
 	
 	protected SpectrumPainter getPlotPainter(PlotData data, PlotSettings settings) {

@@ -1,5 +1,6 @@
 package org.peakaboo.framework.scratch.list.array;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +24,25 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	
 	@Override
 	public T get(int index) {
-		if (index >= backing.size()) { return null; }
-		byte[] encodedValue = backing.get(index);
-		if (encodedValue == null) { return null; }
+		byte[] encodedValue;
+		
+		// Get the data safely under synchronization (minimal lock time)
+		synchronized (this) {
+			if (index >= backing.size()) { 
+				return null; 
+			}
+			encodedValue = backing.get(index);
+		}
+		
+		// Decode outside the lock (the expensive operation)
+		if (encodedValue == null) { 
+			return null; 
+		}
 		return encoder.decode(encodedValue);
 	}
 	
 	@Override
-	public int size() {
+	public synchronized int size() {
 		return backing.size();
 	}
 	
@@ -56,7 +68,7 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	
 	public synchronized void setCompressed(int index, Compressed<T> compressed) {
 		if (!compressed.getEncoder().equals(encoder)) {
-			throw new RuntimeException("Cannot add Compressed element with different ScratchEncoder");
+			throw new IllegalArgumentException("Cannot add Compressed element with different ScratchEncoder");
 		}
 		
 		ensureCapacity(index);
@@ -91,7 +103,7 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	
 	public synchronized void addCompressed(int index, Compressed<T> compressed) {
 		if (!compressed.getEncoder().equals(encoder)) {
-			throw new RuntimeException("Cannot add Compressed element with different ScratchEncoder");
+			throw new IllegalArgumentException("Cannot add Compressed element with different ScratchEncoder");
 		}
 		backing.add(index, compressed.getBytes());
 	}
@@ -102,12 +114,12 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 		backing.remove(index);
 		return t;
 	}
-	
-	
-	
-	
-	
-	
+
+	@Override
+	public void close() throws IOException {
+		// No-op
+	}
+
 	///////////////////////////////////////////////////
 	// Performance-Related Overrides
 	///////////////////////////////////////////////////
@@ -116,6 +128,8 @@ public class ScratchArrayList<T> extends ScratchList<T>{
 	public synchronized void clear() {
 		backing.clear();
 	}
-	
+
+
+
 }
 

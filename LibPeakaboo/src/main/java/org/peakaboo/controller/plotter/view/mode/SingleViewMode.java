@@ -9,18 +9,18 @@ public class SingleViewMode implements ChannelViewMode {
 	public static final String UUID = "f2f55957-0733-4915-a41d-099c54ef5f76";
 	
 	@Override
-	public String shortName() {
+	public String name() {
 		return "Single";
 	}
 
 	@Override
-	public String longName() {
-		return "Single Spectrum";
+	public String description() {
+		return "An individual spectrum";
 	}
 
 	@Override
-	public String description() {
-		return "A single spectrum at a time";
+	public String tooltip() {
+		return "Display one specific spectrum from the dataset";
 	}
 
 	@Override

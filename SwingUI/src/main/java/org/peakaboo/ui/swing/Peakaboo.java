@@ -1,6 +1,5 @@
 package org.peakaboo.ui.swing;
 
-import java.awt.Color;
 import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +12,7 @@ import java.util.function.Supplier;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
@@ -32,7 +32,6 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.table.PeakTable;
-import org.peakaboo.curvefit.peak.table.SerializedPeakTable;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
@@ -46,11 +45,11 @@ import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
+import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
+import org.peakaboo.framework.stratus.laf.theme.DuskTheme;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
-import org.peakaboo.ui.swing.app.AccentedBrightTheme;
-import org.peakaboo.ui.swing.app.AccentedDuskTheme;
 import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.app.DesktopSettings;
@@ -168,6 +167,19 @@ public class Peakaboo {
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
 		CrashHandler.init();
 		
+		// TODO: ugly -- rework logging to make this easier (and in the correct place)
+		// Don't do verbose logging for particularly chatty parts of java's internals
+		List<String> exclusions = List.of(
+				"sun.awt",
+				"java.awt",
+				"java.lang",
+				"sun.net",
+				"jdk.internal"
+		);
+		for (String excl : exclusions) {
+			Logger.getLogger(excl).setLevel(Level.INFO);
+		}
+		
 		PeakabooLog.get().log(Level.INFO, "Peakaboo is starting up.");
 		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.LONG_VERSION + " - " + Version.buildDate);
 		
@@ -189,14 +201,8 @@ public class Peakaboo {
 		
 		Stratus.initialize(Tier.provider().iconPath(), Version.SPLASH, Version.LOGO, "Peakaboo", () -> {
 
-			Color accent = AccentedBrightTheme.accentColours.get(DesktopSettings.getAccentColour());
-			if (accent == null) {
-				accent = AccentedBrightTheme.accentColours.get("Blue");
-			}
-			Theme theme = new AccentedBrightTheme(accent);
-			if (DesktopSettings.isDarkMode()) {
-				theme = new AccentedDuskTheme(accent);
-			}
+			String accentColourName = DesktopSettings.getAccentColour();
+			Theme theme = DesktopSettings.isDarkMode() ? new DuskTheme(accentColourName) : new BrightTheme(accentColourName);
 			StratusLookAndFeel laf = new StratusLookAndFeel(theme);
 			
 			//Load Peakaboo's font
@@ -240,20 +246,10 @@ public class Peakaboo {
 	}
 	
 	private static void initPeakTable() {
-		PeakTable original = PeakTable.SYSTEM.getSource();
-		String filename;
-		if (Version.RELEASE_TYPE == ReleaseType.RELEASE) {
-			filename = "derived-peakfile-" + Version.LONG_VERSION + ".dat";
-		} else {
-			filename = "derived-peakfile-" + Version.LONG_VERSION + "-" + Version.buildDate + ".dat";
-		}
-		File peakdir = DesktopApp.appDir("PeakTable");
-		peakdir.mkdirs();
-		File peakfile = new File(DesktopApp.appDir("PeakTable") + "/" + filename);
-		
-		PeakTable.SYSTEM.setSource(new SerializedPeakTable(original, peakfile));
+		// Force the peak table to generate data
+		PeakTable.SYSTEM.getAll();
 	}
-	
+
 	private static void initPluginSystem() {
 		FilterRegistry.init(DesktopApp.appDir("Plugins/Filter"));
 		MapFilterRegistry.init(DesktopApp.appDir("Plugins/MapFilter"));
@@ -291,7 +287,7 @@ public class Peakaboo {
 					File f = FileDrop.getUrlAsFile(url, urlProgress);
 					files.add(f);
 				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString());
+					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString(), e);
 					return null;
 				}
 				count.set(count.get()+1);

@@ -12,6 +12,10 @@ import org.peakaboo.framework.eventful.EventfulBeacon;
 
 public class ViewController extends EventfulBeacon {
 
+	// Zoom range constants
+	public static final float ZOOM_MIN = 0.1f;
+	public static final float ZOOM_MAX = 10.0f;
+
 	private SessionViewModel viewModel;
 	private PlotController plot;
 	// Don't save dark mode in the session view model or else it'll end up in the session files.
@@ -69,7 +73,7 @@ public class ViewController extends EventfulBeacon {
 
 	public void setChannelViewMode(ChannelViewMode mode) {
 		viewModel.channelView = mode;
-		setUndoPoint(mode.longName());
+		setUndoPoint(mode.name());
 		plot.filtering().filteredDataInvalidated();
 	}
 	

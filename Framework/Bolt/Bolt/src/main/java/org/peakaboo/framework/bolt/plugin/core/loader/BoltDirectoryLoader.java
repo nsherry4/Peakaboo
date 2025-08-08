@@ -160,10 +160,14 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 	 * Determines the name of a File, were it to be imported to the given directory.
 	 */
 	public File importedFile(File file) {
-		ensure();
-		return new File(directory.getAbsolutePath() + File.separator + file.getName());
+		return importedFile(file.getName());
 	}
 
+	public File importedFile(String filename) {
+		ensure();
+		return new File(directory.getAbsolutePath() + File.separator + filename);
+	}
+	
 	protected static URL fileToURL(File file) {
 		try {
 			return file.toURI().toURL();

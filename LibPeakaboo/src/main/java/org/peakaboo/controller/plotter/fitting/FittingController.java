@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ import org.peakaboo.curvefit.peak.search.searcher.DoubleDerivativePeakSearcher;
 import org.peakaboo.curvefit.peak.search.searcher.PeakSearcher;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.cyclops.Mutable;
@@ -257,7 +260,7 @@ public class FittingController extends EventfulType<Boolean>
 		return fittingModel.selections.getFittingParameters().getDetectorMaterial();
 	}
 	
-	public List<ITransitionSeries> proposeTransitionSeriesFromChannel(final int channel, ITransitionSeries currentTS)
+	public List<ITransitionSeries> proposeTransitionSeriesFromChannel(final int channel, ITransitionSeries currentTS, Supplier<Optional<TransitionShell>> shellFilter)
 	{
 		
 		if (! plot.data().hasDataSet() ) return null;
@@ -270,7 +273,8 @@ public class FittingController extends EventfulType<Boolean>
 				this.getFittingSolver(),
 				channel,
 				currentTS,
-				6
+				6,
+				shellFilter.get()
 		).stream().map(p -> p.first).collect(Collectors.toList());
 	}
 
@@ -416,14 +420,14 @@ public class FittingController extends EventfulType<Boolean>
 		setUndoPoint("Change Peak Shape");
 	}
 
-	public void setFittingFunction(PluginDescriptor<? extends FittingFunction> cls) {
+	public void setFittingFunction(PluginDescriptor<FittingFunction> cls) {
 		fittingModel.selections.getFittingParameters().setFittingFunction(cls);
 		fittingModel.proposals.getFittingParameters().setFittingFunction(cls);
 		fittingDataInvalidated();
 		setUndoPoint("Change Peak Model");
 	}
 	
-	public PluginDescriptor<? extends FittingFunction> getFittingFunction() {
+	public PluginDescriptor<FittingFunction> getFittingFunction() {
 		return fittingModel.selections.getFittingParameters().getFittingFunction();
 	}
 	
@@ -467,10 +471,6 @@ public class FittingController extends EventfulType<Boolean>
 			if (!exec.getCompleted()) return;
 			if (ran.get()) return;
 			ran.set(true);
-			for (ITransitionSeries ts : exec.getResult()) {
-				getFittingSelections().addTransitionSeries(ts);
-			}
-			fittingDataInvalidated();
 		});
 		
 		
@@ -550,7 +550,7 @@ public class FittingController extends EventfulType<Boolean>
 			savedannos, 
 			getFittingSolver().save(), 
 			getCurveFitter().save(),
-			getFittingFunction().save(),
+			getFittingFunction().save().orElseThrow(),
 			fittingModel.selections.getFittingParameters().save()
 		);
 	}
@@ -600,10 +600,13 @@ public class FittingController extends EventfulType<Boolean>
 		
 		//Restore the fitting function
 		try {
-			PluginDescriptor<? extends FittingFunction> oProto = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
-			if (oProto == null) {
+			var lookup = FittingFunctionRegistry.system().getByUUID(saved.model.uuid);
+			PluginDescriptor<FittingFunction> oProto;
+			if (lookup.isEmpty()) {
 				errors.add("Failed to load Fitting Function: " + saved.model.name);
 				oProto = FittingFunctionRegistry.system().getPreset();
+			} else {
+				oProto = lookup.get();
 			}
 			fittingModel.selections.getFittingParameters().setFittingFunction(oProto);
 			fittingModel.proposals.getFittingParameters().setFittingFunction(oProto);
@@ -622,8 +625,6 @@ public class FittingController extends EventfulType<Boolean>
 		return errors;
 		
 	}
-	
-	
 	
 }
 
