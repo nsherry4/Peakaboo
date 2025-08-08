@@ -19,7 +19,9 @@ import org.peakaboo.curvefit.peak.transition.Transition;
  */
 public class EnergyProximityScorer implements FittingScorer {
 
-	private float energy;
+	private final float ENERGY_MARGIN = 0.2f; // 200 eV
+    private final float ENERGY_NOISE_FLOOR = 0.02f; // 20eV
+    private float energy;
 	private FittingParametersView parameters;
 	
 	public EnergyProximityScorer(float energy, FittingParametersView parameters) {
@@ -52,25 +54,28 @@ public class EnergyProximityScorer implements FittingScorer {
 	}
 	
 	private float proxScore(Transition t, float maxRel, EnergyCalibration calibration) {
-		float proxScore = 0;
 		if (t.energyValue < calibration.getMinEnergy() || t.energyValue > calibration.getMaxEnergy()) {
 			return 0;
 		}
-		
-		proxScore = Math.abs(t.energyValue - this.energy);
-		
-		//More precision than the 2x energy per channel is just noise, don't 
-		//reward the 0.0001keV fit over the 0.001keV fit...
-		proxScore = Math.max(proxScore, calibration.energyPerChannel()*2f);
-		
+
+        float energyDelta = Math.abs(t.energyValue - this.energy);
+
+		// Deltas smaller than 2 channels are below the noise floor, don't
+		// reward the 0.0001keV fit over the 0.001keV fit...
+		energyDelta = Math.max(energyDelta, ENERGY_NOISE_FLOOR);
+
+
+        System.out.println(calibration.energyPerChannel());
+
 		//Because larger scores are better
-		proxScore = calibration.energyPerChannel()*10 - proxScore;
+		float proxScore = ENERGY_MARGIN - energyDelta;
 		if (proxScore <= 0) {
 			return 0;
 		}
 		
 		proxScore *= t.relativeIntensity / maxRel;
 		return proxScore;
+
 	}
 
 }
