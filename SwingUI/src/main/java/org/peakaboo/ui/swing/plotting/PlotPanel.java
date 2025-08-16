@@ -485,9 +485,9 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		AboutLayer.Contents contents = new AboutLayer.Contents();
 		contents.name = Tier.provider().appName();
 		contents.description = "XRF Analysis Software";
-		contents.linkAction = () -> DesktopApp.browser("http://peakaboo.org");
+		contents.linkAction = () -> DesktopApp.browser("https://peakaboo.org");
 		contents.linktext = "Website";
-		contents.copyright = "2009-2024 by The University of Western Ontario and The Canadian Light Source Inc.";
+		contents.copyright = "2009-2025 by The University of Western Ontario and The Canadian Light Source Inc.";
 
 		try {
 			contents.licence = IOUtils.toString( getClass().getResourceAsStream("/org/peakaboo/licence.txt"), StandardCharsets.UTF_8 );
