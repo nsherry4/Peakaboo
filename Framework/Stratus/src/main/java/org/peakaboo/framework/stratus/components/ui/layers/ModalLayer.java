@@ -98,13 +98,13 @@ public class ModalLayer implements Layer {
 		setModalPanelComponent(modalPanel, this.component);
 		
 		//set blur in case another layer is placed on top of this one
-		LayerBlurUI<JComponent> blurUI = new LayerBlurUI<JComponent>(this.owner, this.component) {
+		LayerShadeUI<JComponent> shadeUI = new LayerShadeUI<JComponent>(this.owner, this.component) {
 			@Override
 			public void eventDispatched(AWTEvent e, JLayer<? extends JComponent> l) {
 				((InputEvent) e).consume();
 			}
 		};
-		JLayer<JComponent> layer = new JLayer<JComponent>(modalPanel, blurUI);
+		JLayer<JComponent> layer = new JLayer<JComponent>(modalPanel, shadeUI);
 		
 		layer.setVisible(true);
 		layer.setOpaque(false);

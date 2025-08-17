@@ -64,9 +64,6 @@ public class EnergyProximityScorer implements FittingScorer {
 		// reward the 0.0001keV fit over the 0.001keV fit...
 		energyDelta = Math.max(energyDelta, ENERGY_NOISE_FLOOR);
 
-
-        System.out.println(calibration.energyPerChannel());
-
 		//Because larger scores are better
 		float proxScore = ENERGY_MARGIN - energyDelta;
 		if (proxScore <= 0) {

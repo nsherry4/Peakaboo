@@ -287,7 +287,14 @@ public class MappingController extends EventfulType<MapUpdateType>
 	}
 	
 	public void writeCSV(OutputStream os) throws IOException {
-		os.write(getFitting().mapAsCSV().getBytes());
+		os.write(getCSV().getBytes());
+	}
+	
+	/**
+	 * Returns a CSV string of the current filtered map
+	 */
+	public String getCSV() {
+		return getFitting().mapAsCSV();
 	}
 	
 

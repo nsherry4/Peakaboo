@@ -14,14 +14,14 @@ public class ContentLayer implements Layer {
 	
 	public ContentLayer(LayerPanel parent, boolean topFade) {
 		//set blur in case another layer is placed on top of this one
-		LayerBlurUI<JComponent> blurUI = new LayerBlurUI<JComponent>(parent, contentPanel) {
+		LayerShadeUI<JComponent> shadeUI = new LayerShadeUI<JComponent>(parent, contentPanel) {
 			@Override
 			public void eventDispatched(AWTEvent e, JLayer<? extends JComponent> l) {
 				((InputEvent) e).consume();
 			}
 		};
-		blurUI.setTopFade(topFade);
-		contentJLayer = new JLayer<JComponent>(contentPanel, blurUI);
+		shadeUI.setTopFade(topFade);
+		contentJLayer = new JLayer<JComponent>(contentPanel, shadeUI);
 	}
 	
 	@Override

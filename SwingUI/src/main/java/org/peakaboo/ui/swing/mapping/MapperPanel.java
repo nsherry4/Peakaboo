@@ -192,7 +192,7 @@ public class MapperPanel extends TabbedLayerPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		canvasContainer.add(warnOnTooSmallDataset, c);
 
-		statusBar = new MapStatusBar(controller);
+		statusBar = new MapStatusBar(controller, this);
 
 		c.gridx = 0;
 		c.gridy = 2;
