@@ -110,7 +110,8 @@ class AlignedListCellRenderer extends DefaultListCellRenderer {
         // DefaultListCellRenderer uses a JLabel as the rendering component:
         JLabel lbl = (JLabel)super.getListCellRendererComponent(
                 list, value, index, isSelected, cellHasFocus);
-        lbl.setHorizontalAlignment(align);
+        lbl.setBorder(new EmptyBorder(4, 4, 4, 4));
+		lbl.setHorizontalAlignment(align);
         return lbl;
     }
 }

@@ -58,31 +58,26 @@ class LayerShadeUI<T extends Component> extends LayerUI<T> {
 				Layer aboveLayer = optAboveLayer.get();
 				var above = aboveLayer.getOuterComponent();
 				if (above != null) {
-					if (Stratus.lowGraphicsMode) {
-						// Draw 1px border around upper layer in low graphics mode
-						g2.setColor(StratusColour.lessTransparent(Stratus.getTheme().getWidgetBorderAlpha(), 0.2f));
-						g2.drawRect(above.getX() - 1, above.getY() - 1, above.getWidth() + 1, above.getHeight() + 1);
-					} else {
-						// Draw multi-layer drop shadow with matching corner radius
-						float cornerRadius = aboveLayer.getCornerRadius();
-						int shadowLayers = 8;
-						for (int i = shadowLayers; i > 0; i--) {
-							// Accommodate rounded corners by continuing the gradient underneath the above layer
-							float offset = i - 2;
-							// Non-linear falloff
-							float alpha = 0.4f / i;
-							var shadow = new RoundRectangle2D.Float(
-								above.getX() - offset,
-								above.getY() - offset + 2,
-								above.getWidth() + offset * 2,
-								above.getHeight() + offset * 2,
-								cornerRadius + offset,
-								cornerRadius + offset
-							);
-							g2.setColor(new Color(0, 0, 0, alpha));
-							g2.fill(shadow);
-						}
+					// Draw multi-layer drop shadow with matching corner radius
+					float cornerRadius = aboveLayer.getCornerRadius();
+					int shadowLayers = 8;
+					for (int i = shadowLayers; i > 0; i--) {
+						// Accommodate rounded corners by continuing the gradient underneath the above layer
+						float offset = i - 2;
+						// Non-linear falloff
+						float alpha = 0.4f / i;
+						var shadow = new RoundRectangle2D.Float(
+							above.getX() - offset,
+							above.getY() - offset + 2,
+							above.getWidth() + offset * 2,
+							above.getHeight() + offset * 2,
+							cornerRadius + offset,
+							cornerRadius + offset
+						);
+						g2.setColor(new Color(0, 0, 0, alpha));
+						g2.fill(shadow);
 					}
+					
 				}
 			}
 
