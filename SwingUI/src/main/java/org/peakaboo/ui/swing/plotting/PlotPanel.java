@@ -1,15 +1,6 @@
 package org.peakaboo.ui.swing.plotting;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -31,14 +22,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.MatteBorder;
 
 import org.apache.commons.io.IOUtils;
@@ -94,6 +78,8 @@ import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
 import org.peakaboo.framework.stratus.components.panels.TitledPanel;
 import org.peakaboo.framework.stratus.components.ui.colour.ColourChooser;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.AboutLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
@@ -800,10 +786,9 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		load(List.of(new PathDataInputAdapter(session)));
 	}
 
-	public void actionShowInfo() {
-
+	public Map<String, String> getProperties() {
 		Map<String, String> properties;
-
+		
 		properties = new LinkedHashMap<>();
 		properties.put("Data Format",
 				"" + controller.data().getDataSet().getDataSource().getFileFormat().getFormatName());
@@ -811,44 +796,74 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		properties.put("Scan Count", "" + controller.data().getDataSet().getScanData().scanCount());
 		properties.put("Channels per Scan", "" + controller.data().getDataSet().getAnalysis().channelsPerScan());
 		properties.put("Maximum Intensity", "" + controller.data().getDataSet().getAnalysis().maximumIntensity());
-
+		
 		// Only load those attributes which have values
 		BiConsumer<String, String> populator = (k, v) -> {
 			if (v != null && !"".equals(v)) {
 				properties.put(k, v);
 			}
 		};
-
+		
 		// Extended attributes
 		if (controller.data().getDataSet().getMetadata().isPresent()) {
 			Metadata metadata = controller.data().getDataSet().getMetadata().get();
-
+			
 			populator.accept("Date of Creation", metadata.getCreationTime());
 			populator.accept("Created By", metadata.getCreator());
-
+			
 			populator.accept("Project Name", metadata.getProjectName());
 			populator.accept("Session Name", metadata.getSessionName());
 			populator.accept("Experiment Name", metadata.getExperimentName());
 			populator.accept("Sample Name", metadata.getSampleName());
 			populator.accept("Scan Name", metadata.getScanName());
-
+			
 			populator.accept("Facility", metadata.getFacilityName());
 			populator.accept("Laboratory", metadata.getLaboratoryName());
 			populator.accept("Instrument", metadata.getInstrumentName());
 			populator.accept("Technique", metadata.getTechniqueName());
-
+			
 		}
+		
+		return properties;
+	}
+	
+	public void actionShowInfo() {
 
-		TitledPanel propPanel = new TitledPanel(new PropertyPanel(properties), false);
+		Map<String, String> properties = getProperties();
+		
+		TitledPanel propPanel = new TitledPanel(new PropertyPanel(getProperties()), false);
 		propPanel.setBorder(Spacing.bHuge());
+		
+		Timer[] timerBox = new Timer[1];
+		
+		FluentButton copy = new FluentButton()
+				.withIcon(StockIcon.EDIT_COPY)
+				.withTooltip("Copy properties")
+				.withButtonSize(FluentButtonSize.COMPACT)
+				.withBordered(FluentButtonConfig.BorderStyle.ACTIVE)
+				.withAction(() -> {
+					
+					// Format the output
+					String output = properties.entrySet().stream()
+							.map(e -> e.getKey() + ": " + e.getValue())
+							.reduce((a, b) -> a + "\n" + b)
+							.orElse("");
+					
+					this.copyInteraction(output, timerBox);
+					
+				});
 
+		
+		
 		HeaderLayer layer = new HeaderLayer(this, true);
 		layer.setBody(propPanel);
 		layer.getHeader().setCentre("Dataset Information");
+		layer.getHeader().setLeft(copy);
 		this.pushLayer(layer);
 
 	}
 
+	
 	public void actionGuessMaxEnergy() {
 
 		if (controller == null)

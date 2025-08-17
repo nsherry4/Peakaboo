@@ -66,6 +66,8 @@ public class PlotStatusBar extends ClearPanel {
 
 		zoom = new PlotZoomControls(controller);
 		
+		
+		Timer[] debounceBox = new Timer[1];
 		clipboardButton = new FluentButton()
 				.withIcon(StockIcon.EDIT_COPY)
 				.withTooltip("Copy single spectrum to clipboard as CSV")
@@ -84,12 +86,8 @@ public class PlotStatusBar extends ClearPanel {
 					}
 
 					// Copy to clipboard
-					StringSelection stringSelection = new StringSelection(csv.toString());
-					Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-					clipboard.setContents(stringSelection, null);
+					plotPanel.copyInteraction(csv.toString(), debounceBox);
 					
-					// Show confirmation toast with debouncing
-					showDebouncedToast();
 				}
 		);
 
@@ -149,23 +147,5 @@ public class PlotStatusBar extends ClearPanel {
 		if (pRaw.isVisible()) pRaw.setVisible(false);
 	}
 	
-	private void showDebouncedToast() {
-		// If timer is already running, suppress this toast
-		if (toastDebounceTimer != null && toastDebounceTimer.isRunning()) {
-			return;
-		}
-		
-		// Show the toast immediately
-		ToastLayer toast = new ToastLayer(plotPanel, "Spectrum copied to clipboard as CSV");
-		plotPanel.pushLayer(toast);
-		
-		// Start debounce timer to suppress future toasts for 5 seconds
-		toastDebounceTimer = new Timer(5000, e -> {
-			// Timer finished, next toast can be shown
-		});
-		toastDebounceTimer.setRepeats(false);
-		toastDebounceTimer.start();
-	}
-
 
 }
