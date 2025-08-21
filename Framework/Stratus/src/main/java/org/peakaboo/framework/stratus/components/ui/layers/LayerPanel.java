@@ -1,14 +1,11 @@
 package org.peakaboo.framework.stratus.components.ui.layers;
 
-import java.awt.Component;
-import java.awt.Frame;
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.util.Optional;
 import java.util.Stack;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import org.peakaboo.framework.stratus.components.ui.live.LiveFrame;
 
@@ -161,6 +158,36 @@ public class LayerPanel extends JLayeredPane {
 		return contentLayer.getContent();
 	}
 	
+	
+	public void copyInteraction(String contents, Timer[] debouncerBox) {
+		
+		// Copy to clipboard
+		StringSelection stringSelection = new StringSelection(contents);
+		java.awt.datatransfer.Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(stringSelection, null);
+		
+		Timer debouncer = debouncerBox[0];
+		
+		// Show confirmation toast with debouncing
+		// If timer is already running, suppress this toast
+		if (debouncer != null && debouncer.isRunning()) {
+			return;
+		}
+		
+		// Show the toast immediately
+		ToastLayer toast = new ToastLayer(this, "Copied to clipboard");
+		this.pushLayer(toast);
+		
+		// Start debounce timer to suppress future toasts for 5 seconds
+		debouncer = new Timer(5000, e -> {
+			// Timer finished, next toast can be shown
+		});
+		debouncerBox[0] = debouncer;
+		debouncer.setRepeats(false);
+		debouncer.start();
+		
+	}
+	
 	/**
 	 * Tests if this component either <i>is</i>, or is <i>contained in</i> a LayerPanel.
 	 * @return true if this component or one of its transitive parents is a LayerPanel, false otherwise.
@@ -189,7 +216,7 @@ public class LayerPanel extends JLayeredPane {
 		return null;
 	}
 	
-
+	
 }
 
 

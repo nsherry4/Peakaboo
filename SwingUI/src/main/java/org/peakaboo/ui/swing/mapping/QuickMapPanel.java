@@ -55,9 +55,11 @@ public class QuickMapPanel extends HeaderLayer {
 	) {
 		super(plotTab, true, true);
 		
+		String mapTitle = "QuickMap of Channel " + channel;
+		
 		RawDataController rawDataController = new RawDataController();
 		DataSet sourceDataset = plotcontroller.data().getDataSet();
-		rawDataController.setMapData(maps, sourceDataset, "", Collections.emptyList(), Tier.provider().createDetectorProfile());
+		rawDataController.setMapData(maps, sourceDataset, mapTitle, Collections.emptyList(), Tier.provider().createDetectorProfile());
 		this.controller = new MappingController(rawDataController, plotcontroller);
 		
 		// load saved dimensions, and when the window closes, save them
@@ -110,13 +112,23 @@ public class QuickMapPanel extends HeaderLayer {
 			if (t == MapUpdateType.UI_OPTIONS) {
 				selections.setSelection(controller.getSelection().getSelectionType());
 			}
+			
+			// Double-redraw solves some issues around image sizing and alignment
+			canvas.setNeedsRedraw(true);
+			canvas.repaint();
+			// Delay the redraw operations to ensure canvas size is fully updated
+			SwingUtilities.invokeLater(() -> {
+				canvas.setNeedsRedraw(true);
+				canvas.repaint();
+			});
+			
 		});
 		selections.setSelection(controller.getSelection().getSelectionType());
 		
 		plotSelection = new PlotSelectionButton(IconSize.BUTTON, controller, plotTabs);
 			
 				
-		getHeader().setCentre("QuickMap of Channel " + channel);
+		getHeader().setCentre(mapTitle);
 		getHeader().setRight(new ComponentStrip(sizingButton, viewButton));
 		getHeader().setLeft(new ComponentStrip(selections, plotSelection));
 		
