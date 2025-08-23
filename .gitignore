@@ -14,3 +14,12 @@
 */.gitignore
 */*/.gitignore
 */*/*/.gitignore
+
+*.class
+
+**/target/classes/**
+**/target/maven-status/**
+**/target/surefire-reports/**
+**/pom.xml.versionsBackup
+.idea/**
+.gitignore
