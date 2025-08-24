@@ -70,7 +70,7 @@ public class PlotStatusBar extends ClearPanel {
 		Timer[] debounceBox = new Timer[1];
 		clipboardButton = new FluentButton()
 				.withIcon(StockIcon.EDIT_COPY)
-				.withTooltip("Copy single spectrum to clipboard as CSV")
+				.withTooltip("Copy single spectrum as CSV")
 				.withBordered(FluentButtonConfig.BorderStyle.ACTIVE)
 				.withAction(() -> {
 					SpectrumView spectrum = this.controller.getPlotDataSpectra().filtered();
