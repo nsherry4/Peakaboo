@@ -177,7 +177,7 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 	}
 	
 	private void download() {
-		DesktopApp.browser("https://github.com/nsherry4/PeakabooPlugins/releases/latest");
+		DesktopApp.browser("https://github.com/PeakabooLabs/PeakabooPlugins/releases/latest");
 	}
 	
 	
