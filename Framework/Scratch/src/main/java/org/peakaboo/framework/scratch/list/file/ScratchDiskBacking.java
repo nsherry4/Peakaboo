@@ -1,5 +1,8 @@
 package org.peakaboo.framework.scratch.list.file;
 
+import org.peakaboo.framework.accent.numeric.LongRange;
+import org.peakaboo.framework.accent.numeric.LongRangeSet;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;

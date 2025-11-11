@@ -9,7 +9,7 @@ import org.peakaboo.app.Version;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
-import org.peakaboo.framework.cyclops.Mutable;
+import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.stratus.components.dialogs.error.ErrorDialog;
 import org.peakaboo.framework.stratus.components.dialogs.error.ErrorDialog.Feedback;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;

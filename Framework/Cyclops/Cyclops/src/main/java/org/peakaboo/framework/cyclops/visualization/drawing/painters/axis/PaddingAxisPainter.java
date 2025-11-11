@@ -1,6 +1,6 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.painters.axis;
 
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 
 public class PaddingAxisPainter extends AxisPainter {

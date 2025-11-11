@@ -14,16 +14,22 @@
 	<url>http://maven.apache.org</url>
 
 	<modules>
-		<!-- Modules with no internal deps -->
+
+        <!-- This module shouldn't depend on anything else in the project -->
+        <module>Accent</module> <!-- Base utility module -->
+
+        <!-- These modules shouldn't depend on anything besides accent -->
+        <module>Stratus</module> <!-- Base UI module -->
+        <module>Eventful</module> <!-- Base event-driven module -->
+        <module>Druthers</module> <!-- Base settings module -->
+
+        <!-- These modules can depend on the previous sets of modules -->
 		<module>Bolt</module>
-		<module>Stratus</module>
-		<module>Eventful</module>
 		<module>Scratch</module>
-		<module>Druthers</module>
-		<!-- Modules with internal deps -->
-		<module>Cyclops</module>
+        <module>Cyclops</module>
 		<module>AutoDialog</module>
 		<module>Plural</module>
+
 	</modules>
 
 	<build>

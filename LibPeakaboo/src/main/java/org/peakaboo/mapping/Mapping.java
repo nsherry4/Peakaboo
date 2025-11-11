@@ -18,9 +18,10 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.accent.numeric.Range;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
@@ -155,7 +156,8 @@ public class Mapping {
 		
 		
 		StreamExecutor<RawMapSet> quickmapper = new StreamExecutor<>("Examining Spectra", Math.max(1, mapsize / 100));
-		quickmapper.setTask(new Range(0, scanCount), stream -> {
+		// Range stop value is inclusive, so we -1 to shift from 1-based to 0-based counting
+		quickmapper.setTask(new Range(0, scanCount - 1), stream -> {
 			
 			long timePre = System.currentTimeMillis();
 			
@@ -165,7 +167,8 @@ public class Mapping {
 				if (noncontiguous) {
 					translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
 				}
-				mapdata.set(translated, ds.getScanData().get(index).get(channel));
+				SpectrumView scan = ds.getScanData().get(index);
+				mapdata.set(translated, scan.get(channel));
 			});
 			
 			long timePost = System.currentTimeMillis();

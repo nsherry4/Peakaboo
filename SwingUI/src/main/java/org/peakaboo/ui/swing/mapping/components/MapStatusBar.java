@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;

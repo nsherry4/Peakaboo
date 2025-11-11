@@ -4,8 +4,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.cyclops.RangeSet;
+import org.peakaboo.framework.accent.numeric.Range;
+import org.peakaboo.framework.accent.numeric.RangeSet;
 
 public class RangeTests {
 

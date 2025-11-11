@@ -3,7 +3,7 @@ package org.peakaboo.curvefit.curve.fitting;
 import java.util.Set;
 
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.RangeSet;
+import org.peakaboo.framework.accent.numeric.RangeSet;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;

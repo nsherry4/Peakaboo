@@ -4,10 +4,9 @@ import org.peakaboo.app.Settings;
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.display.map.modes.MapModeRegistry;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
-import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;

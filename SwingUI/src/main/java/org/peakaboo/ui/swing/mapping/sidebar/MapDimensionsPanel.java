@@ -11,7 +11,7 @@ import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;

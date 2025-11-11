@@ -2,7 +2,7 @@ package org.peakaboo.display.map.modes;
 
 import java.util.Optional;
 
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;

@@ -3,7 +3,7 @@ package org.peakaboo.controller.mapper.selection;
 import java.util.Optional;
 
 import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 

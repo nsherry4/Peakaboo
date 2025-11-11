@@ -1,7 +1,7 @@
 package org.peakaboo.controller.mapper.selection;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 
 public abstract class AbstractSelection implements Selection {
 

@@ -6,8 +6,8 @@ import java.util.List;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
-import org.peakaboo.framework.cyclops.Range;
-import org.peakaboo.framework.cyclops.RangeSet;
+import org.peakaboo.framework.accent.numeric.Range;
+import org.peakaboo.framework.accent.numeric.RangeSet;
 
 import com.github.tschoonj.xraylib.Xraylib;
 

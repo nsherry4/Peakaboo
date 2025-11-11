@@ -17,11 +17,11 @@ import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
+import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.cyclops.Mutable;
+import org.peakaboo.framework.accent.numeric.IntPair;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.tier.Tier;
 

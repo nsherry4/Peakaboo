@@ -1,7 +1,7 @@
 package org.peakaboo.controller.mapper.fitting.modes.components;
 
 import org.peakaboo.controller.mapper.fitting.modes.ModeController;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;

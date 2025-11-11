@@ -3,6 +3,8 @@ package org.peakaboo.framework.cyclops;
 
 import java.util.List;
 
+import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.numeric.IntPair;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 

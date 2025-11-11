@@ -28,6 +28,11 @@
 			<artifactId>druthers</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.peakaboo.framework</groupId>
+            <artifactId>accent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 	<build>

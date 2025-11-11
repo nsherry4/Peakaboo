@@ -9,9 +9,9 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.RealSpinnerStyle;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Range;
+import org.peakaboo.framework.accent.numeric.Range;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;

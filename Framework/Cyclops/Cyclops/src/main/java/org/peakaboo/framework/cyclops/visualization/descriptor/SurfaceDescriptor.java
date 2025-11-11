@@ -1,6 +1,6 @@
 package org.peakaboo.framework.cyclops.visualization.descriptor;
 
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 
 public interface SurfaceDescriptor {

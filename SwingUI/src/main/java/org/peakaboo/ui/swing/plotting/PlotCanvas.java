@@ -27,7 +27,7 @@ import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
@@ -35,8 +35,6 @@ import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
-import org.peakaboo.ui.swing.plugins.PluginPanel;
-
 
 
 /**

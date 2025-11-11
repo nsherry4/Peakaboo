@@ -2,7 +2,7 @@ package org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.png;
 
 import java.awt.image.BufferedImage;
 
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.descriptor.AbstractSurfaceDescriptor;
 
