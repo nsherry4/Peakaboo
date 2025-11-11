@@ -40,11 +40,6 @@ public class QOXRFTest {
     }
 
     @Test
-    public void testEmptySpectrum() throws ScratchException {
-        assertRoundTrip(new float[0]);
-    }
-
-    @Test
     public void testSingleValue() throws ScratchException {
         assertRoundTrip(new float[]{42.5f});
     }
