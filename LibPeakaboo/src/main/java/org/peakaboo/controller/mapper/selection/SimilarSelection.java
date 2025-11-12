@@ -136,8 +136,8 @@ class SimilarSelection extends AbstractSelection {
 		//All points, even those not touching
 		IntArrayList points = new IntArrayList();
 		float thresholdValue = threshold.getValue();
-		for (int y : new Range(0, grid.height)) {
-			for (int x : new Range(0, grid.width)) {
+		for (int y : new Range(0, grid.height-1)) {
+			for (int x : new Range(0, grid.width-1)) {
 				float other = grid.get(data, x, y);
 				
 				// match * or / threshold percent (eg threshold=1.2 so (other/1.2, other*1.2)

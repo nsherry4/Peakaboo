@@ -95,7 +95,7 @@ public class Mapping {
 		int interval = (int)Math.max(10, Math.ceil(count / 100f));
 
 		StreamExecutor<RawMapSet> streamer = new StreamExecutor<>("Applying Filters & Fittings", interval);
-		streamer.setTask(new Range(0, dataset.getScanData().scanCount()), stream -> {
+		streamer.setTask(new Range(0, count - 1), stream -> {
 			
 			long t1 = System.currentTimeMillis();
 			

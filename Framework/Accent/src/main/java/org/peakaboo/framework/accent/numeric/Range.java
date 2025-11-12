@@ -9,10 +9,35 @@ import java.util.List;
  * Represents a range of integer values including a step size. The representation
  * of the range is inclusive of the upper bound value.
  * <br><br>
- * While convention is to make the upper bound exclusive, this does not work as well
- * when step sizes are introduced. A range of 1..5 representing [1, 2, 3, 4] may
- * work well, but a range of 3..9:3 representing only [3, 6] and not [3, 6, 9] makes
- * the exclusive upper bound a less appealing notation in this case.
+ * <h3>Why Inclusive Upper Bounds?</h3>
+ * While programming convention typically uses exclusive upper bounds (like Python's range()),
+ * this class uses inclusive upper bounds for several important reasons:
+ * <br><br>
+ * <b>1. Natural Notation with Step Sizes:</b><br>
+ * With step sizes other than 1, inclusive bounds provide clearer intent. Consider
+ * a range representing values from 3 to 9 in steps of 3:
+ * <ul>
+ * <li>Inclusive: Range(3, 9, 3) = [3, 6, 9] - the upper bound 9 clearly indicates "include 9"</li>
+ * <li>Exclusive: Range(3, 9, 3) = [3, 6] - to include 9, you'd need Range(3, 12, 3) where 12 is arbitrary</li>
+ * </ul>
+ * <br>
+ * <b>2. Single-Element Ranges:</b><br>
+ * Representing a single value becomes natural: Range(5, 5) = [5]. With exclusive bounds,
+ * this would be empty and require Range(5, 6) instead, which is unintuitive when working
+ * with named constants or specific channel/index values.
+ * <br><br>
+ * <b>3. Clear Semantic Intent:</b><br>
+ * When specifying channel ranges or array indices, inclusive notation matches how we think:
+ * "channels 5 through 7" naturally maps to Range(5, 7) = [5, 6, 7]. The bounds directly
+ * represent the actual values you want, not abstract limits.
+ * <br><br>
+ * <b>4. Alignment with Mathematical Notation:</b><br>
+ * Closed interval notation [a, b] is standard in mathematics for "all values from a to b inclusive."
+ * This aligns better with how ranges are used in scientific applications.
+ * <br><br>
+ * <b>Trade-off:</b> For the common case of iterating over array indices with step=1,
+ * you must write Range(0, array.length-1) rather than Range(0, array.length). This is
+ * a worthwhile trade-off for the clarity gained when working with non-unit step sizes.
  *
  * @author Nathaniel Sherry
  *

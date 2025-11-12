@@ -183,8 +183,10 @@ public class Curve implements CurveView {
 			//get the centre of the peak in channels
 			mean = t.energyValue;
 
+			// calculate the bounds of which channels are important for this transition
 			start = calibration.channelFromEnergy(mean - range);
 			stop = calibration.channelFromEnergy(mean + range);
+			// bounds checking the range
 			int max = calibration.getDataWidth() - 1;
 			int min = 0;
 			if (stop < min || start > max) { continue; }
@@ -193,7 +195,7 @@ public class Curve implements CurveView {
 
 			baseSize += stop - start + 1;
 			
-			intenseRanges.addRange(new Range(start, stop+1));
+			intenseRanges.addRange(new Range(start, stop));
 			
 		}
 		
