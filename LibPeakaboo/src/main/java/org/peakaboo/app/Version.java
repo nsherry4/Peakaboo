@@ -1,11 +1,11 @@
 package org.peakaboo.app;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -13,7 +13,16 @@ import org.peakaboo.framework.accent.AlphaNumericComparitor;
 import org.peakaboo.tier.Tier;
 
 public class Version {
-
+	
+	public final static int VERSION_MAJOR = 6;
+	public final static int VERSION_MINOR = 0;
+	public final static int VERSION_POINT = 0;
+	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
+	public final static String PROGRAM_NAME = "Peakaboo";
+	
+	public final static ReleaseType RELEASE_TYPE = ReleaseType.DEVELOPMENT;
+	
+	
 	public enum ReleaseType {
 		DEVELOPMENT,
 		CANDIDATE,
@@ -27,24 +36,30 @@ public class Version {
 		prop = new Properties();
 		try {
 			InputStream versionInfoFile = Version.class.getResourceAsStream("/org/peakaboo/common/version.info");
-			prop.load(versionInfoFile);
-			buildDate = prop.getProperty("builddate");
+			if (versionInfoFile == null) {
+				// We don't log because this is too early in application startup for the logger to be initialized
+				System.err.println("WARNING: Version property file not found");
+			} else {
+				prop.load(versionInfoFile);
+				String rawBuildDate = prop.getProperty("builddate");
+				// Check if the Maven placeholder hasn't been replaced yet
+				if (rawBuildDate != null && !rawBuildDate.contains("${")) {
+					buildDate = rawBuildDate;
+				} else {
+					System.err.println("WARNING: Build date property not populated by Maven build");
+				}
+			}
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.WARNING, "Cannot load version property file", e);
+			System.err.println("WARNING: Cannot load version property file: " + e.getMessage());
+		}
+
+		// For DEV and RC builds, use current date if buildDate is empty
+		// For RELEASE builds, leave empty to fail visibly
+		if (buildDate.isEmpty() && RELEASE_TYPE != ReleaseType.RELEASE) {
+			buildDate = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 		}
 	}
 	
-	
-	public final static int VERSION_MAJOR = 6;
-	public final static int VERSION_MINOR = 0;
-	public final static int VERSION_POINT = 0;
-	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
-	public final static String PROGRAM_NAME = "Peakaboo";
-	
-	public final static ReleaseType RELEASE_TYPE = ReleaseType.DEVELOPMENT;
-	
-
-
 	
 	public final static String RELEASE_DESCRIPTION;
 	public final static String RELEASE_TITLE;
@@ -112,15 +127,15 @@ public class Version {
 	}
 	
 	private static boolean hasNewVersion(URL url) throws IOException {
-		
+
 		String thisVersion = LONG_VERSION;
 		String otherVersion = "";
-		
+
 
 		URLConnection conn = url.openConnection();
 		conn.setConnectTimeout(5000);
 		conn.setReadTimeout(5000);
-		
+
 		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		String inputLine;
         while ((inputLine = in.readLine()) != null) {
@@ -128,12 +143,30 @@ public class Version {
         }
         otherVersion = otherVersion.trim();
         in.close();
-        
+
 		AlphaNumericComparitor cmp = new AlphaNumericComparitor(false);
 		return cmp.compare(thisVersion, otherVersion) < 0;
 
 	}
-	
-	
-	
+
+	/**
+	 * Parses the build date string into a LocalDate object.
+	 * The build date format is yyyy-MM-dd as set in the Maven pom.xml.
+	 * @return LocalDate representing the build date, or current date if parsing fails
+	 */
+	public static LocalDate getBuildDate() {
+		if (buildDate == null || buildDate.isEmpty()) {
+			PeakabooLog.get().log(Level.WARNING, "Build date is empty, using current date");
+			return LocalDate.now();
+		}
+
+		try {
+			return LocalDate.parse(buildDate, DateTimeFormatter.ISO_LOCAL_DATE);
+		} catch (DateTimeParseException e) {
+			PeakabooLog.get().log(Level.WARNING, "Could not parse build date '" + buildDate + "', using current date", e);
+			return LocalDate.now();
+		}
+	}
+
+
 }
