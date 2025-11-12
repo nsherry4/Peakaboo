@@ -1,5 +1,5 @@
 --input ./jar
---name "Peakaboo" 
+--name "PeakabooDev"
 --main-class org.peakaboo.ui.swing.Peakaboo 
 --main-jar Peakaboo.jar 
 --description "XRF Analysis Software"
