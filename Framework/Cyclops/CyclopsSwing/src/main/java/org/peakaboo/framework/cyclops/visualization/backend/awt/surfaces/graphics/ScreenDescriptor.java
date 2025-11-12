@@ -1,6 +1,6 @@
 package org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.graphics;
 
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 

@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops;
+package org.peakaboo.framework.accent.numeric;
 
 import java.io.Serializable;
 

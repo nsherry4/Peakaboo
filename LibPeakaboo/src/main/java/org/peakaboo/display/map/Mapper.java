@@ -1,14 +1,13 @@
 package org.peakaboo.display.map;
 
 
-import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.peakaboo.display.Display;
 import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.MapModeRegistry;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;

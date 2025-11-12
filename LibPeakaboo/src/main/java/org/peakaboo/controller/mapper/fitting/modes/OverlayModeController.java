@@ -13,7 +13,7 @@ import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.overlay.OverlayChannel;
 import org.peakaboo.display.map.modes.overlay.OverlayColour;
 import org.peakaboo.display.map.modes.overlay.OverlayModeData;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 

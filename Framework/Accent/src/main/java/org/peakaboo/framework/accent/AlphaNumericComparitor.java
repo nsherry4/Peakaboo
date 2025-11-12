@@ -1,4 +1,4 @@
-package org.peakaboo.framework.bolt.plugin.core;
+package org.peakaboo.framework.accent;
 
 import java.util.Comparator;
 import java.util.function.Function;

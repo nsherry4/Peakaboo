@@ -2,9 +2,9 @@ package org.peakaboo.mapping.filter.plugin.plugins.sizing;
 
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerSpinnerStyle;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.mapping.filter.Interpolation;

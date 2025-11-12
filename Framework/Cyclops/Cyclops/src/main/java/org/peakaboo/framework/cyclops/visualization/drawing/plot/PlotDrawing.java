@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.cyclops.Bounds;
-import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.numeric.Bounds;
+import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;

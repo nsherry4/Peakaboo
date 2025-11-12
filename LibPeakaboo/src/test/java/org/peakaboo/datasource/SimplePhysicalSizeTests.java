@@ -2,7 +2,7 @@ package org.peakaboo.datasource;
 
 import org.junit.Test;
 import org.peakaboo.dataset.source.model.components.physicalsize.SimplePhysicalSize;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.SISize;
 
 import junit.framework.Assert;

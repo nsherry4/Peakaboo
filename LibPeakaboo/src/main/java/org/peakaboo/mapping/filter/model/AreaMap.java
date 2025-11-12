@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.peakaboo.curvefit.peak.table.Element;
-import org.peakaboo.framework.cyclops.Bounds;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.numeric.Bounds;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;

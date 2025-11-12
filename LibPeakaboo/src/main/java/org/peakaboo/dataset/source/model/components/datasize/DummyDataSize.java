@@ -1,7 +1,7 @@
 package org.peakaboo.dataset.source.model.components.datasize;
 
 import org.peakaboo.dataset.source.model.DataSource;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 
 public class DummyDataSize implements DataSize {
 	

@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.dom.GenericDocument;
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 

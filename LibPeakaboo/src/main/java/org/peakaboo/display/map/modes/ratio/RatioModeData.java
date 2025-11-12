@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.peakaboo.controller.mapper.fitting.modes.RatioModeController.Ratios;
 import org.peakaboo.display.map.modes.MapModeData;
-import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 

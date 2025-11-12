@@ -1,7 +1,7 @@
 package org.peakaboo.mapping.filter.plugin.plugins.transforming;
 
-import org.peakaboo.framework.cyclops.Bounds;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.numeric.Bounds;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;

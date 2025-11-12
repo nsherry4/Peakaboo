@@ -24,7 +24,11 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
-
+        <dependency>
+            <groupId>org.peakaboo.framework</groupId>
+            <artifactId>accent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/it.unimi.dsi/fastutil-core -->
 		<dependency>
 			<groupId>it.unimi.dsi</groupId>

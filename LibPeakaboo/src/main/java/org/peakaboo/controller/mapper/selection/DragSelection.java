@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.autodialog.model.Group;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.GridPerspective;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;

@@ -2,6 +2,7 @@ package org.peakaboo.framework.bolt.plugin.core;
 
 import java.util.Optional;
 
+import org.peakaboo.framework.accent.AlphaNumericComparitor;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 
 /**

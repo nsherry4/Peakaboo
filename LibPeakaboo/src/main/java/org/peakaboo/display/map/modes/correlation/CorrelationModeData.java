@@ -3,7 +3,7 @@ package org.peakaboo.display.map.modes.correlation;
 import java.util.Optional;
 
 import org.peakaboo.display.map.modes.MapModeData;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 

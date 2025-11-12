@@ -24,6 +24,12 @@
 			<scope>test</scope>
 		</dependency>
 
+        <dependency>
+            <groupId>org.peakaboo.framework</groupId>
+            <artifactId>accent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.google.collections/google-collections -->
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>

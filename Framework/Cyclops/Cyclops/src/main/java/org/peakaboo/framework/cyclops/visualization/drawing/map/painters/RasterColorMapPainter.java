@@ -4,8 +4,6 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.IntPair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;

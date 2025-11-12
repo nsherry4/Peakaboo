@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops;
+package org.peakaboo.framework.accent;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

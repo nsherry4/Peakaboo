@@ -4,6 +4,8 @@ import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,7 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.peakaboo.app.BuildExpiry;
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
@@ -35,7 +38,7 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
-import org.peakaboo.framework.cyclops.Mutable;
+import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
@@ -61,15 +64,82 @@ public class Peakaboo {
 	private static Timer gcTimer;
 	
 	private static void checkDevRelease() {
-		if (Version.RELEASE_TYPE != ReleaseType.RELEASE){
-			String message = "This build of Peakaboo is not a final release version.\nAny results you obtain should be treated accordingly.";
-			String title = "Development Build of Peakaboo";
-			if (Version.RELEASE_TYPE == ReleaseType.CANDIDATE) {
-				title = "Release Candidate for Peakaboo";
+		// Only check development and release candidate builds
+		if (Version.RELEASE_TYPE == ReleaseType.RELEASE) {
+			return;
+		}
+
+		// Fetch current time from internet or fallback to local time
+		BuildExpiry.TimeResult currentTime = BuildExpiry.getCurrentTime();
+
+		// Calculate expiry information
+		LocalDate buildDate = Version.getBuildDate();
+		LocalDate expiryDate = BuildExpiry.getExpiryDate();
+		long daysRemaining = BuildExpiry.getDaysRemaining(currentTime);
+		boolean isExpired = BuildExpiry.isExpired(currentTime);
+
+		// Format dates for display
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		String buildDateStr = buildDate.format(dateFormatter);
+		String expiryDateStr = expiryDate.format(dateFormatter);
+
+		// Determine title based on release type
+		String title;
+		if (Version.RELEASE_TYPE == ReleaseType.CANDIDATE) {
+			title = isExpired ? "Release Candidate Build Has Expired" : "Release Candidate Build of Peakaboo";
+		} else {
+			title = isExpired ? "Development Build Has Expired" : "Development Build of Peakaboo";
+		}
+
+		// Build the message
+		StringBuilder messageBuilder = new StringBuilder();
+
+		if (isExpired) {
+			messageBuilder.append("This build is no longer supported.\n\n");
+			messageBuilder.append("Build Date: ").append(buildDateStr).append("\n");
+			messageBuilder.append("Expired: ").append(expiryDateStr);
+			long daysExpired = Math.abs(daysRemaining);
+			if (daysExpired == 1) {
+				messageBuilder.append(" (1 day ago)");
+			} else {
+				messageBuilder.append(" (").append(daysExpired).append(" days ago)");
 			}
-			
-			new LayerDialog(title, message, StockIcon.BADGE_INFO).showInWindow(null, true);
-			
+			messageBuilder.append("\n\n");
+			messageBuilder.append("Please download the latest version from peakaboo.org");
+		} else {
+			messageBuilder.append("This build of Peakaboo is not a final release version.\n");
+			messageBuilder.append("Any results you obtain should be treated accordingly.\n\n");
+			messageBuilder.append("Build Date: ").append(buildDateStr).append("\n");
+			messageBuilder.append("Expires: ").append(expiryDateStr);
+			if (daysRemaining == 1) {
+				messageBuilder.append(" (1 day remaining)");
+			} else {
+				messageBuilder.append(" (").append(daysRemaining).append(" days remaining)");
+			}
+			messageBuilder.append("\n\n");
+			messageBuilder.append("This build will stop working after the expiry date.\n");
+			messageBuilder.append("Please update to a newer build or release version.");
+		}
+
+		String message = messageBuilder.toString();
+
+		// Choose icon based on urgency
+		StockIcon icon;
+		if (isExpired) {
+			icon = StockIcon.BADGE_WARNING;
+		} else if (daysRemaining <= 7) {
+			icon = StockIcon.BADGE_WARNING;
+		} else {
+			icon = StockIcon.BADGE_INFO;
+		}
+
+		// Show dialog
+		new LayerDialog(title, message, icon).showInWindow(null, true);
+
+		// If expired, exit the application
+		if (isExpired) {
+			PeakabooLog.get().log(Level.SEVERE, "Build has expired, exiting application");
+			System.exit(2);
 		}
 	}
 	
@@ -163,8 +233,8 @@ public class Peakaboo {
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		DesktopSettings.init();
 		PeakabooLog.init(DesktopApp.appDir("Logging"));
+		DesktopSettings.init();
 		CrashHandler.init();
 		
 		// TODO: ugly -- rework logging to make this easier (and in the correct place)

@@ -10,7 +10,7 @@ import java.io.OutputStream;
 
 import javax.swing.JPanel;
 
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.graphics.ScreenSurface;

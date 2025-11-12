@@ -8,7 +8,7 @@ import java.util.List;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.components.VisibilityState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;

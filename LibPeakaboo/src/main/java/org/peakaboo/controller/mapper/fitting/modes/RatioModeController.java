@@ -7,7 +7,7 @@ import org.peakaboo.controller.mapper.fitting.modes.components.GroupState;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.MapScaleMode;
 import org.peakaboo.display.map.modes.ratio.RatioModeData;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;

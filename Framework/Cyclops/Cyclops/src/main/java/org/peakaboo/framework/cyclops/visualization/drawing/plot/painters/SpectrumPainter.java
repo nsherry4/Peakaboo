@@ -2,7 +2,7 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters;
 
 
 
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.Surface;

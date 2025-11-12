@@ -1,15 +1,13 @@
 package org.peakaboo.controller.mapper.settings;
 
 import java.io.File;
-import java.util.List;
 
 import org.peakaboo.app.Settings;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.framework.cyclops.Bounds;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.numeric.Bounds;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
-import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.eventful.EventfulType;
 
 /**

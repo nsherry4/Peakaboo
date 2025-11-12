@@ -1,8 +1,10 @@
-package org.peakaboo.framework.cyclops;
+package org.peakaboo.framework.accent.numeric;
+
+import org.peakaboo.framework.accent.Pair;
 
 /**
  * Pair<Integer, Integer> can be slow to construct because of the autoboxing of
- * int values to Integers. This is especially noticable when performed thousands
+ * int values to Integers. This is especially noticeable when performed thousands
  * or even millions of times. IntPair provides a very similar but faster
  * construct
  *

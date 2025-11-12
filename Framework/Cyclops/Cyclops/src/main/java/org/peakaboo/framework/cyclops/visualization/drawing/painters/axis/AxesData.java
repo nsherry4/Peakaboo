@@ -1,6 +1,6 @@
 package org.peakaboo.framework.cyclops.visualization.drawing.painters.axis;
 
-import org.peakaboo.framework.cyclops.Bounds;
+import org.peakaboo.framework.accent.numeric.Bounds;
 
 
 

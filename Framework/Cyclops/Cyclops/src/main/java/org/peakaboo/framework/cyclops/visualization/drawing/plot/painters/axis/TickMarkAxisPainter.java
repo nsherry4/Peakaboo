@@ -2,8 +2,8 @@ package org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.axis;
 
 import java.util.logging.Level;
 
-import org.peakaboo.framework.cyclops.Bounds;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.numeric.Bounds;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;

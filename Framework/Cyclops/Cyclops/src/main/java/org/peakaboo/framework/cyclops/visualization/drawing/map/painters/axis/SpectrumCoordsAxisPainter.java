@@ -5,8 +5,8 @@ package org.peakaboo.framework.cyclops.visualization.drawing.map.painters.axis;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.visualization.drawing.ViewTransform;

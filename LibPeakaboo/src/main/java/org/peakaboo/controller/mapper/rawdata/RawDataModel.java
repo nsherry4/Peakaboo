@@ -7,8 +7,8 @@ import java.util.List;
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.dataset.DataSet;
-import org.peakaboo.framework.cyclops.Bounds;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.numeric.Bounds;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.SISize;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 

@@ -3,9 +3,9 @@ package org.peakaboo.framework.cyclops.visualization.drawing.painters.axis;
 
 import java.util.List;
 
-import org.peakaboo.framework.cyclops.Bounds;
-import org.peakaboo.framework.cyclops.Coord;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.numeric.Bounds;
+import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.Painter;

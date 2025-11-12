@@ -6,7 +6,7 @@ import org.peakaboo.controller.plotter.view.mode.ChannelViewMode;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
 import org.peakaboo.display.plot.PlotSettings;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 
 

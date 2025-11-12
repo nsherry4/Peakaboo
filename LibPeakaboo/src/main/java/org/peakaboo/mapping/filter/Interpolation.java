@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.peakaboo.framework.cyclops.GridPerspective;
-import org.peakaboo.framework.cyclops.IntPair;
-import org.peakaboo.framework.cyclops.Pair;
+import org.peakaboo.framework.accent.numeric.IntPair;
+import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;

@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.framework.cyclops.Coord;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.ui.swing.mapping.MapperPanel;
 import org.peakaboo.ui.swing.mapping.sidebar.filters.FiltersPanel;
