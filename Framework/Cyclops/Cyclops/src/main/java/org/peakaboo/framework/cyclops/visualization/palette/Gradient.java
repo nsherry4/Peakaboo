@@ -1,9 +1,7 @@
 package org.peakaboo.framework.cyclops.visualization.palette;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,9 +38,15 @@ public class Gradient {
 	public Gradient(String name, String resourcePath) {
 		this.name = name;
 		try {
-			String csvContent = Files.readString(Paths.get(getClass().getResource(resourcePath).toURI()));
+			String csvContent;
+			try (var stream = getClass().getResourceAsStream(resourcePath)) {
+				if (stream == null) {
+					throw new IOException("Resource not found: " + resourcePath);
+				}
+				csvContent = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+			}
 			this.stops = parseCSVContent(csvContent);
-		} catch (IOException | URISyntaxException e) {
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 
