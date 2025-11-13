@@ -1,7 +1,17 @@
 name: Package Release
-run-name: Packaging Peakaboo ${{ github.ref_name }} for Release
+run-name: Packaging Peakaboo ${{ github.ref_name }} for ${{ inputs.release_type == 'dev' && 'Development' || 'Release' }}
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type (release or dev)'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+          - release
+          - dev
 
 jobs:
   build-jar:
@@ -59,7 +69,7 @@ jobs:
         path: ./Packaging/jar
                 
     - name: Run JPackage Deb Script
-      run: ./build-deb.sh
+      run: ./build-deb.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
     
     - name: Upload Artifact
@@ -92,8 +102,8 @@ jobs:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
                 
-    - name: Run JPackage Deb Script
-      run: ./build-rpm.sh
+    - name: Run JPackage RPM Script
+      run: ./build-rpm.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
 
     - name: Upload Artifact
@@ -135,27 +145,27 @@ jobs:
         path: ./Packaging/jar
                 
     - name: Run JPackage Mac Script
-      run: ./build-macos.sh
+      run: ./build-macos.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
-    
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
-      with: 
+      with:
         name: Peakaboo-${{ github.ref_name }}-Intel.dmg
         path: ./Packaging/Peakaboo*.dmg
 
 
   build-macos-m1:
-    
+
     needs: build-jar
     runs-on: macos-latest
 
     steps:
-       
+
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
-    
+
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
@@ -169,15 +179,15 @@ jobs:
     - name: Introspect jpackage
       run: which jpackage && jpackage --version
       shell: bash
-        
+
     - name: Download Jar
       uses: actions/download-artifact@v4
-      with: 
+      with:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-                
+
     - name: Run JPackage Mac Script
-      run: ./build-macos.sh
+      run: ./build-macos.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
     
     - name: Upload Artifact
@@ -216,7 +226,7 @@ jobs:
         path: ./Packaging/jar
                 
     - name: Run JPackage Windows Script
-      run: ./build-windows.bat
+      run: ./build-windows.bat ${{ inputs.release_type }}
       shell: cmd
       working-directory: ./Packaging
     
