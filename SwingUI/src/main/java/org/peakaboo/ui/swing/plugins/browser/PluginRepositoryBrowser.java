@@ -42,6 +42,9 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     private PluginsController controller;
     private ComponentStrip headerControls;
     private JComboBox<SortOrder> sortOrder;
+
+    // Track plugins that are currently being downloaded/installed
+    private java.util.Set<String> pluginsInProgress = new java.util.HashSet<>();
         
     public enum SortOrder {
 		NAME, KIND, SOURCE, INSTALLED;
@@ -68,19 +71,21 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         this.pluginTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
         TableCellRenderer stencilRenderer = new StencilTableCellRenderer<>(
         		new PluginRepositoryListItemStencil(
-        				controller, 
-        				this::handleInstall, 
-        				this::handleRemove, 
-        				this::handleUpgrade, 
-        				this::handleIssue
+        				controller,
+        				this::handleInstall,
+        				this::handleRemove,
+        				this::handleUpgrade,
+        				this::handleIssue,
+        				this::isPluginInProgress
         			), pluginTable);
         TableCellEditor stencilEditor = new StencilCellEditor<>(
         		new PluginRepositoryListItemStencil(
-        				controller, 
-        				this::handleInstall, 
-        				this::handleRemove, 
-        				this::handleUpgrade, 
-        				this::handleIssue
+        				controller,
+        				this::handleInstall,
+        				this::handleRemove,
+        				this::handleUpgrade,
+        				this::handleIssue,
+        				this::isPluginInProgress
         			));
         pluginTable.getColumnModel().getColumn(0).setCellRenderer(stencilRenderer);
         pluginTable.getColumnModel().getColumn(0).setCellEditor(stencilEditor);
@@ -218,12 +223,46 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     }
 
     private void handleInstall(PluginMetadata meta) {
-		try {
-	        this.controller.install(meta.download().get(), true);
-		} catch (NoSuchElementException e) {
-			controller.showError("Install Error", "Failed to download plugin: " + meta.name);
-		}
+    	// Mark as in progress and refresh the UI
+    	pluginsInProgress.add(meta.uuid);
+    	refreshTableDisplay();
 
+    	// Download in background to avoid blocking the UI
+		new javax.swing.SwingWorker<java.io.File, Void>() {
+			private Exception exception;
+
+			@Override
+			protected java.io.File doInBackground() {
+				try {
+					return meta.download().orElseThrow(() ->
+						new NoSuchElementException("Failed to download plugin: " + meta.name));
+				} catch (Exception ex) {
+					this.exception = ex;
+					return null;
+				}
+			}
+
+			@Override
+			protected void done() {
+				try {
+					if (exception != null) {
+						throw exception;
+					}
+					java.io.File pluginFile = get();
+					if (pluginFile != null) {
+						controller.install(pluginFile, true);
+					}
+				} catch (NoSuchElementException ex) {
+					controller.showError("Install Error", "Failed to download plugin: " + meta.name);
+				} catch (Exception ex) {
+					controller.showError("Install Error", "Failed to install plugin: " + ex.getMessage());
+				} finally {
+					// Mark as complete and refresh the UI
+					pluginsInProgress.remove(meta.uuid);
+					refreshTableDisplay();
+				}
+			}
+		}.execute();
     }
     
     private void handleRemove(PluginMetadata meta) {
@@ -240,16 +279,66 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
         var maybePlugin = Tier.provider().getExtensionPoints().getByUUID(meta.uuid);
         if (maybePlugin.isPresent()) {
         	PluginDescriptor<? extends BoltPlugin> plugin = maybePlugin.get();
-        	this.controller.upgrade((PluginDescriptor<BoltPlugin>) plugin, meta, true);
+
+        	// Mark as in progress and refresh the UI
+        	pluginsInProgress.add(meta.uuid);
+        	refreshTableDisplay();
+
+        	// Download in background to avoid blocking the UI
+        	new javax.swing.SwingWorker<java.io.File, Void>() {
+        		private Exception exception;
+
+        		@Override
+        		protected java.io.File doInBackground() {
+        			try {
+        				return meta.download().orElseThrow(() ->
+        					new NoSuchElementException("Failed to download plugin upgrade: " + meta.name));
+        			} catch (Exception ex) {
+        				this.exception = ex;
+        				return null;
+        			}
+        		}
+
+        		@Override
+        		protected void done() {
+        			try {
+        				if (exception != null) {
+        					throw exception;
+        				}
+        				java.io.File pluginFile = get();
+        				if (pluginFile != null) {
+        					// Perform the upgrade with the downloaded file
+        					controller.upgradeFromFile((PluginDescriptor<BoltPlugin>) plugin, meta, pluginFile, true);
+        				}
+        			} catch (NoSuchElementException ex) {
+        				controller.showError("Upgrade Error", "Failed to download upgrade: " + meta.name);
+        			} catch (Exception ex) {
+        				controller.showError("Upgrade Error", "Failed to upgrade plugin: " + ex.getMessage());
+        			} finally {
+        				// Mark as complete and refresh the UI
+        				pluginsInProgress.remove(meta.uuid);
+        				refreshTableDisplay();
+        			}
+        		}
+        	}.execute();
         } else {
-        	controller.showError("Upgrade Error", "Failed to remove plugin: " + meta.name);
+        	controller.showError("Upgrade Error", "Failed to find plugin: " + meta.name);
         }
     }
     
     private void handleIssue(BoltIssue<? extends BoltPlugin> issue) {
     	controller.fixIssue(issue);
     }
-       
+
+    private boolean isPluginInProgress(PluginMetadata meta) {
+    	return pluginsInProgress.contains(meta.uuid);
+    }
+
+    // Refresh just the table display without reloading data
+    private void refreshTableDisplay() {
+    	pluginTableModel.fireTableDataChanged();
+    }
+
     // Table model for plugins
     private static class PluginTableModel extends AbstractTableModel {
         private List<PluginMetadata> plugins = List.of();

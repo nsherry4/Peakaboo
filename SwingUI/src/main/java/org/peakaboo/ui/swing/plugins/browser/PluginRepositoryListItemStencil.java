@@ -66,14 +66,18 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
 
     private ExtensionPointRegistry reg = Tier.provider().getExtensionPoints();
     
+    private java.util.function.Predicate<PluginMetadata> inProgressCheck;
+
     public PluginRepositoryListItemStencil(
     		PluginsController controller,
     		Consumer<PluginMetadata> downloadAction,
     		Consumer<PluginMetadata> removeAction,
     		Consumer<PluginMetadata> upgradeAction,
-    		Consumer<BoltIssue<? extends BoltPlugin>> fixAction
+    		Consumer<BoltIssue<? extends BoltPlugin>> fixAction,
+    		java.util.function.Predicate<PluginMetadata> inProgressCheck
     	) {
     	this.controller = controller;
+    	this.inProgressCheck = inProgressCheck;
     	
         setLayout(new GridBagLayout());
         setBorder(new CompoundBorder(
@@ -252,12 +256,33 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         
         
         
+        // Check if plugin is currently being downloaded/installed
+        boolean inProgress = inProgressCheck.test(value);
+
         // Action button enablement logic
         downloadButton.setVisible(!installedPlugin && value.downloadUrl != null && !value.downloadUrl.isBlank());
         removeButton.setVisible(installedPlugin && removable);
         upgradeButton.setVisible(installedPlugin && upgradable);
         fixButton.setVisible(isIssue && issue.hasFix());
         fixButton.setText(isIssue ? issue.fixName() : "Fix");
+
+        // Update button state and text if operation is in progress
+        if (inProgress) {
+        	if (downloadButton.isVisible()) {
+        		downloadButton.setText("Installing...");
+        		downloadButton.setEnabled(false);
+        	}
+        	if (upgradeButton.isVisible()) {
+        		upgradeButton.setText("Upgrading...");
+        		upgradeButton.setEnabled(false);
+        	}
+        } else {
+        	// Reset to normal state
+        	downloadButton.setText("Install");
+        	downloadButton.setEnabled(true);
+        	upgradeButton.setText("Upgrade");
+        	upgradeButton.setEnabled(true);
+        }
         
         
         
