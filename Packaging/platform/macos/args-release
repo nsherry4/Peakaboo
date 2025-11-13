@@ -1,0 +1,3 @@
+--icon platform/macos/icon.icns
+--mac-package-identifier Peakaboo
+--mac-package-name Peakaboo
