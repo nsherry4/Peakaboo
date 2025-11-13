@@ -37,7 +37,7 @@ public class PluginMetadataBuilder {
 		meta.repositoryUrl = downloadRoot;
 		meta.author = author;
 		meta.releaseNotes = "No Release Notes"; // TODO how to get the release notes for the plugin?
-		meta.minAppVersion = Version.VERSION_MAJOR * 100; // Default to the beginning of the current major release series
+		meta.minAppVersion = 610; // Default to the beginning of the current major release series
 
 		
 		
@@ -66,7 +66,7 @@ public class PluginMetadataBuilder {
 		RepositoryMetadata contents = new RepositoryMetadata();
 		contents.applicationName = "Peakaboo";
 		contents.repositoryName = "Official Plugins";
-		contents.repositoryUrl = "https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/610/";
+		contents.repositoryUrl = "https://github.com/PeakabooLabs/PeakabooPluginsTesting/releases/download/v6.1/";
 		contents.specVersion = 1;
 		
 		// For each plugin we've loaded, build the metadata and add it to the repository contents

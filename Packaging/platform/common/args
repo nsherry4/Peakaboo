@@ -1,7 +1,7 @@
 --input ./jar
---name "PeakabooDev"
---main-class org.peakaboo.ui.swing.Peakaboo 
---main-jar Peakaboo.jar 
+--name "Peakaboo"
+--main-class org.peakaboo.ui.swing.Peakaboo
+--main-jar Peakaboo.jar
 --description "XRF Analysis Software"
 --about-url https://peakaboo.org
 --license-file ../LICENSE
