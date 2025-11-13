@@ -66,7 +66,7 @@ public class PluginMetadataBuilder {
 		RepositoryMetadata contents = new RepositoryMetadata();
 		contents.applicationName = "Peakaboo";
 		contents.repositoryName = "Official Plugins";
-		contents.repositoryUrl = "https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/600/";
+		contents.repositoryUrl = "https://github.com/PeakabooLabs/peakaboo-plugins/releases/download/610/";
 		contents.specVersion = 1;
 		
 		// For each plugin we've loaded, build the metadata and add it to the repository contents
