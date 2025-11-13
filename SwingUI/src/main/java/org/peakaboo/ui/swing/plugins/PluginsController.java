@@ -164,23 +164,45 @@ public class PluginsController extends EventfulBeacon {
 	}
 
 	/**
-	 * We need to determine if the new plugin described by meta is actually a newer plugin for the one given.
-	 * Then we need to remove the old one and install the new one. We should try to minimize the chances that the old plugin 
-	 * is removed without the new one being installed properly.
-	 **/
-	public void upgrade(PluginDescriptor<BoltPlugin> plugin, PluginMetadata meta, boolean silent) {	
+	 * Upgrade a plugin from an already-downloaded file. This method performs the validation and upgrade process
+	 * without downloading, allowing the caller to handle the download asynchronously if needed.
+	 *
+	 * @param plugin The plugin to be upgraded
+	 * @param meta The metadata for the upgrade
+	 * @param upgradeFile The already-downloaded plugin file
+	 * @param silent Whether to show UI dialogs
+	 */
+	public void upgradeFromFile(PluginDescriptor<BoltPlugin> plugin, PluginMetadata meta, File upgradeFile, boolean silent) {
 		// Confirm that the plugin is actually an upgrade for the one we have
 		if (! meta.isUpgradeFor(plugin)) {
 			showError("Upgrade Error", "The listed plugin is not a valid upgrade.");
 			return;
 		}
-		
+
+		// Remove old plugin and install new one
+		remove(plugin, silent);
+		install(upgradeFile, silent);
+	}
+
+	/**
+	 * We need to determine if the new plugin described by meta is actually a newer plugin for the one given.
+	 * Then we need to remove the old one and install the new one. We should try to minimize the chances that the old plugin
+	 * is removed without the new one being installed properly.
+	 *
+	 * Note: This method performs a blocking download. UI code should use upgradeFromFile() with async download instead.
+	 **/
+	public void upgrade(PluginDescriptor<BoltPlugin> plugin, PluginMetadata meta, boolean silent) {
+		// Confirm that the plugin is actually an upgrade for the one we have
+		if (! meta.isUpgradeFor(plugin)) {
+			showError("Upgrade Error", "The listed plugin is not a valid upgrade.");
+			return;
+		}
+
 		// Download the new plugin file
 		// NB this will need to be changed if we want to support repositories which don't use unauthenticated HTTP for downloads
 		try {
 			File upgrade = meta.download().get();
-	        remove(plugin, silent);
-	        install(upgrade, silent);
+			upgradeFromFile(plugin, meta, upgrade, silent);
 		} catch (NoSuchElementException ex) {
 			showError("Upgrade Error", "Failed to download upgrade: " + ex.getMessage());
 		}
