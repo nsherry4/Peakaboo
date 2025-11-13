@@ -17,10 +17,11 @@ public class Version {
 	public final static int VERSION_MAJOR = 6;
 	public final static int VERSION_MINOR = 1;
 	public final static int VERSION_POINT = 0;
-	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
-	public final static String PROGRAM_NAME = "Peakaboo";
-	
+
 	public final static ReleaseType RELEASE_TYPE = ReleaseType.DEVELOPMENT;
+
+	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
+	public final static String PROGRAM_NAME = (RELEASE_TYPE == ReleaseType.DEVELOPMENT) ? "PeakabooDev" : "Peakaboo";
 	
 	
 	public enum ReleaseType {

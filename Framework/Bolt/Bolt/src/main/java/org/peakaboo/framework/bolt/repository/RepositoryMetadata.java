@@ -23,7 +23,7 @@ public class RepositoryMetadata implements DruthersStorable {
     	final String REGEX_A1 = "^[a-zA-Z0-9_ -]+$"; // Alphanumeric, underscores, hyphens, and spaces only
     	final String REGEX_UUID = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
     	final String REGEX_VERSION = "^[a-zA-Z0-9_., -]+$";
-    	final String REGEX_CHECKSUM = "^[0-9a-fA-F]{32}$";
+    	final String REGEX_CHECKSUM = "^[0-9a-fA-F]{31,32}$"; // Sometimes Java trims a leading zero
     	
     	// SPEC VERSION
     	// Spec version must match
