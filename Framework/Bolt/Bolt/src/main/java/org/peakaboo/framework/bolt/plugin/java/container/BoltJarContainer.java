@@ -134,7 +134,13 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 	public boolean delete() {
 		try {
 			File f = new File(url.toURI());
-			return f.delete();
+			boolean result = f.delete();
+			if (result) {
+				Bolt.logger().log(Level.INFO, "Deleted plugin container " + f.getAbsolutePath());
+			} else {
+				Bolt.logger().log(Level.WARNING, "Failed to delete plugin container " + f.getAbsolutePath());
+			}
+			return result;
 		} catch (URISyntaxException e) {
 			return false;
 		}
