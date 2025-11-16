@@ -41,7 +41,8 @@ public class SingleViewMode implements ChannelViewMode {
 	
 	@Override
 	public boolean equals(Object other) {
-		return (other.getClass() == getClass());
+		// Compare class names to handle cross-classloader scenarios (plugin upgrades)
+		return other != null && other.getClass().getName().equals(getClass().getName());
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.jar.JarInputStream;
@@ -22,6 +23,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 
 	private URL url;
 	private PluginRegistry<T> manager;
+	private URLClassLoader classLoader;
 	
 	public BoltJarContainer(PluginRegistry<T> manager, Class<T> targetClass, URL url) {
 		super(manager, targetClass);
@@ -42,10 +44,11 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 			}
 
 			URLClassLoader urlLoader = new RestrictedPluginClassLoader(
-					new URL[] { url }, 
-					this.getClass().getClassLoader(), 
+					new URL[] { url },
+					this.getClass().getClassLoader(),
 					manager.getRestrictedPackagePrefixes()
 				);
+			this.classLoader = urlLoader;
 			ServiceLoader<T> loader = ServiceLoader.load(targetClass, urlLoader);
 			loader.reload();
 
@@ -132,10 +135,27 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 
 	@Override
 	public boolean delete() {
+		// Close the classloader first to release file locks (especially important on Windows)
+		if (classLoader != null) {
+			try {
+				classLoader.close();
+				Bolt.logger().log(Level.INFO, "Closed classloader for plugin container " + url.toString());
+			} catch (IOException e) {
+				Bolt.logger().log(Level.WARNING, "Failed to close classloader for plugin container " + url.toString(), e);
+				// Continue with deletion attempt even if close fails
+			}
+		}
+
 		try {
 			File f = new File(url.toURI());
-			return f.delete();
+			Files.delete(f.toPath());
+			Bolt.logger().log(Level.INFO, "Deleted plugin container " + url.toString());
+			return true;
+		} catch (IOException e) {
+			Bolt.logger().log(Level.WARNING, "Failed to delete plugin container " + url.toString(), e);
+			return false;
 		} catch (URISyntaxException e) {
+			Bolt.logger().log(Level.WARNING, "Could not determine path of plugin container " + url.toString(), e);
 			return false;
 		}
 	}

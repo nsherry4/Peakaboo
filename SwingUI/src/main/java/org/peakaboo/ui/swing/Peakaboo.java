@@ -138,7 +138,7 @@ public class Peakaboo {
 
 		// If expired, exit the application
 		if (isExpired) {
-			PeakabooLog.get().log(Level.SEVERE, "Build has expired, exiting application");
+			PeakabooLog.get().log(Level.WARNING, "Build has expired, exiting application");
 			System.exit(2);
 		}
 	}

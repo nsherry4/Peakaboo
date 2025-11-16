@@ -123,11 +123,13 @@ public class PluginsController extends EventfulBeacon {
 		
 		if (plugin == null) {
 			// No need to do anything
+			PeakabooLog.get().log(Level.WARNING, "Plugin was null, not removing anything");
 			return;
 		}
 		
 		BoltContainer<? extends BoltPlugin> container = plugin.getContainer();
 		if (!container.isDeletable()) {
+			PeakabooLog.get().log(Level.WARNING, "Plugin bundle " + container.getSourceName() + " is not deletable");
 			return;
 		}
 		
