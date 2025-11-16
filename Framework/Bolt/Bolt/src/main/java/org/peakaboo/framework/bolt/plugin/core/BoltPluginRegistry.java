@@ -52,18 +52,24 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 	public final synchronized void load() {
 		if (!loaded) {
 			loaded = true;
-			
+
+			// Close all existing containers before clearing to release resources (e.g., classloaders, file handles)
+			// This is critical for Windows where open file handles prevent deletion
+			for (BoltContainer<P> container : containers) {
+				container.close();
+			}
 			containers.clear();
+
 			for (BoltLoader<P> loader : loaders) {
 				List<BoltContainer<P>> loaderContainers = loader.getContainers();
 				containers.addAll(loaderContainers);
 			}
-			
+
 			plugins = new BoltPluginSet<>(this);
 			for (BoltContainer<P> container : containers) {
 				plugins.loadFrom(container);
 			}
-			
+
 		}
 	}
 	

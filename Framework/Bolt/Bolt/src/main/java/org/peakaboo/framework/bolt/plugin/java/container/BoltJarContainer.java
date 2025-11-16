@@ -134,17 +134,23 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 	}
 
 	@Override
-	public boolean delete() {
-		// Close the classloader first to release file locks (especially important on Windows)
+	public void close() {
+		// Close the classloader to release file locks (especially important on Windows)
 		if (classLoader != null) {
 			try {
 				classLoader.close();
 				Bolt.logger().log(Level.INFO, "Closed classloader for plugin container " + url.toString());
 			} catch (IOException e) {
 				Bolt.logger().log(Level.WARNING, "Failed to close classloader for plugin container " + url.toString(), e);
-				// Continue with deletion attempt even if close fails
 			}
+			classLoader = null; // Clear reference after closing
 		}
+	}
+
+	@Override
+	public boolean delete() {
+		// Close resources first to release file locks
+		close();
 
 		try {
 			File f = new File(url.toURI());
