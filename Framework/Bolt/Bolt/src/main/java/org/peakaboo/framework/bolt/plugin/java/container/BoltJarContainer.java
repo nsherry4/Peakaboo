@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.jar.JarInputStream;
@@ -134,14 +135,14 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 	public boolean delete() {
 		try {
 			File f = new File(url.toURI());
-			boolean result = f.delete();
-			if (result) {
-				Bolt.logger().log(Level.INFO, "Deleted plugin container " + f.getAbsolutePath());
-			} else {
-				Bolt.logger().log(Level.WARNING, "Failed to delete plugin container " + f.getAbsolutePath());
-			}
-			return result;
+			Files.delete(f.toPath());
+			Bolt.logger().log(Level.INFO, "Deleted plugin container " + url.toString());
+			return true;
+		} catch (IOException e) {
+			Bolt.logger().log(Level.WARNING, "Failed to delete plugin container " + url.toString(), e);
+			return false;
 		} catch (URISyntaxException e) {
+			Bolt.logger().log(Level.WARNING, "Could not determine path of plugin container " + url.toString(), e);
 			return false;
 		}
 	}
