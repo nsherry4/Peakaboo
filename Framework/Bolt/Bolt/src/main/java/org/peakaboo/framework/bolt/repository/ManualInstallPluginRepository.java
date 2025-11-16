@@ -22,10 +22,13 @@ public class ManualInstallPluginRepository extends AbstractPluginRepository {
 		refresh();
 	}
 
-	protected List<PluginMetadata> generatePluginList() {	
-		// get local plugins, filter for undeletable containers and plugins from this own repo. 
+	protected List<PluginMetadata> generatePluginList() {
+		// get local plugins, filter for undeletable containers and plugins from this own repo.
 		// Then transform the descriptor into PluginMetadata
-		var accountedFor = inventory.get();
+		// Exclude this repository from the inventory to avoid reading our own stale cache
+		var accountedFor = inventory.get().stream()
+				.filter(p -> p.sourceRepository() != this)
+				.toList();
 		List<PluginMetadata> plugins = new ArrayList<>();
 		for (var registry : this.registries.getRegistries()) {
 		

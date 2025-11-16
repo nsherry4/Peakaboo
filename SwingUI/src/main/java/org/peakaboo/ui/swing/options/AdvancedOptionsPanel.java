@@ -357,15 +357,16 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		ButtonGroup group = new ButtonGroup();
 		
 		for (T solver : instances) {
-			
+
 			OptionRadioButton radio = new OptionRadioButton(block, group)
 					.withText(solver.pluginName(), solver.pluginDescription())
-					.withSelection(solver.getClass() == getter.get().getClass())
+					// Compare class names to handle cross-classloader scenarios (plugin upgrades)
+					.withSelection(solver.getClass().getName().equals(getter.get().getClass().getName()))
 					.withListener(() -> setter.accept(solver))
 					.withSize(OptionSize.LARGE);
-			
+
 			block.add(radio);
-			
+
 		}
 		
 		return block;
@@ -394,24 +395,25 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 	
 	private <T extends SelfDescribing> OptionBlock makeRadioBlock(List<T> instances, Supplier<T> getter, Consumer<T> setter) {
-		
+
 		OptionBlock block = new OptionBlock();
 		ButtonGroup group = new ButtonGroup();
-		
+
 		for (T solver : instances) {
-			
+
 			OptionRadioButton radio = new OptionRadioButton(block, group)
 					.withText(solver.name(), solver.description())
-					.withSelection(solver.getClass() == getter.get().getClass())
+					// Compare class names to handle cross-classloader scenarios (plugin upgrades)
+					.withSelection(solver.getClass().getName().equals(getter.get().getClass().getName()))
 					.withListener(() -> setter.accept(solver))
 					.withSize(OptionSize.LARGE);
-			
+
 			block.add(radio);
-			
+
 		}
-		
+
 		return block;
-		
+
 	}
 
 
