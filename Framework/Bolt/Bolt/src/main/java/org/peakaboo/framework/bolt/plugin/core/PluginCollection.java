@@ -51,7 +51,9 @@ public interface PluginCollection<T extends BoltPlugin> extends Iterable<PluginD
 	default Optional<PluginDescriptor<T>> getByClass(Class<? extends T> cls) {
 		synchronized(this) {
 			for (var plugin : getPlugins()) {
-				if (plugin.getReferenceInstance().getClass().equals(cls)) {
+				// Compare class names instead of Class objects to handle cross-classloader scenarios
+				// (e.g., when plugins are upgraded/reloaded with new classloaders)
+				if (plugin.getReferenceInstance().getClass().getName().equals(cls.getName())) {
 					return Optional.of(plugin);
 				}
 			}
