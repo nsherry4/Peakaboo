@@ -520,11 +520,25 @@ public class FileDrop {
 	 * the URL as a string and often a temporary .url shortcut file. By checking
 	 * the string flavor, we can access the actual URL instead of the temp file.
 	 *
+	 * FIX: Added check for application/x-java-url flavor (macOS). On macOS,
+	 * browser URL drops provide this flavor but don't allow reading data during
+	 * the drag phase, so we detect the flavor presence instead of reading data.
+	 *
 	 * @param evt The drag event to check
 	 * @return true if the event contains valid URL string data, false otherwise
 	 */
 	private boolean isDragUrl(DropTargetDragEvent evt) {
 
+		// First check for application/x-java-url flavor (macOS browser URL drops)
+		// This flavor is present on macOS but the data cannot be read during drag phase
+		DataFlavor[] flavors = evt.getCurrentDataFlavors();
+		for (DataFlavor flavor : flavors) {
+			if ("application/x-java-url".equals(flavor.getMimeType())) {
+				return true;
+			}
+		}
+
+		// Fallback: Try to read and validate stringFlavor (works on some OSes)
 		DataFlavor flavour = DataFlavor.stringFlavor;
 		if (!evt.isDataFlavorSupported(flavour)) {
 			return false;
