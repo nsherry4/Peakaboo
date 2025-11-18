@@ -225,9 +225,8 @@ public class FileDrop {
 				} // end dragOver
 
 				public void drop(java.awt.dnd.DropTargetDropEvent evt) {
-					log("FileDrop: drop event.");
+					log("FileDrop: drop event of type " + dropType);
 					try { // Get whatever was dropped
-						Transferable tr = evt.getTransferable();
 
 						switch(dropType) {
 						
@@ -336,8 +335,18 @@ public class FileDrop {
 					// kde seems to append a 0 char to the end of the reader
 					if (ZERO_CHAR_STRING.equals(line))
 						continue;
+					
+					URI uri;
+					try {
+						// Try parsing the URI as-is (fast path for properly formatted URIs)
+						uri = new URI(line);
+					} catch (java.net.URISyntaxException e) {
+						// If parsing fails, escape problematic characters (e.g., spaces on macOS)
+						// and retry. This handles cases where the OS provides unescaped file:// URIs.
+						uri = new URI(escapeUriCharacters(line));
+					}
 
-					File file = new File(new URI(line));
+					File file = new File(uri);
 					list.add(file);
 				} catch (Exception ex) {
 					log("Error with " + line + ": " + ex.getMessage());
@@ -351,6 +360,33 @@ public class FileDrop {
 		return new File[0];
 	}
 	// END 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
+	
+	/**
+	 * Escapes characters in a URI string that should be percent-encoded but aren't.
+	 * This handles cases where the OS provides URIs with unescaped special characters,
+	 * or provides raw file paths without the file:// scheme (as seen on macOS).
+	 *
+	 * @param uri The URI string, potentially with unescaped characters or missing scheme
+	 * @return The URI string with problematic characters escaped and scheme added if needed
+	 */
+	private static String escapeUriCharacters(String uri) {
+		String result = uri;
+
+		// If the URI doesn't have a scheme and is an absolute path, add file:// prefix
+		// This handles macOS providing raw paths like /Users/name/file instead of file:///Users/name/file
+		if (!result.contains("://") && result.startsWith("/")) {
+			result = "file://" + result;
+		}
+
+		// Replace unescaped spaces and other problematic characters with their percent-encoded equivalents
+		// Space is the most common issue, but we'll handle a few other characters that might appear in filenames
+		return result.replace(" ", "%20")
+				     .replace("{", "%7B")
+				     .replace("}", "%7D")
+				     .replace("[", "%5B")
+				     .replace("]", "%5D");
+	}
+	
 
 	private void makeDropTarget(final Component c, boolean recursive) {
 		// Make drop target
@@ -406,15 +442,18 @@ public class FileDrop {
 			log("FileDrop: no data flavors.");
 		for (DataFlavor f : flavors)
 			log("FileDrop: Found DataFlavor " + f.toString());
-		
-		// See if any of the flavors match
+
+		// First pass: look for the preferred native file list flavor
+		// This ensures we use the native approach when available (e.g., on macOS)
+		// rather than falling back to text-based URI parsing
 		for (DataFlavor curFlavor : flavors) {
-			
-			// If it's a file list flavour, accept it
 			if (curFlavor.equals(DataFlavor.javaFileListFlavor)) {
 				return DropType.DROP_FILELIST;
 			}
+		}
 
+		// Second pass: look for fallback flavors
+		for (DataFlavor curFlavor : flavors) {
 			// if the mime-type is a uri-list, accept it
 			if (curFlavor.getSubType().equals("uri-list") && curFlavor.isRepresentationClassReader()) {
 				return DropType.DROP_LINUX;
@@ -424,11 +463,9 @@ public class FileDrop {
 			if (isDragUrl(evt)) {
 				return DropType.DROP_URL;
 			}
-
 		}
 
 		return DropType.DROP_FAIL;
-
 
 	} // end isDragOk
 
