@@ -225,9 +225,8 @@ public class FileDrop {
 				} // end dragOver
 
 				public void drop(java.awt.dnd.DropTargetDropEvent evt) {
-					log("FileDrop: drop event.");
+					StratusLog.get().log(Level.INFO, "FileDrop: drop event of type " + dropType);
 					try { // Get whatever was dropped
-						Transferable tr = evt.getTransferable();
 
 						switch(dropType) {
 						
@@ -327,6 +326,18 @@ public class FileDrop {
 	// BEGIN 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
 	private static String ZERO_CHAR_STRING = "" + (char) 0;
 
+	/**
+	 * Creates an array of Files from a BufferedReader containing URI strings.
+	 * Used for the DROP_LINUX drop type where file URIs are provided as text.
+	 *
+	 * FIX: Added robust URI parsing with fallback to handle malformed URIs from macOS.
+	 * macOS sometimes provides URIs with unescaped characters (e.g., spaces) or raw
+	 * file paths without the file:// scheme. The method now attempts to parse URIs
+	 * as-is first, then falls back to escaping problematic characters if parsing fails.
+	 *
+	 * @param bReader BufferedReader containing URI strings, one per line
+	 * @return Array of File objects parsed from the URIs
+	 */
 	private static File[] createFileArray(BufferedReader bReader) {
 		try {
 			List list = new java.util.ArrayList();
@@ -337,7 +348,18 @@ public class FileDrop {
 					if (ZERO_CHAR_STRING.equals(line))
 						continue;
 
-					File file = new File(new URI(line));
+					URI uri;
+					try {
+						// Try parsing the URI as-is (fast path for properly formatted URIs)
+						uri = new URI(line);
+					} catch (java.net.URISyntaxException e) {
+						// If parsing fails, escape problematic characters (e.g., spaces on macOS)
+						// and retry. This handles cases where the OS provides unescaped file:// URIs
+						// or raw file paths without a scheme.
+						uri = new URI(escapeUriCharacters(line));
+					}
+
+					File file = new File(uri);
 					list.add(file);
 				} catch (Exception ex) {
 					log("Error with " + line + ": " + ex.getMessage());
@@ -351,6 +373,33 @@ public class FileDrop {
 		return new File[0];
 	}
 	// END 2007-09-12 Nathan Blomquist -- Linux (KDE/Gnome) support added.
+	
+	/**
+	 * Escapes characters in a URI string that should be percent-encoded but aren't.
+	 * This handles cases where the OS provides URIs with unescaped special characters,
+	 * or provides raw file paths without the file:// scheme (as seen on macOS).
+	 *
+	 * @param uri The URI string, potentially with unescaped characters or missing scheme
+	 * @return The URI string with problematic characters escaped and scheme added if needed
+	 */
+	private static String escapeUriCharacters(String uri) {
+		String result = uri;
+
+		// If the URI doesn't have a scheme and is an absolute path, add file:// prefix
+		// This handles macOS providing raw paths like /Users/name/file instead of file:///Users/name/file
+		if (!result.contains("://") && result.startsWith("/")) {
+			result = "file://" + result;
+		}
+
+		// Replace unescaped spaces and other problematic characters with their percent-encoded equivalents
+		// Space is the most common issue, but we'll handle a few other characters that might appear in filenames
+		return result.replace(" ", "%20")
+				     .replace("{", "%7B")
+				     .replace("}", "%7D")
+				     .replace("[", "%5B")
+				     .replace("]", "%5D");
+	}
+	
 
 	private void makeDropTarget(final Component c, boolean recursive) {
 		// Make drop target
@@ -395,7 +444,32 @@ public class FileDrop {
 		} // end if: recursively set components as listener
 	} // end dropListener
 
-	/** Determine if the dragged data is a file list. */
+	/**
+	 * Determines if the dragged data is acceptable and returns the appropriate drop type.
+	 *
+	 * FIX: Implemented multi-pass flavor detection to handle edge cases across different
+	 * operating systems and data sources. The detection order is critical:
+	 *
+	 * Priority Order:
+	 * 1. DROP_URL - Browser URL drops (most specific)
+	 *    - Browsers often provide BOTH javaFileListFlavor and stringFlavor
+	 *    - javaFileListFlavor points to temp .url shortcut files (unwanted)
+	 *    - stringFlavor contains the actual URL (wanted)
+	 *    - Must check URL first to avoid selecting the temp file
+	 *
+	 * 2. DROP_FILELIST - Native file list (preferred for real files)
+	 *    - Uses javaFileListFlavor for actual file drops
+	 *    - Preferred over text-based URI parsing when available
+	 *    - Works reliably on macOS, Windows, and Linux
+	 *
+	 * 3. DROP_LINUX - Text-based URI list (fallback)
+	 *    - Used when only text representation is available
+	 *    - Common on Linux/KDE/Gnome systems
+	 *    - Requires URI parsing (see createFileArray() and escapeUriCharacters())
+	 *
+	 * @param evt The drag event to evaluate
+	 * @return The appropriate DropType, or DROP_FAIL if no supported flavor is found
+	 */
 	private DropType isDragOk(final java.awt.dnd.DropTargetDragEvent evt) {
 
 		// Get data flavors being dragged
@@ -406,34 +480,67 @@ public class FileDrop {
 			log("FileDrop: no data flavors.");
 		for (DataFlavor f : flavors)
 			log("FileDrop: Found DataFlavor " + f.toString());
-		
-		// See if any of the flavors match
+
+		// First pass: look for URL drops (most specific)
+		// URL drops from browsers often provide both javaFileListFlavor (pointing to temp .url files)
+		// and string flavor (with the actual URL). We check for URLs first to avoid the temp files.
+		if (isDragUrl(evt)) {
+			return DropType.DROP_URL;
+		}
+
+		// Second pass: look for the preferred native file list flavor
+		// This ensures we use the native approach when available (e.g., on macOS)
+		// rather than falling back to text-based URI parsing
 		for (DataFlavor curFlavor : flavors) {
-			
-			// If it's a file list flavour, accept it
 			if (curFlavor.equals(DataFlavor.javaFileListFlavor)) {
 				return DropType.DROP_FILELIST;
 			}
+		}
 
+		// Third pass: look for fallback flavors
+		for (DataFlavor curFlavor : flavors) {
 			// if the mime-type is a uri-list, accept it
 			if (curFlavor.getSubType().equals("uri-list") && curFlavor.isRepresentationClassReader()) {
 				return DropType.DROP_LINUX;
 			}
-
-			// if the String payload is a URL, accept it
-			if (isDragUrl(evt)) {
-				return DropType.DROP_URL;
-			}
-
 		}
 
 		return DropType.DROP_FAIL;
 
-
 	} // end isDragOk
 
+	/**
+	 * Determines if the drag event contains a URL string.
+	 * This checks if:
+	 * 1. The drag event supports DataFlavor.stringFlavor
+	 * 2. The string data can be successfully retrieved
+	 * 3. The string data can be parsed as a URL
+	 *
+	 * This is used to detect URL drops from web browsers, which provide both
+	 * the URL as a string and often a temporary .url shortcut file. By checking
+	 * the string flavor, we can access the actual URL instead of the temp file.
+	 *
+	 * FIX: Added check for application/x-java-url flavor (macOS). On macOS,
+	 * browser URL drops provide this flavor but don't allow reading data during
+	 * the drag phase, so we detect the flavor presence instead of reading data.
+	 *
+	 * @param evt The drag event to check
+	 * @return true if the event contains valid URL string data, false otherwise
+	 */
 	private boolean isDragUrl(DropTargetDragEvent evt) {
 
+		// First check for application/x-java-url flavor (macOS browser URL drops)
+		// This flavor is present on macOS but the data cannot be read during drag phase
+		DataFlavor[] flavors = evt.getCurrentDataFlavors();
+		for (DataFlavor flavor : flavors) {
+			log("FileDrop: isDragUrl checking flavor - primary: '" + flavor.getPrimaryType() + "', sub: '" + flavor.getSubType() + "'");
+			if ("application".equals(flavor.getPrimaryType()) && "x-java-url".equals(flavor.getSubType())) {
+				log("FileDrop: isDragUrl MATCHED application/x-java-url flavor!");
+				return true;
+			}
+		}
+
+		// Fallback: Try to read and validate stringFlavor (works on some OSes)
 		DataFlavor flavour = DataFlavor.stringFlavor;
 		if (!evt.isDataFlavorSupported(flavour)) {
 			return false;
