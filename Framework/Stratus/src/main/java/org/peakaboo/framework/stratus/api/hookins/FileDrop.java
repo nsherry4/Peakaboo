@@ -533,7 +533,9 @@ public class FileDrop {
 		// This flavor is present on macOS but the data cannot be read during drag phase
 		DataFlavor[] flavors = evt.getCurrentDataFlavors();
 		for (DataFlavor flavor : flavors) {
-			if ("application/x-java-url".equals(flavor.getMimeType())) {
+			log("FileDrop: isDragUrl checking flavor - primary: '" + flavor.getPrimaryType() + "', sub: '" + flavor.getSubType() + "'");
+			if ("application".equals(flavor.getPrimaryType()) && "x-java-url".equals(flavor.getSubType())) {
+				log("FileDrop: isDragUrl MATCHED application/x-java-url flavor!");
 				return true;
 			}
 		}
