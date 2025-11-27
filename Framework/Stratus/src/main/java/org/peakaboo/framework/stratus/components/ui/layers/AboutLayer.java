@@ -78,7 +78,9 @@ public class AboutLayer extends HeaderLayer {
 	}
 	
 	private static Component licencePanel(Contents contents) {
-		return Stratus.scrolled(new JTextLabel(contents.licence));
+		JTextLabel licenceText = new JTextLabel(contents.licence);
+		licenceText.setCaretPosition(0);
+		return Stratus.scrolled(licenceText);
 	}
 
 	public static JPanel aboutPanel(Contents contents) {

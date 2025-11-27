@@ -84,7 +84,6 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.AboutLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
-import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.framework.stratus.laf.painters.scrollbar.ScrollBarTrackPainter;
@@ -161,7 +160,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 	private void notifyUser(String message, Runnable action) {
 		Runnable onclick = action == null ? () -> {
 		} : action;
-		SwingUtilities.invokeLater(() -> this.pushLayer(new ToastLayer(this, message, onclick)));
+		SwingUtilities.invokeLater(() -> this.showToast(message, onclick));
 	}
 
 	private void doFirstRun() {

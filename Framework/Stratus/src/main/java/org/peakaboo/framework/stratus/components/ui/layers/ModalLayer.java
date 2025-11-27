@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.TexturePaint;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -32,8 +31,7 @@ public class ModalLayer implements Layer {
 	private JComponent component;
 	protected LayerPanel owner;
 	protected JPanel wrap;
-	private ComponentAdapter listener;
-	private boolean sizeWithParent = false;
+	private final boolean sizeWithParent;
 	
 	
 	public ModalLayer(LayerPanel owner, JComponent component) {
@@ -66,10 +64,7 @@ public class ModalLayer implements Layer {
 	//clean up after we're done with this modal layer.
 	@Override
 	public void discard() {
-		if (listener == null) {
-			return;
-		}
-		owner.removeComponentListener(listener);
+		// No cleanup needed
 	}
 
 	private JLayer<JComponent> makeModalLayer() {

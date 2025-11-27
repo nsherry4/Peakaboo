@@ -20,7 +20,6 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
-import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 import org.peakaboo.ui.swing.plotting.datasource.DataSourceSelection;
 
 class PlotDataLoader extends DataLoader {
@@ -90,8 +89,7 @@ class PlotDataLoader extends DataLoader {
 
 	@Override
 	public void onSessionNewer() {
-		ToastLayer warning = new ToastLayer(this.plotPanel, "Session is from a newer version of Peakaboo.\nSome settings may not load correctly.");
-		this.plotPanel.pushLayer(warning);
+		this.plotPanel.showToast("Session is from a newer version of Peakaboo.\nSome settings may not load correctly.");
 	}
 
 	@Override
@@ -127,7 +125,6 @@ class PlotDataLoader extends DataLoader {
 
 	@Override
 	public void onWarn(String message) {
-		var toast = new ToastLayer(this.plotPanel, message);
-		this.plotPanel.pushLayer(toast);
+		this.plotPanel.showToast(message);
 	}
 }

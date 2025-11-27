@@ -2,9 +2,6 @@ package org.peakaboo.ui.swing.plotting.statusbar;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
@@ -23,7 +20,6 @@ import org.peakaboo.framework.stratus.components.ui.KeyValuePill;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonConfig;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayout;
-import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 import org.peakaboo.ui.swing.app.widgets.StatusBarPillStrip;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 

@@ -11,9 +11,6 @@ import java.util.Optional;
 import javax.swing.JComponent;
 import javax.swing.plaf.LayerUI;
 
-import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusColour;
-
 class LayerShadeUI<T extends Component> extends LayerUI<T> {
 	
 	private LayerPanel parent;
