@@ -163,31 +163,19 @@ public class SavePicture extends JPanel {
 	private void makeGUI() {
 		setLayout(new BorderLayout());
 		add(createOptionsPane(), BorderLayout.CENTER);
-		add(new HeaderBox(cancelButton(), "Save as Image", saveButton().withStateDefault()), BorderLayout.NORTH);
-	}
-
-
-
-	
-	private FluentButton saveButton() {
-		return new FluentButton("Save").withAction(() -> {
-			Cursor oldCursor = getCursor();
-			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			saveSurfaceType(formatPicker.getSelected());
-			setCursor(oldCursor);
-		});
-	}
-
-	private FluentButton cancelButton() {
-		return new FluentButton("Cancel").withAction(() -> {
-			onComplete.accept(Optional.empty());
-			hide();
-		});
+		var box = HeaderBox.createYesNo(
+				"Save as Image",
+				"Save",
+				() -> saveSurfaceType(formatPicker.getSelected()),
+				"Cancel",
+				() -> {
+					onComplete.accept(Optional.empty());
+					hide();
+				}
+		);
+		add(box, BorderLayout.NORTH);
 	}
 	
-
-
-
 	public JPanel createOptionsPane() {
 		
 		JPanel panel = new JPanel(new BorderLayout(Spacing.huge, Spacing.huge));
@@ -210,6 +198,7 @@ public class SavePicture extends JPanel {
 	private void saveSurfaceType(SurfaceDescriptor descriptor) {
 		
 		setEnabled(false);
+		Cursor oldCursor = getCursor();
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
 		var ext = new SimpleFileExtension(descriptor.title() + " (" + descriptor.extension() + ")", descriptor.extension().toLowerCase());
@@ -223,15 +212,14 @@ public class SavePicture extends JPanel {
 				os.close();
 
 				startingFolder = result.get().getParentFile();
-				hide();
-				
-				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				setEnabled(true);
-				
 				onComplete.accept(result);
 				
 			} catch (IOException e) {
 				CyclopsLog.get().log(Level.SEVERE, "Failed to save image", e);
+			} finally {
+				hide();
+				setCursor(oldCursor);
+				setEnabled(true);
 			}
 		});
 

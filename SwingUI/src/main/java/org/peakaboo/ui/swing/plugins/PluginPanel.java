@@ -62,9 +62,9 @@ public class PluginPanel extends HeaderLayer {
 		final String MANAGER_TITLE = "Classic";
 		final String BROWSER_TITLE = "Modern";
 		
-		var tabBuilder = new HeaderTabBuilder();
-		tabBuilder.addTab(BROWSER_TITLE, browserView);
-		tabBuilder.addTab(MANAGER_TITLE, managerView);
+		var tabBuilder = new HeaderTabBuilder()
+				.withTab(BROWSER_TITLE, browserView)
+				.withTab(MANAGER_TITLE, managerView);
 		setBody(tabBuilder.getBody());
 		getHeader().setCentre(tabBuilder.getTabStrip());
 		

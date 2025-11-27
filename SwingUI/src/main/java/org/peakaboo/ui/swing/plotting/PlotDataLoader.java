@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.dataset.DatasetReadResult;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
@@ -15,6 +16,7 @@ import org.peakaboo.framework.plural.swing.ExecutorSetViewLayer;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
@@ -53,34 +55,30 @@ class PlotDataLoader extends DataLoader {
 
 	@Override
 	public void onParameters(Group parameters, Consumer<Boolean> finished) {
-		HeaderPanel paramPanel = new HeaderPanel();
-		ModalLayer layer = new ModalLayer(this.plotPanel, paramPanel);
-		
-		
-		paramPanel.getHeader().setCentre("Options");
-		paramPanel.getHeader().setShowClose(false);
-		
-		FluentButton ok = new FluentButton("OK")
-				.withStateDefault()
-				.withAction(() -> {
-					this.plotPanel.removeLayer(layer);
-					finished.accept(true);
-				});
-		FluentButton cancel = new FluentButton("Cancel")
-				.withAction(() -> {
-					this.plotPanel.removeLayer(layer);
-					finished.accept(false);
-				});
-		
-		paramPanel.getHeader().setLeft(cancel);
-		paramPanel.getHeader().setRight(ok);
-		
-		
 		SwingAutoPanel sap = new SwingAutoPanel(parameters);
 		sap.setBorder(Spacing.bHuge());
-		paramPanel.setBody(sap);
-		
-		
+
+		var layerRef = new Mutable<ModalLayer>();
+
+		HeaderBox header = HeaderBox.createYesNo(
+			"Options",
+			"OK",
+			() -> {
+				this.plotPanel.removeLayer(layerRef.get());
+				finished.accept(true);
+			},
+			"Cancel",
+			() -> {
+				this.plotPanel.removeLayer(layerRef.get());
+				finished.accept(false);
+			}
+		);
+		header.setShowClose(false);
+
+		HeaderPanel paramPanel = new HeaderPanel(header, sap);
+		ModalLayer layer = new ModalLayer(this.plotPanel, paramPanel);
+		layerRef.set(layer);
+
 		this.plotPanel.pushLayer(layer);
 	}
 

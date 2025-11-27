@@ -1,8 +1,6 @@
 package org.peakaboo.framework.stratus.components.ui.itemlist;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Paint;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
@@ -32,7 +30,7 @@ public abstract class SelectionListControls extends HeaderBox
 
 		setBorder(Spacing.bSmall());
 		
-		setDragable(false);
+		setDraggable(false);
 		setComponents(cancel, title, add);
 
 	}

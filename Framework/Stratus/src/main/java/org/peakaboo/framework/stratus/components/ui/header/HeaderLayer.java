@@ -12,6 +12,46 @@ import javax.swing.KeyStroke;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 
+/**
+ * A modal overlay layer with a {@link HeaderPanel}, displayed within an existing window.
+ * <p>
+ * HeaderLayer provides an in-window modal overlay (not a separate window) with a custom header
+ * bar. Unlike {@link HeaderDialog} and {@link HeaderFrame}, which create new OS windows,
+ * HeaderLayer draws over an existing {@link LayerPanel} within the same window.
+ * </p>
+ * <p>
+ * <strong>Features:</strong>
+ * </p>
+ * <ul>
+ * <li>Modal overlay that blocks interaction with underlying components</li>
+ * <li>Custom header bar with optional close button</li>
+ * <li>ESC key automatically closes the layer</li>
+ * <li>Optional auto-sizing to match owner dimensions</li>
+ * <li>No separate window - rendered within parent LayerPanel</li>
+ * </ul>
+ * <p>
+ * <strong>When to Use:</strong>
+ * </p>
+ * <ul>
+ * <li>Use HeaderLayer for in-window modal overlays (dialogs within the application)</li>
+ * <li>Use {@link HeaderDialog} for separate modal dialog windows</li>
+ * <li>Use {@link HeaderFrame} for separate non-modal windows</li>
+ * </ul>
+ * <p>
+ * <strong>Example:</strong>
+ * </p>
+ * <pre>
+ * HeaderLayer layer = new HeaderLayer(parentPanel, true);
+ * layer.getHeader().setCentre("Settings");
+ * layer.setBody(settingsPanel);
+ * parentPanel.pushLayer(layer);
+ * </pre>
+ *
+ * @see HeaderDialog
+ * @see HeaderFrame
+ * @see HeaderPanel
+ * @see ModalLayer
+ */
 public class HeaderLayer extends ModalLayer {
 
 	protected HeaderPanel root;

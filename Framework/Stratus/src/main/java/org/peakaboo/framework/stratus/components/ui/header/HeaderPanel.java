@@ -10,6 +10,35 @@ import javax.swing.JPanel;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 
+/**
+ * A LayerPanel that combines a {@link HeaderBox} with a body component.
+ * <p>
+ * HeaderPanel arranges a header bar at the top with an arbitrary body component below it,
+ * creating a common UI pattern used throughout the Stratus framework. The header remains
+ * fixed at the top while the body fills the remaining space.
+ * </p>
+ * <p>
+ * <strong>Usage:</strong>
+ * </p>
+ * <pre>
+ * HeaderPanel panel = new HeaderPanel();
+ * panel.getHeader().setCentre("My Title");
+ * panel.setBody(myContentComponent);
+ * </pre>
+ * <p>
+ * <strong>Container Types:</strong>
+ * </p>
+ * <ul>
+ * <li>{@link HeaderDialog} - Wraps HeaderPanel in a modal dialog</li>
+ * <li>{@link HeaderFrame} - Wraps HeaderPanel in a top-level window</li>
+ * <li>{@link HeaderLayer} - Wraps HeaderPanel in an overlay layer</li>
+ * </ul>
+ *
+ * @see HeaderBox
+ * @see HeaderDialog
+ * @see HeaderFrame
+ * @see HeaderLayer
+ */
 public class HeaderPanel extends LayerPanel {
 
 	private JComponent content;
@@ -18,16 +47,8 @@ public class HeaderPanel extends LayerPanel {
 	private Component body;	
 		
 	public HeaderPanel() {
-		super(false);
-		header = new HeaderBox();
-		
-		content = getContentLayer();
-		content.setLayout(new GridBagLayout());
-		content.add(header, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, Spacing.iNone(), 0, 0));
-
-		setBody(new JPanel());
+		this(new HeaderBox(), new JPanel());
 	}
-	
 	
 	public HeaderPanel(HeaderBox header, Component body) {
 		super(false);

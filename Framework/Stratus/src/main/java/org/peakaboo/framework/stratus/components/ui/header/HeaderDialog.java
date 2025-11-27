@@ -11,7 +11,38 @@ import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.components.ui.live.LiveDialog;
 
-public class HeaderDialog extends LiveDialog {
+/**
+ * An undecorated modal dialog with a {@link HeaderPanel}.
+ * <p>
+ * HeaderDialog provides a styled dialog window with a custom header bar and resizable edges.
+ * The dialog is undecorated (no native window controls) and uses a {@link HeaderBox} for the
+ * title bar, which includes an optional close button and supports window dragging.
+ * </p>
+ * <p>
+ * <strong>Features:</strong>
+ * </p>
+ * <ul>
+ * <li>Custom header bar with configurable left, centre, and right sections</li>
+ * <li>Built-in close button (shown by default)</li>
+ * <li>Window dragging via header bar</li>
+ * <li>Edge-based window resizing via glass pane</li>
+ * <li>Themed border matching the Stratus look and feel</li>
+ * </ul>
+ * <p>
+ * <strong>When to Use:</strong>
+ * </p>
+ * <ul>
+ * <li>Use HeaderDialog for modal dialogs that need custom headers</li>
+ * <li>Use {@link HeaderFrame} for non-modal top-level windows</li>
+ * <li>Use {@link HeaderLayer} for in-window overlays (not separate windows)</li>
+ * </ul>
+ *
+ * @see HeaderFrame
+ * @see HeaderPanel
+ * @see HeaderBox
+ * @see HeaderLayer
+ */
+public class HeaderDialog extends LiveDialog implements HeaderWindow {
 
 
 	private HeaderPanel root;
@@ -25,20 +56,13 @@ public class HeaderDialog extends LiveDialog {
 	public HeaderDialog(Window parent, Runnable onClose) {
 		super(parent);
 		this.onClose = onClose;
-		
-		this.setUndecorated(true);
-		
-		root = new HeaderPanel();
-		root.setBorder(new MatteBorder(1, 1, 1, 1, Stratus.getTheme().getWidgetBorder()));
-		this.setContentPane(root);
-		
-		
-		root.getHeader().setShowClose(true);
-		root.getHeader().setOnClose(() -> {
-			close();
-		});
 
-		HeaderFrameGlassPane glass = new HeaderFrameGlassPane(this);
+		this.setUndecorated(true);
+
+		root = createHeaderPanel();
+		this.setContentPane(root);
+
+		glass = new HeaderFrameGlassPane(this);
 		this.setGlassPane(glass);
 		glass.setVisible(true);
 				
@@ -51,29 +75,21 @@ public class HeaderDialog extends LiveDialog {
 		Toolkit.getDefaultToolkit().removeAWTEventListener(glass);
 		this.onClose.run();
 	}
-	
 
-	public HeaderBox getHeader() {
-		return root.getHeader();
+	@Override
+	public HeaderPanel getRootPanel() {
+		return root;
 	}
 
-
-	public Component getBody() {
-		return root.getBody();
-	}
-	
-	public void setBody(Component body) {
-		root.setBody(body);
+	@Override
+	public void packWindow() {
 		pack();
 	}
 
-	public LayerPanel getLayerRoot() {
-		return root;
-	}
-	
 	@Override
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
+	public void pack() {
+		// Ensure any pending header rebuilds happen before packing
+		root.getHeader().ensureBuilt();
+		super.pack();
 	}
-	
 }
