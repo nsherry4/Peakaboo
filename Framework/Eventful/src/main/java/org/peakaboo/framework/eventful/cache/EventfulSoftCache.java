@@ -4,7 +4,10 @@ import java.lang.ref.SoftReference;
 import java.util.function.Supplier;
 
 /**
- * EventfulSoftCache is a kind of EventfulCache which stores if values in a {@link SoftReference}
+ * EventfulSoftCache is a kind of EventfulCache which stores values in a {@link SoftReference}.
+ * The supplier must be deterministic - returning the same value given the same dependency state.
+ * Call {@link #invalidate()} when dependencies change. Regeneration after GC eviction does not
+ * notify listeners, only explicit invalidation does.
  */
 public class EventfulSoftCache<T> extends AbstractEventfulCache<T> {
 
@@ -19,6 +22,7 @@ public class EventfulSoftCache<T> extends AbstractEventfulCache<T> {
 		synchronized (this) {
 			ref = new SoftReference<>(null);
 		}
+		updateListeners();
 	}
 
 	@Override
