@@ -514,21 +514,30 @@ public class FileDrop {
 	 * This checks if:
 	 * 1. The drag event supports DataFlavor.stringFlavor
 	 * 2. The string data can be successfully retrieved
-	 * 3. The string data can be parsed as a URL
+	 * 3. The string data is an http or https URL
 	 *
 	 * This is used to detect URL drops from web browsers, which provide both
 	 * the URL as a string and often a temporary .url shortcut file. By checking
 	 * the string flavor, we can access the actual URL instead of the temp file.
+	 *
+	 * Note: Only http/https URLs are supported. File URLs (file://) should be
+	 * handled by the DROP_FILELIST or DROP_LINUX paths instead.
 	 *
 	 * FIX: Added check for application/x-java-url flavor (macOS). On macOS,
 	 * browser URL drops provide this flavor but don't allow reading data during
 	 * the drag phase, so we detect the flavor presence instead of reading data.
 	 *
 	 * @param evt The drag event to check
-	 * @return true if the event contains valid URL string data, false otherwise
+	 * @return true if the event contains valid http/https URL string data, false otherwise
 	 */
 	private boolean isDragUrl(DropTargetDragEvent evt) {
-
+		
+		// This flavour is used to read the URLs on drop -- it must exist
+		DataFlavor flavour = DataFlavor.stringFlavor;
+		if (!evt.isDataFlavorSupported(flavour)) {
+			return false;
+		}
+		
 		// First check for application/x-java-url flavor (macOS browser URL drops)
 		// This flavor is present on macOS but the data cannot be read during drag phase
 		DataFlavor[] flavors = evt.getCurrentDataFlavors();
@@ -538,12 +547,6 @@ public class FileDrop {
 				log("FileDrop: isDragUrl MATCHED application/x-java-url flavor!");
 				return true;
 			}
-		}
-
-		// Fallback: Try to read and validate stringFlavor (works on some OSes)
-		DataFlavor flavour = DataFlavor.stringFlavor;
-		if (!evt.isDataFlavorSupported(flavour)) {
-			return false;
 		}
 
 		String data;
@@ -556,15 +559,22 @@ public class FileDrop {
 		if (data == null) {
 			return false;
 		}
+		
+		// Only accept http and https URLs - file:// URLs should be handled by other drop paths
+		if (!(data.startsWith("http://") || data.startsWith("https://"))) {
+			return false;
+		}
+
+		// Validate that it's actually a URL (even if it doesn't have a protocol)
+		// The URL constructor is lenient and will accept bare URLs like "example.com"
 		try {
-			URL url = new URL(data);
+			new URL(data);
 		} catch (Exception e) {
 			return false;
 		}
+
 		return true;
 	}
-
-
 
 	
 	private void acceptDropFilelist(DropTargetDropEvent evt, Listener listener) throws UnsupportedFlavorException, IOException {
@@ -657,6 +667,7 @@ public class FileDrop {
 		//make sure we can get the data
 		DataFlavor flavour = DataFlavor.stringFlavor;
 		if (!evt.isDataFlavorSupported(flavour)) {
+			StratusLog.get().log(Level.WARNING, "String data flavour unexpectedly not supported");
 			return null;
 		}
 
@@ -668,17 +679,21 @@ public class FileDrop {
 			data = (String) evt.getTransferable().getTransferData(flavour);
 		} catch (UnsupportedFlavorException | IOException e) {
 			evt.getDropTargetContext().dropComplete(false);
+			StratusLog.get().log(Level.WARNING, "String data flavour unexpectedly not available");
 			return null;
 		}
 
 		if (!(data.startsWith("http://") || data.startsWith("https://"))) {
+			StratusLog.get().log(Level.WARNING, "URL '" + data + "' does not start with http:// or https://");
 			return null;
 		}
+		
 		try {
 			URL url = new URL(data);
 			evt.getDropTargetContext().dropComplete(true);
 			return url;
 		} catch (Exception e) {
+			StratusLog.get().log(Level.WARNING, "URL '" + data + "' could not be parsed");
 			return null;
 		}
 	}
