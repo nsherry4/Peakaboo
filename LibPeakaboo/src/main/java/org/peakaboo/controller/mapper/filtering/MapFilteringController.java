@@ -20,7 +20,7 @@ import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
-import org.peakaboo.framework.cyclops.util.ListOps;
+import org.peakaboo.framework.accent.Lists;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.eventful.cache.CacheIterable;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
@@ -175,7 +175,7 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	
 	public String getActionDescription() {
 		List<String> actions = filters.getAllEnabled().stream().map(f -> f.getFilterDescriptor().getAction()).collect(Collectors.toList());
-		return ListOps.unique(actions).stream().reduce((a, b) -> a + ", " + b).orElse(null);
+		return Lists.unique(actions).stream().reduce((a, b) -> a + ", " + b).orElse(null);
 	}
 
 
