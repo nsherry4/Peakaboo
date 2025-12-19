@@ -23,7 +23,12 @@ public class ListEditor<T> extends AbstractSwingEditor<T> {
 	@Override
 	public void initialize(Parameter<T> p) {
 		this.param = p;
-		SelectionParameter<T> selparam = (SelectionParameter<T>) p;
+
+		if (!(p instanceof SelectionParameter<T> selparam)) {
+			throw new IllegalArgumentException(
+				"ListEditor requires SelectionParameter, got: " + p.getClass().getSimpleName()
+			);
+		}
 
 		control.setModel(new DefaultComboBoxModel(selparam.getPossibleValues().toArray()));
 		control.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -33,12 +38,7 @@ public class ListEditor<T> extends AbstractSwingEditor<T> {
 		param.getEnabledHook().addListener(this::setEnabled);
 		
 		
-		control.addActionListener(e -> {
-			getEditorValueHook().updateListeners(getEditorValue());
-			if (!param.setValue(getEditorValue())) {
-				validateFailed();
-			}
-		});
+		control.addActionListener(e -> notifyParameterChanged());
 	}
 
 	@Override
@@ -71,13 +71,6 @@ public class ListEditor<T> extends AbstractSwingEditor<T> {
 	public T getEditorValue() {
 		return (T)control.getSelectedItem();
 	}
-	
-
-	public void validateFailed() {
-		setFromParameter();
-	}
-	
-	
 	@Override
 	protected void setEnabled(boolean enabled) {
 		control.setEnabled(enabled);

@@ -32,12 +32,7 @@ public class FloatEditor extends AbstractSwingEditor<Float> {
 		control.setValue((Float)param.getValue());
 		
 		
-		control.addChangeListener(e -> {
-			getEditorValueHook().updateListeners(getEditorValue());
-			if (!param.setValue(getEditorValue())) {
-				validateFailed();
-			}
-		});
+		control.addChangeListener(e -> notifyParameterChanged());
 
 	}
 	
@@ -69,10 +64,6 @@ public class FloatEditor extends AbstractSwingEditor<Float> {
 	@Override
 	public Float getEditorValue() {
 		return ((Number)control.getValue()).floatValue();
-	}
-
-	public void validateFailed() {
-		setFromParameter();
 	}
 
 	@Override

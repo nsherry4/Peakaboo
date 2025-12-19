@@ -27,12 +27,7 @@ public class IntegerEditor extends AbstractSwingEditor<Integer> {
 		control.getEditor().setPreferredSize(new Dimension(48, control.getEditor().getPreferredSize().height));
 		control.setValue(param.getValue());
 
-		control.addChangeListener(e -> {
-			getEditorValueHook().updateListeners(getEditorValue());
-			if (!param.setValue(getEditorValue())) {
-				validateFailed();
-			}
-		});
+		control.addChangeListener(e -> notifyParameterChanged());
 	}
 	
 	@Override
@@ -64,12 +59,7 @@ public class IntegerEditor extends AbstractSwingEditor<Integer> {
 	public Integer getEditorValue() {
 		return (Integer)control.getValue();
 	}
-	
 
-	public void validateFailed() {
-		setFromParameter();
-	}
-	
 	@Override
 	protected void setEnabled(boolean enabled) {
 		control.setEnabled(enabled);

@@ -32,12 +32,7 @@ public class IntegerSliderEditor extends WrappingEditor<Integer, JSlider> {
 		param.getValueHook().addListener(v -> this.setFromParameter());
 		param.getEnabledHook().addListener(this::setEnabled);
 		
-		getComponent().addChangeListener(e -> {
-			getEditorValueHook().updateListeners(getEditorValue());
-			if (!param.setValue(getEditorValue())) {
-				validateFailed();
-			}
-		});				
+		getComponent().addChangeListener(e -> notifyParameterChanged());				
 	}
 	
 	@Override

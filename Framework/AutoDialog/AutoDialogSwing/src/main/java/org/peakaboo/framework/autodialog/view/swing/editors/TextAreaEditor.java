@@ -46,10 +46,7 @@ public class TextAreaEditor extends WrappingEditor<String, JTextArea> {
 			}
 			
 			private void update() {
-				getEditorValueHook().updateListeners(getEditorValue());
-				if (!param.setValue(getEditorValue())) {
-					validateFailed();
-				}
+				notifyParameterChanged();
 			}
 		});
 	}

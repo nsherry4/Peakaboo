@@ -10,15 +10,15 @@ public class SimpleValue<T> implements Value<T> {
 	protected String name;
 	protected T value;
 	protected boolean enabled;
-	
+
 	// Used to emit events to listeners
 	protected EventfulType<T> valueHook;
 	protected EventfulType<Boolean> enabledHook;
-	
+
 	public SimpleValue(String name, Style<T> style, T value) {
 		if (name == null) throw new IllegalArgumentException("Name cannot be null");
-		if (style == null) throw new IllegalArgumentException("Name cannot be null");
-		
+		if (style == null) throw new IllegalArgumentException("Style cannot be null");
+
 		this.name = name;
 		this.style = style;
 		this.value = value;
@@ -26,12 +26,12 @@ public class SimpleValue<T> implements Value<T> {
 		valueHook = new EventfulType<>();
 		enabledHook = new EventfulType<>();
 	}
-	
+
 	@Override
 	public synchronized T getValue() {
 		return value;
 	}
-	
+
 	@Override
 	public boolean setValue(T value) {
 		this.value = value;
@@ -39,13 +39,13 @@ public class SimpleValue<T> implements Value<T> {
 		return true;
 	}
 
-	
+
 	@Override
 	public Style<T> getStyle() {
 		return style;
 	}
 
-	
+
 	@Override
 	public String getName() {
 		return name;
@@ -55,13 +55,13 @@ public class SimpleValue<T> implements Value<T> {
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 		getEnabledHook().updateListeners(enabled);
 	}
-	
+
 
 
 	@Override
@@ -75,5 +75,5 @@ public class SimpleValue<T> implements Value<T> {
 	}
 
 
-	
+
 }

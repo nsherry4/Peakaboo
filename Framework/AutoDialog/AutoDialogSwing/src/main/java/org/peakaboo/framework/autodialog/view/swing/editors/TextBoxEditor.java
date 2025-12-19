@@ -33,12 +33,7 @@ public class TextBoxEditor extends AbstractSwingEditor<String> {
 
 		
 		
-		Consumer<DocumentEvent> changeListener = e -> {
-			getEditorValueHook().updateListeners(getEditorValue());
-			if (!param.setValue(getEditorValue())) {
-				validateFailed();
-			}
-		};
+		Consumer<DocumentEvent> changeListener = e -> notifyParameterChanged();
 		
 		control.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -97,7 +92,8 @@ public class TextBoxEditor extends AbstractSwingEditor<String> {
 	}
 	
 
-	public void validateFailed() {
+	@Override
+	protected void validateFailed() {
 		SwingUtilities.invokeLater(this::setFromParameter);
 	}
 	

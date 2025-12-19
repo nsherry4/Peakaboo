@@ -38,9 +38,36 @@ public abstract class AbstractSwingEditor<T> implements SwingEditor<T> {
 		}
 		
 		setEnabled(param.isEnabled());
-		
+
 	}
-	
+
+	/**
+	 * Notifies the parameter and listeners of a value change from the editor.
+	 * This method validates the new value before notifying listeners, ensuring
+	 * that only successfully validated values are propagated.
+	 * <p>
+	 * Call this method from UI event handlers (e.g., change listeners, action listeners)
+	 * when the user modifies the editor value.
+	 * </p>
+	 */
+	protected void notifyParameterChanged() {
+		T newValue = getEditorValue();
+		if (param.setValue(newValue)) {
+			getEditorValueHook().updateListeners(newValue);
+		} else {
+			validateFailed();
+		}
+	}
+
+	/**
+	 * Called when parameter validation fails. Default implementation reverts
+	 * the editor to the parameter's current value. Subclasses may override
+	 * to customize behavior (e.g., use SwingUtilities.invokeLater).
+	 */
+	protected void validateFailed() {
+		setFromParameter();
+	}
+
 	protected abstract void setEnabled(boolean enabled);
-	
+
 }
