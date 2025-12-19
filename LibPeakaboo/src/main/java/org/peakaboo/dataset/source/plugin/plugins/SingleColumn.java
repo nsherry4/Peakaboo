@@ -31,7 +31,7 @@ public class SingleColumn extends AbstractDataSource {
 	private static final String splitPattern = "[,\\s]+";
 	
 	PipelineScanData scandata;
-	SimpleDataSize datasize;
+
 	@Override
 	public Optional<Group> getParameters(List<DataInputAdapter> paths) {
 		return Optional.empty();
@@ -44,7 +44,7 @@ public class SingleColumn extends AbstractDataSource {
 
 	@Override
 	public Optional<DataSize> getDataSize() {
-		return Optional.of(datasize);
+		return Optional.empty();
 	}
 
 	@Override
