@@ -16,6 +16,10 @@ public class Settings {
 
 	protected static SettingsStore provider = new DummySettingsStore();
 	
+	public static void inject(SettingsStore provider) {
+		Settings.provider = provider;
+	}
+	
 	public static void load(File directory) throws IOException {
 		  provider = new YamlSettingsStore(directory);
 	}
