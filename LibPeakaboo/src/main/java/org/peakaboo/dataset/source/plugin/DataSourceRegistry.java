@@ -14,9 +14,9 @@ import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin> {
 
 	private static DataSourceRegistry SYSTEM;
-    public static synchronized void init() {
-        init(null);
-    }
+	public static synchronized void init() {
+		init(null);
+	}
 	public static synchronized void init(File dataSourceDir) {
 		try {
 			if (SYSTEM == null) {
@@ -45,7 +45,8 @@ public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin>
         addLoader(builtins);
 
         // Load plugins from within an AIO jar containing the app + plugins
-        addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class));
+        // Disabled for android compatibility, and because this is unused in the desktop app
+        //addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class));
 
     }
 
