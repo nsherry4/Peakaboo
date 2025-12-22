@@ -27,16 +27,22 @@ public class DataSinkRegistry extends PeakabooPluginRegistry<DataSinkPlugin> {
 	}
 	
 	//--------------------------------
-	
+
+    public DataSinkRegistry() {
+        super("datasink");
+        var builtins = new BoltJavaBuiltinLoader<>(this, DataSinkPlugin.class);
+        builtins.load(CSV.class);
+        addLoader(builtins);
+
+        // Load plugins from within an AIO jar containing the app + plugins
+        addLoader(new BoltJarDirectoryLoader<>(this, DataSinkPlugin.class));
+    }
+
 	public DataSinkRegistry(File dataSinkDir) {
-		super("datasink");
-		
-		addLoader(new BoltJarDirectoryLoader<>(this, DataSinkPlugin.class, dataSinkDir));
-		addLoader(new BoltJarDirectoryLoader<>(this, DataSinkPlugin.class));
-		
-		var builtins = new BoltJavaBuiltinLoader<>(this, DataSinkPlugin.class);
-		builtins.load(CSV.class);
-		addLoader(builtins);
+		this();
+		if (dataSinkDir != null) {
+            addLoader(new BoltJarDirectoryLoader<>(this, DataSinkPlugin.class, dataSinkDir));
+        }
 	}
 	
 	@Override
