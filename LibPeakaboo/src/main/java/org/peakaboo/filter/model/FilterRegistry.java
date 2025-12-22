@@ -75,44 +75,52 @@ public class FilterRegistry extends PeakabooPluginRegistry<Filter> {
 		filter.getParameterGroup().deserialize(saved.settings);
 		return Optional.of(filter);
 	}
-		
+
+    public FilterRegistry() {
+        super("filter");
+
+        var builtins = new BoltJavaBuiltinLoader<>(this, Filter.class);
+
+        builtins.load(IdentityFilter.class);
+        builtins.load(SubFilter.class);
+        builtins.load(SpectrumNormalizationFilter.class);
+        builtins.load(DatasetNormalizationFilter.class);
+
+        builtins.load(BruknerBackgroundFilter.class);
+        builtins.load(LinearTrimBackgroundFilter.class);
+        builtins.load(PolynomialBackgroundFilter.class);
+        builtins.load(SquareSnipBackgroundFilter.class);
+        builtins.load(SpectrumBackgroundFilter.class);
+
+        builtins.load(ComptonBackgroundFilter.class);
+
+        builtins.load(AdditionMathFilter.class);
+        builtins.load(DerivativeMathFilter.class);
+        builtins.load(IntegralMathFilter.class);
+        builtins.load(MultiplicationMathFilter.class);
+        builtins.load(SubtractionMathFilter.class);
+
+        builtins.load(FourierNoiseFilter.class);
+        builtins.load(WeightedAverageNoiseFilter.class);
+        builtins.load(SavitskyGolayNoiseFilter.class);
+        builtins.load(SpringNoiseFilter.class);
+        builtins.load(LowStatisticsNoiseFilter.class);
+
+        builtins.load(PeakDetectorFilter.class);
+
+        addLoader(builtins);
+
+
+        // Load plugins from within an AIO jar containing the app + plugins
+        addLoader(new BoltJarDirectoryLoader<>(this, Filter.class));
+    }
+
 	public FilterRegistry(File filterDir) {
-		super("filter");
-		
-		addLoader(new BoltJarDirectoryLoader<>(this, Filter.class, filterDir));
-		addLoader(new BoltJarDirectoryLoader<>(this, Filter.class));
-		
-		
-		var builtins = new BoltJavaBuiltinLoader<>(this, Filter.class);
-		
-		builtins.load(IdentityFilter.class);
-		builtins.load(SubFilter.class);
-		builtins.load(SpectrumNormalizationFilter.class);
-		builtins.load(DatasetNormalizationFilter.class);
-		
-		builtins.load(BruknerBackgroundFilter.class);
-		builtins.load(LinearTrimBackgroundFilter.class);
-		builtins.load(PolynomialBackgroundFilter.class);
-		builtins.load(SquareSnipBackgroundFilter.class);
-		builtins.load(SpectrumBackgroundFilter.class);
-		
-		builtins.load(ComptonBackgroundFilter.class);
-		
-		builtins.load(AdditionMathFilter.class);
-		builtins.load(DerivativeMathFilter.class);
-		builtins.load(IntegralMathFilter.class);
-		builtins.load(MultiplicationMathFilter.class);
-		builtins.load(SubtractionMathFilter.class);
-		
-		builtins.load(FourierNoiseFilter.class);
-		builtins.load(WeightedAverageNoiseFilter.class);
-		builtins.load(SavitskyGolayNoiseFilter.class);
-		builtins.load(SpringNoiseFilter.class);
-		builtins.load(LowStatisticsNoiseFilter.class);
-		
-		builtins.load(PeakDetectorFilter.class);
-		
-		addLoader(builtins);
+		this();
+
+        if (filterDir != null) {
+            addLoader(new BoltJarDirectoryLoader<>(this, Filter.class, filterDir));
+        }
 	}
 
 	@Override
