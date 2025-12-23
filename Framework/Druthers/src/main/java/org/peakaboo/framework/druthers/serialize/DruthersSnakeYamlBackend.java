@@ -126,9 +126,27 @@ public class DruthersSnakeYamlBackend implements DruthersSerializerBackend {
 
 	/**
 	 * Builds a SnakeYAML loader configured for the target class and mode.
+	 * <p>
+	 * <b>Security:</b> Configured to prevent common YAML deserialization attacks:
+	 * <ul>
+	 *   <li>Blocks all explicit type tags to prevent arbitrary code execution</li>
+	 *   <li>Limits nesting depth to prevent stack overflow attacks</li>
+	 *   <li>Limits aliases to prevent billion laughs attacks</li>
+	 *   <li>Limits document size to prevent memory exhaustion</li>
+	 * </ul>
 	 */
 	private <T> Yaml buildLoader(Class<T> cls, boolean strict) {
 		var loaderopts = new LoaderOptions();
+
+		// SECURITY: Reject ALL explicit type tags (!!java.*, !!javax.*, etc.)
+		// Only allow implicit YAML tags (maps, sequences, scalars)
+		loaderopts.setTagInspector(tag -> tag.startsWith(Tag.PREFIX));
+
+		// SECURITY: Set resource limits to prevent DoS attacks
+		loaderopts.setMaxAliasesForCollections(50);      // Prevent billion laughs attack
+		loaderopts.setNestingDepthLimit(50);             // Prevent stack overflow
+		loaderopts.setCodePointLimit(50 * 1024 * 1024); // 50MB document size limit
+
 		var constructor = new Constructor(cls, loaderopts);
 		constructor.getPropertyUtils().setSkipMissingProperties(!strict);
 
