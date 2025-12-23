@@ -177,13 +177,24 @@ public class DruthersSerializer {
 	
 	public static <T extends Object> Yaml buildLoader(Class<T> cls, boolean strict) {
 		var loaderopts = new LoaderOptions();
+
+		// SECURITY: Reject ALL explicit type tags to prevent RCE via arbitrary class instantiation
+		// Only allow implicit YAML tags (map, seq, str, int, float, bool, null)
+		// This prevents attacks like: !!java.lang.Runtime ["calc.exe"]
+		loaderopts.setTagInspector(tag -> tag.startsWith(Tag.PREFIX));
+
+		// SECURITY: Set resource limits to prevent DoS attacks
+		loaderopts.setMaxAliasesForCollections(50);      // Prevent billion laughs attack
+		loaderopts.setNestingDepthLimit(50);             // Prevent stack overflow attack
+		loaderopts.setCodePointLimit(10 * 1024 * 1024); // Prevent memory exhaustion (10MB limit)
+
 		var constructor = new Constructor(cls, loaderopts);
 		constructor.getPropertyUtils().setSkipMissingProperties(!strict);
-		
+
 		var dumperopts = new DumperOptions();
 		var representer = new DruthersYamlRepresenter(dumperopts);
 		representer.getPropertyUtils().setSkipMissingProperties(!strict);
-		
+
 		return new Yaml(constructor, representer);
 	}
 	
