@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.filter.model.SerializedFilterV1;
+import org.peakaboo.framework.accent.log.OneLog;
 
 @Deprecated(since = "6", forRemoval = true)
 public class SavedFilteringSessionV1 {
@@ -24,7 +24,7 @@ public class SavedFilteringSessionV1 {
 				filterset.add(f.getFilter(errors).orElseThrow());
 			} catch (Exception e) {
 				errors.add("Failed to restore filter " + f.getClazz());
-				PeakabooLog.get().log(Level.WARNING, "Failed to restore filter " + f.getClazz(), e);
+				OneLog.log(Level.WARNING, "Failed to restore filter " + f.getClazz(), e);
 			}
 		}
 	}

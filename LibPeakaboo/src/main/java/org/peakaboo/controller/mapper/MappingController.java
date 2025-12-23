@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
 import org.peakaboo.controller.mapper.fitting.MapFittingController;
@@ -29,6 +28,7 @@ import org.peakaboo.display.map.Mapper;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -238,7 +238,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 			}
 			
 			if (exceptionBox.get() != null) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to generate archive", exceptionBox.get());
+				OneLog.log(Level.SEVERE, "Failed to generate archive", exceptionBox.get());
 			}
 			
 			return null;

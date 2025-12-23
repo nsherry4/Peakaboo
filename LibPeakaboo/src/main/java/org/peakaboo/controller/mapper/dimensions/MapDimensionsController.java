@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.accent.Pair;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
@@ -129,7 +129,7 @@ public class MapDimensionsController extends EventfulType<MapUpdateType>{
 			
 			
 			long t2 = System.currentTimeMillis();
-			PeakabooLog.get().log(Level.INFO, "Guessed Data Dimensions in " + ((t2-t1)/1000) + " seconds");
+			OneLog.log(Level.INFO, "Guessed Data Dimensions in " + ((t2-t1)/1000) + " seconds");
 			
 			if (best.isPresent()) {
 				return best.get().first;

@@ -2,8 +2,8 @@ package org.peakaboo.controller.plotter.view.mode;
 
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
@@ -18,7 +18,7 @@ public class ChannelViewModeRegistry extends PeakabooPluginRegistry<ChannelViewM
 				systemImpl = new ChannelViewModeRegistry();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load channel view plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load channel view plugins", e);
 		}
 	}
 	public static ChannelViewModeRegistry system() {

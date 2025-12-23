@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
@@ -118,14 +118,14 @@ public class SerializedFilterV1 {
 				} catch (IllegalArgumentException e) {
 					var msg = "Cannot restore settings for " + plugin.getName();
 					errors.add(msg);
-					PeakabooLog.get().log(Level.WARNING, msg, e);
+					OneLog.log(Level.WARNING, msg, e);
 				}
 				return Optional.of(filter);
 			}
 		}
 		var msg = "Cannot restore plugin " + uuidOrClazz;
 		errors.add(msg);
-		PeakabooLog.get().log(Level.WARNING, msg);
+		OneLog.log(Level.WARNING, msg);
 		return Optional.empty();
 	}
 

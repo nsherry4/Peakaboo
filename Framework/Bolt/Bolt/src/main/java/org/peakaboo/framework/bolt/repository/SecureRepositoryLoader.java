@@ -2,7 +2,7 @@ package org.peakaboo.framework.bolt.repository;
 
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -15,7 +15,7 @@ public class SecureRepositoryLoader {
      */
     public static RepositoryMetadata loadRepositoryMetadata(String yamlContent) {
         if (yamlContent == null || yamlContent.trim().isEmpty()) {
-        	Bolt.logger().log(Level.WARNING, "Failed to load empty yaml document");
+			OneLog.log(Level.WARNING, "Failed to load empty yaml document");
             throw new IllegalArgumentException("YAML content cannot be null or empty");
         }
         
@@ -35,7 +35,7 @@ public class SecureRepositoryLoader {
         try {
             return yaml.loadAs(yamlContent, RepositoryMetadata.class);
         } catch (YAMLException e) {
-        	Bolt.logger().log(Level.WARNING, "Failed to parse invalid yaml document");
+			OneLog.log(Level.WARNING, "Failed to parse invalid yaml document");
             throw new IllegalArgumentException("Failed to parse YAML: " + e.getMessage(), e);
         }
     }

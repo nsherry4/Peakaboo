@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 
 public class HttpsPluginRepository implements PluginRepository {
 
@@ -87,7 +87,7 @@ public class HttpsPluginRepository implements PluginRepository {
 
 	    	// Validate the raw yaml string
 	    	if (!validateRawYaml(contentsYaml)) {
-	    		Bolt.logger().log(Level.SEVERE, "Yaml failed validation for for repo " + repoUrl);
+				OneLog.log(Level.SEVERE, "Yaml failed validation for for repo " + repoUrl);
 	    		return Optional.empty();
 	    	}
 	    	
@@ -108,7 +108,7 @@ public class HttpsPluginRepository implements PluginRepository {
 	    	
 	    	return Optional.of(fetchedContents);
 	    	        } catch (Exception e) {
-            Bolt.logger().log(Level.WARNING, "Failed to retrieve plugin list from server", e);
+			OneLog.log(Level.WARNING, "Failed to retrieve plugin list from server", e);
         }
     	return Optional.empty();
     }

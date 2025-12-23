@@ -6,7 +6,6 @@ import java.util.logging.Level;
 
 import javax.swing.SwingUtilities;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
@@ -14,6 +13,7 @@ import org.peakaboo.display.map.MapRenderData;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.Mapper;
 import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 
@@ -59,7 +59,7 @@ public class MapCanvas extends GraphicsPanel {
 		try {
 			drawMap(backend, size);
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Unable to draw map", e);
+			OneLog.log(Level.SEVERE, "Unable to draw map", e);
 		}
 	}
 

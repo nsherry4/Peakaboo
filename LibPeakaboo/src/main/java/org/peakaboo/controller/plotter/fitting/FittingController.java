@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.session.v2.SavedFittings;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
@@ -35,6 +34,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.framework.accent.Mutable;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -197,7 +197,7 @@ public class FittingController extends EventfulType<Boolean>
 	public void fittingDataInvalidated()
 	{
 		
-		PeakabooLog.get().log(Level.FINE, "Fitting Data Invalidated");
+		OneLog.log(Level.FINE, "Fitting Data Invalidated");
 		
 		// Clear cached values, since they now have to be recalculated
 		fittingModel.selectionResults.invalidate();
@@ -583,7 +583,7 @@ public class FittingController extends EventfulType<Boolean>
 				errors.add("Failed to load Fitting Solver: " + saved.solver.name);
 			});
 		} catch (RuntimeException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + saved.solver.name, e);
+			OneLog.log(Level.SEVERE, "Failed to find Fitting Solver " + saved.solver.name, e);
 		}
 
 		
@@ -595,7 +595,7 @@ public class FittingController extends EventfulType<Boolean>
 				errors.add("Failed to load Curve Fitter: " + saved.fitter.name);
 			});
 		} catch (RuntimeException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + saved.fitter.name, e);
+			OneLog.log(Level.SEVERE, "Failed to find Curve Fitter " + saved.fitter.name, e);
 		}
 		
 		//Restore the fitting function
@@ -611,7 +611,7 @@ public class FittingController extends EventfulType<Boolean>
 			fittingModel.selections.getFittingParameters().setFittingFunction(oProto);
 			fittingModel.proposals.getFittingParameters().setFittingFunction(oProto);
 		} catch (RuntimeException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + saved.model.name, e);
+			OneLog.log(Level.SEVERE, "Failed to find Fitting Function " + saved.model.name, e);
 		}
 		
 		

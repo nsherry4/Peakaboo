@@ -1,7 +1,7 @@
 package org.peakaboo.framework.plural.executor;
 
+import org.peakaboo.framework.accent.Platform;
 import org.peakaboo.framework.eventful.EventfulBeacon;
-import org.peakaboo.framework.plural.Plural;
 
 
 public abstract class AbstractExecutor<T> extends EventfulBeacon implements PluralExecutor{
@@ -187,7 +187,7 @@ public abstract class AbstractExecutor<T> extends EventfulBeacon implements Plur
 	 */
 	public int calcNumThreads(double threadsPerCore)
 	{
-		int threads = (int) Math.round(Plural.cores() * threadsPerCore);
+		int threads = (int) Math.round(Platform.cores() * threadsPerCore);
 		if (threads <= 0) threads = 1;
 		return threads;
 	}

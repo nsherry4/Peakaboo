@@ -1,5 +1,7 @@
 package org.peakaboo.framework.eventful;
 
+import org.peakaboo.framework.accent.log.OneLog;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,14 +84,14 @@ public class EventfulType<T> implements IEventfulType<T>
 				try {
 					l.change(message);
 				} catch (Exception e) {
-					Eventful.logger().log(Level.WARNING, "Exception in EventfulTypeListener", e);
+					OneLog.log(Level.WARNING, "Exception in EventfulTypeListener", e);
 				}
 			}
 			for (EventfulListener l : simpleListenersCopy) {
 				try {
 					l.change();
 				} catch (Exception e) {
-					Eventful.logger().log(Level.WARNING, "Exception in EventfulListener", e);
+					OneLog.log(Level.WARNING, "Exception in EventfulListener", e);
 				}
 			}
 		});

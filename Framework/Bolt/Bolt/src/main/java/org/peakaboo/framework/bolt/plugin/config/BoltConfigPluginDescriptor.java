@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.config.container.BoltConfigContainer;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
@@ -65,7 +65,7 @@ public class BoltConfigPluginDescriptor<T extends BoltConfigPlugin> implements P
 			s.close();
 			return Optional.of(plugin);
 		} catch (IOException e) {
-			Bolt.logger().log(Level.FINE, "Could not create plugin instance: " + container.getSourceName(), e);
+			OneLog.log(Level.FINE, "Could not create plugin instance: " + container.getSourceName(), e);
 			return Optional.empty();
 		}
 

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.plural.Plural;
+import org.peakaboo.framework.accent.log.OneLog;
 
 public abstract class AbstractOperator<A, Z> implements Operator<A, Z> {
 
@@ -67,7 +67,7 @@ public abstract class AbstractOperator<A, Z> implements Operator<A, Z> {
 					try {
 						this.wait();
 					} catch (InterruptedException e) {
-						Plural.logger().log(Level.SEVERE, "Failed to wait for processing link to become operational", e);
+						OneLog.log(Level.SEVERE, "Failed to wait for processing link to become operational", e);
 						Thread.currentThread().interrupt();
 						return false;
 					}

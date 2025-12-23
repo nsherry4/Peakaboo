@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
@@ -14,6 +13,7 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunction;
 import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.SerializedTransitionSeries;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 @Deprecated(since = "6", forRemoval = true)
@@ -74,7 +74,7 @@ public class SavedFittingSessionV1 {
 			fittingSolverClass = (Class<? extends FittingSolver>) Class.forName(solver);
 			controller.fittingModel.fittingSolver = fittingSolverClass.getDeclaredConstructor().newInstance();
 		} catch (ReflectiveOperationException | RuntimeException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Solver " + solver, e);
+			OneLog.log(Level.SEVERE, "Failed to find Fitting Solver " + solver, e);
 		}
 		
 		//Restore CurveFitter
@@ -87,7 +87,7 @@ public class SavedFittingSessionV1 {
 			String shortname = parts[parts.length-1];
 			errors.add("Failed to find Curve Fitter " + shortname);
 		} catch (ReflectiveOperationException | RuntimeException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Curve Fitter " + fitter, e);
+			OneLog.log(Level.SEVERE, "Failed to find Curve Fitter " + fitter, e);
 		}
 		
 		//Restore the fitting function
@@ -99,7 +99,7 @@ public class SavedFittingSessionV1 {
 			controller.fittingModel.selections.getFittingParameters().setFittingFunction(fitfnProto);
 			controller.fittingModel.proposals.getFittingParameters().setFittingFunction(fitfnProto);
 		} catch (ClassNotFoundException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to find Fitting Function " + function, e);
+			OneLog.log(Level.SEVERE, "Failed to find Fitting Function " + function, e);
 		}
 		
 		

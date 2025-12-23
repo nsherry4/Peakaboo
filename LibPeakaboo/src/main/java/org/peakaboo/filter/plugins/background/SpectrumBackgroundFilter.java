@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.StandardDataSet;
 import org.peakaboo.dataset.io.PathDataInputAdapter;
@@ -15,6 +14,7 @@ import org.peakaboo.dataset.source.model.DataSource.DataSourceContext;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.filter.model.AbstractBackgroundFilter;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.FileNameStyle;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
@@ -96,7 +96,7 @@ public class SpectrumBackgroundFilter extends AbstractBackgroundFilter {
 			DataSet bgDataSet = new StandardDataSet(source);
 			spectrum = bgDataSet.getAnalysis().averagePlot();
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load background from dataset", e);
+			OneLog.log(Level.SEVERE, "Failed to load background from dataset", e);
 			spectrum = new ArraySpectrum(data.size());
 		}
 		//now that we've loaded it (or failed), set the loadedFile so we don't constantly re-load it

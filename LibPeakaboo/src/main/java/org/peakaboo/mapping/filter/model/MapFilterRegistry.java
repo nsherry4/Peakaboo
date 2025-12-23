@@ -3,8 +3,8 @@ package org.peakaboo.mapping.filter.model;
 import java.io.File;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
@@ -40,7 +40,7 @@ public class MapFilterRegistry extends PeakabooPluginRegistry<MapFilterPlugin> {
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load map filter plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load map filter plugins", e);
 		}
 	}
 	public static MapFilterRegistry system() {

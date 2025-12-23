@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.io.DataOutputAdapter;
 import org.peakaboo.dataset.sink.model.DataSink.DataSinkWriteException;
 import org.peakaboo.dataset.sink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.dataset.sink.model.components.interaction.Interaction;
 import org.peakaboo.dataset.source.model.DataSource;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
 
@@ -66,7 +66,7 @@ public interface DataSink {
 					execset.aborted();
 				}
 			} catch (IOException | DataSinkWriteException e) {
-				PeakabooLog.get().log(Level.SEVERE, "Failed to export data", e);
+				OneLog.log(Level.SEVERE, "Failed to export data", e);
 			}
 			
 			return null;

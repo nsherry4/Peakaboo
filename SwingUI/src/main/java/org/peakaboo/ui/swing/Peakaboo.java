@@ -23,10 +23,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.peakaboo.app.BuildExpiry;
-import org.peakaboo.app.Env;
+import org.peakaboo.framework.accent.Platform;
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Settings;
 import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
@@ -39,6 +38,7 @@ import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.accent.Mutable;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
@@ -138,16 +138,16 @@ public class Peakaboo {
 
 		// If expired, exit the application
 		if (isExpired) {
-			PeakabooLog.get().log(Level.WARNING, "Build has expired, exiting application");
+			OneLog.log(Level.WARNING, "Build has expired, exiting application");
 			System.exit(2);
 		}
 	}
 	
 	private static void checkLowMemory() {
-		PeakabooLog.get().log(Level.INFO, "Max heap size = " + Env.maxHeap() + "MB");
+		OneLog.log(Level.INFO, "Max heap size = " + Platform.maxHeap() + "MB");
 		
 		if (PeakabooConfiguration.memorySize == MemorySize.TINY){
-			String message = "This system's Java VM is only allocated " + Env.maxHeap()
+			String message = "This system's Java VM is only allocated " + Platform.maxHeap()
 			+ "MB of memory.\nProcessing large data sets may be quite slow, if not impossible.";
 			String title = "Low Memory";
 						
@@ -163,7 +163,7 @@ public class Peakaboo {
 			new PlotFrame();
 		} catch (Throwable e) {
 			Stratus.removeSplash();
-			PeakabooLog.get().log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
+			OneLog.log(Level.SEVERE, "Peakaboo has encountered a problem and must exit", e);
 			System.exit(1);
 		}
 		
@@ -174,7 +174,7 @@ public class Peakaboo {
 
 		
 		//Set error handler that shows a popup
-		PeakabooLog.getRoot().addHandler(new Handler() {
+		OneLog.getRoot().addHandler(new Handler() {
 			
 			@Override
 			public void publish(LogRecord entry) {
@@ -215,7 +215,7 @@ public class Peakaboo {
 		try {
 			UIManager.setLookAndFeel(laf);
 		} catch (UnsupportedLookAndFeelException e) {
-			PeakabooLog.get().log(Level.WARNING, "Failed to set Look and Feel", e);
+			OneLog.log(Level.WARNING, "Failed to set Look and Feel", e);
 		}
 	}
 
@@ -233,9 +233,14 @@ public class Peakaboo {
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
-		PeakabooLog.init(DesktopApp.appDir("Logging"));
+
 		DesktopSettings.init();
 		CrashHandler.init();
+		
+		// Configure app-level logging
+		OneLog.setAppInfo(Tier.provider().appName(), Version.LONG_VERSION); // Tier must be configured before this
+		OneLog.setVerbose(Settings.isVerboseLogging()); // Requires DesktopSettings.init() first
+		OneLog.addFileHandler(DesktopApp.appDir("Logging"), "Peakaboo.log");
 		
 		// TODO: ugly -- rework logging to make this easier (and in the correct place)
 		// Don't do verbose logging for particularly chatty parts of java's internals
@@ -250,8 +255,8 @@ public class Peakaboo {
 			Logger.getLogger(excl).setLevel(Level.INFO);
 		}
 		
-		PeakabooLog.get().log(Level.INFO, "Peakaboo is starting up.");
-		PeakabooLog.get().log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.LONG_VERSION + " - " + Version.buildDate);
+		OneLog.log(Level.INFO, "Peakaboo is starting up.");
+		OneLog.log(Level.INFO, "This is " + Tier.provider().appName() + " version " + Version.LONG_VERSION + " - " + Version.buildDate);
 		
 		CyclopsSurface.init();
 		
@@ -279,7 +284,7 @@ public class Peakaboo {
 			try {
 				Stratus.registerFont("/org/peakaboo/ui/swing/fonts/springsteel-lig.otf");
 			} catch (FontFormatException | IOException e) {
-				PeakabooLog.get().log(Level.WARNING, "", e);
+				OneLog.log(Level.WARNING, "", e);
 			}
 			
 			
@@ -298,7 +303,7 @@ public class Peakaboo {
 				peakLoader.join();
 			} catch (InterruptedException e) {
 				Stratus.removeSplash();
-				PeakabooLog.get().log(Level.SEVERE, "Failed to start up properly, Peakaboo must now exit.", e);
+				OneLog.log(Level.SEVERE, "Failed to start up properly, Peakaboo must now exit.", e);
 				System.exit(3);
 			}
 			showPeakabooMainWindow();
@@ -357,7 +362,7 @@ public class Peakaboo {
 					File f = FileDrop.getUrlAsFile(url, urlProgress);
 					files.add(f);
 				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, "Failed to download file " + url.toString(), e);
+					OneLog.log(Level.SEVERE, "Failed to download file " + url.toString(), e);
 					return null;
 				}
 				count.set(count.get()+1);

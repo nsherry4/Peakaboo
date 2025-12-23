@@ -1,6 +1,8 @@
 package org.peakaboo.framework.eventful;
 
 
+import org.peakaboo.framework.accent.log.OneLog;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -93,7 +95,7 @@ public class EventfulBeacon implements IEventfulBeacon
 				try {
 					l.change();
 				} catch (Exception e) {
-					Eventful.logger().log(Level.WARNING, "Exception in EventfulListener", e);
+					OneLog.log(Level.WARNING, "Exception in EventfulListener", e);
 				}
 			}
 		});

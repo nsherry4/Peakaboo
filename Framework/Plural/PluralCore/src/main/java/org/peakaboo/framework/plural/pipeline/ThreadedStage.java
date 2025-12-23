@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.plural.Plural;
+import org.peakaboo.framework.accent.log.OneLog;
 
 public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 
@@ -86,7 +86,7 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 		try {
 			this.pool.awaitTermination(5, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
-			Plural.logger().log(Level.WARNING, "Failed to shut down pipeline threads", e);
+			OneLog.log(Level.WARNING, "Failed to shut down pipeline threads", e);
 		}
 		
 		// Finally set the state to completed, which will also prevent the superclass's
@@ -101,7 +101,7 @@ public class ThreadedStage<S, T> extends AbstractStage<S, T> {
 		try {
 			this.pool.awaitTermination(5, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
-			Plural.logger().log(Level.WARNING, "Failed to abort pipeline threads", e);
+			OneLog.log(Level.WARNING, "Failed to abort pipeline threads", e);
 		}
 		return result;
 	}

@@ -3,11 +3,11 @@ package org.peakaboo.dataset.source.plugin;
 import java.io.File;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.dataset.source.plugin.plugins.SingleColumn;
 import org.peakaboo.dataset.source.plugin.plugins.universalhdf5.UniversalHDF5DataSource;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
@@ -21,7 +21,7 @@ public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin>
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load data source plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load data source plugins", e);
 		}
 	}
 	public static DataSourceRegistry system() {

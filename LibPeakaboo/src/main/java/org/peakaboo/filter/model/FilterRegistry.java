@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.filter.plugins.advanced.DatasetNormalizationFilter;
 import org.peakaboo.filter.plugins.advanced.IdentityFilter;
@@ -27,6 +26,7 @@ import org.peakaboo.filter.plugins.noise.LowStatisticsNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SavitskyGolayNoiseFilter;
 import org.peakaboo.filter.plugins.noise.SpringNoiseFilter;
 import org.peakaboo.filter.plugins.noise.WeightedAverageNoiseFilter;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
@@ -42,7 +42,7 @@ public class FilterRegistry extends PeakabooPluginRegistry<Filter> {
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load filter plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load filter plugins", e);
 		}
 	}
 	public static FilterRegistry system() {

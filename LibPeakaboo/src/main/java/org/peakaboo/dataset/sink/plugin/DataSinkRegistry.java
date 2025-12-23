@@ -3,9 +3,9 @@ package org.peakaboo.dataset.sink.plugin;
 import java.io.File;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.dataset.sink.plugin.plugins.CSV;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
@@ -19,7 +19,7 @@ public class DataSinkRegistry extends PeakabooPluginRegistry<DataSinkPlugin> {
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load data sink plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load data sink plugins", e);
 		}
 	}
 	public static DataSinkRegistry system() {

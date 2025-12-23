@@ -10,7 +10,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.IntConsumer;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.DatasetReadResult.ReadStatus;
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSource;
@@ -27,6 +26,7 @@ import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.internal.SubsetDataSource;
 import org.peakaboo.framework.accent.AlphaNumericComparitor;
 import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.plural.executor.AbstractExecutor;
 import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -105,7 +105,7 @@ public class StandardDataSet implements DataSet
 				try {
 					
 					long t1 = System.currentTimeMillis();
-					PeakabooLog.get().log(Level.INFO, "Starting Data Set Open with " + dataSource.getFileFormat().getFormatName());
+					OneLog.log(Level.INFO, "Starting Data Set Open with " + dataSource.getFileFormat().getFormatName());
 					
 					final int scanCount;
 					
@@ -161,7 +161,7 @@ public class StandardDataSet implements DataSet
 					applying.advanceState();
 					
 					long t2 = System.currentTimeMillis();
-					PeakabooLog.get().log(Level.INFO, "Opened a " + dataSource.getFileFormat().getFormatName() + " Data Set in " + ((t2-t1)/1000) + " Seconds");
+					OneLog.log(Level.INFO, "Opened a " + dataSource.getFileFormat().getFormatName() + " Data Set in " + ((t2-t1)/1000) + " Seconds");
 					
 					return new DatasetReadResult(ReadStatus.SUCCESS);
 					
