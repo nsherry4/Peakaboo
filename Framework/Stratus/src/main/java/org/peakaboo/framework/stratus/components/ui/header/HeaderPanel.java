@@ -54,12 +54,16 @@ public class HeaderPanel extends LayerPanel {
 		if (this.body != null) {
 			this.content.remove(this.body);
 		}
-		
+
 		this.body = body;
-		
+
 		if (this.body != null) {
 			this.content.add(this.body, new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, Spacing.iNone(), 0, 0));
 		}
+
+		// Recalculate layout and repaint after component changes
+		this.content.revalidate();
+		this.content.repaint();
 	}
 
 	

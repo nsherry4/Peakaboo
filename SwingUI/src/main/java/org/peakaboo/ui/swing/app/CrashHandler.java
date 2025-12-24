@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import org.peakaboo.app.Env;
 import org.peakaboo.app.PeakabooLog;
+import javax.swing.SwingUtilities;
 import org.peakaboo.app.Version;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
@@ -84,32 +85,31 @@ public class CrashHandler {
 		
 		if (!inUse) {
 			inUse = true;
-			ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable, doReport);
-			errorDialog.setModal(true);
-			errorDialog.setVisible(true); //stalls here until dialog closes
-			inUse = false;
-		}
+			// Defer dialog display until after current EDT operations (like painting) complete
+			SwingUtilities.invokeLater(() -> {
+				ErrorDialog errorDialog = new ErrorDialog(null, "Peakaboo Error", message, throwable, doReport);
+				errorDialog.setModal(true);
+				errorDialog.setVisible(true); //stalls here until dialog closes
+				inUse = false;
 
-		
-		if (! reported.get() && DesktopSettings.isCrashAutoreporting()) {
-			
-			try {
-				//When autoreporting is on, we report even when the user doesn't send additional feedback
-				doReport.accept(null);
-				
-			} catch (NoSuchMethodError e) {
-				// Specifically silence this error, since there was an issue where 
-				// bugsnag ended up in an infinite loop trying to report about a 
-				// failure to report the last crash.
-				PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
-				
-			} catch (Exception e) {
-				// Also don't report exceptions generally, to avoid an infinite 
-				// crash-reporting loop
-				PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
-			}
-			
 
+				// Auto-report if user didn't manually report
+				if (! reported.get() && DesktopSettings.isCrashAutoreporting()) {
+					try {
+						//When autoreporting is on, we report even when the user doesn't send additional feedback
+						doReport.accept(null);
+					} catch (NoSuchMethodError e) {
+						// Specifically silence this error, since there was an issue where
+						// bugsnag ended up in an infinite loop trying to report about a
+						// failure to report the last crash.
+						PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
+					} catch (Exception e) {
+						// Also don't report exceptions generally, to avoid an infinite
+						// crash-reporting loop
+						PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
+					}
+				}
+			});
 		}
 	}
 
