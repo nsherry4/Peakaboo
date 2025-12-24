@@ -171,7 +171,7 @@ public class Plotter {
 		
 		//Filter previews
 		for (Filter f : data.filters) {
-			if (!f.isPreviewOnly()) { continue; }
+			if (!f.isPreviewOnly() || !f.isEnabled()) { continue; }
 			plotPainters.add(createFilterPreviewPainter(data, f));
 		}
 		
