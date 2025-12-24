@@ -68,7 +68,7 @@ public abstract class PlotPainter extends Painter{
 	{
 
 
-		if (context == null) return;
+		if (context == null || data == null) return;
 
 		// copy the data
 		Spectrum transformedData = transformDataForPlot(dr, data);
