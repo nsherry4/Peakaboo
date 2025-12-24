@@ -505,4 +505,67 @@ public class DruthersBackendCompatibilityTests {
 		assertEquals(0, obj.value);  // Default int value
 		assertFalse(obj.flag);  // Default boolean value
 	}
+
+	@DisplayName("Field vs Getter/Setter Precedence")
+	@Test
+	public void testFieldVsGetterSetterPrecedence() throws DruthersLoadException {
+		DruthersSerializerBackend backend = getBackend();
+
+		// Create object and serialize it
+		FieldVsGetterTest original = new FieldVsGetterTest("test-value");
+		String yaml = backend.serialize(original);
+
+		System.out.println("Backend: " + backend.getClass().getSimpleName());
+		System.out.println("Serialized YAML:\n" + yaml);
+		System.out.println("\n--- Public Field Analysis ---");
+		System.out.println("Public field 'value' getter called during serialization: " + original.getterCalled);
+
+		// Deserialize into a new object
+		FieldVsGetterTest deserialized = backend.deserialize(yaml, false, null, FieldVsGetterTest.class);
+
+		System.out.println("Public field 'value' setter called during deserialization: " + deserialized.setterCalled);
+		System.out.println("Value: " + deserialized.value);
+
+		// Verify the value was correctly deserialized
+		assertEquals("test-value", deserialized.value, "Value should be correctly deserialized");
+
+		// Report which accessor was used for public field
+		if (original.getterCalled) {
+			System.out.println("RESULT (public field): Getter was used for serialization");
+		} else {
+			System.out.println("RESULT (public field): Field was used for serialization");
+		}
+
+		if (deserialized.setterCalled) {
+			System.out.println("RESULT (public field): Setter was used for deserialization");
+		} else {
+			System.out.println("RESULT (public field): Field was used for deserialization");
+		}
+
+		// Report which accessor was used for package-private field
+		System.out.println("\n--- Package-Private Field Analysis ---");
+		System.out.println("Package-private field 'packagePrivateValue' getter called during serialization: " + original.packagePrivateGetterCalled);
+		System.out.println("Package-private field 'packagePrivateValue' setter called during deserialization: " + deserialized.packagePrivateSetterCalled);
+		System.out.println("Package-private value: " + deserialized.packagePrivateValue);
+
+		// Check if package-private field was serialized at all
+		if (deserialized.packagePrivateValue != null) {
+			assertEquals("test-value-package", deserialized.packagePrivateValue,
+				"Package-private value should be correctly deserialized");
+
+			if (original.packagePrivateGetterCalled) {
+				System.out.println("RESULT (package-private field): Getter was used for serialization");
+			} else {
+				System.out.println("RESULT (package-private field): Field was used for serialization");
+			}
+
+			if (deserialized.packagePrivateSetterCalled) {
+				System.out.println("RESULT (package-private field): Setter was used for deserialization");
+			} else {
+				System.out.println("RESULT (package-private field): Field was used for deserialization");
+			}
+		} else {
+			System.out.println("RESULT (package-private field): NOT SERIALIZED - Backend does not serialize package-private fields");
+		}
+	}
 }

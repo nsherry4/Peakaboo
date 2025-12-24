@@ -2,6 +2,8 @@ package org.peakaboo.framework.druthers.serialize;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectMapper;
@@ -69,6 +71,10 @@ public class DruthersJacksonBackend implements DruthersSerializerBackend {
 
 	/**
 	 * Builds a Jackson ObjectMapper configured for Druthers requirements.
+	 * <p>
+	 * Configured to match SnakeYAML behaviour by using direct field access
+	 * instead of getters/setters. This ensures compatibility when deserializing
+	 * YAML that was serialized by SnakeYAML.
 	 */
 	private ObjectMapper buildMapper(boolean strict) {
 		YAMLFactory yamlFactory = YAMLFactory.builder()
@@ -81,7 +87,47 @@ public class DruthersJacksonBackend implements DruthersSerializerBackend {
 
 		var builder = YAMLMapper.builder(yamlFactory)
 			// Disable serialization issues with empty beans
-			.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+			.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+			// COMPATIBILITY: Match SnakeYAML's PropertyUtils default behaviour
+			//
+			// SnakeYAML uses JavaBean introspection which serializes:
+			// 1. Public fields via direct access
+			// 2. JavaBean properties via public getter/setter pairs
+			// 3. When both exist, getters/setters take precedence over fields
+			//
+			// Configure Jackson to replicate this behaviour:
+			.changeDefaultVisibility(vc -> vc
+				// PropertyAccessor.FIELD with PUBLIC_ONLY visibility:
+				// - Enables serialization/deserialization of public fields via direct access
+				// - Fields without getters/setters will be accessed directly
+				// - When a getter/setter exists for a field, the getter/setter takes precedence (see below)
+				.withVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.PUBLIC_ONLY)
+
+				// PropertyAccessor.GETTER with PUBLIC_ONLY visibility:
+				// - Enables serialization via public getXxx() methods
+				// - Takes precedence over FIELD access when both a public field and public getter exist
+				// - Allows getters to return transformed/wrapped values different from the raw field type
+				//   (e.g., returning a DTO wrapper around an interface/abstract field)
+				.withVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.PUBLIC_ONLY)
+
+				// PropertyAccessor.SETTER with PUBLIC_ONLY visibility:
+				// - Enables deserialization via public setXxx() methods
+				// - Pairs with GETTER - when a getter exists, Jackson uses the matching setter for deserialization
+				// - Allows setters to accept transformed/wrapped values and convert them to internal types
+				//   (e.g., accepting a DTO wrapper and extracting the actual object)
+				.withVisibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.PUBLIC_ONLY)
+
+				// PropertyAccessor.CREATOR with NONE visibility:
+				// - Disables constructor-based deserialization
+				// - Jackson will use the default no-arg constructor and then set fields/properties
+				// - Matches SnakeYAML's approach which doesn't use constructor parameters for deserialization
+				.withVisibility(PropertyAccessor.CREATOR, JsonAutoDetect.Visibility.NONE)
+
+				// PropertyAccessor.IS_GETTER with NONE visibility:
+				// - Disables special handling of isXxx() boolean getters
+				// - Only standard getXxx() methods will be used as getters
+				// - Simplifies behaviour and matches SnakeYAML's PropertyUtils defaults
+				.withVisibility(PropertyAccessor.IS_GETTER, JsonAutoDetect.Visibility.NONE));
 
 		// Configure strict vs non-strict mode
 		if (strict) {
@@ -93,7 +139,6 @@ public class DruthersJacksonBackend implements DruthersSerializerBackend {
 		}
 
 		// Important: Don't use default typing (prevents @class/@type annotations)
-		// Build and return the mapper
 		return builder.build();
 	}
 

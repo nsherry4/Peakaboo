@@ -15,6 +15,21 @@ import java.util.List;
  *   <li>Represents JavaBeans as maps rather than tagged objects</li>
  *   <li>Can be read by any other backend implementation</li>
  * </ul>
+ *
+ * <h2>JavaBean Serialization Expectations</h2>
+ * <p>
+ * Backends must follow this visibility-based strategy for cross-compatibility:
+ * <ul>
+ *   <li><b>Public fields (no getters/setters):</b> Use direct field access</li>
+ *   <li><b>Package-private/private fields (with public getters/setters):</b> Use getter/setter methods</li>
+ *   <li><b>Public fields WITH public getters/setters:</b> AMBIGUOUS - behavior differs between backends.
+ *       SnakeYAML uses field access, Jackson prefers getters/setters. This pattern should be
+ *       AVOIDED in Druthers-serialized classes.</li>
+ * </ul>
+ * <p>
+ * The Peakaboo codebase uses two patterns: (1) public fields without accessors, or
+ * (2) package-private fields with public accessors. The ambiguous case does not occur
+ * and should be avoided.
  * <p>
  * See BACKEND_COMPATIBILITY.md for detailed requirements and testing strategy.
  */
