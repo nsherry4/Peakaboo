@@ -174,14 +174,42 @@ public class DruthersSerializer {
 		}
 	}
 
-	
+	/**
+	 * Whitelist of allowed YAML tags for security.
+	 * Only standard YAML 1.2 core types are permitted to prevent arbitrary Java class instantiation.
+	 * This prevents CVE-2022-1471-style attacks where malicious YAML uses type tags like
+	 * !!java.lang.Runtime to execute arbitrary code.
+	 */
+	private static final Set<String> ALLOWED_TAGS = Set.of(
+		Tag.PREFIX + "map",       // !!map - mapping/dictionary
+		Tag.PREFIX + "omap",      // !!omap - ordered mapping
+		Tag.PREFIX + "pairs",     // !!pairs - ordered key-value pairs
+		Tag.PREFIX + "set",       // !!set - unordered set
+		Tag.PREFIX + "seq",       // !!seq - sequence/list/array
+		Tag.PREFIX + "binary",    // !!binary - base64 encoded binary data
+		Tag.PREFIX + "bool",      // !!bool - boolean values
+		Tag.PREFIX + "float",     // !!float - floating point numbers
+		Tag.PREFIX + "int",       // !!int - integer numbers
+		Tag.PREFIX + "merge",     // !!merge - merge key for mappings
+		Tag.PREFIX + "null",      // !!null - null/nil values
+		Tag.PREFIX + "str",       // !!str - string/text
+		Tag.PREFIX + "timestamp", // !!timestamp - date/time values
+		Tag.PREFIX + "value",     // !!value - value key for mappings
+		Tag.PREFIX + "yaml"       // !!yaml - YAML document
+	);
+
+
 	public static <T extends Object> Yaml buildLoader(Class<T> cls, boolean strict) {
 		var loaderopts = new LoaderOptions();
 
-		// SECURITY: Reject ALL explicit type tags to prevent RCE via arbitrary class instantiation
-		// Only allow implicit YAML tags (map, seq, str, int, float, bool, null)
-		// This prevents attacks like: !!java.lang.Runtime ["calc.exe"]
-		loaderopts.setTagInspector(tag -> tag.startsWith(Tag.PREFIX));
+		// SECURITY: Whitelist-based tag filtering to prevent CVE-2022-1471 RCE
+		// CRITICAL FIX: The previous check `tag.startsWith(Tag.PREFIX)` was insufficient because
+		// malicious tags like `!!java.lang.Runtime` expand to `tag:yaml.org,2002:java.lang.Runtime`
+		// which ALSO starts with Tag.PREFIX, allowing arbitrary class instantiation.
+		//
+		// This whitelist approach only permits standard YAML 1.2 core types, blocking all Java
+		// class tags (!!java.*, !!javax.*, !!org.*, etc.) and preventing RCE attacks.
+		loaderopts.setTagInspector(tag -> ALLOWED_TAGS.contains(tag));
 
 		// SECURITY: Set resource limits to prevent DoS attacks
 		loaderopts.setMaxAliasesForCollections(50);      // Prevent billion laughs attack
