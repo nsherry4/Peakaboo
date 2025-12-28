@@ -22,7 +22,7 @@ jobs:
       run: mvn -B package --file pom.xml
       
     - name: Create Datestamped Artifact
-      run: mv ./Peakaboo-*-SNAPSHOT.jar ./Peakaboo-SNAPSHOT-$(date +%Y%m%d).jar
+      run: mv ./Peakaboo-*.jar ./Peakaboo-SNAPSHOT-$(date +%Y%m%d).jar
       shell: bash
       
     - name: Upload Artifact

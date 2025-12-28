@@ -33,6 +33,9 @@ import org.peakaboo.mapping.filter.plugin.plugins.transforming.VFlipMapFilter;
 public class MapFilterRegistry extends PeakabooPluginRegistry<MapFilterPlugin> {
 
 	private static MapFilterRegistry SYSTEM;
+	public static synchronized void init() {
+		init(null);
+	}
 	public static void init(File filterDir) {
 		try {
 			if (SYSTEM == null) {
@@ -48,46 +51,53 @@ public class MapFilterRegistry extends PeakabooPluginRegistry<MapFilterPlugin> {
 	}
 	
 	//--------------------------------
-	
-	private MapFilterRegistry(File directories) {
+
+	private MapFilterRegistry() {
 		super("mapfilter");
-		
-		addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class, directories));
-		addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class));
-		
-		
-		
+
 		var builtins = new BoltJavaBuiltinLoader<>(this, MapFilterPlugin.class);
-		
+
 		builtins.load(BinningMapFilter.class);
 		builtins.load(EnlargeMapFilter.class);
-		
+
 		builtins.load(FastAverageMapFilter.class);
 		builtins.load(WeightedAverageMapFilter.class);
 		builtins.load(DenoiseMapFilter.class);
-		
+
 		builtins.load(SharpenMapFilter.class);
-		
+
 		builtins.load(WeakSignalRemovalMapFilter.class);
 		builtins.load(SignalOutlierCorrectionMapFilter.class);
 		builtins.load(SignalCapMapFilter.class);
-					
+
 		builtins.load(MultiplyMapFilter.class);
 		builtins.load(AdditionMapFilter.class);
 		builtins.load(NormalizationMapFilter.class);
 		builtins.load(LogMapFilter.class);
 		builtins.load(PowerMapFilter.class);
 		builtins.load(ElementMultiplyFilter.class);
-		
+
 		builtins.load(VFlipMapFilter.class);
 		builtins.load(HFlipMapFilter.class);
 		builtins.load(Rotate90MapFilter.class);
 		builtins.load(Rotate180MapFilter.class);
 		builtins.load(Rotate270MapFilter.class);
-		
+
 		builtins.load(DeskewMapFilter.class);
-		
+
 		addLoader(builtins);
+
+		// Load plugins from within an AIO jar containing the app + plugins
+		// Disabled for android compatibility, and because this is unused in the desktop app
+		//addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class));
+	}
+
+	private MapFilterRegistry(File directories) {
+		this();
+
+		if (directories != null) {
+			addLoader(new BoltJarDirectoryLoader<>(this, MapFilterPlugin.class, directories));
+		}
 	}
 
 	@Override

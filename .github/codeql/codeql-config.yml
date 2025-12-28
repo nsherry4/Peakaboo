@@ -1,0 +1,4 @@
+name: "CodeQL config"
+query-filters:
+  - exclude:
+      id: java/implicit-cast-in-compound-assignment
