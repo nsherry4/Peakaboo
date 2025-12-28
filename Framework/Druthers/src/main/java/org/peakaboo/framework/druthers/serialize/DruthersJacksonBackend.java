@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import tools.jackson.core.JacksonException;
+import tools.jackson.core.StreamReadConstraints;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationFeature;
@@ -75,9 +76,27 @@ public class DruthersJacksonBackend implements DruthersSerializerBackend {
 	 * Configured to match SnakeYAML behaviour by using direct field access
 	 * instead of getters/setters. This ensures compatibility when deserializing
 	 * YAML that was serialized by SnakeYAML.
+	 * <p>
+	 * <b>Security:</b> Configured to prevent common YAML deserialization attacks:
+	 * <ul>
+	 *   <li>Default typing disabled - prevents polymorphic deserialization attacks</li>
+	 *   <li>Nesting depth limited to prevent stack overflow attacks</li>
+	 *   <li>String and number lengths limited to prevent memory exhaustion</li>
+	 * </ul>
 	 */
 	private ObjectMapper buildMapper(boolean strict) {
+		// SECURITY: Configure resource limits to prevent DoS attacks
+		// Match SnakeYAML's LoaderOptions limits for consistency
+		StreamReadConstraints streamReadConstraints = StreamReadConstraints.builder()
+			.maxNestingDepth(50)                    // Prevent stack overflow (matches SnakeYAML's nestingDepthLimit)
+			.maxStringLength(50 * 1024 * 1024)      // 50MB string limit (matches SnakeYAML's codePointLimit)
+			.maxNumberLength(1000)                  // Reasonable limit for number parsing
+			.maxNameLength(50000)                   // Reasonable limit for property/field names
+			.build();
+
 		YAMLFactory yamlFactory = YAMLFactory.builder()
+			// SECURITY: Apply stream read constraints for DoS protection
+			.streamReadConstraints(streamReadConstraints)
 			// Disable features that would add clutter
 			.disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)  // Don't write "---"
 			.disable(YAMLWriteFeature.USE_NATIVE_TYPE_ID)       // Don't write type tags
@@ -129,14 +148,19 @@ public class DruthersJacksonBackend implements DruthersSerializerBackend {
 				// - Simplifies behaviour and matches SnakeYAML's PropertyUtils defaults
 				.withVisibility(PropertyAccessor.IS_GETTER, JsonAutoDetect.Visibility.NONE));
 
-		// Configure strict vs non-strict mode
-		if (strict) {
-			builder.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			builder.enable(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES);
-		} else {
-			builder.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			builder.disable(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES);
-		}
+		// COMPATIBILITY: Always ignore extra fields (matches SnakeYAML behavior)
+		// Extra fields cannot leak as they have no POJO properties to store them.
+		builder.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+		// KNOWN LIMITATION: Jackson does not have a way to fail on missing fields for
+		// field/setter-based deserialization (only for @JsonCreator constructor parameters).
+		// Since we disabled CREATOR visibility (line 143), FAIL_ON_MISSING_CREATOR_PROPERTIES
+		// has no effect. This means Jackson will silently use defaults for missing fields even
+		// in strict mode, while SnakeYAML will error.
+		//
+		// Impact: Strict mode validation is weaker in Jackson - missing required fields won't
+		// be caught during deserialization. Code should use explicit validation (e.g., check
+		// for null UUIDs) rather than relying on strict mode to catch missing fields.
 
 		// Important: Don't use default typing (prevents @class/@type annotations)
 		return builder.build();

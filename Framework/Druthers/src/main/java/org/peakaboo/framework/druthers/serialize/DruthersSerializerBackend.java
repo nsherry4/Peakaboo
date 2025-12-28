@@ -31,7 +31,6 @@ import java.util.List;
  * (2) package-private fields with public accessors. The ambiguous case does not occur
  * and should be avoided.
  * <p>
- * See BACKEND_COMPATIBILITY.md for detailed requirements and testing strategy.
  */
 public interface DruthersSerializerBackend {
 

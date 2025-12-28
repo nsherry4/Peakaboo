@@ -1,19 +1,18 @@
 package org.peakaboo.framework.druthers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializerBackend;
 import org.peakaboo.framework.druthers.serialize.DruthersSnakeYamlBackend;
@@ -34,7 +33,7 @@ import org.peakaboo.framework.druthers.serialize.DruthersSnakeYamlBackend;
  * SnakeYAML and Jackson backends pass these tests individually, cross-compatibility
  * tests can verify they produce mutually readable YAML.
  */
-public class DruthersBackendCompatibilityTests {
+public class DruthersBackendCompatibilityTest {
 
 	// ========================================================================
 	// Test Data Classes
@@ -225,20 +224,20 @@ public class DruthersBackendCompatibilityTests {
 	 * Verifies that YAML output meets format requirements.
 	 */
 	private void assertValidYamlFormat(String yaml) {
-		assertFalse(yaml.contains("!!java"),
-			"YAML should not contain Java class tags (!!java.*)");
-		assertFalse(yaml.contains("!!org.peakaboo"),
-			"YAML should not contain Peakaboo class tags (!!org.peakaboo.*)");
+		assertFalse("YAML should not contain Java class tags (!!java.*)",
+			yaml.contains("!!java"));
+		assertFalse("YAML should not contain Peakaboo class tags (!!org.peakaboo.*)",
+			yaml.contains("!!org.peakaboo"));
 	}
 
 	/**
 	 * Verifies that YAML does not contain anchors or aliases.
 	 */
 	private void assertNoAnchors(String yaml) {
-		assertFalse(yaml.contains("&"),
-			"YAML should not contain anchors (&)");
-		assertFalse(yaml.contains("*"),
-			"YAML should not contain aliases (*)");
+		assertFalse("YAML should not contain anchors (&)",
+			yaml.contains("&"));
+		assertFalse("YAML should not contain aliases (*)",
+			yaml.contains("*"));
 	}
 
 	/**
@@ -250,14 +249,13 @@ public class DruthersBackendCompatibilityTests {
 		assertValidYamlFormat(yaml);
 
 		T deserialized = backend.deserialize(yaml, false, null, cls);
-		assertEquals(original, deserialized, "Round-trip serialization failed");
+		assertEquals("Round-trip serialization failed", original, deserialized);
 	}
 
 	// ========================================================================
 	// Core Functionality Tests
 	// ========================================================================
 
-	@DisplayName("Simple Object - Round Trip")
 	@Test
 	public void testSimpleObjectRoundTrip() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -265,7 +263,6 @@ public class DruthersBackendCompatibilityTests {
 		testRoundTrip(backend, obj, SimpleObject.class);
 	}
 
-	@DisplayName("Simple Object - Read Golden YAML")
 	@Test
 	public void testSimpleObjectGolden() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -276,7 +273,6 @@ public class DruthersBackendCompatibilityTests {
 		assertEquals(true, obj.flag);
 	}
 
-	@DisplayName("Collections - Round Trip")
 	@Test
 	public void testCollectionsRoundTrip() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -295,7 +291,6 @@ public class DruthersBackendCompatibilityTests {
 		testRoundTrip(backend, obj, ObjectWithCollections.class);
 	}
 
-	@DisplayName("Collections - Read Golden YAML")
 	@Test
 	public void testCollectionsGolden() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -312,7 +307,6 @@ public class DruthersBackendCompatibilityTests {
 		assertEquals(new SimpleObject("second", 2, false), obj.objects.get(1));
 	}
 
-	@DisplayName("Nested Objects - Round Trip")
 	@Test
 	public void testNestedObjectsRoundTrip() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -329,7 +323,6 @@ public class DruthersBackendCompatibilityTests {
 		testRoundTrip(backend, obj, NestedObject.class);
 	}
 
-	@DisplayName("Empty Collections - No Anchors")
 	@Test
 	public void testEmptyCollectionsNoAnchors() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -349,7 +342,6 @@ public class DruthersBackendCompatibilityTests {
 		assertTrue(deserialized.emptyMap.isEmpty());
 	}
 
-	@DisplayName("Empty Collections - Read Golden YAML")
 	@Test
 	public void testEmptyCollectionsGolden() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -364,7 +356,6 @@ public class DruthersBackendCompatibilityTests {
 		assertTrue(obj.emptyMap.isEmpty());
 	}
 
-	@DisplayName("Null Values - Round Trip")
 	@Test
 	public void testNullValuesRoundTrip() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -379,7 +370,6 @@ public class DruthersBackendCompatibilityTests {
 		assertNull(deserialized.nullList);
 	}
 
-	@DisplayName("Null Values - Read Golden YAML")
 	@Test
 	public void testNullValuesGolden() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -392,7 +382,6 @@ public class DruthersBackendCompatibilityTests {
 		assertNull(obj.nullList);
 	}
 
-	@DisplayName("List Serialization")
 	@Test
 	public void testListSerialization() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -406,7 +395,6 @@ public class DruthersBackendCompatibilityTests {
 		assertEquals(list, deserialized);
 	}
 
-	@DisplayName("Generic Map - Round Trip")
 	@Test
 	public void testGenericMapRoundTrip() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -427,7 +415,6 @@ public class DruthersBackendCompatibilityTests {
 		assertNotNull(deserialized.get("nested"));
 	}
 
-	@DisplayName("No Class Tags in Output")
 	@Test
 	public void testNoClassTagsInOutput() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -441,7 +428,6 @@ public class DruthersBackendCompatibilityTests {
 		assertValidYamlFormat(backend.serializeList(list));
 	}
 
-	@DisplayName("Strict Mode - Format Validation")
 	@Test
 	public void testStrictModeFormatValidation() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -472,7 +458,6 @@ public class DruthersBackendCompatibilityTests {
 		}
 	}
 
-	@DisplayName("Non-Strict Mode - Extra Fields Ignored")
 	@Test
 	public void testNonStrictModeExtraFields() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -491,7 +476,6 @@ public class DruthersBackendCompatibilityTests {
 		assertTrue(obj.flag);
 	}
 
-	@DisplayName("Non-Strict Mode - Missing Fields Ignored")
 	@Test
 	public void testNonStrictModeMissingFields() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -506,7 +490,6 @@ public class DruthersBackendCompatibilityTests {
 		assertFalse(obj.flag);  // Default boolean value
 	}
 
-	@DisplayName("Field vs Getter/Setter Precedence")
 	@Test
 	public void testFieldVsGetterSetterPrecedence() throws DruthersLoadException {
 		DruthersSerializerBackend backend = getBackend();
@@ -527,7 +510,7 @@ public class DruthersBackendCompatibilityTests {
 		System.out.println("Value: " + deserialized.value);
 
 		// Verify the value was correctly deserialized
-		assertEquals("test-value", deserialized.value, "Value should be correctly deserialized");
+		assertEquals("Value should be correctly deserialized", "test-value", deserialized.value);
 
 		// Report which accessor was used for public field
 		if (original.getterCalled) {
@@ -550,8 +533,8 @@ public class DruthersBackendCompatibilityTests {
 
 		// Check if package-private field was serialized at all
 		if (deserialized.packagePrivateValue != null) {
-			assertEquals("test-value-package", deserialized.packagePrivateValue,
-				"Package-private value should be correctly deserialized");
+			assertEquals("Package-private value should be correctly deserialized",
+				"test-value-package", deserialized.packagePrivateValue);
 
 			if (original.packagePrivateGetterCalled) {
 				System.out.println("RESULT (package-private field): Getter was used for serialization");

@@ -27,6 +27,34 @@ import org.yaml.snakeyaml.representer.Representer;
 public class DruthersSnakeYamlBackend implements DruthersSerializerBackend {
 
 	/**
+	 * Whitelist of allowed YAML core type tags.
+	 * <p>
+	 * Only these standard YAML tags are permitted during deserialization to prevent
+	 * arbitrary Java class instantiation (CVE-2022-1471). Any attempt to use explicit
+	 * Java class tags like !!java.lang.Runtime or !!javax.script.ScriptEngineManager
+	 * will be rejected by the TagInspector.
+	 * <p>
+	 * This whitelist includes all core YAML 1.2 types as defined in the YAML specification.
+	 */
+	private static final Set<String> ALLOWED_TAGS = Set.of(
+		Tag.PREFIX + "map",       // !!map - mapping/dictionary
+		Tag.PREFIX + "omap",      // !!omap - ordered mapping
+		Tag.PREFIX + "pairs",     // !!pairs - ordered key-value pairs
+		Tag.PREFIX + "set",       // !!set - unordered set
+		Tag.PREFIX + "seq",       // !!seq - sequence/list/array
+		Tag.PREFIX + "binary",    // !!binary - base64 encoded binary data
+		Tag.PREFIX + "bool",      // !!bool - boolean values
+		Tag.PREFIX + "float",     // !!float - floating point numbers
+		Tag.PREFIX + "int",       // !!int - integer numbers
+		Tag.PREFIX + "merge",     // !!merge - merge key for mappings
+		Tag.PREFIX + "null",      // !!null - null/nil values
+		Tag.PREFIX + "str",       // !!str - string/text
+		Tag.PREFIX + "timestamp", // !!timestamp - date/time values
+		Tag.PREFIX + "value",     // !!value - value key for mappings
+		Tag.PREFIX + "yaml"       // !!yaml - YAML document
+	);
+
+	/**
 	 * Custom SnakeYAML representer with Druthers-specific behaviour.
 	 * <ul>
 	 *   <li>Prevents anchors/aliases for empty maps (reduces clutter)</li>
@@ -139,8 +167,9 @@ public class DruthersSnakeYamlBackend implements DruthersSerializerBackend {
 		var loaderopts = new LoaderOptions();
 
 		// SECURITY: Reject ALL explicit type tags (!!java.*, !!javax.*, etc.)
-		// Only allow implicit YAML tags (maps, sequences, scalars)
-		loaderopts.setTagInspector(tag -> tag.startsWith(Tag.PREFIX));
+		// Only allow whitelisted YAML core types to prevent CVE-2022-1471 RCE
+		// The tag inspector returns TRUE to allow a tag, FALSE to reject it
+		loaderopts.setTagInspector(tag -> ALLOWED_TAGS.contains(tag));
 
 		// SECURITY: Set resource limits to prevent DoS attacks
 		loaderopts.setMaxAliasesForCollections(50);      // Prevent billion laughs attack
