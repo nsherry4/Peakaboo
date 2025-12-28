@@ -33,7 +33,7 @@ public class SessionViewModel {
 	public void setChannelView(SavedPlugin plugin) {
 		setChannelView(plugin.uuid);
 	}
-	public void setChannelView(String uuid) {
+	private void setChannelView(String uuid) {
 		var lookup = ChannelViewModeRegistry.system().getByUUID(uuid);
 		var created = lookup.flatMap(d -> d.create());
 		if (created.isPresent()) {
