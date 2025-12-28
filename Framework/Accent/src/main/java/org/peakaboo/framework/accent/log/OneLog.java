@@ -163,14 +163,14 @@ public class OneLog {
 	 *
 	 * @param logDir the directory where the log file will be created; will be created if it doesn't exist
 	 */
-	public static synchronized void addFileHandler(File logDir, String logFilename) {
+	public static synchronized void addFileHandler(File logDir, String logName) {
 		if (!initialized) {
 			initialize();
 		}
 
 		try {
 			logDir.mkdirs();
-			logFilename = logDir.getPath() + "/" + logFilename;
+			logFilename = logDir.getPath() + "/" + logName;
 
 			// Workaround for JDK-8189953: FileHandler fails on first run if file doesn't exist
 			// See: https://bugs.openjdk.org/browse/JDK-8189953
