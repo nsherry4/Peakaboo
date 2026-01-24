@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import org.peakaboo.app.Version;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
@@ -62,11 +63,13 @@ public class PluginMetadataBuilder {
 		// Initialize the DataSourceRegistry with the directory provided as the first argument
 		DataSourceRegistry.init(new File(directory));
 		
+		boolean testBuild = Arrays.asList(args).contains("--testing");
+		
 		// Create the repository metadata, this is the top-level metadata for the repository
 		RepositoryMetadata contents = new RepositoryMetadata();
 		contents.applicationName = "Peakaboo";
 		contents.repositoryName = "Official Plugins";
-		contents.repositoryUrl = "https://github.com/PeakabooLabs/PeakabooPluginsTesting/releases/download/v6.1/";
+		contents.repositoryUrl = "https://github.com/PeakabooLabs/PeakabooPlugins" + (testBuild ? "Testing" : "") + "/releases/download/v6.1/";
 		contents.specVersion = 1;
 		
 		// For each plugin we've loaded, build the metadata and add it to the repository contents

@@ -40,7 +40,7 @@ public class BasicTierProvider implements TierProvider {
 		extensionPoints.addRegistry(MapFilterRegistry.system());
 		
 		pluginRepositories = new AggregatePluginRepository(List.of(
-				new HttpsPluginRepository("https://github.com/PeakabooLabs/PeakabooPluginsTesting/releases/download/v6.1/", 610),
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/PeakabooPlugins/releases/download/v6.1/", 610),
 				new BuiltinPluginRepository(DataSourceRegistry.system()),
 				new BuiltinPluginRepository(DataSinkRegistry.system())
 			));

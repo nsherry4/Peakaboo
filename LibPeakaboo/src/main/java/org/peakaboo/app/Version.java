@@ -18,7 +18,7 @@ public class Version {
 	public final static int VERSION_MINOR = 1;
 	public final static int VERSION_POINT = 0;
 
-	public final static ReleaseType RELEASE_TYPE = ReleaseType.DEVELOPMENT;
+	public final static ReleaseType RELEASE_TYPE = ReleaseType.RELEASE;
 
 	//Program name intended for internal use, filesystem, etc. For user-friendly name, see Tier.appName()
 	public final static String PROGRAM_NAME = (RELEASE_TYPE == ReleaseType.DEVELOPMENT) ? "PeakabooDev" : "Peakaboo";
