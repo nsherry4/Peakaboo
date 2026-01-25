@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.peakaboo.framework</groupId>
 		<artifactId>cyclops</artifactId>
-		<version>6.1-SNAPSHOT</version>
+		<version>6.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>cyclops-swing</artifactId>
 	<packaging>jar</packaging>

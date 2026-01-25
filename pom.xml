@@ -5,7 +5,7 @@
   <groupId>org.peakaboo</groupId>
   <artifactId>peakaboo</artifactId>
   <name>peakaboo</name>
-  <version>6.1-SNAPSHOT</version>
+  <version>6.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>http://maven.apache.org</url>
   
