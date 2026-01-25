@@ -41,10 +41,15 @@ public class EventfulThreadingTest {
 		assertTrue(latch.await(1, TimeUnit.SECONDS));
 
 		assertEquals(1, callCount.get());
+		// "before-update" is guaranteed to be first (added before updateListeners called)
 		assertEquals("before-update", executionOrder.get(0));
-		assertEquals("after-update", executionOrder.get(1));
-		assertEquals("background", executionOrder.get(2));
-		assertEquals("listener", executionOrder.get(3));
+		// "background" and "listener" are on the same thread, so "background" comes before "listener"
+		int backgroundIndex = executionOrder.indexOf("background");
+		int listenerIndex = executionOrder.indexOf("listener");
+		assertTrue("background should come before listener", backgroundIndex < listenerIndex);
+		// All four entries should be present
+		assertTrue(executionOrder.contains("after-update"));
+		assertEquals(4, executionOrder.size());
 	}
 
 	@Test
