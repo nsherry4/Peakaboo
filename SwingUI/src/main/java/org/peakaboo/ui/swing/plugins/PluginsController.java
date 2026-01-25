@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 
-import org.peakaboo.app.Env;
-import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.accent.Platform;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
@@ -62,7 +62,7 @@ public class PluginsController extends EventfulBeacon {
 	
 	
 	public void addFromFilesystem() {
-		StratusFilePanels.openFile(parentLayer, "Import Plugins", Env.homeDirectory(), new SimpleFileExtension("Peakaboo Plugin", "jar"), result -> {
+		StratusFilePanels.openFile(parentLayer, "Import Plugins", Platform.homeDirectory(), new SimpleFileExtension("Peakaboo Plugin", "jar"), result -> {
 			if (!result.isPresent()) {
 				return;
 			}
@@ -90,8 +90,8 @@ public class PluginsController extends EventfulBeacon {
 			}
 			
 		} catch (BoltImportException e) {
-		
-			PeakabooLog.get().log(Level.WARNING, e.getMessage(), e);
+			
+			OneLog.log(Level.WARNING, e.getMessage(), e);
 			new LayerDialog(
 					"Import Failed", 
 					"Peakboo was unable to import the plugin\n" + e.getMessage(), 
@@ -123,13 +123,13 @@ public class PluginsController extends EventfulBeacon {
 		
 		if (plugin == null) {
 			// No need to do anything
-			PeakabooLog.get().log(Level.WARNING, "Plugin was null, not removing anything");
+			OneLog.log(Level.WARNING, "Plugin was null, not removing anything");
 			return;
 		}
 		
 		BoltContainer<? extends BoltPlugin> container = plugin.getContainer();
 		if (!container.isDeletable()) {
-			PeakabooLog.get().log(Level.WARNING, "Plugin bundle " + container.getSourceName() + " is not deletable");
+			OneLog.log(Level.WARNING, "Plugin bundle " + container.getSourceName() + " is not deletable");
 			return;
 		}
 		

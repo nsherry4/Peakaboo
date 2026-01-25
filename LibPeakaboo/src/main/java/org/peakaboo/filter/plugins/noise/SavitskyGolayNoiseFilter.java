@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.AbstractFilter;
 import org.peakaboo.filter.model.FilterDescriptor;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.autodialog.model.Parameter;
 import org.peakaboo.framework.autodialog.model.style.editors.BooleanStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.IntegerStyle;
@@ -142,7 +142,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 
 		float[] coefs = getCoeffs();
 		if (coefs == null) {
-			PeakabooLog.get().log(Level.WARNING, "Failed to load Savitsky Golay coefficients");
+			OneLog.log(Level.WARNING, "Failed to load Savitsky Golay coefficients");
 			return new ArraySpectrum(data);
 		}
 		

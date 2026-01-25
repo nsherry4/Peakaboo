@@ -12,6 +12,39 @@ import javax.swing.JPanel;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 
+/**
+ * A builder for creating tabbed interfaces with linked toggle buttons and card layout panels.
+ * <p>
+ * HeaderTabBuilder simplifies creating tab strips (typically used in {@link HeaderBox} headers)
+ * that control which panel is displayed in a body area. It manages the button group, card layout,
+ * and button linking automatically.
+ * </p>
+ * <p>
+ * <strong>Usage Pattern:</strong>
+ * </p>
+ * <pre>
+ * HeaderTabBuilder tabs = new HeaderTabBuilder()
+ *     .withTab("General", generalPanel)
+ *     .withTab("Advanced", advancedPanel);
+ *
+ * headerBox.setLeft(tabs.getTabStrip());
+ * headerPanel.setBody(tabs.getBody());
+ * </pre>
+ * <p>
+ * <strong>Features:</strong>
+ * </p>
+ * <ul>
+ * <li>Automatic button grouping (only one tab selected at a time)</li>
+ * <li>Card layout management (shows panel for selected tab)</li>
+ * <li>Button linking for visual grouping via {@link ButtonLinker}</li>
+ * <li>First tab automatically selected on creation</li>
+ * <li>Fluent API via {@link #withTab(String, Component)}</li>
+ * <li>Direct button access via {@link #addTab(String, Component)} for customization</li>
+ * </ul>
+ *
+ * @see HeaderBox
+ * @see ButtonLinker
+ */
 public class HeaderTabBuilder {
 
 	private JPanel body;
@@ -45,6 +78,11 @@ public class HeaderTabBuilder {
 		
 		return button;
 		
+	}
+	
+	public HeaderTabBuilder withTab(String title, Component component) {
+		addTab(title, component);
+		return this;
 	}
 	
 	public JPanel getBody() {

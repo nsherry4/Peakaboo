@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import javax.swing.Scrollable;
 import javax.swing.SwingUtilities;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
@@ -26,6 +25,7 @@ import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
@@ -177,13 +177,13 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			@Override
 			public void urlsDropped(URL[] urls) {
-				PeakabooLog.get().log(Level.INFO, "Received dropped URLs: " + Arrays.toString(urls));
+				OneLog.log(Level.INFO, "Received dropped URLs: " + Arrays.toString(urls));
 				PlotCanvas.this.urlsDropped(urls);
 			}
 			
 			@Override
 			public void filesDropped(File[] files) {
-				PeakabooLog.get().log(Level.INFO, "Received dropped Files: " + Arrays.toString(files));
+				OneLog.log(Level.INFO, "Received dropped Files: " + Arrays.toString(files));
 				PlotCanvas.this.filesDropped(List.of(files));
 			}
 		};
@@ -194,14 +194,14 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 			
 			TaskMonitor<List<File>> monitor = Peakaboo.getUrlsAsync(Arrays.asList(urls), optfiles -> {
 				if (!optfiles.isPresent()) { return; }
-				PeakabooLog.get().log(Level.INFO, "Downloaded URLs to files: " + optfiles.get().toString());
+				OneLog.log(Level.INFO, "Downloaded URLs to files: " + optfiles.get().toString());
 				filesDropped(optfiles.get());
 			});
 
 			TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
 
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to download data", e);
+			OneLog.log(Level.SEVERE, "Failed to download data", e);
 		}
 	}
 	
@@ -376,7 +376,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 	
 			
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to draw plot", e);
+			OneLog.log(Level.SEVERE, "Failed to draw plot", e);
 			throw e;
 		}
 	}

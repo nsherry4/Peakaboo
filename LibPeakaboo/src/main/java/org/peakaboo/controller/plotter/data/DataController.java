@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.data.discards.Discards;
 import org.peakaboo.controller.plotter.data.discards.DiscardsList;
@@ -22,6 +21,7 @@ import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
@@ -144,7 +144,7 @@ public class DataController extends EventfulBeacon implements AutoCloseable
 			try {
 				old.close();
 			} catch (Exception e) {
-				PeakabooLog.get().log(Level.WARNING, "Could not close old DataSet " + old.toString());
+				OneLog.log(Level.WARNING, "Could not close old DataSet " + old.toString());
 			}
 			old.discard();
 		}

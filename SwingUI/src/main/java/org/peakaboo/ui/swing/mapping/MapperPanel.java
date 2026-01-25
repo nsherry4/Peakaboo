@@ -24,11 +24,11 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
@@ -253,7 +253,7 @@ public class MapperPanel extends TabbedLayerPanel {
 			controller.writeCSV(os);
 			os.close();
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Error saving plot as csv", e);
+			OneLog.log(Level.SEVERE, "Error saving plot as csv", e);
 		}
 	}
 	
@@ -277,7 +277,7 @@ public class MapperPanel extends TabbedLayerPanel {
 				try {
 					actionSaveArchive(file.get(), format, width, height);
 				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, "Error saving maps as archive", e);
+					OneLog.log(Level.SEVERE, "Error saving maps as archive", e);
 				}
 				
 				

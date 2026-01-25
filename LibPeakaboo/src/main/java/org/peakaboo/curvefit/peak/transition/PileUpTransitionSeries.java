@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.peakaboo.curvefit.peak.table.Element;
-import org.peakaboo.framework.cyclops.util.ListOps;
+import org.peakaboo.framework.accent.Lists;
 
 public class PileUpTransitionSeries implements ITransitionSeries {
 
@@ -69,7 +69,7 @@ public class PileUpTransitionSeries implements ITransitionSeries {
 		Collections.sort(mySeries);
 		Collections.sort(theirSeries);
 
-		return ListOps.zipWith(mySeries, theirSeries, (a, b) -> a.equals(b)).stream().reduce(true, Boolean::logicalAnd);
+		return Lists.zipWith(mySeries, theirSeries, (a, b) -> a.equals(b)).stream().reduce(true, Boolean::logicalAnd);
 	}
 	
 	@Override

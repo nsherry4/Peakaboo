@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.accent.AlphaNumericComparitor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
@@ -157,7 +157,7 @@ public class PluginMetadata implements DruthersStorable {
 			byte[] hash = MessageDigest.getInstance("MD5").digest(data);
 			return new BigInteger(1, hash).toString(16);
 		} catch (IOException | NoSuchAlgorithmException e) {
-			Bolt.logger().log(Level.WARNING, "Failed to calculate MD5SUM for " + filename, e);
+			OneLog.log(Level.WARNING, "Failed to calculate MD5SUM for " + filename, e);
 			return null;
 		}
 	}
@@ -165,12 +165,12 @@ public class PluginMetadata implements DruthersStorable {
 	public boolean validateChecksum(String filename) {
 		String md5sum = checksum(filename);
 		if (md5sum == null) {
-			Bolt.logger().log(Level.WARNING, "Checksum failed to match for " + filename);
+			OneLog.log(Level.WARNING, "Checksum failed to match for " + filename);
 			return false;
 		}
 		boolean matched = this.checksum.equalsIgnoreCase(md5sum);
 		if (!matched) {
-			Bolt.logger().log(Level.WARNING, "Checksum failed to match for " + filename);
+			OneLog.log(Level.WARNING, "Checksum failed to match for " + filename);
 		}
 		return matched;
 	}
@@ -216,7 +216,7 @@ public class PluginMetadata implements DruthersStorable {
 	        
 	        return Optional.of(tempFile);
 		} catch (IOException e) {
-			Bolt.logger().log(Level.WARNING, "Failed to download plugin", e);
+			OneLog.log(Level.WARNING, "Failed to download plugin", e);
 			return Optional.empty();
 		}
 

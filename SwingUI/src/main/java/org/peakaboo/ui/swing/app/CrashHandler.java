@@ -3,14 +3,15 @@ package org.peakaboo.ui.swing.app;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
-import org.peakaboo.app.Env;
-import org.peakaboo.app.PeakabooLog;
 import javax.swing.SwingUtilities;
+
+import org.peakaboo.framework.accent.Platform;
 import org.peakaboo.app.Version;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.accent.Mutable;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.components.dialogs.error.ErrorDialog;
 import org.peakaboo.framework.stratus.components.dialogs.error.ErrorDialog.Feedback;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
@@ -59,7 +60,7 @@ public class CrashHandler {
 		Consumer<Feedback> doReport = (feedback) -> {
 			bugsnag.notify(throwable, Severity.ERROR, report -> {
 				final String APP_TAB = "Peakaboo";
-				report.addToTab(APP_TAB, "heapsize", Env.maxHeapBytes());
+				report.addToTab(APP_TAB, "heapsize", Platform.maxHeapBytes());
 				report.addToTab(APP_TAB, "version", Version.LONG_VERSION);
 				report.addToTab(APP_TAB, "build-date", Version.buildDate);
 				report.addToTab(APP_TAB, "tier", Tier.provider().tierName());
@@ -73,7 +74,7 @@ public class CrashHandler {
 				if (feedback != null) {
 					report.addToTab("User", "notes", feedback.notes());
 					if (feedback.includeLogs()) {
-						String logs = PeakabooLog.getRecentLogs();
+						String logs = OneLog.getRecentLogs();
 						report.addToTab("User", "logs", logs);
 					}
 				}
@@ -92,7 +93,6 @@ public class CrashHandler {
 				errorDialog.setVisible(true); //stalls here until dialog closes
 				inUse = false;
 
-
 				// Auto-report if user didn't manually report
 				if (! reported.get() && DesktopSettings.isCrashAutoreporting()) {
 					try {
@@ -102,11 +102,11 @@ public class CrashHandler {
 						// Specifically silence this error, since there was an issue where
 						// bugsnag ended up in an infinite loop trying to report about a
 						// failure to report the last crash.
-						PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
+						OneLog.log(Level.WARNING, "Failed to submit crash report", e);
 					} catch (Exception e) {
 						// Also don't report exceptions generally, to avoid an infinite
 						// crash-reporting loop
-						PeakabooLog.get().log(Level.WARNING, "Failed to submit crash report", e);
+						OneLog.log(Level.WARNING, "Failed to submit crash report", e);
 					}
 				}
 			});

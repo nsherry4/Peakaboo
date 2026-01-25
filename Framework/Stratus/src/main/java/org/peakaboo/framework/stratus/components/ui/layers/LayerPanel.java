@@ -14,6 +14,7 @@ public class LayerPanel extends JLayeredPane {
 
 	private Stack<Layer> layers = new Stack<>();
 	private Layer contentLayer;
+	private ToastManagerLayer toastManager = null;
 	
 	
 	public LayerPanel(boolean topFade) {
@@ -35,20 +36,7 @@ public class LayerPanel extends JLayeredPane {
 	}
 	
 	boolean isLayerBlocked(Layer layer) {
-		if (layers.isEmpty()) {
-			return false;
-		}
-		boolean blocked = false;
-		for (int i = layers.size()-1; i >= 0; i--) {
-			Layer li = layers.get(i);
-			if (layer == li) {
-				return blocked;
-			}
-			if (li.modal()) {
-				blocked = true;
-			}
-		}
-		return blocked;
+		return getBlockingLayer(layer).isPresent();
 	}
 	
 	Optional<Layer> getBlockingLayer(Layer layer) {
@@ -159,25 +147,45 @@ public class LayerPanel extends JLayeredPane {
 	}
 	
 	
+	/**
+	 * Show a toast notification message
+	 * @param message the message to display
+	 */
+	public void showToast(String message) {
+		showToast(message, () -> {});
+	}
+
+	/**
+	 * Show a toast notification message with a click action
+	 * @param message the message to display
+	 * @param onClick action to perform when the toast is clicked
+	 */
+	public void showToast(String message, Runnable onClick) {
+		if (toastManager == null || !layers.contains(toastManager)) {
+			toastManager = new ToastManagerLayer(this);
+			pushLayer(toastManager);
+		}
+		toastManager.addToast(message, onClick);
+	}
+
 	public void copyInteraction(String contents, Timer[] debouncerBox) {
-		
+
 		// Copy to clipboard
 		StringSelection stringSelection = new StringSelection(contents);
 		java.awt.datatransfer.Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		clipboard.setContents(stringSelection, null);
-		
+
 		Timer debouncer = debouncerBox[0];
-		
+
 		// Show confirmation toast with debouncing
 		// If timer is already running, suppress this toast
 		if (debouncer != null && debouncer.isRunning()) {
 			return;
 		}
-		
+
 		// Show the toast immediately
-		ToastLayer toast = new ToastLayer(this, "Copied to clipboard");
-		this.pushLayer(toast);
-		
+		showToast("Copied to clipboard");
+
 		// Start debounce timer to suppress future toasts for 5 seconds
 		debouncer = new Timer(5000, e -> {
 			// Timer finished, next toast can be shown
@@ -185,9 +193,9 @@ public class LayerPanel extends JLayeredPane {
 		debouncerBox[0] = debouncer;
 		debouncer.setRepeats(false);
 		debouncer.start();
-		
+
 	}
-	
+
 	/**
 	 * Tests if this component either <i>is</i>, or is <i>contained in</i> a LayerPanel.
 	 * @return true if this component or one of its transitive parents is a LayerPanel, false otherwise.

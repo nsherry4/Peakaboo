@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.display.Display;
@@ -14,6 +13,7 @@ import org.peakaboo.display.plot.painters.FittingMarkersPainter;
 import org.peakaboo.display.plot.painters.FittingPainter;
 import org.peakaboo.display.plot.painters.FittingSumPainter;
 import org.peakaboo.filter.model.Filter;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.accent.numeric.Bounds;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
@@ -62,7 +62,7 @@ public class Plotter {
 		
 
 		if (data.spectra.filtered() == null) {
-			PeakabooLog.get().log(Level.WARNING, "Could not draw plot, data (filtered) was null");
+			OneLog.log(Level.WARNING, "Could not draw plot, data (filtered) was null");
 			plotDrawing = null;
 			return null;
 		}

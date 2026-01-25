@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Settings;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.api.Stratus;
 
 public class DesktopSettings extends Settings {
@@ -17,7 +17,7 @@ public class DesktopSettings extends Settings {
 			Settings.load(settingsDir);
 		} catch (IOException e) {
 			Stratus.removeSplash();
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load persistent settings, Peakaboo must now exit.", e);
+			OneLog.log(Level.SEVERE, "Failed to load persistent settings, Peakaboo must now exit.", e);
 			System.exit(2);
 		}	
 	}

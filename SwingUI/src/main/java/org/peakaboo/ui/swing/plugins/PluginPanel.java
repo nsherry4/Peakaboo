@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import javax.swing.AbstractButton;
 import javax.swing.JPanel;
 
-import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.stratus.api.Stratus;
@@ -62,9 +62,9 @@ public class PluginPanel extends HeaderLayer {
 		final String MANAGER_TITLE = "Classic";
 		final String BROWSER_TITLE = "Modern";
 		
-		var tabBuilder = new HeaderTabBuilder();
-		tabBuilder.addTab(BROWSER_TITLE, browserView);
-		tabBuilder.addTab(MANAGER_TITLE, managerView);
+		var tabBuilder = new HeaderTabBuilder()
+				.withTab(BROWSER_TITLE, browserView)
+				.withTab(MANAGER_TITLE, managerView);
 		setBody(tabBuilder.getBody());
 		getHeader().setCentre(tabBuilder.getTabStrip());
 		
@@ -118,7 +118,7 @@ public class PluginPanel extends HeaderLayer {
 		try {
 			desktop.open(appDataDir);
 		} catch (IOException e1) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
+			OneLog.log(Level.SEVERE, "Failed to open plugin folder", e1);
 		}
 	}
 	

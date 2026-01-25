@@ -2,8 +2,8 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
@@ -19,7 +19,7 @@ public class CurveFitterRegistry extends PeakabooPluginRegistry<CurveFitter> imp
 				SYSTEM = new CurveFitterRegistry();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load curve fit plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load curve fit plugins", e);
 		}
 	}
 	public static CurveFitterRegistry system() {

@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 
 /**
  * This class is a custom ClassLoader that restricts access to certain packages
@@ -52,7 +52,7 @@ public class RestrictedPluginClassLoader extends URLClassLoader {
 		
 		// Don't load classes from the restricted packages
 		if (isListedPackage(name, blockedPackages)) {
-			Bolt.logger().log(Level.WARNING, "Restricted access to class: " + name);
+			OneLog.log(Level.WARNING, "Restricted access to class: " + name);
 			throw new ClassNotFoundException("Access to " + name + " is restricted");
 		}
 		

@@ -1,15 +1,17 @@
-package org.peakaboo.app;
+package org.peakaboo.framework.accent;
 
 
+
+import org.peakaboo.framework.accent.log.OneLog;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.logging.Level;
 
 
-
-
-public class Env
+/**
+ * Platform specific code, limited to headless information
+ */
+public class Platform
 {
 
 	public enum OS {
@@ -50,7 +52,7 @@ public class Env
 
 
 	
-	public static Env.OS getOS() {
+	public static Platform.OS getOS() {
 		if (OS.isWindows()) return OS.WINDOWS;
 		if (OS.isMac()) return OS.MAC;
 		if (OS.isUnix()) return OS.UNIX;
@@ -70,6 +72,14 @@ public class Env
 	 */
 	public static long maxHeapBytes() {
 		return Runtime.getRuntime().maxMemory();
+	}
+	
+	/**
+	 * Convenience method for {@link Runtime#availableProcessors()}
+	 * @return
+	 */
+	public static int cores() {
+		return Runtime.getRuntime().availableProcessors();
 	}
 	
 	
@@ -108,7 +118,7 @@ public class Env
 		if (install == null) {
 			throw new RuntimeException("Cannot determine the install directory for " + appname);
 		}
-		PeakabooLog.get().log(Level.INFO, "Detected install directory as " + install.getPath());		
+		OneLog.log(Level.INFO, "Detected install directory as " + install.getPath());
 		File cfg = switch(getOS()) {
 			case ANDROID -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 			case WINDOWS -> new File(install.getPath() + "/app/" + appname + ".cfg");

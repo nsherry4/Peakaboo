@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormatCompatibility;
+import org.peakaboo.framework.accent.log.OneLog;
 
 public class DataSourceLookup {
 
@@ -16,20 +16,20 @@ public class DataSourceLookup {
 		List<DataSourcePlugin> maybeByContents = new ArrayList<>();
 		List<DataSourcePlugin> yesByContents = new ArrayList<>();
 		
-		PeakabooLog.get().log(Level.INFO, "Discovering compatible DataSource plugins");
+		OneLog.log(Level.INFO, "Discovering compatible DataSource plugins");
 
 		for (DataSourcePlugin datasource : dsps) {
 			try {
 				FileFormatCompatibility compat = datasource.getFileFormat().compatibility(new ArrayList<>(datafiles));
 				
-				PeakabooLog.get().log(Level.INFO, "DataSource plugin '" + datasource.pluginName() + "' (" + datasource.pluginUUID() + ") answers '" + compat.toString() + "'");
+				OneLog.log(Level.INFO, "DataSource plugin '" + datasource.pluginName() + "' (" + datasource.pluginUUID() + ") answers '" + compat.toString() + "'");
 				
 				if ( compat == FileFormatCompatibility.NO ) continue;
 				if ( compat == FileFormatCompatibility.MAYBE_BY_FILENAME) { maybeByFilename.add(datasource); }
 				if ( compat == FileFormatCompatibility.MAYBE_BY_CONTENTS) { maybeByContents.add(datasource); }
 				if ( compat == FileFormatCompatibility.YES_BY_CONTENTS) { yesByContents.add(datasource); }
 			} catch (Throwable e) {
-				PeakabooLog.get().log(Level.WARNING, "Error while evaluating data source " + datasource.pluginName(), e);
+				OneLog.log(Level.WARNING, "Error while evaluating data source " + datasource.pluginName(), e);
 			} 
 		}
 			

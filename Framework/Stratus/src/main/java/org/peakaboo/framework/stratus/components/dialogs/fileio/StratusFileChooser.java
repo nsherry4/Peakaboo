@@ -28,9 +28,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusLog;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
@@ -103,7 +103,7 @@ public class StratusFileChooser extends JFileChooser {
 			this.setPreferredSize(new Dimension(850, 400));
 						
 		} catch (ClassCastException e) {
-			StratusLog.get().log(Level.SEVERE, "Failed to show file chooser", e);
+			OneLog.log(Level.SEVERE, "Failed to show file chooser", e);
 			return;
 		}
 	}

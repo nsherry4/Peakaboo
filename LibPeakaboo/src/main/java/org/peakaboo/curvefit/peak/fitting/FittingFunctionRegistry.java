@@ -2,12 +2,12 @@ package org.peakaboo.curvefit.peak.fitting;
 
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.curvefit.peak.fitting.functions.ConvolvingVoigtFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.GaussianFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.LorentzFittingFunction;
 import org.peakaboo.curvefit.peak.fitting.functions.PseudoVoigtFittingFunction;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginPreset;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
@@ -22,7 +22,7 @@ public class FittingFunctionRegistry extends PeakabooPluginRegistry<FittingFunct
 				SYSTEM = new FittingFunctionRegistry();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load fitting function plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load fitting function plugins", e);
 		}
 	}
 	public static FittingFunctionRegistry system() {

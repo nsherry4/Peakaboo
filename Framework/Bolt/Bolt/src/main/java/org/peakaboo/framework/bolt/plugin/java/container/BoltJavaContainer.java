@@ -4,7 +4,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginSet;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
@@ -59,7 +59,7 @@ public abstract class BoltJavaContainer<T extends BoltJavaPlugin> implements Bol
 		catch (Throwable e)
 		{
 			plugins.addIssue(new BoltBrokenJavaPluginIssue<>(loadedClass, this, e));
-			Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
+			OneLog.log(Level.WARNING, "Unable to load plugin", e);
 		}
 	}
 	

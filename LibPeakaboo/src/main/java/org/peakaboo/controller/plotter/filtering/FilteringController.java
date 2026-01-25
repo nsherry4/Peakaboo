@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
@@ -129,7 +129,7 @@ public class FilteringController extends EventfulBeacon
 
 	public void filteredDataInvalidated()
 	{
-		PeakabooLog.get().log(Level.FINE, "Filter Data Invalidated");
+		OneLog.log(Level.FINE, "Filter Data Invalidated");
 		// Clear cached values, since they now have to be recalculated
 		filteringModel.filteredPlot.invalidate();
 	}
@@ -167,7 +167,7 @@ public class FilteringController extends EventfulBeacon
 			if (optFilter.isPresent()) {
 				filters.add(optFilter.get());
 			} else {
-				PeakabooLog.get().warning("Failed to load plugin '" + s.uuid + "'");
+				OneLog.get().warning("Failed to load plugin '" + s.uuid + "'");
 			}
 		}
 	}

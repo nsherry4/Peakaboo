@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 
 public class AggregatePluginRepository implements PluginRepository {
 
@@ -29,7 +29,7 @@ public class AggregatePluginRepository implements PluginRepository {
 			} catch (PluginRepositoryException e) {
 				// Log error but continue with other repositories
 				// This allows local and built-in plugins to be shown even if remote repositories fail
-				Bolt.logger().log(Level.WARNING, "Failed to load plugins from repository " + repo.getRepositoryName() + ": " + e.getMessage(), e);
+				OneLog.log(Level.WARNING, "Failed to load plugins from repository " + repo.getRepositoryName() + ": " + e.getMessage(), e);
 			}
 		}
 
@@ -66,7 +66,7 @@ public class AggregatePluginRepository implements PluginRepository {
 				repo.refresh();
 			} catch (Exception e) {
 				// Log error but continue refreshing other repositories
-				Bolt.logger().log(Level.WARNING, "Failed to refresh repository " + repo.getRepositoryName() + ": " + e.getMessage(), e);
+				OneLog.log(Level.WARNING, "Failed to refresh repository " + repo.getRepositoryName() + ": " + e.getMessage(), e);
 			}
 		}
 	}

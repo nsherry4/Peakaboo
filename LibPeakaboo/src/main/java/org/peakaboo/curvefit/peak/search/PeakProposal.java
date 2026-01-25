@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
@@ -30,6 +29,7 @@ import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.framework.accent.Pair;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.plural.executor.DummyExecutor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -116,13 +116,13 @@ public class PeakProposal {
 					
 					List<Pair<ITransitionSeries, Float>> guesses = fromChannel(data, fits, proposals, fitter, solver, channel, null, 5, Optional.empty());
 					
-					PeakabooLog.get().log(Level.FINE, "Examining Channel " + channel);
+					OneLog.log(Level.FINE, "Examining Channel " + channel);
 					
 					
 					//if this list of guesses contains a TransitionSeries we've already proposed
 					//we assume that this peak is also caused by that TransitionSeries and skip it
 					if (peakOverlap(newFits, channel, fits.getFittingParameters())) {
-						PeakabooLog.get().log(Level.FINE, "Guesses contains previously proposed TransitionSeries, skipping");
+						OneLog.log(Level.FINE, "Guesses contains previously proposed TransitionSeries, skipping");
 						continue;
 					}
 					
@@ -146,10 +146,10 @@ public class PeakProposal {
 					if (!fits.getFittedTransitionSeries().contains(guess)) {
 						newFits.add(guess);
 						proposals.addTransitionSeries(guess);
-						PeakabooLog.get().log(Level.FINE, "Channel " + channel + " guess: " + guess);
+						OneLog.log(Level.FINE, "Channel " + channel + " guess: " + guess);
 					}
 				
-					PeakabooLog.get().log(Level.FINE, "----------------------------");
+					OneLog.log(Level.FINE, "----------------------------");
 					
 					secondStage.workUnitCompleted();
 				}

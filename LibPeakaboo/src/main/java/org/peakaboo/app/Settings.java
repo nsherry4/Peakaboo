@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import org.peakaboo.framework.accent.Platform;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
 import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.druthers.settings.DummySettingsStore;
 import org.peakaboo.framework.druthers.settings.SettingsStore;
 import org.peakaboo.framework.druthers.settings.YamlSettingsStore;
-import org.peakaboo.framework.plural.Plural;
 
 public class Settings {
 
@@ -54,14 +55,14 @@ public class Settings {
 	}
 	public static void setVerboseLogging(boolean verbose) {
 		provider.setBoolean(VERBOSE_LOGGING, verbose);
-		PeakabooLog.reloadSettings();
+		OneLog.setVerbose(verbose);
 	}
 	
 	
 	
 	private static final String THREAD_COUNT = "org.peakaboo.app.threadcount";
 	public static int getThreadCount() {
-		return provider.getInt(THREAD_COUNT, Plural.cores());
+		return provider.getInt(THREAD_COUNT, Platform.cores());
 	}
 	public static void setThreadCount(int threadcount) {
 		provider.setInt(THREAD_COUNT, threadcount);
@@ -70,11 +71,11 @@ public class Settings {
 
 	private static final String HEAP_SIZE_MB = "org.peakaboo.app.heapsize-megabytes";
 	public static int getHeapSizeMegabytes() {
-		return provider.getInt(HEAP_SIZE_MB, Math.min(Math.max(128, (int)(Env.maxHeap() * 0.75f)), 2048)  );
+		return provider.getInt(HEAP_SIZE_MB, Math.min(Math.max(128, (int)(Platform.maxHeap() * 0.75f)), 2048)  );
 	}
 	public static void setHeapSizeMegabytes(int size) {
 		if (size < 128) { size = 128; }
-		if (size > Env.maxHeap()) { size = (int) Env.maxHeap(); }
+		if (size > Platform.maxHeap()) { size = (int) Platform.maxHeap(); }
 		provider.setInt(HEAP_SIZE_MB, size);
 		writeHeapConfig();
 	}
@@ -114,7 +115,7 @@ public class Settings {
 			jvmOption = "java-options=-XX:MaxRAMPercentage=" + size;
 		} else {
 			size = getHeapSizeMegabytes();
-			if (size < 128 || size > Env.maxHeap()) {
+			if (size < 128 || size > Platform.maxHeap()) {
 				throw new IllegalArgumentException("Invalid heap size");
 			}
 			jvmOption = "java-options=-Xmx" + size + "m";
@@ -122,14 +123,14 @@ public class Settings {
 
 		//Load the system-wide cfg file for the jpackage launcher
 		try {
-			File sourceCFG = Env.systemCFGFile(Version.PROGRAM_NAME);
+			File sourceCFG = Platform.systemCFGFile(Version.PROGRAM_NAME);
 			String cfgContents = Files.readString(sourceCFG.toPath());
 			//replace the default memory option with the new one
 			cfgContents = cfgContents.replace("java-options=-XX:MaxRAMPercentage=75", jvmOption);
-			File userCFG = Env.userCFGFile(Version.PROGRAM_NAME);
+			File userCFG = Platform.userCFGFile(Version.PROGRAM_NAME);
 			Files.writeString(userCFG.toPath(), cfgContents);
 		} catch (IOException | RuntimeException e) {
-			PeakabooLog.get().log(Level.WARNING, "Cannot write to per-user Peakaboo.cfg file", e);
+			OneLog.log(Level.WARNING, "Cannot write to per-user Peakaboo.cfg file", e);
 		}
 		
 		

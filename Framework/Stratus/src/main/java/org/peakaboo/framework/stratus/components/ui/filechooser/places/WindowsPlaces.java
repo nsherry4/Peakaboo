@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.stratus.api.StratusLog;
+import org.peakaboo.framework.accent.log.OneLog;
 
 class WindowsPlaces implements Places {
 
@@ -45,7 +45,7 @@ class WindowsPlaces implements Places {
 			    }
 				
 			} catch (Exception e) {
-				StratusLog.get().log(Level.WARNING, "Could not look up value in registry", e);
+				OneLog.log(Level.WARNING, "Could not look up value in registry", e);
 				lookups.put(var, Optional.empty());
 			}
 		}
@@ -77,7 +77,7 @@ class WindowsPlaces implements Places {
 			    }
 				
 			} catch (Exception e) {
-				StratusLog.get().log(Level.WARNING, "Could not look up value in registry", e);
+				OneLog.log(Level.WARNING, "Could not look up value in registry", e);
 				lookups.put(key, Optional.empty());
 			}
 		}

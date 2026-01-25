@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.data.DataController;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
@@ -20,6 +19,7 @@ import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.accent.Mutable;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.accent.numeric.Range;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
@@ -120,7 +120,7 @@ public class Mapping {
 			});
 			
 			long t2 = System.currentTimeMillis();
-			PeakabooLog.get().log(Level.INFO, "Generated Maps in " + ((t2-t1)/1000)  + " seconds");
+			OneLog.log(Level.INFO, "Generated Maps in " + ((t2-t1)/1000)  + " seconds");
 			
 			System.gc();
 			return maps;
@@ -173,7 +173,7 @@ public class Mapping {
 			
 			long timePost = System.currentTimeMillis();
 			long timeDelta = (timePost - timePre) / 1000;
-			PeakabooLog.get().log(Level.INFO, "Generated a QuickMap in " + timeDelta + " seconds");
+			OneLog.log(Level.INFO, "Generated a QuickMap in " + timeDelta + " seconds");
 			
 			//build the RawMapSet now that the map Spectrum has been populated
 			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), mapdata);

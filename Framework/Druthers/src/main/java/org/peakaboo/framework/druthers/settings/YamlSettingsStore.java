@@ -9,7 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.druthers.Druthers;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 
 public class YamlSettingsStore implements SettingsStore {
@@ -76,7 +76,7 @@ public class YamlSettingsStore implements SettingsStore {
 					StandardOpenOption.WRITE, 
 					StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
-			Druthers.logger().log(Level.WARNING, "Failed to write persistent settings to disk", e);
+			OneLog.log(Level.WARNING, "Failed to write persistent settings to disk", e);
 		}
 	}
 

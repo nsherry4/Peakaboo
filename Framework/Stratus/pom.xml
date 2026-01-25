@@ -24,13 +24,16 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency><!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-
 		<dependency>
 			<groupId>org.swinglabs.swingx</groupId>
 			<artifactId>swingx-graphics</artifactId>
 			<version>1.6.5-1</version>
 		</dependency>
-
+        <dependency>
+            <groupId>org.peakaboo.framework</groupId>
+            <artifactId>accent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 	<build>

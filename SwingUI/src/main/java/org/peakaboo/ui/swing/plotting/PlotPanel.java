@@ -26,7 +26,6 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 
 import org.apache.commons.io.IOUtils;
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.SavedMapSession;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
@@ -52,6 +51,7 @@ import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.accent.Pair;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -84,7 +84,6 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.AboutLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerDialog;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
-import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.framework.stratus.laf.painters.scrollbar.ScrollBarTrackPainter;
@@ -161,7 +160,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 	private void notifyUser(String message, Runnable action) {
 		Runnable onclick = action == null ? () -> {
 		} : action;
-		SwingUtilities.invokeLater(() -> this.pushLayer(new ToastLayer(this, message, onclick)));
+		SwingUtilities.invokeLater(() -> this.showToast(message, onclick));
 	}
 
 	private void doFirstRun() {
@@ -479,7 +478,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 			contents.licence = IOUtils.toString( getClass().getResourceAsStream("/org/peakaboo/licence.txt"), StandardCharsets.UTF_8 );
 			contents.credits = IOUtils.toString( getClass().getResourceAsStream("/org/peakaboo/credits.txt"), StandardCharsets.UTF_8 );
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.WARNING, "Failed to load asset from classloader", e);
+			OneLog.log(Level.WARNING, "Failed to load asset from classloader", e);
 		}
 
 		contents.logo = logo;
@@ -641,7 +640,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 			os.write(controller.save().serialize().getBytes());
 			controller.history().setSavePoint();
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to save session", e);
+			OneLog.log(Level.SEVERE, "Failed to save session", e);
 		}
 	}
 
@@ -707,7 +706,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 			zos.closeEntry();
 
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Could not save archive", e);
+			OneLog.log(Level.SEVERE, "Could not save archive", e);
 		}
 	}
 
@@ -762,7 +761,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 						controller.writeFittingInformation(os);
 						os.close();
 					} catch (IOException e) {
-						PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
+						OneLog.log(Level.SEVERE, "Failed to save fitting information", e);
 					}
 
 				});
@@ -915,7 +914,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		try {
 			desktop.open(appDataDir);
 		} catch (IOException e1) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to open logging folder", e1);
+			OneLog.log(Level.SEVERE, "Failed to open logging folder", e1);
 		}
 	}
 

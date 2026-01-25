@@ -9,10 +9,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.peak.transition.PrimaryTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.Transition;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.framework.accent.log.OneLog;
 
 public class KrausePeakTable implements PeakTable {
 
@@ -55,7 +55,7 @@ public class KrausePeakTable implements PeakTable {
 			}
 
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Error reading Peak Table", e);
+			OneLog.log(Level.SEVERE, "Error reading Peak Table", e);
 		}
 
 		//remove headers

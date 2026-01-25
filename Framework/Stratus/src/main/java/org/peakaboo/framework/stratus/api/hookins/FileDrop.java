@@ -29,9 +29,9 @@ import java.util.logging.Level;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusColour;
-import org.peakaboo.framework.stratus.api.StratusLog;
 
 /**
  * This class makes it easy to drag and drop files from the operating system to
@@ -225,7 +225,7 @@ public class FileDrop {
 				} // end dragOver
 
 				public void drop(java.awt.dnd.DropTargetDropEvent evt) {
-					StratusLog.get().log(Level.INFO, "FileDrop: drop event of type " + dropType);
+					OneLog.log(Level.INFO, "FileDrop: drop event of type " + dropType);
 					try { // Get whatever was dropped
 
 						switch(dropType) {
@@ -667,7 +667,7 @@ public class FileDrop {
 		//make sure we can get the data
 		DataFlavor flavour = DataFlavor.stringFlavor;
 		if (!evt.isDataFlavorSupported(flavour)) {
-			StratusLog.get().log(Level.WARNING, "String data flavour unexpectedly not supported");
+			OneLog.log(Level.WARNING, "String data flavour unexpectedly not supported");
 			return null;
 		}
 
@@ -679,12 +679,12 @@ public class FileDrop {
 			data = (String) evt.getTransferable().getTransferData(flavour);
 		} catch (UnsupportedFlavorException | IOException e) {
 			evt.getDropTargetContext().dropComplete(false);
-			StratusLog.get().log(Level.WARNING, "String data flavour unexpectedly not available");
+			OneLog.log(Level.WARNING, "String data flavour unexpectedly not available");
 			return null;
 		}
 
 		if (!(data.startsWith("http://") || data.startsWith("https://"))) {
-			StratusLog.get().log(Level.WARNING, "URL '" + data + "' does not start with http:// or https://");
+			OneLog.log(Level.WARNING, "URL '" + data + "' does not start with http:// or https://");
 			return null;
 		}
 		
@@ -693,7 +693,7 @@ public class FileDrop {
 			evt.getDropTargetContext().dropComplete(true);
 			return url;
 		} catch (Exception e) {
-			StratusLog.get().log(Level.WARNING, "URL '" + data + "' could not be parsed");
+			OneLog.log(Level.WARNING, "URL '" + data + "' could not be parsed");
 			return null;
 		}
 	}
@@ -750,11 +750,11 @@ public class FileDrop {
 	}
 	
 	private static void log(String message) {
-		StratusLog.get().log(Level.FINE, message);
+		OneLog.log(Level.FINE, message);
 	}
 
 	private static void log(Throwable t) {
-		StratusLog.get().log(Level.FINE, t.getMessage(), t);
+		OneLog.log(Level.FINE, t.getMessage(), t);
 	}
 
 	

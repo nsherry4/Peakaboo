@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.filter.model.Filter.FilterContext;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
@@ -135,7 +135,7 @@ public class FilterSet implements Iterable<Filter> {
 			return data;
 		} else {
 			
-			PeakabooLog.get().log(Level.WARNING, "Filtered data contained NaN or Infinity");
+			OneLog.log(Level.WARNING, "Filtered data contained NaN or Infinity");
 			Spectrum corrected = new ArraySpectrum(data);
 			float[] c = corrected.backingArray();
 			for (int i = 0; i < c.length; i++) {

@@ -2,7 +2,6 @@ package org.peakaboo.curvefit.curve.fitting;
 
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.fitting.EscapeFittingContext;
 import org.peakaboo.curvefit.peak.fitting.FittingContext;
@@ -11,6 +10,7 @@ import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.fitting.TransitionFittingContext;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.Transition;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 
 public interface FittingParametersView {
@@ -59,7 +59,7 @@ public interface FittingParametersView {
 		if (created.isPresent()) {
 			function = created.get();
 		} else {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to create fitting function, using default");
+			OneLog.log(Level.SEVERE, "Failed to create fitting function, using default");
 			function = FittingFunctionRegistry.system().getPresetInstance();		
 		}
 		function.initialize(context);

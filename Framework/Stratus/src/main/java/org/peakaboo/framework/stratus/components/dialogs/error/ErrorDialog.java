@@ -15,7 +15,6 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderDialog;
-import org.peakaboo.framework.stratus.components.ui.layers.ToastLayer;
 
 public class ErrorDialog extends HeaderDialog {
 
@@ -111,10 +110,9 @@ public class ErrorDialog extends HeaderDialog {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		StringSelection sel = new StringSelection(error.getStackTrace());
 		clipboard.setContents(sel, null);
-		
-		ToastLayer toast = new ToastLayer(this.getLayerRoot(), "Data copied to clipboard");
-		this.getLayerRoot().pushLayer(toast);
-		
+
+		this.getLayerRoot().showToast("Data copied to clipboard");
+
 	}
 	
 	

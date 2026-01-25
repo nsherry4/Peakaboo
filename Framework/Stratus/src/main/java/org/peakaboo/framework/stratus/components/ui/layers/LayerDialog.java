@@ -152,8 +152,8 @@ public class LayerDialog {
 	
 	private HeaderBox buildHeaderBox() {
 		Component left, right;
-		
-		if (leftButtons.size() == 0) {
+
+		if (leftButtons.isEmpty()) {
 			left = null;
 		} else if (leftButtons.size() == 1) {
 			left = leftButtons.get(0);
@@ -164,8 +164,8 @@ public class LayerDialog {
 			}
 			left = leftBox;
 		}
-		
-		if (rightButtons.size() == 0) {
+
+		if (rightButtons.isEmpty()) {
 			right = null;
 		} else if (rightButtons.size() == 1) {
 			right = rightButtons.get(0);
