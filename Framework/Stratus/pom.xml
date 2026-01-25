@@ -101,11 +101,46 @@
 					<reuseForks>false</reuseForks>
 					<includes>
 						<include>**/*Test.java</include>
-						<include>**/*SwingTest.java</include>
 					</includes>
+					<!-- Swing tests excluded by default (require display/Xvfb) -->
+					<excludes>
+						<exclude>**/*SwingTest.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- Profile for running Swing UI tests (requires display or Xvfb) -->
+		<profile>
+			<id>swing-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>3.2.5</version>
+						<configuration>
+							<argLine>
+								--add-opens java.base/java.lang=ALL-UNNAMED
+								--add-opens java.desktop/javax.swing=ALL-UNNAMED
+								--add-opens java.desktop/java.awt=ALL-UNNAMED
+								--add-opens java.base/java.util=ALL-UNNAMED
+							</argLine>
+							<forkCount>1</forkCount>
+							<reuseForks>false</reuseForks>
+							<includes>
+								<include>**/*SwingTest.java</include>
+							</includes>
+							<excludes>
+								<exclude>none</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
