@@ -1,4 +1,16 @@
 {
-  "name": "Ubuntu",
-  "image": "ubuntu:24.04"
+  "name": "Ubuntu 24.04 with Java",
+  "image": "ubuntu:24.04",
+  "postCreateCommand": "apt-get update && apt-get install -y git openjdk-21-jdk-headless",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "workbench.editor.enablePreview": false,
+        "terminal.integrated.enabled": false
+      },
+      "extensions": [
+        "anthropic.claude-code"
+      ]
+    }
+  }
 }
