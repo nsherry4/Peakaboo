@@ -1,0 +1,4 @@
+{
+  "name": "Ubuntu",
+  "image": "ubuntu:24.04"
+}
