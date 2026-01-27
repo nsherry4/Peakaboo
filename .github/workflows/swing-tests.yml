@@ -21,5 +21,8 @@ jobs:
     - name: Install Xvfb
       run: sudo apt-get install -y xvfb
 
+    - name: Build all modules
+      run: mvn -B install -DskipTests --file pom.xml
+
     - name: Run Swing Tests with Xvfb
       run: xvfb-run -a mvn -B test -Pswing-tests -pl Framework/Stratus --file pom.xml
