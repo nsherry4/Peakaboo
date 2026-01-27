@@ -6,7 +6,7 @@
     "vscode": {
       "settings": {
         "workbench.editor.enablePreview": false,
-        "terminal.integrated.enabled": false
+        "terminal.integrated.shellIntegration.enabled": false
       },
       "extensions": [
         "anthropic.claude-code"
