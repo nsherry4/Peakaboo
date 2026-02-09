@@ -455,9 +455,9 @@ public class Plotter {
 				palette.fitFill = new PaletteColour(0x40000000);
 				palette.fitStroke = new PaletteColour(0xA0000000);
 				palette.sumStroke = new PaletteColour(0xD0000000);
-				palette.labelText = palette.fitStroke;
-				palette.labelBackground = new PaletteColour(0xffffffff);
-				palette.labelStroke = palette.labelText;
+				palette.labelText = new PaletteColour(0xFF000000);
+				palette.labelBackground = new PaletteColour(0xFFFFFFFF);
+				palette.labelStroke = new PaletteColour(0xFF000000);
 				palette.markings = palette.fitStroke;
 			}
 		}

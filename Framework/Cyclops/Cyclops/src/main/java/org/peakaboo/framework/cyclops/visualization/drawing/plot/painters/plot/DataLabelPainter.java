@@ -24,6 +24,8 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 public class DataLabelPainter extends PlotPainter
 {
 
+	private static int HPAD = 4;
+
 	public static class DataLabel {
 		
 		//passed in
@@ -69,7 +71,7 @@ public class DataLabelPainter extends PlotPainter
 		p.context.save();
 			
 			p.context.setFontSize(p.context.getFontSize() + 2);
-					
+
 			//calculate derived label info
 			for (DataLabel label : labels){
 				configureLabel(label, p);
@@ -196,8 +198,8 @@ public class DataLabelPainter extends PlotPainter
 		float penWidth = label.penWidth;
 		float totalHeight = (titleHeight + penWidth * 2);
 		
-		float farLeft = titleStart - penWidth * 2;
-		float width = textWidth + penWidth * 6;
+		float farLeft = titleStart - penWidth * HPAD;
+		float width = textWidth + penWidth * (2 * HPAD);
 		float farRight = farLeft + width;
 		
 		float leftChannel = (farLeft / channelSize);
@@ -220,7 +222,7 @@ public class DataLabelPainter extends PlotPainter
 		
 		
 		
-		return new Coord<>(new Bounds<>(leftChannel, rightChannel), new Bounds<>(penWidth, totalHeight));
+		return new Coord<>(new Bounds<>(leftChannel, rightChannel), new Bounds<>(0f, totalHeight));
 		
 	}
 	
@@ -235,19 +237,17 @@ public class DataLabelPainter extends PlotPainter
 		
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
 		float xStart = label.position.x.start * channelSize;
-		float xTextStart = xStart + label.penWidth*2;
-		float yTextStart = label.position.y.start + p.context.getFontDescent();
+		float xTextStart = xStart + label.penWidth*(HPAD - 1);
+		float yTextStart = label.position.y.start + label.penWidth + p.context.getFontDescent();
 		if (xStart > p.plotSize.x) return;
 		
 		float w = (label.position.x.end - label.position.x.start) * channelSize;
 		float h = label.position.y.end - label.position.y.start;
 				
 		p.context.setSource(label.palette.labelBackground);
-		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
-		p.context.fill();
-		
+		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 5f, 5f);
+		p.context.fillPreserve();
 		p.context.setSource(label.palette.labelStroke);
-		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
 		p.context.stroke();
 		
 		p.context.setSource(label.palette.labelText);
