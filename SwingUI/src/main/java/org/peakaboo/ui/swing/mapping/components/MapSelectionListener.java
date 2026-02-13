@@ -27,6 +27,14 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
+		// Handle right-click for polygon cancellation
+		if (SwingUtilities.isRightMouseButton(e)) {
+			if (controller.getSelection().getSelectionType() == org.peakaboo.controller.mapper.selection.MapSelectionController.SelectionType.POLYGON) {
+				controller.getSelection().cancelInProgressSelection();
+			}
+			return;
+		}
+
 		//left button makes selections, and everything else does nothing
 		if (!SwingUtilities.isLeftMouseButton(e)) {
 			return;
@@ -59,6 +67,10 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
+			// Skip drag for polygon mode (uses clicks)
+			if (controller.getSelection().getSelectionType() == org.peakaboo.controller.mapper.selection.MapSelectionController.SelectionType.POLYGON) {
+				return;
+			}
 			dragging = true;
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
 			controller.getSelection().startDragSelection(point, e.isControlDown());
@@ -86,6 +98,10 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		// Skip for polygon mode
+		if (controller.getSelection().getSelectionType() == org.peakaboo.controller.mapper.selection.MapSelectionController.SelectionType.POLYGON) {
+			return;
+		}
 		if (SwingUtilities.isLeftMouseButton(e) && dragging) {
 			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
 			controller.getSelection().addDragSelection(point);
@@ -94,7 +110,11 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		//NOOP
+		// Update preview line for polygon mode
+		if (controller.getSelection().getSelectionType() == org.peakaboo.controller.mapper.selection.MapSelectionController.SelectionType.POLYGON) {
+			Coord<Integer> point = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
+			controller.getSelection().addDragSelection(point);
+		}
 	}
 
 	@Override

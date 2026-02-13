@@ -24,13 +24,15 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	
 	private DragSelection areaSelection;
 	private SimilarSelection similarSelection;
-	private ShapeSelection shapeSelection;
-	
+	private FreehandSelection freehandSelection;
+	private PolygonSelection polygonSelection;
+
 	public enum SelectionType {
 		SIMILAR,
 		RECTANGLE,
 		ELLIPSE,
-		SHAPE
+		SHAPE,
+		POLYGON
 	}
 	private SelectionType selectionType = SelectionType.RECTANGLE;
 	
@@ -50,7 +52,8 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		//create selection models and pass their events along
 		areaSelection = new DragSelection(mappingController);
 		similarSelection = new SimilarSelection(mappingController);
-		shapeSelection = new ShapeSelection(mappingController);
+		freehandSelection = new FreehandSelection(mappingController);
+		polygonSelection = new PolygonSelection(mappingController);
 		
 		map.addListener(m -> {
 			
@@ -202,6 +205,20 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		currentSelection.clear();
 		updateListeners(MapUpdateType.SELECTION);
 	}
+
+	/**
+	 * Cancel in-progress selection without affecting committed selections.
+	 * Preserves compound selections built with Ctrl+click.
+	 */
+	public void cancelInProgressSelection() {
+		// Clear in-progress selection only, preserve committed selections
+		newSelection.clear();
+
+		// Let the selection implementation reset its internal state
+		getSelection().reset();
+
+		updateListeners(MapUpdateType.SELECTION);
+	}
 	
 
 	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
@@ -209,9 +226,34 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 			clearSelection();
 			return;
 		}
-		newSelection = getSelection().selectPoint(clickedAt, singleSelect);
-		currentSelection = mergeSelections(clickedAt, modify);
-		newSelection.clear();
+
+		Selection selection = getSelection();
+
+		// Store focal point for first click of incremental selections (for modify mode)
+		if (selectionType == SelectionType.POLYGON && newSelection.isEmpty()) {
+			// First click of new polygon
+			this.dragFocalPoint = clickedAt;
+			this.modify = modify;
+			if (!modify) clearSelection();
+		}
+
+		newSelection = selection.selectPoint(clickedAt, singleSelect);
+
+		// Only commit if selection is complete (polymorphic check!)
+		if (selection.isClosed()) {
+			// Selection complete, commit it
+			if (selectionType == SelectionType.POLYGON) {
+				// Polygon: use stored focal point for modify mode
+				currentSelection = mergeSelections(dragFocalPoint, this.modify);
+				this.modify = false;
+			} else {
+				// Other selections: use current click point
+				currentSelection = mergeSelections(clickedAt, modify);
+			}
+			newSelection.clear();
+		}
+		// else: keep building newSelection without committing
+
 		updateListeners(MapUpdateType.SELECTION);
 	}
 	
@@ -296,7 +338,9 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 		case SIMILAR:
 			return similarSelection;
 		case SHAPE:
-			return shapeSelection;
+			return freehandSelection;
+		case POLYGON:
+			return polygonSelection;
 		}
 		throw new IllegalArgumentException("Unknown selection type");
 	}

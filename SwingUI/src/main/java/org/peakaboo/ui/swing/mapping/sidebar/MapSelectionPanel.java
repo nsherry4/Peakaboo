@@ -27,7 +27,7 @@ public class MapSelectionPanel extends SettingsPanel {
 	
 	public static class MapSelectionComponent extends ButtonLinker {
 		
-		private FluentToggleButton selRect, selEllipse, selSimilar, selShape;
+		private FluentToggleButton selRect, selEllipse, selSimilar, selShape, selPolygon;
 		private ButtonGroup selGroup;
 		
 		public MapSelectionComponent(Consumer<SelectionType> listener) {
@@ -57,32 +57,41 @@ public class MapSelectionPanel extends SettingsPanel {
 					.withTooltip("Select Hand-Drawn Shape")
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> listener.accept(SelectionType.SHAPE));
-			
+
+			selPolygon = new FluentToggleButton()
+					.withIcon(PeakabooIcons.SELECT_RECTANGULAR, IconSize.BUTTON, fg)
+					.withTooltip("Select Polygon")
+					.withButtonSize(FluentButtonSize.COMPACT)
+					.withAction(() -> listener.accept(SelectionType.POLYGON));
+
 			selGroup = new ButtonGroup();
 			selGroup.add(selRect);
 			selGroup.add(selEllipse);
 			selGroup.add(selSimilar);
 			selGroup.add(selShape);
-			
+			selGroup.add(selPolygon);
+
 			addButton(selRect);
 			addButton(selEllipse);
 			addButton(selSimilar);
 			addButton(selShape);
+			addButton(selPolygon);
 			
 						
 		}
 		
 		public void setSelection(SelectionType selection) {
-			
+
 			var button = switch(selection) {
 				case ELLIPSE -> selEllipse;
 				case RECTANGLE -> selRect;
 				case SIMILAR -> selSimilar;
 				case SHAPE -> selShape;
+				case POLYGON -> selPolygon;
 			};
-					
+
 			selGroup.setSelected(button.getModel(), true);
-			
+
 		}
 		
 	}
