@@ -32,7 +32,8 @@ public class Banner extends ClearPanel {
 	// Internal state
 	private boolean closed = false;
 	
-	
+	// UI elements
+	JLabel label;
 	
 
 	public Banner(String message) {
@@ -70,7 +71,7 @@ public class Banner extends ClearPanel {
 		icon.setBorder(Spacing.bSmall());
 		add(icon);
 		
-		var label = new JLabel(message);
+		label = new JLabel(message);
 		label.setBorder(Spacing.bSmall());
 		label.setForeground(style.fg);
 		label.setFont(label.getFont().deriveFont(13f));
@@ -132,6 +133,10 @@ public class Banner extends ClearPanel {
 	public void closeBanner() {
 		this.closed = true;
 		hideBanner();
+	}
+	
+	public void setMessage(String message) {
+		this.label.setText(message);
 	}
 	
 }
