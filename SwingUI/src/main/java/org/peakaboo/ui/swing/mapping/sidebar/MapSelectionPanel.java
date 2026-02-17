@@ -59,7 +59,7 @@ public class MapSelectionPanel extends SettingsPanel {
 					.withAction(() -> listener.accept(SelectionType.SHAPE));
 
 			selPolygon = new FluentToggleButton()
-					.withIcon(PeakabooIcons.SELECT_RECTANGULAR, IconSize.BUTTON, fg)
+					.withIcon(PeakabooIcons.SELECT_POLYGON, IconSize.BUTTON, fg)
 					.withTooltip("Select Polygon")
 					.withButtonSize(FluentButtonSize.COMPACT)
 					.withAction(() -> listener.accept(SelectionType.POLYGON));
@@ -73,9 +73,11 @@ public class MapSelectionPanel extends SettingsPanel {
 
 			addButton(selRect);
 			addButton(selEllipse);
-			addButton(selSimilar);
-			addButton(selShape);
 			addButton(selPolygon);
+			addButton(selShape);
+			addButton(selSimilar);
+
+
 			
 						
 		}
