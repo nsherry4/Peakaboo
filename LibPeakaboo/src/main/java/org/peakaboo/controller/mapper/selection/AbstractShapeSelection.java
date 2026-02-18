@@ -154,9 +154,9 @@ public abstract class AbstractShapeSelection extends AbstractSelection {
 	/**
 	 * Interpolate missing points between two indices using Bresenham-style algorithm.
 	 * Ensures no gaps in the edge trace even when mouse moves quickly.
+	 * Returns the interpolated points; callers decide what to do with them.
 	 */
-	//CLAUDETODO Should this method return a list of points so that each caller can decide what to do with them? Then this can also be a static method.
-	protected void interpolate(int i1, int i2, GridPerspective<Float> grid) {
+	protected static IntArrayList interpolate(int i1, int i2, GridPerspective<Float> grid) {
 		IntPair p1 = grid.getXYFromIndex(i1);
 		IntPair p2 = grid.getXYFromIndex(i2);
 
@@ -193,6 +193,7 @@ public abstract class AbstractShapeSelection extends AbstractSelection {
 		float advanceY = distanceY / steps;
 
 		//advance along the line and add all the pixels we encounter
+		IntArrayList result = new IntArrayList();
 		float x = x1;
 		float y = y1;
 		int ix;
@@ -203,15 +204,15 @@ public abstract class AbstractShapeSelection extends AbstractSelection {
 			ix = Math.round(x);
 			iy = Math.round(y);
 			index = grid.getIndexFromXY(ix, iy);
-			if (!points.contains(index)) {
-				points.add(index);
+			if (!result.contains(index)) {
+				result.add(index);
 			}
 
 			x += advanceX;
 			y += advanceY;
 		}
 
-
+		return result;
 	}
 
 	/**

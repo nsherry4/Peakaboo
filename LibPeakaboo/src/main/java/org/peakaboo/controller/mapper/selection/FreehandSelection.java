@@ -39,7 +39,7 @@ class FreehandSelection extends AbstractShapeSelection {
 			int lastIndex = points.getInt(points.size()-1);
 			var lastPoint = grid.getXYFromIndex(lastIndex);
 			if (Math.abs(lastPoint.first - point.x) > 1 || Math.abs(lastPoint.second - point.y) > 1) {
-				interpolate(lastIndex, index, grid);
+				points.addAll(interpolate(lastIndex, index, grid));
 			}
 		}
 
@@ -55,7 +55,7 @@ class FreehandSelection extends AbstractShapeSelection {
 		addDragSelection(point);
 
 		//interpolate between the first and last points
-		interpolate(points.getInt(0), points.getInt(points.size()-1), grid());
+		points.addAll(interpolate(points.getInt(0), points.getInt(points.size()-1), grid()));
 
 		//fill in the traced area now that the user is done making the selection
 		fillTrace();

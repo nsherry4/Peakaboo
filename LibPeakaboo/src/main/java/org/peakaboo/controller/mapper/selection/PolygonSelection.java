@@ -46,17 +46,13 @@ class PolygonSelection extends AbstractShapeSelection {
 		// Add vertex
 		vertices.add(clickedAt);
 
-		// CLAUDETODO We generally want to see all lines drawn so far. We may
-		// want to rework the interpolation function to make this easier
-		// especially if we want to cache the interpolation between existing vertices
-
 		// Interpolate edge from previous vertex to new vertex
 		if (vertices.size() > 1) {
 			GridPerspective<Float> grid = grid();
 			Coord<Integer> prev = vertices.get(vertices.size() - 2);
 			int idx1 = grid.getIndexFromXY(prev.x, prev.y);
 			int idx2 = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
-			interpolate(idx1, idx2, grid);
+			points.addAll(interpolate(idx1, idx2, grid));
 		} else {
 			// First vertex - just add it as a point
 			GridPerspective<Float> grid = grid();
@@ -122,7 +118,7 @@ class PolygonSelection extends AbstractShapeSelection {
 		Coord<Integer> last = vertices.get(vertices.size() - 1);
 		int idx1 = grid.getIndexFromXY(last.x, last.y);
 		int idx2 = grid.getIndexFromXY(first.x, first.y);
-		interpolate(idx1, idx2, grid);
+		points.addAll(interpolate(idx1, idx2, grid));
 
 		// Fill the interior using shared flood-fill algorithm
 		fillTrace();
@@ -142,22 +138,13 @@ class PolygonSelection extends AbstractShapeSelection {
 		// Return edges plus preview line from last vertex to current mouse position
 		IntArrayList preview = new IntArrayList(points);
 
-		if (previewPoint != null && vertices.size() > 0) {
+		if (previewPoint != null && !vertices.isEmpty()) {
 			// Add preview line from last vertex to mouse cursor
 			GridPerspective<Float> grid = grid();
 			Coord<Integer> last = vertices.get(vertices.size() - 1);
 			int idx1 = grid.getIndexFromXY(last.x, last.y);
 			int idx2 = grid.getIndexFromXY(previewPoint.x, previewPoint.y);
-
-			// Temporarily interpolate preview line (don't modify points field)
-			IntArrayList previewLine = new IntArrayList();
-			// Save current points state
-			IntArrayList savedPoints = points;
-			points = previewLine;
-			interpolate(idx1, idx2, grid);
-			// Restore points and add preview to result
-			points = savedPoints;
-			preview.addAll(previewLine);
+			preview.addAll(interpolate(idx1, idx2, grid));
 		}
 
 		return preview;
