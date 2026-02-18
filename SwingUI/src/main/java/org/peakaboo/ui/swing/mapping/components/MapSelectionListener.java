@@ -46,20 +46,12 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 		}
 		
 		
-		Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-		if (e.isControlDown()) {
-			if (e.getClickCount() == 1) {
-				controller.getSelection().selectPoint(clickedAt, true, true);
-			} else if (e.getClickCount() == 2) {
-				//Double clicks only get run after a single click gets run. If CTRL is down, that means we need to
-				//undo the action caused by the previous (improper) single-click, so we re-run the contiguous
-				//selection modification to perform the reverse modification.
-				controller.getSelection().selectPoint(clickedAt, true, true);
-				controller.getSelection().selectPoint(clickedAt, false, true);
-			}
-		} else {
-			controller.getSelection().selectPoint(clickedAt, e.getClickCount() == 1, false);
+		// Ignore double-clicks: no selection mode uses them any more
+		if (e.getClickCount() != 1) {
+			return;
 		}
+		Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
+		controller.getSelection().selectPoint(clickedAt, true, e.isControlDown());
 
 
 	}
