@@ -97,8 +97,10 @@ class SimilarSelection extends AbstractSelection {
 		float valueMin = value - delta;
 		float valueMax = value + delta;
 		int point = grid.getIndexFromXY(clickedAt.x, clickedAt.y);
-		points.add(point);
-		pointSet.add(point);
+		if (!invalidPoints.contains(point)) {
+			points.add(point);
+			pointSet.add(point);
+		}
 		int cursor = 0;
 		while (cursor < points.size()) {
 			point = points.getInt(cursor);
