@@ -11,7 +11,7 @@ public interface Selection {
 
 	Optional<Group> getParameters();
 
-	IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect);
+	IntArrayList selectPoint(Coord<Integer> clickedAt);
 
 	IntArrayList startDragSelection(Coord<Integer> point);
 	IntArrayList addDragSelection(Coord<Integer> point);

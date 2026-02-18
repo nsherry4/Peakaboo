@@ -221,7 +221,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 	}
 	
 
-	public void selectPoint(Coord<Integer> clickedAt, boolean singleSelect, boolean modify) {
+	public void selectPoint(Coord<Integer> clickedAt, boolean modify) {
 		if (!isSelectable()) {
 			clearSelection();
 			return;
@@ -237,7 +237,7 @@ public class MapSelectionController extends EventfulType<MapUpdateType> {
 			if (!modify) clearSelection();
 		}
 
-		newSelection = selection.selectPoint(clickedAt, singleSelect);
+		newSelection = selection.selectPoint(clickedAt);
 
 		// Only commit if selection is complete (polymorphic check!)
 		if (selection.isClosed()) {

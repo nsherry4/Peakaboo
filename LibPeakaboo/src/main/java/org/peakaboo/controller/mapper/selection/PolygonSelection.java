@@ -29,7 +29,7 @@ class PolygonSelection extends AbstractShapeSelection {
 	}
 
 	@Override
-	public IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
+	public IntArrayList selectPoint(Coord<Integer> clickedAt) {
 		// If already closed, start a new polygon
 		if (closed) {
 			reset();

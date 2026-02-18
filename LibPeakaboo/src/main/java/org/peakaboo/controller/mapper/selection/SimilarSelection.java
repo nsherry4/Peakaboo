@@ -43,7 +43,7 @@ class SimilarSelection extends AbstractSelection {
 
 
 	@Override
-	public IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
+	public IntArrayList selectPoint(Coord<Integer> clickedAt) {
 		indexes.clear();
 
 		var selectionInfo = map.getFitting().getMapModeData().getMapSelectionInfo().orElseGet(() -> null);

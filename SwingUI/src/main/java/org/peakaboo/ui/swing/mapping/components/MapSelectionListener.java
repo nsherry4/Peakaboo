@@ -51,7 +51,7 @@ public class MapSelectionListener implements MouseMotionListener, MouseListener,
 			return;
 		}
 		Coord<Integer> clickedAt = canvas.getMapCoordinateAtPoint(e.getX(), e.getY(), true);
-		controller.getSelection().selectPoint(clickedAt, true, e.isControlDown());
+		controller.getSelection().selectPoint(clickedAt, e.isControlDown());
 
 
 	}
