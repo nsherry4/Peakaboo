@@ -20,10 +20,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.filter.model.FilterRegistry;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
@@ -172,7 +172,7 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 		try {
 			desktop.open(appDataDir);
 		} catch (IOException e1) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to open plugin folder", e1);
+			OneLog.log(Level.SEVERE, "Failed to open plugin folder", e1);
 		}
 	}
 	

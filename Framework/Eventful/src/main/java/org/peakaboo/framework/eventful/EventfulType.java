@@ -1,8 +1,12 @@
 package org.peakaboo.framework.eventful;
 
+import org.peakaboo.framework.accent.log.OneLog;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 public class EventfulType<T> implements IEventfulType<T>
 {
@@ -18,7 +22,7 @@ public class EventfulType<T> implements IEventfulType<T>
 	}
 
 	@Override
-	public void addListener(EventfulListener l) {
+	public synchronized void addListener(EventfulListener l) {
 		simpleListeners.add(l);
 	}
 	
@@ -27,8 +31,9 @@ public class EventfulType<T> implements IEventfulType<T>
 		listeners.add(l);
 	}
 
-	
-	//Done on the event thread on purpose
+
+	// Done on the event thread on purpose to ensure listeners receive all
+	// events queued before removal (UI thread queue provides ordering guarantee)
 	@Override
 	public void removeListener(EventfulListener l) {
 		getUIThreadRunner().accept(() -> { 
@@ -37,24 +42,27 @@ public class EventfulType<T> implements IEventfulType<T>
 			}
 		});
 	}
-	
-	//Done on the event thread on purpose
+
+	// Done on the event thread on purpose to ensure listeners receive all
+	// events queued before removal (UI thread queue provides ordering guarantee)
 	@Override
-	public synchronized void removeListener(final EventfulTypeListener<T> l) {
+	public void removeListener(final EventfulTypeListener<T> l) {
 		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulType.this) { 
 				listeners.remove(l);
 			}
 		});
 	}
-	
 
-	//Done on the event thread on purpose
+
+	// Done on the event thread on purpose to ensure listeners receive all
+	// events queued before removal (UI thread queue provides ordering guarantee)
 	@Override
-	public synchronized void removeAllListeners() {
-		getUIThreadRunner().accept(() -> { 
-			synchronized(EventfulType.this) { 
+	public void removeAllListeners() {
+		getUIThreadRunner().accept(() -> {
+			synchronized(EventfulType.this) {
 				listeners.clear();
+				simpleListeners.clear();
 			}
 		});
 	}
@@ -62,16 +70,28 @@ public class EventfulType<T> implements IEventfulType<T>
 
 	@Override
 	public void updateListeners(final T message) {
+		List<EventfulTypeListener<T>> listenersCopy;
+		List<EventfulListener> simpleListenersCopy;
 
-		if (listeners.isEmpty()) return;
+		synchronized(this) {
+			if (listeners.isEmpty() && simpleListeners.isEmpty()) return;
+			listenersCopy = new ArrayList<>(listeners);
+			simpleListenersCopy = new ArrayList<>(simpleListeners);
+		}
 
 		getUIThreadRunner().accept(() -> {
-			synchronized(EventfulType.this){
-				for (EventfulTypeListener<T> l : listeners) {
+			for (EventfulTypeListener<T> l : listenersCopy) {
+				try {
 					l.change(message);
+				} catch (Exception e) {
+					OneLog.log(Level.WARNING, "Exception in EventfulTypeListener", e);
 				}
-				for (EventfulListener l : simpleListeners) {		
+			}
+			for (EventfulListener l : simpleListenersCopy) {
+				try {
 					l.change();
+				} catch (Exception e) {
+					OneLog.log(Level.WARNING, "Exception in EventfulListener", e);
 				}
 			}
 		});

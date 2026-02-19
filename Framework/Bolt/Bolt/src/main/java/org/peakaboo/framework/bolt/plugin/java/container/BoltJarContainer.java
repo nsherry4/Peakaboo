@@ -11,7 +11,7 @@ import java.util.ServiceLoader;
 import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
@@ -79,7 +79,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 					
 				} catch (Throwable e) {
 					plugins.addIssue(new BoltBrokenJarIssue<>(this, "Failed to load plugins"));
-					Bolt.logger().log(Level.WARNING, "Unable to load plugin", e);
+					OneLog.log(Level.WARNING, "Unable to load plugin", e);
 					empty = false;
 				}
 			}
@@ -90,7 +90,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 
 		} catch (Throwable e) {
 			plugins.addIssue(new BoltBrokenJarIssue<>(this, e.getMessage()));
-			Bolt.logger().log(Level.WARNING, "Unable to load plugins from jar", e);
+			OneLog.log(Level.WARNING, "Unable to load plugins from jar", e);
 		}
 		
 	}
@@ -139,9 +139,9 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 		if (classLoader != null) {
 			try {
 				classLoader.close();
-				Bolt.logger().log(Level.INFO, "Closed classloader for plugin container " + url.toString());
+				OneLog.log(Level.INFO, "Closed classloader for plugin container " + url.toString());
 			} catch (IOException e) {
-				Bolt.logger().log(Level.WARNING, "Failed to close classloader for plugin container " + url.toString(), e);
+				OneLog.log(Level.WARNING, "Failed to close classloader for plugin container " + url.toString(), e);
 			}
 			classLoader = null; // Clear reference after closing
 		}
@@ -155,13 +155,13 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 		try {
 			File f = new File(url.toURI());
 			Files.delete(f.toPath());
-			Bolt.logger().log(Level.INFO, "Deleted plugin container " + url.toString());
+			OneLog.log(Level.INFO, "Deleted plugin container " + url.toString());
 			return true;
 		} catch (IOException e) {
-			Bolt.logger().log(Level.WARNING, "Failed to delete plugin container " + url.toString(), e);
+			OneLog.log(Level.WARNING, "Failed to delete plugin container " + url.toString(), e);
 			return false;
 		} catch (URISyntaxException e) {
-			Bolt.logger().log(Level.WARNING, "Could not determine path of plugin container " + url.toString(), e);
+			OneLog.log(Level.WARNING, "Could not determine path of plugin container " + url.toString(), e);
 			return false;
 		}
 	}

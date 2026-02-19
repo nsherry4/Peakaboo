@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
 import org.peakaboo.calibration.SavedCalibrationSessionV1;
 import org.peakaboo.controller.plotter.data.SavedDataSessionV1;
 import org.peakaboo.controller.plotter.filtering.SavedFilteringSessionV1;
 import org.peakaboo.controller.plotter.fitting.SavedFittingSessionV1;
 import org.peakaboo.controller.plotter.view.SessionViewModel;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.druthers.DruthersStorable;
 
 /**
@@ -53,7 +53,7 @@ public class SavedSessionV1 implements DruthersStorable {
 		try {
 			plotController.calibration().loadSavedV1(this.calibration);
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load detector calibration session", e);
+			OneLog.log(Level.SEVERE, "Failed to load detector calibration session", e);
 		}
 		
 		

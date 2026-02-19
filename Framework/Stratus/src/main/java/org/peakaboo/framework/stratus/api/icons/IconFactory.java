@@ -9,7 +9,7 @@ import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 
-import org.peakaboo.framework.stratus.api.StratusLog;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentConfig;
 
 
@@ -77,7 +77,7 @@ public class IconFactory {
 		
 		URL url = IconFactory.class.getResource(location);
 		if (url == null) {
-			StratusLog.get().log(Level.FINE, "Failed to locate: " + path + iconDir + imageName + ".png");
+			OneLog.log(Level.FINE, "Failed to locate: " + path + iconDir + imageName + ".png");
 		}
 		return url;
 		

@@ -19,7 +19,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.ExtensionPointRegistry;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
@@ -205,7 +205,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
                     	if (interfaceNames.contains(plugin.category)) {
                     		filteredPlugins.add(plugin);
                     	} else {
-                    		PeakabooLog.get().log(Level.WARNING, "Plugin " + plugin.name + " is for unsupported catagory " + plugin.category);
+							OneLog.log(Level.WARNING, "Plugin " + plugin.name + " is for unsupported catagory " + plugin.category);
                     	}
                     }
                     plugins = filteredPlugins;

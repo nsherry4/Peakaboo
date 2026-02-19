@@ -3,17 +3,20 @@ package org.peakaboo.dataset.source.plugin;
 import java.io.File;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.PeakabooPluginRegistry;
 import org.peakaboo.dataset.source.plugin.plugins.PlainText;
 import org.peakaboo.dataset.source.plugin.plugins.SingleColumn;
 import org.peakaboo.dataset.source.plugin.plugins.universalhdf5.UniversalHDF5DataSource;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJarDirectoryLoader;
 import org.peakaboo.framework.bolt.plugin.java.loader.BoltJavaBuiltinLoader;
 
 public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin> {
 
 	private static DataSourceRegistry SYSTEM;
+	public static synchronized void init() {
+		init(null);
+	}
 	public static synchronized void init(File dataSourceDir) {
 		try {
 			if (SYSTEM == null) {
@@ -21,7 +24,7 @@ public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin>
 				SYSTEM.load();
 			}
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load data source plugins", e);
+			OneLog.log(Level.SEVERE, "Failed to load data source plugins", e);
 		}
 	}
 	public static DataSourceRegistry system() {
@@ -29,21 +32,29 @@ public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin>
 	}
 	
 	//--------------------------------
-	
-	public DataSourceRegistry(File dataSourceDir) {
-		super("datasource");
-		
-		addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class, dataSourceDir));
-		
-		var builtins = new BoltJavaBuiltinLoader<>(this, DataSourcePlugin.class);
-		builtins.load(PlainText.class);
-		builtins.load(SingleColumn.class);
-		builtins.load(UniversalHDF5DataSource.class);
 
-		// Used to test how Peakaboo handles conflicting data sources. This should normally be commented out
-		//builtins.load(YesToEverything.class, PluginDescriptor.WEIGHT_HIGHEST);
-		
-		addLoader(builtins);
+    public DataSourceRegistry() {
+        super("datasource");
+
+        var builtins = new BoltJavaBuiltinLoader<>(this, DataSourcePlugin.class);
+        builtins.load(PlainText.class);
+        builtins.load(SingleColumn.class);
+        builtins.load(UniversalHDF5DataSource.class);
+        // Used to test how Peakaboo handles conflicting data sources. This should normally be commented out
+        //builtins.load(YesToEverything.class, PluginDescriptor.WEIGHT_HIGHEST);
+        addLoader(builtins);
+
+        // Load plugins from within an AIO jar containing the app + plugins
+        // Disabled for android compatibility, and because this is unused in the desktop app
+        //addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class));
+
+    }
+
+	public DataSourceRegistry(File dataSourceDir) {
+		this();
+        if (dataSourceDir != null) {
+            addLoader(new BoltJarDirectoryLoader<>(this, DataSourcePlugin.class, dataSourceDir));
+        }
 	}
 	
 	@Override

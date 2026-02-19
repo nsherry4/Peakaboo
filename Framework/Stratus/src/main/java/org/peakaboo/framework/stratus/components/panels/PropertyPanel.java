@@ -20,8 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.framework.stratus.api.StratusLog;
 
 public class PropertyPanel extends JPanel {
 
@@ -165,7 +165,7 @@ public class PropertyPanel extends JPanel {
 				try {
 					Desktop.getDesktop().browse(url.toURI());
 				} catch (IOException | URISyntaxException e) {
-					StratusLog.get().log(Level.WARNING, "Failed to open link to " + url.toString(), e);
+					OneLog.log(Level.WARNING, "Failed to open link to " + url.toString(), e);
 				}
 			});
 			

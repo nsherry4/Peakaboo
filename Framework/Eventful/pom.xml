@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.peakaboo</groupId>
 		<artifactId>framework</artifactId>
-		<version>6.1-SNAPSHOT</version>
+		<version>6.2-SNAPSHOT</version>
 	</parent>
 	<groupId>org.peakaboo.framework</groupId>
 	<artifactId>eventful</artifactId>
@@ -25,6 +25,11 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.peakaboo.framework</groupId>
+            <artifactId>accent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 

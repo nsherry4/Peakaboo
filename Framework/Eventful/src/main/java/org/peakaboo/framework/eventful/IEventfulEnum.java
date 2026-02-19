@@ -1,25 +1,8 @@
 package org.peakaboo.framework.eventful;
 
-
-
-public interface IEventfulEnum<T extends Enum<T>>
-{
-
-	void addListener(EventfulEnumListener<T> l);
-
-
-	void removeListener(final EventfulEnumListener<T> l);
-
-
-	void removeAllListeners();
-
-
-	void updateListeners(final T message);
-
-
-	void addListener(EventfulListener l);
-
-
-	void removeListener(EventfulListener l);
-
-}
+/**
+ * Interface for enum-based event sources. Extends IEventfulType to inherit
+ * standard typed event functionality. Since EventfulEnumListener extends
+ * EventfulTypeListener, the methods from the parent interface work directly.
+ */
+public interface IEventfulEnum<T extends Enum<T>> extends IEventfulType<T> {}

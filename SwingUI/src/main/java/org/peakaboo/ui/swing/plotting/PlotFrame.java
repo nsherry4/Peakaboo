@@ -13,8 +13,8 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.Version;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
@@ -78,7 +78,7 @@ public class PlotFrame extends LiveFrame
                 try {
                     this.plot.close();
                 } catch (Exception e) {
-					PeakabooLog.get().log(Level.WARNING, "Failed to close plot with tab");
+					OneLog.log(Level.WARNING, "Failed to close plot with tab");
                 }
             }
 

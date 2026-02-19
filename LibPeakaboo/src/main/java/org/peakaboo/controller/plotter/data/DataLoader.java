@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.app.RecentSessions;
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.plotter.PlotController;
@@ -23,6 +22,7 @@ import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.plugin.DataSourceLookup;
 import org.peakaboo.dataset.source.plugin.DataSourcePlugin;
 import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.accent.AlphaNumericComparitor;
 import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
@@ -156,7 +156,7 @@ public abstract class DataLoader {
 				try {
 					dsGroup.deserialize(ctx.dataSource.settings);
 				} catch (RuntimeException e) {
-					PeakabooLog.get().log(Level.WARNING, "Failed to load saved Data Source parameters", e);
+					OneLog.log(Level.WARNING, "Failed to load saved Data Source parameters", e);
 				}
 			}
 			
@@ -265,7 +265,7 @@ public abstract class DataLoader {
 
 			
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to load session", e);
+			OneLog.log(Level.SEVERE, "Failed to load session", e);
 		}
 	}
 	
@@ -463,9 +463,9 @@ public abstract class DataLoader {
 		}
 		
 		if (result != null) {
-			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
+			OneLog.log(Level.WARNING, "Error Opening Data", new RuntimeException(result.message, result.problem));
 		} else {
-			PeakabooLog.get().log(Level.WARNING, "Error Opening Data", new RuntimeException("Dataset Read Result was null"));
+			OneLog.log(Level.WARNING, "Error Opening Data", new RuntimeException("Dataset Read Result was null"));
 		}
 		onFail(ctx, message);
 		

@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import org.peakaboo.framework.accent.AlphaNumericComparitor;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.tier.Tier;
 
 public class Version {
@@ -122,7 +123,7 @@ public class Version {
 			}
 		}
 		
-		PeakabooLog.get().log(Level.WARNING, "Could not check for new version from any known url");
+		OneLog.log(Level.WARNING, "Could not check for new version from any known url");
 		return false;
 		
 	}
@@ -157,14 +158,14 @@ public class Version {
 	 */
 	public static LocalDate getBuildDate() {
 		if (buildDate == null || buildDate.isEmpty()) {
-			PeakabooLog.get().log(Level.WARNING, "Build date is empty, using current date");
+			OneLog.log(Level.WARNING, "Build date is empty, using current date");
 			return LocalDate.now();
 		}
 
 		try {
 			return LocalDate.parse(buildDate, DateTimeFormatter.ISO_LOCAL_DATE);
 		} catch (DateTimeParseException e) {
-			PeakabooLog.get().log(Level.WARNING, "Could not parse build date '" + buildDate + "', using current date", e);
+			OneLog.log(Level.WARNING, "Could not parse build date '" + buildDate + "', using current date", e);
 			return LocalDate.now();
 		}
 	}

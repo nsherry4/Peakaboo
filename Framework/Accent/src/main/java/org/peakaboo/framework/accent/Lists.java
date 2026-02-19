@@ -1,4 +1,4 @@
-package org.peakaboo.framework.cyclops.util;
+package org.peakaboo.framework.accent;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-public class ListOps {
+public class Lists {
 
-	private ListOps() {}
+	private Lists() {}
 	
 	//////////////////////////////////////////////////////////
 	// UNIQUE

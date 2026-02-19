@@ -1,6 +1,7 @@
 package org.peakaboo.app;
 
 import org.peakaboo.dataset.encoder.QOXRF;
+import org.peakaboo.framework.accent.Platform;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 
@@ -16,7 +17,7 @@ public class PeakabooConfiguration {
 
 	private static MemorySize calcMemoryFootprint() {
 		
-		long maxHeap = Env.maxHeap();
+		long maxHeap = Platform.maxHeap();
 		
 		
 		if      (maxHeap < 512)   return MemorySize.TINY;

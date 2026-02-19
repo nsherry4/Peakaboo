@@ -3,7 +3,7 @@ package org.peakaboo.framework.bolt.plugin.java;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
@@ -61,7 +61,7 @@ public class BoltJavaPluginDescriptor<T extends BoltJavaPlugin> implements Plugi
 		}
 		catch (InstantiationException | IllegalAccessException e)
 		{
-			Bolt.logger().log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
+			OneLog.log(Level.WARNING, "Unable to create new plugin instance for " + implClass, e);
 			return Optional.empty();
 		}
 

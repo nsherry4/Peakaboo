@@ -5,8 +5,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.controller.plotter.PlotController;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 
@@ -103,7 +103,7 @@ public class UndoController extends EventfulBeacon
 			currentState = undoStack.pop();
 			plot.load(currentState.getState(), true);
 		} catch (DruthersLoadException e) {
-			PeakabooLog.get().log(Level.WARNING, "Could not load application state from undo history", e);
+			OneLog.log(Level.WARNING, "Could not load application state from undo history", e);
 		} finally {
 			working = false;
 		}
@@ -124,7 +124,7 @@ public class UndoController extends EventfulBeacon
 			currentState = redoStack.pop();
 			plot.load(currentState.getState(), true);
 		} catch (DruthersLoadException e) {
-			PeakabooLog.get().log(Level.WARNING, "Could not load application state from undo history", e);
+			OneLog.log(Level.WARNING, "Could not load application state from undo history", e);
 		} finally {
 			working = false;
 		}

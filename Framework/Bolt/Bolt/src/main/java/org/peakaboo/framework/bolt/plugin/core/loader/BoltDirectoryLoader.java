@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 
-import org.peakaboo.framework.bolt.Bolt;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.container.BoltContainer;
 import org.peakaboo.framework.bolt.plugin.core.exceptions.BoltImportException;
@@ -59,7 +59,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 					.filter(filter::test)
 					.toList();
 		} catch (IOException e) {
-			Bolt.logger().log(Level.WARNING, "Cannot list managed plugin directory contents", e);
+			OneLog.log(Level.WARNING, "Cannot list managed plugin directory contents", e);
 		}
 		return new ArrayList<>();
 	}	
@@ -115,7 +115,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 				build(importedFile(file)).delete();
 			} else {
 				String msg = "Importing " + file.getAbsolutePath() + " failed, file already exists";
-				Bolt.logger().log(Level.INFO, msg);
+				OneLog.log(msg);
 				throw new BoltImportException(msg);		
 			}
 		}
@@ -133,7 +133,7 @@ public abstract class BoltDirectoryLoader<T extends BoltPlugin> implements BoltM
 			Files.copy(file.toPath(), importedFile(file).toPath());
 		} catch (IOException e) {
 			String msg = "Importing " + file.getAbsolutePath() + " failed";
-			Bolt.logger().log(Level.WARNING, msg, e);
+			OneLog.log(Level.WARNING, msg, e);
 			throw new BoltImportException(msg, e);
 		}
 		

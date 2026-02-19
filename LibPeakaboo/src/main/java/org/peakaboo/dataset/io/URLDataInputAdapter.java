@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.yaml.snakeyaml.Yaml;
 
 public class URLDataInputAdapter implements DataInputAdapter {
@@ -45,7 +45,7 @@ public class URLDataInputAdapter implements DataInputAdapter {
 			try {
 				Files.delete(file);
 			} catch (IOException e) {
-				PeakabooLog.get().log(Level.WARNING, "Failed to close resource for " + name, e);
+				OneLog.log(Level.WARNING, "Failed to close resource for " + name, e);
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public class URLDataInputAdapter implements DataInputAdapter {
 			try {
 				Files.delete(p);
 			} catch (IOException e) {
-				PeakabooLog.get().log(Level.WARNING, "Failed to delete temp file", e);
+				OneLog.log(Level.WARNING, "Failed to delete temp file", e);
 			}
 		}));
 

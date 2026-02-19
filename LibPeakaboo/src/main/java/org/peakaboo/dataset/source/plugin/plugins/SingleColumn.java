@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
@@ -21,6 +21,7 @@ import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
 import org.peakaboo.dataset.source.model.components.scandata.PipelineScanData;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.dataset.source.plugin.AbstractDataSource;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.cyclops.SparsedList;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
@@ -76,14 +77,14 @@ public class SingleColumn extends AbstractDataSource {
 				try {
 					//exactly 1 file
 					if (files.size() != 1) {
-						PeakabooLog.get().fine("Expected exactly one file");
+						OneLog.log(Level.FINE, "Expected exactly one file");
 						return FileFormatCompatibility.NO;
 					}
 					DataInputAdapter filename = files.get(0);
 					
 					//no larger than 1MB
 					if (filename.size().orElse(0l) > 1048576l) {
-						PeakabooLog.get().fine("Expected a file less than 1MB");
+						OneLog.log(Level.FINE, "Expected a file less than 1MB");
 						return FileFormatCompatibility.NO;
 					}
 					
@@ -93,12 +94,12 @@ public class SingleColumn extends AbstractDataSource {
 					if (test(lines)) {
 						return FileFormatCompatibility.MAYBE_BY_CONTENTS;
 					} else {
-						PeakabooLog.get().fine("File did not meet expected structure");
+						OneLog.log(Level.FINE, "File did not meet expected structure");
 						return FileFormatCompatibility.NO;
 					}
 					
 				} catch (IOException e) {
-					PeakabooLog.get().fine("An error occurred while reading this file: " + e.getMessage());
+					OneLog.log(Level.FINE, "An error occurred while reading this file: " + e.getMessage());
 					return FileFormatCompatibility.NO;
 				}
 			}

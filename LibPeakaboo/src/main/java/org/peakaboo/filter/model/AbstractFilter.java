@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
@@ -71,7 +71,7 @@ public abstract class AbstractFilter implements Serializable, Filter {
 		}
 		catch(Throwable e)
 		{
-			PeakabooLog.get().log(Level.SEVERE, "Error applying filter " + this.getClass().getSimpleName(), e);
+			OneLog.log(Level.SEVERE, "Error applying filter " + this.getClass().getSimpleName(), e);
 			return data;
 		}
 		

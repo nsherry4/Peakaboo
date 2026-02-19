@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 
 import org.peakaboo.app.Version.ReleaseType;
+import org.peakaboo.framework.accent.log.OneLog;
 
 /**
  * Handles build expiry checking for development and release candidate builds.
@@ -66,16 +67,16 @@ public class BuildExpiry {
 			try {
 				LocalDateTime time = fetchTimeFromApi(client, apiUrl);
 				if (time != null) {
-					PeakabooLog.get().log(Level.INFO, "Fetched time from internet source: " + apiUrl);
+					OneLog.log(Level.INFO, "Fetched time from internet source: " + apiUrl);
 					return new TimeResult(time, apiUrl, true);
 				}
 			} catch (Exception e) {
-				PeakabooLog.get().log(Level.WARNING, "Failed to fetch time from " + apiUrl + ": " + e.getMessage());
+				OneLog.log(Level.WARNING, "Failed to fetch time from " + apiUrl + ": " + e.getMessage());
 			}
 		}
 
 		// Fall back to local system time
-		PeakabooLog.get().log(Level.WARNING, "Could not fetch time from internet, using local system time");
+		OneLog.log(Level.WARNING, "Could not fetch time from internet, using local system time");
 		LocalDateTime localTime = LocalDateTime.now();
 		return new TimeResult(localTime, "local system time", false);
 	}
@@ -178,7 +179,7 @@ public class BuildExpiry {
 		// Check for environment variable override
 		String disableExpiry = System.getenv(ENV_DISABLE_EXPIRY);
 		if (disableExpiry != null && (disableExpiry.equalsIgnoreCase("true") || disableExpiry.equals("1"))) {
-			PeakabooLog.get().log(Level.INFO, "Build expiry check disabled by " + ENV_DISABLE_EXPIRY + " environment variable");
+			OneLog.log(Level.INFO, "Build expiry check disabled by " + ENV_DISABLE_EXPIRY + " environment variable");
 			return false;
 		}
 

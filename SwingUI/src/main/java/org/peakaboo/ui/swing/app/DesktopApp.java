@@ -7,10 +7,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 
-import org.peakaboo.app.Env;
-import org.peakaboo.app.PeakabooLog;
+import org.peakaboo.framework.accent.Platform;
 import org.peakaboo.app.Version;
-
+import org.peakaboo.framework.accent.log.OneLog;
 
 
 public class DesktopApp {
@@ -38,14 +37,14 @@ public class DesktopApp {
 		
 		final String ERROR = "Failed to Open Document";
 		
-		switch (Env.getOS()) {
+		switch (Platform.getOS()) {
 			case WINDOWS:
 				try {
 					//proper way of launching a webpage viewer
 					Runtime.getRuntime().exec("start " + location);
 				}
 				catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, ERROR, e);
+					OneLog.log(Level.SEVERE, ERROR, e);
 				}
 				break;
 				
@@ -56,7 +55,7 @@ public class DesktopApp {
 					Runtime.getRuntime().exec("open " + location);
 				}
 				catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, ERROR, e);
+					OneLog.log(Level.SEVERE, ERROR, e);
 				}
 				break;
 			
@@ -68,7 +67,7 @@ public class DesktopApp {
 					//proper way of launching a webpage viewer
 					Runtime.getRuntime().exec("xdg-open " + location);
 				} catch (IOException e) {
-					PeakabooLog.get().log(Level.SEVERE, ERROR, e);
+					OneLog.log(Level.SEVERE, ERROR, e);
 				}
 				break;
 
@@ -78,10 +77,10 @@ public class DesktopApp {
 	}
 	
 	public static File appDir() {
-		return Env.appDir(Version.PROGRAM_NAME);
+		return Platform.appDir(Version.PROGRAM_NAME);
 	}
 	public static File appDir(String subdir) {
-		return Env.appDirEntry(Version.PROGRAM_NAME, subdir);
+		return Platform.appDirEntry(Version.PROGRAM_NAME, subdir);
 	}
 	
 }

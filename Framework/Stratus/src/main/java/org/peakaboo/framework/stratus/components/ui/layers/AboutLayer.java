@@ -48,12 +48,10 @@ public class AboutLayer extends HeaderLayer {
 		Component credits = creditsPanel(contents);
 		Component licence = licencePanel(contents);
 			
-		HeaderTabBuilder tb = new HeaderTabBuilder();
-		tb.addTab("About", about);
-		tb.addTab("Credits", credits);
-		tb.addTab("Licence", licence);
-		
-		
+		HeaderTabBuilder tb = new HeaderTabBuilder()
+				.withTab("About", about)
+				.withTab("Credits", credits)
+				.withTab("Licence", licence);
 		
 		Component body = tb.getBody();
 		body.setPreferredSize(new Dimension(700, 330));
@@ -80,7 +78,9 @@ public class AboutLayer extends HeaderLayer {
 	}
 	
 	private static Component licencePanel(Contents contents) {
-		return Stratus.scrolled(new JTextLabel(contents.licence));
+		JTextLabel licenceText = new JTextLabel(contents.licence);
+		licenceText.setCaretPosition(0);
+		return Stratus.scrolled(licenceText);
 	}
 
 	public static JPanel aboutPanel(Contents contents) {

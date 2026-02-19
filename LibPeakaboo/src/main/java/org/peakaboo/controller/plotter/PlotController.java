@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.peakaboo.app.PeakabooLog;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
 import org.peakaboo.controller.plotter.data.DataController;
@@ -32,6 +31,7 @@ import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
@@ -146,7 +146,7 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 		try {
 			return Optional.of(DruthersSerializer.deserialize(yaml, SavedSessionV1.class));
 		} catch (Exception e) {
-			PeakabooLog.get().log(Level.WARNING, "Failed to load saved session", e);
+			OneLog.log(Level.WARNING, "Failed to load saved session", e);
 			return Optional.empty();
 		}
 	}
@@ -261,7 +261,7 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
 			writer.write(spectrum.toString(", ") + "\n");
 		} catch (IOException e) {
-			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
+			OneLog.log(Level.SEVERE, "Failed to save fitted data", e);
 		}
 	}
 	
@@ -292,7 +292,7 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 					}
 				}
 			} catch (Exception e) { 
-				PeakabooLog.get().log(Level.SEVERE, "Failed to save fitted data", e);
+				OneLog.log(Level.SEVERE, "Failed to save fitted data", e);
 				execset.aborted();
 			}
 			
@@ -348,7 +348,7 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 		}
 		catch (IOException e)
 		{
-			PeakabooLog.get().log(Level.SEVERE, "Failed to save fitting information", e);
+			OneLog.log(Level.SEVERE, "Failed to save fitting information", e);
 		}
 	}
 		

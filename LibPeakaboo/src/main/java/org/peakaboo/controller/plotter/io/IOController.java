@@ -2,7 +2,7 @@ package org.peakaboo.controller.plotter.io;
 
 import java.io.File;
 
-import org.peakaboo.app.Env;
+import org.peakaboo.framework.accent.Platform;
 import org.peakaboo.framework.eventful.EventfulBeacon;
 
 public class IOController extends EventfulBeacon {
@@ -11,7 +11,7 @@ public class IOController extends EventfulBeacon {
 	private File lastFolder;
 	
 	public IOController() {
-		lastFolder = Env.homeDirectory();
+		lastFolder = Platform.homeDirectory();
 		sessionFile = null;
 	}
 	

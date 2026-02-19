@@ -1,9 +1,13 @@
 package org.peakaboo.framework.eventful;
 
 
+import org.peakaboo.framework.accent.log.OneLog;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 
 /**
@@ -36,8 +40,9 @@ public class EventfulBeacon implements IEventfulBeacon
 
 
 
-	//Done on the event thread on purpose
-	public synchronized void removeListener(final EventfulListener l)
+	// Done on the event thread on purpose to ensure listeners receive all
+	// events queued before removal (UI thread queue provides ordering guarantee)
+	public void removeListener(final EventfulListener l)
 	{
 		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulBeacon.this) { 
@@ -46,8 +51,9 @@ public class EventfulBeacon implements IEventfulBeacon
 		});
 	}
 
-	//Done on the event thread on purpose
-	public synchronized void removeAllListeners()
+	// Done on the event thread on purpose to ensure listeners receive all
+	// events queued before removal (UI thread queue provides ordering guarantee)
+	public void removeAllListeners()
 	{
 		getUIThreadRunner().accept(() -> { 
 			synchronized(EventfulBeacon.this) { 
@@ -77,13 +83,19 @@ public class EventfulBeacon implements IEventfulBeacon
 	 */
 	public void updateListeners()
 	{
+		List<EventfulListener> listenersCopy;
 
-		if (listeners.isEmpty()) return;
+		synchronized(this) {
+			if (listeners.isEmpty()) return;
+			listenersCopy = new ArrayList<>(listeners);
+		}
 
-		getUIThreadRunner().accept(() -> { 
-			synchronized(EventfulBeacon.this) {
-				for (EventfulListener l : listeners) {
+		getUIThreadRunner().accept(() -> {
+			for (EventfulListener l : listenersCopy) {
+				try {
 					l.change();
+				} catch (Exception e) {
+					OneLog.log(Level.WARNING, "Exception in EventfulListener", e);
 				}
 			}
 		});
