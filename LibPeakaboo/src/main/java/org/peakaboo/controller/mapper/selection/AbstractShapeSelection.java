@@ -3,76 +3,47 @@ package org.peakaboo.controller.mapper.selection;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.peakaboo.controller.mapper.MappingController;
-import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.accent.Coord;
-import org.peakaboo.framework.cyclops.GridPerspective;
 import org.peakaboo.framework.accent.numeric.IntPair;
+import org.peakaboo.framework.cyclops.GridPerspective;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
-class ShapeSelection extends AbstractSelection {
+/**
+ * Abstract base class for shape-based selections that use edge tracing
+ * and flood-fill algorithms. Provides shared infrastructure for both
+ * freehand drawing and polygon vertex-based selections.
+ */
+public abstract class AbstractShapeSelection extends AbstractSelection {
 
-	private IntArrayList points = new IntArrayList();
-	
-	private static final int EMPTY = 0;
-	private static final int INSIDE = 1;
-	private static final int OUTSIDE = 2;
-	
-	
-	public ShapeSelection(MappingController mappingController) {
-		super(mappingController);
+	protected IntArrayList points = new IntArrayList();
+
+	protected static final int EMPTY = 0;
+	protected static final int INSIDE = 1;
+	protected static final int OUTSIDE = 2;
+
+	protected AbstractShapeSelection(MappingController map) {
+		super(map);
 	}
 
-	@Override
-	public IntArrayList startDragSelection(Coord<Integer> point) {
+	/**
+	 * Reset the selection state, clearing all accumulated points.
+	 * Subclasses should override to clear their specific state and call super.reset().
+	 */
+	public void reset() {
 		points.clear();
-		return addDragSelection(point);
 	}
 
-	@Override
-	public IntArrayList addDragSelection(Coord<Integer> point) {
-		point = bounded(point);
+	/**
+	 * Fill the interior of a traced shape using flood-fill algorithm.
+	 * Assumes points list contains the edge points of the shape.
+	 */
+	protected void fillTrace() {
 		GridPerspective<Float> grid = grid();
-		int index = grid.getIndexFromXY(point.x, point.y);
-		
-		// if there are already points in this trace, we want to make sure that the
-		// points are all contiguous. If a mouse is moving very fast, we might not get
-		// all of the points, so we interpolate
-		if (!points.isEmpty()) {
-			//check if the last point is touching
-			int lastIndex = points.getInt(points.size()-1);
-			IntPair lastPoint = grid.getXYFromIndex(lastIndex);
-			if (Math.abs(lastPoint.first - point.x) > 1 || Math.abs(lastPoint.second - point.y) > 1) {
-				interpolate(lastIndex, index, grid);
-			}
-		}
-		
-		if (!points.contains(index)) {
-			points.add(index);
-		}
-		return points;
-	}
 
-	public IntArrayList releaseDragSelection(Coord<Integer> point) {
-		//add the last point
-		addDragSelection(point);
-		
-		//interpolate between the first and last points
-		interpolate(points.getInt(0), points.getInt(points.size()-1), grid());
-		
-		//fill in the traced area now that the user is done making the selection
-		fillTrace();
-		
-		return points;
-	}
-	
-	private void fillTrace() {
-		GridPerspective<Float> grid = grid();
-		
 		//we establish some pixels which are definitely outside the shape and then 'flood-fill' the remainder by adjacency
 		Set<Integer> outside = new HashSet<>();
 		Set<Integer> inside = new HashSet<>();
@@ -122,18 +93,18 @@ class ShapeSelection extends AbstractSelection {
 		}
 		//set all inside points
 		for (int i : points) {
-			values.set(i, INSIDE); 
+			values.set(i, INSIDE);
 		}
 		//set all outside points
 		for (int i : outside) {
 			values.set(i, OUTSIDE);
 		}
-		
+
 		//then floodfill the values matrix from each original outside point
 		Deque<Integer> stack = new ArrayDeque<>();
 		stack.addAll(outside);
 		floodFill(values, stack, grid);
-		
+
 		//read the value matrix and use it to build a new points list
 		points.clear();
 		for (int i = 0; i < grid.width*grid.height; i++) {
@@ -142,47 +113,53 @@ class ShapeSelection extends AbstractSelection {
 			}
 		}
 	}
-	
-	private void floodFill(IntArrayList values, Deque<Integer> stack, GridPerspective<Float> grid) {	
-		
+
+	/**
+	 * Recursive flood-fill implementation using a stack.
+	 */
+	private void floodFill(IntArrayList values, Deque<Integer> stack, GridPerspective<Float> grid) {
+
 		/*
 		 * We track all pixels we've visited to or are going to visit. This ensures we
 		 * only visit each pixel once and provides a fast 'contains' check so that we
 		 * don't put the same pixel in the stack more than once.
 		 */
 		Set<Integer> visiting = new HashSet<>(stack);
-		
+
 		while (!stack.isEmpty()) {
 			int index = stack.pop();
 			values.set(index, OUTSIDE);
 
 			//recurse
 
-			int[] neighbours = new int[] { 
-					grid.north(index), 
-					grid.south(index), 
-					grid.east(index), 
-					grid.west(index) 
+			int[] neighbours = new int[] {
+					grid.north(index),
+					grid.south(index),
+					grid.east(index),
+					grid.west(index)
 				};
-			
+
 			for (int i : neighbours) {
-				if (i >= 0 && values.getInt(i) == EMPTY && !visiting.contains(i)) { 
+				if (i >= 0 && values.getInt(i) == EMPTY && !visiting.contains(i)) {
 					stack.add(i);
 					visiting.add(i);
 				}
 			}
-						
+
 		}
-		
-	
+
+
 	}
-	
-	
-	//Given two trace points, interpolate any missing line points between them
-	private void interpolate(int i1, int i2, GridPerspective<Float> grid) {
+
+	/**
+	 * Interpolate missing points between two indices using Bresenham-style algorithm.
+	 * Ensures no gaps in the edge trace even when mouse moves quickly.
+	 * Returns the interpolated points; callers decide what to do with them.
+	 */
+	protected static IntArrayList interpolate(int i1, int i2, GridPerspective<Float> grid) {
 		IntPair p1 = grid.getXYFromIndex(i1);
 		IntPair p2 = grid.getXYFromIndex(i2);
-				
+
 		int x1 = p1.first;
 		int y1 = p1.second;
 		int x2 = p2.first;
@@ -190,13 +167,13 @@ class ShapeSelection extends AbstractSelection {
 
 		float distanceX = x2 - x1;
 		float distanceY = y2 - y1;
-		
-		
-		
+
+
+
 		/*
 		 * Calculate step count required to not miss any pixels
 		 */
-		
+
 		//absolute value of how much we should advance along the line to get all the pixels
 		float advance;
 		if (distanceX == 0 || distanceY == 0) {
@@ -209,42 +186,49 @@ class ShapeSelection extends AbstractSelection {
 		//how long the line between the two points is: a^2 = b^2 + c^2
 		float distance = (float) Math.sqrt(distanceY*distanceY + distanceX*distanceX);
 		//how many advance steps will we need to cover the distance
-		float steps = distance / advance;		
-		
+		float steps = distance / advance;
+
 		//the amount to advance x and y by each step
 		float advanceX = distanceX / steps;
 		float advanceY = distanceY / steps;
-		
+
 		//advance along the line and add all the pixels we encounter
+		IntArrayList result = new IntArrayList();
 		float x = x1;
 		float y = y1;
 		int ix;
 		int iy;
 		int index;
 		for (float pos = 0f; pos < distance; pos += advance) {
-			
+
 			ix = Math.round(x);
 			iy = Math.round(y);
 			index = grid.getIndexFromXY(ix, iy);
-			if (!points.contains(index)) {
-				points.add(index);
+			if (!result.contains(index)) {
+				result.add(index);
 			}
-			
+
 			x += advanceX;
 			y += advanceY;
 		}
-		
-		
+
+		return result;
 	}
-	
-	private GridPerspective<Float> grid() {
+
+	/**
+	 * Create a grid perspective for the current map size.
+	 */
+	protected GridPerspective<Float> grid() {
 		Coord<Integer> mapSize = mapSize();
 		return new GridPerspective<>(mapSize.x, mapSize.y, 0f);
 	}
-	
-	private Coord<Integer> bounded(Coord<Integer> point) {
+
+	/**
+	 * Clamp a coordinate point to valid map bounds.
+	 */
+	protected Coord<Integer> bounded(Coord<Integer> point) {
 		Coord<Integer> trimmed = new Coord<>(point);
-		
+
 		Coord<Integer> size = mapSize();
 		int width = size.x;
 		int height = size.y;
@@ -254,20 +238,7 @@ class ShapeSelection extends AbstractSelection {
 		if (point.x < 0) trimmed.x = 0;
 		if (point.y < 0) trimmed.y = 0;
 
-		return trimmed;		
+		return trimmed;
 	}
-
-	@Override
-	public Optional<Group> getParameters() {
-		return Optional.empty();
-	}
-
-
-	@Override
-	public IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
-		points.clear();
-		return points;
-	}
-
 
 }

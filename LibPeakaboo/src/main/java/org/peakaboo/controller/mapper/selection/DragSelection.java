@@ -181,7 +181,7 @@ class DragSelection extends AbstractSelection {
 	}
 
 	@Override
-	public IntArrayList selectPoint(Coord<Integer> clickedAt, boolean singleSelect) {
+	public IntArrayList selectPoint(Coord<Integer> clickedAt) {
 		start = null;
 		end = null;
 		return IntArrayList.of();
