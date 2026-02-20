@@ -266,6 +266,9 @@ public abstract class DataLoader {
 			
 		} catch (IOException e) {
 			OneLog.log(Level.SEVERE, "Failed to load session", e);
+		} catch (IllegalArgumentException e) {
+			OneLog.log(Level.SEVERE, "Session contained unrecognised file path", e);
+			onSessionFailure();
 		}
 	}
 	
@@ -290,10 +293,6 @@ public abstract class DataLoader {
 		//Verify all paths exist
 		boolean sessionPathsExist = true;
 		for (DataInputAdapter d : sessionPaths) {
-			if (d == null) {
-				sessionPathsExist = false;
-				break;
-			}
 			sessionPathsExist &= d.exists();
 		}
 		
@@ -351,7 +350,7 @@ public abstract class DataLoader {
 		
 		List<DataInputAdapter> currentPaths = controller.data().getDataPaths();
 		List<DataInputAdapter> sessionPaths = session.data.filesAsDataPaths();
-		
+
 		//Verify all paths exist
 		boolean sessionPathsExist = true;
 		for (DataInputAdapter d : sessionPaths) {
