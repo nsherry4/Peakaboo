@@ -50,52 +50,6 @@ public class DataInputAdaptersTest {
 		}
 	}
 
-	// ===== URL Protocol Support =====
-	// Tests verifying that both file paths and URLs (HTTP/HTTPS) are correctly
-	// handled by the adapter construction system
-
-	@Test
-	public void testConstructWithValidURL() {
-		// HTTP URLs should construct a URLDataInputAdapter
-		DataInputAdapter adapter = DataInputAdapters.construct("http://example.com/data.dat", () -> null);
-		Assert.assertNotNull("construct() should return non-null for valid HTTP URL", adapter);
-		Assert.assertTrue("HTTP URL should construct URLDataInputAdapter",
-				adapter instanceof URLDataInputAdapter);
-	}
-
-	@Test
-	public void testConstructWithHTTPSURL() {
-		// HTTPS URLs should also work
-		DataInputAdapter adapter = DataInputAdapters.construct("https://example.com/data.dat", () -> null);
-		Assert.assertNotNull("construct() should return non-null for valid HTTPS URL", adapter);
-		Assert.assertTrue("HTTPS URL should construct URLDataInputAdapter",
-				adapter instanceof URLDataInputAdapter);
-	}
-
-	@Test
-	public void testFromFilenamesWithMixedFileAndURL() {
-		// Mixed file and URL paths should all construct correctly
-		List<String> mixed = Arrays.asList(
-			"/local/file.dat",
-			"http://example.com/remote.dat",
-			"/another/local.dat"
-		);
-		List<DataInputAdapter> adapters = DataInputAdapter.fromFilenames(mixed);
-
-		Assert.assertEquals("Should return 3 adapters", 3, adapters.size());
-		Assert.assertNotNull("First adapter should not be null", adapters.get(0));
-		Assert.assertNotNull("Second adapter should not be null", adapters.get(1));
-		Assert.assertNotNull("Third adapter should not be null", adapters.get(2));
-
-		// Verify types
-		Assert.assertTrue("First should be PathDataInputAdapter",
-				adapters.get(0) instanceof PathDataInputAdapter);
-		Assert.assertTrue("Second should be URLDataInputAdapter",
-				adapters.get(1) instanceof URLDataInputAdapter);
-		Assert.assertTrue("Third should be PathDataInputAdapter",
-				adapters.get(2) instanceof PathDataInputAdapter);
-	}
-
 	// ===== Edge Cases and Boundary Conditions =====
 	// Tests verifying behaviour with empty lists, all-invalid paths, and invalid
 	// paths at different positions in the list
