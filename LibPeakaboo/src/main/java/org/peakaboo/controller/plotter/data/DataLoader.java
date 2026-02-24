@@ -265,9 +265,10 @@ public abstract class DataLoader {
 
 			
 		} catch (IOException e) {
-			OneLog.log(Level.SEVERE, "Failed to load session", e);
+			OneLog.log(Level.WARNING, "Failed to load session", e);
+			onSessionFailure();
 		} catch (IllegalArgumentException e) {
-			OneLog.log(Level.SEVERE, "Session contained unrecognised file path", e);
+			OneLog.log(Level.WARNING, "Session contained unrecognised file path", e);
 			onSessionFailure();
 		}
 	}
