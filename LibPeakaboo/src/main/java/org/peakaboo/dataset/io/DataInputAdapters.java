@@ -31,8 +31,8 @@ public class DataInputAdapters {
 				return addressConstructors.get(matcher).apply(address, downloadDir);
 			}
 		}
-		return null;
-		
+		throw new IllegalArgumentException("No handler registered for file path: " + address);
+
 	}
 		
 	public static Path createDownloadDirectory() {
