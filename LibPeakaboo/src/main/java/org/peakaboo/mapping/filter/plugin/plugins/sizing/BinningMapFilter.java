@@ -58,7 +58,11 @@ public class BinningMapFilter extends AbstractMapFilter {
 	}
 
 	private AreaMap bin(AreaMap source) {
-		
+
+		if (source.getSize().x < 2 || source.getSize().y < 2) {
+			return new AreaMap(source);
+		}
+
 		GridPerspective<Float> originalGrid = new GridPerspective<>(source.getSize().x, source.getSize().y, 0f);
 		SpectrumView originalData = source.getData();
 		
