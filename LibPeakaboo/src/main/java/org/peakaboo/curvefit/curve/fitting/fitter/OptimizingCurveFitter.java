@@ -32,11 +32,15 @@ public class OptimizingCurveFitter implements CurveFitter {
 
 		Spectrum data = (Spectrum) ctx.data();
 		float[] d = data.backingArray();
-		
-		UnivariateFunction score = scoringFunction(data, ctx.curve());
-		
-		double guess = 0;
+
 		int[] channels = ctx.curve().getIntenseChannelList();
+		if (channels.length == 0) {
+			return 0f;
+		}
+
+		UnivariateFunction score = scoringFunction(data, ctx.curve());
+
+		double guess = 0;
 		for (int channel : channels) {
 			guess = Math.max(guess, d[channel]);
 		}
