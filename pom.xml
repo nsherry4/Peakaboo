@@ -13,6 +13,7 @@
     <module>Framework</module>
     <module>LibPeakaboo</module>
     <module>SwingUI</module>
+	<module>Tooling</module>
   </modules>
  
  

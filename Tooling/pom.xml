@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.peakaboo</groupId>
 		<artifactId>peakaboo</artifactId>
-		<version>6.1-SNAPSHOT</version>
+		<version>6.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>peakaboo-tooling</artifactId>
 	<packaging>jar</packaging>
@@ -30,6 +30,11 @@
 			<artifactId>libpeakaboo</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>4.7.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -47,23 +52,16 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
-					<outputDirectory>
-						${project.basedir}/../
-					</outputDirectory>
-					<finalName>Peakaboo-${project.version}</finalName>
+					<finalName>peakaboo-tooling-${project.version}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
-							<mainClass>org.peakaboo.ui.swing.Peakaboo</mainClass>
+							<mainClass>org.peakaboo.tooling.PluginMetadataBuilder</mainClass>
 						</manifest>
-						<manifestEntries>
-							<Add-Opens>java.base/java.lang java.base/java.math java.base/java.util java.base/java.util.concurrent java.base/java.net java.base/java.text</Add-Opens>
-						</manifestEntries>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-
 				</configuration>
 				<executions>
 					<execution>
