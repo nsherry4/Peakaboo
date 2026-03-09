@@ -34,9 +34,6 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.table.PeakTable;
-import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
-import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
-import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
@@ -51,7 +48,6 @@ import org.peakaboo.framework.stratus.laf.StratusLookAndFeel;
 import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 import org.peakaboo.framework.stratus.laf.theme.DuskTheme;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
-import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.CrashHandler;
 import org.peakaboo.ui.swing.app.DesktopApp;
@@ -326,17 +322,17 @@ public class Peakaboo {
 	}
 
 	private static void initPluginSystem() {
-		FilterRegistry.init(DesktopApp.appDir("Plugins/Filter"));
-		MapFilterRegistry.init(DesktopApp.appDir("Plugins/MapFilter"));
-		DataSourceRegistry.init(DesktopApp.appDir("Plugins/DataSource"));
-		DataSinkRegistry.init(DesktopApp.appDir("Plugins/DataSink"));
+		// Initialize "informal" plugin registries. We use the registry format
+		// to manage different impls, but they are not a public extension point
+		// supporting external JAR plugins.
 		CurveFitterRegistry.init();
 		FittingSolverRegistry.init();
 		ChannelViewModeRegistry.init();
 		FittingFunctionRegistry.init();
-		
-		//Any additional plugin types provided per-tier
-		Tier.provider().initializePlugins();
+
+		// Initialize "real" plugin registries. These do support loading external
+		// JAR plugins, so we instruct them to load plugins from the given directory.
+		Tier.provider().initializePlugins(DesktopApp.appDir("Plugins"));
 	}
 
 

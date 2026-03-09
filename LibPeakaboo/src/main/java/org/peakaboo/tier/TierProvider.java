@@ -1,5 +1,6 @@
 package org.peakaboo.tier;
 
+import java.io.File;
 import java.util.List;
 
 import org.peakaboo.calibration.DetectorProfile;
@@ -20,7 +21,7 @@ public interface TierProvider {
 	public DetectorProfile createDetectorProfile();
 	
 	// Plugins
-	public void initializePlugins();
+	public void initializePlugins(File pluginsRoot);
 	public ExtensionPointRegistry getExtensionPoints();
 	public <V, C> List<TierUIAction<V, C>> uiComponents(String location);
 	public AggregatePluginRepository getPluginRepositories();

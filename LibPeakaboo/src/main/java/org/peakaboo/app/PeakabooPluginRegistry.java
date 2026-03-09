@@ -31,5 +31,9 @@ public abstract class PeakabooPluginRegistry<P extends BoltPlugin> extends BoltP
 			);
 	}
 
+	public String getSlugName() {
+		return getInterfaceName().replace(" ", "");
+	}
+
 
 }

@@ -36,10 +36,11 @@ public class MapFilterRegistry extends PeakabooPluginRegistry<MapFilterPlugin> {
 	public static synchronized void init() {
 		init(null);
 	}
-	public static void init(File filterDir) {
+	public static void init(File pluginsRoot) {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new MapFilterRegistry(filterDir);
+				File dir = pluginsRoot != null ? new File(pluginsRoot, "MapFilter") : null;
+				SYSTEM = new MapFilterRegistry(dir);
 				SYSTEM.load();
 			}
 		} catch (Exception e) {

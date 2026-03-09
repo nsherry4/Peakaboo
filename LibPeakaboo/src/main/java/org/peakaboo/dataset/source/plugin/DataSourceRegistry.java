@@ -17,10 +17,11 @@ public class DataSourceRegistry extends PeakabooPluginRegistry<DataSourcePlugin>
 	public static synchronized void init() {
 		init(null);
 	}
-	public static synchronized void init(File dataSourceDir) {
+	public static synchronized void init(File pluginsRoot) {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new DataSourceRegistry(dataSourceDir);
+				File dir = pluginsRoot != null ? new File(pluginsRoot, "DataSource") : null;
+				SYSTEM = new DataSourceRegistry(dir);
 				SYSTEM.load();
 			}
 		} catch (Exception e) {

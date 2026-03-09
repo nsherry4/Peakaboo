@@ -1,5 +1,6 @@
 package org.peakaboo.tier;
 
+import java.io.File;
 import java.util.List;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
@@ -32,7 +33,12 @@ public class BasicTierProvider implements TierProvider {
 	}
 	
 	@Override
-	public void initializePlugins() {
+	public void initializePlugins(File pluginsRoot) {
+		DataSourceRegistry.init(pluginsRoot);
+		DataSinkRegistry.init(pluginsRoot);
+		FilterRegistry.init(pluginsRoot);
+		MapFilterRegistry.init(pluginsRoot);
+
 		extensionPoints = new ExtensionPointRegistry();
 		extensionPoints.addRegistry(DataSourceRegistry.system());
 		extensionPoints.addRegistry(DataSinkRegistry.system());

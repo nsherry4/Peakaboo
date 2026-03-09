@@ -38,10 +38,11 @@ public class FilterRegistry extends PeakabooPluginRegistry<Filter> {
 	public static synchronized void init() {
 		init(null);
 	}
-	public static void init(File filterDir) {
+	public static void init(File pluginsRoot) {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new FilterRegistry(filterDir);
+				File dir = pluginsRoot != null ? new File(pluginsRoot, "Filter") : null;
+				SYSTEM = new FilterRegistry(dir);
 				SYSTEM.load();
 			}
 		} catch (Exception e) {

@@ -15,10 +15,11 @@ public class DataSinkRegistry extends PeakabooPluginRegistry<DataSinkPlugin> {
 	public static synchronized void init() {
 		init(null);
 	}
-	public static void init(File dataSinkDir) {
+	public static void init(File pluginsRoot) {
 		try {
 			if (SYSTEM == null) {
-				SYSTEM = new DataSinkRegistry(dataSinkDir);
+				File dir = pluginsRoot != null ? new File(pluginsRoot, "DataSink") : null;
+				SYSTEM = new DataSinkRegistry(dir);
 				SYSTEM.load();
 			}
 		} catch (Exception e) {

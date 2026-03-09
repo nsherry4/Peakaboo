@@ -10,12 +10,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.Callable;
 
 import org.peakaboo.app.Version;
-import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.bolt.repository.RepositoryMetadata;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
+import org.peakaboo.tier.Tier;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -31,7 +31,7 @@ public class PluginMetadataBuilder {
 	)
 	static class BuildCommand implements Callable<Integer> {
 
-		@Option(names = {"--dir", "-d"}, required = true, description = "Directory containing plugin JARs to scan.")
+		@Option(names = {"--dir", "-d"}, required = true, description = "Plugins root directory (expects DataSource/, DataSink/, Filter/, MapFilter/ subdirectories).")
 		String directory;
 
 		@Option(names = {"--url", "-u"}, required = true, description = "Base download URL for the plugin repository.")
@@ -42,7 +42,7 @@ public class PluginMetadataBuilder {
 
 		@Override
 		public Integer call() throws Exception {
-			DataSourceRegistry.init(new File(directory));
+			Tier.provider().initializePlugins(new File(directory));
 
 			RepositoryMetadata contents = new RepositoryMetadata();
 			contents.applicationName = "Peakaboo";
@@ -50,12 +50,14 @@ public class PluginMetadataBuilder {
 			contents.repositoryUrl = repositoryUrl;
 			contents.specVersion = 1;
 
-			DataSourceRegistry.system().getPlugins().forEach(plugin -> {
-				if (!plugin.getContainer().isDeletable()) {
-					return;
-				}
-				var meta = buildFromPlugin(plugin, repositoryUrl, author);
-				contents.plugins.add(meta);
+			Tier.provider().getExtensionPoints().getRegistries().forEach(registry -> {
+				registry.getPlugins().forEach(plugin -> {
+					if (!plugin.getContainer().isDeletable()) {
+						return;
+					}
+					var meta = buildFromPlugin(plugin, repositoryUrl, author);
+					contents.plugins.add(meta);
+				});
 			});
 
 			String yaml = DruthersSerializer.serialize(contents);
