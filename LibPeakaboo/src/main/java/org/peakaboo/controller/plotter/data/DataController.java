@@ -257,10 +257,16 @@ public class DataController extends EventfulBeacon implements AutoCloseable
 
 
 	public SavedData save() {
+		var unaddressable = dataPaths.stream().filter(df -> !df.addressable()).toList();
+		if (!unaddressable.isEmpty()) {
+			throw new IllegalStateException(
+				"Cannot serialise session: " + unaddressable.size() + " data file(s) have no addressable path: "
+				+ unaddressable.stream().map(df -> df.getFullyQualifiedFilename()).toList());
+		}
 		return new SavedData(
-			discards.list(), 
-			dataPaths.stream().map(df -> df.getFullyQualifiedFilename()).toList(), 
-			dataSourcePlugin, 
+			discards.list(),
+			dataPaths.stream().map(df -> df.address().get()).toList(),
+			dataSourcePlugin,
 			title
 		);
 	}
