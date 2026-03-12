@@ -122,7 +122,7 @@ public abstract class BoltPluginRegistry<P extends BoltPlugin> implements Plugin
 					outdated = true;
 				}
 			}
-			if (outdated) {
+			if (outdated && container.isDeletable()) {
 				found.add(new BoltOldContainerIssue<>(container));
 			}
 		}
