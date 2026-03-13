@@ -237,8 +237,8 @@ class PluginRepositoryListItemStencil extends Stencil<PluginMetadata> {
         if (installedPlugin) {
             descriptor = reg.getByUUID(value.uuid).get();
             var container = descriptor.getContainer();
-            removable &= container.isDeletable();
-            upgradable = removable && value.isUpgradeFor(descriptor);
+            removable = container.isDeletable();
+            upgradable = value.isUpgradeFor(descriptor);
         } else if (isIssue) {
         	// Issues come from this type of repo
         	IssuePluginRepository issueRepo = (IssuePluginRepository) value.sourceRepository();
