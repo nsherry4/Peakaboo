@@ -21,7 +21,7 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 		try {
 			File f = new File(url.toURI());
 			return f.getAbsolutePath();
-		} catch (URISyntaxException e) {
+		} catch (URISyntaxException | IllegalArgumentException e) {
 			return url.getPath();
 		}
 	}
@@ -31,7 +31,7 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 		try {
 			File f = new File(url.toURI());
 			return f.getName();
-		} catch (URISyntaxException e) {
+		} catch (URISyntaxException | IllegalArgumentException e) {
 			String[] parts = url.getPath().split("{/,\\}");
 			return parts[parts.length - 1];
 		}
