@@ -32,7 +32,7 @@ public class SimpleDataSize implements DataSize {
 	@Override
 	public Coord<Integer> getDataCoordinatesAtIndex(int index) throws IndexOutOfBoundsException {
 		int cx = index % dataWidth;
-		int cy = (index - cx) / dataHeight;
+		int cy = (index - cx) / dataWidth;
 		return new Coord<>(cx, cy);
 	}
 	

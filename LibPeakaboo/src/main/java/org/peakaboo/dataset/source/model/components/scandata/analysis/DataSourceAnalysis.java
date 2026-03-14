@@ -76,6 +76,11 @@ public class DataSourceAnalysis implements Analysis {
 
 	public static DataSourceAnalysis merge(List<Analysis> analyses) {
 		DataSourceAnalysis result = new DataSourceAnalysis();
+		
+		// Remove any empty analyses and exit fast if none are left after
+		analyses = analyses.stream().filter(a -> a.scanCount() > 0).toList();
+		if (analyses.size() == 0) { return result; }
+		
 		result.init(analyses.get(0).channelsPerScan());
 		for (var analysis : analyses) {
 			SpectrumCalculations.addLists_inplace(result.summedSpectrum, analysis.summedPlot());
