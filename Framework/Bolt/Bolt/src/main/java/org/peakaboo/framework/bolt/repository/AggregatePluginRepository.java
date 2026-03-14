@@ -32,8 +32,17 @@ public class AggregatePluginRepository implements PluginRepository {
 				Bolt.logger().log(Level.WARNING, "Failed to load plugins from repository " + repo.getRepositoryName() + ": " + e.getMessage(), e);
 			}
 		}
-
-		return allPlugins;
+		
+		// Deduplicate by UUID, preferring remote (downloadable) entries over local/built-in
+		// ones so that built-in plugins with a remote counterpart show upgrade availability.
+		var seen = new java.util.LinkedHashMap<String, PluginMetadata>();
+		for (var plugin : allPlugins) {
+			var existing = seen.get(plugin.uuid);
+			if (existing == null || (existing.downloadUrl == null || existing.downloadUrl.isEmpty())) {
+				seen.put(plugin.uuid, plugin);
+			}
+		}
+		return new java.util.ArrayList<>(seen.values());
 	}
 	
 	@Override
