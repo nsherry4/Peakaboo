@@ -46,7 +46,7 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 		try {
 			File f = new File(url.toURI());
 			return f.delete();
-		} catch (URISyntaxException e) {
+		} catch (URISyntaxException | IllegalArgumentException e) {
 			return false;
 		}
 	}
