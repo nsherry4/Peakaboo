@@ -75,7 +75,7 @@ public class RepositoryMetadata implements DruthersStorable {
 			
 			// DOWNLOAD URL
 			// Ensure the plugin's download url starts with the repository URL
-			if (!validateString(plugin.downloadUrl, 200) || this.repositoryUrl.contains("..") || !plugin.downloadUrl.startsWith(this.repositoryUrl)) {
+			if (!validateString(plugin.downloadUrl, 200) || plugin.downloadUrl.contains("..") || !plugin.downloadUrl.startsWith(this.repositoryUrl)) {
 				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid download URL: " + plugin.downloadUrl + ". It must begin with same path as the repository inventory file.");
 				return false;
 			}

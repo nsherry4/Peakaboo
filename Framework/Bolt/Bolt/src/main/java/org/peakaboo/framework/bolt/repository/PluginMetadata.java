@@ -94,9 +94,9 @@ public class PluginMetadata implements DruthersStorable {
 	 */
 	public <T extends BoltPlugin> Optional<PluginDescriptor<T>> getUpgradeTarget(ExtensionPointRegistry reg) {
 		for (var subreg : reg.getRegistries()) {
-			var result = getUpgradeTarget(subreg);
+			Optional<PluginDescriptor<T>> result = this.<T>getUpgradeTarget((PluginRegistry<T>) subreg);
 			if (result.isPresent()) {
-				return (Optional<PluginDescriptor<T>>) result;
+				return result;
 			}
 		}
 		return Optional.empty();
@@ -168,6 +168,7 @@ public class PluginMetadata implements DruthersStorable {
 			OneLog.log(Level.WARNING, "Checksum failed to match for " + filename);
 			return false;
 		}
+		if (this.checksum == null) { return false; }
 		boolean matched = this.checksum.equalsIgnoreCase(md5sum);
 		if (!matched) {
 			OneLog.log(Level.WARNING, "Checksum failed to match for " + filename);
@@ -249,10 +250,12 @@ public class PluginMetadata implements DruthersStorable {
         if (this == obj) return true;
         if (obj == null) return false;
         if (obj instanceof PluginMetadata other) {
-        	return 	this.uuid.equals(other.uuid) &&
-        			this.name.equals(other.name) &&
-        			this.repositoryUrl.equals(other.repositoryUrl) &&
-        			this.downloadUrl.equals(other.downloadUrl);
+        	return 	this.uuid != null &&
+					other.uuid != null &&
+					this.uuid.equals(other.uuid) &&
+					Objects.equals(this.name, other.name) &&
+					Objects.equals(this.repositoryUrl, other.repositoryUrl) &&
+					Objects.equals(this.downloadUrl, other.downloadUrl);
         }
         return false;
     }
