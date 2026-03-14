@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.jar.JarInputStream;
@@ -128,8 +129,7 @@ public class BoltJarContainer<T extends BoltJavaPlugin> extends BoltJavaContaine
 			File f = new File(url.toURI());
 			return f.getName();
 		} catch (URISyntaxException | IllegalArgumentException e) {
-			String[] parts = url.getPath().split("{/,\\}");
-			return parts[parts.length - 1];
+			return Paths.get(url.getPath()).getFileName().toString();
 		}
 	}
 
