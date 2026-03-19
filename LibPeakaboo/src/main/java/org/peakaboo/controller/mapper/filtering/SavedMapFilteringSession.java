@@ -8,7 +8,7 @@ import org.peakaboo.mapping.filter.model.SerializedMapFilter;
 
 public class SavedMapFilteringSession {
 
-	List<SerializedMapFilter> filters;
+	public List<SerializedMapFilter> filters;
 	
 	
 	public SavedMapFilteringSession storeFrom(MapFilteringController controller) {
