@@ -4,7 +4,7 @@ import org.peakaboo.display.map.MapScaleMode;
 
 public class SavedMapFittingSession {
 
-	private String mapScaleMode = null;
+	public String mapScaleMode = null;
 	
 	public SavedMapFittingSession storeFrom(MapFittingController fitting) {
 		this.mapScaleMode = fitting.getMapScaleMode().toString();
