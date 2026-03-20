@@ -3,7 +3,6 @@ package org.peakaboo.framework.bolt.plugin.core.container;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 
@@ -33,7 +32,9 @@ public abstract class BoltURLContainer<T extends BoltPlugin> implements BoltCont
 			File f = new File(url.toURI());
 			return f.getName();
 		} catch (URISyntaxException | IllegalArgumentException e) {
-			return Paths.get(url.getPath()).getFileName().toString();
+			String path = url.getPath();
+			int lastSlash = path.lastIndexOf('/');
+			return lastSlash >= 0 ? path.substring(lastSlash + 1) : path;
 		}
 	}
 
