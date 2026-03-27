@@ -382,86 +382,16 @@ public class Plotter {
 	}
 
 	private static PlotPalette getSelectedPalette(PlotSettings settings) {
-		PlotPalette palette = new PlotPalette();
-		// Colour/Monochrome colours for highlighted/selected fittings
-		if (settings.monochrome)
-		{
-			palette.fitFill = new PaletteColour(0x60ffffff);
-			palette.fitStroke = new PaletteColour(0x80ffffff);
-			palette.sumStroke = new PaletteColour(0xFF777777);
-			palette.labelText = new PaletteColour(0xffffffff);
-			palette.labelBackground = new PaletteColour(0x80000000);
-			palette.labelStroke = new PaletteColour(0xA0000000);
-			palette.markings = palette.fitStroke;
-		}
-		else
-		{
-			palette.fitFill = new PaletteColour(0x801c71d8);
-			palette.fitStroke = new PaletteColour(0xff1a5fb4);
-			palette.sumStroke = new PaletteColour(0xff1a5fb4);
-			palette.labelText = new PaletteColour(0xffffffff);
-			palette.labelBackground = new PaletteColour(0xA01c71d8);
-			palette.labelStroke = palette.fitStroke;
-			palette.markings = palette.fitStroke;
-		}
-		return palette;
+		return settings.monochrome ? PlotPalettes.SELECTION_MONO : PlotPalettes.SELECTION_COLOUR;
 	}
 
 	private static PlotPalette getProposedPalette(PlotSettings settings) {
-		PlotPalette palette = new PlotPalette();
-		if (settings.monochrome)
-		{
-			palette.fitFill = new PaletteColour(0x40ffffff);
-			palette.fitStroke = new PaletteColour(0x80ffffff);
-			palette.sumStroke = new PaletteColour(0xD0ffffff);
-			palette.labelText = new PaletteColour(0xFF777777);
-			palette.labelBackground = new PaletteColour(0xffffffff);
-			palette.labelStroke = palette.labelText;
-			palette.markings = palette.fitStroke;
-		}
-		else
-		{
-			palette.fitFill = new PaletteColour(0xA09141ac);
-			palette.fitStroke = new PaletteColour(0xA0613583);
-			palette.sumStroke = new PaletteColour(0xD0613583);
-			palette.labelText = new PaletteColour(0xffffffff);
-			palette.labelBackground = palette.fitStroke;
-			palette.labelStroke = palette.labelBackground;
-			palette.markings = palette.fitStroke;
-		}
-		return palette;
+		return settings.monochrome ? PlotPalettes.PROPOSAL_MONO : PlotPalettes.PROPOSAL_COLOUR;
 	}
 
 	private static PlotPalette getFittedPalette(PlotSettings settings) {
-		PlotPalette palette = new PlotPalette();
-		if (settings.monochrome) {
-			palette.fitFill = new PaletteColour(0x40000000);
-			palette.fitStroke = new PaletteColour(0x80000000);
-			palette.sumStroke = new PaletteColour(0xD0000000);
-			palette.labelText = new PaletteColour(0xFF000000);
-			palette.labelBackground = new PaletteColour(0xffffffff);
-			palette.labelStroke = palette.labelText;
-			palette.markings = palette.fitStroke;
-		} else {
-			if (settings.darkmode) {
-				palette.fitFill = new PaletteColour(0x40ffffff);
-				palette.fitStroke = new PaletteColour(0xA0ffffff);
-				palette.sumStroke = new PaletteColour(0xD0ffffff);
-				palette.labelText = palette.fitStroke;
-				palette.labelBackground = new PaletteColour(0xff000000);
-				palette.labelStroke = palette.labelText;
-				palette.markings = palette.fitStroke;
-			} else {
-				palette.fitFill = new PaletteColour(0x40000000);
-				palette.fitStroke = new PaletteColour(0xA0000000);
-				palette.sumStroke = new PaletteColour(0xD0000000);
-				palette.labelText = palette.fitStroke;
-				palette.labelBackground = new PaletteColour(0xffffffff);
-				palette.labelStroke = palette.labelText;
-				palette.markings = palette.fitStroke;
-			}
-		}
-		return palette;
+		return settings.monochrome ? PlotPalettes.FITTING_MONO :
+				settings.darkmode ? PlotPalettes.FITTING_DARK : PlotPalettes.FITTING_LIGHT;
 	}
 
 	public PlotDrawing getPlot() {
