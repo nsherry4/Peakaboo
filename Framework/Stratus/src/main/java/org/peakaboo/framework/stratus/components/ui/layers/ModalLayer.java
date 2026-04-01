@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.TexturePaint;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -131,18 +130,13 @@ public class ModalLayer implements Layer {
 					buffered.clear();
 					var buffer = buffered.get();
 					var bufg = buffer.createGraphics();
-
-					Graphics2D b2d = (Graphics2D) bufg;
-					b2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-					b2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);	
+					
+					Graphics2D b2d = Stratus.modernGraphicsSettings(bufg);
 					super.paint(b2d);
 					buffered.markPainted();
 					
 					//Set up our graphics context for antialiasing
-					Graphics2D g2d = (Graphics2D) g;
-					g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-					g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);			
-					
+					Graphics2D g2d = Stratus.modernGraphicsSettings(g);
 					// Define a clip shape, then take the rendered ui in the buffer, set it as a texture 
 					// and fill that shape. This is the only way to get antialiased corners
 					var clip = new RoundRectangle2D.Float(component.getX(), component.getY(), component.getWidth(), component.getHeight(), getCornerRadius(), getCornerRadius());

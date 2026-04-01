@@ -20,7 +20,7 @@ public class MenuArrowPainter implements Painter<JComponent> {
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
 		GeneralPath arrow = new GeneralPath();
 		
-		g = Stratus.g2d(g);
+		g = Stratus.modernGraphicsCopy(g);
 		
 		width = height;
 		

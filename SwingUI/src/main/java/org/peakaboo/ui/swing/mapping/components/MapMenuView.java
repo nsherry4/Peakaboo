@@ -1,7 +1,6 @@
 package org.peakaboo.ui.swing.mapping.components;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.TexturePaint;
@@ -21,7 +20,6 @@ import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.framework.cyclops.visualization.palette.ColourStopPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.Gradient;
-import org.peakaboo.framework.cyclops.visualization.palette.Gradients;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
@@ -134,7 +132,7 @@ public class MapMenuView extends JPopupMenu {
 		
 		// Paint the gradient image onto another image within a rounded rectangle shape
 		BufferedImage c = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = Stratus.g2d(c.createGraphics());
+		Graphics2D g2d = Stratus.modernGraphicsCopy(c.createGraphics());
 		var clip = new RoundRectangle2D.Float(0, 0, width, height, 10, 10);
 		var bounds = new Rectangle2D.Float(0, 0, width, height);
 		var texture = new TexturePaint(i, bounds);

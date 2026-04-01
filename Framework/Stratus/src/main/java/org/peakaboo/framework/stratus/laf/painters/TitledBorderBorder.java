@@ -5,12 +5,12 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 
 import javax.swing.border.AbstractBorder;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -32,8 +32,7 @@ public class TitledBorderBorder extends AbstractBorder implements Themed {
 		
 		Shape border = new RoundRectangle2D.Float(x, y, width, height, radius, radius);
 		
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		g = Stratus.modernGraphicsSettings(g);
 		
 		g.setColor(StratusColour.lighten(getTheme().getWidgetBorder()));
 		g.setStroke(new BasicStroke(1));

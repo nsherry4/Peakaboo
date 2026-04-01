@@ -3,10 +3,8 @@ package org.peakaboo.framework.stratus.components.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.IOException;
 import java.text.Format;
 
 import javax.swing.Box;
@@ -92,7 +90,7 @@ public class KeyValuePill extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		Graphics2D g2d = Stratus.g2d(g);
+		Graphics2D g2d = Stratus.modernGraphicsCopy(g);
 		g2d = (Graphics2D) g2d.create();
 		
 		Color bg = Stratus.getTheme().getWidgetAlpha();

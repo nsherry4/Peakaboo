@@ -3,7 +3,6 @@ package org.peakaboo.framework.stratus.laf.painters.spinner;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.util.Arrays;
@@ -12,6 +11,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -42,10 +42,9 @@ public class SpinnerArrowPainter implements Painter<JComponent> {
 
 	@Override
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-    	
 		
+		g = Stratus.modernGraphicsSettings(g);
+  
 		GeneralPath arrow = new GeneralPath();
 		
 		float size = ((float)Math.min(width, height)) / 2.5f;

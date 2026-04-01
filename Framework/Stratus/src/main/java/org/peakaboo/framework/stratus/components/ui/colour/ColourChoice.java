@@ -1,19 +1,15 @@
 package org.peakaboo.framework.stratus.components.ui.colour;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.peakaboo.framework.stratus.api.HSLColor;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class ColourChoice extends ColourView implements ItemSelectable {
 	
@@ -81,7 +77,7 @@ public class ColourChoice extends ColourView implements ItemSelectable {
 	public void paint(Graphics g0) {
 		super.paint(g0);
 		
-		Graphics2D g = Stratus.g2d(g0);
+		Graphics2D g = Stratus.modernGraphicsCopy(g0);
 		
 		if (isSelected()) {
 			
