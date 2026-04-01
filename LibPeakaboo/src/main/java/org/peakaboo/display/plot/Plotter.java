@@ -109,9 +109,11 @@ public class Plotter {
 		////////////////////////////////////////////////////////////////////
 		// Colour Selections
 		////////////////////////////////////////////////////////////////////
-		PlotPalette fittedPalette = getFittedPalette(settings);
-		PlotPalette proposedPalette = getProposedPalette(settings);
-		PlotPalette selectedPalette = getSelectedPalette(settings);
+		PlotMode mode = PlotMode.from(settings);
+		PlotChrome chrome = PlotChrome.forMode(mode);
+		PlotPalette fittedPalette = PlotPalettes.fitting(mode);
+		PlotPalette proposedPalette = PlotPalettes.proposal(mode);
+		PlotPalette selectedPalette = PlotPalettes.selection(mode);
 		
 
 		
@@ -142,29 +144,19 @@ public class Plotter {
 		List<PlotPainter> plotPainters = new ArrayList<>();
 		
 		//draw grid lines. We do this right up front so they're behind everything else
-		PaletteColour hMajorColour, hMinorColour, vMajorColour;
-		if (settings.darkmode) {
-			hMajorColour = new PaletteColour(0x28ffffff);
-			hMinorColour = new PaletteColour(0x10ffffff);
-			vMajorColour = new PaletteColour(0x08ffffff);
-		} else {
-			hMajorColour = new PaletteColour(0x28000000);
-			hMinorColour = new PaletteColour(0x10000000);
-			vMajorColour = new PaletteColour(0x08000000);
-		}
-		plotPainters.add(new GridlinePainter(new Config(Orientation.HORIZONTAL, tickLeft, hMajorColour, hMinorColour, null)));
-		plotPainters.add(new GridlinePainter(new Config(Orientation.VERTICAL, tickBottom, vMajorColour, vMajorColour, new Dash(new float[] {3}, 0))));
+		plotPainters.add(new GridlinePainter(new Config(Orientation.HORIZONTAL, tickLeft, chrome.gridHMajor(), chrome.gridHMinor(), null)));
+		plotPainters.add(new GridlinePainter(new Config(Orientation.VERTICAL, tickBottom, chrome.gridVMajor(), chrome.gridVMajor(), new Dash(new float[] {3}, 0))));
 		
 		
 
 		// draw the filtered data
-		plotPainters.add(getPlotPainter(data, settings));
+		plotPainters.add(getPlotPainter(data, chrome));
 
 		
 		// draw the original data
 		if (data.spectra.raw() != null && settings.backgroundShowOriginal) {
 			SpectrumView originalData = data.spectra.raw();
-			plotPainters.add(new OriginalDataPainter(originalData, settings.monochrome));
+			plotPainters.add(new OriginalDataPainter(originalData, chrome.originalDataColour()));
 		}
 		
 			
@@ -172,7 +164,7 @@ public class Plotter {
 		//Filter previews
 		for (Filter f : data.filters) {
 			if (!f.isPreviewOnly() || !f.isEnabled()) { continue; }
-			plotPainters.add(createFilterPreviewPainter(data, f));
+			plotPainters.add(createFilterPreviewPainter(data, f, chrome));
 		}
 		
 		
@@ -206,12 +198,7 @@ public class Plotter {
 		// Axis Painters
 		////////////////////////////////////////////////////////////////////
 
-		PaletteColour cForeground;
-		if (settings.darkmode) {
-			cForeground = new PaletteColour(0xffe0e0e0);
-		} else {
-			cForeground = new PaletteColour(0xff000000);
-		}
+		PaletteColour cForeground = chrome.axisForeground();
 		
 		List<AxisPainter> axisPainters = new ArrayList<>();	
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, cForeground,  "Relative Intensity", null, settings.title, "Energy (keV)"));
@@ -227,7 +214,7 @@ public class Plotter {
 		//Create the DrawingRequest object
 		DrawingRequest dr = createDrawingRequest(data, size, settings, context);
 		
-		clearSurface(context, settings, size);
+		clearSurface(context, chrome, size);
 		plotDrawing = new PlotDrawing(context, dr, plotPainters, axisPainters);
 		plotDrawing.draw();
 				
@@ -316,16 +303,16 @@ public class Plotter {
 		return fitLabels;
 	}
 
-	private PlotPainter createFilterPreviewPainter(PlotData data, Filter f) {
+	private PlotPainter createFilterPreviewPainter(PlotData data, Filter f, PlotChrome chrome) {
 		return new SpectrumPainter(data.spectra.deltas().get(f)) {
 
 			@Override
 			public void drawElement(PainterData p)
 			{
 				traceData(p);
-				p.context.setSource(0x7f5C3666);
+				p.context.setSource(chrome.filterPreviewFill());
 				p.context.fillPreserve();
-				p.context.setSource(0xff5C3666);
+				p.context.setSource(chrome.filterPreviewStroke());
 				p.context.stroke();
 
 			}
@@ -361,37 +348,18 @@ public class Plotter {
 		return maxIntensity;
 	}
 
-	private void clearSurface(Surface context, PlotSettings settings, Coord<Integer> size) {
+	private void clearSurface(Surface context, PlotChrome chrome, Coord<Integer> size) {
 		context.rectAt(0, 0, (float)size.x, (float)size.y);
-		context.setSource(getPlotBackground(settings));
+		context.setSource(chrome.background());
 		context.fill();
 	}
 
 	public PaletteColour getPlotBackground(PlotSettings settings) {
-		if (settings.darkmode) {
-			return new PaletteColour(0xff202020);
-		} else {
-			return new PaletteColour(0xffffffff);
-		}
-	}
-	
-	protected SpectrumPainter getPlotPainter(PlotData data, PlotSettings settings) {
-		PaletteColour fill = new PaletteColour(settings.monochrome ? 0xff606060 : 0xff26a269);
-		PaletteColour stroke = new PaletteColour(settings.monochrome ? 0xff202020 : 0xff1e7e52);
-		return new StackedAreaPainter(data.spectra.filtered(), fill, stroke);
+		return PlotChrome.forMode(PlotMode.from(settings)).background();
 	}
 
-	private static PlotPalette getSelectedPalette(PlotSettings settings) {
-		return settings.monochrome ? PlotPalettes.SELECTION_MONO : PlotPalettes.SELECTION_COLOUR;
-	}
-
-	private static PlotPalette getProposedPalette(PlotSettings settings) {
-		return settings.monochrome ? PlotPalettes.PROPOSAL_MONO : PlotPalettes.PROPOSAL_COLOUR;
-	}
-
-	private static PlotPalette getFittedPalette(PlotSettings settings) {
-		return settings.monochrome ? PlotPalettes.FITTING_MONO :
-				settings.darkmode ? PlotPalettes.FITTING_DARK : PlotPalettes.FITTING_LIGHT;
+	protected SpectrumPainter getPlotPainter(PlotData data, PlotChrome chrome) {
+		return new StackedAreaPainter(data.spectra.filtered(), chrome.dataFill(), chrome.dataStroke());
 	}
 
 	public PlotDrawing getPlot() {

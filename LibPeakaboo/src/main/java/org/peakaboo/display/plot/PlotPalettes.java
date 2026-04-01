@@ -3,80 +3,95 @@ package org.peakaboo.display.plot;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.plot.PlotPalette;
 import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
+/**
+ * Centralised palette definitions for plot fitting roles (selection, proposal,
+ * fitted). Palettes are derived from a base colour using a shared alpha
+ * progression, with hand-tuned monochrome bases for accessibility.
+ */
 public class PlotPalettes {
 
+	// Colour bases: differentiated by hue
+	private static final PaletteColour SELECTION_BASE   = new PaletteColour(0xff2570cc); // blue
+	private static final PaletteColour SELECTION_STROKE = new PaletteColour(0xff0d3b6e); // dark blue for fit lines
+	private static final PaletteColour PROPOSAL_BASE   = new PaletteColour(0xff613583); // purple
 
-	public static final PlotPalette SELECTION_COLOUR = new PlotPalette() {{
-		this.fitFill = new PaletteColour(0x801c71d8);
-		this.fitStroke = new PaletteColour(0xff1a5fb4);
-		this.sumStroke = new PaletteColour(0xff1a5fb4);
-		this.labelText = new PaletteColour(0xffffffff);
-		this.labelBackground = this.fitStroke;
-		this.labelStroke = this.fitStroke;
-		this.markings = this.fitStroke;
-	}};
-
-	public static final PlotPalette SELECTION_MONO = new PlotPalette() {{
-		this.fitFill = new PaletteColour(0x60ffffff);
-		this.fitStroke = new PaletteColour(0x80ffffff);
-		this.sumStroke = new PaletteColour(0xFF777777);
-		this.labelText = new PaletteColour(0xffffffff);
-		this.labelBackground = new PaletteColour(0x80000000);
-		this.labelStroke = new PaletteColour(0xA0000000);
-		this.markings = this.fitStroke;
-	}};
+	// Mono bases: hand-tuned for luminance separation between roles.
+	// These are deliberately NOT auto-converted from the colour bases —
+	// monochrome relies on luminance alone, and automatic conversion would
+	// collapse distinct hues into similar grey values.
+	private static final PaletteColour SELECTION_MONO_BASE = new PaletteColour(0xffffffff);
+	private static final PaletteColour PROPOSAL_MONO_BASE  = new PaletteColour(0xffffffff);
 
 
-	public static final PlotPalette PROPOSAL_COLOUR = new PlotPalette() {{
-		this.fitFill = new PaletteColour(0xA09141ac);
-		this.fitStroke = new PaletteColour(0xA0613583);
-		this.sumStroke = new PaletteColour(0xD0613583);
-		this.labelText = new PaletteColour(0xffffffff);
-		this.labelBackground = new PaletteColour(0xFF613583);
-		this.labelStroke = this.labelBackground;
-		this.markings = this.fitStroke;
-	}};
+	/**
+	 * Build a PlotPalette from a base colour and contrast direction.
+	 * The alpha progression is mechanical and shared across all roles.
+	 */
+	private static PlotPalette build(PaletteColour base, boolean dark) {
+		PlotPalette p = new PlotPalette();
+		p.fitFill = withAlpha(base, 0x40);
+		p.fitStroke = withAlpha(base, 0x80);
+		p.sumStroke = withAlpha(base, 0xD0);
+		p.markings = p.fitStroke;
+		p.labelText = dark ? new PaletteColour(0xC0ffffff) : new PaletteColour(0xC0000000);
+		p.labelBackground = dark ? new PaletteColour(0xff000000) : new PaletteColour(0xffffffff);
+		p.labelStroke = p.labelText;
+		return p;
+	}
 
-	public static final PlotPalette PROPOSAL_MONO = new PlotPalette() {{
-		this.fitFill = new PaletteColour(0x40ffffff);
-		this.fitStroke = new PaletteColour(0x80ffffff);
-		this.sumStroke = new PaletteColour(0xD0ffffff);
-		this.labelText = new PaletteColour(0xFF444444);
-		this.labelBackground = new PaletteColour(0xffffffff);
-		this.labelStroke = this.labelText;
-		this.markings = this.fitStroke;
-	}};
+	/**
+	 * Apply tinted label styling — the role's base colour becomes the label
+	 * background with white text. Used for selection and proposal roles in
+	 * colour mode to give labels a distinctive tint.
+	 */
+	private static void applyTintedLabels(PlotPalette p, PaletteColour base) {
+		p.labelBackground = base;
+		p.labelStroke = base;
+		p.labelText = new PaletteColour(0xffffffff);
+	}
 
 
+	public static PlotPalette fitting(PlotMode mode) {
+		// Fitting uses neutral base: black on light backgrounds, white on dark
+		var base = mode.isDark()
+			? new PaletteColour(0xffffffff)
+			: new PaletteColour(0xff000000);
+		return build(base, mode.isDark());
+	}
 
-	public static final PlotPalette FITTING_LIGHT = new PlotPalette() {{
-		this.fitFill = new PaletteColour(0x40000000);
-		this.fitStroke = new PaletteColour(0xA0000000);
-		this.sumStroke = new PaletteColour(0xD0000000);
-		this.labelText = new PaletteColour(0xC0000000);
-		this.labelBackground = new PaletteColour(0xffffffff);
-		this.labelStroke = this.labelText;
-		this.markings = this.fitStroke;
-	}};
+	public static PlotPalette selection(PlotMode mode) {
+		var base = mode.isMono() ? SELECTION_MONO_BASE : SELECTION_BASE;
+		var p = build(base, mode.isDark());
+		// Selection highlights need stronger visibility than fittings.
+		// Strokes use a darker blue so fit lines stand out against the
+		// green data fill without the semi-transparent area undermining them.
+		var stroke = mode.isMono() ? base : SELECTION_STROKE;
+		p.fitFill = withAlpha(base, 0x60);
+		p.fitStroke = withAlpha(stroke, 0xFF);
+		p.sumStroke = withAlpha(stroke, 0xFF);
+		p.markings = p.fitStroke;
+		if (!mode.isMono()) {
+			applyTintedLabels(p, base);
+		}
+		return p;
+	}
 
-	public static final PlotPalette FITTING_DARK = new PlotPalette() {{
-		this.fitFill = new PaletteColour(0x40ffffff);
-		this.fitStroke = new PaletteColour(0xA0ffffff);
-		this.sumStroke = new PaletteColour(0xD0ffffff);
-		this.labelText = new PaletteColour(0xC0ffffff);
-		this.labelBackground = new PaletteColour(0xff000000);
-		this.labelStroke = this.labelText;
-		this.markings = this.fitStroke;
-	}};
+	public static PlotPalette proposal(PlotMode mode) {
+		var base = mode.isMono() ? PROPOSAL_MONO_BASE : PROPOSAL_BASE;
+		var p = build(base, mode.isDark());
+		if (!mode.isMono()) {
+			applyTintedLabels(p, base);
+		}
+		return p;
+	}
 
-	public static final PlotPalette FITTING_MONO = new PlotPalette() {{
-		this.fitFill = new PaletteColour(0x40000000);
-		this.fitStroke = new PaletteColour(0x80000000);
-		this.sumStroke = new PaletteColour(0xD0000000);
-		this.labelText = new PaletteColour(0xFF000000);
-		this.labelBackground = new PaletteColour(0xffffffff);
-		this.labelStroke = this.labelText;
-		this.markings = this.fitStroke;
-	}};
+
+	/**
+	 * Create a new PaletteColour with the same RGB channels but a different
+	 * alpha value.
+	 */
+	private static PaletteColour withAlpha(PaletteColour c, int alpha) {
+		return new PaletteColour(alpha, c.getRed(), c.getGreen(), c.getBlue());
+	}
 
 }

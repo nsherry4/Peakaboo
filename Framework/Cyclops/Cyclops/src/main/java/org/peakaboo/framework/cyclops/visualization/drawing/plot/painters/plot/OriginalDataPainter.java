@@ -7,26 +7,17 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 
 public class OriginalDataPainter extends LinePainter
 {
-	
-	public OriginalDataPainter(SpectrumView data, boolean isMonochrome)
+
+	public OriginalDataPainter(SpectrumView data, PaletteColour colour)
 	{
-		super(data, getColour(isMonochrome));
+		super(data, colour);
 	}
 	public OriginalDataPainter(SpectrumView data)
 	{
-		super(data, getColour(false));
+		super(data, new PaletteColour(0x60D32F2F));
 	}
 
 
-	private static PaletteColour getColour(boolean isMonochrome)
-	{
-		if (! isMonochrome) {
-			return new PaletteColour(0x60D32F2F);
-		} else {
-			return new PaletteColour(0x7f000000);
-		}
-	}
-		
 	@Override
 	public void drawElement(PainterData p)
 	{
