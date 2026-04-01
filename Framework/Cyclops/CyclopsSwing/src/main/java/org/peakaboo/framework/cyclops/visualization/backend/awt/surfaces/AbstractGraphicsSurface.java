@@ -48,6 +48,9 @@ public abstract class AbstractGraphicsSurface implements Surface
 	
 	private CompositeModes		compositeMode;
 	protected SurfaceDescriptor descriptor;
+	
+	public static String FONT_MONO = Font.MONOSPACED;
+	public static String FONT_SANS = Font.SANS_SERIF;
 
 	protected AbstractGraphicsSurface(Graphics2D g, SurfaceDescriptor descriptor)
 	{
@@ -61,8 +64,9 @@ public abstract class AbstractGraphicsSurface implements Surface
 
 		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 
-		// In case we inherit from a graphics context with a non-standard font set.
-		graphics.setFont(new Font("Dialog", Font.PLAIN, 12));
+		// Set the default font to sans-serif rather than inheriting from a
+		// graphics context which may have a non-standard font set.
+		graphics.setFont(new Font(FONT_SANS, Font.PLAIN, 12));
 
 		saveStack = new Stack<>();
 
@@ -251,6 +255,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 		
 	}
 	
+	
 
 	@Override
 	public void setLineStyle(float width, EndCap cap, LineJoin join)
@@ -349,20 +354,20 @@ public abstract class AbstractGraphicsSurface implements Surface
 	{
 		Font f = graphics.getFont();
 		f = new Font(f.getName(), f.getStyle(), (int) (size));
-		f = f.deriveFont(size);
+		f = f.deriveFont(f.getStyle(), size);
 		graphics.setFont(f);
 	}
 
 	@Override
 	public void useMonoFont()
 	{
-		setFont("Mono");
+		setFont(FONT_MONO);
 	}
 
 	@Override
 	public void useSansFont()
 	{
-		setFont("Sans");
+		setFont(FONT_SANS);
 	}
 	
 	@Override
@@ -371,7 +376,7 @@ public abstract class AbstractGraphicsSurface implements Surface
 		Font current = graphics.getFont();
 		Font font = new Font(name, current.getStyle(), current.getSize());
 		// Important! Don't let the API round the font size to the nearest integer
-		font = font.deriveFont(current.getSize2D());
+		font = font.deriveFont(current.getStyle(), current.getSize2D());
 		graphics.setFont(font);
 	}
 	
@@ -379,7 +384,8 @@ public abstract class AbstractGraphicsSurface implements Surface
 	public void setFontBold(boolean bold)
 	{
 		Font f = graphics.getFont();
-		graphics.setFont(f.deriveFont(bold ? Font.BOLD : Font.PLAIN));
+		float size = graphics.getFont().getSize2D();
+		graphics.setFont(f.deriveFont(bold ? Font.BOLD : Font.PLAIN, size));
 	}
 	
 	@Override
