@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.peakaboo.framework.accent.numeric.Bounds;
 import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.plot.painters.PlotPainter;
@@ -44,6 +45,9 @@ public class DataLabelPainter extends PlotPainter
 		
 	}
 	
+	private static final int HPAD_SIZE = 5;
+	private static final int VPAD_SIZE = 1;
+	
 	private List<DataLabel> labels;
 	private List<DataLabel> configuredLabels = new ArrayList<>();
 	private float xoffset;
@@ -69,7 +73,8 @@ public class DataLabelPainter extends PlotPainter
 		p.context.save();
 			
 			p.context.setFontSize(p.context.getFontSize() + 2);
-					
+			p.context.setFontBold(true);
+			
 			//calculate derived label info
 			for (DataLabel label : labels){
 				configureLabel(label, p);
@@ -163,8 +168,9 @@ public class DataLabelPainter extends PlotPainter
 				break;
 			}
 			
-			if (labelInRange.position.y.end > baseline) {
-				baseline = labelInRange.position.y.end;
+			float labelInRangeTop = labelInRange.position.y.end + labelInRange.penWidth * VPAD_SIZE * 3;
+			if (labelInRangeTop > baseline) {
+				baseline = labelInRangeTop;
 			}
 			
 			
@@ -194,10 +200,10 @@ public class DataLabelPainter extends PlotPainter
 
 		float titleHeight = p.context.getFontHeight();
 		float penWidth = label.penWidth;
-		float totalHeight = (titleHeight + penWidth * 2);
+		float totalHeight = (titleHeight + penWidth*(VPAD_SIZE*2));
 		
-		float farLeft = titleStart - penWidth * 2;
-		float width = textWidth + penWidth * 6;
+		float farLeft = titleStart - penWidth*(HPAD_SIZE -1);
+		float width = textWidth + penWidth*(HPAD_SIZE *2);
 		float farRight = farLeft + width;
 		
 		float leftChannel = (farLeft / channelSize);
@@ -235,33 +241,35 @@ public class DataLabelPainter extends PlotPainter
 		
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
 		float xStart = label.position.x.start * channelSize;
-		float xTextStart = xStart + label.penWidth*2;
-		float yTextStart = label.position.y.start + p.context.getFontDescent();
+		float xTextStart = xStart + label.penWidth*(HPAD_SIZE);
+		float yTextStart = (label.position.y.start + p.context.getFontDescent()) + (label.penWidth * (VPAD_SIZE-1));
 		if (xStart > p.plotSize.x) return;
 		
 		float w = (label.position.x.end - label.position.x.start) * channelSize;
 		float h = label.position.y.end - label.position.y.start;
 				
 		p.context.setSource(label.palette.labelBackground);
-		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
+		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 4f, 4f);
 		p.context.fill();
 		
 		p.context.setSource(label.palette.labelStroke);
-		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 2.5f, 2.5f);
+		p.context.roundRectAt(xStart, p.plotSize.y - label.position.y.end, w+1, h+1, 4f, 4f);
 		p.context.stroke();
 		
 		p.context.setSource(label.palette.labelText);
-		p.context.writeText(label.title, xTextStart+1, p.plotSize.y - yTextStart+1);
+		// We take the floor here because otherwise it sometimes gets rounded up by the (java swing?) graphics layer
+		// which makes it look too low. TODO look for artefacts in other drawing backends
+		p.context.writeText(label.title, xTextStart+1, (float)Math.floor(p.plotSize.y - yTextStart+1));
 		
 
 	}
 	
 	protected void drawTextLine(PainterData p, DataLabel label) {
 		if (label.title == null || label.title.length() == 0) { return; }
-		
 		PaletteColour stroke = label.palette.labelStroke;
-		PaletteColour semitransparent = new PaletteColour(64, stroke.getRed(), stroke.getGreen(), stroke.getBlue());
+		PaletteColour semitransparent = new PaletteColour(128, stroke.getRed(), stroke.getGreen(), stroke.getBlue());
 		p.context.setSource(semitransparent);
+		p.context.setDashedLine(new Surface.Dash(new float[]{3f, 3f}, 0f));
 		float channelSize = p.plotSize.x / p.dr.dataWidth;
 		float centreChannel = label.index + xoffset;
 		int endChannel = Math.round(label.index);
@@ -280,6 +288,11 @@ public class DataLabelPainter extends PlotPainter
 		
 		p.context.lineTo(xPeak, yEnd);
 		p.context.stroke();
+	
+		// Manually clear the dashed line change -- java2d doesn't copy line style properly, causing
+		// context save/restore operations to fail to restore the original
+		p.context.setDashedLine(null);
+
 	}
 	
 	private void configureLabel(DataLabel label, PainterData p) {

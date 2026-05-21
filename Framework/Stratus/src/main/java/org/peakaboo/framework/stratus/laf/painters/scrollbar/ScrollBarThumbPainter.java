@@ -2,11 +2,11 @@ package org.peakaboo.framework.stratus.laf.painters.scrollbar;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
 import javax.swing.JComponent;
 import javax.swing.Painter;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.painters.SimpleThemed;
@@ -33,9 +33,8 @@ public class ScrollBarThumbPainter extends SimpleThemed implements Painter<JComp
     	float pad = 3;
     	float radius = getTheme().borderRadius()*2;
     	radius = Math.min(radius, Math.min(width, height) - (pad*2));
-    	
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		
+		g = Stratus.modernGraphicsSettings(g);
     	
     	g.setPaint(c);
     	g.fillRoundRect((int)pad, (int)pad, (int)(width-(pad*2)), (int)(height-(pad*2)), (int)radius, (int)radius);

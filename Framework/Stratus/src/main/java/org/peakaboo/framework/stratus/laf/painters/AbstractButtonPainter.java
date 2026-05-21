@@ -3,7 +3,6 @@ package org.peakaboo.framework.stratus.laf.painters;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Optional;
@@ -136,9 +135,8 @@ public abstract class AbstractButtonPainter extends StatefulPainter {
     
     @Override
     public final void paint(Graphics2D g, JComponent object, int width, int height) {
-    	
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		
+		g = Stratus.modernGraphicsSettings(g);
     	
     	if (isBorderPainted(object)) {
     		paint(g, object, width, height, makePalette(object));   		

@@ -3,11 +3,11 @@ package org.peakaboo.framework.stratus.laf.painters.textfield;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Stroke;
 
 import javax.swing.JComponent;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.painters.StatefulPainter;
@@ -38,9 +38,7 @@ public class TextFieldBackgroundPainter extends StatefulPainter {
 	@Override
 	public void paint(Graphics2D g, JComponent object, int width, int height) {
 		
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-    	
+		g = Stratus.modernGraphicsSettings(g);
     	
 
     	//Border

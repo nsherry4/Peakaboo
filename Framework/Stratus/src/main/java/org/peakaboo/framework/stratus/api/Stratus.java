@@ -94,17 +94,32 @@ public class Stratus {
 		if (splashWindow == null) return;
 		splashWindow.setVisible(false);
 	}
-    
-	public static Graphics2D g2d(Graphics g) {
-		g = g.create();
+	
+	/**
+	 * Copies a Graphics object and configures it to have good sensible defaults for modern drawing.
+	 * have good sensible defaults for modern drawing.
+	 * @param g A Graphics (Graphics2D) object
+	 * @return A copy of the Graphics2D object, configured to look better
+	 */
+	public static Graphics2D modernGraphicsCopy(Graphics g) {
+		return modernGraphicsSettings(g.create());
+	}
+	
+	/**
+	 * Configures a Graphics object to have good sensible defaults for modern drawing.
+	 * @param g A Graphics (Graphics2D) object
+	 * @return The same Graphics2D object, configured to look better
+	 */
+	public static Graphics2D modernGraphicsSettings(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 		
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+		
 		return g2d;
-
 	}
-    
     
 	public static BufferedImage acceleratedImage(int width, int height) {
 		GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();

@@ -124,6 +124,7 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.laf.theme.BrightTheme;
 
 
@@ -1661,8 +1662,7 @@ public class StratusThemeCreator
 			case Color: {
 				Color col = (Color) value;
 				g.setColor(col);
-				Graphics2D g2 = (Graphics2D) g;
-				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				Graphics2D g2 = Stratus.modernGraphicsSettings(g);
 				g2.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 10, 10);
 			}
 				break;

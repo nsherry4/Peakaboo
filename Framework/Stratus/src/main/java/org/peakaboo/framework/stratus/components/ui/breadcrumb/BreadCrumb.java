@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseWheelListener;
@@ -436,11 +435,7 @@ public class BreadCrumb<T> extends JPanel {
 		Theme theme = Stratus.getTheme();
 		
 		g = g.create();
-		Graphics2D g2 = (Graphics2D) g;
-		
-    	
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		Graphics2D g2 = Stratus.modernGraphicsSettings(g);
 		
 		
 		Color bg = theme.getControl();

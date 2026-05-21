@@ -1,9 +1,10 @@
 package org.peakaboo.framework.stratus.components.ui.colour;
 
+import org.peakaboo.framework.stratus.api.Stratus;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
 public class NotificationDot extends ColourComponent {
 
@@ -26,9 +27,7 @@ public class NotificationDot extends ColourComponent {
 		super.paint(g0);
 		
 		g0 = g0.create();
-		Graphics2D g = (Graphics2D) g0;
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		Graphics2D g = Stratus.modernGraphicsSettings(g0);
 
 		int w = getWidth();
 		int h = getHeight();

@@ -17,6 +17,7 @@
 
 *.class
 
+**/target/
 **/target/classes/**
 **/target/maven-status/**
 **/target/surefire-reports/**

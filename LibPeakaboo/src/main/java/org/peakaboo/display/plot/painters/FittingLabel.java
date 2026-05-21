@@ -37,12 +37,12 @@ public class FittingLabel extends DataLabel {
 
 		sb.append(titleName);
 		if (drawMaxIntensities) {
-			sb.append(" (" + titleHeight + ")");
+			sb.append(": " + titleHeight);
 		}
 		
 		if (annotation != null) {
 			if (sb.length() > 0) {
-				sb.append(": ");
+				sb.append(" — ");
 			}
 			sb.append(annotation);
 		}
