@@ -2,7 +2,19 @@ name: Build LibPeakaboo (Headless)
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Peakaboo ref (branch, tag, or SHA) to build'
+        required: false
+        default: master
+        type: string
   workflow_call:
+    inputs:
+      ref:
+        description: 'Peakaboo ref (branch, tag, or SHA) to build'
+        required: false
+        default: master
+        type: string
 
 permissions:
   contents: read
@@ -15,6 +27,9 @@ jobs:
     steps:
 
     - uses: actions/checkout@v6
+      with:
+        repository: nsherry4/Peakaboo
+        ref: ${{ inputs.ref }}
 
     - name: Set up JDK
       uses: actions/setup-java@v5
