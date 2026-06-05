@@ -1,0 +1,37 @@
+name: Build LibPeakaboo (Headless)
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build-lib:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v6
+
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        java-version: 21
+        distribution: 'temurin'
+        cache: maven
+
+    # Builds LibPeakaboo and only its (non-GUI) dependencies via -am/also-make;
+    # SwingUI and the Stratus UI module are excluded. The assembly plugin emits
+    # a self-contained jar-with-dependencies to the repo root.
+    - name: Build LibPeakaboo
+      run: mvn -B package -pl LibPeakaboo -am --file pom.xml
+
+    - name: Upload Library Jar
+      uses: actions/upload-artifact@v7
+      with:
+        name: libpeakaboo
+        path: ./libpeakaboo-*.jar
+        retention-days: 14
