@@ -27,7 +27,7 @@ jobs:
     # SwingUI and the Stratus UI module are excluded. The assembly plugin emits
     # a self-contained jar-with-dependencies to the repo root.
     - name: Build LibPeakaboo
-      run: mvn -B package -pl LibPeakaboo -am --file pom.xml
+      run: mvn -B package -pl :libpeakaboo -am --file pom.xml
 
     - name: Upload Library Jar
       uses: actions/upload-artifact@v7
