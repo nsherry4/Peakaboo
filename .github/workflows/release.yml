@@ -13,24 +13,27 @@ on:
           - release
           - dev
 
+permissions:
+  contents: read
+
 jobs:
   build-jar:
 
     runs-on: ubuntu-latest
 
     steps:
-    
-    - uses: actions/checkout@v4
+
+    - uses: actions/checkout@v6
       with:
         ref: ${{ github.ref }}
-    
+
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         java-version: 21
         distribution: 'temurin'
         cache: maven
-      
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
@@ -39,93 +42,93 @@ jobs:
       shell: bash
 
     - name: Upload Jar
-      uses: actions/upload-artifact@v4
-      with: 
+      uses: actions/upload-artifact@v7
+      with:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Peakaboo.jar
-      
+
 
   build-deb:
-    
+
     needs: build-jar
     runs-on: ubuntu-latest
 
     steps:
-      
-    - uses: actions/checkout@v4
+
+    - uses: actions/checkout@v6
       with:
         ref: ${{ github.ref }}
-    
+
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         java-version: 21
         distribution: 'temurin'
-    
+
     - name: Download Jar
-      uses: actions/download-artifact@v4
-      with: 
+      uses: actions/download-artifact@v8
+      with:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-                
+
     - name: Run JPackage Deb Script
       run: ./build-deb.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
-    
+
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with: 
+      uses: actions/upload-artifact@v7
+      with:
         name: Peakaboo-${{ github.ref_name }}.deb
         path: ./Packaging/peakaboo*.deb
 
 
   build-rpm:
-    
+
     needs: build-jar
     runs-on: ubuntu-latest
 
     steps:
-      
-    - uses: actions/checkout@v4
+
+    - uses: actions/checkout@v6
       with:
         ref: ${{ github.ref }}
-    
+
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         java-version: 21
         distribution: 'temurin'
-    
+
     - name: Download Jar
-      uses: actions/download-artifact@v4
-      with: 
+      uses: actions/download-artifact@v8
+      with:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-                
+
     - name: Run JPackage RPM Script
       run: ./build-rpm.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with: 
+      uses: actions/upload-artifact@v7
+      with:
         name: Peakaboo-${{ github.ref_name }}.rpm
         path: ./Packaging/peakaboo*.rpm
 
 
   build-macos-intel:
-    
+
     needs: build-jar
     runs-on: macos-15-intel
 
     steps:
-       
-    - uses: actions/checkout@v4
+
+    - uses: actions/checkout@v6
       with:
         ref: ${{ github.ref }}
-    
+
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         java-version: 21
         distribution: 'temurin'
@@ -137,19 +140,19 @@ jobs:
     - name: Introspect jpackage
       run: which jpackage && jpackage --version
       shell: bash
-        
+
     - name: Download Jar
-      uses: actions/download-artifact@v4
-      with: 
+      uses: actions/download-artifact@v8
+      with:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-                
+
     - name: Run JPackage Mac Script
       run: ./build-macos.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Peakaboo-${{ github.ref_name }}-Intel.dmg
         path: ./Packaging/Peakaboo*.dmg
@@ -162,12 +165,12 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         ref: ${{ github.ref }}
 
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         java-version: 21
         distribution: 'temurin'
@@ -181,7 +184,7 @@ jobs:
       shell: bash
 
     - name: Download Jar
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
@@ -189,49 +192,48 @@ jobs:
     - name: Run JPackage Mac Script
       run: ./build-macos.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
-    
+
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with: 
+      uses: actions/upload-artifact@v7
+      with:
         name: Peakaboo-${{ github.ref_name }}-M1.dmg
         path: ./Packaging/Peakaboo*.dmg
 
 
   build-windows:
-    
+
     needs: build-jar
     runs-on: windows-latest
-    
 
     steps:
-       
-    - uses: actions/checkout@v4
+
+    - uses: actions/checkout@v6
       with:
         ref: ${{ github.ref }}
-   
+
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         java-version: 21
         distribution: 'temurin'
-   
+
     - name: Introspect jpackage
       run: which jpackage.exe && jpackage.exe --version
       shell: bash
-        
+
     - name: Download Jar
-      uses: actions/download-artifact@v4
-      with: 
+      uses: actions/download-artifact@v8
+      with:
         name: Peakaboo-${{ github.ref_name }}.jar
         path: ./Packaging/jar
-                
+
     - name: Run JPackage Windows Script
       run: ./build-windows.bat ${{ inputs.release_type }}
       shell: cmd
       working-directory: ./Packaging
-    
+
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with: 
+      uses: actions/upload-artifact@v7
+      with:
         name: Peakaboo-${{ github.ref_name }}.exe
         path: ./Packaging/Peakaboo*.exe
