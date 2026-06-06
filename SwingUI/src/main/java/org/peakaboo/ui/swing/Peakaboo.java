@@ -29,10 +29,6 @@ import org.peakaboo.app.PeakabooConfiguration.MemorySize;
 import org.peakaboo.app.Settings;
 import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
-import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
-import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
-import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
-import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.log.OneLog;
@@ -326,16 +322,8 @@ public class Peakaboo {
 	}
 
 	private static void initPluginSystem() {
-		// Initialize "informal" plugin registries. We use the registry format
-		// to manage different impls, but they are not a public extension point
-		// supporting external JAR plugins.
-		CurveFitterRegistry.init();
-		FittingSolverRegistry.init();
-		ChannelViewModeRegistry.init();
-		FittingFunctionRegistry.init();
-
-		// Initialize "real" plugin registries. These do support loading external
-		// JAR plugins, so we instruct them to load plugins from the given directory.
+		// Initialize the plugin system: informal built-in-only registries plus the
+		// external-JAR registries loaded from the given directory.
 		Tier.provider().initializePlugins(DesktopApp.appDir("Plugins"));
 	}
 

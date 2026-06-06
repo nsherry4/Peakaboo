@@ -8,6 +8,10 @@ import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.controller.plotter.calibration.BasicCalibrationController;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
+import org.peakaboo.controller.plotter.view.mode.ChannelViewModeRegistry;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
+import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.Analysis;
 import org.peakaboo.dataset.source.model.components.scandata.analysis.DataSourceAnalysis;
@@ -34,6 +38,13 @@ public class BasicTierProvider implements TierProvider {
 	
 	@Override
 	public void initializePlugins(File pluginsRoot) {
+		// Informal registries: built-in-only impls (no external JAR plugins).
+		// init() is idempotent (null-guarded), so re-entry is safe.
+		CurveFitterRegistry.init();
+		FittingSolverRegistry.init();
+		ChannelViewModeRegistry.init();
+		FittingFunctionRegistry.init();
+
 		DataSourceRegistry.init(pluginsRoot);
 		DataSinkRegistry.init(pluginsRoot);
 		FilterRegistry.init(pluginsRoot);
