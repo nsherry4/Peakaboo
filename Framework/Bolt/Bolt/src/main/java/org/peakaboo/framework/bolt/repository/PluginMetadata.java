@@ -151,25 +151,46 @@ public class PluginMetadata implements DruthersStorable {
 	}
 	
 	public static String checksum(String filename) {
-		// Do an md5sumn from the filename
+		// Do an md5sum from the filename
 		try {
 			byte[] data = Files.readAllBytes(Paths.get(filename));
 			byte[] hash = MessageDigest.getInstance("MD5").digest(data);
-			return new BigInteger(1, hash).toString(16);
+			// Zero-pad to a fixed 32 hex characters. BigInteger.toString(16) drops
+			// leading zero nibbles, which would otherwise produce short, variable-length
+			// checksums that fail validation and fail to match when verifying downloads.
+			return String.format("%032x", new BigInteger(1, hash));
 		} catch (IOException | NoSuchAlgorithmException e) {
 			OneLog.log(Level.WARNING, "Failed to calculate MD5SUM for " + filename, e);
 			return null;
 		}
 	}
-	
+
+	/**
+	 * Canonicalizes an MD5 checksum to its 32-character lowercase hexadecimal form.
+	 * Older inventories (and {@link BigInteger#toString(int)}) may store checksums
+	 * with leading zero nibbles stripped, so shorter hex strings are left-padded with
+	 * zeros. Returns {@code null} if the input is null, empty, longer than 32
+	 * characters, or not valid hexadecimal.
+	 * @param checksum the checksum to normalize
+	 * @return the canonical 32-character checksum, or null if the input is not a valid checksum
+	 */
+	static String normalizeChecksum(String checksum) {
+		if (checksum == null || checksum.isEmpty() || checksum.length() > 32 || !checksum.matches("[0-9a-fA-F]+")) {
+			return null;
+		}
+		return "0".repeat(32 - checksum.length()) + checksum;
+	}
+
 	public boolean validateChecksum(String filename) {
 		String md5sum = checksum(filename);
 		if (md5sum == null) {
 			OneLog.log(Level.WARNING, "Checksum failed to match for " + filename);
 			return false;
 		}
-		if (this.checksum == null) { return false; }
-		boolean matched = this.checksum.equalsIgnoreCase(md5sum);
+		// Older inventories may store checksums with leading zeros stripped, so
+		// canonicalize before comparing against the freshly computed value.
+		String stored = normalizeChecksum(this.checksum);
+		boolean matched = stored != null && stored.equalsIgnoreCase(md5sum);
 		if (!matched) {
 			OneLog.log(Level.WARNING, "Checksum failed to match for " + filename);
 		}

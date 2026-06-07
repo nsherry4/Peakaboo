@@ -20,7 +20,47 @@ public class PluginMetadataTest {
 		Files.writeString(f.toPath(), "hello world");
 		String result = PluginMetadata.checksum(f.getAbsolutePath());
 		assertNotNull(result);
-		assertTrue("Expected 31-32 hex chars, got: " + result, result.matches("[0-9a-fA-F]{31,32}"));
+		assertTrue("Expected 32 hex chars, got: " + result, result.matches("[0-9a-fA-F]{32}"));
+	}
+
+	@Test
+	public void normalizeChecksum_leftPadsToThirtyTwoChars() {
+		String result = PluginMetadata.normalizeChecksum("abc");
+		assertEquals(32, result.length());
+		assertTrue("Should preserve the original hex as the low-order digits", result.endsWith("abc"));
+		assertTrue("Padding should be leading zeros", result.startsWith("00000000000000000000000000000"));
+		// An already-canonical checksum is returned unchanged
+		String canonical = "d41d8cd98f00b204e9800998ecf8427e";
+		assertEquals(canonical, PluginMetadata.normalizeChecksum(canonical));
+	}
+
+	@Test
+	public void normalizeChecksum_rejectsInvalid() {
+		assertNull(PluginMetadata.normalizeChecksum(null));
+		assertNull(PluginMetadata.normalizeChecksum(""));
+		assertNull("Non-hex should be rejected", PluginMetadata.normalizeChecksum("None"));
+		assertNull("Over-length should be rejected", PluginMetadata.normalizeChecksum("0".repeat(33)));
+	}
+
+	@Test
+	public void validateChecksum_legacyUnpaddedStored_returnsTrue() throws Exception {
+		// Find file content whose MD5 has at least one leading zero nibble, so the
+		// canonical (padded) checksum genuinely differs from the legacy stripped form.
+		// Roughly 1/16 of inputs qualify, so this terminates quickly.
+		File f = tempFolder.newFile("legacy.jar");
+		String canonical;
+		int attempt = 0;
+		do {
+			Files.writeString(f.toPath(), "legacy content " + attempt++);
+			canonical = PluginMetadata.checksum(f.getAbsolutePath());
+		} while (canonical.charAt(0) != '0');
+
+		String stripped = canonical.replaceFirst("^0+", "");
+		assertNotEquals("Test must exercise a genuinely stripped checksum", canonical, stripped);
+
+		PluginMetadata meta = new PluginMetadata();
+		meta.checksum = stripped; // simulate an older inventory with leading zeros stripped
+		assertTrue(meta.validateChecksum(f.getAbsolutePath()));
 	}
 
 	@Test

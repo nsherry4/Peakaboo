@@ -23,7 +23,7 @@ public class RepositoryMetadata implements DruthersStorable {
     	final String REGEX_A1 = "^[a-zA-Z0-9_ -]+$"; // Alphanumeric, underscores, hyphens, and spaces only
     	final String REGEX_UUID = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
     	final String REGEX_VERSION = "^[a-zA-Z0-9_., -]+$";
-    	final String REGEX_CHECKSUM = "^[0-9a-fA-F]{31,32}$"; // Sometimes Java trims a leading zero
+    	final String REGEX_CHECKSUM = "^[0-9a-fA-F]{32}$"; // MD5 as 32 lowercase hex characters
     	
     	// SPEC VERSION
     	// Spec version must match
@@ -33,7 +33,6 @@ public class RepositoryMetadata implements DruthersStorable {
     	}
     	
     	// REPOSITORY NAME
-    	// Repository Name may not contain the protected term "Built" to prevent confusion with built-in plugins
     	if (!validateString(this.repositoryName, 50, REGEX_A1)) {
     		OneLog.log(Level.WARNING, "Invalid repository name. 50 alphanumeric characters (plus spaces, hyphens, and underscores) or less");
     		return false;
@@ -82,7 +81,7 @@ public class RepositoryMetadata implements DruthersStorable {
 			
 			// REPOSITORY URL
 			// Ensure the plugin's reference to the repository URL is correct
-			if (!validateString(plugin.repositoryUrl, 200) || this.repositoryUrl.contains("..") || !plugin.repositoryUrl.equals(this.repositoryUrl)) {
+			if (!validateString(plugin.repositoryUrl, 200) || plugin.repositoryUrl.contains("..") || !plugin.repositoryUrl.equals(this.repositoryUrl)) {
 				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid repository URL: " + plugin.repositoryUrl + ". It must match the repository inventory file URL.");
 				return false;
 			}
@@ -95,13 +94,13 @@ public class RepositoryMetadata implements DruthersStorable {
 			
 			// DESCRIPTION
 			if (!validateString(plugin.description, 200)) {
-				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid name. It must only contain alphanumeric characters, underscores, hyphens, and spaces.");
+				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid description. It must only contain alphanumeric characters, underscores, hyphens, and spaces.");
 				return false;
 			}
 			
 			// CATEGORY
 			if (!validateString(plugin.category, 50, REGEX_A1)) {
-				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid description.");
+				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' has an invalid category.");
 				return false;
 			}
 			
@@ -125,7 +124,9 @@ public class RepositoryMetadata implements DruthersStorable {
 			}
 			
 			// CHECKSUM
-			if (!validateString(plugin.checksum, 32, REGEX_CHECKSUM)) {
+			// Older inventories may have stored checksums with leading zeros stripped, so
+			// canonicalize before validating. validateChecksum() does the same when verifying.
+			if (!validateString(PluginMetadata.normalizeChecksum(plugin.checksum), 32, REGEX_CHECKSUM)) {
 				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' has invalid Checksum.");
 				return false;
 			}
@@ -137,7 +138,7 @@ public class RepositoryMetadata implements DruthersStorable {
 				return false;
 			}
 			if (plugin.minAppVersion > appVersion) {
-				OneLog.log(Level.WARNING, "Plugin minimum required version is greater than the version of this application.");
+				OneLog.log(Level.WARNING, "Plugin '" + plugin.name + "' minimum required version is greater than the version of this application.");
 				return false;
 			}
 			
