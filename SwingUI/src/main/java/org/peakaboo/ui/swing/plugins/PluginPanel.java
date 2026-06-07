@@ -52,7 +52,7 @@ public class PluginPanel extends HeaderLayer {
 	public PluginPanel(PlotPanel parent) {
 		super(parent, true);
 		this.parent = parent;
-		getContentRoot().setPreferredSize(new Dimension(850, 400));
+		getContentRoot().setPreferredSize(new Dimension(850, 450));
 
 		this.controller = new PluginsController(parent);
 		
