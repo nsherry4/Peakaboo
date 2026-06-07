@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.swing.DefaultListModel;
@@ -28,11 +29,15 @@ public class OptionSidebar extends OptionComponent {
 	
 	public static class Entry {
 		String name;
-		ImageIcon icon;
+		Optional<ImageIcon> icon;
 		public boolean trailingSeparator = false;
+		public Entry(String name) {
+			this.name = name;
+			this.icon = Optional.empty();
+		}
 		public Entry(String name, ImageIcon icon) {
 			this.name = name;
-			this.icon = icon;
+			this.icon = Optional.ofNullable(icon);
 		}
 		public String getName() {
 			return name;
@@ -61,8 +66,11 @@ public class OptionSidebar extends OptionComponent {
 		protected void onSetValue(Entry entry, boolean selected) {
 			label.setText(entry.name);
 			label.setForeground(this.getForeground());
-			//label.setIcon(value.icon.toSymbolicIcon(IconSize.BUTTON, this.getForeground()));
-			label.setIcon(IconFactory.recolour(entry.icon, this.getForeground()));
+			if (entry.icon.isPresent()) {
+				label.setIcon(IconFactory.recolour(entry.icon.get(), this.getForeground()));
+			} else {
+				label.setIcon(null);
+			}
 			
 			if (entry.trailingSeparator) {
 				this.setBorder(separatorBorder);
