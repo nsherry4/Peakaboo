@@ -43,6 +43,11 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     private ComponentStrip headerControls;
     private JComboBox<SortOrder> sortOrder;
 
+    // The full, sorted set of supported plugins. The table model only ever holds the
+    // subset of these that match the current text filter.
+    private List<PluginMetadata> allPlugins = new ArrayList<>();
+    private String filterQuery = "";
+
     // Track plugins that are currently being downloaded/installed
     private java.util.Set<String> pluginsInProgress = new java.util.HashSet<>();
         
@@ -121,8 +126,8 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     
     private void sortTable() {
     	SortOrder order = (SortOrder) sortOrder.getSelectedItem();
-    	
-    	List<PluginMetadata> sorted = pluginTableModel.getPlugins();
+
+    	List<PluginMetadata> sorted = allPlugins;
     	ExtensionPointRegistry reg = Tier.provider().getExtensionPoints();
     	
     	// Sort by name first so that items of the same rank are always in the same order
@@ -162,9 +167,35 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
     	sorted = sorted.stream().sorted(
     			(p1, p2) -> -Boolean.compare(hasNotification(p1), hasNotification(p2))
     		).toList();
-    	
-    	pluginTableModel.setPlugins(sorted);
-    	
+
+    	allPlugins = sorted;
+    	applyFilter();
+	}
+
+	// Push the subset of allPlugins matching the current text filter into the table model
+	private void applyFilter() {
+		List<PluginMetadata> visible = allPlugins.stream()
+				.filter(this::matchesQuery)
+				.toList();
+		pluginTableModel.setPlugins(visible);
+	}
+
+	// Case-insensitive contains match against name, description, author, and category
+	private boolean matchesQuery(PluginMetadata m) {
+		if (filterQuery.isEmpty()) {
+			return true;
+		}
+		return contains(m.name) || contains(m.description) || contains(m.author) || contains(m.category);
+	}
+
+	private boolean contains(String field) {
+		return field != null && field.toLowerCase().contains(filterQuery);
+	}
+
+	// Set the text filter applied to the plugin list and refresh the displayed rows
+	public void setFilter(String query) {
+		this.filterQuery = query == null ? "" : query.trim().toLowerCase();
+		applyFilter();
 	}
 
     public static boolean hasNotification(PluginMetadata p) {
@@ -208,8 +239,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
 							OneLog.log(Level.WARNING, "Plugin " + plugin.name + " is for unsupported catagory " + plugin.category);
                     	}
                     }
-                    plugins = filteredPlugins;
-                    pluginTableModel.setPlugins(plugins);
+                    allPlugins = filteredPlugins;
                     sortTable();
                 } catch (PluginRepositoryException | ExecutionException ex) {
                 	controller.showError("Failed to load plugins: " + ex.getMessage());
@@ -353,9 +383,6 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
             this.plugins = plugins != null ? plugins : List.of();
             fireTableDataChanged();
         }
-        public List<PluginMetadata> getPlugins() {
-			return List.copyOf(plugins);
-		}
         @Override public boolean isCellEditable(int row, int col) { return true; }
     }
 

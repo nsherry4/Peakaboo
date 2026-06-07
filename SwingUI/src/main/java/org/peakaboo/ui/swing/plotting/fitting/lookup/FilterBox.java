@@ -25,7 +25,7 @@ public class FilterBox extends JTextField {
 
 	private ImageIcon icon = IconFactory.getImageIcon(PeakabooIcons.FILTER, IconSize.BUTTON);
 	
-	public FilterBox() {
+	public FilterBox(boolean drawBorder) {
 		super();
 		
 		
@@ -34,15 +34,18 @@ public class FilterBox extends JTextField {
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, getWidth(), getHeight());
 		};
-		dialogTheme.put("TextField[Enabled].backgroundPainter", painter);
-		dialogTheme.put("TextField[Focused].backgroundPainter", painter);
-		
-		this.putClientProperty("Nimbus.Overrides.InheritDefaults", Boolean.TRUE);
-        this.putClientProperty("Nimbus.Overrides", dialogTheme);
-		
+		if (!drawBorder) {
+			dialogTheme.put("TextField[Enabled].backgroundPainter", painter);
+			dialogTheme.put("TextField[Focused].backgroundPainter", painter);
+			
+			this.putClientProperty("Nimbus.Overrides.InheritDefaults", Boolean.TRUE);
+			this.putClientProperty("Nimbus.Overrides", dialogTheme);
+			
+			this.setBackground(Color.GRAY);
+		}
 		
 		this.setBorder(new EmptyBorder(Spacing.medium, Spacing.large * 2 + icon.getIconWidth(), Spacing.medium, Spacing.large));
-		this.setBackground(Color.GRAY);
+		
 		
 	}
 

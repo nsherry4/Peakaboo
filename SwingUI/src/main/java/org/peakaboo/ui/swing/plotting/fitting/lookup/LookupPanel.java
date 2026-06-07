@@ -82,7 +82,7 @@ public class LookupPanel extends ClearPanel implements Changeable {
 		JScrollPane fitted = createLookupTable();
 		panel.add(fitted, BorderLayout.CENTER);
 		
-		search = new FilterBox();
+		search = new FilterBox(false);
 		JPanel searchPanel = new JPanel(new BorderLayout());
 		searchPanel.add(search, BorderLayout.CENTER);
 		searchPanel.setBorder(new EmptyBorder(0, 0, 1, 0));

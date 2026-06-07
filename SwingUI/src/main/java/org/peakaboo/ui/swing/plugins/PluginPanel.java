@@ -1,9 +1,12 @@
 package org.peakaboo.ui.swing.plugins;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.event.ItemEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,22 +14,24 @@ import java.util.logging.Level;
 
 import javax.swing.AbstractButton;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
+import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
 import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
-import org.peakaboo.framework.stratus.components.ui.header.HeaderTabBuilder;
-import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.app.DesktopApp;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
+import org.peakaboo.ui.swing.plotting.fitting.lookup.FilterBox;
 import org.peakaboo.ui.swing.plugins.browser.PluginRepositoryBrowser;
 import org.peakaboo.ui.swing.plugins.manager.PluginManager;
 
@@ -53,33 +58,60 @@ public class PluginPanel extends HeaderLayer {
 		
 		// Set up manager view
 		managerView = new PluginManager(this.controller);
-		setBody(managerView);
 
-		// Set up browser view	
-		browserView = new PluginRepositoryBrowser(controller);		
-		
-		
-		final String MANAGER_TITLE = "Classic";
-		final String BROWSER_TITLE = "Modern";
-		
-		var tabBuilder = new HeaderTabBuilder()
-				.withTab(BROWSER_TITLE, browserView)
-				.withTab(MANAGER_TITLE, managerView);
-		setBody(tabBuilder.getBody());
-		getHeader().setCentre(tabBuilder.getTabStrip());
-		
-		for (var button : tabBuilder.getButtons().values()) {
-			button.addItemListener(e -> {
-				if (e.getStateChange() != ItemEvent.SELECTED) return;
-				switch (button.getText()) {
-					case MANAGER_TITLE -> getHeader().setLeft(managerView.getHeaderControls());
-					case BROWSER_TITLE -> getHeader().setLeft(browserView.getHeaderControls());
-				}
-			});
-		}
-						
+		// Set up browser view
+		browserView = new PluginRepositoryBrowser(controller);
+
+
+		final String MANAGER_CARD = "Classic";
+		final String BROWSER_CARD = "Modern";
+
+		// The two views share a card layout; Modern is shown by default and Classic is
+		// toggled on via the button in the right-hand toolbar.
+		final CardLayout cards = new CardLayout();
+		final JPanel body = new JPanel(cards);
+		body.add(browserView, BROWSER_CARD);
+		body.add(managerView, MANAGER_CARD);
+		setBody(body);
+		cards.show(body, BROWSER_CARD);
+
+		// Centre search box filters the Modern list live (only shown for the Modern view)
+		final FilterBox searchBox = new FilterBox(true);
+		searchBox.setPreferredSize(new Dimension(260, searchBox.getPreferredSize().height));
+		searchBox.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				browserView.setFilter(searchBox.getText());
+			}
+		});
+
+		// Pad the centre so the search box doesn't crowd the left/right header sections
+		final JPanel searchCentre = new JPanel(new BorderLayout());
+		searchCentre.setOpaque(false);
+		searchCentre.setBorder(new EmptyBorder(0, Spacing.huge*6, 0, Spacing.huge*6));
+		searchCentre.add(searchBox, BorderLayout.CENTER);
+
 		getHeader().setLeft(browserView.getHeaderControls());
-		
+		getHeader().setCentre(searchCentre);
+
+		// Single toggle to switch to the (deprecated) Classic tree view
+		var classicToggle = new FluentToggleButton()
+				.withIcon(StockIcon.MENU_SETTINGS, Stratus.getTheme().getControlText())
+				.withBordered(false)
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Advanced View")
+				.withAction(selected -> {
+					if (selected) {
+						cards.show(body, MANAGER_CARD);
+						getHeader().setLeft(managerView.getHeaderControls());
+						getHeader().setCentre((Component) null);
+					} else {
+						cards.show(body, BROWSER_CARD);
+						getHeader().setLeft(browserView.getHeaderControls());
+						getHeader().setCentre(searchCentre);
+					}
+				});
+
 		var browseButton = new FluentButton()
 				.withIcon(StockIcon.DOCUMENT_OPEN_SYMBOLIC, Stratus.getTheme().getControlText())
 				.withBordered(false)
@@ -92,8 +124,8 @@ public class PluginPanel extends HeaderLayer {
 				.withButtonSize(FluentButtonSize.LARGE)
 				.withTooltip("Refresh Plugins")
 				.withAction(controller::reload);
-		getHeader().setRight(new ComponentStrip(reloadButton, browseButton));
-		
+		getHeader().setRight(new ComponentStrip(classicToggle, reloadButton, browseButton));
+
 	}
 	
 
