@@ -82,63 +82,65 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		final String SETTING_PER_DATASET = "Per-Session Settings";
 		final String SETTING_PER_USER = "Global Settings";
 		
+		var entries = new ArrayList<Entry>();
+		entries.add(new OptionSidebar.Entry(SETTING_PER_DATASET).setHeading(true));
+
 		String KEY_DETECTOR = "Detector";
 		OptionBlocksPanel detectorPanel = makeDetectorPanel(controller);
 		detectorPanel.setEnabled(hasdata);
-		body.add(wrapSettingsInfo(detectorPanel, SETTING_PER_DATASET), KEY_DETECTOR);
+		body.add(detectorPanel, KEY_DETECTOR);
 		OptionSidebar.Entry detectorEntry = new OptionSidebar.Entry(KEY_DETECTOR, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_DETECTOR, IconSize.TOOLBAR_SMALL));
+		entries.add(detectorEntry);
 		
 		String KEY_PEAKMODEL = "Peak Model";
 		OptionBlocksPanel peakPanel = makePeakModelPanel(controller);
 		peakPanel.setEnabled(hasdata);
-		body.add(wrapSettingsInfo(peakPanel, SETTING_PER_DATASET), KEY_PEAKMODEL);
+		body.add(peakPanel, KEY_PEAKMODEL);
 		OptionSidebar.Entry peakEntry = new OptionSidebar.Entry(KEY_PEAKMODEL, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PEAKMODEL, IconSize.TOOLBAR_SMALL));
+		entries.add(peakEntry);
 		
 		String KEY_CURVEFIT = "Curve Fitting";
 		OptionBlocksPanel curvefitPanel = makeCurvefitPanel(controller);
 		curvefitPanel.setEnabled(hasdata);
-		body.add(wrapSettingsInfo(curvefitPanel, SETTING_PER_DATASET), KEY_CURVEFIT);
+		body.add(curvefitPanel, KEY_CURVEFIT);
 		OptionSidebar.Entry curvefitEntry = new OptionSidebar.Entry(KEY_CURVEFIT, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_CURVEFIT, IconSize.TOOLBAR_SMALL));
+		entries.add(curvefitEntry);
 		
 		String KEY_OVERLAP = "Overlap Solving";
 		OptionBlocksPanel overlapPanel = makeOverlapPanel(controller);
 		overlapPanel.setEnabled(hasdata);
-		body.add(wrapSettingsInfo(overlapPanel, SETTING_PER_DATASET), KEY_OVERLAP);
+		body.add(overlapPanel, KEY_OVERLAP);
 		OptionSidebar.Entry overlapEntry = new OptionSidebar.Entry(KEY_OVERLAP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_SOLVER, IconSize.TOOLBAR_SMALL));
+		entries.add(overlapEntry);
 				
-		var entries = new ArrayList<Entry>();
-		entries.addAll(List.of(detectorEntry, peakEntry, curvefitEntry, overlapEntry));
-		
 		for (TierUIAutoGroup<PlotController> item : Tier.provider().getAdvancedOptions()) {
 			Group group = item.getValue();
 			String groupKey = group.getName();
 			JComponent groupPanel = SwingLayoutFactory.forGroup(group).getComponent();
-			body.add(wrapSettingsInfo(groupPanel, SETTING_PER_DATASET), groupKey);
+			body.add(groupPanel, groupKey);
 			OptionSidebar.Entry itemEntry = new OptionSidebar.Entry(groupKey, IconFactory.getImageIcon(Tier.provider().iconPath(), item.getIconPath(), IconSize.TOOLBAR_SMALL));
 			entries.add(itemEntry);
 		}
 
-		//separator between dataset-focused options and app options
-		entries.get(entries.size()-1).trailingSeparator = true;
-		
+		entries.add(new OptionSidebar.Entry(SETTING_PER_USER).setHeading(true));
 		
 		String KEY_APP = "Appearance";
 		OptionBlocksPanel appPanel = makeAppPanel(controller);
-		body.add(wrapSettingsInfo(appPanel, SETTING_PER_USER), KEY_APP);
+		body.add(appPanel, KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
 		
 		
 		String KEY_PERFORMANCE = "Performance";
 		OptionBlocksPanel perfPanel = makePerformancePanel(controller);
-		body.add(wrapSettingsInfo(perfPanel, SETTING_PER_USER), KEY_PERFORMANCE);
+		body.add(perfPanel, KEY_PERFORMANCE);
 		OptionSidebar.Entry perfEntry = new OptionSidebar.Entry(KEY_PERFORMANCE, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_PERFORMANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(perfEntry);
 
 		
 		String KEY_ERRORS = "Errors";
 		OptionBlocksPanel errorsPanel = makeErrorsPanel(controller);
-		body.add(wrapSettingsInfo(errorsPanel, SETTING_PER_USER), KEY_ERRORS);
+		body.add(errorsPanel, KEY_ERRORS);
 		OptionSidebar.Entry errorsEntry = new OptionSidebar.Entry(KEY_ERRORS, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_ERRORS, IconSize.TOOLBAR_SMALL));
 		entries.add(errorsEntry);
 		
@@ -417,16 +419,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 	}
 
 
-	private ClearPanel wrapSettingsInfo(JComponent panel, String info) {
-		var label = new JLabel(info, SwingConstants.CENTER);
-		label.setForeground(Stratus.getTheme().getPalette().getColour("Dark", "1"));
-		label.setFont(label.getFont().deriveFont(11f));
-		
-		var wrap = new ClearPanel(new BorderLayout());
-		wrap.add(panel, BorderLayout.CENTER);
-		wrap.add(label, BorderLayout.SOUTH);
-		return wrap;
-	}
+
 
 	private OptionBlocksPanel makeOverlapPanel(PlotController controller) {
 
