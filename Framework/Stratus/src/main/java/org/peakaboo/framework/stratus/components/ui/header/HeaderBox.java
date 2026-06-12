@@ -2,6 +2,7 @@ package org.peakaboo.framework.stratus.components.ui.header;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -152,6 +153,17 @@ public class HeaderBox extends JPanel {
 		}
 	}
 
+	@Override
+	public Dimension getPreferredSize() {
+		ensureBuilt();
+		return super.getPreferredSize();
+	}
+
+	@Override
+	public Dimension getMinimumSize() {
+		ensureBuilt();
+		return super.getMinimumSize();
+	}
 
 	private void rebuild() {
 		
