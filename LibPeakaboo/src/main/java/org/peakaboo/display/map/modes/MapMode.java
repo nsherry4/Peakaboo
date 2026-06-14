@@ -87,6 +87,19 @@ public abstract class MapMode {
 		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, settings.getFg(), null, null, null, title);
 	}
 	
+	/**
+	 * Renders the selection mask as an overlay on top of an already-drawn base map.
+	 * Shared by the modes' {@link #drawSelection} implementations; the colour and
+	 * dimensions differ per mode. The base map and axes are not touched here, so this
+	 * is cheap to call on every paint while a selection is being dragged.
+	 */
+	protected void drawSelectionPainter(Surface backend, PaletteColour colour, IntArrayList points, int width, int height) {
+		map.setContext(backend);
+		dr.drawToVectorSurface = backend.isVectorSurface();
+		SelectionMaskPainter selectionPainter = getSelectionPainter(colour, points, width, height);
+		map.drawSelectionOverlay(selectionPainter);
+	}
+
 	protected SelectionMaskPainter getSelectionPainter(PaletteColour colour, IntArrayList points, int width, int height) {
 		SelectionMaskPainter selectionPainter = selectionPainterRef.get();
 		if (selectionPainter == null) {
@@ -165,7 +178,15 @@ public abstract class MapMode {
 	}
 	
 	public abstract void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps);
-	
+
+	/**
+	 * Draws only the selection overlay for this mode, on top of an already-drawn base
+	 * map. Each mode supplies its own selection colour and dimensions. Always called
+	 * after {@link #draw}; on the buffered path it is also called on its own (against a
+	 * cached base) when only the selection has changed.
+	 */
+	public abstract void drawSelection(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend);
+
 	public abstract String mapModeName();
 
 	public abstract void invalidate();

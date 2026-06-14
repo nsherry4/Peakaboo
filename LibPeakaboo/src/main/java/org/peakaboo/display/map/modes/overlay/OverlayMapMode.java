@@ -205,6 +205,11 @@ public class OverlayMapMode extends MapMode {
 
 	
 	@Override
+	public void drawSelection(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend) {
+		drawSelectionPainter(backend, new PaletteColour(0x80ffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
+	}
+
+	@Override
 	public void invalidate() {
 		map.needsMapRepaint();
 		if (overlayMapPainters != null) {

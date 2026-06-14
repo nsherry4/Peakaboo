@@ -155,6 +155,12 @@ public class CorrelationMapMode extends MapMode {
 	
 	
 	@Override
+	public void drawSelection(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend) {
+		CorrelationModeData correlationData = (CorrelationModeData) data.mapModeData;
+		drawSelectionPainter(backend, new PaletteColour(0x80498ed7), settings.selectedPoints, correlationData.getSize().x, correlationData.getSize().y);
+	}
+
+	@Override
 	public void invalidate() {
 		map.needsMapRepaint();
 		if (correlationMapPainter != null) { correlationMapPainter.clearBuffer(); }

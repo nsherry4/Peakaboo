@@ -19,7 +19,6 @@ public class Mapper {
 	private boolean invalidated;
 	private ManagedBuffer bufferer = new ManagedBuffer(Display.OVERSIZE);
 	private Coord<Integer> lastSize;
-	private Coord<Integer> lastOffset;
 	
 	private Map<String, MapMode> modecache = new LinkedHashMap<>();
 	private MapMode mapmode;
@@ -65,21 +64,22 @@ public class Mapper {
 		if (context.getSurfaceDescriptor().isVector()) {
 			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
-			
+
 			// Apply horizontal centering transform
 			int offsetX = calculateHorizontalCenteringOffset(size);
 			context.save();
 				context.translate(offsetX, 0);
 				mapmode.draw(size, data, settings, context, spectrumSteps);
+				mapmode.drawSelection(size, data, settings, context);
 			context.restore();
 		} else if (doBuffer) {
 
 			Buffer buffer = bufferer.get(size.x, size.y);
-			int currentOffsetX = calculateHorizontalCenteringOffset(size);
-			boolean offsetChanged = lastOffset == null || lastOffset.x != currentOffsetX;
-			boolean needsRedraw = buffer == null || lastSize == null || !lastSize.equals(size) || invalidated || offsetChanged;
+			boolean needsRedraw = buffer == null || lastSize == null || !lastSize.equals(size) || invalidated;
 
-			//if there is no cached buffer meeting our size requirements, create it and draw to it
+			//The base map (everything except the selection overlay) is cached in the
+			//buffer and only rebuilt when the data or size changes. A selection-only
+			//change skips this and just recomposites the overlay below.
 			if (needsRedraw) {
 				if (buffer == null) {
 					buffer = bufferer.create(context);
@@ -87,18 +87,29 @@ public class Mapper {
 				// Clear the buffer first to remove any old content
 				buffer.clear();
 
-				// Draw map to buffer at original position
+				// Draw the base map to the buffer at the original position
 				mapmode.draw(size, data, settings, buffer, spectrumSteps);
 				lastSize = new Coord<>(size);
-				lastOffset = new Coord<>(currentOffsetX, 0);
 				invalidated = false;
 			}
+
+			// Compute the centering offset *after* the base map has been (re)built. The
+			// title/border geometry that calcTotalSize() relies on is only refreshed as a
+			// side-effect of mapmode.draw(), so computing the offset earlier would use the
+			// previous frame's layout and misalign the map on a layout-affecting change
+			// (e.g. toggling the title) until a later repaint. The buffer is always drawn
+			// at the origin and centering is applied only at compose time, so the offset is
+			// independent of the buffer contents and is safe to compute last.
+			int currentOffsetX = calculateHorizontalCenteringOffset(size);
 
 			context.save();
 				context.rectAt(0, 0, size.x, size.y);
 				context.clip();
-				// Compose buffer with horizontal centering offset applied
+				// Compose the cached base map with the horizontal centering offset...
 				context.compose(buffer, currentOffsetX, 0, 1f);
+				// ...then draw the live selection overlay on top at the same offset.
+				context.translate(currentOffsetX, 0);
+				mapmode.drawSelection(size, data, settings, context);
 			context.restore();
 
 		} else {
@@ -110,6 +121,7 @@ public class Mapper {
 			context.save();
 				context.translate(offsetX, 0);
 				mapmode.draw(size, data, settings, context, spectrumSteps);
+				mapmode.drawSelection(size, data, settings, context);
 			context.restore();
 		}
 
@@ -137,14 +149,19 @@ public class Mapper {
 	 *             simply be recomposited
 	 */
 	public void setNeedsRedraw(boolean deep) {
+		/*
+		 * A deep change (data, dimensions, palette, ...) invalidates the cached base map
+		 * and the per-painter buffers. A shallow change (deep == false) is selection-only:
+		 * the base map is untouched and the selection overlay is simply recomposited on
+		 * top of the cached base on the next paint, so there is nothing to invalidate here.
+		 */
 		if (deep) {
 			mapmode.invalidate();
+			this.invalidated = true;
+			// Also clear the buffer cache to force complete redraw - force resize to clear cache
+			this.bufferer.resize(1, 1);
+			this.lastSize = null;
 		}
-		this.invalidated = true;
-		// Also clear the buffer cache to force complete redraw - force resize to clear cache
-		this.bufferer.resize(1, 1);
-		this.lastSize = null;
-		this.lastOffset = null;
 	}
 
 }

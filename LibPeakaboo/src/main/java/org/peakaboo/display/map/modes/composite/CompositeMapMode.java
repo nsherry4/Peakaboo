@@ -26,7 +26,8 @@ public class CompositeMapMode extends MapMode{
 	public static final String MODE_NAME = "Composite";
 	
 	private SpectrumMapPainter contourMapPainter;
-	
+	private SpectrumMapPainter invalidMapPainter;
+
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
 		
@@ -78,11 +79,17 @@ public class CompositeMapMode extends MapMode{
 		
 		
 		
-		//Invalid points with no backing data
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(
-				new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), 
-				compositedata.getInvalidPoints());
-		mapPainters.add(invalidPainter);
+		//Invalid points with no backing data. Cache the painter (like the contour
+		//painter above) so its raster buffer survives between frames instead of being
+		//rebuilt from scratch on every redraw, e.g. while dragging a selection.
+		if (invalidMapPainter == null) {
+			invalidMapPainter = MapTechniqueFactory.getTechnique(
+					new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)),
+					compositedata.getInvalidPoints());
+		} else {
+			invalidMapPainter.setData(compositedata.getInvalidPoints());
+		}
+		mapPainters.add(invalidMapPainter);
 		
 		//Selection Painter
 		SelectionMaskPainter selectionPainter = super.getSelectionPainter(
@@ -101,9 +108,16 @@ public class CompositeMapMode extends MapMode{
 
 
 	@Override
+	public void drawSelection(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend) {
+		drawSelectionPainter(backend, new PaletteColour(0x80ffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
+	}
+
+
+	@Override
 	public void invalidate() {
 		map.needsMapRepaint();
 		if (contourMapPainter != null)			contourMapPainter.clearBuffer();
+		if (invalidMapPainter != null)			invalidMapPainter.clearBuffer();
 	}
 
 

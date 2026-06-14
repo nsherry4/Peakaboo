@@ -12,6 +12,7 @@ import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.Drawing;
 import org.peakaboo.framework.cyclops.visualization.drawing.DrawingRequest;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.MapPainter;
+import org.peakaboo.framework.cyclops.visualization.drawing.map.painters.SelectionMaskPainter;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.PainterData;
 import org.peakaboo.framework.cyclops.visualization.drawing.painters.axis.AxisPainter;
 import org.peakaboo.framework.cyclops.visualization.palette.Palette;
@@ -126,8 +127,13 @@ public class MapDrawing extends Drawing
 	
 
 	/**
-	 * Draws a map using the given data and the given set of {@link MapPainter}s
-	 * 
+	 * Draws a map using the given data and the given set of {@link MapPainter}s.
+	 * <p>
+	 * Note: {@link SelectionMaskPainter}s are <em>deferred</em> and are not drawn here.
+	 * The selection is rendered separately via
+	 * {@link #drawSelectionOverlay(MapPainter)} so that callers can cache the base map
+	 * and recomposite a cheap selection overlay on top without re-rendering everything.
+	 *
 	 * @param data
 	 *            the data to use to draw the map
 	 * @param mapPainters
@@ -136,9 +142,9 @@ public class MapDrawing extends Drawing
 	@Override
 	public void draw()
 	{
-		
+
 		if (context == null) return;
-		
+
 		float oldMaxIntensity = dr.maxYIntensity;
 
 		Coord<Bounds<Float>> borderSizes = calcAxisBorders();
@@ -149,13 +155,15 @@ public class MapDrawing extends Drawing
 
 
 			context.translate(borderSizes.x.start, borderSizes.y.start);
-			
+
 			for (MapPainter t : painters) {
+				// Selection masks are drawn separately as an overlay (see class note above)
+				if (t instanceof SelectionMaskPainter) continue;
 				t.draw(new PainterData(context, dr, mapDimensions, null));
 			}
 
 
-			
+
 		context.restore();
 
 
@@ -207,6 +215,27 @@ public class MapDrawing extends Drawing
 
 	}
 
+
+	/**
+	 * Draws a single selection-overlay painter on top of an already-drawn base map,
+	 * using the same border translate and cell geometry as {@link #draw()}. This lets
+	 * a selection change be recomposited cheaply without re-rendering the base map or
+	 * its axes.
+	 *
+	 * @param selectionPainter the selection painter to draw; ignored if {@code null}
+	 */
+	public void drawSelectionOverlay(MapPainter selectionPainter)
+	{
+		if (context == null || selectionPainter == null) return;
+
+		Coord<Bounds<Float>> borderSizes = calcAxisBorders();
+		Coord<Float> mapDimensions = calcMapSize();
+
+		context.save();
+			context.translate(borderSizes.x.start, borderSizes.y.start);
+			selectionPainter.draw(new PainterData(context, dr, mapDimensions, null));
+		context.restore();
+	}
 
 
 	/**

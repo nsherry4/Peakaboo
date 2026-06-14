@@ -112,16 +112,6 @@ public class QuickMapPanel extends HeaderLayer {
 			if (t == MapUpdateType.UI_OPTIONS) {
 				selections.setSelection(controller.getSelection().getSelectionType());
 			}
-			
-			// Double-redraw solves some issues around image sizing and alignment
-			canvas.setNeedsRedraw(true);
-			canvas.repaint();
-			// Delay the redraw operations to ensure canvas size is fully updated
-			SwingUtilities.invokeLater(() -> {
-				canvas.setNeedsRedraw(true);
-				canvas.repaint();
-			});
-			
 		});
 		selections.setSelection(controller.getSelection().getSelectionType());
 		

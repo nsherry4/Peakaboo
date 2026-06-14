@@ -26,7 +26,8 @@ public class RatioMapMode extends MapMode {
 	public static String MODE_NAME = "Ratio";
 	
 	private SpectrumMapPainter ratioMapPainter;
-	
+	private SpectrumMapPainter invalidMapPainter;
+
 	@Override
 	public void draw(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend, int spectrumSteps) {
 		map.setContext(backend);
@@ -109,8 +110,14 @@ public class RatioMapMode extends MapMode {
 		
 
 
-		MapPainter invalidPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), ratiodata.second);
-		mapPainters.add(invalidPainter);
+		// Cache the invalid-points painter so its raster buffer is reused between
+		// frames rather than rebuilt every redraw (e.g. while dragging a selection).
+		if (invalidMapPainter == null) {
+			invalidMapPainter = MapTechniqueFactory.getTechnique(new SaturationPalette(new PaletteColour(0xff777777), new PaletteColour(0x00000000)), ratiodata.second);
+		} else {
+			invalidMapPainter.setData(ratiodata.second);
+		}
+		mapPainters.add(invalidMapPainter);
 		
 		
 		//Selection Painter
@@ -130,9 +137,15 @@ public class RatioMapMode extends MapMode {
 	}
 
 	@Override
+	public void drawSelection(Coord<Integer> size, MapRenderData data, MapRenderSettings settings, Surface backend) {
+		drawSelectionPainter(backend, new PaletteColour(0x80ffffff), settings.selectedPoints, settings.userDataWidth, settings.userDataHeight);
+	}
+
+	@Override
 	public void invalidate() {
 		map.needsMapRepaint();
 		if (ratioMapPainter != null) { ratioMapPainter.clearBuffer(); }
+		if (invalidMapPainter != null) { invalidMapPainter.clearBuffer(); }
 	}
 
 	@Override

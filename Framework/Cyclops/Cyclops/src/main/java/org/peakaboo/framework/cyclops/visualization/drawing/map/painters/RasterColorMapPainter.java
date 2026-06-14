@@ -60,21 +60,26 @@ public class RasterColorMapPainter extends MapPainter
 		
 		p.context.save();
 
-			IntArrayList data = transformListDataForMap(p.dr, pixels);
-	
 			if (p.dr.drawToVectorSurface) {
+				// Vector surfaces can't be buffered, so we always re-transform and draw.
+				IntArrayList data = transformListDataForMap(p.dr, pixels);
 				drawAsScalar(p, data, cellSize);
 				buffer = null;
 			} else {
-				
+
 				if (buffer == null || buffer.getWidth() != p.dr.dataWidth || buffer.getHeight() != p.dr.dataHeight) {
 					buffer = createRasterBuffer(p);
+					// A freshly allocated buffer is blank and must be filled.
+					stale = true;
 				}
 				if (stale) {
+					// Only pay for the flip/transform when we actually need to rewrite
+					// the buffer; otherwise we just recomposite the cached pixels.
+					IntArrayList data = transformListDataForMap(p.dr, pixels);
 					drawToRasterBuffer(data, p.dr.dataHeight * p.dr.dataWidth);
 				}
 				p.context.compose(buffer, 0, 0, cellSize);
-				
+
 			}
 
 		p.context.restore();
