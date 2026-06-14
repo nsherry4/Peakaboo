@@ -1,12 +1,25 @@
 package org.peakaboo.framework.plural.monitor.swing;
 
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.peakaboo.framework.eventful.EventfulEnumListener;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
+import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
+
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.border.EmptyBorder;
 
 public class TaskMonitorLayer extends HeaderLayer {
 
@@ -23,7 +36,102 @@ public class TaskMonitorLayer extends HeaderLayer {
 	}
 	
 	public TaskMonitorLayer(LayerPanel owner, String title, List<TaskMonitorView> observerViews) {
-		super(owner, TaskMonitorPanel.makeHeader(title, observerViews), TaskMonitorPanel.makeBody(observerViews));		
+		super(owner, makeHeader(title, observerViews), makeBody(observerViews));
+		this.withHeaderShadow(false);
+		this.withHeaderBackgroundPainted(false);
 	}
 	
+	static HeaderBox makeHeader(String title) {
+		return makeHeader(title, Collections.emptyList());
+	}
+	
+	static HeaderBox makeHeader(String title, List<TaskMonitorView> observerViews) {
+		
+		FluentButton cancel = new FluentButton("Cancel")
+				.withStateCritical()
+				.withAction(() -> {
+					List<TaskMonitorView> reversed = new ArrayList<>(observerViews);
+					Collections.reverse(reversed);
+					for (TaskMonitorView v : reversed) {
+						v.getExecutor().abort();
+					}
+				});
+		
+		return new HeaderBox(null, title, cancel);
+	}
+	
+	static JPanel makeBody() {
+		return makeBody(Collections.emptyList());
+	}
+	
+	static JPanel makeBody(List<TaskMonitorView> observerViews) {
+		
+		JPanel body = new JPanel(new BorderLayout());
+		body.setBorder(Spacing.bHuge());
+		
+		JPanel lineItems = new JPanel();
+		lineItems.setBorder(new EmptyBorder(0, Spacing.huge, Spacing.huge, Spacing.huge));
+		LayoutManager layout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		lineItems.setLayout(layout);
+
+
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1.0;
+		c.weighty = 0.0;
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
+
+		for (TaskMonitorView obsv : observerViews) {
+			lineItems.add(obsv, c);
+			c.gridy += 1;
+		}
+		body.add(lineItems, BorderLayout.CENTER);
+		
+		
+		
+		JProgressBar progress = new JProgressBar();
+		progress.setMaximum(100);
+		progress.setMinimum(0);
+		progress.setValue(0);
+		body.add(progress, BorderLayout.SOUTH);
+		
+		for (TaskMonitorView v : observerViews) {
+			v.getExecutor().addListener(event -> {
+				TaskMonitor<?> exec = v.getExecutor();
+				if (exec.getSize() <= 0) {
+					progress.setIndeterminate(true);
+				} else {
+					progress.setIndeterminate(false);
+					progress.setValue((int)(exec.getPercent()*100));
+				}
+			});
+		}
+		
+		return body;
+		
+	}
+	
+	public static <T> void onLayerPanel(TaskMonitor<T> monitor, LayerPanel parent) {
+		TaskMonitorLayer layer = new TaskMonitorLayer(parent, "Downloading", monitor);
+		parent.pushLayer(layer);
+		
+		//listener which removes the progress panel and the listener if the state changes from RUNNING
+		EventfulEnumListener<TaskMonitor.Event> listener = new EventfulEnumListener<TaskMonitor.Event>() {
+			boolean handled = false;
+			@Override
+			public void change(TaskMonitor.Event message) {
+				if (handled) { return; }
+				if (monitor.getState() != TaskMonitor.State.RUNNING) {
+					monitor.removeListener(this);
+					parent.removeLayer(layer);
+					handled = true;
+				}
+			}
+		};
+		monitor.addListener(listener);
+		
+		monitor.start();
+
+	}
 }

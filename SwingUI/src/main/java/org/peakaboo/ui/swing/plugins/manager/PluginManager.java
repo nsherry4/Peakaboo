@@ -20,9 +20,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-import org.peakaboo.dataset.sink.plugin.DataSinkRegistry;
-import org.peakaboo.dataset.source.plugin.DataSourceRegistry;
-import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.bolt.plugin.core.BoltPlugin;
 import org.peakaboo.framework.bolt.plugin.core.BoltPluginRegistry;
@@ -30,7 +27,7 @@ import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
 import org.peakaboo.framework.bolt.plugin.core.PluginRegistry;
 import org.peakaboo.framework.bolt.plugin.core.issue.BoltIssue;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
-import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
@@ -40,7 +37,6 @@ import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
 import org.peakaboo.framework.stratus.components.stencil.StencilTreeCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
-import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
 import org.peakaboo.ui.swing.app.DesktopApp;
@@ -101,7 +97,7 @@ public class PluginManager extends JPanel implements HeaderControlProvider {
 					}
 				});
 				
-				TaskMonitorPanel.onLayerPanel(monitor, controller.getParentLayer());
+				TaskMonitorLayer.onLayerPanel(monitor, controller.getParentLayer());
 
 			}
 			

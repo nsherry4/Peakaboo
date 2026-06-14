@@ -31,7 +31,7 @@ import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.GraphicsPanel;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
-import org.peakaboo.framework.plural.monitor.swing.TaskMonitorPanel;
+import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.tier.Tier;
 import org.peakaboo.ui.swing.Peakaboo;
@@ -198,7 +198,7 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 				filesDropped(optfiles.get());
 			});
 
-			TaskMonitorPanel.onLayerPanel(monitor, plotPanel);
+			TaskMonitorLayer.onLayerPanel(monitor, plotPanel);
 
 		} catch (Exception e) {
 			OneLog.log(Level.SEVERE, "Failed to download data", e);

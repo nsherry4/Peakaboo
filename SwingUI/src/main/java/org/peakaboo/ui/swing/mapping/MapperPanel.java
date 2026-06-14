@@ -40,6 +40,7 @@ import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener.But
 import org.peakaboo.framework.stratus.components.Banner;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
+import org.peakaboo.framework.stratus.components.panels.BodyShadowPanel;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
@@ -103,7 +104,9 @@ public class MapperPanel extends TabbedLayerPanel {
 		sidebar.setPreferredSize(new Dimension(225, sidebar.getPreferredSize().height));
 		split.add(sidebar, BorderLayout.WEST);
 		split.add(mapCanvas, BorderLayout.CENTER);
-		contentLayer.add(split, BorderLayout.CENTER);
+		
+		BodyShadowPanel bodyConttainer = new BodyShadowPanel(split);
+		contentLayer.add(bodyConttainer, BorderLayout.CENTER);
 		
 		MapperToolbar toolbar = new MapperToolbar(this, controller);
 		contentLayer.add(toolbar, BorderLayout.NORTH);

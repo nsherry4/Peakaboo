@@ -42,6 +42,7 @@ import org.peakaboo.framework.stratus.components.ui.filechooser.places.PlacesPan
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentToggleButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
 
@@ -92,12 +93,14 @@ public class StratusFileChooser extends JFileChooser {
 			placesWidget = makePlacesWidget();
 			headerWidget = makeHeaderWidget();
 			
-			this.setLayout(new BorderLayout());
-			this.add(chooserPanel, BorderLayout.CENTER);
-			this.add(headerWidget, BorderLayout.NORTH);
+			JPanel body = new JPanel(new BorderLayout());
+			body.add(chooserPanel, BorderLayout.CENTER);
 			if (placesWidget.supported()) {
-				this.add(placesWidget, BorderLayout.WEST);
+				body.add(placesWidget, BorderLayout.WEST);
 			}
+
+			this.setLayout(new BorderLayout());
+			this.add(new HeaderPanel(headerWidget, body), BorderLayout.CENTER);
 			
 			this.setPreferredSize(new Dimension(850, 400));
 						

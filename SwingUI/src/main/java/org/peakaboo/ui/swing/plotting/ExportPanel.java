@@ -11,6 +11,7 @@ import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceExporterRegistry;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 import org.peakaboo.framework.stratus.components.ui.options.OptionChooserPanel;
@@ -35,9 +36,7 @@ public class ExportPanel extends JPanel {
 					parent.removeLayer(layer);
 				}
 			);
-		this.add(header, BorderLayout.NORTH);
-		
-		
+
 		JPanel body = new JPanel();
 		body.setBorder(Spacing.bHuge());
 		body.setLayout(new BorderLayout(Spacing.huge, Spacing.huge));
@@ -50,8 +49,8 @@ public class ExportPanel extends JPanel {
 			return new OptionRadioButton().withText(item.title(), item.description());
 		});
 		body.add(formatPicker, BorderLayout.CENTER);
-		
-		this.add(body, BorderLayout.CENTER);
+
+		this.add(new HeaderPanel(header, body), BorderLayout.CENTER);
 		parent.pushLayer(layer);
 		
 	}

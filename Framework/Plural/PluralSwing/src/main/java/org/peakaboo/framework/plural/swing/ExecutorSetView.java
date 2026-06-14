@@ -15,6 +15,7 @@ import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 
 public class ExecutorSetView extends JPanel
 {
@@ -38,8 +39,7 @@ public class ExecutorSetView extends JPanel
 				.withAction(() -> executors.requestAbortWorking());
 		
         HeaderBox header = new HeaderBox(null, executors.getDescription(), cancel);
-        this.add(header, BorderLayout.NORTH);
-		
+
 		JPanel center = new JPanel(new BorderLayout());
 		center.setBorder(Spacing.bHuge());
 		
@@ -75,8 +75,10 @@ public class ExecutorSetView extends JPanel
 		center.add(progress, BorderLayout.SOUTH);
 
 		
-		
-		this.add(center, BorderLayout.CENTER);
+		var contents = new HeaderPanel(header, center)
+				.withHeaderBackgroundPainted(false)
+				.withHeaderShadow(false);
+		this.add(contents, BorderLayout.CENTER);
 		
 
 		

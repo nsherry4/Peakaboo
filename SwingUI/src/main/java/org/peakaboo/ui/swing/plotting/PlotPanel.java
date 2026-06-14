@@ -73,6 +73,7 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
+import org.peakaboo.framework.stratus.components.panels.BodyShadowPanel;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.panels.PropertyPanel;
 import org.peakaboo.framework.stratus.components.panels.TitledPanel;
@@ -224,9 +225,6 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		toolBar = new PlotToolbar(this, controller);
 		pane.add(toolBar, c);
 
-		JPanel p = new JPanel();
-		p.setPreferredSize(new Dimension(1000, 100));
-
 		JScrollPane scrolledCanvas = new JScrollPane(canvas);
 		scrolledCanvas.setAutoscrolls(true);
 		scrolledCanvas.setBorder(Spacing.bNone());
@@ -284,26 +282,29 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 				"You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.",
 				peakabooLogo);
 		new FileDrop(blankCanvas, canvas.getFileDropListener());
-
+		
 		JTabbedPane sidebarTabs = new JTabbedPane();
 		sidebarTabs.add(new CurveFittingView(controller.fitting(), controller, this, canvas), 0);
 		sidebarTabs.add(new FiltersetViewer(controller.filtering(), getTabbedInterface().getWindow()), 1);
-
+		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
+		sidebarTabs.setPreferredSize(new Dimension(250, sidebarTabs.getPreferredSize().height));
+		
+		// Component that holds the plot and the sidebar
+		ClearPanel split = new ClearPanel(new BorderLayout());
+		split.add(blankCanvas, BorderLayout.CENTER);
+		split.setBorder(Spacing.bNone());
+		
+		// We swap out the blank canvas for a real plot once data is loaded
+		BodyShadowPanel bodyContainer = new BodyShadowPanel(split);
+		
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 1;
 		c.weightx = 1.0;
 		c.weighty = 1.0;
 		c.fill = GridBagConstraints.BOTH;
-
-		sidebarTabs.setBorder(new MatteBorder(0, 0, 0, 1, Stratus.getTheme().getWidgetBorder()));
-		ClearPanel split = new ClearPanel(new BorderLayout());
-		sidebarTabs.setPreferredSize(new Dimension(250, sidebarTabs.getPreferredSize().height));
-		split.add(blankCanvas, BorderLayout.CENTER);
-
-		split.setBorder(Spacing.bNone());
-		pane.add(split, c);
-
+		pane.add(bodyContainer, c);
+		
 		controller.addListener(e -> {
 			if (controller.data().hasDataSet() && Arrays.asList(split.getComponents()).contains(blankCanvas)) {
 				split.remove(blankCanvas);
@@ -574,7 +575,6 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 		TaskMonitorView taskView = new TaskMonitorView(mapTask);
 		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Maps", taskView);
-
 		mapTask.addListener(event -> {
 
 			// if this is just a progress event, exit early

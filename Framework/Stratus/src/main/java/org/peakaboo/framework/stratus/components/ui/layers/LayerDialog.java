@@ -21,6 +21,7 @@ import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ButtonBox;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.components.ui.live.LiveDialog;
 
 
@@ -103,42 +104,34 @@ public class LayerDialog {
 	}
 	
 	private void showInLayer(LayerPanel owner) {
-		JPanel panel = buildPanel();
+		JComponent panel = buildPanel();
 		Layer layer = new ModalLayer(owner, panel);
 		owner.pushLayer(layer);
 		if (defaultButton != null) { defaultButton.grabFocus(); }
 		hider = () -> owner.removeLayer(layer);
 	}
 	
-	private JPanel buildPanel() {
-		JPanel panel = new JPanel(new BorderLayout());
+	private JComponent buildPanel() {
 		int pad = Spacing.huge * 2;
 
 		JPanel center = new JPanel(new BorderLayout(pad, pad));
 		center.setBorder(new EmptyBorder(pad, pad, pad, pad));
 		center.add(this.body, BorderLayout.CENTER);
-		panel.add(center, BorderLayout.CENTER);
-		
+
+		JPanel bodyPanel = new JPanel(new BorderLayout());
 		JLabel lblIcon = new JLabel();
 		lblIcon.setHorizontalAlignment(JLabel.CENTER);
+		lblIcon.setVerticalAlignment(JLabel.CENTER);
 		lblIcon.setBorder(new EmptyBorder(pad, pad, pad, 0));
 		if (icon != null) {
 			lblIcon.setIcon(icon);
-			panel.add(lblIcon, BorderLayout.WEST);
-		}
-			
-
-		if (icon != null) {
+			bodyPanel.add(lblIcon, BorderLayout.WEST);
 			center.add(Box.createVerticalGlue(), BorderLayout.NORTH);
 			center.add(Box.createVerticalGlue(), BorderLayout.SOUTH);
 		}
-		lblIcon.setVerticalAlignment(JLabel.CENTER);
-		
-		panel.add(buildHeaderBox(), BorderLayout.NORTH);
-	
-		
-		
-		return panel;
+		bodyPanel.add(center, BorderLayout.CENTER);
+
+		return new HeaderPanel(buildHeaderBox(), bodyPanel);
 	}
 	
 	

@@ -128,6 +128,65 @@ public class HeaderLayer extends ModalLayer {
 		this.onClose = onClose;
 	}
 	
+	/**
+	 * Sets whether the header casts a soft shadow onto the body. Enabled by default.
+	 *
+	 * @param headerShadow true to draw the shadow, false to hide it
+	 */
+	public void setHeaderShadow(boolean headerShadow) {
+		this.root.setHeaderShadow(headerShadow);
+	}
+	
+	/**
+	 * Gets whether the header casts a soft shadow onto the body.
+	 *
+	 * @return true if the shadow is drawn, false otherwise
+	 */
+	public boolean isHeaderShadow() {
+		return this.root.isHeaderShadow();
+	}
+	
+	/**
+	 * Fluent variant of {@link #setHeaderShadow(boolean)}.
+	 *
+	 * @param headerShadow true to draw the shadow, false to hide it
+	 * @return this HeaderLayer
+	 */
+	public HeaderLayer withHeaderShadow(boolean headerShadow) {
+		setHeaderShadow(headerShadow);
+		return this;
+	}
+	
+	/**
+	 * Sets whether the header paints its background. When disabled, the header is
+	 * transparent and shows whatever lies behind it. Enabled by default.
+	 *
+	 * @param paintBackground true to paint the background, false to leave it transparent
+	 */
+	public void setHeaderBackgroundPainted(boolean paintBackground) {
+		this.root.setHeaderBackgroundPainted(paintBackground);
+	}
+	
+	/**
+	 * Gets whether the header paints its background.
+	 *
+	 * @return true if the background is painted, false otherwise
+	 */
+	public boolean isHeaderBackgroundPainted() {
+		return this.root.isHeaderBackgroundPainted();
+	}
+	
+	/**
+	 * Fluent variant of {@link #setHeaderBackgroundPainted(boolean)}.
+	 *
+	 * @param paintBackground true to paint the background, false to leave it transparent
+	 * @return this HeaderLayer
+	 */
+	public HeaderLayer withHeaderBackgroundPainted(boolean paintBackground) {
+		setHeaderBackgroundPainted(paintBackground);
+		return this;
+	}
+	
 }
 
 

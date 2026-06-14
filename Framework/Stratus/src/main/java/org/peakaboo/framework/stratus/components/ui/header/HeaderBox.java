@@ -54,6 +54,7 @@ public class HeaderBox extends JPanel {
 	private WindowDragger dragger;
 
 	private boolean needsRebuild = false;
+	private boolean paintBackground = true;
 
 
 	/**
@@ -112,6 +113,10 @@ public class HeaderBox extends JPanel {
 	public void paintComponent(Graphics g) {
 
 		super.paintComponent(g);
+
+		if (!paintBackground) {
+			return;
+		}
 
 		g = g.create();
 		Graphics2D g2 = (Graphics2D) g;
@@ -198,7 +203,7 @@ public class HeaderBox extends JPanel {
 		}
 		
 		Border b = Spacing.bMedium();
-		b = new CompoundBorder(new MatteBorder(0, 0, 1, 0, Stratus.getTheme().getWidgetBorder()), b);
+		b = new CompoundBorder(new MatteBorder(0, 0, paintBackground ? 1 : 0, 0, Stratus.getTheme().getWidgetBorder()), b);
 		setBorder(b);
 		
 	}
@@ -316,6 +321,38 @@ public class HeaderBox extends JPanel {
 	 */
 	public boolean getShowClose() {
 		return showClose;
+	}
+
+	/**
+	 * Sets whether the header paints its background. When disabled, the header is
+	 * transparent and shows whatever lies behind it.
+	 *
+	 * @param paintBackground true to paint the background, false to leave it transparent
+	 */
+	public void setPaintBackground(boolean paintBackground) {
+		this.paintBackground = paintBackground;
+		scheduleRebuild();
+		repaint();
+	}
+
+	/**
+	 * Gets whether the header paints its background.
+	 *
+	 * @return true if the background is painted, false otherwise
+	 */
+	public boolean isPaintBackground() {
+		return paintBackground;
+	}
+
+	/**
+	 * Fluent variant of {@link #setPaintBackground(boolean)}.
+	 *
+	 * @param paintBackground true to paint the background, false to leave it transparent
+	 * @return this HeaderBox
+	 */
+	public HeaderBox withPaintBackground(boolean paintBackground) {
+		setPaintBackground(paintBackground);
+		return this;
 	}
 
 	/**

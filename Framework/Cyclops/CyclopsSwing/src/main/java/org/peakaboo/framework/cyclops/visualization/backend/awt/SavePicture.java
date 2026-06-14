@@ -33,6 +33,7 @@ import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtens
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
+import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.framework.stratus.components.ui.layers.ModalLayer;
 import org.peakaboo.framework.stratus.components.ui.options.OptionChooserPanel;
@@ -162,7 +163,6 @@ public class SavePicture extends JPanel {
 
 	private void makeGUI() {
 		setLayout(new BorderLayout());
-		add(createOptionsPane(), BorderLayout.CENTER);
 		var box = HeaderBox.createYesNo(
 				"Save as Image",
 				"Save",
@@ -173,7 +173,7 @@ public class SavePicture extends JPanel {
 					hide();
 				}
 		);
-		add(box, BorderLayout.NORTH);
+		add(new HeaderPanel(box, createOptionsPane()), BorderLayout.CENTER);
 	}
 	
 	public JPanel createOptionsPane() {
