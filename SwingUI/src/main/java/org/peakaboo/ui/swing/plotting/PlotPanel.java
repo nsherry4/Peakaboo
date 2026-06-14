@@ -526,6 +526,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 		ExecutorSet<Boolean> loader = PluralExecutor.build("Loading Data Set", "Calculating Values", (execset, exec) -> {
 			getController().data().setDataSource(sds, exec, execset::isAborted);
+			//setDataSource already cleared the undo history, so don't record a point for the session apply
 			getController().load(settings, false);
 			removeLayer(layer.get());
 			return true;

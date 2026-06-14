@@ -36,6 +36,38 @@ public class UndoController extends EventfulBeacon
 	}
 
 
+	/**
+	 * Sets whether undo-point recording is suppressed, returning the previous
+	 * value so callers can restore it. Used to make bulk operations (e.g. loading
+	 * a session) atomic from the undo system's perspective, so sub-controllers
+	 * don't each push their own undo point.
+	 */
+	public boolean suppress(boolean suppress) {
+		boolean previous = working;
+		working = suppress;
+		return previous;
+	}
+
+
+	/**
+	 * Re-syncs the recorded current state to the present model without adding an
+	 * undo step or disturbing the undo/redo stacks. Use after a bulk change that
+	 * deliberately records no undo point (e.g. a session applied over a freshly
+	 * opened dataset whose history was just cleared) so that the recorded current
+	 * state matches the model. Without this, the next change would push the stale
+	 * pre-change state and undoing it would also revert the bulk change.
+	 * <p>
+	 * No-ops while suppressed (e.g. during undo/redo), so it never disturbs an
+	 * in-progress state replay.
+	 */
+	public void rebaseline() {
+		if (working) { return; }
+		String saved = plot.save().serialize();
+		String name = (currentState != null) ? currentState.getName() : "";
+		currentState = new UndoPoint(name, saved);
+	}
+
+
 	public void setUndoPoint(String change, boolean distinctChange) {
 		if (working) { return; }
 		
@@ -96,18 +128,18 @@ public class UndoController extends EventfulBeacon
 	public void undo()
 	{
 		if (!canUndo()) return;
-		
+
+		boolean wasSuppressed = suppress(true);
 		try {
-			working = true;
 			if (currentState != null) { redoStack.push(currentState); }
 			currentState = undoStack.pop();
-			plot.load(currentState.getState(), true);
+			plot.load(currentState.getState(), false);
 		} catch (DruthersLoadException e) {
 			OneLog.log(Level.WARNING, "Could not load application state from undo history", e);
 		} finally {
-			working = false;
+			suppress(wasSuppressed);
 		}
-		
+
 		updateListeners();
 
 	}
@@ -118,17 +150,17 @@ public class UndoController extends EventfulBeacon
 
 		if (!canRedo()) return;
 
+		boolean wasSuppressed = suppress(true);
 		try {
-			working = true;
 			if (currentState != null) { undoStack.push(currentState); }
 			currentState = redoStack.pop();
-			plot.load(currentState.getState(), true);
+			plot.load(currentState.getState(), false);
 		} catch (DruthersLoadException e) {
 			OneLog.log(Level.WARNING, "Could not load application state from undo history", e);
 		} finally {
-			working = false;
+			suppress(wasSuppressed);
 		}
-		
+
 		updateListeners();
 		plot.view().updateListeners();
 		plot.filtering().updateListeners();

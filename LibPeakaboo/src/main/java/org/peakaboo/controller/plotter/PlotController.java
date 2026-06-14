@@ -118,26 +118,52 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 	/**
 	 * Given a {@link SavedSession} in yaml form, read the saved session and load it's values
 	 */
-	public void load(String yaml, boolean isUndoAction) throws DruthersLoadException {
+	public void load(String yaml, boolean recordUndoPoint) throws DruthersLoadException {
 		DruthersSerializer.deserialize(yaml, false,
 				new DruthersSerializer.FormatLoader<>(
-						SavedSession.SESSION_FORMAT, 
-						SavedSession.class, 
-						saved -> load(saved, isUndoAction)
+						SavedSession.SESSION_FORMAT,
+						SavedSession.class,
+						saved -> load(saved, recordUndoPoint)
 					)
 			);
 	}
-	
+
 	/**
-	 * Load the values from this {@link SavedSession} into this controller's model
+	 * Load the values from this {@link SavedSession} into this controller's model.
+	 * <p>
+	 * The whole load is atomic from the undo system's perspective: sub-controller
+	 * mutations are suppressed so they don't each push their own undo point. When
+	 * {@code recordUndoPoint} is true, a single "Load Session" point is recorded
+	 * afterwards so the user can undo the load as one step; pass false for undo/redo
+	 * replays and for loads that follow a fresh dataset open (which already clears
+	 * the undo history).
 	 */
-	public void load(SavedSession saved, boolean isUndoAction) {
-		if (!isUndoAction) undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
-		data().load(saved.data);
-		filtering().load(saved.filters);
-		fitting().load(saved.fittings);
-		view().getViewModel().copy(saved.view);
-		calibration().load(saved.extended);
+	public void load(SavedSession saved, boolean recordUndoPoint) {
+		//Loads are non-strict, so guard the required blocks up front rather than
+		//NPE-ing partway through and leaving the session half-loaded. File-load
+		//callers (DataLoader) validate and report this gracefully before reaching
+		//here; this is a backstop for direct/programmatic callers.
+		saved.validate().ifPresent(missing -> {
+			throw new IllegalArgumentException("Session is missing required '" + missing + "' block");
+		});
+		boolean wasSuppressed = undoController.suppress(true);
+		try {
+			data().load(saved.data);
+			filtering().load(saved.filters);
+			fitting().load(saved.fittings);
+			view().getViewModel().copy(saved.view);
+			calibration().load(saved.extended);
+		} finally {
+			undoController.suppress(wasSuppressed);
+		}
+		if (recordUndoPoint) {
+			undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
+		} else {
+			//no undo step for this load (e.g. undo/redo replay, or a session over a
+			//freshly-opened dataset), but re-sync the recorded state to the loaded model
+			//so a later change doesn't undo past the load. No-ops during undo/redo.
+			undoController.rebaseline();
+		}
 	}
 	
 	
@@ -153,25 +179,37 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 
 	
 	@Deprecated(since = "6", forRemoval = true)
-	public void loadSessionSettingsV1(SavedSessionV1 saved, boolean isUndoAction) {
-		if (!isUndoAction) undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
-		
-		List<String> errors = saved.loadInto(this);
-		
-		filteringController.filteredDataInvalidated();
-		fittingController.fittingDataInvalidated();
-		fittingController.fittingProposalsInvalidated();
-		viewController.updateListeners();
-		calibrationController.updateListeners();
-		
-		//fire an update message from the fittingcontroller with a boolean flag
-		//indicating that the change is not comming from inside the fitting controller
-		fittingController.updateListeners(true);
+	public void loadSessionSettingsV1(SavedSessionV1 saved, boolean recordUndoPoint) {
+		List<String> errors;
+		boolean wasSuppressed = undoController.suppress(true);
+		try {
+			errors = saved.loadInto(this);
+
+			filteringController.filteredDataInvalidated();
+			fittingController.fittingDataInvalidated();
+			fittingController.fittingProposalsInvalidated();
+			viewController.updateListeners();
+			calibrationController.updateListeners();
+
+			//fire an update message from the fittingcontroller with a boolean flag
+			//indicating that the change is not comming from inside the fitting controller
+			fittingController.updateListeners(true);
+		} finally {
+			undoController.suppress(wasSuppressed);
+		}
+
+		if (recordUndoPoint) {
+			undoController.setUndoPoint("Load Session", /*distinctChange =*/ true);
+		} else {
+			//no undo step for this load, but re-sync the recorded state to the loaded
+			//model so a later change doesn't undo past the load. No-ops during undo/redo.
+			undoController.rebaseline();
+		}
 
 		for (String error : errors) {
 			this.notifications().updateListeners(new Notice(error, null));
 		}
-		
+
 	}
 
 	/**

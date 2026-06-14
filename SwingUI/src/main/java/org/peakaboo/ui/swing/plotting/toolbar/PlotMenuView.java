@@ -200,15 +200,15 @@ public class PlotMenuView extends JPopupMenu {
 
 	private void updateWidgetValues() {
 		
-		oLog.setSelected(controller.view().getViewLog());
-		oMono.setSelected(controller.view().getMonochrome());
-		oMarks.setSelected(controller.view().getShowElementMarkers());
-		oIntens.setSelected(controller.view().getShowElementIntensities());
-		oRaw.setSelected(controller.view().getShowRawData());
-		oFit.setSelected(controller.view().getShowIndividualSelections());
-		oConsist.setSelected(controller.view().getConsistentScale());
+		oLog.setSelectedSilently(controller.view().getViewLog());
+		oMono.setSelectedSilently(controller.view().getMonochrome());
+		oMarks.setSelectedSilently(controller.view().getShowElementMarkers());
+		oIntens.setSelectedSilently(controller.view().getShowElementIntensities());
+		oRaw.setSelectedSilently(controller.view().getShowRawData());
+		oFit.setSelectedSilently(controller.view().getShowIndividualSelections());
+		oConsist.setSelectedSilently(controller.view().getConsistentScale());
 
-		scanmodes.get(controller.view().getChannelViewMode()).setSelected(true);
+		scanmodes.get(controller.view().getChannelViewMode()).setSelectedSilently(true);
 
 	}
 	

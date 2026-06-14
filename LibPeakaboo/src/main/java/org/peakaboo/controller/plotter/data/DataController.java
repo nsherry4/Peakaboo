@@ -274,7 +274,16 @@ public class DataController extends EventfulBeacon implements AutoCloseable
 
 	public void load(SavedData data) {
 		this.discards.clear();
+		//Bound saved discard indices against the loaded dataset: a session whose
+		//discards exceed the current scan count would otherwise mark non-existent
+		//scans bad, skewing filtering/averaging with indices the UI can't clear.
+		int scanCount = dataModel.getScanData().scanCount();
 		for (int i : data.discards) {
+			if (i < 0 || i >= scanCount) {
+				OneLog.get().warning("Ignoring out-of-range discarded scan index " + i
+						+ " (dataset has " + scanCount + " scans)");
+				continue;
+			}
 			this.discards.discard(i);
 		}
 		this.setDataSourcePlugin(data.datasource);

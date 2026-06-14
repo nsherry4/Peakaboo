@@ -13,15 +13,17 @@ public class OptionCheckBox extends OptionCustomComponent implements OptionFluen
 	
 	private JCheckBox checkbox;
 	private Consumer<Boolean> listener;
-	
+	private boolean suppressListener = false;
+
 	public OptionCheckBox() {
 		this(null);
 	}
-	
+
 	public OptionCheckBox(OptionBlock block) {
 		super(block, new JCheckBox(), true);
 		checkbox = (JCheckBox) this.getComponent();
 		checkbox.addItemListener(e -> {
+			if (suppressListener) return;
 			if (this.listener != null) this.listener.accept(isSelected());
 		});
 	}
@@ -44,6 +46,19 @@ public class OptionCheckBox extends OptionCustomComponent implements OptionFluen
 
 	public void setSelected(boolean b) {
 		checkbox.setSelected(b);
+	}
+
+	/**
+	 * Sets the selection state without firing the value listener. Use when syncing
+	 * the widget to a model change, so a programmatic update isn't mistaken for user input.
+	 */
+	public void setSelectedSilently(boolean b) {
+		suppressListener = true;
+		try {
+			setSelected(b);
+		} finally {
+			suppressListener = false;
+		}
 	}
 
 

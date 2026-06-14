@@ -538,12 +538,9 @@ public class FittingController extends EventfulType<Boolean>
 		var fittings = fittingModel.selections.getFittedTransitionSeries().stream().map(ITransitionSeries::save).toList();
 		
 		Map<String, String> savedannos = this.fittingModel.annotations.entrySet().stream().collect(Collectors.toMap(
-				e -> e.getKey().getShellement(), 
+				e -> e.getKey().getShellement(),
 				e -> e.getValue()
 		));
-		
-		
-		this.fittingModel.annotations.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getShellement(), e-> e.getValue()));
 
 		return new SavedFittings(
 			fittings, 
@@ -566,6 +563,8 @@ public class FittingController extends EventfulType<Boolean>
 			}
 			//Add this ts to our list
 			fittingModel.selections.addTransitionSeries(ts);
+			//Restore saved visibility.
+			fittingModel.selections.setTransitionSeriesVisibility(ts, fitting.visible);
 			//Check for an annotation. If it exists, add it.
 			if (saved.annotations.containsKey(fitting.shellement)) {
 				setAnnotation(ts, saved.annotations.get(fitting.shellement));
@@ -617,14 +616,34 @@ public class FittingController extends EventfulType<Boolean>
 		
 		//We load all this here instead of a load method in FittingParameters because we track two
 		//of them, one for selections and one for proposed selections.
-		setMinMaxEnergy(saved.calibration.min, saved.calibration.max);
-		setDetectorMaterial(DetectorMaterialType.valueOf(saved.calibration.detectorMaterial));
-		setFWHMBase(saved.calibration.fwhmbase);
-		setShowEscapePeaks(saved.calibration.escapes);
+		try {
+			if (saved.calibration != null) {
+				setMinMaxEnergy(saved.calibration.min, saved.calibration.max);
+				setDetectorMaterial(parseDetectorMaterial(saved.calibration.detectorMaterial));
+				setFWHMBase(saved.calibration.fwhmbase);
+				setShowEscapePeaks(saved.calibration.escapes);
+			} else {
+				errors.add("Session was missing fitting calibration; using defaults.");
+			}
+		} catch (RuntimeException e) {
+			OneLog.log(Level.SEVERE, "Failed to restore fitting calibration", e);
+			errors.add("Failed to restore fitting calibration.");
+		}
 
 		return errors;
-		
+
 	}
-	
+
+	private static DetectorMaterialType parseDetectorMaterial(String name) {
+		if (name == null) {
+			return DetectorMaterialType.getDefault();
+		}
+		try {
+			return DetectorMaterialType.valueOf(name);
+		} catch (IllegalArgumentException e) {
+			return DetectorMaterialType.getDefault();
+		}
+	}
+
 }
 

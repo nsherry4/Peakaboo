@@ -27,6 +27,10 @@ public class PlotMenuEnergy extends JPopupMenu {
 	
 	private JSpinner minEnergy, maxEnergy, noiseEnergy;
 	private FluentButton energyGuess;
+
+	//suppresses the spinner change listeners while syncing widgets to the model, so a
+	//programmatic update (e.g. loading a session) isn't recorded as a user energy-calibration edit
+	private boolean suppressListeners = false;
 	
 	public PlotMenuEnergy(PlotPanel plot, PlotController controller) {
 		this.controller = controller;
@@ -59,6 +63,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		minEnergy.getEditor().setPreferredSize(new Dimension(72, (int)minEnergy.getPreferredSize().getHeight()));
 		minEnergy.getEditor().setOpaque(false);
 		minEnergy.addChangeListener(e -> {
+			if (suppressListeners) return;
 			float min = ((Number) minEnergy.getValue()).floatValue();
 			if (min > controller.fitting().getMaxEnergy()) {
 				min = controller.fitting().getMaxEnergy() - 0.01f;
@@ -75,6 +80,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		maxEnergy.getEditor().setPreferredSize(new Dimension(72, (int)maxEnergy.getPreferredSize().getHeight()));
 		maxEnergy.getEditor().setOpaque(false);
 		maxEnergy.addChangeListener(e -> {
+			if (suppressListeners) return;
 			float max = ((Number) maxEnergy.getValue()).floatValue();
 			if (max < controller.fitting().getMinEnergy()) {
 				max = controller.fitting().getMinEnergy() + 0.01f;
@@ -91,7 +97,7 @@ public class PlotMenuEnergy extends JPopupMenu {
 		noiseEnergy.getEditor().setPreferredSize(new Dimension(72, (int)noiseEnergy.getPreferredSize().getHeight()));
 		noiseEnergy.getEditor().setOpaque(false);
 		noiseEnergy.addChangeListener(e -> {
-			
+			if (suppressListeners) return;
 			float base = ((Number) noiseEnergy.getValue()).floatValue()/1000;
 			controller.fitting().setFWHMBase(base);
 			
@@ -114,25 +120,37 @@ public class PlotMenuEnergy extends JPopupMenu {
 	}
 
 	public void setWidgetState(boolean hasData) {
-		
-		
+
 		maxEnergy.setEnabled(hasData);
-		float modelMax = controller.fitting().getMaxEnergy();
-		float viewMax = ((Number) maxEnergy.getValue()).floatValue();
-		if (modelMax != viewMax) {
-			maxEnergy.setValue((double) modelMax);
-		}
-		
-
 		minEnergy.setEnabled(hasData);
-		float modelMin = controller.fitting().getMinEnergy();
-		float viewMin = ((Number) minEnergy.getValue()).floatValue();
-		if (modelMin != viewMin) {
-			minEnergy.setValue((double) modelMin);
-		}
-
-		
+		noiseEnergy.setEnabled(hasData);
 		energyGuess.setEnabled(hasData);
+
+		//sync the spinners to the model without firing their change listeners, so this
+		//programmatic update isn't recorded as a user energy-calibration edit
+		suppressListeners = true;
+		try {
+			float modelMax = controller.fitting().getMaxEnergy();
+			float viewMax = ((Number) maxEnergy.getValue()).floatValue();
+			if (modelMax != viewMax) {
+				maxEnergy.setValue((double) modelMax);
+			}
+
+			float modelMin = controller.fitting().getMinEnergy();
+			float viewMin = ((Number) minEnergy.getValue()).floatValue();
+			if (modelMin != viewMin) {
+				minEnergy.setValue((double) modelMin);
+			}
+
+			//spinner shows the FWHM base in eV; the model stores it in keV
+			float modelNoise = controller.fitting().getFWHMBase() * 1000;
+			float viewNoise = ((Number) noiseEnergy.getValue()).floatValue();
+			if (modelNoise != viewNoise) {
+				noiseEnergy.setValue((double) modelNoise);
+			}
+		} finally {
+			suppressListeners = false;
+		}
 	}
 	
 }

@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.components.ui.options;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 import java.util.function.Consumer;
 
 import javax.lang.model.type.NullType;
@@ -16,6 +17,7 @@ public class OptionRadioButton<T> extends OptionCustomComponent implements Optio
 	private JRadioButton button;
 	private Consumer<T> listener;
 	private T item;
+	private boolean suppressListener = false;
 	
 	public OptionRadioButton() {
 		this(null, null);
@@ -32,9 +34,12 @@ public class OptionRadioButton<T> extends OptionCustomComponent implements Optio
 		button = (JRadioButton) super.getComponent();
 		if (group != null) { group.add(button); }
 		button.addItemListener(e -> {
-			if (this.listener != null) this.listener.accept(this.item);
+			if (suppressListener) return;
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				if (this.listener != null) this.listener.accept(this.item);
+			}
 		});
-		
+
 	}
 	
 	@Override
@@ -42,7 +47,6 @@ public class OptionRadioButton<T> extends OptionCustomComponent implements Optio
 		if (!isEnabled()) return;
 		boolean state = !isSelected();
 		setSelected(state);
-		if (listener != null) listener.accept(null);
 	}
 
 	public JRadioButton getButton() {
@@ -51,6 +55,19 @@ public class OptionRadioButton<T> extends OptionCustomComponent implements Optio
 
 	public void setSelected(boolean b) {
 		button.setSelected(b);
+	}
+
+	/**
+	 * Sets the selection state without firing the value listener. Use when syncing
+	 * the widget to a model change, so a programmatic update isn't mistaken for user input.
+	 */
+	public void setSelectedSilently(boolean b) {
+		suppressListener = true;
+		try {
+			setSelected(b);
+		} finally {
+			suppressListener = false;
+		}
 	}
 
 	public boolean isSelected() {

@@ -146,15 +146,18 @@ public abstract class DataLoader {
 		
 		if (parameters.isPresent()) {
 			Group dsGroup = parameters.get();
+
+			//Saved settings from the session being opened, captured before we overwrite ctx.dataSource
+			SavedPlugin previous = ctx.dataSource;
 			ctx.dataSource = new SavedPlugin(dsp);
-			
+
 			/*
 			 * if we've alredy loaded a set of parameters from a session we're opening then
 			 * we transfer those values into the values for the data source's Parameters
 			 */
-			if (ctx.dataSource.settings != null) {
+			if (previous != null && previous.settings != null) {
 				try {
-					dsGroup.deserialize(ctx.dataSource.settings);
+					dsGroup.deserialize(previous.settings);
 				} catch (RuntimeException e) {
 					OneLog.log(Level.WARNING, "Failed to load saved Data Source parameters", e);
 				}
@@ -280,7 +283,17 @@ public abstract class DataLoader {
 			throw new RuntimeException(ERR_EMPTY_CTX);
 		}
 		var ctx = pending.get();
-		
+
+		//Loads are non-strict, so a truncated or hand-edited file can be missing
+		//required blocks. Validate up front and fail gracefully rather than NPE-ing
+		//partway through the load.
+		var missing = session.validate();
+		if (missing.isPresent()) {
+			OneLog.log(Level.WARNING, "Session is missing required '" + missing.get() + "' block");
+			onSessionFailure();
+			return;
+		}
+
 		//check if the session is from a newer version of Peakaboo, and warn if it is
 		Runnable warnVersion = () -> {
 			if (AlphaNumericComparitor.compareVersions(Version.LONG_VERSION, session.app.version) < 0) {
@@ -290,6 +303,13 @@ public abstract class DataLoader {
 		
 		List<DataInputAdapter> currentPaths = controller.data().getDataPaths();
 		List<DataInputAdapter> sessionPaths = DataInputAdapter.fromFilenames(session.data.files);
+
+		//Snapshot the full current data-source identity so the "load settings
+		//without data" branch can restore it: loading the session applies the
+		//session's datasource plugin and title over the current dataset, not just
+		//its file paths.
+		SavedPlugin currentDataSource = controller.data().getDataSourcePlugin();
+		String currentTitle = controller.data().getCustomTitle();
 		
 		//Verify all paths exist
 		boolean sessionPathsExist = true;
@@ -308,15 +328,23 @@ public abstract class DataLoader {
 					ctx.datafiles = sessionPaths;
 					ctx.dataSource = session.data.datasource;
 					ctx.sessionCallback = () -> {
-						controller.load(session, true);
+						//the fresh dataset load already cleared undo history, so don't record a point
+						controller.load(session, false);
 						warnVersion.run();
 					};
 					load(ctx);
 				} else {
-					//load the settings w/o the data, then set the file paths back to the current values
+					//load the settings w/o the data, then restore the current data source
+					//session settings applied over existing data, so record a single undoable point
 					controller.load(session, true);
-					//they said no, reset the stored paths to the old ones
+					//they said no, so restore the current dataset's identity (paths,
+					//datasource plugin, and title) that controller.load overwrote
 					controller.data().setDataPaths(currentPaths);
+					controller.data().setDataSourcePlugin(currentDataSource);
+					controller.data().setTitle(currentTitle);
+					//the undo point was recorded before these restores; re-baseline so the
+					//recorded current state matches the live model rather than the session's.
+					controller.history().rebaseline();
 					warnVersion.run();
 				}
 				controller.io().setSessionFile(ctx.sessionFile);
@@ -325,6 +353,7 @@ public abstract class DataLoader {
 							
 		} else {
 			//just load the session, as there is either no data associated with it, or it's the same data
+			//session settings applied over existing data, so record a single undoable point
 			controller.load(session, true);
 			warnVersion.run();
 			controller.io().setSessionFile(ctx.sessionFile);
@@ -373,7 +402,8 @@ public abstract class DataLoader {
 					ctx.datafiles = sessionPaths;
 					ctx.dataSource = new SavedPlugin(session.data.dataSourcePluginUUID, "Data Source", "", session.data.dataSourceParameters);
 					ctx.sessionCallback = () -> {
-						controller.loadSessionSettingsV1(session, true);	
+						//the fresh dataset load already cleared undo history, so don't record a point
+						controller.loadSessionSettingsV1(session, false);
 						warnVersion.run();
 					};
 					load(ctx);
@@ -382,6 +412,9 @@ public abstract class DataLoader {
 					controller.loadSessionSettingsV1(session, true);
 					//they said no, reset the stored paths to the old ones
 					controller.data().setDataPaths(currentPaths);
+					//the undo point was recorded before this restore; re-baseline so the
+					//recorded current state matches the live model rather than the session's.
+					controller.history().rebaseline();
 					warnVersion.run();
 				}
 				controller.io().setSessionFile(ctx.sessionFile);
