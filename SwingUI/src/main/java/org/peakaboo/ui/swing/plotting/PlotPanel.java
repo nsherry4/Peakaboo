@@ -279,7 +279,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		}
 
 		BlankMessagePanel blankCanvas = new BlankMessagePanel("No Data",
-				"You can open a dataset by dragging it here or by clicking the 'Open' button in the toolbar.",
+				"Drag a dataset here or browse by clicking 'Open' in the toolbar.",
 				peakabooLogo);
 		new FileDrop(blankCanvas, canvas.getFileDropListener());
 		
