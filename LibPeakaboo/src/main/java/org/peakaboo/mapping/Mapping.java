@@ -1,5 +1,6 @@
 package org.peakaboo.mapping;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -14,6 +15,8 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataLabels;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
@@ -89,7 +92,14 @@ public class Mapping {
 			mapsize = dimensions.x * dimensions.y;
 		}
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
-		
+
+		//Snapshot the labels describing this processing so they stay with the
+		//generated maps even if the plot's filters or solver change afterwards
+		List<DataLabel> sourceLabels = new ArrayList<>(filters.getDataLabels());
+		sourceLabels.addAll(solver.getDataLabels());
+		maps.setSourceLabels(DataLabels.unique(sourceLabels));
+
+
 		// Update on progress every 1%, but no more frequently than every 10 scans
 		int count = dataset.getScanData().scanCount();
 		int interval = (int)Math.max(10, Math.ceil(count / 100f));

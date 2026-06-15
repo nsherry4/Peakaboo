@@ -13,6 +13,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
+import org.peakaboo.datalabel.DataLabelProvider;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
@@ -22,7 +23,12 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
  * @author NAS
  *
  */
-public interface FittingSolver extends BoltJavaPlugin {
+/*
+ * FittingSolver extends DataLabelProvider so that a solver can mark its output
+ * (e.g. as DataLabel.SPECULATIVE) by overriding getDataLabels(); the default
+ * applies no labels.
+ */
+public interface FittingSolver extends BoltJavaPlugin, DataLabelProvider {
 
 	public static class FittingSolverContext {
 		

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
+import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataLabelProvider;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
@@ -11,10 +13,19 @@ import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.framework.bolt.plugin.java.BoltJavaPlugin;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
-public interface Filter extends BoltJavaPlugin {
+public interface Filter extends BoltJavaPlugin, DataLabelProvider {
 
 
 	public static record FilterContext(DataSet dataset, FittingSetView fittings) {};
+
+	/**
+	 * Returns the labels this filter applies to data it processes, derived by
+	 * default from this filter's {@link FilterDescriptor}.
+	 */
+	@Override
+	default List<DataLabel> getDataLabels() {
+		return List.of(getFilterDescriptor().getLabel());
+	}
 	
 	boolean isEnabled();
 	void setEnabled(boolean enabled);

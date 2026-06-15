@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
+import org.peakaboo.datalabel.DataLabels;
 import org.peakaboo.display.Display;
 import org.peakaboo.display.plot.painters.FittingLabel;
 import org.peakaboo.display.plot.painters.FittingMarkersPainter;
@@ -200,8 +201,22 @@ public class Plotter {
 
 		PaletteColour cForeground = chrome.axisForeground();
 		
-		List<AxisPainter> axisPainters = new ArrayList<>();	
+		List<AxisPainter> axisPainters = new ArrayList<>();
+		
+		//Disclaimer line showing any DataLabels describing how the data was processed
+		String disclaimer = DataLabels.summary(data.dataLabels).orElse(null);
+		boolean hasTitle = settings.title != null;
+		if (disclaimer != null && !hasTitle) {
+			// Show the disclaimer below the x-axis label when there is no title visible
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, cForeground, null, null, null, disclaimer));
+		}
+		
+		// Axis Titles and Lines
 		axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TITLE, cForeground,  "Relative Intensity", null, settings.title, "Energy (keV)"));
+		if (disclaimer != null && hasTitle) {
+			// Show the disclaimer below the title when there is a title visible
+			axisPainters.add(new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, cForeground, null, null, disclaimer, null));
+		}
 		axisPainters.add(new TickMarkAxisPainter(cForeground, tickRight, tickBottom, tickTop, tickLeft));
 		axisPainters.add(new LineAxisPainter(cForeground, true, true, false, true));
 

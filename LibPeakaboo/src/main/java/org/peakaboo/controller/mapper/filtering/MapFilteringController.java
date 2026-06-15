@@ -14,13 +14,14 @@ import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataLabels;
 import org.peakaboo.framework.accent.numeric.Bounds;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
-import org.peakaboo.framework.accent.Lists;
 import org.peakaboo.framework.eventful.EventfulType;
 import org.peakaboo.framework.eventful.cache.CacheIterable;
 import org.peakaboo.framework.eventful.cache.EventfulCache;
@@ -173,9 +174,19 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	}
 	
 	
+	/**
+	 * Returns the deduplicated {@link DataLabel}s for this map: labels inherited
+	 * from the plot-stage processing which generated the map data, followed by
+	 * labels from the enabled map filters.
+	 */
+	public List<DataLabel> getDataLabels() {
+		List<DataLabel> labels = new ArrayList<>(controller.rawDataController.getSourceLabels());
+		labels.addAll(filters.getDataLabels());
+		return DataLabels.unique(labels);
+	}
+
 	public String getActionDescription() {
-		List<String> actions = filters.getAllEnabled().stream().map(f -> f.getFilterDescriptor().getAction()).collect(Collectors.toList());
-		return Lists.unique(actions).stream().reduce((a, b) -> a + ", " + b).orElse(null);
+		return DataLabels.summary(getDataLabels()).orElse(null);
 	}
 
 

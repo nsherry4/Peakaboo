@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datalabel.DataLabel;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
@@ -31,6 +32,9 @@ public class RawMapSet implements Cloneable, Iterable<RawMap> {
 	
 	//Are all points valid, or does this map contain dummy points (eg for non-rectangular datasets)
 	private boolean			allPointsValid;
+
+	//Labels describing how the source data these maps were generated from was processed
+	private List<DataLabel>	sourceLabels = List.of();
 
 
 	/**
@@ -60,6 +64,19 @@ public class RawMapSet implements Cloneable, Iterable<RawMap> {
 		
 	public Stream<RawMap> stream() {
 		return maps.stream();
+	}
+
+	/**
+	 * Returns the {@link DataLabel}s describing how the source data these maps
+	 * were generated from was processed (e.g. by plot filters or the fitting
+	 * solver), captured when the maps were generated.
+	 */
+	public List<DataLabel> getSourceLabels() {
+		return sourceLabels;
+	}
+
+	public void setSourceLabels(List<DataLabel> sourceLabels) {
+		this.sourceLabels = List.copyOf(sourceLabels);
 	}
 	
 	/**

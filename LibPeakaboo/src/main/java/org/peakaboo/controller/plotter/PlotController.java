@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,8 @@ import org.peakaboo.controller.session.v2.SavedAppData;
 import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.DelegatingFittingSetView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataLabels;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
@@ -252,8 +255,19 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 		data.dataset = data().getDataSet();
 		data.filters = filtering().getActiveFilters();
 		data.spectra = spectra;
+		data.dataLabels = getDataLabels();
 
 		return data;
+	}
+
+	/**
+	 * Returns the deduplicated {@link DataLabel}s describing how the displayed
+	 * data was processed, gathered from the active filters and the fitting solver.
+	 */
+	public List<DataLabel> getDataLabels() {
+		List<DataLabel> labels = new ArrayList<>(filteringController.getActiveFilters().getDataLabels());
+		labels.addAll(fittingController.getFittingSolver().getDataLabels());
+		return DataLabels.unique(labels);
 	}
 
 	public PlotDataSpectra getPlotDataSpectra()	{

@@ -2,17 +2,28 @@ package org.peakaboo.mapping.filter.model;
 
 import java.util.List;
 
+import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataLabelProvider;
 import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.autodialog.model.Value;
 import org.peakaboo.mapping.filter.plugin.MapFilterDescriptor;
 
-public interface MapFilter {
+public interface MapFilter extends DataLabelProvider {
 
 	public static record MapFilterContext(AreaMap map) {};
-	
-	
+
+
 	AreaMap filter(MapFilterContext ctx);
-	
+
+	/**
+	 * Returns the labels this filter applies to data it processes, derived by
+	 * default from this filter's {@link MapFilterDescriptor}.
+	 */
+	@Override
+	default List<DataLabel> getDataLabels() {
+		return List.of(getFilterDescriptor().getLabel());
+	}
+
 	
 	boolean isEnabled();
 	void setEnabled(boolean enabled);

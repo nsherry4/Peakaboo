@@ -9,6 +9,7 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.peak.detector.DetectorMaterialType;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.datalabel.DataLabel;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.filter.model.FilterSet;
@@ -42,6 +43,8 @@ public class PlotData {
 	public List<ITransitionSeries> proposedTransitionSeries = new ArrayList<>();
 	
 	public Map<ITransitionSeries, String> annotations = new HashMap<>();
+
+	public List<DataLabel> dataLabels = List.of();
 	
 }
 
