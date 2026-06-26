@@ -1,7 +1,9 @@
 package org.peakaboo.dataset.source.plugin.plugins;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +26,7 @@ import org.peakaboo.framework.cyclops.SparsedList;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
+import com.univocity.parsers.csv.CsvFormat;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 
@@ -69,94 +72,100 @@ public class PlainText extends AbstractDataSource
 	// DATASOURCE METHODS
 	//==============================================
 
+	private static final int LINE_ESTIMATE_SAMPLE_SIZE = 5;
+
 	@Override
 	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
 		List<DataInputAdapter> inputs = ctx.inputs();
-		
+
 		if (inputs == null) throw new UnsupportedOperationException();
 		if (inputs.size() == 0) throw new UnsupportedOperationException();
 		if (inputs.size() > 1) throw new UnsupportedOperationException();
-		
+
 		DataInputAdapter file = inputs.get(0);
 		scandata = new PipelineScanData(file.getBasename());
-		
-		// Variables for getting a linecount estimate 
-		final int LINE_ESTIMATE_SAMPLE_SIZE = 5;
+
+		// Variables for getting a linecount estimate
 		var filesize = file.size();
 		Spectrum linesizes = new ArraySpectrum(LINE_ESTIMATE_SAMPLE_SIZE);
 		int linecountEstimate = -1;
 		boolean hasLinecountEstimate = false;
 
+		// Detect the delimiter/line-separator/etc format once at the start. We use
+		// the univocity parser to parse every line, but not to read through the
+		// whole file. This lets us push the tokenizing into the parallel pipeline.
+		CsvFormat format = detectFormat(file);
+		char delim = format.getDelimiter();
 
-		// CSV parser used to read this file
+		// Per-worker-thread tokenizers. CsvParser is not thread-safe, so each pipeline
+		// thread gets its own instance, all configured with the detected format and
+		// auto-detection disabled (so every line tokenizes identically).
 		CsvParserSettings settings = new CsvParserSettings();
-		//Note: the order of the delimiters here matters (!) because it will 
-		//determine the delimiter chosen in the event of a tie. I believe that
-		//delimiter detection is based on frequency analysis. In the case where 
-		//the *real* delimiter is ", " the comma and space will appear the same
-		//number of times. It is important that the comma appear before the 
-		//space in this list so that it is chosen in those cases.
-		settings.setDelimiterDetectionEnabled(true, ',', '\t', ' ');
-		settings.setLineSeparatorDetectionEnabled(true);
+		settings.setDelimiterDetectionEnabled(false);
+		settings.setLineSeparatorDetectionEnabled(false);
 		settings.setMaxColumns(65536);
 		settings.setMaxCharsPerColumn(24);
-		CsvParser parser = new CsvParser(settings);
-		
-		InputStream instream = file.getInputStream();
+		settings.setFormat(format);
+		ThreadLocal<CsvParser> tokenizers = ThreadLocal.withInitial(() -> new CsvParser(settings));
 
+		// Extract raw lines with direct parsing, offload parsing each line info floats
+		// until we're in the processing pipeline.
+		// NB: this impl. always treats a newline as a row separator, so a quoted value
+		// with a literal newline would be split incorrectly. For the numerical data
+		// that we handle this will be safe. Quotes and escapes *within* a line are
+		// still handled correctly by the per-thread parsing
 		int index = 0;
 		int readcount = 0;
 		int notificationInterval = 50;
-		for (String[] row : parser.iterate(instream)) {
-			int scanIndex = index++;
-			
-			// Estimating the number of rows by the length of the first n rows against the
-			// length of the whole file
-			if (!hasLinecountEstimate && filesize.isPresent()) {
-				// Track each linesize
-				linesizes.add(String.join(" ", row).length());
-				
-				// After we have a few data points, calculate an average linesize and do the
-				// calculation.
-				if (readcount == LINE_ESTIMATE_SAMPLE_SIZE) {
-					hasLinecountEstimate = true;
-					float averageLinesize = linesizes.sum() / linesizes.size();
-					float bytes = filesize.get().floatValue();
-					linecountEstimate = (int)Math.round(bytes / averageLinesize);
-					getInteraction().notifyScanCount(linecountEstimate);
-					notificationInterval = (int) Math.min(Math.max(notificationInterval, linecountEstimate / 100f), 1000);
-				}
-			}
-			
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				int scanIndex = index++;
 
-			
-			char delim = parser.getDetectedFormat().getDelimiter();
-			ScanEntry entry = new PlainTextScanEntry(scanIndex, row, delim, sizes);
-			
-			//Record the size to check later
-			scandata.submit(entry);
-			readcount++;
-			
-			// Every so often we check in with a listener-ish component
-			if (readcount == notificationInterval) {
-				
-				// Progress
-				getInteraction().notifyScanRead(readcount);
-				readcount = 0;
-				
-				// Check for abort request
-				if (getInteraction().checkReadAborted()) {
-					scandata.abort();
-					break; 
+				// Estimating the number of rows by the length of the first n rows against the
+				// length of the whole file
+				if (!hasLinecountEstimate && filesize.isPresent()) {
+					// Track each linesize
+					linesizes.add(line.length());
+
+					// After we have a few data points, calculate an average linesize and do the
+					// calculation.
+					if (readcount == LINE_ESTIMATE_SAMPLE_SIZE) {
+						hasLinecountEstimate = true;
+						float averageLinesize = linesizes.sum() / linesizes.size();
+						float bytes = filesize.get().floatValue();
+						linecountEstimate = (int)Math.round(bytes / averageLinesize);
+						getInteraction().notifyScanCount(linecountEstimate);
+						notificationInterval = (int) Math.min(Math.max(notificationInterval, linecountEstimate / 100f), 1000);
+					}
 				}
-				
+
+				ScanEntry entry = new PlainTextScanEntry(scanIndex, line, delim, tokenizers, sizes);
+
+				//Record the size to check later
+				scandata.submit(entry);
+				readcount++;
+
+				// Every so often we check in with a listener-ish component
+				if (readcount == notificationInterval) {
+
+					// Progress
+					getInteraction().notifyScanRead(readcount);
+					readcount = 0;
+
+					// Check for abort request
+					if (getInteraction().checkReadAborted()) {
+						scandata.abort();
+						break;
+					}
+
+				}
+
 			}
-			
 		}
-		
-		parser.stopParsing();
+
 		scandata.finish();
-		
+
 		//Check and make sure all the scans are the same size
 		int channels = -1;
 		for (int size : sizes) {
@@ -167,8 +176,36 @@ public class PlainText extends AbstractDataSource
 				throw new DataSourceReadException("Spectra sizes are not equal");
 			}
 		}
-		
 
+
+	}
+
+	/**
+	 * Detects the CSV format (delimiter, line separator, etc) by reading first
+	 * few lines of the file with univocity's auto-detection. Returns comma
+	 * separated as a default if the file is too short to detect.
+	 */
+	private CsvFormat detectFormat(DataInputAdapter file) throws IOException {
+		CsvParserSettings settings = new CsvParserSettings();
+		//NB: the order of the delimiters here matters (!) because it will
+		//determine the delimiter chosen in the event of a tie. I believe that
+		//delimiter detection is based on frequency analysis. In the case where
+		//the *real* delimiter is ", " the comma and space will appear the same
+		//number of times. It is important that the comma appear before the
+		//space in this list so that it is chosen in those cases.
+		settings.setDelimiterDetectionEnabled(true, ',', '\t', ' ');
+		settings.setLineSeparatorDetectionEnabled(true);
+		settings.setMaxColumns(65536);
+		settings.setMaxCharsPerColumn(24);
+		CsvParser parser = new CsvParser(settings);
+		try (InputStream sample = file.getInputStream()) {
+			parser.beginParsing(sample);
+			// Read a few rows to trigger frequency-based format detection
+			for (int i = 0; i < LINE_ESTIMATE_SAMPLE_SIZE && parser.parseNext() != null; i++) { }
+			CsvFormat detected = parser.getDetectedFormat();
+			parser.stopParsing();
+			return detected != null ? detected : new CsvFormat();
+		}
 	}
 
 
@@ -226,22 +263,26 @@ public class PlainText extends AbstractDataSource
 class PlainTextScanEntry implements ScanEntry {
 
 	private int index;
-	private String[] entries;
+	private String line;
 	private char delimiter;
+	private ThreadLocal<CsvParser> tokenizers;
 	private Spectrum spectrum;
 	private List<Integer> sizes;
-	
+
 	/**
-	 * Entry for the pipeline which parses the spectrum in the pipeline thread pool when it gets it from this entry
+	 * Entry for the pipeline which tokenizes and parses the spectrum in the pipeline
+	 * thread pool when it gets it from this entry.
 	 * @param index the index of the scan
-	 * @param entries the channels in this scan
+	 * @param line the raw, un-tokenized text line for this scan
 	 * @param delimiter the plaintext delimiter character
+	 * @param tokenizers per-thread CsvParser instances used to tokenize the line
 	 * @param sizes a list of sizes used to track per-entry/row sizes for checking later
 	 */
-	public PlainTextScanEntry(int index, String[] entries, char delimiter, List<Integer> sizes) {
+	public PlainTextScanEntry(int index, String line, char delimiter, ThreadLocal<CsvParser> tokenizers, List<Integer> sizes) {
 		this.index = index;
-		this.entries = entries;
+		this.line = line;
 		this.delimiter = delimiter;
+		this.tokenizers = tokenizers;
 		this.sizes = sizes;
 	}
 
@@ -261,9 +302,16 @@ class PlainTextScanEntry implements ScanEntry {
 	public int index() {
 		return index;
 	}
-	
-	
+
+
 	private Spectrum parseLine() {
+		// Tokenize this single line using a per-thread parser.
+		String[] entries = tokenizers.get().parseLine(line);
+		if (entries == null) {
+			// Blank line
+			return new ArraySpectrum(0);
+		}
+
 		int length = entries.length;
 
 		// remove null values from length count if the delimiter is a space. Double
@@ -273,14 +321,14 @@ class PlainTextScanEntry implements ScanEntry {
 				if (entry == null) length--;
 			}
 		}
-		
+
 		Spectrum scan = new ArraySpectrum(length);
 		for (int i = 0; i < entries.length; i++) {
 			String entry = entries[i];
 			try {
-				
+
 				//null entry means duplicate delimiter (eg "0,,0" or "0  0")
-				//we need different behaviour for spaces than for *actual* 
+				//we need different behaviour for spaces than for *actual*
 				//delimiters
 				if (entry == null) {
 					if (delimiter == ' ') {
@@ -298,5 +346,5 @@ class PlainTextScanEntry implements ScanEntry {
 		}
 		return scan;
 	}
-	
+
 }

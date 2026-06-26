@@ -1,8 +1,6 @@
 package org.peakaboo.dataset.source.plugin.plugins.universalhdf5;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +16,9 @@ import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
-import ch.systemsx.cisd.base.mdarray.MDFloatArray;
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
+import ch.systemsx.cisd.hdf5.HDF5StorageLayout;
 import ch.systemsx.cisd.hdf5.IHDF5FloatReader;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 
@@ -31,21 +29,21 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
  * specifying the path to the data and the axis ordering (e.g. "xyz").
  */
 public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
-
+	
 	private String axisOrder;
 	private int xIndex = -1;
 	private int yIndex = -1;
 	private int zIndex = -1;
 	
-	private static final int BLOCK_READ_SIZE = 	PeakabooConfiguration.memorySize == MemorySize.TINY ? 20 : 
-												PeakabooConfiguration.memorySize == MemorySize.SMALL ? 100 : 
+	private static final int BLOCK_READ_SIZE = 	PeakabooConfiguration.memorySize == MemorySize.TINY ? 20 :
+												PeakabooConfiguration.memorySize == MemorySize.SMALL ? 100 :
 												PeakabooConfiguration.memorySize == MemorySize.MEDIUM ? 800 : 3200;
 	
 	public FloatMatrixHDF5DataSource(String axisOrder, String dataPath, String name, String description) {
 		super(dataPath, name, description);
 		this.axisOrder = axisOrder;
 	}
-
+	
 	public FloatMatrixHDF5DataSource(String axisOrder, String name, String description) {
 		super(name, description);
 		this.axisOrder = axisOrder;
@@ -63,7 +61,7 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 		yIndex = order.indexOf("y");
 		zIndex = order.indexOf("z");
 	}
-
+	
 	@Override
 	public void read(DataSourceContext ctx) throws DataSourceReadException, IOException, InterruptedException {
 		readAxisOrder();
@@ -81,139 +79,159 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 		HDF5DataSetInformation info = reader.getDataSetInformation(dataPaths.get(0));
 		int channels = (int) info.getDimensions()[zIndex];
 		
-		
 		//prep for iterating over all points in scan
 		IHDF5FloatReader floatreader = reader.float32();
 		int height = dataSize.getDataDimensions().y;
 		int width = dataSize.getDataDimensions().x;
-		int[] range;
-		if (yIndex >= 0) {
-			range = new int[] {-1, -1, -1};
-			range[xIndex] = 1;
-			range[yIndex] = 1;
-			range[zIndex] = channels;
-		} else {
-			//There is no y axis, only scans (x) and channels (z)
-			range = new int[] {-1, -1};
-			range[xIndex] = 1;
-			range[zIndex] = channels;
-		}
-
-
+		
 		Map<String, Spectrum> livetimes = new HashMap<>();
 		for (String dataPath : dataPaths) {
 			Spectrum livetime = getDeadtimes(dataPath, reader);
 			SpectrumCalculations.subtractListFrom_inplace(livetime, 1, 0);
 			livetimes.put(dataPath, livetime);
 		}
-			
 		
-		long[] offset = yIndex == -1 ? new long[] {0, 0} : new long[] {0, 0, 0};
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width;) {
+		// HDF5 stores chunked datasets as fixed-size blocks that are compressed and
+		// decompressed as a unit. When a chunk spans several rows of the height (y) axis,
+		// reading a single row at a time would make the library decompress that whole
+		// chunk again for every row it covers. So we read a full chunk-tall band of y at
+		// once, which lets each chunk be decompressed only once. For 2D or unchunked data
+		// the band is just 1, which reduces to a plain single-row read.
+		// We step through the x and y dimensions in blocks based on chunk size
+		// Within each block, we have an inner loop with y1, x1 as relative offsets
+		// inside these blocks.
+		int yChunk = chunkExtent(info, yIndex);
+		int yBand = (yIndex < 0) ? 1 : yChunk;
+		// Choose the largest x band that will fit in our memory budget, or at least one.
+		// Work in whole chunks, so we do integer division on our budget over our chosen 
+		// y band and the HDF file's x chunk sizes, then convert back to x columns for 
+		// our final xBlock size.
+		int xChunk = chunkExtent(info, xIndex);
+		int xBlock = xChunk * Math.max(1, BLOCK_READ_SIZE / yBand / xChunk);
+		
+		// Vectors representing the size (range) and position (offset) of the block we're reading
+		int[] range = new int[(yIndex < 0) ? 2 : 3];
+		long[] offset = new long[range.length];
+		range[zIndex] = channels;
+		
+		for (int y = 0; y < height; y += yBand) {
+			int ylen = Math.min(yBand, height - y);
+			if (yIndex >= 0) {
+				offset[yIndex] = y;
+				range[yIndex] = ylen;
+			}
+			for (int x = 0; x < width; x += xBlock) {
 				if (super.getInteraction().checkReadAborted()) { return; }
 				
-				int index = (y*width+x);
-				int blocksize = blockReadSize(x, width);
-				
-				//Initialize aggregate spectra, we will read from each data path and sum the results into the aggregate
-				List<Spectrum> aggs = new ArrayList<>();
-				for (int i = 0; i < blocksize; i++) {
-					aggs.add(new ArraySpectrum(channels));
-				}
-				
-				//read scan
-				if (yIndex > -1) { 
-					offset[yIndex] = y;
-					offset[xIndex] = x;
-				} else {
-					offset[xIndex] = y*width+x;
-				}
+				int xlen = Math.min(xBlock, width - x);
+				offset[xIndex] = x;
 				offset[zIndex] = 0;
-				
-				
-				//For block reads, we try to read more than one scan in a row
-				range[xIndex] = blocksize;
+				range[xIndex] = xlen;
 
-				
+				// The block comes back as one flat array in row-major order, where the
+				// last file dimension varies fastest -- so moving one position along a
+				// dimension skips `stride` elements in the array. We precompute those strides
+				// for the block (whose extents are `range`) so we can locate any scan within
+				// it: for a scan at block-local (xl, yl) the first channel sits at
+				// base = xl*xStride + yl*yStride, and successive channels are chStride apart.
+				// When z is the last dimension chStride is 1 and a spectrum is contiguous;
+				// otherwise its channels are interleaved with other scans, and the stride is
+				// what lets us gather them back together.
+				int[] stride = strides(range);
+				int chStride = stride[zIndex];
+				int xStride = stride[xIndex];
+				int yStride = (yIndex < 0) ? 0 : stride[yIndex];
+
+				// We read each data path and sum the deadtime-corrected spectra into the
+				// aggregate (a single data path is the common case and is just the spectrum
+				// itself). The slice + deadtime correction runs here on the read thread.
+				// We do this on the inner (x1, y1) loop to fully build up the spectra from a
+				// single block, submit it, and move on without having to cache the entire
+				// dataset.
+				Spectrum[] aggs = new Spectrum[ylen * xlen];
 				for (String dataPath : dataPaths) {
-
-				    /*
-				     * Reads a block from a multi-dimensional <code>float</code> array from the data set 
-				     * <var>objectPath</var>.
-				     * 
-				     * @param objectPath The name (including path information) of the data set object in the file.
-				     * @param blockDimensions The extent of the block in each dimension.
-				     * @param blockNumber The block number in each dimension (offset: multiply with the
-				     *            <var>blockDimensions</var> in the according dimension).
-				     * @return The data block read from the data set.
-				     */
-					//MDFloatArray mdarray = floatreader.readMDArrayBlock(dataPath, range, offset);
-					
-					
-				    /*
-				     * Reads a block from a multi-dimensional <code>float</code> array from the data set
-				     * <var>objectPath</var>.
-				     * 
-				     * @param objectPath The name (including path information) of the data set object in the file.
-				     * @param blockDimensions The extent of the block in each dimension.
-				     * @param offset The offset in the data set to start reading from in each dimension.
-				     * @return The data block read from the data set.
-				     */
-					//TODO: ~89% of loading time is this call
-					MDFloatArray mdarray = floatreader.readMDArrayBlockWithOffset(dataPath, range, offset);
-					List<Spectrum> spectra = floatsToSpectra(mdarray.getAsFlatArray(), channels);
-					
-					
-					//For each spectrum returned, do some post-processing
-					for (int i = 0; i < spectra.size(); i++) {
-						Spectrum scan = spectra.get(i);
-						//deadtime correction
-						SpectrumCalculations.divideBy_inplace(scan, livetimes.get(dataPath).get(index + i));
-						//add scan to aggregate
-						SpectrumCalculations.addLists_inplace(aggs.get(i), scan);
+					//TODO: this read (with decompression) is the dominant cost for chunked files
+					float[] block = floatreader.readMDArrayBlockWithOffset(dataPath, range, offset).getAsFlatArray();
+					Spectrum livetime = livetimes.get(dataPath);
+					for (int yl = 0; yl < ylen; yl++) {
+						for (int xl = 0; xl < xlen; xl++) {
+							int i = yl * xlen + xl;
+							int scanIndex = (y + yl) * width + (x + xl);
+							int base = xl * xStride + yl * yStride;
+							Spectrum scan = extractSpectrum(block, base, chStride, channels, livetime.get(scanIndex));
+							if (aggs[i] == null) {
+								aggs[i] = scan;
+							} else {
+								SpectrumCalculations.addLists_inplace(aggs[i], scan);
+							}
+						}
 					}
 				}
-				for (int i = 0; i < aggs.size(); i++) {
-					super.submitScan(index + i, aggs.get(i));
+				// Now that we've read this block fully across all dataPaths, we commit the 
+				// completed scans we've read from it before moving on to the next block
+				for (int yl = 0; yl < ylen; yl++) {
+					for (int xl = 0; xl < xlen; xl++) {
+						submitScan((y + yl) * width + (x + xl), aggs[yl * xlen + xl]);
+					}
 				}
-				
-				//Increment x manually here so that it always reflects the actual size of the read
-				x += range[xIndex];
-				
 			}
 		}
-
 		
 		readMatrixMetadata(reader, channels);
 		
 	}
-
-
 	
 	/**
-	 * Given a float[] of length count*channels, return `count` Spectrum objects of length `channels`
+	 * Row-major strides for an array of the given dimensions: how many flat elements to
+	 * skip to move one step along each dimension. The last dimension is contiguous
+	 * (stride 1) and each earlier stride is the product of all the dimensions after it.
 	 */
-	protected List<Spectrum> floatsToSpectra(float[] array, int channels) {
-		List<Spectrum> spectra = new ArrayList<>();
-		for (int i = 0; i < array.length; i+=channels) {
-			float[] spectrumData = Arrays.copyOfRange(array, i, i+channels);
-			Spectrum spectrum = new ArraySpectrum(spectrumData, false);
-			spectra.add(spectrum);
+	private static int[] strides(int[] dimensions) {
+		int[] stride = new int[dimensions.length];
+		stride[dimensions.length - 1] = 1;
+		for (int i = dimensions.length - 2; i >= 0; i--) {
+			stride[i] = stride[i + 1] * dimensions[i + 1];
 		}
-		return spectra;
+		return stride;
 	}
-	
-	
+
 	/**
-	 * Given the current position `x` in a row of scans and the width of the row,
-	 * calculate the size of the x component of the range array to be passed to
-	 * readMDArrayBlock.
+	 * Extracts one scan from a raw read block: copies {@code channels} values starting at
+	 * {@code base} and spaced {@code stride} apart (stride 1 == contiguous, i.e. z is the
+	 * fastest file dimension), then applies the deadtime correction.
 	 */
-	private int blockReadSize(int x, int width) {
-		//We want to read the block size, but we'll read less if we're at the end of a row
-		return Math.min(BLOCK_READ_SIZE, width - x);
-		
+	private static Spectrum extractSpectrum(float[] block, int base, int stride, int channels, float livetime) {
+		float[] data = new float[channels];
+		if (stride == 1) {
+			// The common case where spectra are stored contiguously
+			System.arraycopy(block, base, data, 0, channels);
+		} else {
+			// The case where spectra are not stored contiguously means that we must
+			// manually extract each value based on the stride between values.
+			for (int c = 0; c < channels; c++) {
+				data[c] = block[base + c * stride];
+			}
+		}
+		Spectrum scan = new ArraySpectrum(data, false);
+		//deadtime correction (livetime == 1 means no correction, a cheap no-op to skip)
+		if (livetime != 1f) {
+			SpectrumCalculations.divideBy_inplace(scan, livetime);
+		}
+		return scan;
+	}
+
+	/**
+	 * The chunk extent along the given file dimension, or 1 if the dataset is not
+	 * chunked, the axis is not present, or no chunk size is reported. Reading whole
+	 * chunks lets compressed chunks be decompressed exactly once.
+	 */
+	private int chunkExtent(HDF5DataSetInformation info, int axis) {
+		if (axis < 0) { return 1; }
+		if (info.getStorageLayout() != HDF5StorageLayout.CHUNKED) { return 1; }
+		int[] chunks = info.tryGetChunkSizes();
+		if (chunks == null || axis >= chunks.length) { return 1; }
+		int axisChunk = chunks[axis];
+		return axisChunk > 0 ? axisChunk : 1;
 	}
 	
 	
