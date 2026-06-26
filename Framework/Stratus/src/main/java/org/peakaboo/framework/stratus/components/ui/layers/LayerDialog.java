@@ -131,7 +131,9 @@ public class LayerDialog {
 		}
 		bodyPanel.add(center, BorderLayout.CENTER);
 
-		return new HeaderPanel(buildHeaderBox(), bodyPanel);
+		var headerPanel = new HeaderPanel(buildHeaderBox(), bodyPanel);
+		headerPanel.withHeaderShadow(false);
+		return headerPanel;
 	}
 	
 	

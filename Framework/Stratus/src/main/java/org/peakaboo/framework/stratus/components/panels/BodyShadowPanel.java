@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
 
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
@@ -21,10 +22,10 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 public class BodyShadowPanel extends ClearPanel {
 
 	/** Height, in pixels, of the soft shadow cast onto the body. */
-	private static final int SHADOW_HEIGHT = 6;
+	private static final int SHADOW_HEIGHT = 8;
 
 	/** Gentle multiplier applied to the theme's shadow alpha at the top edge. */
-	private static final float SHADOW_STRENGTH = 0.3f;
+	private static final float SHADOW_STRENGTH = 0.4f;
 
 	private boolean shadowEnabled = true;
 
@@ -81,8 +82,14 @@ public class BodyShadowPanel extends ClearPanel {
 		Graphics2D g2 = Stratus.modernGraphicsCopy(g);
 		Color base = Stratus.getTheme().getShadow();
 		Color top = new Color(base.getRed(), base.getGreen(), base.getBlue(), (int)(base.getAlpha() * SHADOW_STRENGTH));
+		Color mid = new Color(base.getRed(), base.getGreen(), base.getBlue(), (int)(base.getAlpha() * SHADOW_STRENGTH / 4));
 		Color bottom = new Color(base.getRed(), base.getGreen(), base.getBlue(), 0);
-		g2.setPaint(new GradientPaint(0, 0, top, 0, SHADOW_HEIGHT, bottom));
+		g2.setPaint(new LinearGradientPaint(
+				0, 0,
+				0, SHADOW_HEIGHT,
+				new float[]{0, 0.5f, 1},
+				new Color[]{top, mid, bottom}
+		));
 		g2.fillRect(0, 0, getWidth(), SHADOW_HEIGHT);
 		g2.dispose();
 	}
