@@ -185,7 +185,7 @@ public class PluginRepositoryBrowser extends JPanel implements HeaderControlProv
 		if (filterQuery.isEmpty()) {
 			return true;
 		}
-		return contains(m.name) || contains(m.description) || contains(m.author) || contains(m.category);
+		return contains(m.name) || contains(m.description) || contains(m.author) || contains(m.category) || contains(m.sourceRepository().getRepositoryName());
 	}
 
 	private boolean contains(String field) {
