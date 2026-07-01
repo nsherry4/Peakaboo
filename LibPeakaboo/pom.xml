@@ -71,12 +71,19 @@
 			<artifactId>druthers</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <!-- Native HDF5 implementation -->
 		<!-- https://mvnrepository.com/artifact/ch.systemsx.cisd/sis-jhdf5-batteries_included -->
 		<dependency>
 			<groupId>cisd</groupId>
 			<artifactId>jhdf5</artifactId>
 			<version>19.04.1</version>
 		</dependency>
+        <!-- Java HDF5 implementation -->
+        <dependency>
+            <groupId>io.jhdf</groupId>
+            <artifactId>jhdf</artifactId>
+            <version>0.11.0</version>
+        </dependency>
 
 		<!-- We pull in the latest commons-* so that various out of date references in other deps get replaced -->
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->

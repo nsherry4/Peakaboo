@@ -18,10 +18,6 @@ import org.peakaboo.framework.autodialog.model.Group;
 import org.peakaboo.framework.accent.AlphaNumericComparitor;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 
-import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
-import ch.systemsx.cisd.hdf5.HDF5Factory;
-import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
-
 public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 
 	private PipelineScanData scandata;
@@ -78,11 +74,11 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 		
 		String datasetName = getDatasetTitle(datafiles);
 		scandata = new PipelineScanData(datasetName);
-		
-		IHDF5SimpleReader reader = getMetadataReader(datafiles);
+
 		dataPaths = getDataPaths(datafiles);
-		HDF5DataSetInformation info = reader.getDataSetInformation(dataPaths.get(0));
-		dataSize = getDataSize(datafiles, info);
+		try (HDFReader reader = getMetadataReader(datafiles)) {
+			dataSize = getDataSize(datafiles, reader);
+		}
 		getInteraction().notifyScanCount(dataSize.size());
 
 		
@@ -121,14 +117,12 @@ public abstract class SimpleHDF5DataSource extends AbstractDataSource {
 		return DataInputAdapter.getTitle(paths);
 	}
 	
-	protected IHDF5SimpleReader getMetadataReader(List<DataInputAdapter> paths) throws IOException {
-		DataInputAdapter firstPath = paths.get(0);
-		IHDF5SimpleReader reader = HDF5Factory.openForReading(firstPath.getAndEnsurePath().toFile());
-		return reader;
+	protected HDFReader getMetadataReader(List<DataInputAdapter> paths) throws IOException {
+		return HDFReaders.open(paths.get(0));
 	}
-	
+
 	protected abstract void readFile(DataInputAdapter path, int filenum) throws DataSourceReadException, IOException, InterruptedException;
-	protected abstract DataSize getDataSize(List<DataInputAdapter> paths, HDF5DataSetInformation datasetInfo);
+	protected abstract DataSize getDataSize(List<DataInputAdapter> paths, HDFReader reader);
 	
 	//TODO: make this mandatory (abstract) -- no default implementation
 	protected List<String> getDataPaths(List<DataInputAdapter> paths) {

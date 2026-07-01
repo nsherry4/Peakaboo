@@ -15,6 +15,12 @@ public class PeakabooConfiguration {
 		TINY, SMALL, MEDIUM, LARGE;
 	}
 
+	/**
+	 * Which HDF5 reader backend the universalhdf5 data sources should use: AUTO (native when
+	 * available, jhdf otherwise), NATIVE, or JHDF.
+	 */
+	public static String hdfBackend = System.getProperty("peakaboo.hdf.backend", "AUTO");
+
 	private static MemorySize calcMemoryFootprint() {
 		
 		long maxHeap = Platform.maxHeap();

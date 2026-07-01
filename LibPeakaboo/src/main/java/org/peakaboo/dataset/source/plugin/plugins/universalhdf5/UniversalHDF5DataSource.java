@@ -23,9 +23,6 @@ import org.peakaboo.framework.autodialog.model.style.editors.DropDownStyle;
 import org.peakaboo.framework.autodialog.model.style.editors.LabelStyle;
 import org.peakaboo.framework.autodialog.model.style.layouts.FramedLayoutStyle;
 
-import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
-import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
-
 public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 
 	public enum Axis {
@@ -58,7 +55,9 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 	
 	
 	private void initialize(List<DataInputAdapter> paths) throws IOException {
-		IHDF5SimpleReader mdreader = super.getMetadataReader(paths);
+		//this reader is held open for the lifetime of the parameter dialog, since the path
+		//listener below reads from it as the user changes their selection
+		HDFReader mdreader = super.getMetadataReader(paths);
 		List<String> datasetPaths = listDatasets(mdreader);
 		
 		path = new SelectionParameter<String>("Path", new DropDownStyle<String>(), datasetPaths.get(0));
@@ -96,14 +95,12 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 		return true;
 	}
 	
-	private String getPathInfo(IHDF5SimpleReader mdreader, String path) {
-		HDF5DataSetInformation info = mdreader.getDataSetInformation(path);
-		
+	private String getPathInfo(HDFReader mdreader, String path) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Dimensions: ");
-		
+
 		int count = 0;
-		for (long dim : info.getDimensions()) {
+		for (int dim : mdreader.dimensions(path)) {
 			if (count > 0) { sb.append(", "); }
 			
 			sb.append(Axis.values()[count]);
@@ -116,7 +113,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 		return sb.toString();
 	}
 	
-	private List<String> listDatasets(IHDF5SimpleReader mdreader) {
+	private List<String> listDatasets(HDFReader mdreader) {
 		List<String> datasets = listDatasets(mdreader, "/");
 		
 		Comparator<String> scorer = (String o1, String o2) -> {
@@ -130,7 +127,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 		
 	}
 	
-	private List<String> listDatasets(IHDF5SimpleReader mdreader, String path) {
+	private List<String> listDatasets(HDFReader mdreader, String path) {
 		if (!mdreader.isGroup(path)) {
 			//remove trailing slash from path, as this is not a group (folder)
 			path = path.substring(0, path.length()-1);
@@ -143,7 +140,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 		} else {
 			//non-leaf nodes return all child leaves
 			List<String> leaves = new ArrayList<>();
-			for (String subpath : mdreader.getGroupMembers(path)) {
+			for (String subpath : mdreader.groupMembers(path)) {
 				String fullpath = path + subpath + "/";
 				leaves.addAll(listDatasets(mdreader, fullpath));
 			}
@@ -152,17 +149,16 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 		
 	}
 	
-	private Axis[] matchAxes(IHDF5SimpleReader mdreader, String path) {
-		HDF5DataSetInformation info = mdreader.getDataSetInformation(path);
+	private Axis[] matchAxes(HDFReader mdreader, String path) {
 		List<Axis> axes = new ArrayList<>();
-		
+
 		//best guess for spectrum axis goes first
 		Axis spectrum = bestSpectrumAxis(mdreader, path);
 		axes.add(spectrum);
-		
+
 		for (Axis a : Axis.values()) {
 			if (axes.size() >= 3) { break; }
-			if (axes.size() >= info.getRank()) { axes.add(Axis.None); }
+			if (axes.size() >= mdreader.rank(path)) { axes.add(Axis.None); }
 			//skip axes already in the list
 			if (axes.contains(a)) { continue; }
 			axes.add(a);
@@ -172,7 +168,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 	}
 	
 	//scores each axis as the potential spectrum axis, returns the best 
-	private Axis bestSpectrumAxis(IHDF5SimpleReader mdreader, String path) {
+	private Axis bestSpectrumAxis(HDFReader mdreader, String path) {
 		List<Axis> axes = new ArrayList<>(Arrays.asList(Axis.values()));
 		Comparator<Axis> scorer = (Axis a1, Axis a2) -> {
 			float s1 = scoreSpectrumAxis(mdreader, path, a1.ordinal());
@@ -185,13 +181,11 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 	}
 	
 	//scores an axis based on the likelihood that it is the spectrum axis 
-	private float scoreSpectrumAxis(IHDF5SimpleReader mdreader, String path, int axis) {
-		HDF5DataSetInformation info = mdreader.getDataSetInformation(path);
+	private float scoreSpectrumAxis(HDFReader mdreader, String path, int axis) {
 		float score = 1f;
-		
-		
-		long[] dims = info.getDimensions();
-		if (axis >= info.getRank()) { return 0f; }
+
+		int[] dims = mdreader.dimensions(path);
+		if (axis >= dims.length) { return 0f; }
 		
 		//penalty for not being a power of 2
 		long dim = dims[axis];
@@ -216,22 +210,21 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 		return score;
 	}
 	
-	private float scoreDataset(IHDF5SimpleReader mdreader, String path) {
-		HDF5DataSetInformation info = mdreader.getDataSetInformation(path);
+	private float scoreDataset(HDFReader mdreader, String path) {
 		float score = 1f;
-		
+
 		//Does this dataset contain at least one axis that is a power of two and largish?
 		boolean hasPowerOfTwo = false;
-		for (long dim : info.getDimensions()) {
+		for (int dim : mdreader.dimensions(path)) {
 			if (dim > 128) { hasPowerOfTwo |= isPowerOfTwo(dim); }
 		}
 		if (!hasPowerOfTwo) {
 			score *= 0.5f;
 		}
-		
-		
+
+
 		//3 axes are more likely than two, more than one
-		int dims = info.getRank();
+		int dims = mdreader.rank(path);
 		if (dims == 0 || dims > 3) {
 			score = 0;
 		} else if (dims == 1) {
@@ -243,7 +236,7 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 		}
 		
 		//must have more than 255 total elements
-		if (info.getNumberOfElements() <= 256) {
+		if (mdreader.numberOfElements(path) <= 256) {
 			score *= 0.1f;
 		}
 		
@@ -259,9 +252,8 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 				FileFormatCompatibility fromSuper = super.compatibility(filenames);
 				if (fromSuper == FileFormatCompatibility.NO) { return fromSuper; }
 				
-				try {
+				try (HDFReader mdreader = UniversalHDF5DataSource.super.getMetadataReader(filenames)) {
 					//extra tests to reject HDF5 files that don't contain any promising values
-					IHDF5SimpleReader mdreader = UniversalHDF5DataSource.super.getMetadataReader(filenames);
 					List<String> datasetPaths = listDatasets(mdreader);
 					if (datasetPaths.isEmpty()) { return FileFormatCompatibility.NO; }
 				} catch (Exception e) {

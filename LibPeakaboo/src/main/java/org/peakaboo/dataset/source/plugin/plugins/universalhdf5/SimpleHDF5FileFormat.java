@@ -9,9 +9,6 @@ import org.peakaboo.dataset.io.DataInputAdapter;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormat;
 import org.peakaboo.dataset.source.model.components.fileformat.FileFormatCompatibility;
 
-import ch.systemsx.cisd.hdf5.HDF5Factory;
-import ch.systemsx.cisd.hdf5.IHDF5SimpleReader;
-
 public class SimpleHDF5FileFormat implements FileFormat {
 
 	private Function<List<DataInputAdapter>, List<String>> dataPathFunction;
@@ -37,13 +34,16 @@ public class SimpleHDF5FileFormat implements FileFormat {
 	}
 
 	public FileFormatCompatibility compatibility(DataInputAdapter path) {
-		try (IHDF5SimpleReader reader = HDF5Factory.openForReading(path.getAndEnsurePath().toFile())) {
+		try (HDFReader reader = HDFReaders.open(path)) {
 			List<String> dataPaths = dataPathFunction.apply(Collections.singletonList(path));
 			if (dataPaths.size() == 0) {
 				return FileFormatCompatibility.NO;
 			}
 			for (String dataPath : dataPaths) {
-				reader.getDataSetInformation(dataPath);
+				//confirm each required data path resolves to a real dataset
+				if (!reader.exists(dataPath)) {
+					return FileFormatCompatibility.NO;
+				}
 			}
 		} catch (Exception e) {
 			return FileFormatCompatibility.NO;

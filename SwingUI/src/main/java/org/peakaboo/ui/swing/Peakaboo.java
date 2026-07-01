@@ -30,6 +30,7 @@ import org.peakaboo.app.Settings;
 import org.peakaboo.app.Version;
 import org.peakaboo.app.Version.ReleaseType;
 import org.peakaboo.curvefit.peak.table.PeakTable;
+import org.peakaboo.dataset.source.plugin.plugins.universalhdf5.HDFReaders;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.AbstractGraphicsSurface;
@@ -266,7 +267,15 @@ public class Peakaboo {
 		Thread peakLoader = new Thread(Peakaboo::initPeakTable);
 		peakLoader.setDaemon(true);
 		peakLoader.start();
-		
+
+		//warm up the HDF5 native backend probe off the critical path. The first HDFReader
+		//opened has to extract and load a multi-MB native library, which otherwise stalls
+		//the first data set the user opens (even a non-HDF one, since format detection probes
+		//every plugin). Doing it here during splash means the result is cached and ready.
+		Thread hdfLoader = new Thread(Peakaboo::warmUpHdfBackend, "hdf-native-warmup");
+		hdfLoader.setDaemon(true);
+		hdfLoader.start();
+
 		Stratus.initialize(Tier.provider().iconPath(), Version.SPLASH, Version.LOGO, "Peakaboo", () -> {
 
 			String accentColourName = DesktopSettings.getAccentColour();
@@ -319,6 +328,12 @@ public class Peakaboo {
 	private static void initPeakTable() {
 		// Force the peak table to generate data
 		PeakTable.SYSTEM.getAll();
+	}
+
+	private static void warmUpHdfBackend() {
+		// Resolve (and cache) the HDF5 backend choice, loading the native library now rather
+		// than on the user's first data set open.
+		HDFReaders.warmUp();
 	}
 
 	private static void initPluginSystem() {
