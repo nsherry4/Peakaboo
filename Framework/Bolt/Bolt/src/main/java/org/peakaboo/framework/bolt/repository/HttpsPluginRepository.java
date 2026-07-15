@@ -57,7 +57,7 @@ public class HttpsPluginRepository implements PluginRepository {
         conn.setRequestMethod("GET");
         int responseCode = conn.getResponseCode();
         if (responseCode != 200) {
-            throw new IOException("HTTP returned " + responseCode);
+            throw new IOException("HTTP GET for " + url.toString() + " returned " + responseCode);
         }
         try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             StringBuilder response = new StringBuilder();
