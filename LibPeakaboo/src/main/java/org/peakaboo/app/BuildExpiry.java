@@ -33,8 +33,9 @@ public class BuildExpiry {
 	public static final String ENV_DISABLE_EXPIRY = "PEAKABOO_DISABLE_EXPIRY";
 
 	private static final String[] TIME_API_URLS = {
-		"http://worldtimeapi.org/api/timezone/Etc/UTC",
-		"https://timeapi.io/api/Time/current/zone?timeZone=UTC"
+		"https://timeapi.io/api/v1/time/current/zone?timezone=UTC",
+		"https://www.cloudflare.com",
+		"https://www.google.com"
 	};
 
 	private static final Duration TIMEOUT = Duration.ofSeconds(5);
@@ -85,12 +86,16 @@ public class BuildExpiry {
 	 * Fetches current time from a time API
 	 */
 	private static LocalDateTime fetchTimeFromApi(HttpClient client, String apiUrlString) throws IOException, InterruptedException {
-		HttpRequest request = HttpRequest.newBuilder()
+		// timeapi.io needs a full response body to parse; the other sources are
+		// only used for their standard HTTP Date response header, so HEAD suffices
+		boolean isTimeApiIo = apiUrlString.contains("timeapi.io");
+
+		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
 			.uri(URI.create(apiUrlString))
 			.timeout(TIMEOUT)
-			.header("User-Agent", "Peakaboo/" + Version.LONG_VERSION)
-			.GET()
-			.build();
+			.header("User-Agent", "Peakaboo/" + Version.LONG_VERSION);
+		requestBuilder = isTimeApiIo ? requestBuilder.GET() : requestBuilder.method("HEAD", HttpRequest.BodyPublishers.noBody());
+		HttpRequest request = requestBuilder.build();
 
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -98,55 +103,43 @@ public class BuildExpiry {
 			throw new IOException("HTTP response code: " + response.statusCode());
 		}
 
-		String responseBody = response.body();
-
-		// Parse the response based on the API
-		if (apiUrlString.contains("worldtimeapi.org")) {
-			return parseWorldTimeApi(responseBody);
-		} else if (apiUrlString.contains("timeapi.io")) {
-			return parseTimeApiIo(responseBody);
+		if (isTimeApiIo) {
+			return parseTimeApiIo(response.body());
 		}
 
-		throw new IOException("Unknown API format");
+		String dateHeader = response.headers().firstValue("Date")
+			.orElseThrow(() -> new IOException("No Date header in response"));
+		return parseHttpDateHeader(dateHeader);
 	}
 
 	/**
-	 * Parses WorldTimeAPI JSON response
-	 * Example: {"datetime":"2025-01-15T10:30:45.123456+00:00",...}
+	 * Parses a standard HTTP Date response header
+	 * Example: Tue, 15 Jan 2025 10:30:45 GMT
 	 */
-	private static LocalDateTime parseWorldTimeApi(String json) {
-		// Simple JSON parsing for datetime field
-		String dateTimeKey = "\"datetime\":\"";
-		int startIdx = json.indexOf(dateTimeKey);
-		if (startIdx == -1) {
-			throw new IllegalArgumentException("Could not find datetime field");
-		}
-		startIdx += dateTimeKey.length();
-		int endIdx = json.indexOf("\"", startIdx);
-		String dateTimeStr = json.substring(startIdx, endIdx);
-
-		// Parse ISO 8601 format
-		ZonedDateTime zdt = ZonedDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+	private static LocalDateTime parseHttpDateHeader(String dateHeader) {
+		ZonedDateTime zdt = ZonedDateTime.parse(dateHeader, DateTimeFormatter.RFC_1123_DATE_TIME);
 		return zdt.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
 	}
 
 	/**
 	 * Parses TimeAPI.io JSON response
-	 * Example: {"dateTime":"2025-01-15T10:30:45.123456",...}
+	 * Example: {"date_time":"2025-01-15T10:30:45.123456+00:00",...}
 	 */
 	private static LocalDateTime parseTimeApiIo(String json) {
-		// Simple JSON parsing for dateTime field
-		String dateTimeKey = "\"dateTime\":\"";
+		// Simple JSON parsing for date_time field
+		String dateTimeKey = "\"date_time\":\"";
 		int startIdx = json.indexOf(dateTimeKey);
 		if (startIdx == -1) {
-			throw new IllegalArgumentException("Could not find dateTime field");
+			throw new IllegalArgumentException("Could not find date_time field");
 		}
 		startIdx += dateTimeKey.length();
 		int endIdx = json.indexOf("\"", startIdx);
 		String dateTimeStr = json.substring(startIdx, endIdx);
 
-		// Parse ISO 8601 format (without timezone, assume UTC)
-		return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		// The v1 API includes a UTC offset (e.g. +00:00), so parse with the
+		// offset and normalize to UTC rather than assuming a local time
+		ZonedDateTime zdt = ZonedDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+		return zdt.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
 	}
 
 	/**
