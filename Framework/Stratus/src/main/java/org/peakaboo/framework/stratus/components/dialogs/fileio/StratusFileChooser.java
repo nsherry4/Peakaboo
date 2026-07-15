@@ -34,6 +34,7 @@ import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ButtonLinker;
 import org.peakaboo.framework.stratus.components.ComponentStrip;
+import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.stencil.StencilListCellRenderer;
 import org.peakaboo.framework.stratus.components.ui.filechooser.breadcrumb.FileBreadCrumb;
@@ -294,17 +295,27 @@ public class StratusFileChooser extends JFileChooser {
 						StratusFileChooser.this.invalidate();
 					}
 				});
+		
+		int b = Spacing.large;
+		listview.setBorder(new EmptyBorder(b, b, b, b));
+		iconview.setBorder(new EmptyBorder(b, b, b, b));
+		// Not sure why the extra increment is required for this button
+		makeDirButton.setBorder(new EmptyBorder(b+1, b, b+1, b));
+		
 		listview.setSelected(true);
 		viewGroup.add(listview);
 		viewGroup.add(iconview);
 		ButtonLinker viewButtons = new ButtonLinker(listview, iconview);
 		
-		ComponentStrip allButtons = new ComponentStrip(List.of(viewButtons, makeDirButton), false, Spacing.iNone(), Spacing.small);
+		ComponentStrip allButtons = new ComponentStrip(List.of(viewButtons, makeDirButton), false, Spacing.iTiny(), Spacing.large);
 		
 		FileBreadCrumb breadcrumb = new FileBreadCrumb(this, places);
+		var breadcrumbBox = new ClearPanel(new BorderLayout());
+		breadcrumbBox.add(breadcrumb, BorderLayout.CENTER);
+		breadcrumbBox.setBorder(new EmptyBorder(0, Spacing.huge, 0, Spacing.huge));
 		JPanel box = new JPanel(new BorderLayout(Spacing.small, Spacing.small));
 		box.setBorder(new EmptyBorder(0, Spacing.medium, 0, Spacing.medium));
-		box.add(breadcrumb, BorderLayout.CENTER);
+		box.add(breadcrumbBox, BorderLayout.CENTER);
 		box.add(allButtons, BorderLayout.LINE_END);
 		box.setOpaque(false);
 		return box;

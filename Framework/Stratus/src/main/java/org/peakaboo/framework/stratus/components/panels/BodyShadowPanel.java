@@ -22,10 +22,10 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 public class BodyShadowPanel extends ClearPanel {
 
 	/** Height, in pixels, of the soft shadow cast onto the body. */
-	private static final int SHADOW_HEIGHT = 8;
+	private static final int SHADOW_HEIGHT = 6;
 
 	/** Gentle multiplier applied to the theme's shadow alpha at the top edge. */
-	private static final float SHADOW_STRENGTH = 0.4f;
+	private static final float SHADOW_STRENGTH = 0.35f;
 
 	private boolean shadowEnabled = true;
 

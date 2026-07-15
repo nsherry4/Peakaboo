@@ -368,7 +368,7 @@ public class BreadCrumb<T> extends JPanel {
 		buttons.addAll(subset(first, last).stream().map(e -> e.getButton()).collect(toList()));
 		buttons.add(goRight);
 		Box box = Box.createHorizontalBox();
-		box.setBorder(Spacing.bSmall());
+		box.setBorder(Spacing.bTiny());
 		for (var button : buttons) {
 			box.add(button);
 		}
