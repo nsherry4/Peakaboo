@@ -70,7 +70,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		ClearPanel body = new ClearPanel() {
 			@Override
 			public Dimension getPreferredSize() {
-				return new Dimension(550, 400);
+				return new Dimension(550, 425);
 			}
 
 		};

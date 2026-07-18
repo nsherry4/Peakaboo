@@ -24,9 +24,9 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
  *
  */
 /*
- * FittingSolver extends DataLabelProvider so that a solver can mark its output
- * (e.g. as DataLabel.SPECULATIVE) by overriding getDataLabels(); the default
- * applies no labels.
+ * We extend DataLabelProvider so that a solver can mark its output (e.g. as
+ * DataLabel.SPECULATIVE) by overriding getDataLabels(); the default applies
+ * no labels.
  */
 public interface FittingSolver extends BoltJavaPlugin, DataLabelProvider {
 
@@ -53,26 +53,40 @@ public interface FittingSolver extends BoltJavaPlugin, DataLabelProvider {
 		// Derived Values
 		
 		/**
-		 *  Sorted list of channels
+		 * Sorted list of curves from the visible fittings
 		 */
 		public List<CurveView> curves;
 
 		/**
-		 *  Subset of channels to focus on
+		 * Subset of channels to focus on -- the union of the curves' intense channels
 		 */
 		public int[] channels;
-		
+
+		/**
+		 * Cache for expensive work that stays valid across solves. See
+		 * {@link SolverCache} for the rules on when cached values go stale.
+		 * Never null.
+		 */
+		public SolverCache cache = new SolverCache();
+
 		public FittingSolverContext(SpectrumView data, FittingSetView fittings, CurveFitter fitter) {
+			this(data, fittings, fitter, getIntenseChannels(fittings.getVisibleCurves()));
+		}
+		
+		/**
+		 * Construct a new FittingSolverContext and set the intense channels
+		 * manually, instead of having them calculated automatically. This is
+		 * an optimization for when intense channels is a loop invariant.
+		 */
+		public FittingSolverContext(SpectrumView data, FittingSetView fittings, CurveFitter fitter, int[] intenseChannels) {
 			this.data = data;
 			this.fittings = fittings;
 			this.fitter = fitter;
+			this.channels = intenseChannels;
 			
 			// Generate sorted list of curves from visible fittings
 			curves = new ArrayList<>(fittings.getVisibleCurves());
 			sortCurves(curves);
-			
-			// Calculate a list of channels with enough curve signal to matter
-			channels = getIntenseChannels(curves);
 		}
 		
 		/**
@@ -84,6 +98,7 @@ public interface FittingSolver extends BoltJavaPlugin, DataLabelProvider {
 			this.fitter = copy.fitter;
 			this.curves = copy.curves;
 			this.channels = copy.channels;
+			this.cache = copy.cache;
 		}
 		
 	}
@@ -91,7 +106,7 @@ public interface FittingSolver extends BoltJavaPlugin, DataLabelProvider {
 	FittingResultSetView solve(FittingSolverContext ctx);
 
 	/**
-	 * Given a list of curves, sort them by by shell first, and then by element
+	 * Given a list of curves, sort them by shell first, and then by element
 	 */
 	static void sortCurves(List<CurveView> curves) {
 		curves.sort((a, b) -> {
@@ -109,7 +124,10 @@ public interface FittingSolver extends BoltJavaPlugin, DataLabelProvider {
 		});
 	}
 	
-	static int[] getIntenseChannels(List<CurveView> curves) {
+	/**
+	 * Collects the union of the given curves' intense channels as a sorted array
+	 */
+	public static int[] getIntenseChannels(List<CurveView> curves) {
 		Set<Integer> intenseChannels = new LinkedHashSet<>();
 		for (CurveView curve : curves) {
 			intenseChannels.addAll(curve.getIntenseChannels());

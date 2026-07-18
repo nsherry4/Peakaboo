@@ -32,6 +32,7 @@ public class FittingSolverRegistry extends PeakabooPluginRegistry<FittingSolver>
 		
 		var builtins = new BoltJavaBuiltinLoader<>(this, FittingSolver.class);
 		builtins.load(GreedyFittingSolver.class);
+		builtins.load(IterativeFittingSolver.class);
 		builtins.load(OptimizingFittingSolver.class);
 		builtins.load(MultisamplingOptimizingFittingSolver.class);
 		

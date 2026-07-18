@@ -13,6 +13,7 @@ import org.peakaboo.curvefit.curve.fitting.FittingSetView;
 import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
+import org.peakaboo.curvefit.curve.fitting.solver.SolverCache;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.datalabel.DataLabel;
@@ -109,14 +110,23 @@ public class Mapping {
 			
 			long t1 = System.currentTimeMillis();
 			
+			// Loop invariant intense channels
+			int[] intenseChannels = FittingSolver.getIntenseChannels(fittings.getVisibleCurves());
+
+			// Loop invariant solver cache, shared across (parallel) per-pixel solves
+			// so solvers can reuse work derived from the unchanging curve list
+			SolverCache solverCache = new SolverCache();
+
 			stream.forEach(index -> {
-				
+
 				SpectrumView data = dataset.getScanData().get(index);
 				if (data == null) return;
-				
+
 				data = filters.applyFiltersUnsynchronized(data, ctx);
-				
-				FittingResultSetView frs = solver.solve(new FittingSolverContext(data, fittings, fitter));
+
+				FittingSolverContext sctx = new FittingSolverContext(data, fittings, fitter, intenseChannels);
+				sctx.cache = solverCache;
+				FittingResultSetView frs = solver.solve(sctx);
 				
 				for (FittingResultView result : frs.getFits()) {
 					if (noncontiguous) {

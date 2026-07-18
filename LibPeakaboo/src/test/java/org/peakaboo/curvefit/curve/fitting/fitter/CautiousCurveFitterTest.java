@@ -15,7 +15,7 @@ import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
-public class OptimizingCurveFitterTest {
+public class CautiousCurveFitterTest {
 
 	@BeforeClass
 	public static void initRegistry() {
@@ -34,7 +34,7 @@ public class OptimizingCurveFitterTest {
 	}
 
 	private FittingResult fit(CurveView curve, Spectrum data) {
-		return new OptimizingCurveFitter().fit(new CurveFitter.CurveFitterContext(data, curve));
+		return new CautiousCurveFitter().fit(new CurveFitter.CurveFitterContext(data, curve));
 	}
 
 	/**

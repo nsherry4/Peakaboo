@@ -1,6 +1,6 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
-public class LeastSquaresCurveFitter extends OptimizingCurveFitter {
+public class LeastSquaresCurveFitter extends CautiousCurveFitter {
 
 	public LeastSquaresCurveFitter() {
 		overfitPenalty = 1f;
@@ -13,7 +13,7 @@ public class LeastSquaresCurveFitter extends OptimizingCurveFitter {
 	
 	@Override
 	public String pluginDescription() {
-		return "Curve fitter that minimizes error between curve and signal";
+		return "Least squares curve fitting with no guard against overfitting";
 	}
 	
 	@Override
