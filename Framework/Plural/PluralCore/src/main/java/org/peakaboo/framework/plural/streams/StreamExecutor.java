@@ -7,9 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.eventful.EventfulEnum;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 
@@ -188,13 +190,21 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 	 */
 	public void setTask(Supplier<T> task) {
 		thread = new Thread(() -> {
-			setResult(task.get());
-			
+			try {
+				setResult(task.get());
+			} catch (Exception e) {
+				//A task that dies without aborting would leave listeners (and any
+				//chained executor) waiting forever
+				OneLog.log(Level.SEVERE, "StreamExecutor task '" + name + "' failed", e);
+				abort();
+				return;
+			}
+
 			//If another StreamExecutor is specified to run after this is done, kick it off now
 			if (this.next != null && state == State.COMPLETED) {
 				next.start();
 			}
-		});		
+		});
 	}
 	
 	/**
@@ -232,35 +242,43 @@ public class StreamExecutor<T> extends EventfulEnum<TaskMonitor.Event> implement
 	public <S> void setTask(Supplier<? extends Iterable<S>> sourceProvider, Function<Stream<S>, T> task) {
 
 		thread = new Thread(() -> {
-			
-			Iterable<S> source = sourceProvider.get();
-			
-			//If size hasn't already been manually set, figure it out now
-			if (size == -1) {
-				if (source instanceof Collection<?> c) {
-					setSize(c.size());
-				} else {
-					int itemCount = 0;
-					for (S s : source) {
-						itemCount++;
+
+			try {
+				Iterable<S> source = sourceProvider.get();
+
+				//If size hasn't already been manually set, figure it out now
+				if (size == -1) {
+					if (source instanceof Collection<?> c) {
+						setSize(c.size());
+					} else {
+						int itemCount = 0;
+						for (S s : source) {
+							itemCount++;
+						}
+						setSize(itemCount);
 					}
-					setSize(itemCount);
 				}
-			}
-			
-			setResult(
-				task.apply(
-					observe(
-						StreamSupport.stream(source.spliterator(), true)
+
+				setResult(
+					task.apply(
+						observe(
+							StreamSupport.stream(source.spliterator(), true)
+						)
 					)
-				)
-			);
-			
+				);
+			} catch (Exception e) {
+				//A task that dies without aborting would leave listeners (and any
+				//chained executor) waiting forever
+				OneLog.log(Level.SEVERE, "StreamExecutor task '" + name + "' failed", e);
+				abort();
+				return;
+			}
+
 			//If another StreamExecutor is specified to run after this is done, kick it off now
 			if (this.next != null && state == State.COMPLETED) {
 				next.start();
 			}
-		});		
+		});
 	}
 
 	/**

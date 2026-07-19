@@ -17,8 +17,11 @@ public class EventfulConfig {
 	
 	//RUN THIS ON THE UI THREAD
 	private static void uiThreadDrain() {
-		while (!globalDeliveryQueue.isEmpty()) {
-			Runnable job = globalDeliveryQueue.poll();
+		//With a headless uiThreadRunner this drain can run on several threads at once,
+		//so another drainer may empty the queue between an isEmpty check and a poll.
+		//Poll-and-null-check so the loser of that race exits cleanly instead of NPEing.
+		Runnable job;
+		while ((job = globalDeliveryQueue.poll()) != null) {
 			job.run();
 		}
 	}
