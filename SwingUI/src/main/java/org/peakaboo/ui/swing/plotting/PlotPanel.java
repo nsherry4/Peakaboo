@@ -877,7 +877,9 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 		StreamExecutorSet<EnergyCalibration> energyTask = AutoEnergyCalibration.propose(
 				controller.data().getDataSet().getAnalysis().averagePlot(),
-				controller.fitting().getVisibleTransitionSeries(), controller.fitting(),
+				controller.fitting().getVisibleTransitionSeries(),
+				controller.fitting().getFittingSolver(),
+				controller.fitting().getCurveFitter(),
 				controller.data().getDataSet().getAnalysis().channelsPerScan());
 
 		List<TaskMonitorView> views = energyTask.getExecutors().stream().map(TaskMonitorView::new).toList();

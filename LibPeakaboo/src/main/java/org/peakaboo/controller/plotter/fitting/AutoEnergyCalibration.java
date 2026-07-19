@@ -10,6 +10,8 @@ import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
 import org.peakaboo.curvefit.curve.fitting.FittingSetView;
+import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitter;
+import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverContext;
 import org.peakaboo.curvefit.peak.search.scoring.FastPeakSearchingScorer;
 import org.peakaboo.curvefit.peak.search.scoring.FittingScorer;
@@ -118,10 +120,11 @@ public class AutoEnergyCalibration {
 	 * Uses a slower algorithm to choose the best calibration from the rough options
 	 */
 	private static StreamExecutor<EnergyCalibration> chooseFromRoughOptions(
-			Supplier<List<EnergyCalibration>> energies, 
-			SpectrumView spectrum, 
+			Supplier<List<EnergyCalibration>> energies,
+			SpectrumView spectrum,
 			List<ITransitionSeries> tsList,
-			FittingController controller,
+			FittingSolver solver,
+			CurveFitter fitter,
 			int dataWidth
 		) {
 			
@@ -136,7 +139,7 @@ public class AutoEnergyCalibration {
 				
 				FittingResultSetView results;
 				fits.get().getFittingParameters().setCalibration(calibration);
-				results = controller.getFittingSolver().solve(new FittingSolverContext(spectrum, fits.get(), controller.getCurveFitter()));
+				results = solver.solve(new FittingSolverContext(spectrum, fits.get(), fitter));
 				return scoreFitGood(results, spectrum);
 				
 			}).toList();
@@ -155,7 +158,7 @@ public class AutoEnergyCalibration {
 			}
 
 			EnergyCalibration best = energies.get().get(bestIndex);
-			return fineTune(best, spectrum, tsList, controller, 0.1f);
+			return fineTune(best, spectrum, tsList, solver, fitter, 0.1f);
 			
 		});
 		
@@ -203,9 +206,10 @@ public class AutoEnergyCalibration {
 	
 	private static EnergyCalibration fineTune(
 			EnergyCalibration calibration,
-			SpectrumView spectrum, 
-			List<ITransitionSeries> tsList, 
-			FittingController controller,
+			SpectrumView spectrum,
+			List<ITransitionSeries> tsList,
+			FittingSolver solver,
+			CurveFitter fitter,
 			float window
 		) {
 		
@@ -228,8 +232,8 @@ public class AutoEnergyCalibration {
 				if (max <= min) continue;
 				
 				fits.getFittingParameters().setCalibration(min, max, calibration.getDataWidth());
-				var ctx = new FittingSolverContext(spectrum, fits, controller.getCurveFitter());
-				FittingResultSetView results = controller.getFittingSolver().solve(ctx);
+				var ctx = new FittingSolverContext(spectrum, fits, fitter);
+				FittingResultSetView results = solver.solve(ctx);
 				
 				float score = scoreFitGood(results, spectrum);
 				
@@ -246,14 +250,15 @@ public class AutoEnergyCalibration {
 	
 	
 	public static StreamExecutorSet<EnergyCalibration> propose(
-			SpectrumView spectrum, 
-			List<ITransitionSeries> tsList, 
-			FittingController controller, 
+			SpectrumView spectrum,
+			List<ITransitionSeries> tsList,
+			FittingSolver solver,
+			CurveFitter fitter,
 			int dataWidth
 		) {
-			
+
 		StreamExecutor<List<EnergyCalibration>> rough = roughOptions(allEnergies(dataWidth, tsList.size() > 1), spectrum, tsList, dataWidth);
-		StreamExecutor<EnergyCalibration> quality = chooseFromRoughOptions(() -> rough.getResult().get(), spectrum, tsList, controller, dataWidth);
+		StreamExecutor<EnergyCalibration> quality = chooseFromRoughOptions(() -> rough.getResult().get(), spectrum, tsList, solver, fitter, dataWidth);
 		rough.then(quality);
 		
 		return new StreamExecutorSet<>(rough, quality);
