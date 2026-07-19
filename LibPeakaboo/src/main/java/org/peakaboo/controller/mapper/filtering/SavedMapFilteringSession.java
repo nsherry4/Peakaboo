@@ -22,7 +22,7 @@ public class SavedMapFilteringSession {
 	public void loadInto(MapFilteringController controller) {
 		controller.clear();
 		for (SerializedMapFilter f : this.filters) {
-			controller.add(f.getFilter());
+			controller.add(f.buildFilter());
 		}
 	}
 	

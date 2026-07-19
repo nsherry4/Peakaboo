@@ -1,79 +1,62 @@
 package org.peakaboo.mapping.filter.model;
 
-import java.util.Map;
-
-import org.peakaboo.framework.bolt.plugin.core.PluginDescriptor;
+import org.peakaboo.framework.bolt.plugin.core.SavedPlugin;
 import org.peakaboo.mapping.filter.plugin.MapFilterPlugin;
 
 /**
- * SerializedFilter holds a reference to a filter, and provides getters/setters for
- * the class and the serialized parameters. When this class is serialzied, the class
- * and parameters are exposed to the serializing agent. When this object is read back
- * in, the setters will receive a Class, and serialized parameters. Calling getFilter 
- * will then reconstruct the filter from that data. 
+ * Serialized map filter state: the plugin reference, its serialized
+ * parameters, and its enabled flag -- collected in the constructor. We don't
+ * track the original filter as that leads to window-to-window interference.
+ * Instead, {@link #buildFilter()} builds a fresh instance on every call
  * @author NAS
  *
  */
 public class SerializedMapFilter {
 
+	// A SavedPlugin gets the filter by its UUID
+	private SavedPlugin plugin;
+	private boolean enabled = true;
 
-	private MapFilter filter;
-	
-	//These values exist only to initialize the filter, not to be read from.
-	private String clazz;
-	private Map<String, Object> settings;
-	
-	
-	
+
 	public SerializedMapFilter() {	}
-	
+
 	public SerializedMapFilter(MapFilter filter) {
-		
-		this.filter = filter;
-		
-	}
-
-
-
-	public String getClazz() {
-		return filter.getClass().getName();
-	}
-
-	public void setClazz(String clazz) {
-		this.clazz = clazz;
-	}
-
-	public Map<String, Object> getSettings() {
-		return filter.getParameterGroup().serialize();
-	}
-
-	public void setSettings(Map<String, Object> settings) {
-		this.settings = settings;
-	}
-
-	public MapFilter getFilter() {
-		if (filter != null) { return filter; }
-			
-		for (PluginDescriptor<MapFilterPlugin> plugin : MapFilterRegistry.system().getPlugins()) {
-			if (plugin.getImplementationClass().getName().equals(clazz)) {
-				var created = plugin.create();
-				if (created.isEmpty()) {
-					throw new RuntimeException("Cannot create plugin for " + clazz);
-				}
-				filter = created.get();
-				filter.initialize();
-				filter.getParameterGroup().deserialize(settings);
-				return filter;
-			}
+		if (!(filter instanceof MapFilterPlugin p)) {
+			throw new IllegalArgumentException("Map filter " + filter.getClass().getName() + " is not a plugin");
 		}
-		throw new RuntimeException("Cannot find plugin " + clazz);
+		this.plugin = p.save();
+		this.enabled = filter.isEnabled();
 	}
 
-	
-	
-	
-	
-	
-	
-	
+	public SavedPlugin getPlugin() {
+		return plugin;
+	}
+
+	public void setPlugin(SavedPlugin plugin) {
+		this.plugin = plugin;
+	}
+
+	public boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	// Builds a new MapFilter from the serialized state
+	public MapFilter buildFilter() {
+		// fromSaved() only looks the plugin up by UUID and creates it, but does not
+		// initialize or apply settings, so we do that manually
+		MapFilter filter = MapFilterRegistry.system().fromSaved(plugin)
+				.orElseThrow(() -> new RuntimeException("Cannot find map filter plugin " + plugin.uuid));
+
+		filter.initialize();
+		if (plugin.settings != null) {
+			filter.getParameterGroup().deserialize(plugin.settings);
+		}
+		filter.setEnabled(enabled);
+		return filter;
+	}
+
 }
