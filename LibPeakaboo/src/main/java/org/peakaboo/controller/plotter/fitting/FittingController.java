@@ -196,9 +196,23 @@ public class FittingController extends EventfulType<Boolean>
 
 	public void fittingDataInvalidated()
 	{
-		
+
 		OneLog.log(Level.FINE, "Fitting Data Invalidated");
-		
+
+		// A filter which reads the fittings produces stale output once they change,
+		// so the filtered data must be recalculated too. Order matters here:
+		// selectionResults is derived from the filtered plot, so we invalidate the
+		// filtered plot first and let that cascade down to re-invalidate
+		// selectionResults from fresh filter output. The reverse order would briefly
+		// recompute the fit against stale filtered data before healing itself.
+		// Be careful: this stays acyclic only because fittings-aware filters read the
+		// fitting selections (the FilterContext's FittingSetView), not the fit
+		// results -- reading selectionResults from a filter would make the filtered
+		// plot depend on its own downstream and form an invalidation cycle.
+		if (plot.filtering().getActiveFilters().usesFittings()) {
+			plot.filtering().filteredDataInvalidated();
+		}
+
 		// Clear cached values, since they now have to be recalculated
 		fittingModel.selectionResults.invalidate();
 

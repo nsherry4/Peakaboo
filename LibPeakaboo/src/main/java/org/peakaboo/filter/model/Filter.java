@@ -79,6 +79,15 @@ public interface Filter extends BoltJavaPlugin, DataLabelProvider {
 	 */
 	boolean canFilterSubset();
 
+	/**
+	 * Returns true if this filter reads the fittings in its {@link FilterContext}.
+	 * The host uses this to re-run filtering when the fitting model changes, since
+	 * this filter's output is stale after such a change.
+	 */
+	default boolean usesFittings() {
+		return false;
+	}
+
 	
 	default FilterContext requireContext(Optional<FilterContext> ctx) {
 		if (!ctx.isPresent()) {

@@ -161,6 +161,16 @@ public class FilterSet implements Iterable<Filter> {
 	}
 
 	/**
+	 * Returns true if any filter which would be applied by
+	 * {@link #applyFilters(SpectrumView, FilterContext)} reads the fittings in its
+	 * context, meaning filtered data goes stale when the fitting model changes.
+	 */
+	public synchronized boolean usesFittings() {
+		return filters.stream()
+				.anyMatch(f -> f != null && f.isEnabled() && !f.isPreviewOnly() && f.usesFittings());
+	}
+
+	/**
 	 * Returns the deduplicated {@link DataLabel}s for the filters which would be
 	 * applied by {@link #applyFilters(SpectrumView, FilterContext)}.
 	 */
