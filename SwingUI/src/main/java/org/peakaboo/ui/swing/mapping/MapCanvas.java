@@ -10,6 +10,7 @@ import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.settings.MapSettingsController;
 import org.peakaboo.display.map.MapRenderData;
+import org.peakaboo.display.Display;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.Mapper;
 import org.peakaboo.framework.accent.Coord;
@@ -162,7 +163,11 @@ public class MapCanvas extends GraphicsPanel {
 	
 	private void drawMap(Surface context, Coord<Integer> size) {
 				
+		// Deep copy the settings and update the theme-independant one(s)
 		MapRenderSettings settings = mapController.getRenderSettings();
+		if (Display.forceLightBackground(context)) {
+			settings.darkmode = false;
+		}
 		MapRenderData data = mapController.getMapRenderData();
 		mapper.draw(data, settings, context, size);
 		

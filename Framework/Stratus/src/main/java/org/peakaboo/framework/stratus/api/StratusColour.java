@@ -56,6 +56,23 @@ public class StratusColour {
     	return c.getClass().getName().equals("java.awt.Color");
     }
 
+	/**
+	 * Strips the UIResource marker off a colour, so that Swing treats it as one the
+	 * application chose rather than one the look and feel supplied. A renderer doing
+	 * the obvious <code>label.setForeground(table.getSelectionForeground())</code>
+	 * silently gets the Nimbus default instead.
+	/**
+	 * Returns a colour object without the UIResource marker. Swing treats them different.y
+	 * A UIResource is considered a built-in, but without it its considered a user override
+	 * and given more priority.
+	 */
+	public static Color explicit(Color c) {
+		if (c == null) {
+			return null;
+		}
+		return new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+	}
+
 	public static Color blackOrWhite(Color colour) {
 		float lum = new HSLColor(colour).getLuminance();
 		Color highlight;

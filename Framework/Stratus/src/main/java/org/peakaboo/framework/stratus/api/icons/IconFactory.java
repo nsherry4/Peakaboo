@@ -5,12 +5,16 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.net.URL;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 
 import org.peakaboo.framework.accent.log.OneLog;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.FluentConfig;
+import org.peakaboo.framework.stratus.laf.theme.Theme;
 
 
 public class IconFactory {
@@ -57,14 +61,62 @@ public class IconFactory {
 
 		if (url == null) {
 			return new ImageIcon();
-		} else {
-			var image = new ImageIcon(url);
-			if (colour != null) {
-				image = recolour(image, colour);
-			}
+		}
+
+		var image = new ImageIcon(url);
+		if (colour != null) {
+			return recolour(image, colour);
+		}
+
+		// Icons can load before the look and feel is configured, eg on the splash screen
+		Theme theme = Stratus.getTheme();
+		if (theme == null) {
 			return image;
 		}
-		
+
+		BufferedImage bi = toBufferedImage(image);
+		if (!isSymbolic(url, bi)) {
+			return image;
+		}
+		return tint(bi, theme.getControlText());
+	}
+
+	private static BufferedImage toBufferedImage(ImageIcon icon) {
+		BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		bi.createGraphics().drawImage(icon.getImage(), 0, 0, null);
+		return bi;
+	}
+	
+	
+	private static final Map<String, Boolean> symbolicCache = new ConcurrentHashMap<>();
+	/**
+	 * Test an icon to determine if it is symbolic. We examine the opaque pixels to
+	 * look for any hint of colour or shading. Generally, symbolic icons will not have
+	 * any of this.
+	 */
+	private static boolean isSymbolic(URL url, BufferedImage bi) {
+		return symbolicCache.computeIfAbsent(url.toString(), k -> {
+			int min = 255;
+			int max = 0;
+			for (int y = 0; y < bi.getHeight(); y++) {
+				for (int x = 0; x < bi.getWidth(); x++) {
+					int argb = bi.getRGB(x, y);
+					// Ignore anti-aliased edges, they say nothing about the icon's colour
+					int a = (argb >> 24) & 0xff;
+					if (a <= 200) { continue; }
+					int r = (argb >> 16) & 0xff;
+					int g = (argb >> 8) & 0xff;
+					int b = argb & 0xff;
+					// Look for anything with any colour saturation
+					if (r != g || g != b) { return false; }
+					min = Math.min(min, r);
+					max = Math.max(max, r);
+					// Look for any greyscale shading, too
+					if (max - min > 8) { return false; }
+				}
+			}
+			return true;
+		});
 	}
 	
 	public static URL getImageIconURL(String path, String imageName, IconSize size) {
@@ -94,13 +146,14 @@ public class IconFactory {
 	
 	
 	public static ImageIcon recolour(ImageIcon icon, Color c) {
-		//Get a BufferedImage from this icon
-		Image image = icon.getImage();
-		BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-		bi.createGraphics().drawImage(image, 0, 0, null);
-		
-		
-		//Go through pixel by pixel and update all the rgb elements to match the given colour, leaving alpha alone
+		return tint(toBufferedImage(icon), c);
+	}
+
+	/**
+	 * Repaints every pixel in the given colour, keeping the image's alpha. Consumes
+	 * the image it is handed.
+	 */
+	private static ImageIcon tint(BufferedImage bi, Color c) {
 		int[] argb = new int[4];
 		WritableRaster raster = bi.getRaster();
 
@@ -108,19 +161,19 @@ public class IconFactory {
 		int r = c.getRed();
 		int g = c.getGreen();
 		int b = c.getBlue();
-		
+
 		for (int y = 0; y < bi.getHeight(); y++) {
 			for (int x = 0; x < bi.getWidth(); x++) {
 				raster.getPixel(x, y, argb);
 				argb[0] = r;
 				argb[1] = g;
 				argb[2] = b;
-				argb[3] = (argb[3] * a) >> 8;
+				//divide by 255, not >>8: the latter leaves a fully opaque pixel at 254
+				argb[3] = (argb[3] * a) / 255;
 				raster.setPixel(x, y, argb);
 			}
 		}
-	
-		
+
 		return new ImageIcon(bi);
 	}
 	

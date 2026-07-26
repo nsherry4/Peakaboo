@@ -45,8 +45,8 @@ public class DesktopSettings extends Settings {
 	public static boolean isDarkMode() {
 		return provider.getBoolean(DARK_MODE, false);
 	}
-	public static void setDarkMode(boolean verbose) {
-		provider.setBoolean(DARK_MODE, verbose);
+	public static void setDarkMode(boolean darkMode) {
+		provider.setBoolean(DARK_MODE, darkMode);
 	}
 	
 	
@@ -54,8 +54,8 @@ public class DesktopSettings extends Settings {
 	public static boolean isCrashAutoreporting() {
 		return provider.getBoolean(CRASH_AUTOREPORTING, false);
 	}
-	public static void setCrashAutoreporting(boolean verbose) {
-		provider.setBoolean(CRASH_AUTOREPORTING, verbose);
+	public static void setCrashAutoreporting(boolean autoreport) {
+		provider.setBoolean(CRASH_AUTOREPORTING, autoreport);
 	}
 	
 }

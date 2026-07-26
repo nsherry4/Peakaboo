@@ -17,7 +17,7 @@ public class DuskTheme implements Theme {
 	
 	private Color control = new Color(0x484848);
 	private Color controlText = new Color(0xd0d0d0);
-	private Color controlTextDisabled = new Color(0x808080);
+	private Color controlTextDisabled = new Color(0x9a9a9a);
 	private Color negative = new Color(0x383838);
 	
 	private Color border = new Color(0x202020);
@@ -35,9 +35,10 @@ public class DuskTheme implements Theme {
 	private Color menuControl = new Color(0x202020);
 	private Color menuControlText = controlText;
 	
-	private Color tableHeaderText = new Color(0x666666);
-	
-	private Color scrollHandle = StratusColour.lighten(getWidgetBorder(), 0.1f);
+	private Color tableHeader = new Color(0x383838);
+	private Color tableHeaderText = new Color(0xa8a8a8);
+
+	private Color scrollHandle = StratusColour.lighten(control, 0.20f);
 	
 	public DuskTheme() {
 		this(Accent.BLUE);
@@ -55,25 +56,6 @@ public class DuskTheme implements Theme {
 	@Override
 	public ColourPalette getPalette() {
 		return PALETTE;
-	}
-	
-	@Override
-	public Color getAccent(Accent accent) {
-			
-		return switch (accent) {
-			case BLUE -> new Color(0x5080df);
-			case GREEN -> new Color(0x4c8e4b);
-			case GREY -> new Color(0x728194);
-			case ORANGE -> new Color(0xdc6823);
-			case PINK -> new Color(0xc76996);
-			case PURPLE -> new Color(0x8e47ab);
-			case RED -> new Color(0xd64848);
-			case TEAL -> new Color(0x3e8889);
-			case YELLOW -> new Color(0xbd8b25);
-			
-			default -> getAccent(Accent.BLUE);
-		};
-		
 	}
 	
 	@Override
@@ -161,7 +143,7 @@ public class DuskTheme implements Theme {
 
 	@Override
 	public Color getTableHeader() {
-		return Color.WHITE;
+		return tableHeader;
 	}
 
 	@Override

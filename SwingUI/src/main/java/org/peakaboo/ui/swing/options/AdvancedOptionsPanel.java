@@ -39,6 +39,7 @@ import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
+import org.peakaboo.framework.stratus.components.Banner;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 import org.peakaboo.framework.stratus.components.stencil.Stencil;
 import org.peakaboo.framework.stratus.components.stencil.StencilListCellRenderer;
@@ -76,8 +77,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		};
 		CardLayout cards = new CardLayout();
 		body.setLayout(cards);
-		body.setBorder(Spacing.bMedium());
-		
+
 		var hasdata = controller.data().hasDataSet();
 		final String SETTING_PER_DATASET = "Per-Session Settings";
 		final String SETTING_PER_USER = "Global Settings";
@@ -117,7 +117,10 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			Group group = item.getValue();
 			String groupKey = group.getName();
 			JComponent groupPanel = SwingLayoutFactory.forGroup(group).getComponent();
-			body.add(groupPanel, groupKey);
+			ClearPanel groupWrapper = new ClearPanel(new BorderLayout());
+			groupWrapper.setBorder(Spacing.bMedium());
+			groupWrapper.add(groupPanel, BorderLayout.CENTER);
+			body.add(groupWrapper, groupKey);
 			OptionSidebar.Entry itemEntry = new OptionSidebar.Entry(groupKey, IconFactory.getImageIcon(Tier.provider().iconPath(), item.getIconPath(), IconSize.TOOLBAR_SMALL));
 			entries.add(itemEntry);
 		}
@@ -125,7 +128,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		entries.add(new OptionSidebar.Entry(SETTING_PER_USER).setHeading(true));
 		
 		String KEY_APP = "Appearance";
-		OptionBlocksPanel appPanel = makeAppPanel(controller);
+		JComponent appPanel = makeAppPanel(controller);
 		body.add(appPanel, KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
@@ -201,8 +204,8 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		return new OptionBlocksPanel(multithreading, datasets, heapBlock);
 	}
 	
-	private OptionBlocksPanel makeAppPanel(PlotController controller) {
-	
+	private JComponent makeAppPanel(PlotController controller) {
+
 
 		OptionBlock mapsBlock = new OptionBlock();
 		
@@ -238,26 +241,54 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		
 		
 		OptionBlock uxBlock = new OptionBlock();
-		
-		
+
+
+		// Banner that tells users when a restart is required for their settings to take effect
+		var initialDarkMode = DesktopSettings.isDarkMode();
+		var initialAccent = DesktopSettings.getAccentColour();
+		Banner restartNotice = new Banner("Restart Peakaboo to apply the new theme.", Banner.styleInfo());
+		restartNotice.hideBanner();
+		Runnable themeChanged = () -> {
+			boolean changed = DesktopSettings.isDarkMode() != initialDarkMode
+					|| !DesktopSettings.getAccentColour().equals(initialAccent);
+			if (changed) {
+				restartNotice.openBanner();
+			} else {
+				restartNotice.hideBanner();
+			}
+		};
+
 		var accentColour = Accent.forName(DesktopSettings.getAccentColour());
 		var theme = Stratus.getTheme();
 		var accents = theme.getAccents();
 		OptionColours accent = new OptionColours(uxBlock, new ArrayList<>(accents.values()), theme.getAccent(accentColour))
-				.withListener(c -> DesktopSettings.setAccentColour(theme.getColourAccentName(c)))
+				.withListener(c -> {
+					DesktopSettings.setAccentColour(theme.getColourAccentName(c));
+					themeChanged.run();
+				})
 				.withText("Accent Colour", "Requires restart")
 				.withSize(OptionSize.LARGE);
 		uxBlock.add(accent);
-		
+
 		OptionCheckBox darkmode = new OptionCheckBox(uxBlock)
-				.withText("Dark Mode (Experimental)", "Use a dark user interface theme, requires restart")
+				.withText("Dark Mode", "Use a dark user interface theme, requires restart")
 				.withSize(OptionSize.LARGE)
 				.withSelection(DesktopSettings.isDarkMode())
-				.withListener(DesktopSettings::setDarkMode);
+				.withListener(dark -> {
+					DesktopSettings.setDarkMode(dark);
+					themeChanged.run();
+				});
 		uxBlock.add(darkmode);
-		
-				
-		
+
+		OptionCheckBox lightExports = new OptionCheckBox(uxBlock)
+				.withText("Light Background for Exported Images", "Exported plots and maps ignore dark mode")
+				.withSize(OptionSize.LARGE)
+				.withSelection(Settings.isLightExports())
+				.withListener(Settings::setLightExports);
+		uxBlock.add(lightExports);
+
+
+
 		OptionBlock startup = new OptionBlock();
 		OptionCheckBox firstrun = new OptionCheckBox(startup)
 				.withText("Show First Run Introduction", "Toggles the first-run introduction screen")
@@ -266,8 +297,12 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withListener(DesktopSettings::setFirstrun);
 		startup.add(firstrun);
 
-		return new OptionBlocksPanel(mapsBlock, uxBlock, startup);
-				
+		ClearPanel panel = new ClearPanel(new BorderLayout());
+		panel.setBorder(Spacing.bNone());
+		panel.add(restartNotice, BorderLayout.NORTH);
+		panel.add(new OptionBlocksPanel(mapsBlock, uxBlock, startup), BorderLayout.CENTER);
+		return panel;
+
 	}
 
 	

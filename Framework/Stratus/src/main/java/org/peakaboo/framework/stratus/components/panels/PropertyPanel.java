@@ -1,6 +1,5 @@
 package org.peakaboo.framework.stratus.components.panels;
 
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -22,6 +21,7 @@ import javax.swing.event.HyperlinkEvent;
 
 import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 
 public class PropertyPanel extends JPanel {
 
@@ -141,7 +141,7 @@ public class PropertyPanel extends JPanel {
 		c.anchor = rightAlignedLabels ? GridBagConstraints.NORTHEAST : GridBagConstraints.NORTHWEST;
 		
 		lblName = new JLabel(name);
-		lblName.setForeground(Color.GRAY);
+		lblName.setForeground(Stratus.getTheme().getControlTextDisabled());
 		add(lblName, c);
 		
 		

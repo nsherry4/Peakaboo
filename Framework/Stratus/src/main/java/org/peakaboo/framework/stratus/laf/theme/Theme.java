@@ -7,7 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.peakaboo.framework.stratus.api.ColourPalette;
+import org.peakaboo.framework.stratus.api.HSLColor;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 public interface Theme {
 
@@ -43,10 +45,28 @@ public interface Theme {
 	Color getShadow();
 	
 	ColourPalette getPalette();
-	Color getAccent(Accent accent);
-	
+
 	Font getMonospaceFont();
-	
+
+	/**
+	 * The accent colours a user can choose between. These are mid-tone by design so
+	 * that they carry white text and sit legibly on both light and dark controls,
+	 * which is why both themes share one table.
+	 */
+	default Color getAccent(Accent accent) {
+		return switch (accent) {
+			case BLUE -> new Color(0x5080df);
+			case GREEN -> new Color(0x4c8e4b);
+			case GREY -> new Color(0x728194);
+			case ORANGE -> new Color(0xdc6823);
+			case PINK -> new Color(0xc76996);
+			case PURPLE -> new Color(0x8e47ab);
+			case RED -> new Color(0xd64848);
+			case TEAL -> new Color(0x3e8889);
+			case YELLOW -> new Color(0xbd8b25);
+		};
+	}
+
 	default Map<Accent, Color> getAccents() {
 		var map = new LinkedHashMap<Accent, Color>();
 		Arrays.stream(Accent.values()).forEach(accent -> map.put(accent, getAccent(accent)));
@@ -69,6 +89,31 @@ public interface Theme {
 	 */
 	default Color getNegative() {
 		return getControl();
+	}
+
+	/**
+	 * Is this a dark theme? Derived from the control colour rather than declared, so
+	 * that any theme gets a sensible answer without having to remember to override it.
+	 */
+	default boolean isDark() {
+		return new HSLColor(getControl()).getLuminance() < 50;
+	}
+
+	/**
+	 * Move a colour away from this theme's background, so it stands out more. Use this
+	 * instead of picking lighten/darken by hand -- "darken to emphasize" is only true
+	 * on a light theme.
+	 */
+	default Color emphasize(Color src, float amount) {
+		return isDark() ? StratusColour.lighten(src, amount) : StratusColour.darken(src, amount);
+	}
+
+	/**
+	 * Move a colour toward this theme's background, so it recedes. The opposite of
+	 * {@link #emphasize(Color, float)}.
+	 */
+	default Color recede(Color src, float amount) {
+		return isDark() ? StratusColour.darken(src, amount) : StratusColour.lighten(src, amount);
 	}
 	
 	/**

@@ -23,6 +23,7 @@ import org.peakaboo.controller.plotter.view.ViewController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.io.PathDataInputAdapter;
 import org.peakaboo.display.plot.PlotData;
+import org.peakaboo.display.Display;
 import org.peakaboo.display.plot.PlotSettings;
 import org.peakaboo.display.plot.Plotter;
 import org.peakaboo.framework.accent.log.OneLog;
@@ -370,8 +371,12 @@ public class PlotCanvas extends GraphicsPanel implements Scrollable {
 				//No Data
 				return;
 			}
+			// Deep copy and update
 			PlotSettings settings = controller.view().getPlotSettings();
-			
+			if (Display.forceLightBackground(context)) {
+				settings.darkmode = false;
+			}
+
 			plotter.draw(data, settings, context, size);
 	
 			

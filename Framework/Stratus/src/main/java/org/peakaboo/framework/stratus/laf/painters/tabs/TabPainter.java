@@ -8,7 +8,6 @@ import javax.swing.JComponent;
 
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
-import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.painters.StatefulPainter;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -42,11 +41,11 @@ public class TabPainter extends StatefulPainter{
 		
 		
 		if (isSelected()) {
-			color = StratusColour.darken(color, 0.10f);
+			color = theme.emphasize(color, 0.10f);
 		}
-		
+
 		if (isMouseOver()) {
-			color = StratusColour.darken(color, theme.selectionStrength());
+			color = theme.emphasize(color, theme.selectionStrength());
 		}
 		
 		

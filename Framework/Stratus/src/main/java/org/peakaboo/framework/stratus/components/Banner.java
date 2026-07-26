@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import org.peakaboo.framework.stratus.api.ColourPalette;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -23,11 +24,31 @@ public class Banner extends ClearPanel {
 	public static record BannerAction(String title, Runnable action) {};
 	public static record BannerStyle(Color bg, Color fg, ImageIcon icon) {};
 	
-	// Preset styles
-	private static ColourPalette palette = Stratus.getTheme().getPalette();
-	public static BannerStyle STYLE_INFO = new BannerStyle(palette.getColour("Blue", "1") , Stratus.getTheme().getControlText(), StockIcon.BADGE_INFO.toImageIcon(IconSize.TOOLBAR_SMALL) );
-	public static BannerStyle STYLE_WARN = new BannerStyle(new Color(0xfffec1) , Stratus.getTheme().getControlText(), StockIcon.BADGE_WARNING.toImageIcon(IconSize.TOOLBAR_SMALL) );
-	public static BannerStyle STYLE_ERROR = new BannerStyle(palette.getColour("Red", "4") , Stratus.getTheme().getHighlightText(), StockIcon.BADGE_ERROR.toImageIcon(IconSize.TOOLBAR_SMALL) );
+	/*
+	 * Preset styles. Static fields may init before the theme can load.
+	 *
+	 * Banner backgrounds are fixed light colours, so the text colour is chosen
+	 * against the background rather than taken from the theme.
+	 */
+	public static BannerStyle styleInfo() {
+		return style(palette().getColour("Blue", "1"), StockIcon.BADGE_INFO);
+	}
+
+	public static BannerStyle styleWarn() {
+		return style(palette().getColour("Yellow", "1"), StockIcon.BADGE_WARNING);
+	}
+
+	public static BannerStyle styleError() {
+		return style(palette().getColour("Red", "4"), StockIcon.BADGE_ERROR);
+	}
+
+	private static BannerStyle style(Color bg, StockIcon icon) {
+		return new BannerStyle(bg, StratusColour.blackOrWhite(bg), icon.toImageIcon(IconSize.TOOLBAR_SMALL));
+	}
+
+	private static ColourPalette palette() {
+		return Stratus.getTheme().getPalette();
+	}
 
 	// Internal state
 	private boolean closed = false;
@@ -37,7 +58,7 @@ public class Banner extends ClearPanel {
 	
 
 	public Banner(String message) {
-		this(message, STYLE_INFO, List.of(), false);
+		this(message, styleInfo(), List.of(), false);
 	}
 	
 	public Banner(String message, BannerStyle style) {
@@ -92,7 +113,7 @@ public class Banner extends ClearPanel {
 		
 		if (closable) {
 			var close = new FluentButton()
-					.withIcon(StockIcon.WINDOW_CLOSE, IconSize.BUTTON)
+					.withIcon(StockIcon.WINDOW_CLOSE, IconSize.BUTTON, style.fg)
 					.withBordered(false)
 					.withTooltip("Close this banner")
 					.withAction(this::closeBanner);

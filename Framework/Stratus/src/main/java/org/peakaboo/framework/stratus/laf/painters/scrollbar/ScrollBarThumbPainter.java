@@ -8,7 +8,6 @@ import javax.swing.Painter;
 
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
-import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.painters.SimpleThemed;
 import org.peakaboo.framework.stratus.laf.theme.Theme;
 
@@ -20,7 +19,7 @@ public class ScrollBarThumbPainter extends SimpleThemed implements Painter<JComp
 		super(theme);
 		c = getTheme().getScrollHandle();
 		if (state == ButtonState.MOUSEOVER) {
-			c = StratusColour.darken(c, 0.1f);
+			c = getTheme().emphasize(c, 0.1f);
 		}
 		if (state == ButtonState.PRESSED) {
 			c = getTheme().getHighlight();

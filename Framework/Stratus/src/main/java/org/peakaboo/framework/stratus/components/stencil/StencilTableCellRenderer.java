@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class StencilTableCellRenderer<T> implements TableCellRenderer, StencilParent {
 
@@ -35,11 +36,11 @@ public class StencilTableCellRenderer<T> implements TableCellRenderer, StencilPa
 			int row, int column) {
 		
 		if (isSelected) {
-			widget.setForeground(table.getSelectionForeground());
+			widget.setForeground(StratusColour.explicit(table.getSelectionForeground()));
 			widget.setBackground(table.getSelectionBackground());
 			widget.setOpaque(true);
 		} else {
-			widget.setForeground(table.getForeground());
+			widget.setForeground(StratusColour.explicit(table.getForeground()));
 			widget.setBackground(table.getBackground());
 			widget.setOpaque(false);
 		}

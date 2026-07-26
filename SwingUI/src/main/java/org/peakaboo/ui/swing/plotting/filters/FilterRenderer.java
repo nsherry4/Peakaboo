@@ -2,6 +2,7 @@ package org.peakaboo.ui.swing.plotting.filters;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -13,6 +14,7 @@ import javax.swing.table.TableCellRenderer;
 import org.peakaboo.filter.model.Filter;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.StratusText;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 class FilterRenderer extends JPanel implements TableCellRenderer
 {
@@ -50,17 +52,19 @@ class FilterRenderer extends JPanel implements TableCellRenderer
 		if (isSelected) {
 			setBackground(table.getSelectionBackground());
 
-			setForeground(table.getSelectionForeground());
-			name.setForeground(table.getSelectionForeground());
-			detail.setForeground(table.getSelectionForeground());
+			Color selected = StratusColour.explicit(table.getSelectionForeground());
+			setForeground(selected);
+			name.setForeground(selected);
+			detail.setForeground(selected);
 
 			setOpaque(true);
 		} else {
 			setOpaque(false);
 
-			setForeground(table.getForeground());
-			name.setForeground(table.getForeground());
-			detail.setForeground(table.getForeground());
+			Color normal = StratusColour.explicit(table.getForeground());
+			setForeground(normal);
+			name.setForeground(normal);
+			detail.setForeground(normal);
 
 
 			setBackground(table.getBackground());

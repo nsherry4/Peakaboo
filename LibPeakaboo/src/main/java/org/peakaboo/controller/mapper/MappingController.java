@@ -23,6 +23,7 @@ import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.source.model.internal.SelectionDataSource;
 import org.peakaboo.display.map.MapRenderData;
+import org.peakaboo.display.Display;
 import org.peakaboo.display.map.MapRenderSettings;
 import org.peakaboo.display.map.Mapper;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
@@ -267,12 +268,15 @@ public class MappingController extends EventfulType<MapUpdateType>
 		composite.setAllVisible(false);
 		composite.setVisibility(ts, true);
 		MapRenderSettings settings = controller.getRenderSettings();
-		
+
 		//image extension
 		String ext = format.extension().toLowerCase();
 		ZipEntry entry = new ZipEntry(ts.toString() + "." + ext);
 		zos.putNextEntry(entry);
 		ExportableSurface context = surfaceFactory.get();
+		if (Display.forceLightBackground(context)) {
+			settings.darkmode = false;
+		}
 		mapper.draw(data, settings, context, size);
 		context.write(zos);
 		zos.closeEntry();

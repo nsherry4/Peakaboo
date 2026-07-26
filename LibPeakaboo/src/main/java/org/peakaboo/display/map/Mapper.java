@@ -9,6 +9,7 @@ import org.peakaboo.display.map.modes.MapMode;
 import org.peakaboo.display.map.modes.MapModeRegistry;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
+import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.drawing.map.MapDrawing;
@@ -61,10 +62,11 @@ public class Mapper {
 		context.fill();
 		context.restore();
 
-		if (context.getSurfaceDescriptor().isVector()) {
-			//We can't do raster-based buffering if the drawing target is vector
-			//so just draw directly to the surface
+		// Vector surfaces can't be composed from a raster buffer, and exports can't be
+		// composed from the screen's buffer because it caches screen-specific visuals.
+		boolean drawDirect = context.getSurfaceDescriptor().isVector() || context instanceof ExportableSurface;
 
+		if (drawDirect) {
 			// Apply horizontal centering transform
 			int offsetX = calculateHorizontalCenteringOffset(size);
 			context.save();

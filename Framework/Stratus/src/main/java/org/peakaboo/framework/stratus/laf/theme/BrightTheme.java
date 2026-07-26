@@ -59,26 +59,6 @@ public class BrightTheme implements Theme {
 	}
 	
 	@Override
-	public Color getAccent(Accent accent) {
-			
-		return switch (accent) {
-			case BLUE -> new Color(0x5080df);
-			case GREEN -> new Color(0x4c8e4b);
-			case GREY -> new Color(0x728194);
-			case ORANGE -> new Color(0xdc6823);
-			case PINK -> new Color(0xc76996);
-			case PURPLE -> new Color(0x8e47ab);
-			case RED -> new Color(0xd64848);
-			case TEAL -> new Color(0x3e8889);
-			case YELLOW -> new Color(0xbd8b25);
-			
-			default -> getAccent(Accent.BLUE);
-		};
-		
-	}
-	
-	
-	@Override
 	public Color getHighlight() {
 		return highlight;
 	}

@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class StencilListCellRenderer<T> implements ListCellRenderer<T>, StencilParent {
 
@@ -19,11 +20,11 @@ public class StencilListCellRenderer<T> implements ListCellRenderer<T>, StencilP
 			boolean cellHasFocus) {
 		
 		if (isSelected) {
-			widget.setForeground(list.getSelectionForeground());
+			widget.setForeground(StratusColour.explicit(list.getSelectionForeground()));
 			widget.setBackground(list.getSelectionBackground());
 			widget.setOpaque(true);
 		} else {
-			widget.setForeground(list.getForeground());
+			widget.setForeground(StratusColour.explicit(list.getForeground()));
 			widget.setBackground(list.getBackground());
 			widget.setOpaque(false);
 		}

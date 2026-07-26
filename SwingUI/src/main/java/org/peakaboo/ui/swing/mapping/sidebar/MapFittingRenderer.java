@@ -10,6 +10,7 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import org.peakaboo.ui.swing.plotting.fitting.fitted.FittedWidget;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class MapFittingRenderer extends DefaultTableCellRenderer
 {
@@ -34,11 +35,11 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 		if (selected){	
 			tswidget.setOpaque(true);
 			tswidget.setBackground(table.getSelectionBackground());
-			tswidget.setForeground(table.getSelectionForeground());
+			tswidget.setForeground(StratusColour.explicit(table.getSelectionForeground()));
 		} else {
 			tswidget.setOpaque(false);
 			tswidget.setBackground(table.getBackground());
-			tswidget.setForeground(table.getForeground());
+			tswidget.setForeground(StratusColour.explicit(table.getForeground()));
 		}
 		
 		

@@ -14,7 +14,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
-import org.peakaboo.framework.stratus.api.icons.IconFactory;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.IconSize;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 
@@ -23,25 +23,28 @@ import org.peakaboo.ui.swing.app.PeakabooIcons;
  */
 public class FilterBox extends JTextField {
 
-	private ImageIcon icon = IconFactory.getImageIcon(PeakabooIcons.FILTER, IconSize.BUTTON);
+	private ImageIcon icon = PeakabooIcons.FILTER.toImageIcon(
+			IconSize.BUTTON,
+			Stratus.getTheme().getControlText());
 	
 	public FilterBox(boolean drawBorder) {
 		super();
 		
 		
 		UIDefaults dialogTheme = new UIDefaults();
+		Color background = Stratus.getTheme().getRecessedControl();
 		Painter<FilterBox> painter = (Graphics2D g, FilterBox object, int width, int height) -> {
-			g.setColor(Color.WHITE);
+			g.setColor(background);
 			g.fillRect(0, 0, getWidth(), getHeight());
 		};
 		if (!drawBorder) {
 			dialogTheme.put("TextField[Enabled].backgroundPainter", painter);
 			dialogTheme.put("TextField[Focused].backgroundPainter", painter);
-			
+
 			this.putClientProperty("Nimbus.Overrides.InheritDefaults", Boolean.TRUE);
 			this.putClientProperty("Nimbus.Overrides", dialogTheme);
-			
-			this.setBackground(Color.GRAY);
+
+			this.setBackground(background);
 		}
 		
 		this.setBorder(new EmptyBorder(Spacing.medium, Spacing.large * 2 + icon.getIconWidth(), Spacing.medium, Spacing.large));

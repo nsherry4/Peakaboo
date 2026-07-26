@@ -3,7 +3,6 @@ package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -276,7 +275,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 		JScrollPane scroll = new JScrollPane(fitTable);
 		scroll.setPreferredSize(new Dimension(200, 0));
-		scroll.getViewport().setBackground(Color.white);
+		scroll.getViewport().setBackground(Stratus.getTheme().getRecessedControl());
 		scroll.setBorder(Spacing.bNone());
 		
 		return scroll;

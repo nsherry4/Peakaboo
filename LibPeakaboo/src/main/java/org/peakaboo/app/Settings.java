@@ -149,5 +149,14 @@ public class Settings {
 		return Gradients.forName(name).orElse(Gradients.DEFAULT);
 	}
 
-	
+
+	// Toggle exported images using light backgrounds even in dark mode
+	private static final String LIGHT_EXPORTS = "org.peakaboo.app.light-exports";
+	public static boolean isLightExports() {
+		return provider.getBoolean(LIGHT_EXPORTS, true);
+	}
+	public static void setLightExports(boolean light) {
+		provider.setBoolean(LIGHT_EXPORTS, light);
+	}
+
 }

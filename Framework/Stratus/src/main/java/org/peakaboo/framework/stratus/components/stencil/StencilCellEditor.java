@@ -5,6 +5,7 @@ import java.awt.Component;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 public class StencilCellEditor<T> extends DefaultCellEditor implements StencilParent {
 
@@ -19,7 +20,7 @@ public class StencilCellEditor<T> extends DefaultCellEditor implements StencilPa
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 		
-		widget.setForeground(table.getSelectionForeground());
+		widget.setForeground(StratusColour.explicit(table.getSelectionForeground()));
 		widget.setBackground(table.getSelectionBackground());
 		widget.setOpaque(true);
 				

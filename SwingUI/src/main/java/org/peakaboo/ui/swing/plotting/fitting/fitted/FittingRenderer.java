@@ -11,6 +11,7 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.curvefit.peak.transition.TransitionSeriesMode;
 import org.peakaboo.framework.cyclops.SigDigits;
+import org.peakaboo.framework.stratus.api.StratusColour;
 
 
 class FittingRenderer extends DefaultTableCellRenderer
@@ -37,11 +38,11 @@ class FittingRenderer extends DefaultTableCellRenderer
 		if (selected){
 			tswidget.setOpaque(true);
 			tswidget.setBackground(table.getSelectionBackground());
-			tswidget.setForeground(table.getSelectionForeground());
+			tswidget.setForeground(StratusColour.explicit(table.getSelectionForeground()));
 		} else {
 			tswidget.setOpaque(false);
 			tswidget.setBackground(table.getBackground());
-			tswidget.setForeground(table.getForeground());			
+			tswidget.setForeground(StratusColour.explicit(table.getForeground()));			
 		}
 		
 		float intensity;

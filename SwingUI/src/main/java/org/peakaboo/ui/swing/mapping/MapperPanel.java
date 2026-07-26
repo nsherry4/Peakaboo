@@ -176,7 +176,7 @@ public class MapperPanel extends TabbedLayerPanel {
 
 		warnOnTooSmallDataset = new Banner(
 				"Map dimensions are smaller than data set (" + controller.rawDataController.getMapSize() + ")", 
-				Banner.STYLE_WARN, 
+				Banner.styleWarn(),
 				true
 			);
 		

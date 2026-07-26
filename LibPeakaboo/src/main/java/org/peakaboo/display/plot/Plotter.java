@@ -20,6 +20,7 @@ import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 import org.peakaboo.framework.cyclops.visualization.Buffer;
+import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.ManagedBuffer;
 import org.peakaboo.framework.cyclops.visualization.Surface;
 import org.peakaboo.framework.cyclops.visualization.Surface.Dash;
@@ -73,10 +74,15 @@ public class Plotter {
 		
 		//Should be use a buffer, or are we too tight on memory?
 		boolean doBuffer = Display.useBuffer(size);
-		 
+
 		if (context.getSurfaceDescriptor().isVector()) {
 			//We can't do raster-based buffering if the drawing target is vector
 			//so just draw directly to the surface
+			drawToSurface(data, settings, context, size);
+		} else if (context instanceof ExportableSurface) {
+			// Never use the screen buffer for exporting. The export size is based
+			// on the screen size, so the buffer doesn't invalidate on size. That
+			// means it wouldn't redraw and may export a dark mode image (for example).
 			drawToSurface(data, settings, context, size);
 		} else if (doBuffer) {
 			

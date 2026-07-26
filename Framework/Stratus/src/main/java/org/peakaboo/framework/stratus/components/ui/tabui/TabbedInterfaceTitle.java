@@ -1,6 +1,7 @@
 package org.peakaboo.framework.stratus.components.ui.tabui;
 
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.laf.theme.Theme;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -183,7 +184,7 @@ public class TabbedInterfaceTitle extends JPanel {
                 g2.translate(1, 1);
             }
             g2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            g2.setColor(Color.BLACK);
+            g2.setColor(closeIconColour());
             if (getModel().isRollover()) {
             	g2.setColor(new Color(0.64f, 0f, 0f));
             	g2.fillOval(1, 1, size - 2, size - 2);
@@ -195,7 +196,15 @@ public class TabbedInterfaceTitle extends JPanel {
             g2.drawLine(getWidth() - delta - 1, delta, delta, getHeight() - delta - 1);
             g2.dispose();
         }
-        
+
+        // The close icon drawn by hand rather than being an icon, so we have to handle
+		// tinting it manually.
+        private Color closeIconColour() {
+        	Theme theme = Stratus.getTheme();
+        	return theme == null ? Color.BLACK : theme.getControlText();
+        }
+
+
     }
 
 	public void setOnDoubleClick(Runnable onDoubleClick) {

@@ -2,16 +2,24 @@ package org.peakaboo.display;
 
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
+import org.peakaboo.app.Settings;
 import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
+import org.peakaboo.framework.cyclops.visualization.Surface;
 
 public class Display {
 
 	public static final float OVERSIZE = 1.2f;
-	
+
 	private Display() {
 		//Not Constructable
 	}
-	
+
+	// We force a light background on exports if the setting is enabled
+	public static boolean forceLightBackground(Surface context) {
+		return context instanceof ExportableSurface && Settings.isLightExports();
+	}
+
 	public static boolean useBuffer(Coord<Integer> size) {
 		
 		boolean doBuffer = true;

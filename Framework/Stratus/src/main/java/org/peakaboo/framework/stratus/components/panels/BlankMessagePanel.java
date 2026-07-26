@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.StratusText;
 import org.peakaboo.framework.stratus.components.layouts.CenteringLayout;
 
@@ -22,11 +23,11 @@ public class BlankMessagePanel extends JPanel {
 		
 		JLabel lblMessage = new JLabel();
 		lblMessage.setText(StratusText.lineWrapHTML(lblMessage, message, 350));
-		lblMessage.setForeground(Color.GRAY);
+		lblMessage.setForeground(secondaryText());
 
 		JLabel lblTitle = new JLabel("", image, JLabel.CENTER);
 		lblTitle.setText(StratusText.lineWrapHTML(lblTitle, title, 350));
-		lblTitle.setForeground(Color.GRAY);
+		lblTitle.setForeground(secondaryText());
 		lblTitle.setFont(lblTitle.getFont().deriveFont(18f));
 		lblTitle.setVerticalTextPosition(JLabel.BOTTOM);
 		lblTitle.setHorizontalTextPosition(JLabel.CENTER);
@@ -47,10 +48,14 @@ public class BlankMessagePanel extends JPanel {
 		
 		JLabel label = new JLabel();
 		label.setText(StratusText.lineWrapHTML(label, message, 350));
-		label.setForeground(Color.GRAY);
+		label.setForeground(secondaryText());
 		
 		setLayout(new CenteringLayout());
 		add(label);
+	}
+	
+	private static Color secondaryText() {
+		return Stratus.getTheme().getControlTextDisabled();
 	}
 	
 }

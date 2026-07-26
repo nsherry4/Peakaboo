@@ -27,6 +27,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.Stratus.ButtonState;
 import org.peakaboo.framework.stratus.api.StratusColour;
 import org.peakaboo.framework.stratus.laf.components.StratusComboBoxUI;
@@ -701,7 +702,9 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Table:\"Table.cellRenderer\".background", theme.getRecessedControl());
 			reg(ret, "Table[Disabled].textForeground", theme.getControlTextDisabled());
 			reg(ret, "Table[Enabled].textForeground", theme.getControlText());
-			reg(ret, "Table[Selected].textForeground", theme.getHighlightText());
+			reg(ret, "Table[Enabled+Selected].textForeground", theme.getHighlightText());
+			reg(ret, "Table[Disabled+Selected].textForeground", theme.getControlTextDisabled());
+
 			
 			//TABLEHEADER
 			reg(ret, "TableHeader:\"TableHeader.renderer\"[Disabled+Sorted].backgroundPainter", new TableHeaderPainter(theme));
@@ -730,8 +733,14 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "Tree[Enabled+Selected].collapsedIconPainter", new TreeArrowPainter(theme.getHighlightText(), false));
 			
 			//LIST
-			reg(ret, "List.background", theme.getRecessedControl());			
-			
+			reg(ret, "List.background", theme.getRecessedControl());
+
+			reg(ret, "List[Selected].textForeground", theme.getHighlightText());
+			reg(ret, "List:\"List.cellRenderer\"[Selected].textForeground", theme.getHighlightText());
+			reg(ret, "List[Disabled].textForeground", theme.getControlTextDisabled());
+			reg(ret, "List:\"List.cellRenderer\"[Disabled].textForeground", theme.getControlTextDisabled());
+
+
 			//SPLITPANE
 			reg(ret, "SplitPane:SplitPaneDivider[Enabled].backgroundPainter", new SplitPaneDividerPainter(theme));
 			reg(ret, "SplitPane:SplitPaneDivider[Focused].backgroundPainter", new SplitPaneDividerPainter(theme));
@@ -756,7 +765,8 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			reg(ret, "FileChooser.fileIcon", getImageIcon("mime-text", 16));
 			reg(ret, "FileChooser.homeFolderIcon", getImageIcon("place-home", 16));
 			reg(ret, "FileChooser.newFolderIcon", getImageIcon("place-folder-new", 16));
-			reg(ret, "FileChooser.upFolderIcon", getImageIcon("go-up", 16));
+			// Symbolic, so shade as theme
+			reg(ret, "FileChooser.upFolderIcon", IconFactory.recolour(getImageIcon("go-up", 16), theme.getControlText()));
 
 			reg(ret, "OptionPane.errorIcon", getImageIcon("badge-error", 48));
 			reg(ret, "OptionPane.informationIcon", getImageIcon("badge-info", 48));
