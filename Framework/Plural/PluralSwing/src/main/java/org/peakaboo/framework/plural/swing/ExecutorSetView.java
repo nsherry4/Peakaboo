@@ -1,6 +1,7 @@
 package org.peakaboo.framework.plural.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
@@ -13,7 +14,10 @@ import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.executor.ExecutorState;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderPanel;
 
@@ -34,8 +38,11 @@ public class ExecutorSetView extends JPanel
 	{
 		this.setLayout(new BorderLayout());
 
-		FluentButton cancel = new FluentButton("Cancel")
+		FluentButton cancel = new FluentButton()
+				.withIcon(StockIcon.WINDOW_CLOSE, Stratus.getTheme().getHighlightText())
 				.withStateCritical()
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Abort the current task")
 				.withAction(() -> executors.requestAbortWorking());
 		
         HeaderBox header = new HeaderBox(null, executors.getDescription(), cancel);
@@ -55,6 +62,7 @@ public class ExecutorSetView extends JPanel
         c.gridy = 0;
         c.weightx = 1.0;
         c.weighty = 0.0;
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
                
 		ExecutorView view;
@@ -68,10 +76,17 @@ public class ExecutorSetView extends JPanel
 		
 		
 		
-		progress = new JProgressBar();
+		progress = new JProgressBar(){
+			@Override
+			public Dimension getPreferredSize() {
+				Dimension sup = super.getPreferredSize();
+				return new Dimension((int)Math.max(300, sup.getWidth()), (int)sup.getHeight());
+			}
+		};
 		progress.setMaximum(100);
 		progress.setMinimum(0);
 		progress.setValue(0);
+		
 		center.add(progress, BorderLayout.SOUTH);
 
 		

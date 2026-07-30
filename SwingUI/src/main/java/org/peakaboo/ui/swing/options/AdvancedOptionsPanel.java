@@ -63,7 +63,11 @@ import org.peakaboo.ui.swing.mapping.components.MapMenuView;
 import org.peakaboo.ui.swing.plotting.PlotPanel;
 
 public class AdvancedOptionsPanel extends HeaderLayer {
-	
+
+	// A single banner shared by all cards, notices persist as the user
+	// navigates, but only the most recently set message is shown
+	private final Banner notice = new Banner("", Banner.styleInfo());
+
 	public AdvancedOptionsPanel(PlotPanel parent, PlotController controller) {
 		super(parent, true);
 		getHeader().setCentre("Advanced Options");
@@ -77,6 +81,9 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		};
 		CardLayout cards = new CardLayout();
 		body.setLayout(cards);
+		body.setBorder(Spacing.bMedium());
+
+		notice.hideBanner();
 
 		var hasdata = controller.data().hasDataSet();
 		final String SETTING_PER_DATASET = "Per-Session Settings";
@@ -117,10 +124,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 			Group group = item.getValue();
 			String groupKey = group.getName();
 			JComponent groupPanel = SwingLayoutFactory.forGroup(group).getComponent();
-			ClearPanel groupWrapper = new ClearPanel(new BorderLayout());
-			groupWrapper.setBorder(Spacing.bMedium());
-			groupWrapper.add(groupPanel, BorderLayout.CENTER);
-			body.add(groupWrapper, groupKey);
+			body.add(groupPanel, groupKey);
 			OptionSidebar.Entry itemEntry = new OptionSidebar.Entry(groupKey, IconFactory.getImageIcon(Tier.provider().iconPath(), item.getIconPath(), IconSize.TOOLBAR_SMALL));
 			entries.add(itemEntry);
 		}
@@ -128,7 +132,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		entries.add(new OptionSidebar.Entry(SETTING_PER_USER).setHeading(true));
 		
 		String KEY_APP = "Appearance";
-		JComponent appPanel = makeAppPanel(controller);
+		OptionBlocksPanel appPanel = makeAppPanel(controller);
 		body.add(appPanel, KEY_APP);
 		OptionSidebar.Entry appEntry = new OptionSidebar.Entry(KEY_APP, IconFactory.getImageIcon(PeakabooIcons.OPTIONS_APPEARANCE, IconSize.TOOLBAR_SMALL));
 		entries.add(appEntry);
@@ -155,8 +159,12 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		});
 		sidebar.select(hasdata? detectorEntry : appEntry);
 		
+		ClearPanel content = new ClearPanel(new BorderLayout());
+		content.add(notice, BorderLayout.NORTH);
+		content.add(body, BorderLayout.CENTER);
+
 		ClearPanel outer = new ClearPanel(new BorderLayout());
-		outer.add(body, BorderLayout.CENTER);
+		outer.add(content, BorderLayout.CENTER);
 		outer.add(sidebar, BorderLayout.WEST);
 		
 		setBody(outer);
@@ -204,7 +212,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		return new OptionBlocksPanel(multithreading, datasets, heapBlock);
 	}
 	
-	private JComponent makeAppPanel(PlotController controller) {
+	private OptionBlocksPanel makeAppPanel(PlotController controller) {
 
 
 		OptionBlock mapsBlock = new OptionBlock();
@@ -243,18 +251,17 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 		OptionBlock uxBlock = new OptionBlock();
 
 
-		// Banner that tells users when a restart is required for their settings to take effect
+		// Tells users when a restart is required for their settings to take effect
 		var initialDarkMode = DesktopSettings.isDarkMode();
 		var initialAccent = DesktopSettings.getAccentColour();
-		Banner restartNotice = new Banner("Restart Peakaboo to apply the new theme.", Banner.styleInfo());
-		restartNotice.hideBanner();
 		Runnable themeChanged = () -> {
 			boolean changed = DesktopSettings.isDarkMode() != initialDarkMode
 					|| !DesktopSettings.getAccentColour().equals(initialAccent);
 			if (changed) {
-				restartNotice.openBanner();
+				notice.setMessage("Restart Peakaboo to apply the new theme.");
+				notice.openBanner();
 			} else {
-				restartNotice.hideBanner();
+				notice.hideBanner();
 			}
 		};
 
@@ -297,11 +304,7 @@ public class AdvancedOptionsPanel extends HeaderLayer {
 				.withListener(DesktopSettings::setFirstrun);
 		startup.add(firstrun);
 
-		ClearPanel panel = new ClearPanel(new BorderLayout());
-		panel.setBorder(Spacing.bNone());
-		panel.add(restartNotice, BorderLayout.NORTH);
-		panel.add(new OptionBlocksPanel(mapsBlock, uxBlock, startup), BorderLayout.CENTER);
-		return panel;
+		return new OptionBlocksPanel(mapsBlock, uxBlock, startup);
 
 	}
 

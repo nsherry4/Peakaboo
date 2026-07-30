@@ -90,7 +90,8 @@ interface FluentButtonAPI<
 	}
 	
 	default B withStateCritical() {
-		this.setBackground(new Color(0xffe01b24, true));
+		var red = Stratus.getTheme().recede(Stratus.getTheme().getPalette().getColour("Red", "3"), 0.05f);
+		this.setBackground(red);
 		this.setForeground(Color.WHITE);
 		return getSelf();
 	}

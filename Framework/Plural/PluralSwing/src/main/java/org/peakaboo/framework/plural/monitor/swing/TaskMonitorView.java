@@ -2,28 +2,23 @@ package org.peakaboo.framework.plural.monitor.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.awt.Font;
 
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingConstants;
 
-import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
-import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
-import org.peakaboo.framework.stratus.api.icons.IconSize;
-import org.peakaboo.framework.stratus.api.icons.StockIcon;
+
 
 public class TaskMonitorView extends JPanel {
 
 	
 	private TaskMonitor<?> exec;
+	private Font originalFont;
 	
 	public TaskMonitorView(TaskMonitor<?> exec) {
 		super();
@@ -32,22 +27,27 @@ public class TaskMonitorView extends JPanel {
 		setLayout(new BorderLayout(8, 8));
 		setBorder(Spacing.bSmall());
 		
-		JLabel icon = new JLabel();
 		Dimension d = new Dimension(16, 16);
-		icon.setMinimumSize(d);
-		icon.setMaximumSize(d);
-		icon.setPreferredSize(d);
-		this.add(icon, BorderLayout.WEST);
 		
 		JLabel text = new JLabel(exec.getName());
+		text.setHorizontalAlignment(SwingConstants.CENTER);
+		text.setFont(text.getFont().deriveFont(text.getFont().getSize() + 1f));
+		this.originalFont = text.getFont();
+		
 		this.add(text, BorderLayout.CENTER);
 		
+		
 		exec.addListener(event -> {
+			var green = Stratus.getTheme().emphasize(
+					Stratus.getTheme().getPalette().getColour("Green", "5"), 0.1f
+			);
 			if (event == Event.COMPLETED) {
-				icon.setIcon(StockIcon.PROCESS_COMPLETED.toImageIcon(IconSize.BUTTON));
+				text.setForeground(green);
+				text.setFont(originalFont);
 			}
 			if (event == Event.PROGRESS && exec.getCount() > 0) {
-				icon.setIcon(StockIcon.GO_NEXT.toImageIcon(IconSize.BUTTON));
+				text.setFont(originalFont.deriveFont(Font.BOLD));
+				text.setForeground(green);
 			}
 		});
 		

@@ -1,6 +1,7 @@
 package org.peakaboo.framework.plural.monitor.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
@@ -12,7 +13,10 @@ import java.util.List;
 import org.peakaboo.framework.eventful.EventfulEnumListener;
 import org.peakaboo.framework.plural.monitor.TaskMonitor;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
+import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
+import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButtonSize;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderBox;
 import org.peakaboo.framework.stratus.components.ui.header.HeaderLayer;
 import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
@@ -47,8 +51,11 @@ public class TaskMonitorLayer extends HeaderLayer {
 	
 	static HeaderBox makeHeader(String title, List<TaskMonitorView> observerViews) {
 		
-		FluentButton cancel = new FluentButton("Cancel")
+		FluentButton cancel = new FluentButton()
+				.withIcon(StockIcon.WINDOW_CLOSE, Stratus.getTheme().getHighlightText())
 				.withStateCritical()
+				.withButtonSize(FluentButtonSize.LARGE)
+				.withTooltip("Abort the current task")
 				.withAction(() -> {
 					List<TaskMonitorView> reversed = new ArrayList<>(observerViews);
 					Collections.reverse(reversed);
@@ -80,6 +87,7 @@ public class TaskMonitorLayer extends HeaderLayer {
 		c.gridy = 0;
 		c.weightx = 1.0;
 		c.weighty = 0.0;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 
 		for (TaskMonitorView obsv : observerViews) {
@@ -90,7 +98,13 @@ public class TaskMonitorLayer extends HeaderLayer {
 		
 		
 		
-		JProgressBar progress = new JProgressBar();
+		JProgressBar progress = new JProgressBar() {
+			@Override
+			public Dimension getPreferredSize() {
+				var sup = super.getPreferredSize();
+				return new Dimension((int)Math.max(300, sup.getWidth()), (int)sup.getHeight());
+			}
+		};
 		progress.setMaximum(100);
 		progress.setMinimum(0);
 		progress.setValue(0);
