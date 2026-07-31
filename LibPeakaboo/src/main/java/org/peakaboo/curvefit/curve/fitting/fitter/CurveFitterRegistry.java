@@ -34,6 +34,7 @@ public class CurveFitterRegistry extends PeakabooPluginRegistry<CurveFitter> imp
 		var builtins = new BoltJavaBuiltinLoader<>(this, CurveFitter.class);
 		builtins.load(UnderCurveFitter.class);
 		builtins.load(CautiousCurveFitter.class);
+		builtins.load(OptimizingCurveFitter.class);
 		builtins.load(LeastSquaresCurveFitter.class);
 		
 		

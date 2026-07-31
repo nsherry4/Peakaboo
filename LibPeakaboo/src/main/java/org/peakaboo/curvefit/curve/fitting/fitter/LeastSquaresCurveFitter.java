@@ -1,19 +1,28 @@
 package org.peakaboo.curvefit.curve.fitting.fitter;
 
+/**
+ * Plain least squares: {@link CautiousCurveFitter} with both of its biases
+ * turned off, so overshooting and undershooting count alike and the data is
+ * taken as it comes.
+ *
+ * <p>The clamp has to go as well as the penalty, or else it wouldn't really
+ * be least squares
+ */
 public class LeastSquaresCurveFitter extends CautiousCurveFitter {
 
 	public LeastSquaresCurveFitter() {
 		overfitPenalty = 1f;
+		clampDataAtZero = false;
 	}
 	
 	@Override
 	public String pluginName() {
-		return "Least-Squares";
+		return "Plain Least Squares";
 	}
 	
 	@Override
 	public String pluginDescription() {
-		return "Least squares curve fitting with no guard against overfitting";
+		return "Least squares curve fitting with no bias against overfitting";
 	}
 	
 	@Override

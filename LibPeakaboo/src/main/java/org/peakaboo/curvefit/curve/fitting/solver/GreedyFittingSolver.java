@@ -28,7 +28,7 @@ public class GreedyFittingSolver implements FittingSolver {
 	
 	@Override
 	public String pluginDescription() {
-		return "Sequentially matches fittings to as much signal as they will fit";
+		return "Sequentially matches fittings to as much signal as the curve fitter will fit";
 	}
 	
 	@Override

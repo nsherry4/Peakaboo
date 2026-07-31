@@ -132,6 +132,20 @@ public final class SyntheticSpectrumFixture {
 				Element.Pb, TransitionShell.L, 450.0);
 	}
 
+	/**
+	 * A dominant element with trace neighbours, in the ratio that exposed the
+	 * calibration cliff on real data -- Mn at ~5 counts beside Fe at ~500. At
+	 * this ratio a small misfit of the dominant curve is larger than the traces
+	 * themselves, so it can bury their windows completely.
+	 */
+	public static Scenario traceBesideDominant() {
+		return scenario("Trace beside dominant (Fe K dominant; Cr, Mn, Co K trace)",
+				Element.Cr, TransitionShell.K, 3.0,
+				Element.Mn, TransitionShell.K, 5.0,
+				Element.Fe, TransitionShell.K, 900.0,
+				Element.Co, TransitionShell.K, 4.0);
+	}
+
 	/** Overlap chain plus elements that are not actually present in the data. */
 	public static Scenario absentElements() {
 		return scenario("Absent elements (Mn, Fe, Co, Ni present; Cu, Zn absent)",

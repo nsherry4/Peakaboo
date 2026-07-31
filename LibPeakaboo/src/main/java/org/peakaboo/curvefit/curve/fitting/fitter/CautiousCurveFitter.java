@@ -2,6 +2,7 @@ package org.peakaboo.curvefit.curve.fitting.fitter;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResult;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
+import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
  * Fits one element's curve to the measured spectrum. The curve's shape is fixed
@@ -20,12 +21,10 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * score -- an overshot channel's residual is multiplied by {@link #overfitPenalty}
  * before squaring, so it counts for {@code overfitPenalty^2} as much.
  *
- * <p>For a single {@code s} the score is a parabola: it bends upward as
- * {@code s} grows too big or too small, lowest where its slope is zero. So we
- * differentiate {@code sum (d - s*c)^2} with respect to {@code s} -- each term
- * differentiates to {@code -2*c*(d - s*c)} by the chain rule -- set the slope to
- * zero and solve for {@code s}. The {@code -2} drops out and we're left with the
- * one-dimensional normal equation, no searching required:
+ * <p>For a single {@code s} the score is a parabola, lowest where its slope is
+ * zero, so we differentiate {@code sum (d - s*c)^2} with respect to {@code s},
+ * set the slope to zero and solve. That leaves the one-dimensional normal
+ * equation, no searching required:
  * <pre>    s = sum(d*c) / sum(c*c)</pre>
  * The asymmetric penalty keeps the score a parabola in each region, just steeper
  * on the overshoot side, so the same formula holds once each channel is
@@ -42,6 +41,9 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
  * overshot set -- and with it {@code s} -- stops changing, usually within a few
  * passes.
  *
+ * <p>{@link OptimizingCurveFitter} and {@link LeastSquaresCurveFitter} are this
+ * same algorithm at other settings of the two fields below.
+ *
  * @author NAS
  */
 public class CautiousCurveFitter implements CurveFitter {
@@ -49,10 +51,15 @@ public class CautiousCurveFitter implements CurveFitter {
 	/**
 	 * How many times worse an overshoot is than an undershoot. An overshot
 	 * channel's residual is multiplied by this before being squared, so it ends
-	 * up squared in the weighting: the default 5 makes such a channel count for
-	 * 25x a normal one.
+	 * up squared in the weighting: the default 3 makes such a channel count for
+	 * 9x a normal one.
 	 */
-	protected float overfitPenalty = 5f;
+	protected float overfitPenalty = 3f;
+
+	/**
+	 * Whether to accept negative signal as input or clamp to 0
+	 */
+	protected boolean clampDataAtZero = true;
 
 	private static final int MAX_IRLS_ITERATIONS = 10;
 	private static final float CONVERGENCE_TOLERANCE = 1e-5f;
@@ -67,22 +74,24 @@ public class CautiousCurveFitter implements CurveFitter {
 
 		// The intense channels are the handful of energy bins where this curve
 		// actually has meaningful height -- its peak(s). We only fit against
-		// those; the flat stretches where the curve is ~0 say nothing about its
-		// scale and would just add noise to the sums.
+		// those.
 		int[] channels = ctx.curve().getIntenseChannelList();
 
-		// Pack the data and curve heights at the intense channels into dense
-		// arrays d[] and c[], so the solve loops are free of channel indirection.
-		// d[i] and c[i] are the measured and curve heights at the i-th channel.
-		float[] dataAll = ((Spectrum) ctx.data()).backingArray();
+		// Pack the data and curves at intense channels into dense arrays so we
+		// don't have to deal with that indirection in the loop. d[i] and c[i]
+		// both describe the i-th such channel.
+		SpectrumView data = ctx.data();
+		float[] dataAll = ((Spectrum)data).backingArray();
 		float[] curveAll = ((Spectrum) ctx.curve().get()).backingArray();
-		int dataSize = ctx.data().size();
+		int dataSize = data.size();
+
 		float[] d = new float[channels.length]; // Data
 		float[] c = new float[channels.length]; // Curve
 		int count = 0; // Not every channel lands in c/d: out-of-bounds ones are skipped
 		for (int ch : channels) {
 			if (ch < 0 || ch >= dataSize) continue;
-			d[count] = dataAll[ch];
+			// Clamp signal at zero, we don't own another fitting's overshoot.
+			d[count] = clampDataAtZero ? Math.max(0f, dataAll[ch]) : dataAll[ch];
 			c[count] = curveAll[ch];
 			count++;
 		}
@@ -91,7 +100,7 @@ public class CautiousCurveFitter implements CurveFitter {
 		}
 
 		// Plain least squares for a starting guess, then IRLS to fold in the
-		// overfit penalty -- see the class notes above.
+		// overfit penalty.
 		float guess = initialScale(d, c, count);
 		if (Float.isNaN(guess)) {
 			// The curve is flat zero across every intense channel; no scale fits.
@@ -101,11 +110,10 @@ public class CautiousCurveFitter implements CurveFitter {
 	}
 
 	/**
-	 * The plain, un-penalised least squares scale, {@code sum(d*c)/sum(c*c)} --
-	 * the normal equation from the class notes, clamped at zero. This is our
-	 * starting guess before we know which channels the fit overshoots. Returns
-	 * {@code NaN} when the curve is flat zero across the whole window, where no
-	 * scale fits.
+	 * The plain, un-penalised least squares scale, {@code sum(d*c)/sum(c*c)},
+	 * clamped at zero. This is our starting guess before we know which channels
+	 * the fit overshoots. Returns {@code NaN} when the curve is flat zero across
+	 * the whole window, where no scale fits.
 	 */
 	private static float initialScale(float[] d, float[] c, int count) {
 		float num = 0f, den = 0f;
@@ -122,25 +130,18 @@ public class CautiousCurveFitter implements CurveFitter {
 	}
 
 	/**
-	 * Refines a starting scale by IRLS (see the class notes): repeatedly reweight
-	 * the channels the current scale overshoots and re-solve the weighted normal
-	 * equation, until the scale -- and with it the overshot set -- stops
-	 * changing. For this single-valley score that fixed point is the exact best
-	 * answer.
+	 * Refines a starting scale by IRLS: reweight whatever the current scale
+	 * overshoots, re-solve the weighted normal equation, repeat until the scale
+	 * stops moving. We keep the best-scoring iterate as a safety net.
 	 */
 	private float refine(float[] d, float[] c, int count, float scale) {
 		float overfitWeight = overfitPenalty * overfitPenalty;
 
-		// Keep the best-scoring scale as a safety net: in rare borderline cases
-		// the overshot set flips between two patterns instead of settling, and if
-		// we run out of iterations we want the best iterate, not wherever we
-		// happened to stop.
 		float best = scale;
 		float bestScore = Float.MAX_VALUE;
 		for (int iter = 0; iter < MAX_IRLS_ITERATIONS; iter++) {
 			// One pass does double duty: score the current scale, and accumulate
-			// the weighted sums for the next one. w up-weights a channel the fit
-			// overshoots (r < 0); num/den build sum(w*d*c) / sum(w*c*c).
+			// the weighted sums for the next one.
 			float score = 0f;
 			float num = 0f, den = 0f;
 			for (int i = 0; i < count; i++) {
@@ -156,9 +157,7 @@ public class CautiousCurveFitter implements CurveFitter {
 			}
 
 			// Solve for the next scale (clamped at zero, same reason as the
-			// guess). den is > 0 here: initialScale ruled out an all-zero curve
-			// and the weights only add to it. If the scale barely moved the
-			// overshot set has settled and we're at the minimum -- done.
+			// guess). If the scale barely moved then we've converged.
 			float next = Math.max(0f, num / den);
 			if (Math.abs(next - scale) <= CONVERGENCE_TOLERANCE * Math.max(1f, scale)) {
 				return next;
@@ -173,7 +172,7 @@ public class CautiousCurveFitter implements CurveFitter {
 
 	@Override
 	public String pluginName() {
-		return "Cautious Least-Squares (Optimizing)";
+		return "Cautious Least Squares";
 	}
 
 	@Override
@@ -183,17 +182,17 @@ public class CautiousCurveFitter implements CurveFitter {
 
 	@Override
 	public String pluginDescription() {
-		return "Least squares curve fitting weighted against overfitting";
+		return "Least squares curve fitting with a bias against overfitting";
 	}
 
 	@Override
 	public String pluginVersion() {
-		return "2.0";
+		return "1.0";
 	}
 
 	@Override
 	public String pluginUUID() {
-		return "9e7caaf0-4684-4c50-bca7-e6a304a6fd6b";
+		return "4e5b95fa-a873-4732-bdab-918107c87e20";
 	}
 
 }
