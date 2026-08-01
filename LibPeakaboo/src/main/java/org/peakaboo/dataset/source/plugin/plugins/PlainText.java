@@ -120,6 +120,10 @@ public class PlainText extends AbstractDataSource
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
+
+				// We drop blank / comment lines early
+				if (line.isBlank() || line.strip().charAt(0) == format.getComment()) continue;
+
 				int scanIndex = index++;
 
 				// Estimating the number of rows by the length of the first n rows against the
@@ -309,7 +313,7 @@ class PlainTextScanEntry implements ScanEntry {
 		String[] entries = tokenizers.get().parseLine(line);
 		if (entries == null) {
 			// Blank line
-			return new ArraySpectrum(0);
+			throw new IllegalStateException("Scan " + index + " contains no values");
 		}
 
 		int length = entries.length;
@@ -320,6 +324,10 @@ class PlainTextScanEntry implements ScanEntry {
 			for (String entry : entries) {
 				if (entry == null) length--;
 			}
+		}
+		// If pruning nulls leaves us with nothing, we bail
+		if (length < 1) {
+			throw new IllegalStateException("Scan " + index + " contains no values");
 		}
 
 		Spectrum scan = new ArraySpectrum(length);
