@@ -87,7 +87,7 @@ public class MappingControllerDataTagTest {
 	public void testInheritedAndMapFilterTagsCombine() {
 		mc.rawDataController.getMapResultSet().setSourceTags(List.of(PLOT_BACKGROUND));
 		mc.getFiltering().add(createSmoothingFilter());
-		assertEquals("Smoothed - Plot: Background Removed", mc.getFiltering().getActionDescription());
+		assertEquals("Smoothed; Plot: Background Removed", mc.getFiltering().getActionDescription());
 	}
 
 	@Test
@@ -97,7 +97,7 @@ public class MappingControllerDataTagTest {
 		mc.rawDataController.getMapResultSet().setSourceTags(List.of(PLOT_SMOOTHED));
 		mc.getFiltering().add(createSmoothingFilter());
 		assertEquals(List.of(PLOT_SMOOTHED, MAP_SMOOTHED), mc.getFiltering().getDataTags());
-		assertEquals("Smoothed - Plot: Smoothed", mc.getFiltering().getActionDescription());
+		assertEquals("Smoothed; Plot: Smoothed", mc.getFiltering().getActionDescription());
 	}
 
 	@Test

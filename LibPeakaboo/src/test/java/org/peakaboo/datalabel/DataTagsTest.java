@@ -78,7 +78,7 @@ public class DataTagsTest {
 				List.of(PLOT_BACKGROUND, PLOT_SMOOTHED, MAP_SMOOTHED, MAP_DESKEWED),
 				DataScope.MAP
 			);
-		assertEquals("Smoothed, Deskewed - Plot: Background Removed, Smoothed", summary.get());
+		assertEquals("Smoothed, Deskewed; Plot: Background Removed, Smoothed", summary.get());
 	}
 
 	@Test
