@@ -106,7 +106,7 @@ public class Settings {
 	private static void writeHeapConfig() {
 		int size;
 		String jvmOption;
-		
+
 		if (isHeapSizePercent()) {
 			size = getHeapSizePercent();
 			if (size < 2 || size > 95) {
@@ -123,25 +123,30 @@ public class Settings {
 
 		//Load the system-wide cfg file for the jpackage launcher
 		try {
-			File sourceCFG = Platform.systemCFGFile(Version.PROGRAM_NAME);
+			File sourceCFG = Platform.systemCFGFile();
 			String cfgContents = Files.readString(sourceCFG.toPath());
 			//replace the default memory option with the new one
 			cfgContents = cfgContents.replace("java-options=-XX:MaxRAMPercentage=75", jvmOption);
-			File userCFG = Platform.userCFGFile(Version.PROGRAM_NAME);
+			File userCFG = Platform.userCFGFile();
+			// Nothing else creates this directory since the launcher only checks and reads
+			File userCFGDir = userCFG.getParentFile();
+			if (userCFGDir != null && !userCFGDir.exists()) {
+				// Needs to be created
+				boolean success = userCFGDir.mkdirs();
+				if (!success) {
+					throw new IOException("Cannot create directory " + userCFGDir.getPath());
+				}
+			}
 			Files.writeString(userCFG.toPath(), cfgContents);
 		} catch (IOException | RuntimeException e) {
-			OneLog.log(Level.WARNING, "Cannot write to per-user Peakaboo.cfg file", e);
+			OneLog.log(Level.WARNING, "Cannot write to per-user cfg file", e);
 		}
-		
-		
 
-		
 	}
 
 	private static final String MAP_PALETTE = "org.peakaboo.app.map-palette";
 	public static void setDefaultMapPalette(Gradient g) {
 		provider.set(MAP_PALETTE, g.getName());
-		writeHeapConfig();
 	}
 
 	public static Gradient getDefaultMapPalette() {

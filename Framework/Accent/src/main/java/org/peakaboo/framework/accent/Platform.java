@@ -102,6 +102,7 @@ public class Platform
 
 	}
 	
+	/** What is the jpackage'd install directory? */
 	public static File installDir() {
 		String apppath = System.getProperty("jpackage.app-path");
 		if (apppath == null) return null;
@@ -113,17 +114,42 @@ public class Platform
 		}
 	}
 	
-	public static File systemCFGFile(String appname) {
+	/** What is the name of the jpackage'd app? */
+	public static String launcherName() {
+		String apppath = System.getProperty("jpackage.app-path");
+		if (apppath == null) return null;
+		String name = new File(apppath).getName();
+		if (name.toLowerCase().endsWith(".exe")) {
+			name = name.substring(0, name.length() - 4);
+		}
+		return name;
+	}
+
+	/** What is the package name that jpackage generates and installs to? */
+	public static String packageName() {
+		String name = launcherName();
+		if (name == null) return null;
+		return switch(getOS()) {
+			// Match the transform on the name done by the package manager
+			case UNIX, OTHER -> name.toLowerCase().replaceAll("[ _]", "-");
+			// No transformation on the name expected
+			case WINDOWS, MAC -> name;
+			case ANDROID -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
+		};
+	}
+
+	public static File systemCFGFile() {
 		File install = installDir();
-		if (install == null) {
-			throw new RuntimeException("Cannot determine the install directory for " + appname);
+		String launcher = launcherName();
+		if (install == null || launcher == null) {
+			throw new RuntimeException("Not running from a jpackage install, cannot locate the system CFG file");
 		}
 		OneLog.log(Level.INFO, "Detected install directory as " + install.getPath());
 		File cfg = switch(getOS()) {
 			case ANDROID -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
-			case WINDOWS -> new File(install.getPath() + "/app/" + appname + ".cfg");
-			case MAC -> new File(install.getPath() + "/app/" + appname + ".cfg");
-			case UNIX -> new File(install.getPath() + "/../lib/app/" + appname + ".cfg");
+			case WINDOWS -> new File(install.getPath() + "/app/" + launcher + ".cfg");
+			case MAC -> new File(install.getPath() + "/app/" + launcher + ".cfg");
+			case UNIX -> new File(install.getPath() + "/../lib/app/" + launcher + ".cfg");
 			case OTHER -> throw new UnsupportedOperationException("Unimplemented OS: " + getOS());
 		};
 		if (!cfg.exists()) {
@@ -131,10 +157,17 @@ public class Platform
 		}
 		return cfg;
 	}
-	
-	
-	public static File userCFGFile(String appname) {
-		return appDirEntry(appname, appname + ".cfg");
+
+	/**
+	 * Location of the jpackage user override config file. Based on jpackage app name,
+	 * rather than an applications self-given name.
+	 */
+	public static File userCFGFile() {
+		String launcher = launcherName();
+		if (launcher == null) {
+			throw new RuntimeException("Cannot locate the user CFG file");
+		}
+		return appDirEntry(packageName(), launcher + ".cfg");
 	}
 
 	public static File homeDirectory() {
