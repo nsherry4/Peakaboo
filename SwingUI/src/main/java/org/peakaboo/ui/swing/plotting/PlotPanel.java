@@ -626,7 +626,8 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 	public void actionSaveSessionAs() {
 
-		StratusFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(), new SessionFileExtension(),
+		StratusFilePanels.saveFile(this, "Save Session", controller.io().getSessionFolder(),
+				suggestedSessionFilename(), new SessionFileExtension(),
 				file -> {
 					if (!file.isPresent()) {
 						return;
@@ -634,6 +635,35 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 					controller.io().setFromSession(file.get());
 					actionSaveSession(file.get());
 				});
+	}
+
+	/**
+	 * Suggested filename for a session file without extension.
+	 * Reuse the existing session filename if it exists, otherwise
+	 * try the data source title. Then make it filesystem-safe.
+	 */
+	private String suggestedSessionFilename() {
+		File session = controller.io().getSessionFile();
+		if (session != null) {
+			return session.getName();
+		}
+
+		// No dataset, no title
+		if (!controller.data().hasDataSet()) {
+			return null;
+		}
+
+		// Get the dataset title
+		String name = controller.data().getTitle();
+		if (name == null || name.isBlank()) {
+			return null;
+		}
+
+		// A title string may not be a valid filename out of the box.
+		// This is tricky on Windows in particular as it has many
+		// characters that it cannot support in filenames.
+		name = name.replaceAll("[\\\\/:*?\"<>|]", "_").trim();
+		return name.isEmpty() ? null : name;
 	}
 
 	public void actionSaveSession(File file) {

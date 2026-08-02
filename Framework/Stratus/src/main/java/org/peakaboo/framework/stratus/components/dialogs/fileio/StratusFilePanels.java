@@ -75,6 +75,11 @@ public class StratusFilePanels {
 	
 	public static void saveFile(Component parent, String title, File startingFolder, SimpleFileExtension extension, Consumer<Optional<File>> callback)
 	{
+		saveFile(parent, title, startingFolder, null, extension, callback);
+	}
+
+	public static void saveFile(Component parent, String title, File startingFolder, String suggestedFilename, SimpleFileExtension extension, Consumer<Optional<File>> callback)
+	{
 
 		StratusFileChooser chooser = new StratusFileChooser(startingFolder);
 		chooser.setMultiSelectionEnabled(false);
@@ -82,9 +87,16 @@ public class StratusFilePanels {
 		chooser.setFileFilter(extension.getFilter());
 		chooser.setApproveButtonText("Save");
 		chooser.setApproveButtonToolTipText("Save Selected File");
-		
-		
-				
+
+		if (suggestedFilename != null && !suggestedFilename.isBlank()) {
+			if (!extension.match(suggestedFilename)) {
+				suggestedFilename += "." + extension.getExtensions().get(0);
+			}
+			// Build a qualified File object to hand to the chooser
+			chooser.setSelectedFile(new File(chooser.getCurrentDirectory(), suggestedFilename));
+		}
+
+
 		//Run this when the dialog is accepted
 		Runnable onAccept = () -> {
 			String filename = chooser.getSelectedFile().toString();
