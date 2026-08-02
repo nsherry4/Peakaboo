@@ -16,6 +16,14 @@ import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
 
 public class CautiousCurveFitterTest {
 
+	/** Same overfit bias as extra-cautious/optimizing, but with no zero clamp */
+	private static class UnclampedFitter extends CautiousCurveFitter {
+		UnclampedFitter() {
+			overfitPenalty = 5f;
+			clampDataAtZero = false;
+		}
+	}
+
 	@BeforeClass
 	public static void initRegistry() {
 		FittingFunctionRegistry.init();
@@ -103,25 +111,21 @@ public class CautiousCurveFitterTest {
 		CurveView curve = makeFeKCurve(IN_RANGE_CALIB);
 		Spectrum data = SpectrumCalculations.multiplyBy(curve.get(), 500f);
 
-		float unclamped = fitWith(new UnclampedCurveFitter(), curve, data);
+		float unclamped = fitWith(new UnclampedFitter(), curve, data);
 
 		Assert.assertEquals(unclamped, fit(curve, data), 1e-4f);
 	}
 
 
-	// ---- what the clamp buys us ----
+	// ---- clamped vs unclamped ----
 
 	/**
 	 * Mn's true weight is 40 and its K-alpha peak is genuinely in the data;
 	 * over-subtracting Fe only digs a pit around its K-beta. Plain least squares
 	 * still recovers most of Mn, so a collapse toward zero is the penalty being
-	 * charged for Fe's mistake rather than Mn being absent.
-	 * <p>
-	 * Across Fe 500 / 520 / 540 / 560: unclamped runs 40.00 / 16.59 / 0.00 / 0.00,
-	 * this fitter 40.00 / 35.10 / 34.34 / 34.13, plain least squares 40.00 / 38.65
-	 * / 37.29 / 35.94. The ~5% shortfall is the over-drawn K-beta window still
-	 * contributing 9*c^2 to the denominator of the solve while contributing
-	 * nothing to its numerator.
+	 * charged for Fe's mistake rather than Mn being absent. The cautious fit still
+	 * lands ~5% short: the over-drawn K-beta window contributes 9*c^2 to the
+	 * denominator of the solve while contributing nothing to its numerator.
 	 */
 	@Test
 	public void testContestedCurveSurvives() {
@@ -129,7 +133,7 @@ public class CautiousCurveFitterTest {
 		CurveView mn = makeKCurve(Element.Mn, IN_RANGE_CALIB);
 		Spectrum remainder = contestedMnRemainder(fe, mn, 530f);
 
-		float unclamped = fitWith(new UnclampedCurveFitter(), mn, remainder);
+		float unclamped = fitWith(new UnclampedFitter(), mn, remainder);
 		float unbiased = fitWith(new LeastSquaresCurveFitter(), mn, remainder);
 		float cautious = fit(mn, remainder);
 
@@ -156,7 +160,7 @@ public class CautiousCurveFitterTest {
 		for (int i = 0; i < steps; i++) {
 			Spectrum remainder = contestedMnRemainder(fe, mn, 500f + i * 0.6f);
 			cautious[i] = fit(mn, remainder);
-			unclamped[i] = fitWith(new UnclampedCurveFitter(), mn, remainder);
+			unclamped[i] = fitWith(new UnclampedFitter(), mn, remainder);
 		}
 
 		Assert.assertTrue("sweep should start with a real fit", cautious[0] > 0f);
@@ -172,7 +176,7 @@ public class CautiousCurveFitterTest {
 	}
 
 	/**
-	 * The penalty is narrowed, not disabled: against data the curve genuinely
+	 * The clamp doesn't disable the penalty: against data the curve genuinely
 	 * exceeds, the fit must still come in below the unbiased answer.
 	 */
 	@Test
@@ -204,7 +208,7 @@ public class CautiousCurveFitterTest {
 	@Test
 	public void testPluginIdentity() {
 		CautiousCurveFitter fitter = new CautiousCurveFitter();
-		Assert.assertEquals("ac5dae42-cc2e-4a9e-a282-2e13ef65a916", fitter.pluginUUID());
+		Assert.assertEquals("4e5b95fa-a873-4732-bdab-918107c87e20", fitter.pluginUUID());
 		// Distinct from its heavier-penalty subclass, so sessions resolve to
 		// whichever they were saved with.
 		Assert.assertNotEquals(new OptimizingCurveFitter().pluginUUID(), fitter.pluginUUID());
