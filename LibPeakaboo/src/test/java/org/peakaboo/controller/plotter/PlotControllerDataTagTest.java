@@ -20,12 +20,16 @@ import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.table.KrausePeakTable;
 import org.peakaboo.curvefit.peak.transition.TransitionShell;
 import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTag;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.filter.plugins.mathematical.MultiplicationMathFilter;
 import org.peakaboo.framework.plural.streams.StreamExecutor;
 import org.peakaboo.mapping.rawmap.RawMapSet;
 
-public class PlotControllerDataLabelTest {
+public class PlotControllerDataTagTest {
+
+	private static final DataTag PLOT_OTHER = new DataTag(DataScope.PLOT, DataLabel.OTHER_FILTERING);
 
 	private PlotController pc;
 
@@ -53,20 +57,20 @@ public class PlotControllerDataLabelTest {
 	}
 
 	@Test
-	public void testNoLabelsInitially() {
-		assertTrue(pc.getDataLabels().isEmpty());
-		assertTrue(pc.getPlotData().dataLabels.isEmpty());
+	public void testNoTagsInitially() {
+		assertTrue(pc.getDataTags().isEmpty());
+		assertTrue(pc.getPlotData().dataTags.isEmpty());
 	}
 
 	@Test
-	public void testFilterLabelsAppearInPlotData() {
+	public void testFilterTagsAppearInPlotData() {
 		pc.filtering().addFilter(createMultiplyFilter());
-		assertEquals(List.of(DataLabel.OTHER_FILTERING), pc.getDataLabels());
-		assertEquals(List.of(DataLabel.OTHER_FILTERING), pc.getPlotData().dataLabels);
+		assertEquals(List.of(PLOT_OTHER), pc.getDataTags());
+		assertEquals(List.of(PLOT_OTHER), pc.getPlotData().dataTags);
 	}
 
 	@Test
-	public void testMapTaskSnapshotsSourceLabels() {
+	public void testMapTaskSnapshotsSourceTags() {
 		pc.filtering().addFilter(createMultiplyFilter());
 		KrausePeakTable table = new KrausePeakTable();
 		pc.fitting().addTransitionSeries(table.get(Element.Fe, TransitionShell.K));
@@ -74,12 +78,12 @@ public class PlotControllerDataLabelTest {
 		StreamExecutor<RawMapSet> task = pc.getMapTask();
 		Optional<RawMapSet> result = task.run();
 		assertTrue(result.isPresent());
-		assertEquals(List.of(DataLabel.OTHER_FILTERING), result.get().getSourceLabels());
+		assertEquals(List.of(PLOT_OTHER), result.get().getSourceTags());
 
 		//The snapshot must not change when the plot's filters change afterwards
 		pc.filtering().removeFilter(0);
-		assertTrue(pc.getDataLabels().isEmpty());
-		assertEquals(List.of(DataLabel.OTHER_FILTERING), result.get().getSourceLabels());
+		assertTrue(pc.getDataTags().isEmpty());
+		assertEquals(List.of(PLOT_OTHER), result.get().getSourceTags());
 	}
 
 }

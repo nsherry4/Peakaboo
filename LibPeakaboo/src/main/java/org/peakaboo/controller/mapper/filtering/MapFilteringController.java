@@ -14,8 +14,9 @@ import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.curvefit.peak.table.Element;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datalabel.DataLabel;
-import org.peakaboo.datalabel.DataLabels;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTag;
+import org.peakaboo.datalabel.DataTags;
 import org.peakaboo.framework.accent.numeric.Bounds;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
@@ -175,18 +176,18 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	
 	
 	/**
-	 * Returns the deduplicated {@link DataLabel}s for this map: labels inherited
-	 * from the plot-stage processing which generated the map data, followed by
-	 * labels from the enabled map filters.
+	 * Returns the deduplicated {@link DataTag}s for this map: tags inherited from the
+	 * plot-stage processing which generated the map data, followed by tags from the
+	 * enabled map filters.
 	 */
-	public List<DataLabel> getDataLabels() {
-		List<DataLabel> labels = new ArrayList<>(controller.rawDataController.getSourceLabels());
-		labels.addAll(filters.getDataLabels());
-		return DataLabels.unique(labels);
+	public List<DataTag> getDataTags() {
+		List<DataTag> tags = new ArrayList<>(controller.rawDataController.getSourceTags());
+		tags.addAll(filters.getDataTags());
+		return DataTags.unique(tags);
 	}
 
 	public String getActionDescription() {
-		return DataLabels.summary(getDataLabels()).orElse(null);
+		return DataTags.summary(getDataTags(), DataScope.MAP).orElse(null);
 	}
 
 

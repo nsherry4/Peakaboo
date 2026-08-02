@@ -16,13 +16,19 @@ import org.peakaboo.curvefit.curve.fitting.fitter.CurveFitterRegistry;
 import org.peakaboo.curvefit.curve.fitting.solver.FittingSolverRegistry;
 import org.peakaboo.curvefit.peak.fitting.FittingFunctionRegistry;
 import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTag;
 import org.peakaboo.filter.model.FilterRegistry;
 import org.peakaboo.mapping.filter.model.MapFilter;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 import org.peakaboo.mapping.filter.plugin.plugins.mathematical.MultiplyMapFilter;
 import org.peakaboo.mapping.filter.plugin.plugins.smoothing.FastAverageMapFilter;
 
-public class MappingControllerDataLabelTest {
+public class MappingControllerDataTagTest {
+
+	private static final DataTag PLOT_SMOOTHED = new DataTag(DataScope.PLOT, DataLabel.SMOOTHED);
+	private static final DataTag PLOT_BACKGROUND = new DataTag(DataScope.PLOT, DataLabel.BACKGROUND_REMOVED);
+	private static final DataTag MAP_SMOOTHED = new DataTag(DataScope.MAP, DataLabel.SMOOTHED);
 
 	private MappingController mc;
 
@@ -57,42 +63,45 @@ public class MappingControllerDataLabelTest {
 	}
 
 	@Test
-	public void testNoLabelsInitially() {
-		assertTrue(mc.getFiltering().getDataLabels().isEmpty());
+	public void testNoTagsInitially() {
+		assertTrue(mc.getFiltering().getDataTags().isEmpty());
 		assertNull(mc.getFiltering().getActionDescription());
 	}
 
 	@Test
-	public void testMapFilterLabels() {
+	public void testMapFilterTags() {
+		//Map-stage processing is implied on a map, so it reads without a prefix
 		mc.getFiltering().add(createSmoothingFilter());
-		assertEquals(List.of(DataLabel.SMOOTHED), mc.getFiltering().getDataLabels());
+		assertEquals(List.of(MAP_SMOOTHED), mc.getFiltering().getDataTags());
 		assertEquals("Smoothed", mc.getFiltering().getActionDescription());
 	}
 
 	@Test
-	public void testInheritedSourceLabels() {
-		mc.rawDataController.getMapResultSet().setSourceLabels(List.of(DataLabel.BACKGROUND_REMOVED));
-		assertEquals(List.of(DataLabel.BACKGROUND_REMOVED), mc.getFiltering().getDataLabels());
-		assertEquals("Background Removed", mc.getFiltering().getActionDescription());
+	public void testInheritedSourceTags() {
+		mc.rawDataController.getMapResultSet().setSourceTags(List.of(PLOT_BACKGROUND));
+		assertEquals(List.of(PLOT_BACKGROUND), mc.getFiltering().getDataTags());
+		assertEquals("Plot: Background Removed", mc.getFiltering().getActionDescription());
 	}
 
 	@Test
-	public void testInheritedAndMapFilterLabelsCombine() {
-		mc.rawDataController.getMapResultSet().setSourceLabels(List.of(DataLabel.BACKGROUND_REMOVED));
+	public void testInheritedAndMapFilterTagsCombine() {
+		mc.rawDataController.getMapResultSet().setSourceTags(List.of(PLOT_BACKGROUND));
 		mc.getFiltering().add(createSmoothingFilter());
-		assertEquals("Background Removed, Smoothed", mc.getFiltering().getActionDescription());
+		assertEquals("Smoothed - Plot: Background Removed", mc.getFiltering().getActionDescription());
 	}
 
 	@Test
-	public void testCrossStageDedup() {
-		//Smoothed at the plot stage, then smoothed again at the map stage: one label
-		mc.rawDataController.getMapResultSet().setSourceLabels(List.of(DataLabel.SMOOTHED));
+	public void testCrossStageSmoothingKeepsBoth() {
+		//Smoothing a spectrum and smoothing a map are different operations, so both are
+		//reported. These used to collapse into a single "Smoothed".
+		mc.rawDataController.getMapResultSet().setSourceTags(List.of(PLOT_SMOOTHED));
 		mc.getFiltering().add(createSmoothingFilter());
-		assertEquals("Smoothed", mc.getFiltering().getActionDescription());
+		assertEquals(List.of(PLOT_SMOOTHED, MAP_SMOOTHED), mc.getFiltering().getDataTags());
+		assertEquals("Smoothed - Plot: Smoothed", mc.getFiltering().getActionDescription());
 	}
 
 	@Test
-	public void testDisabledMapFilterContributesNoLabel() {
+	public void testDisabledMapFilterContributesNoTag() {
 		MapFilter filter = createMultiplyFilter();
 		filter.setEnabled(false);
 		mc.getFiltering().add(filter);

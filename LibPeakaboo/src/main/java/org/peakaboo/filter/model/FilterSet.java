@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.peakaboo.datalabel.DataLabel;
-import org.peakaboo.datalabel.DataLabels;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTag;
+import org.peakaboo.datalabel.DataTags;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
@@ -171,11 +172,11 @@ public class FilterSet implements Iterable<Filter> {
 	}
 
 	/**
-	 * Returns the deduplicated {@link DataLabel}s for the filters which would be
+	 * Returns the deduplicated {@link DataTag}s for the filters which would be
 	 * applied by {@link #applyFilters(SpectrumView, FilterContext)}.
 	 */
-	public synchronized List<DataLabel> getDataLabels() {
-		return DataLabels.gather(filters.stream()
+	public synchronized List<DataTag> getDataTags() {
+		return DataTags.gather(DataScope.PLOT, filters.stream()
 				.filter(f -> f != null && f.isEnabled() && !f.isPreviewOnly())
 				.toList());
 	}

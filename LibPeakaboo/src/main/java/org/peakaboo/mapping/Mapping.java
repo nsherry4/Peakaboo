@@ -1,6 +1,5 @@
 package org.peakaboo.mapping;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,8 +15,7 @@ import org.peakaboo.curvefit.curve.fitting.solver.FittingSolver.FittingSolverCon
 import org.peakaboo.curvefit.curve.fitting.solver.SolverCache;
 import org.peakaboo.curvefit.peak.transition.DummyTransitionSeries;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datalabel.DataLabel;
-import org.peakaboo.datalabel.DataLabels;
+import org.peakaboo.datalabel.DataTag;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
@@ -65,13 +63,15 @@ public class Mapping {
 	 * @param filters the {@link FilterSet} containing all filters needing to be applied to this data
 	 * @param fittings the {@link FittingSet} containing all fittings needing to be turned into maps
 	 * @param type the way in which a fitting should be mapped to a 2D map. (eg height, area, ...)
+	 * @param sourceTags describes how this source data was processed, to be kept with the maps
 	 * @return a {@link StreamExecutor} which will return a {@link RawMapSet}
 	 */
 	public static StreamExecutor<RawMapSet> mapTask(
-			FilterSet filters, 
-			CurveFitter fitter, 
+			FilterSet filters,
+			CurveFitter fitter,
 			FittingSolver solver,
-			FilterContext ctx
+			FilterContext ctx,
+			List<DataTag> sourceTags
 		) {
 
 		DataSet dataset = ctx.dataset();
@@ -94,11 +94,9 @@ public class Mapping {
 		}
 		RawMapSet maps = new RawMapSet(transitionSeries, mapsize, !noncontiguous);
 
-		//Snapshot the labels describing this processing so they stay with the
-		//generated maps even if the plot's filters or solver change afterwards
-		List<DataLabel> sourceLabels = new ArrayList<>(filters.getDataLabels());
-		sourceLabels.addAll(solver.getDataLabels());
-		maps.setSourceLabels(DataLabels.unique(sourceLabels));
+		//Keep the caller's snapshot of how this data was processed with the generated
+		//maps, so it stays accurate even if the plot's filters or solver change afterwards
+		maps.setSourceTags(sourceTags);
 
 
 		// Update on progress every 1%, but no more frequently than every 10 scans

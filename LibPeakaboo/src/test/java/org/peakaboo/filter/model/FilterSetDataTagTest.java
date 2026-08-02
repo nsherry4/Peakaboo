@@ -8,9 +8,11 @@ import java.util.Optional;
 
 import org.junit.Test;
 import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTag;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
-public class FilterSetDataLabelTest {
+public class FilterSetDataTagTest {
 
 	private static class StubFilter extends AbstractFilter {
 
@@ -72,16 +74,16 @@ public class FilterSetDataLabelTest {
 	}
 
 	@Test
-	public void testNoFiltersNoLabels() {
-		assertTrue(new FilterSet().getDataLabels().isEmpty());
+	public void testNoFiltersNoTags() {
+		assertTrue(new FilterSet().getDataTags().isEmpty());
 	}
 
 	@Test
-	public void testLabelsFromDescriptors() {
+	public void testTagsFromDescriptors() {
 		FilterSet filters = new FilterSet();
 		filters.add(new StubFilter(FilterDescriptor.SMOOTHING));
 		filters.add(new StubFilter(FilterDescriptor.BACKGROUND));
-		assertEquals(List.of(DataLabel.SMOOTHED, DataLabel.BACKGROUND_REMOVED), filters.getDataLabels());
+		assertEquals(List.of(plot(DataLabel.SMOOTHED), plot(DataLabel.BACKGROUND_REMOVED)), filters.getDataTags());
 	}
 
 	@Test
@@ -89,7 +91,7 @@ public class FilterSetDataLabelTest {
 		FilterSet filters = new FilterSet();
 		filters.add(new StubFilter(FilterDescriptor.SMOOTHING));
 		filters.add(new StubFilter(FilterDescriptor.SMOOTHING));
-		assertEquals(List.of(DataLabel.SMOOTHED), filters.getDataLabels());
+		assertEquals(List.of(plot(DataLabel.SMOOTHED)), filters.getDataTags());
 	}
 
 	@Test
@@ -98,21 +100,27 @@ public class FilterSetDataLabelTest {
 		Filter smoothing = new StubFilter(FilterDescriptor.SMOOTHING);
 		smoothing.setEnabled(false);
 		filters.add(smoothing);
-		assertTrue(filters.getDataLabels().isEmpty());
+		assertTrue(filters.getDataTags().isEmpty());
 	}
 
 	@Test
 	public void testPreviewOnlyFiltersExcluded() {
 		FilterSet filters = new FilterSet();
 		filters.add(new StubFilter(FilterDescriptor.SMOOTHING, true));
-		assertTrue(filters.getDataLabels().isEmpty());
+		assertTrue(filters.getDataTags().isEmpty());
 	}
 
 	@Test
 	public void testCustomActionStringBecomesCustomLabel() {
 		FilterSet filters = new FilterSet();
 		filters.add(new StubFilter(new FilterDescriptor(FilterType.OTHER, "Despeckled")));
-		assertEquals(List.of(new DataLabel("Despeckled")), filters.getDataLabels());
+		assertEquals(List.of(plot(new DataLabel("Despeckled"))), filters.getDataTags());
+	}
+
+	//A spectrum FilterSet scopes everything it gathers to the plot stage, including
+	//labels a plugin made up itself
+	private static DataTag plot(DataLabel label) {
+		return new DataTag(DataScope.PLOT, label);
 	}
 
 }

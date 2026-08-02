@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
-import org.peakaboo.datalabel.DataLabel;
+import org.peakaboo.datalabel.DataTag;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.components.physicalsize.PhysicalSize;
@@ -154,15 +154,15 @@ public class RawDataController extends EventfulType<MapUpdateType> {
 	}
 
 	/**
-	 * Returns the {@link DataLabel}s describing how the source data for this
+	 * Returns the {@link DataTag}s describing how the source data for this
 	 * map was processed (e.g. by plot filters or the fitting solver) before the
 	 * map was generated.
 	 */
-	public List<DataLabel> getSourceLabels() {
+	public List<DataTag> getSourceTags() {
 		if (mapModel.mapResults == null) {
 			return List.of();
 		}
-		return mapModel.mapResults.getSourceLabels();
+		return mapModel.mapResults.getSourceTags();
 	}
 
 	public DetectorProfile getDetectorProfile() {

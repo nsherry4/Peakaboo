@@ -5,8 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.peakaboo.datalabel.DataLabel;
-import org.peakaboo.datalabel.DataLabels;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTag;
+import org.peakaboo.datalabel.DataTags;
 import org.peakaboo.mapping.filter.model.MapFilter.MapFilterContext;
 
 public class MapFilterSet implements Iterable<MapFilter> {
@@ -78,10 +79,10 @@ public class MapFilterSet implements Iterable<MapFilter> {
 	}
 
 	/**
-	 * Returns the deduplicated {@link DataLabel}s for the enabled filters in this set.
+	 * Returns the deduplicated {@link DataTag}s for the enabled filters in this set
 	 */
-	public synchronized List<DataLabel> getDataLabels() {
-		return DataLabels.gather(getAllEnabled());
+	public synchronized List<DataTag> getDataTags() {
+		return DataTags.gather(DataScope.MAP, getAllEnabled());
 	}
 	
 	public AreaMap apply(AreaMap map) {

@@ -27,8 +27,9 @@ import org.peakaboo.controller.session.v2.SavedAppData;
 import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.DelegatingFittingSetView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
-import org.peakaboo.datalabel.DataLabel;
-import org.peakaboo.datalabel.DataLabels;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTag;
+import org.peakaboo.datalabel.DataTags;
 import org.peakaboo.dataset.source.model.components.scandata.ScanData;
 import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
@@ -255,19 +256,20 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 		data.dataset = data().getDataSet();
 		data.filters = filtering().getActiveFilters();
 		data.spectra = spectra;
-		data.dataLabels = getDataLabels();
+		data.dataTags = getDataTags();
 
 		return data;
 	}
 
 	/**
-	 * Returns the deduplicated {@link DataLabel}s describing how the displayed
-	 * data was processed, gathered from the active filters and the fitting solver.
+	 * Returns the deduplicated {@link DataTag}s describing how the displayed data was
+	 * processed, gathered from the active filters and the fitting solver. The solver
+	 * has no implicit way to scope it, so we do it here.
 	 */
-	public List<DataLabel> getDataLabels() {
-		List<DataLabel> labels = new ArrayList<>(filteringController.getActiveFilters().getDataLabels());
-		labels.addAll(fittingController.getFittingSolver().getDataLabels());
-		return DataLabels.unique(labels);
+	public List<DataTag> getDataTags() {
+		List<DataTag> tags = new ArrayList<>(filteringController.getActiveFilters().getDataTags());
+		tags.addAll(DataTags.of(DataScope.PLOT, fittingController.getFittingSolver().getDataLabels()));
+		return DataTags.unique(tags);
 	}
 
 	public PlotDataSpectra getPlotDataSpectra()	{
@@ -298,10 +300,11 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 	 */
 	public StreamExecutor<RawMapSet> getMapTask() {
 		return Mapping.mapTask(
-				filteringController.getActiveFilters(), 
-				fittingController.getCurveFitter(), 
+				filteringController.getActiveFilters(),
+				fittingController.getCurveFitter(),
 				fittingController.getFittingSolver(),
-				getFilterContext()
+				getFilterContext(),
+				getDataTags()
 			);
 	}
 	

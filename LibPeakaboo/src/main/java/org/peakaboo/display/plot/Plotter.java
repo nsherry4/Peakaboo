@@ -7,7 +7,8 @@ import java.util.logging.Level;
 
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
-import org.peakaboo.datalabel.DataLabels;
+import org.peakaboo.datalabel.DataScope;
+import org.peakaboo.datalabel.DataTags;
 import org.peakaboo.display.Display;
 import org.peakaboo.display.plot.painters.FittingLabel;
 import org.peakaboo.display.plot.painters.FittingMarkersPainter;
@@ -210,7 +211,7 @@ public class Plotter {
 		List<AxisPainter> axisPainters = new ArrayList<>();
 		
 		//Disclaimer line showing any DataLabels describing how the data was processed
-		String disclaimer = DataLabels.summary(data.dataLabels).orElse(null);
+		String disclaimer = DataTags.summary(data.dataTags, DataScope.PLOT).orElse(null);
 		boolean hasTitle = settings.title != null;
 		if (disclaimer != null && !hasTitle) {
 			// Show the disclaimer below the x-axis label when there is no title visible
