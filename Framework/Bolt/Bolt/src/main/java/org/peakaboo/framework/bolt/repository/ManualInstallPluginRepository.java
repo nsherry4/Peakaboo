@@ -19,7 +19,7 @@ public class ManualInstallPluginRepository extends AbstractPluginRepository {
 		}
 		this.registries = registries;
 		this.inventory = inventory;
-		refresh();
+		// No eager refresh here
 	}
 
 	protected List<PluginMetadata> generatePluginList() {

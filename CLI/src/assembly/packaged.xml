@@ -1,0 +1,29 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+
+	<!--
+	Package only the CLI-specific deps, local Peakaboo.jar will do the rest.
+	-->
+
+	<id>packaged</id>
+
+	<formats>
+		<format>jar</format>
+	</formats>
+
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>/</outputDirectory>
+			<unpack>true</unpack>
+			<useProjectArtifact>true</useProjectArtifact>
+			<includes>
+				<include>org.peakaboo:peakaboo-cli</include>
+				<include>info.picocli:picocli</include>
+			</includes>
+		</dependencySet>
+	</dependencySets>
+
+</assembly>

@@ -24,6 +24,7 @@ import org.peakaboo.framework.bolt.repository.BuiltinPluginRepository;
 import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
 import org.peakaboo.framework.bolt.repository.IssuePluginRepository;
 import org.peakaboo.framework.bolt.repository.ManualInstallPluginRepository;
+import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 
 public class BasicTierProvider implements TierProvider {
@@ -56,12 +57,18 @@ public class BasicTierProvider implements TierProvider {
 		extensionPoints.addRegistry(FilterRegistry.system());
 		extensionPoints.addRegistry(MapFilterRegistry.system());
 		
-		pluginRepositories = new AggregatePluginRepository(List.of(
-				new HttpsPluginRepository("https://github.com/PeakabooLabs/PeakabooPlugins/releases/download/600/", 600),
+		List<PluginRepository> knownRepositories = List.of(
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/PeakabooPlugins/releases/download/v6.1/", 610),
 				new BuiltinPluginRepository(DataSourceRegistry.system()),
 				new BuiltinPluginRepository(DataSinkRegistry.system())
-			));
-		pluginRepositories.addRepository(new ManualInstallPluginRepository(extensionPoints, pluginRepositories::listAvailablePlugins));
+			);
+		
+		// Aggregate of all repos which the manual install "repo" needs for isOrphan checks
+		// Can't use `pluginRepositories` for this or we create a cycle
+		AggregatePluginRepository knownInventory = new AggregatePluginRepository(knownRepositories);
+
+		pluginRepositories = new AggregatePluginRepository(knownRepositories);
+		pluginRepositories.addRepository(new ManualInstallPluginRepository(extensionPoints, knownInventory::listAvailablePlugins));
 		pluginRepositories.addRepository(new IssuePluginRepository(extensionPoints));
 		
 		

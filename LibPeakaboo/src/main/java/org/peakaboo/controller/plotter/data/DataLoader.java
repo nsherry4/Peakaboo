@@ -37,9 +37,19 @@ public abstract class DataLoader {
 		public List<DataInputAdapter> datafiles;
 		public SavedPlugin dataSource;
 		public File sessionFile;
-		public Runnable sessionCallback = () -> {}; 
+		public Runnable sessionCallback = () -> {};
 	};
-	
+
+	/** Reasons why a session might be opened without data */
+	public enum SessionOnlyReason {
+		/** The session's data is the data we already have loaded */
+		SAME_DATA,
+		/** The session lists data files, but at least one of them is missing */
+		MISSING_DATA,
+		/** The session doesn't list any data files */
+		NO_DATA
+	}
+
 	private static final String ERR_EMPTY_CTX = "Pending DataLoader Context cannot be empty";
 	
 	protected PlotController controller;
@@ -358,6 +368,7 @@ public abstract class DataLoader {
 			warnVersion.run();
 			controller.io().setSessionFile(ctx.sessionFile);
 			RecentSessions.SYSTEM.addSessionFile(ctx.sessionFile);
+			onSessionOnly(sessionOnlyReason(sessionPaths, currentPaths));
 		}
 		
 	}
@@ -428,6 +439,7 @@ public abstract class DataLoader {
 			warnVersion.run();
 			controller.io().setSessionFile(ctx.sessionFile);
 			RecentSessions.SYSTEM.addSessionFile(ctx.sessionFile);
+			onSessionOnly(sessionOnlyReason(sessionPaths, currentPaths));
 		}
 		
 	}
@@ -470,6 +482,17 @@ public abstract class DataLoader {
 		onSuccess(ctx);
 	}
 	
+	/** Why is a session loading without any data? */
+	private static SessionOnlyReason sessionOnlyReason(List<DataInputAdapter> sessionPaths, List<DataInputAdapter> currentPaths) {
+		if (sessionPaths.isEmpty()) {
+			return SessionOnlyReason.NO_DATA;
+		}
+		if (sessionPaths.equals(currentPaths)) {
+			return SessionOnlyReason.SAME_DATA;
+		}
+		return SessionOnlyReason.MISSING_DATA;
+	}
+
 	private void onLoadCancelled() {
 		
 		if (this.pending.isEmpty()) {
@@ -516,5 +539,7 @@ public abstract class DataLoader {
 	public abstract void onSessionNewer();
 	public abstract void onSessionFailure();
 	public abstract void onSessionHasData(File sessionFile, Consumer<Boolean> load);
+	/** Session opened, but no data was loaded. Enum explains why. */
+	public abstract void onSessionOnly(SessionOnlyReason reason);
 	
 }

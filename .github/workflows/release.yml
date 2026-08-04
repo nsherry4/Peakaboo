@@ -37,15 +37,17 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-    - name: Move Jar to Upload Location
-      run: mv ./Peakaboo-*.jar ./Peakaboo.jar
+    - name: Move Jars to Upload Location
+      run: |
+        mv ./Peakaboo-*.jar ./Packaging/jar/Peakaboo.jar
+        mv ./CLI/target/peakaboo-cli-*-packaged.jar ./Packaging/jar/peakaboo-cli.jar
       shell: bash
 
-    - name: Upload Jar
+    - name: Upload Jars
       uses: actions/upload-artifact@v7
       with:
-        name: Peakaboo-${{ github.ref_name }}.jar
-        path: ./Peakaboo.jar
+        name: Peakaboo-${{ github.ref_name }}-jars
+        path: ./Packaging/jar
 
 
   build-deb:
@@ -65,15 +67,22 @@ jobs:
         java-version: 21
         distribution: 'temurin'
 
-    - name: Download Jar
+    - name: Download Jars
       uses: actions/download-artifact@v8
       with:
-        name: Peakaboo-${{ github.ref_name }}.jar
+        name: Peakaboo-${{ github.ref_name }}-jars
         path: ./Packaging/jar
 
     - name: Run JPackage Deb Script
       run: ./build-deb.sh ${{ inputs.release_type }}
       working-directory: ./Packaging
+
+    - name: Smoke Test Packaged CLI
+      run: |
+        dpkg -x ./Packaging/peakaboo*.deb /tmp/pkgtest
+        dpkg -c ./Packaging/peakaboo*.deb
+        /tmp/pkgtest/opt/peakaboo*/bin/peakaboo-cli --version
+      shell: bash
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
@@ -99,10 +108,10 @@ jobs:
         java-version: 21
         distribution: 'temurin'
 
-    - name: Download Jar
+    - name: Download Jars
       uses: actions/download-artifact@v8
       with:
-        name: Peakaboo-${{ github.ref_name }}.jar
+        name: Peakaboo-${{ github.ref_name }}-jars
         path: ./Packaging/jar
 
     - name: Run JPackage RPM Script
@@ -141,10 +150,10 @@ jobs:
       run: which jpackage && jpackage --version
       shell: bash
 
-    - name: Download Jar
+    - name: Download Jars
       uses: actions/download-artifact@v8
       with:
-        name: Peakaboo-${{ github.ref_name }}.jar
+        name: Peakaboo-${{ github.ref_name }}-jars
         path: ./Packaging/jar
 
     - name: Run JPackage Mac Script
@@ -183,10 +192,10 @@ jobs:
       run: which jpackage && jpackage --version
       shell: bash
 
-    - name: Download Jar
+    - name: Download Jars
       uses: actions/download-artifact@v8
       with:
-        name: Peakaboo-${{ github.ref_name }}.jar
+        name: Peakaboo-${{ github.ref_name }}-jars
         path: ./Packaging/jar
 
     - name: Run JPackage Mac Script
@@ -221,10 +230,10 @@ jobs:
       run: which jpackage.exe && jpackage.exe --version
       shell: bash
 
-    - name: Download Jar
+    - name: Download Jars
       uses: actions/download-artifact@v8
       with:
-        name: Peakaboo-${{ github.ref_name }}.jar
+        name: Peakaboo-${{ github.ref_name }}-jars
         path: ./Packaging/jar
 
     - name: Run JPackage Windows Script

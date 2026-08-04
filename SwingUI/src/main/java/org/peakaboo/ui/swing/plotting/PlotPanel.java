@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -707,35 +705,8 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 	}
 
 	private void actionExportArchiveToZip(File file, SurfaceDescriptor format, int width, int height) {
-		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file))) {
-
-			// Save Plot
-			String ext = format.extension().toLowerCase();
-			ZipEntry e = new ZipEntry("plot." + ext);
-			zos.putNextEntry(e);
-
-			canvas.write(format, zos, new Coord<Integer>(width, height));
-			zos.closeEntry();
-
-			// save fittings as text
-			e = new ZipEntry("fittings.txt");
-			zos.putNextEntry(e);
-			controller.writeFittingInformation(zos);
-			zos.closeEntry();
-
-			if (controller.calibration().hasDetectorProfile()) {
-				e = new ZipEntry("detector-profile.pbdp");
-				zos.putNextEntry(e);
-				String profileYaml = controller.calibration().getDetectorProfile().save();
-				zos.write(profileYaml.getBytes());
-				zos.closeEntry();
-			}
-
-			e = new ZipEntry("session.peakaboo");
-			zos.putNextEntry(e);
-			zos.write(controller.save().serialize().getBytes());
-			zos.closeEntry();
-
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			controller.writeArchive(fos, format, new Coord<Integer>(width, height));
 		} catch (IOException e) {
 			OneLog.log(Level.SEVERE, "Could not save archive", e);
 		}

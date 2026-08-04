@@ -6,12 +6,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.calibration.CalibrationController;
@@ -35,9 +38,12 @@ import org.peakaboo.display.plot.PlotData;
 import org.peakaboo.display.plot.PlotData.PlotDataSpectra;
 import org.peakaboo.filter.model.Filter.FilterContext;
 import org.peakaboo.filter.model.FilterSet;
+import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.SigDigits;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
+import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
+import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.druthers.serialize.DruthersLoadException;
 import org.peakaboo.framework.druthers.serialize.DruthersSerializer;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -407,6 +413,33 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 		}
 	}
 		
+	/** Write the AIO zip: plot, fitting info, and session. */
+	public void writeArchive(OutputStream os, SurfaceDescriptor format, Coord<Integer> size) throws IOException {
+		try (ZipOutputStream zos = new ZipOutputStream(os)) {
+
+			zos.putNextEntry(new ZipEntry("plot." + format.extension().toLowerCase()));
+			ExportableSurface surface = (ExportableSurface) format.create(size);
+			Tier.provider().createPlotter().draw(getPlotData(), view().getPlotSettings(), surface, size);
+			surface.write(zos);
+			zos.closeEntry();
+
+			zos.putNextEntry(new ZipEntry("fittings.csv"));
+			writeFittingInformation(zos);
+			zos.closeEntry();
+
+			if (calibration().hasDetectorProfile()) {
+				zos.putNextEntry(new ZipEntry("detector-profile.pbdp"));
+				zos.write(calibration().getDetectorProfile().save().getBytes(StandardCharsets.UTF_8));
+				zos.closeEntry();
+			}
+
+			zos.putNextEntry(new ZipEntry("session.peakaboo"));
+			zos.write(save().serialize().getBytes(StandardCharsets.UTF_8));
+			zos.closeEntry();
+
+		}
+	}
+
 	public DataController data()
 	{
 		return dataController;

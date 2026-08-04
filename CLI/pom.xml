@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.peakaboo</groupId>
+		<artifactId>peakaboo</artifactId>
+		<version>6.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>peakaboo-cli</artifactId>
+	<packaging>jar</packaging>
+
+	<name>peakaboo-cli</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.peakaboo</groupId>
+			<artifactId>libpeakaboo</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- The image export surfaces are Java2D, which we use headless -->
+		<dependency>
+			<groupId>org.peakaboo.framework</groupId>
+			<artifactId>cyclops-swing</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>4.7.6</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.7.0</version>
+				<configuration>
+					<source>21</source>
+					<target>21</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.0</version>
+                <!--
+                Build against the peakaboo GUI (for graphics support) instead of
+                libpeakaboo, so the only deps we need are that and cli-specific.
+                -->
+				<configuration>
+					<finalName>peakaboo-cli-${project.version}-packaged</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<attach>false</attach>
+					<archive>
+						<manifest>
+							<mainClass>org.peakaboo.cli.PeakabooCLI</mainClass>
+						</manifest>
+						<manifestEntries>
+							<!-- Resolved by the JVM against this jar's own directory -->
+							<Class-Path>Peakaboo.jar</Class-Path>
+						</manifestEntries>
+					</archive>
+					<descriptors>
+						<descriptor>src/assembly/packaged.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

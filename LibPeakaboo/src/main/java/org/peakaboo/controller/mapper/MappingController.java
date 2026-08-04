@@ -187,6 +187,16 @@ public class MappingController extends EventfulType<MapUpdateType>
 	}
 
 
+	/** Starting from an NxN seed, what ultimate size to we end up using? */
+	public Coord<Integer> naturalImageSize(SurfaceDescriptor format, int box) {
+		Coord<Integer> seed = new Coord<>(box, box);
+		Mapper mapper = new Mapper();
+		// Drawing also computes the layout and required size
+		mapper.draw(getMapRenderData(), getRenderSettings(), format.create(seed), seed);
+		Coord<Float> natural = mapper.getMap().calcTotalSize();
+		return new Coord<>((int)Math.ceil(natural.x), (int)Math.ceil(natural.y));
+	}
+
 	public StreamExecutor<Void> writeArchive(OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
 		//we make a copy of the controller to prevent spamming the UI with changes as we generate map after map
 		MappingController exportController = new MappingController(this.rawDataController, this.plotcontroller);

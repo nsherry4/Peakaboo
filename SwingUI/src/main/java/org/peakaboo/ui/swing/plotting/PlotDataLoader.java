@@ -127,4 +127,12 @@ class PlotDataLoader extends DataLoader {
 	public void onWarn(String message) {
 		this.plotPanel.showToast(message);
 	}
+
+	@Override
+	public void onSessionOnly(SessionOnlyReason reason) {
+		// NO_DATA and SAME_DATA are unremarkable, MISSING_DATA should show a warning.
+		if (reason == SessionOnlyReason.MISSING_DATA) {
+			this.plotPanel.showToast("Session loaded, but data files not found.");
+		}
+	}
 }
