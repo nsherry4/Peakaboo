@@ -1,7 +1,9 @@
 package org.peakaboo.framework.stratus.components.ui.options;
 
 import java.awt.BorderLayout;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -13,7 +15,8 @@ public class OptionChooserPanel<T> extends ClearPanel {
 
 	private T selected;
 	private Consumer<T> listener = null;
-	
+	private final Map<T, OptionRadioButton> options = new LinkedHashMap<>();
+
 	public OptionChooserPanel(List<T> items, Function <T, OptionRadioButton> widget) {
 		this(items, OptionSize.LARGE, widget);
 	}
@@ -35,6 +38,7 @@ public class OptionChooserPanel<T> extends ClearPanel {
 			option.withSize(size);
 			option.setBlock(block);
 			block.add(option);
+			options.put(item, option);
 		}
 		
 		setLayout(new BorderLayout());
@@ -45,7 +49,18 @@ public class OptionChooserPanel<T> extends ClearPanel {
 	public T getSelected() {
 		return selected;
 	}
-	
+
+	/** Indicates that the given item should be selected, no listener update */
+	public OptionChooserPanel<T> withSelected(T item) {
+		OptionRadioButton option = options.get(item);
+		if (option == null) {
+			throw new IllegalArgumentException("Not one of this chooser's options: " + item);
+		}
+		selected = item;
+		option.setSelectedSilently(true);
+		return this;
+	}
+
 	public OptionChooserPanel<T> withListener(Consumer<T> listener) {
 		this.listener = listener;
 		return this;
