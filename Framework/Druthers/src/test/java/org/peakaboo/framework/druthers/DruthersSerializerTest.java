@@ -197,6 +197,29 @@ extended:
 	}
 
 	@Test
+	public void testFormatLoaderCallbackCanRejectDocument() {
+		//A document can parse cleanly and still be malformed once interpreted. The
+		//callback reports that the same way any other load failure is reported,
+		//rather than having to smuggle it out as an unchecked exception.
+		String yaml = """
+			format: org.peakaboo.framework.druthers.test/v1
+			oldField: present
+			""";
+
+		try {
+			DruthersSerializer.deserialize(yaml, true,
+				new DruthersSerializer.FormatLoader<>("org.peakaboo.framework.druthers.test/v1", FormatV1.class,
+					obj -> {
+						throw new DruthersLoadException("document is missing its widget");
+					})
+			);
+			fail("Should propagate the DruthersLoadException raised by the callback");
+		} catch (DruthersLoadException e) {
+			assertEquals("document is missing its widget", e.getMessage());
+		}
+	}
+
+	@Test
 	public void testFormatLoaderMissingFormat() {
 		String yaml = """
 			name: test

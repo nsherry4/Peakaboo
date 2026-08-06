@@ -125,9 +125,19 @@ public class DruthersSerializer {
 	}
 
 	/**
+	 * In order to throw druthers exceptions through the loader callback, we define
+	 * our own functional interface with the same signature as Consumer, except with
+	 * the chance of a DruthersLoadException coming back.
+	 */
+	@FunctionalInterface
+	public interface LoadCallback<T> {
+		void accept(T loaded) throws DruthersLoadException;
+	}
+
+	/**
 	 * Format loader record for multi-version deserialization strategies.
 	 */
-	public record FormatLoader<T> (String format, Class<T> cls, Consumer<T> callback) {
+	public record FormatLoader<T> (String format, Class<T> cls, LoadCallback<T> callback) {
 		void load(String yaml, boolean strict) throws DruthersLoadException {
 			T loaded = deserialize(yaml, strict, format, cls);
 			callback.accept(loaded);
@@ -139,8 +149,9 @@ public class DruthersSerializer {
 	 * handling yaml with different `format` IDs. Attempts to match the document's
 	 * `format` to a FormatLoader and implement it's strategy. Each strategy may
 	 * have a different deserialized type, so instead of returning it, each loader
-	 * also supplies a callback {@link Consumer} which will be run on a successful
-	 * load. If there is no successful strategy, a DruthersLoadException is thrown.
+	 * also supplies a {@link LoadCallback} which will be run on a successful load.
+	 * If there is no successful strategy, or if a callback rejects the document it
+	 * was given, a DruthersLoadException is thrown.
 	 */
 	public static void deserialize(String yaml, boolean strict, FormatLoader<?>... formats) throws DruthersLoadException {
 
