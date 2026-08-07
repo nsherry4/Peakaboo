@@ -61,25 +61,26 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 				
 	}
 	
-	private String getFitString() {
+	private String getFitString(int reach) {
 		int p = order.getValue();
+		// For a symmetric window the odd terms vanish at the centrepoint
 		if (p == 3) p = 2;
 		if (p == 5) p = 4;
-		return p + ":" + reach.getValue();
+		return p + ":" + reach;
 	}
-	
-	private float[] getCoeffs() {
-		if (coeffLookup.containsKey(getFitString())) {
-			return coeffLookup.get(getFitString());
+
+	private float[] getCoeffs(int reach) {
+		if (coeffLookup.containsKey(getFitString(reach))) {
+			return coeffLookup.get(getFitString(reach));
 		} else {
 			return null;
 		}
 	}
 
 	private boolean validate(Parameter<?> p) {
-	
+
 		//don't validate any combo we don't have fittings for
-		if (getCoeffs() == null) {
+		if (getCoeffs(reach.getValue()) == null) {
 			return false;
 		}
 		
@@ -140,38 +141,48 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 
 	public Spectrum fastSavitskyGolayFilter(SpectrumView data, int reach, float max) {
 
-		float[] coefs = getCoeffs();
-		if (coefs == null) {
+		if (getCoeffs(reach) == null) {
 			OneLog.log(Level.WARNING, "Failed to load Savitsky Golay coefficients");
 			return new ArraySpectrum(data);
 		}
-		
+
 		Spectrum out = new ArraySpectrum(data.size());
-		
+
 		for (int i = 0; i < data.size(); i++) {
 
 			//skip signal stronger than max
 			if (data.get(i) > max) {
 				out.set(i, data.get(i));
 				continue;
-			} 
-			
+			}
+
+			// At the edges we don't have room for desired reach
+			// compute the minimum distance from an edge and limit
+			// reach by that available space / data
+			int span = Math.min(Math.min(i, data.size()-1 - i), reach);
+			float[] coefs = getCoeffs(span);
+
+			// At the edges, with a span smaller than our smallest
+			// available coeffs, don't smooth, just return the data
+			if (coefs == null) {
+				out.set(i, data.get(i));
+				continue;
+			}
+
 			float sum = 0;
 			float normalize = 0;
-			for (int j = -reach; j <= reach; j++) {
+			for (int j = -span; j <= span; j++) {
 				float coef = coefs[Math.abs(j)];
-				int di = i+j;
-				if (di < 0 || di >= data.size()) continue;
-				sum += coef * data.get(di);
+				sum += coef * data.get(i+j);
 				normalize += coef;
 			}
-			
-			out.set(i, normalize == 0 ? 0f : sum / normalize);
-		
+
+			out.set(i, sum / normalize);
+
 		}
-		
+
 		return out;
-		
+
 	}
 
 }
