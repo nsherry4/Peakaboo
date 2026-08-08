@@ -25,6 +25,7 @@ import org.peakaboo.framework.bolt.repository.BuiltinPluginRepository;
 import org.peakaboo.framework.bolt.repository.HttpsPluginRepository;
 import org.peakaboo.framework.bolt.repository.IssuePluginRepository;
 import org.peakaboo.framework.bolt.repository.ManualInstallPluginRepository;
+import org.peakaboo.framework.bolt.repository.PluginMetadata;
 import org.peakaboo.framework.bolt.repository.PluginRepository;
 import org.peakaboo.mapping.filter.model.MapFilterRegistry;
 
@@ -63,17 +64,24 @@ public class BasicTierProvider implements TierProvider {
 				new BuiltinPluginRepository(DataSinkRegistry.system())
 			);
 		
-		// Aggregate of all repos which the manual install "repo" needs for isOrphan checks
-		// Can't use `pluginRepositories` for this or we create a cycle
-		AggregatePluginRepository knownInventory = new AggregatePluginRepository(knownRepositories);
-
 		pluginRepositories = new AggregatePluginRepository(knownRepositories);
-		pluginRepositories.addRepository(new ManualInstallPluginRepository(extensionPoints, knownInventory::listAvailablePlugins));
+		pluginRepositories.addRepository(new ManualInstallPluginRepository(extensionPoints, this::knownInventory));
 		pluginRepositories.addRepository(new IssuePluginRepository(extensionPoints));
 		
 		
 	}
 	
+	/**
+	 * Get a listing of plugins excluding manual installs. Needed by manual install "repo" for
+	 * making sure there is no repo match for a local plugin
+	 */
+	private List<PluginMetadata> knownInventory() {
+		var others = pluginRepositories.getRepositories().stream()
+				.filter(repo -> !(repo instanceof ManualInstallPluginRepository))
+				.toList();
+		return new AggregatePluginRepository(others).listAvailablePlugins();
+	}
+
 	@Override
 	public ExtensionPointRegistry getExtensionPoints() {
 		return extensionPoints;
