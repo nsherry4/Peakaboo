@@ -29,7 +29,7 @@ public class PluginMetadata implements DruthersStorable {
     public String name;
     public String category; // Category of the plugin, e.g., "DataSource", "DataSink", "Filter", etc.
     public String version; // Plugin version
-    public int minAppVersion; // Minimum app version required, as an integer (eg 6.1 is 601)
+    public int minAppVersion; // Minimum app version required, as an integer (eg 6.1.0 is 610)
     public String uuid; //uuid of the plugin
     
     public String downloadUrl; // URL to download the plugin

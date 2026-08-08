@@ -3,6 +3,7 @@ package org.peakaboo.tier;
 import java.io.File;
 import java.util.List;
 
+import org.peakaboo.app.Version;
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.plotter.PlotController;
@@ -39,8 +40,6 @@ public class BasicTierProvider implements TierProvider {
 	
 	@Override
 	public void initializePlugins(File pluginsRoot) {
-		// Informal registries: built-in-only impls (no external JAR plugins).
-		// init() is idempotent (null-guarded), so re-entry is safe.
 		CurveFitterRegistry.init();
 		FittingSolverRegistry.init();
 		ChannelViewModeRegistry.init();
@@ -57,8 +56,9 @@ public class BasicTierProvider implements TierProvider {
 		extensionPoints.addRegistry(FilterRegistry.system());
 		extensionPoints.addRegistry(MapFilterRegistry.system());
 		
+		String infix = Version.RELEASE_TYPE == Version.ReleaseType.RELEASE ? "" : "Testing";
 		List<PluginRepository> knownRepositories = List.of(
-				new HttpsPluginRepository("https://github.com/PeakabooLabs/PeakabooPlugins/releases/download/v6.1/", 610),
+				new HttpsPluginRepository("https://github.com/PeakabooLabs/PeakabooPlugins" + infix + "/releases/download/v6.2/", 620),
 				new BuiltinPluginRepository(DataSourceRegistry.system()),
 				new BuiltinPluginRepository(DataSinkRegistry.system())
 			);

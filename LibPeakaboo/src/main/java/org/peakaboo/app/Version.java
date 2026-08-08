@@ -16,7 +16,7 @@ import org.peakaboo.tier.Tier;
 public class Version {
 	
 	public final static int VERSION_MAJOR = 6;
-	public final static int VERSION_MINOR = 1;
+	public final static int VERSION_MINOR = 2;
 	public final static int VERSION_POINT = 0;
 
 	public final static ReleaseType RELEASE_TYPE = ReleaseType.DEVELOPMENT;
