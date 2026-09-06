@@ -14,6 +14,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.filtering.MapFilteringController;
@@ -208,6 +210,7 @@ public class FiltersPanel extends JPanel {
 				item -> item.getReferenceInstance().getFilterDescriptor().getGroup());
 		JTree tree = new JTree(treeModel);
 		tree.setRootVisible(false);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 		renderer.setBorder(Spacing.bMedium());
 		renderer.setLeafIcon(StockIcon.MISC_EXECUTABLE.toImageIcon(IconSize.BUTTON));
@@ -223,11 +226,21 @@ public class FiltersPanel extends JPanel {
 			
 			@Override
 			protected void approve() {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+				TreePath treepath;
+				DefaultMutableTreeNode node;
 				PluginDescriptor<MapFilterPlugin> proto = null;
-				try {
-					proto = (PluginDescriptor<MapFilterPlugin>) node.getUserObject();	
-				} catch (ClassCastException e) {}
+				
+				// Try to get the selected path
+				treepath = tree.getSelectionPath();
+				if (treepath != null) {
+					// Get the selected (last) node on the path
+					node = (DefaultMutableTreeNode) treepath.getLastPathComponent();
+					// Either this is a plugin descriptor or junk like a folder node
+					if (node.getUserObject() instanceof PluginDescriptor<?> descriptor) {
+						proto = (PluginDescriptor<MapFilterPlugin>) descriptor;
+					}
+				}
+
 				
 				if (proto != null) { 
 					var created = proto.create();
