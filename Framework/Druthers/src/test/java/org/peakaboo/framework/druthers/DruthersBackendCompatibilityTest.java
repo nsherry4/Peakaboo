@@ -551,4 +551,19 @@ public class DruthersBackendCompatibilityTest {
 			System.out.println("RESULT (package-private field): NOT SERIALIZED - Backend does not serialize package-private fields");
 		}
 	}
+
+	@Test
+	public void testEmptyDocumentRejected() {
+		// A truncated or zero-length file -- a save that died part-way through, say --
+		// must fail loudly. Backends differ here by default: Jackson complains, but
+		// SnakeYAML quietly returns null, which only becomes an NPE further downstream.
+		for (String empty : List.of("", "   \n\n  ", "# nothing but a comment\n", "---\n")) {
+			try {
+				SimpleObject loaded = getBackend().deserialize(empty, false, null, SimpleObject.class);
+				fail("Expected DruthersLoadException for empty document, got " + loaded);
+			} catch (DruthersLoadException e) {
+				// This is what we want
+			}
+		}
+	}
 }

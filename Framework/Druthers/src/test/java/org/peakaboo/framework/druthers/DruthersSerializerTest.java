@@ -3,6 +3,7 @@ package org.peakaboo.framework.druthers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -241,5 +242,15 @@ extended:
 		assertFalse("Callback should not be invoked for format mismatch", called[0]);
 	}
 
+
+	@Test
+	public void emptyDocumentHasNoFormat() {
+		// A zero-length session file used to NPE inside getFormat rather than simply
+		// reporting that it carries no format string.
+		for (String empty : List.of("", "   \n\n  ", "# nothing but a comment\n", "---\n")) {
+			assertNull(DruthersSerializer.getFormat(empty));
+			assertFalse(DruthersSerializer.hasFormat(empty));
+		}
+	}
 
 }

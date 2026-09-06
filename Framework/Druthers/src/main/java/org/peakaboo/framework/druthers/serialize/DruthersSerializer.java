@@ -233,6 +233,10 @@ public class DruthersSerializer {
 			// If we can't read it, it might as well not have a format string
 			return null;
 		}
+		// Catch and reject empty, whitespace-only or comment-only documents
+		if (shallow == null) {
+			return null;
+		}
 		Object formatObj = shallow.getOrDefault("format", null);
 		if (formatObj == null) {
 			return null;
