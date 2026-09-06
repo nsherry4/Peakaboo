@@ -99,12 +99,13 @@ public class CorrelationModeController extends SimpleModeController {
 		
 		
 		int bincount = bins.getCount();
+		int totalBins = bincount*bincount;
 		GridPerspective<Float> grid = new GridPerspective<>(bincount, bincount, 0f);
-		Spectrum correlation = new ArraySpectrum(bincount*bincount);
+		Spectrum correlation = new ArraySpectrum(totalBins);
 		
 		//we track which points on the original (spatial) maps each bin in the correlation map
 		//comes from so that selections can be mapped back to them
-		translation.initialize(bincount*bincount);
+		translation.initialize(totalBins);
 		
 		for (int i = 0; i < xData.size(); i++) {
 
@@ -128,7 +129,7 @@ public class CorrelationModeController extends SimpleModeController {
 			if (ybin >= bincount) { ybin = bincount-1; }
 			
 			int bindex = grid.getIndexFromXY(xbin, ybin);
-			if (bindex == -1 || bindex > bincount*bincount) {
+			if (bindex == -1 || bindex >= totalBins) {
 				//index was out of bounds
 				Map<String, Number> valueMap = new HashMap<>();
 				valueMap.put("xMax", xMax);
@@ -138,7 +139,7 @@ public class CorrelationModeController extends SimpleModeController {
 				valueMap.put("xbin", xbin);
 				valueMap.put("ybin", ybin);
 				String values = valueMap.entrySet().stream().map(e -> "\t" + e.getKey() + ": " + e.getValue().toString()).reduce((a, b) -> a + "\n" + b).get();
-				throw new IndexOutOfBoundsException("index " + bindex + "is not within the expected range of 0 to " + bincount*bincount + "\n" + values);
+				throw new IndexOutOfBoundsException("index " + bindex + " is not within the expected range of 0 to " + (totalBins - 1) + "\n" + values);
 			}
 			translation.add(bindex, i);
 			correlation.set(bindex, correlation.get(bindex)+1);
