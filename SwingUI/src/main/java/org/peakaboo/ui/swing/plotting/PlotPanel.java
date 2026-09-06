@@ -665,8 +665,10 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 	}
 
 	public void actionSaveSession(File file) {
+		// Serialize up front, then clobber and write
+		String session = controller.save().serialize();
 		try (FileOutputStream os = new FileOutputStream(file)) {
-			os.write(controller.save().serialize().getBytes());
+			os.write(session.getBytes(StandardCharsets.UTF_8));
 			controller.history().setSavePoint();
 		} catch (IOException e) {
 			OneLog.log(Level.SEVERE, "Failed to save session", e);
