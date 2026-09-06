@@ -125,11 +125,17 @@ public class DruthersSnakeYamlBackend implements DruthersSerializerBackend {
 
 		// Build loader and deserialize
 		Yaml y = buildLoader(cls, strict);
+		T loaded;
 		try {
-			return y.load(yaml);
+			loaded = y.load(yaml);
 		} catch (YAMLException e) {
 			throw new DruthersLoadException(e);
 		}
+		// SnakeYAML hands back null for an empty document instead of complaining.
+		if (loaded == null) {
+			throw new DruthersLoadException("YAML document was empty");
+		}
+		return loaded;
 	}
 
 	@Override
@@ -197,6 +203,11 @@ public class DruthersSnakeYamlBackend implements DruthersSerializerBackend {
 			shallow = y.load(yaml);
 		} catch (YAMLException e) {
 			// If we can't read it, it might as well not have a format string
+			return null;
+		}
+		// An empty, whitespace-only or comment-only document parses to nothing at all
+		// rather than to an empty map. No document means no format string.
+		if (shallow == null) {
 			return null;
 		}
 		String format = shallow.getOrDefault("format", null);
