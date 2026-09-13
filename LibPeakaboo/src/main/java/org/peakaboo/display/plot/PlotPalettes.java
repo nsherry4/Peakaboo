@@ -11,7 +11,7 @@ import org.peakaboo.framework.cyclops.visualization.palette.PaletteColour;
 public class PlotPalettes {
 
 	// Colour bases: differentiated by hue
-	private static final PaletteColour SELECTION_BASE   = new PaletteColour(0xff2570cc); // blue
+	private static final PaletteColour SELECTION_BASE   = new PaletteColour(0xff2173d9); // blue
 	private static final PaletteColour SELECTION_STROKE = new PaletteColour(0xff0d3b6e); // dark blue for fit lines
 	private static final PaletteColour PROPOSAL_BASE   = new PaletteColour(0xff613583); // purple
 
@@ -66,7 +66,7 @@ public class PlotPalettes {
 		// Strokes use a darker blue so fit lines stand out against the
 		// green data fill without the semi-transparent area undermining them.
 		var stroke = mode.isMono() ? base : SELECTION_STROKE;
-		p.fitFill = withAlpha(base, 0x60);
+		p.fitFill = withAlpha(base, 0xA0);
 		p.fitStroke = withAlpha(stroke, 0xFF);
 		p.sumStroke = withAlpha(stroke, 0xFF);
 		p.markings = p.fitStroke;
