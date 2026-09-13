@@ -27,7 +27,7 @@ public record PlotChrome(
 		new PaletteColour(0x08000000),
 		new PaletteColour(0xff4ba67c),
 		new PaletteColour(0xff186642),
-		new PaletteColour(0x60D32F2F),
+		new PaletteColour(0xA0D32F2F),
 		new PaletteColour(0x7f5C3666),
 		new PaletteColour(0xff5C3666)
 	);
@@ -40,7 +40,7 @@ public record PlotChrome(
 		new PaletteColour(0x08ffffff),
 		new PaletteColour(0xff4ba67c),
 		new PaletteColour(0xff186642),
-		new PaletteColour(0x60D32F2F),
+		new PaletteColour(0xA0D32F2F),
 		new PaletteColour(0x7f5C3666),
 		new PaletteColour(0xff5C3666)
 	);
