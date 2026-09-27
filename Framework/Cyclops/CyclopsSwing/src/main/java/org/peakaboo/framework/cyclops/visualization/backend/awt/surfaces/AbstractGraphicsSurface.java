@@ -403,6 +403,14 @@ public abstract class AbstractGraphicsSurface implements Surface
 		return graphics.getFontMetrics().getDescent();
 	}
 
+	@Override
+	public float getFontCapHeight()
+	{
+		// Java doesn't expose the font's cap height, so measure a capital H
+		TextLayout layout = new TextLayout("H", graphics.getFont(), graphics.getFontRenderContext());
+		return (float) -layout.getBounds().getY();
+	}
+
 
 	@Override
 	public void compose(Buffer buffer, int x, int y, float scale)
