@@ -70,6 +70,12 @@ public class Stratus {
 		System.setProperty("sun.java2d.xrender", "false");
 		System.setProperty("sun.java2d.pmoffscreen", "false");
 		
+		// This is also set in StratusLookAndFeel, but setting these values early is key
+		System.setProperty("swing.aatext", "true");
+		if (StratusLookAndFeel.DISABLE_FONT_HINTING) {
+			System.setProperty("awt.useSystemAAFontSettings", "gasp");
+		}
+		
 		ToolTipManager.sharedInstance().setDismissDelay(15000);
 		
 		if (splashBackground != null && splashIcon != null) {

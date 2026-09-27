@@ -184,7 +184,7 @@ public class DuskTheme implements Theme {
 	
 	@Override
 	public Font getMonospaceFont() {
-		return new Font("JetBrains Mono Medium", Font.PLAIN, 11);
+		return new Font("Peakaboo Mono Medium", Font.PLAIN, 11);
 	}
 	
 }

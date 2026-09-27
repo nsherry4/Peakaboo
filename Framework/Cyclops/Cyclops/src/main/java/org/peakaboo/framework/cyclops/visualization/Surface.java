@@ -251,9 +251,18 @@ public interface Surface
 	/**
 	 * Descenders are portions of text which go below the baseline, such as lower case g, y, j, etc...
 	 * 
-	 * @return the fond descent
+	 * @return the font descent
 	 */
 	float getFontDescent();
+
+
+	/**
+	 * The height of capital letters above the baseline for the current font settings. Ascent *can* include
+	 * extra space (eg for accents), but cap height describes space consumed by the letters themselves.
+	 *
+	 * @return the cap height
+	 */
+	float getFontCapHeight();
 
 
 	/**

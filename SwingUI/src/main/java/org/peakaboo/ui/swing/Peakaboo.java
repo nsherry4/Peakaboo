@@ -33,7 +33,6 @@ import org.peakaboo.curvefit.peak.table.PeakTable;
 import org.peakaboo.dataset.source.plugin.plugins.universalhdf5.HDFReaders;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.log.OneLog;
-import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.AbstractGraphicsSurface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.surfaces.CyclopsSurface;
 import org.peakaboo.framework.eventful.EventfulConfig;
 import org.peakaboo.framework.plural.monitor.SimpleTaskMonitor;
@@ -281,10 +280,7 @@ public class Peakaboo {
 			String accentColourName = DesktopSettings.getAccentColour();
 			Theme theme = DesktopSettings.isDarkMode() ? new DuskTheme(accentColourName) : new BrightTheme(accentColourName);
 			StratusLookAndFeel laf = new StratusLookAndFeel(theme);
-			
-			// Set the default mono font for our visualization library to the same as out theme
-			AbstractGraphicsSurface.FONT_MONO = "JetBrains Mono";
-			
+
 			//Load Peakaboo's font
 			try {
 				Stratus.registerFont("/org/peakaboo/ui/swing/fonts/springsteel-lig.otf");
