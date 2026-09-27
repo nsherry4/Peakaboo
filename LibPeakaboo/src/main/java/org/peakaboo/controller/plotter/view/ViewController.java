@@ -57,7 +57,7 @@ public class ViewController extends EventfulBeacon {
 	}
 
 	public boolean getShowIndividualSelections() {
-		return Settings.provider().getBoolean(SETTING_FITINDIVIDUAL, false);
+		return Settings.provider().getBoolean(SETTING_FITINDIVIDUAL, true);
 	}
 
 	
@@ -151,7 +151,7 @@ public class ViewController extends EventfulBeacon {
 	}
 
 	public boolean getShowElementIntensities() {
-		return Settings.provider().getBoolean(SETTING_FITINTENSITY, false);
+		return Settings.provider().getBoolean(SETTING_FITINTENSITY, true);
 	}
 
 	public void setShowRawData(boolean show) {
