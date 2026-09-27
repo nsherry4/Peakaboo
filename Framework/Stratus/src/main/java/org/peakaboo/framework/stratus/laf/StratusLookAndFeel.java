@@ -169,18 +169,18 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 			
 			try {
 				// Sans Serif
-				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansUnhinted.ttf");
-				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansBoldUnhinted.ttf");
-				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansObliqueUnhinted.ttf");
-				Stratus.registerFont("/stratus/fonts/dejavu/DejaVuSansBoldObliqueUnhinted.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySans.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansBold.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansOblique.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansBoldOblique.ttf");
 
 				// Monospace
-				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Regular.ttf");
-				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Italic.ttf");
-				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Medium.ttf");
-				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-MediumItalic.ttf");
-				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-Bold.ttf");
-				Stratus.registerFont("/stratus/fonts/JetBrains_Mono/static/JetBrainsMono-BoldItalic.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Regular.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Italic.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Medium.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-MediumItalic.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Bold.ttf");
+				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-BoldItalic.ttf");
 
 
 				
@@ -196,7 +196,7 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 					
 					Font oldFont = (Font) ret.get(key);
 					int fontSize = oldFont.getSize();
-					Font newFont = new Font("DejaVu Sans Unhinted", oldFont.getStyle(), fontSize);
+					Font newFont = new Font("Peakaboo Display Sans", oldFont.getStyle(), fontSize);
 					reg(ret, key, newFont);
 
 				}

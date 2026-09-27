@@ -14,6 +14,8 @@ public class LinearTickGenerator implements TickGenerator {
 		int stepsDown = 1;
 		List<Integer> ticks = null;
 		while (stepsDown < STEPS.length * 3) {
+			// a value less than 1 rounds down to an existing tick, skip it
+			if (calcMultiplier(magnitude, stepsDown) < 1) break;
 			var maybeTicks = getTicksByMagitude(magnitude, stepsDown, maxValue);
 			if (maybeTicks.size() <= maxTicks || ticks == null) {
 				ticks = maybeTicks;

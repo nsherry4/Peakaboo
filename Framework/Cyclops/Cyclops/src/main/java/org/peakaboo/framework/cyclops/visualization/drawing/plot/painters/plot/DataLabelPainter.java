@@ -198,7 +198,9 @@ public class DataLabelPainter extends PlotPainter
 		titleStart -= (textWidth / 2.0);
 
 
-		float titleHeight = p.context.getFontHeight();
+		// Font height is highly variable -- some fonts leave extra space overhead for accents for example.Size the space above the baseline from the cap height rather than the font's ascent,
+		// Instead, we construct an estimate with the leading, descent, and scaled cap height
+		float titleHeight = Math.round(p.context.getFontCapHeight() * 1.5f) + p.context.getFontDescent() + p.context.getFontLeading();
 		float penWidth = label.penWidth;
 		float totalHeight = (titleHeight + penWidth*(VPAD_SIZE*2));
 		
