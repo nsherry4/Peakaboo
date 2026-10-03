@@ -161,6 +161,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 		settings.spectrumHeight = SPECTRUM_HEIGHT;
 		
 		settings.detectorProfile = this.getFitting().getDetectorProfile();
+		settings.visibleTransitionSeries = this.getFitting().getActiveMode().getVisible();
 		settings.selectedPoints = this.getSelection().getDisplayPoints();
 			
 		settings.spectrumTitle = this.getFitting().getActiveMode().shortTitle();
@@ -279,9 +280,15 @@ public class MappingController extends EventfulType<MapUpdateType>
 		composite.setVisibility(ts, true);
 		MapRenderSettings settings = controller.getRenderSettings();
 
+		// Flag non-nominal maps in the file name, since they can now sit beside nominal ones
+		String name = ts.toString();
+		if (!controller.getFitting().isTransitionSeriesNominal(ts)) {
+			name += " (uncalibrated)";
+		}
+		
 		//image extension
 		String ext = format.extension().toLowerCase();
-		ZipEntry entry = new ZipEntry(ts.toString() + "." + ext);
+		ZipEntry entry = new ZipEntry(name + "." + ext);
 		zos.putNextEntry(entry);
 		ExportableSurface context = surfaceFactory.get();
 		if (Display.forceLightBackground(context)) {
@@ -292,7 +299,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 		zos.closeEntry();
 		
 		//csv
-		entry = new ZipEntry(ts.toString() + ".csv");
+		entry = new ZipEntry(name + ".csv");
 		zos.putNextEntry(entry);
 		controller.writeCSV(zos);
 		zos.closeEntry();

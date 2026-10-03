@@ -66,11 +66,7 @@ class CompositeUI extends JPanel {
 
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				if (columnIndex == 0) {
-					ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-					return viewController.getTransitionSeriesEnabled(ts);
-				}
-				return false;
+				return columnIndex == 0;
 			}
 
 
@@ -117,7 +113,7 @@ class CompositeUI extends JPanel {
 		table.setShowHorizontalLines(false);
 		table.setFillsViewportHeight(true);
 		
-		MapFittingRenderer renderer = new MapFittingRenderer(viewController::getTransitionSeriesEnabled);
+		MapFittingRenderer renderer = new MapFittingRenderer(ts -> true);
 		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
 		table.setRowHeight(renderer.getPreferredSize().height);
 		

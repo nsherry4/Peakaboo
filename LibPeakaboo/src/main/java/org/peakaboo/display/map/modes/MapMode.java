@@ -82,7 +82,14 @@ public abstract class MapMode {
 	protected AxisPainter getDescriptionPainter(MapRenderSettings settings) {
 		String title = settings.spectrumTitle;
 		if (!settings.detectorProfile.isEmpty()) {
-			title += " calibrated with " + settings.detectorProfile.getName();	
+			long calibrated = settings.visibleTransitionSeries.stream().filter(settings.detectorProfile::contains).count();
+			if (calibrated == settings.visibleTransitionSeries.size()) {
+				title += " - calibrated with " + settings.detectorProfile.getName();
+			} else if (calibrated > 0) {
+				title += " - partially calibrated with " + settings.detectorProfile.getName();
+			} else {
+				title += " - uncalibrated";
+			}
 		}
 		return new TitleAxisPainter(TitleAxisPainter.SCALE_TEXT, settings.getFg(), null, null, null, title);
 	}

@@ -99,10 +99,8 @@ class RatioUI extends JPanel {
 			}
 
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				ITransitionSeries ts = viewController.getAllTransitionSeries().get(rowIndex);
-				
 				switch (columnIndex) {
-					case 0: return viewController.getTransitionSeriesEnabled(ts);
+					case 0: return true;
 					case 1: return false;
 					case 2: return true;
 				}
@@ -164,7 +162,7 @@ class RatioUI extends JPanel {
 		table.setShowHorizontalLines(false);
 		table.setFillsViewportHeight(true);
 		
-		MapFittingRenderer fitRenderer = new MapFittingRenderer(viewController::getTransitionSeriesEnabled);
+		MapFittingRenderer fitRenderer = new MapFittingRenderer(ts -> true);
 		table.getColumnModel().getColumn(1).setCellRenderer(fitRenderer);
 		table.setRowHeight(fitRenderer.getPreferredSize().height);
 		

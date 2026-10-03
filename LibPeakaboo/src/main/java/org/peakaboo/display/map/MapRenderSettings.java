@@ -1,8 +1,11 @@
 package org.peakaboo.display.map;
 
+import java.util.List;
+
 import org.peakaboo.app.Settings;
 import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
+import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.display.map.modes.MapModeRegistry;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.cyclops.SISize;
@@ -46,6 +49,8 @@ public class MapRenderSettings {
 	public IntArrayList selectedPoints = new IntArrayList();
 	
 	public DetectorProfile detectorProfile = new BasicDetectorProfile();
+	// The maps being shown, so the UI/maps can tailor the titles, legends, etc
+	public List<ITransitionSeries> visibleTransitionSeries = List.of();
 
 	
 	public PaletteColour getFg() {
