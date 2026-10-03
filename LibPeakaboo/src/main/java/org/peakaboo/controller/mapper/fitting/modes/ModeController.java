@@ -33,8 +33,8 @@ public interface ModeController extends IEventfulBeacon {
 	void setAllVisible(boolean visible);
 
 	/**
-	 * Returns if this TransitionSeries is enabled, but returning false regardless
-	 * of setting if the {@link MapFittingController} shows it has not visible false
+	 * Returns if this TransitionSeries is visible. Until the user sets it, this
+	 * follows {@link MapFittingController#isTransitionSeriesNominal(ITransitionSeries)}
 	 */
 	boolean getVisibility(ITransitionSeries ts);
 

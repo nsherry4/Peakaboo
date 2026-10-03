@@ -211,9 +211,11 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 
 
 	/**
-	 * Indicates if this TransitionSeries is enabled, or disabled (due to a lack of calibration, for example)
+	 * Indicates if this TransitionSeries' map is nominal: fully processed and free of
+	 * known defects. Non-nominal maps can still be shown, but start hidden and are
+	 * flagged as such.
 	 */
-	public boolean getTransitionSeriesEnabled(ITransitionSeries ts) {
+	public boolean isTransitionSeriesNominal(ITransitionSeries ts) {
 		if (getDetectorProfile().isEmpty()) {
 			return true;
 		}
