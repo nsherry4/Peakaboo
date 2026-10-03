@@ -15,8 +15,10 @@ public class VisibilityState extends AbstractState {
 	
 	public VisibilityState(ModeController mode) {
 		super(mode);
+		// A null means unset -- we must set the value lazily because the
+		// MapFittingController isn't ready here
 		for (ITransitionSeries ts : mode.getMap().rawDataController.getMapResultSet().getAllTransitionSeries()) {
-			visibility.put(ts, true);
+			visibility.put(ts, null);
 		}
 	}
 	
@@ -40,12 +42,15 @@ public class VisibilityState extends AbstractState {
 	}
 	
 	/**
-	 * Returns if this TransitionSeries is enabled, but returning false regardless
-	 * of setting if {@link #getTransitionSeriesEnabled(ITransitionSeries)} returns
-	 * false
+	 * Returns if this TransitionSeries is visible. Until the user sets it, only
+	 * nominal TransitionSeries are visible.
 	 */
 	public synchronized boolean getVisibility(ITransitionSeries ts) {
-		return this.visibility.get(ts) && mode.getMap().getFitting().getTransitionSeriesEnabled(ts);
+		Boolean visible = this.visibility.get(ts);
+		if (visible == null) {
+			visible = mode.getMap().getFitting().isTransitionSeriesNominal(ts);
+		}
+		return visible;
 	}
 	
 	public synchronized void setVisibility(ITransitionSeries ts, boolean visible) {
