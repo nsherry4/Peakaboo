@@ -259,6 +259,13 @@ jobs:
         tenant-id: ${{ vars.AZURE_TENANT_ID }}
         subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
+    # jpackage marks the launchers it builds read-only, which signtool reports as "Access is denied"
+    - name: Make Launchers Writable
+      if: inputs.release_type == 'release'
+      shell: pwsh
+      working-directory: ./Packaging/image/Peakaboo
+      run: Set-ItemProperty Peakaboo.exe, peakaboo-cli.exe -Name IsReadOnly -Value $false
+
     # Only the launchers jpackage builds for us; the bundled runtime is Temurin's and keeps
     # their signatures (verify-windows-signatures.ps1 warns if that ever stops being true)
     - name: Sign Launchers
