@@ -209,10 +209,20 @@ jobs:
         path: ./Packaging/Peakaboo*.dmg
 
 
+  # Release builds are signed using Azure Artifact Signing. The launchers live inside the MSI, so
+  # they must be signed between building the app image and packaging it, and then the MSI
+  # is signed in turn. Dev builds follow the same path but are not signed.
   build-windows:
 
     needs: build-jar
     runs-on: windows-latest
+
+    # Environment for OIDC integration
+    environment: release
+    permissions:
+      contents: read
+      # Required for OIDC token exchange
+      id-token: write
 
     steps:
 
@@ -236,13 +246,65 @@ jobs:
         name: Peakaboo-${{ github.ref_name }}-jars
         path: ./Packaging/jar
 
-    - name: Run JPackage Windows Script
-      run: ./build-windows.bat ${{ inputs.release_type }}
+    - name: Build App Image
+      run: ./build-windows-image.bat ${{ inputs.release_type }}
       shell: cmd
       working-directory: ./Packaging
+
+    - name: Azure Login
+      if: inputs.release_type == 'release'
+      uses: azure/login@v3
+      with:
+        client-id: ${{ vars.AZURE_CLIENT_ID }}
+        tenant-id: ${{ vars.AZURE_TENANT_ID }}
+        subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+    # Only the launchers jpackage builds for us; the bundled runtime is Temurin's and keeps
+    # their signatures (verify-windows-signatures.ps1 warns if that ever stops being true)
+    - name: Sign Launchers
+      if: inputs.release_type == 'release'
+      uses: azure/artifact-signing-action@v2
+      with:
+        endpoint: ${{ vars.ARTIFACT_SIGNING_ENDPOINT }}
+        signing-account-name: ${{ vars.ARTIFACT_SIGNING_ACCOUNT }}
+        certificate-profile-name: ${{ vars.ARTIFACT_SIGNING_PROFILE }}
+        files: |
+          ${{ github.workspace }}\Packaging\image\Peakaboo\Peakaboo.exe
+          ${{ github.workspace }}\Packaging\image\Peakaboo\peakaboo-cli.exe
+        file-digest: SHA256
+        # the certificates only live ~3 days, so without a timestamp the signatures would too
+        timestamp-rfc3161: http://timestamp.acs.microsoft.com
+        timestamp-digest: SHA256
+
+    - name: Build Installer
+      run: ./build-windows-msi.bat ${{ inputs.release_type }}
+      shell: cmd
+      working-directory: ./Packaging
+
+    - name: Sign Installer
+      if: inputs.release_type == 'release'
+      uses: azure/artifact-signing-action@v2
+      with:
+        endpoint: ${{ vars.ARTIFACT_SIGNING_ENDPOINT }}
+        signing-account-name: ${{ vars.ARTIFACT_SIGNING_ACCOUNT }}
+        certificate-profile-name: ${{ vars.ARTIFACT_SIGNING_PROFILE }}
+        files-folder: ${{ github.workspace }}\Packaging
+        files-folder-filter: msi
+        # UAC shows this as the program name for an MSI; without it, users see a temp filename
+        description: Peakaboo
+        description-url: https://peakaboo.org
+        file-digest: SHA256
+        timestamp-rfc3161: http://timestamp.acs.microsoft.com
+        timestamp-digest: SHA256
+
+    - name: Verify Signatures
+      if: inputs.release_type == 'release'
+      shell: pwsh
+      working-directory: ./Packaging
+      run: ./verify-windows-signatures.ps1 (Get-Item Peakaboo*.msi).FullName
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v7
       with:
-        name: Peakaboo-${{ github.ref_name }}.exe
-        path: ./Packaging/Peakaboo*.exe
+        name: Peakaboo-${{ github.ref_name }}.msi
+        path: ./Packaging/Peakaboo*.msi
