@@ -2,4 +2,7 @@
 set RELEASE_TYPE=%1
 if "%RELEASE_TYPE%"=="" set RELEASE_TYPE=release
 
-jpackage.exe @version @platform/common/args @platform/common/args-%RELEASE_TYPE% @platform/windows/args @platform/windows/args-%RELEASE_TYPE%
+rem unsigned local build; release.yml runs the two stages separately so it can sign in between
+call build-windows-image.bat %RELEASE_TYPE%
+if errorlevel 1 exit /b %errorlevel%
+call build-windows-msi.bat %RELEASE_TYPE%
