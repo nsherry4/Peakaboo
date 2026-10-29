@@ -26,7 +26,7 @@ public class PeakabooConfiguration {
 		long maxHeap = Platform.maxHeap();
 		
 		
-		if      (maxHeap < 512)   return MemorySize.TINY;
+		if      (maxHeap < 384)   return MemorySize.TINY;
 		else if (maxHeap <= 2048) return MemorySize.SMALL;
 		else if (maxHeap <= 8192) return MemorySize.MEDIUM;
 		else                      return MemorySize.LARGE;

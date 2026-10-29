@@ -165,41 +165,38 @@ public class StratusLookAndFeel extends NimbusLookAndFeel {
 		
 		
 //		//Fonts
-		if (DISABLE_FONT_HINTING) {
+		try {
+			// Sans Serif
+			Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySans.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansBold.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansOblique.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansBoldOblique.ttf");
+
+			// Monospace
+			Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Regular.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Italic.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Medium.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-MediumItalic.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Bold.ttf");
+			Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-BoldItalic.ttf");
+
+
 			
-			try {
-				// Sans Serif
-				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySans.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansBold.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansOblique.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-display-sans/PeakabooDisplaySansBoldOblique.ttf");
-
-				// Monospace
-				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Regular.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Italic.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Medium.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-MediumItalic.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-Bold.ttf");
-				Stratus.registerFont("/stratus/fonts/peakaboo-mono/PeakabooMono-BoldItalic.ttf");
-
-
-				
-				
-				
-			} catch (FontFormatException | IOException e) {
-				Logger.getLogger("Stratus").log(Level.WARNING, "Failed to configure font", e);
-			}
 			
-			for (Object key : ret.keySet()) {
-				Object value = ret.get(key);
-				if (value instanceof javax.swing.plaf.FontUIResource || value instanceof Font) {
-					
-					Font oldFont = (Font) ret.get(key);
-					int fontSize = oldFont.getSize();
-					Font newFont = new Font("Peakaboo Display Sans", oldFont.getStyle(), fontSize);
-					reg(ret, key, newFont);
+			
+		} catch (FontFormatException | IOException e) {
+			Logger.getLogger("Stratus").log(Level.WARNING, "Failed to configure font", e);
+		}
+		
+		for (Object key : ret.keySet()) {
+			Object value = ret.get(key);
+			if (value instanceof javax.swing.plaf.FontUIResource || value instanceof Font) {
+				
+				Font oldFont = (Font) ret.get(key);
+				int fontSize = oldFont.getSize();
+				Font newFont = new Font("Peakaboo Display Sans", oldFont.getStyle(), fontSize);
+				reg(ret, key, newFont);
 
-				}
 			}
 		}
 		

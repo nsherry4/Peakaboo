@@ -212,14 +212,23 @@ public class MapFittingController extends EventfulType<MapUpdateType> {
 
 	/**
 	 * Indicates if this TransitionSeries' map is nominal: fully processed and free of
-	 * known defects. Non-nominal maps can still be shown, but start hidden and are
-	 * flagged as such.
+	 * known defects. Non-nominal maps can still be shown, but start hidden, and
+	 * showing one makes the whole view non-nominal (see {@link #isNominal()}).
 	 */
 	public boolean isTransitionSeriesNominal(ITransitionSeries ts) {
 		if (getDetectorProfile().isEmpty()) {
 			return true;
 		}
 		return getDetectorProfile().contains(ts);
+	}
+	
+	/**
+	 * Indicates if the maps being shown are nominal. This is all or nothing: if any
+	 * visible map is non-nominal, none of the maps are processed (eg calibrated), so
+	 * that the maps shown together always share the same units.
+	 */
+	public boolean isNominal() {
+		return getActiveMode().getVisible().stream().allMatch(this::isTransitionSeriesNominal);
 	}
 	
 

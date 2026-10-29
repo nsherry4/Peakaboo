@@ -6,4 +6,8 @@ public class ScratchException extends RuntimeException {
 		super(cause);
 	}
 
+	public ScratchException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

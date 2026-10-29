@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.peakaboo.calibration.BasicDetectorProfile;
+import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.rawdata.RawDataController;
 import org.peakaboo.controller.plotter.PlotController;
 import org.peakaboo.curvefit.peak.table.Element;
@@ -38,6 +39,14 @@ public class SyntheticMapData {
 	 * @return a fully wired MappingController
 	 */
 	public static MappingController create(PlotController pc, int width, int height) {
+		return create(pc, width, height, new BasicDetectorProfile());
+	}
+
+	/**
+	 * As {@link #create(PlotController, int, int)}, but with the given
+	 * {@link DetectorProfile} applied to the maps.
+	 */
+	public static MappingController create(PlotController pc, int width, int height, DetectorProfile profile) {
 		int mapSize = width * height;
 
 		ITransitionSeries feK = feK();
@@ -59,7 +68,7 @@ public class SyntheticMapData {
 			pc.data().getDataSet(),
 			"Synthetic Map",
 			Collections.emptyList(),
-			new BasicDetectorProfile()
+			profile
 		);
 
 		MappingController mc = new MappingController(rawDataController, pc);
