@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.peakaboo.dataset.io.DataInputAdapter;
@@ -55,23 +57,32 @@ public class UniversalHDF5DataSource extends FloatMatrixHDF5DataSource {
 	
 	
 	private void initialize(List<DataInputAdapter> paths) throws IOException {
-		//this reader is held open for the lifetime of the parameter dialog, since the path
-		//listener below reads from it as the user changes their selection
-		HDFReader mdreader = super.getMetadataReader(paths);
-		List<String> datasetPaths = listDatasets(mdreader);
 		
+		// Extract per-dataset info up front so that we don't have to keep the file handle open
+		// the entire time we're showing the user a list of datasets to pick from
+		List<String> datasetPaths;
+		Map<String, String> pathInfos = new HashMap<>();
+		Map<String, Axis[]> axisGuesses = new HashMap<>();
+		try (HDFReader mdreader = super.getMetadataReader(paths)) {
+			datasetPaths = listDatasets(mdreader);
+			for (String datasetPath : datasetPaths) {
+				pathInfos.put(datasetPath, getPathInfo(mdreader, datasetPath));
+				axisGuesses.put(datasetPath, matchAxes(mdreader, datasetPath));
+			}
+		}
+
 		path = new SelectionParameter<String>("Path", new DropDownStyle<String>(), datasetPaths.get(0));
 		path.setPossibleValues(datasetPaths);
-		pathinfo = new Parameter<String>("Path Information", new LabelStyle(), getPathInfo(mdreader, datasetPaths.get(0)));
+		pathinfo = new Parameter<String>("Path Information", new LabelStyle(), pathInfos.get(datasetPaths.get(0)));
 		path.getValueHook().addListener(newpath -> {
-			pathinfo.setValue(getPathInfo(mdreader, newpath));
-			Axis[] axesGuess = matchAxes(mdreader, newpath);
+			pathinfo.setValue(pathInfos.get(newpath));
+			Axis[] axesGuess = axisGuesses.get(newpath);
 			spectrumAxis.setValue(axesGuess[0]);
 			widthAxis.setValue(axesGuess[1]);
 			heightAxis.setValue(axesGuess[2]);
 		});
-		
-		Axis[] axesGuess = matchAxes(mdreader, datasetPaths.get(0));
+
+		Axis[] axesGuess = axisGuesses.get(datasetPaths.get(0));
 		spectrumAxis = new SelectionParameter<UniversalHDF5DataSource.Axis>("Spectrum Axis", new DropDownStyle<>(), axesGuess[0], new EnumClassInfo<>(Axis.class), this::validator);
 		widthAxis = new SelectionParameter<UniversalHDF5DataSource.Axis>("Width Axis", new DropDownStyle<>(), axesGuess[1], new EnumClassInfo<>(Axis.class), this::validator);
 		heightAxis = new SelectionParameter<UniversalHDF5DataSource.Axis>("Height Axis", new DropDownStyle<>(), axesGuess[2], new EnumClassInfo<>(Axis.class), this::validator);

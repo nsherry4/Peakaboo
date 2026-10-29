@@ -21,6 +21,21 @@ public class SpectrumCalculations
 	
 	public static final int	MIN_SIZE_FOR_THREADING	= 512;
 
+	private static volatile boolean useFMA = true;
+
+	/**
+	 * Toggles the use of the {@link Math#fma(float, float, float)} function. Platforms where
+	 * this function is well-optimized should leave this enabled. Platforms where this causes
+	 * slowdowns can fall back to a version that does not use this Math function.
+	 */
+	public static void setUseFMA(boolean useFMA) {
+		SpectrumCalculations.useFMA = useFMA;
+	}
+
+	public static boolean getUseFMA() {
+		return useFMA;
+	}
+
 
 	public static Spectrum maxLists(SpectrumView l1, SpectrumView l2) {
 		float[] a1 = ((Spectrum)l1).backingArray();
@@ -70,30 +85,7 @@ public class SpectrumCalculations
 		return result;
 	}
 
-
-	/**
-	 * returns the maximum value in the list
-	 * 
-	 * @param list
-	 * @param allowzero
-	 *            should values of exactly 0 be considered in the search for a minimum value?
-	 * @return min(list)
-	 */
-
-	public static float min(SpectrumView list, final boolean allowzero)
-	{
-
-		float min = Float.MAX_VALUE;
-		for (int i = 0; i < list.size(); i++) 
-		{
-			min = (list.get(i) == 0.0 && !allowzero) ? min : Math.min(min, list.get(i));
-			min = Math.min(min, list.get(i));
-		}
-		return min;
-
-	}
-
-
+	
 	/**
 	 * Calculates the maximum value of a list of lists of values
 	 * 
@@ -220,11 +212,17 @@ public class SpectrumCalculations
 		final float[] sourceArray = ((Spectrum)source).backingArray();
 		final float[] addArray = ((Spectrum)add).backingArray();
 		final float[] targetArray = ((Spectrum)target).backingArray();
-		
-		for (int i = first; i <= last; i++) {
-			targetArray[i] = Math.fma(sourceArray[i], mult, addArray[i]);
+
+		if (useFMA) {
+			for (int i = first; i <= last; i++) {
+				targetArray[i] = Math.fma(sourceArray[i], mult, addArray[i]);
+			}
+		} else {
+			for (int i = first; i <= last; i++) {
+				targetArray[i] = sourceArray[i] * mult + addArray[i];
+			}
 		}
-		
+
 		return target;
 	}
 
@@ -234,11 +232,17 @@ public class SpectrumCalculations
 	public static Spectrum fma_target(final SpectrumView source, float mult, final Spectrum target, int first, int last) {
 		final float[] sourceArray = ((Spectrum)source).backingArray();
 		final float[] targetArray = ((Spectrum)target).backingArray();
-		
-		for (int i = first; i <= last; i++) {
-			targetArray[i] = Math.fma(sourceArray[i], mult, targetArray[i]);
+
+		if (useFMA) {
+			for (int i = first; i <= last; i++) {
+				targetArray[i] = Math.fma(sourceArray[i], mult, targetArray[i]);
+			}
+		} else {
+			for (int i = first; i <= last; i++) {
+				targetArray[i] = sourceArray[i] * mult + targetArray[i];
+			}
 		}
-		
+
 		return target;
 	}
 
@@ -326,7 +330,7 @@ public class SpectrumCalculations
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!minIsNaN && value < minimum) newvalue = minimum;
+			if (!minIsNaN && newvalue < minimum) newvalue = minimum;
 			result.set(i, newvalue);
 		}
 
@@ -362,7 +366,7 @@ public class SpectrumCalculations
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!minIsNaN && value < minimum) newvalue = minimum;
+			if (!minIsNaN && newvalue < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 
@@ -385,9 +389,6 @@ public class SpectrumCalculations
 	/**
 	 * Subtracts each element in data from value, while keeping all values no lower than minimum
 	 * 
-	 * @param data
-	 * @param value
-	 * @param minimum
 	 * @return a copy of data, with value subtracted from each element
 	 */
 	public static Spectrum subtractListFrom(SpectrumView source, Spectrum target, final float value, final float minimum)
@@ -398,7 +399,7 @@ public class SpectrumCalculations
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = value - source.get(i);
-			if (!minIsNaN && value < minimum) newvalue = minimum;
+			if (!minIsNaN && newvalue < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 

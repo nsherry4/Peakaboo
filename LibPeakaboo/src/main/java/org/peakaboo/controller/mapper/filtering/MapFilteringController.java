@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.peakaboo.calibration.BasicDetectorProfile;
 import org.peakaboo.calibration.DetectorProfile;
 import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
@@ -39,11 +41,25 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	private MappingController controller;
 	
 	private MapFilterSet filters = new MapFilterSet();
-	private EventfulCache<CachedMaps> cachedMaps;
+	// Nominal maps are processed, raw (non-nominal) ones aren't. We keep both so
+	// toggling a non-nominal map's visibility doesn't re-filter everything
+	private EventfulCache<CachedMaps> nominalMaps;
+	private EventfulCache<CachedMaps> rawMaps;
 	
 	public MapFilteringController(MappingController controller) {
 		this.controller = controller;
-		cachedMaps = new EventfulNullableCache<>(() -> new CachedMaps(controller, filters));
+		nominalMaps = new EventfulNullableCache<>(() -> new CachedMaps(
+				controller, 
+				filters, 
+				controller.rawDataController.getDetectorProfile(), 
+				controller.getFitting()::isTransitionSeriesNominal
+			));
+		rawMaps = new EventfulNullableCache<>(() -> new CachedMaps(
+				controller, 
+				filters, 
+				new BasicDetectorProfile(), 
+				ts -> true
+			));
 		
 		controller.addListener(t -> {
 			if (t == MapUpdateType.DATA || t == MapUpdateType.DATA_SIZE) {
@@ -84,13 +100,21 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	 */
 	public boolean isReplottable() {
 		if (filteringChangedMapSize()) return false;
-		if (! this.cachedMaps.getValue().isReplottable()) return false;
+		if (! current().isReplottable()) return false;
 		return true;
 	}
 	
 	
+	/**
+	 * Returns the cached maps matching the maps being shown: if any visible map is
+	 * non-nominal, none of them are processed and the raw maps are returned.
+	 */
+	private CachedMaps current() {
+		return controller.getFitting().isNominal() ? nominalMaps.getValue() : rawMaps.getValue();
+	}
+	
 	private EventfulSoftCache<AreaMap> getAreaMap(ITransitionSeries ts) {
-		return cachedMaps.getValue().getCachedMap(ts);
+		return current().getCachedMap(ts);
 	}
 	
 	public Iterable<AreaMap> getAreaMaps(List<ITransitionSeries> tss) {
@@ -98,14 +122,16 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	}
 	
 	public List<Integer> getInvalidPoints() {
-		return cachedMaps.getValue().getInvalidPoints();
+		return current().getInvalidPoints();
 	}
 	
 	/**
-	 * Returns the sum of all maps, or null, if there are no maps.
+	 * Returns the sum of all maps, or null, if there are no maps. NOTE: When the
+	 * maps being shown are nominal, only nominal maps are included so that the
+	 * sum shares their units.
 	 */
 	public AreaMap getSummedMap() {
-		return cachedMaps.getValue().getSum();
+		return current().getSum();
 	}
 	
 
@@ -170,7 +196,8 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	}
 	
 	public void filteredDataInvalidated() {
-		cachedMaps.invalidate();
+		nominalMaps.invalidate();
+		rawMaps.invalidate();
 		updateListeners(MapUpdateType.FILTER);
 	}
 	
@@ -199,10 +226,11 @@ public class MapFilteringController extends EventfulType<MapUpdateType> {
 	}
 	
 	public Coord<Bounds<Number>> getRealDimensions() {
-		if (cachedMaps.getValue().getSum() == null) {
+		AreaMap sum = current().getSum();
+		if (sum == null) {
 			return null;
 		}
-		return cachedMaps.getValue().getSum().getRealDimensions();
+		return sum.getRealDimensions();
 	}
 	
 
@@ -216,7 +244,11 @@ class CachedMaps {
 	private AreaMap sum;
 	private boolean replottable;
 	
-	public CachedMaps(MappingController controller, MapFilterSet filters) {
+	/**
+	 * @param profile the profile to apply to each map
+	 * @param summed  which maps to include in the sum
+	 */
+	public CachedMaps(MappingController controller, MapFilterSet filters, DetectorProfile profile, Predicate<ITransitionSeries> summed) {
 
 		this.maps = new ConcurrentHashMap<>();
 		this.replottable = filters.isReplottable();
@@ -224,7 +256,6 @@ class CachedMaps {
 		Coord<Integer> size = controller.getUserDimensions().getDimensions();
 
 		//get calibrated map data and generate AreaMaps
-		DetectorProfile profile = controller.rawDataController.getDetectorProfile();
 		RawMapSet rawmaps = controller.rawDataController.getMapResultSet();
 		rawmaps.stream().parallel().forEach(rawmap -> {
 			ITransitionSeries ts = rawmap.transitionSeries;
@@ -262,20 +293,22 @@ class CachedMaps {
 		invalidPoints = Spectrum.toPoints(invalidMap.getData());
 		
 		//calculate the sum total map, replacing it with an empty map if there's nothing to sum
-		if (maps.size() > 0) {
+		List<ITransitionSeries> toSum = maps.keySet().stream().filter(summed).toList();
+		if (toSum.size() > 0) {
 			Spectrum total = new ArraySpectrum(size.x * size.y);
 			AreaMap map = null;
 			Set<Element> elements = new LinkedHashSet<>();
 			//we do it this way so that we only have to hold one in memory at a time
 			//that way the soft references can collect it when we're done adding it in
-			for (ITransitionSeries key : maps.keySet()) {
+			for (ITransitionSeries key : toSum) {
 				map = maps.get(key).getValue();
 				SpectrumCalculations.addLists_inplace(total, map.getData());
 				elements.addAll(map.getElements());
 			}
 			sum = new AreaMap(total, new ArrayList<>(elements), map.getSize(), map.getRealDimensions());
 		} else {
-			sum = new AreaMap(new ArraySpectrum(size.x * size.y), Collections.emptyList(), size, null);
+			// Keep the real dimensions, since a nominal sum can be empty while there are still maps
+			sum = new AreaMap(new ArraySpectrum(size.x * size.y), Collections.emptyList(), size, controller.rawDataController.getRealDimensions());
 			sum = filters.apply(sum);
 		}
 		

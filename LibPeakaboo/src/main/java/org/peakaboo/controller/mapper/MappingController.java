@@ -162,6 +162,7 @@ public class MappingController extends EventfulType<MapUpdateType>
 		
 		settings.detectorProfile = this.getFitting().getDetectorProfile();
 		settings.visibleTransitionSeries = this.getFitting().getActiveMode().getVisible();
+		settings.nominal = this.getFitting().isNominal();
 		settings.selectedPoints = this.getSelection().getDisplayPoints();
 			
 		settings.spectrumTitle = this.getFitting().getActiveMode().shortTitle();
@@ -271,13 +272,16 @@ public class MappingController extends EventfulType<MapUpdateType>
 
 		CompositeModeController composite = (CompositeModeController) controller.getFitting().getModeController(CompositeMapMode.MODE_NAME).get();
 		
+		// Show only this map before reading any data, since whether the maps are
+		// processed depends on which maps are visible
+		composite.setAllVisible(false);
+		composite.setVisibility(ts, true);
+		
 		Mapper mapper = new Mapper();
 		MapRenderData data = new MapRenderData();
 		data.mapModeData = composite.getData(Optional.of(ts));
 		data.maxIntensity = controller.getFitting().sumAllTransitionSeriesMaps().max();
 		
-		composite.setAllVisible(false);
-		composite.setVisibility(ts, true);
 		MapRenderSettings settings = controller.getRenderSettings();
 
 		// Flag non-nominal maps in the file name, since they can now sit beside nominal ones

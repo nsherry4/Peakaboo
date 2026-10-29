@@ -2,6 +2,8 @@ package org.peakaboo.framework.scratch.list.file;
 
 import org.peakaboo.framework.accent.numeric.LongRange;
 import org.peakaboo.framework.accent.numeric.LongRangeSet;
+import org.peakaboo.framework.scratch.ScratchSpace;
+import org.peakaboo.framework.scratch.ScratchSpaceException;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,20 +19,25 @@ class ScratchDiskBacking implements AutoCloseable {
 	private List<LongRange> elementPositions;
 	private LongRangeSet discardedRanges;
 	
+	private final ScratchSpace space;
 	private File file;
 	private RandomAccessFile writeRaf; // Single RAF for writes
 	private final ConcurrentLinkedQueue<RandomAccessFile> readRafPool = new ConcurrentLinkedQueue<>();
 	private volatile boolean closing = false;
-		
-	
+
+	// Track end of used space and end of reserved space
+	private long writeEnd = 0;
+	private long reserved = 0;
+
+
 	/**
 	 * Create a new AbstractScratchList
 	 * @throws IOException
 	 */
-	public ScratchDiskBacking() throws IOException
+	public ScratchDiskBacking(ScratchSpace space) throws IOException
 	{
-		file = File.createTempFile("ScratchDiskList [temp - ", "]");
-		file.deleteOnExit();
+		this.space = space;
+		file = space.create();
 		elementPositions = new ArrayList<LongRange>();
 		discardedRanges = new LongRangeSet();
 		writeRaf = new RandomAccessFile(file, "rw");
@@ -48,17 +55,26 @@ class ScratchDiskBacking implements AutoCloseable {
 
 		try {
 			
-			long writePosition = writeRaf.length();
-					
+			// By default, we append after the end of our used space
+			long writePosition = writeEnd;
+
 			// Try to find a suitable discarded range
 			LongRange suitableRange = findDiscardedRange(data.length);
 			if (suitableRange != null) {
 				writePosition = suitableRange.getStart();
 			}
-			
+
+			// Where will the write end, and have we reserved enough space yet?
+			long end = writePosition + data.length;
+			if (end > reserved) {
+				reserved = space.reserve(writeRaf, end);
+			}
+
+			// Do the write and update our end-of-data marker
 			writeRaf.seek(writePosition);
 			writeRaf.write(data);
-			
+			writeEnd = Math.max(writeEnd, end);
+
 			if (index >= elementPositions.size())
 			{
 				for (int i = elementPositions.size(); i <= index; i++)
@@ -72,11 +88,11 @@ class ScratchDiskBacking implements AutoCloseable {
 			
 		} catch (IOException e)
 		{
-			throw new UnsupportedOperationException("Cannot write to backend file");
+			throw new ScratchSpaceException("Cannot write to backend file", e);
 		}
-		
-		
-		
+
+
+
 	}
 	
 		
@@ -88,14 +104,10 @@ class ScratchDiskBacking implements AutoCloseable {
 
 	public void clear()
 	{
+		// Clear all references to serialized data and reset the used space tracker `writeEnd`
 		elementPositions.clear();
 		discardedRanges.clear();
-		try {
-			writeRaf.seek(0);
-		} catch (IOException e)
-		{
-			throw new UnsupportedOperationException("Cannot write to backend file");
-		}
+		writeEnd = 0;
 	}
 
 	/**
@@ -235,8 +247,9 @@ class ScratchDiskBacking implements AutoCloseable {
 			}
 		}
 		
-		if (file != null && file.exists()) {
-			file.delete();
+		if (file != null) {
+			space.release(file);
+			file = null;
 		}
 	}
 	
