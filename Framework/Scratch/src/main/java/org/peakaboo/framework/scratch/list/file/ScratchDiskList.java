@@ -6,7 +6,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.ScratchException;
+import org.peakaboo.framework.scratch.ScratchSpace;
 import org.peakaboo.framework.scratch.list.ScratchList;
+import org.peakaboo.framework.scratch.list.ScratchLists;
 import org.peakaboo.framework.scratch.single.Compressed;
 
 /**
@@ -26,9 +28,13 @@ public class ScratchDiskList<T> extends ScratchList<T> implements AutoCloseable 
 	
 	
 	public ScratchDiskList(ScratchEncoder<T> encoder) {
+		this(encoder, ScratchLists.getScratchSpace());
+	}
+
+	ScratchDiskList(ScratchEncoder<T> encoder, ScratchSpace space) {
 		try {
 			this.encoder = encoder;
-			this.backing = new ScratchDiskBacking();
+			this.backing = new ScratchDiskBacking(space);
 		} catch (IOException e) {
 			throw new ScratchException(e);
 		}

@@ -7,10 +7,22 @@ import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.scratch.DiskStrategy;
 import org.peakaboo.framework.scratch.ScratchEncoder;
 import org.peakaboo.framework.scratch.ScratchException;
+import org.peakaboo.framework.scratch.ScratchSpace;
 import org.peakaboo.framework.scratch.list.array.ScratchArrayList;
 import org.peakaboo.framework.scratch.list.file.ScratchDiskList;
 
 public class ScratchLists {
+
+	private static volatile ScratchSpace space = ScratchSpace.DEFAULT;
+
+	/** Sets the {@link ScratchSpace} used by new disk-backed lists */
+	public static void setScratchSpace(ScratchSpace space) {
+		ScratchLists.space = space;
+	}
+
+	public static ScratchSpace getScratchSpace() {
+		return space;
+	}
 
 	public static <T> ScratchList<T> memoryBacked(ScratchEncoder<T> encoder) {
 		return new ScratchArrayList<T>(encoder);

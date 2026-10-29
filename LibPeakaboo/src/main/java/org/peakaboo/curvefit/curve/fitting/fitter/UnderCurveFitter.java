@@ -29,9 +29,6 @@ public class UnderCurveFitter implements CurveFitter {
 
 	/**
 	 * Calculates the amount that this fitting should be scaled by to best fit the given data set
-	 * 
-	 * @param data
-	 *            the data to scale the fit to match
 	 * @return a scale value
 	 */
 	private float getRatioForCurveUnderData(CurveFitterContext ctx) {
@@ -54,7 +51,7 @@ public class UnderCurveFitter implements CurveFitter {
 		
 		//look at every point in the ranges covered by transitions
 		SpectrumView curveSignal = ctx.curve().get();
-		for (Integer i : ctx.curve().getIntenseChannelList()) {
+		for (int i : ctx.curve().getIntenseChannelList()) {
 			if (i < 0 || i >= ctx.data().size()) continue;
 			
 			float curveChannelSignal = curveSignal.get(i);

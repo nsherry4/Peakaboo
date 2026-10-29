@@ -160,8 +160,6 @@ public class Mapper {
 		if (deep) {
 			mapmode.invalidate();
 			this.invalidated = true;
-			// Also clear the buffer cache to force complete redraw - force resize to clear cache
-			this.bufferer.resize(1, 1);
 			this.lastSize = null;
 		}
 	}

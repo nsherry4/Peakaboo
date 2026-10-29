@@ -51,6 +51,9 @@ public class MapRenderSettings {
 	public DetectorProfile detectorProfile = new BasicDetectorProfile();
 	// The maps being shown, so the UI/maps can tailor the titles, legends, etc
 	public List<ITransitionSeries> visibleTransitionSeries = List.of();
+	// If the maps being shown are all processed, or if they're raw because at
+	// least one of them is non-nominal
+	public boolean nominal = true;
 
 	
 	public PaletteColour getFg() {
