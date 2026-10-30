@@ -64,12 +64,11 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			// dimensions for various parts of the axis
 			float tickLength = getTickLength(p.dr, tick);
-			float textHeight = getTickFontHeight(p.context);
-			float textAscent = p.context.getFontAscent();
-			
+			float capHeight = p.context.getFontCapHeight();
+
 			float axisYStart = axesData.yPositionBounds.end - getAxisSizeY(p).second;
 			float axisXStart = axesData.xPositionBounds.start + otherAxisSize.first;
-			float textBaseline = axisYStart + tickLength + textHeight;
+			float textBaseline = axisYStart + tickLength*1.5f + capHeight;
 		
 
 			
@@ -90,9 +89,9 @@ public class TickMarkAxisPainter extends AxisPainter
 				float tickWidth = p.context.getTextWidth(tickText);
 				if (tick.isTextRotated()) {
 					float tx = position;
-					float ty = textBaseline - textAscent;
-					float px = -tickWidth - tickLength * 0.5f;
-					float py = textAscent/2f;
+					float ty = axisYStart + tickLength*1.5f;
+					float px = -tickWidth;
+					float py = capHeight/2f;
 					p.context.save();
 					p.context.translate(tx, ty);
 					p.context.rotate(-1.57f);					
@@ -123,7 +122,7 @@ public class TickMarkAxisPainter extends AxisPainter
 			
 			// dimensions for various parts of the axis
 			float tickLength = getTickLength(p.dr, tick);
-			float textAscent = p.context.getFontAscent();
+			float capHeight = p.context.getFontCapHeight();
 
 			float axisYEnd = axesData.yPositionBounds.start + getAxisSizeY(p).first;
 			float axisXStart = axesData.xPositionBounds.start + otherAxisSize.first;
@@ -151,7 +150,7 @@ public class TickMarkAxisPainter extends AxisPainter
 					float tx = position;
 					float ty = textBaseline;
 					float px = 0;
-					float py = textAscent/2f;
+					float py = capHeight/2f;
 					p.context.save();
 					p.context.translate(tx, ty);
 					p.context.rotate(-1.57f);					
@@ -207,7 +206,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				float yPosition = (float) Math.floor(drawRangeY.start + percentAlongAxis * drawHeight);
 
 				
-				if (yPosition - p.context.getFontAscent() / 2.0 > 0) {
+				if (yPosition - p.context.getFontCapHeight() / 2.0 > 0) {
 					drawTickLine(p.context, axisStart + axisWidth - tickLength, yPosition, axisStart + axisWidth, yPosition);
 					float textWidth = p.context.getTextWidth(tickText);
 
@@ -223,7 +222,7 @@ public class TickMarkAxisPainter extends AxisPainter
 						p.context.restore();
 					} else {
 						float xTextPos = axisStart + axisWidth - tickLength*1.5f - textWidth;
-						float yTextPos = yPosition + p.context.getFontAscent() / 2.0f;
+						float yTextPos = yPosition + p.context.getFontCapHeight() / 2.0f;
 						p.context.writeText(tickText, xTextPos, yTextPos);
 					}
 							
@@ -273,7 +272,7 @@ public class TickMarkAxisPainter extends AxisPainter
 				float drawHeight = drawRangeY.end - drawRangeY.start;
 				float yPosition = (float) Math.floor(drawRangeY.start + percentAlongAxis * drawHeight);
 				
-				if (yPosition - p.context.getFontAscent() / 2.0 > 0) {
+				if (yPosition - p.context.getFontCapHeight() / 2.0 > 0) {
 					drawTickLine(p.context, axisStart, yPosition, axisStart + tickLength, yPosition);
 					float textWidth = p.context.getTextWidth(tickText);
 					
@@ -288,7 +287,7 @@ public class TickMarkAxisPainter extends AxisPainter
 						p.context.writeText(tickText, px, py);
 						p.context.restore();
 					} else {
-						p.context.writeText(tickText, axisStart + tickLength*1.5f, yPosition + p.context.getFontAscent() / 2.0f);
+						p.context.writeText(tickText, axisStart + tickLength*1.5f, yPosition + p.context.getFontCapHeight() / 2.0f);
 					}
 				}
 				
@@ -354,10 +353,6 @@ public class TickMarkAxisPainter extends AxisPainter
 	}
 
 
-	private static float getTickFontHeight(Surface context)
-	{
-		return context.getFontHeight();
-	}
 
 	
 	private static float axisSize(Bounds<Float> axisBounds, Pair<Float, Float> otherAxisSize) {

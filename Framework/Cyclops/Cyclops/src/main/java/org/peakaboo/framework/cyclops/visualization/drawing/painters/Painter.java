@@ -35,10 +35,12 @@ public abstract class Painter
 		p.context.setCompositeMode(compositeMode);
 		
 		int stackPointer = p.context.saveWithMarker();
-		drawElement(p);
-		p.context.restoreFromMarker(stackPointer);
-		
-		p.context.setCompositeMode(oldMode);
+		try {
+			drawElement(p);
+		} finally {
+			p.context.restoreFromMarker(stackPointer);
+			p.context.setCompositeMode(oldMode);
+		}
 
 	}
 
