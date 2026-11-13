@@ -121,7 +121,7 @@ public class HeaderBox extends JPanel {
 		g = g.create();
 		Graphics2D g2 = (Graphics2D) g;
 
-		Paint paint = theme.getNegative();
+		Paint paint = Stratus.focusedWindow(this) ? theme.getNegative() : theme.getControl();
 		if (paint != null) {
 			g2.setPaint(paint);
 		} else {

@@ -479,6 +479,8 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		} catch (IOException e) {
 			OneLog.log(Level.WARNING, "Failed to load asset from classloader", e);
 		}
+		// The GPL text we ship is hard-wrapped
+		contents.licenceFormat = AboutLayer.LicenceFormat.PREFORMATTED;
 
 		contents.logo = logo;
 		contents.version = Version.VERSION_MAJOR + "." + Version.VERSION_MINOR;

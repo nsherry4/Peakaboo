@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
@@ -25,11 +26,20 @@ import org.peakaboo.framework.stratus.components.ui.header.HeaderTabBuilder;
 
 public class AboutLayer extends HeaderLayer {
 
+	/** Licence text style */
+	public enum LicenceFormat {
+		/** plain text, word wrapped */
+		FLOWING,
+		/** pre-wrapped monospace text */
+		PREFORMATTED
+	}
+	
 	public static class Contents {
 		public String name;
 		public String description;
 		public String copyright;
 		public String licence;
+		public LicenceFormat licenceFormat = LicenceFormat.FLOWING;
 		public String credits;
 		public ImageIcon logo;
 		public String version;
@@ -80,7 +90,31 @@ public class AboutLayer extends HeaderLayer {
 	private static Component licencePanel(Contents contents) {
 		JTextLabel licenceText = new JTextLabel(contents.licence);
 		licenceText.setCaretPosition(0);
-		return Stratus.scrolled(licenceText);
+		
+		if (contents.licenceFormat == LicenceFormat.FLOWING) {
+			// The text area is the viewport's view here so that it wraps to the viewport's width
+			licenceText.setBorder(Spacing.bHuge());
+			JScrollPane scroller = Stratus.scrolled(licenceText);
+			scroller.getViewport().setBackground(Stratus.getTheme().getRecessedControl());
+			return scroller;
+		}
+		
+		// Pre-wrapped text needs monospace without wrapping.
+		// Centre the component rather than the text within
+		licenceText.setLineWrap(false);
+		licenceText.setFont(Stratus.getTheme().getMonospaceFont());
+
+		// GridBag centres the block horizontally, and the viewport stretches this
+		// panel to its width so the scroll bar stays at the dialog's edge
+		JPanel page = new JPanel(new GridBagLayout());
+		page.setBackground(Stratus.getTheme().getRecessedControl());
+		page.setBorder(Spacing.bHuge());
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.weighty = 1.0;
+		page.add(licenceText, gc);
+
+		return Stratus.scrolled(page);
 	}
 
 	public static JPanel aboutPanel(Contents contents) {

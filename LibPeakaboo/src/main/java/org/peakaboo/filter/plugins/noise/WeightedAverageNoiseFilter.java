@@ -51,7 +51,7 @@ public class WeightedAverageNoiseFilter extends AbstractFilter {
 	public String getFilterDescription() {
 		return "The "
 				+ getFilterName()
-				+ " filter refines the values of each point in a scan by sampling it and the points around it, and replacing it with an exponentially weighted average of the sampled points. While not as sophisticated as the Savitsky-Golay filter, it does provide more flexibility.";
+				+ " filter refines the values of each point in a scan by sampling it and the points around it, and replacing it with an exponentially weighted average of the sampled points. While not as sophisticated as the Savitzky-Golay filter, it does provide more flexibility.";
 	}
 
 

@@ -3,11 +3,13 @@ package org.peakaboo.ui.swing.plotting.fitting.lookup;
 
 
 import java.awt.Component;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellEditor;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.table.Element;
@@ -79,12 +81,16 @@ class LookupEditor extends DefaultTreeCellEditor {
 
 	@Override
 	public boolean isCellEditable(EventObject e) {
-		Object selected = tree.getLastSelectedPathComponent();
-
-		if (selected == null) return false;
-		if (selected instanceof ITransitionSeries) return true;
-
-		return false;
+		// Called before it updates the selection on click, so the selection still points at old row.
+		// Use the row under the mouse instead, and select it ourselves since the tree won't once we accept.
+		if (e instanceof MouseEvent me) {
+			TreePath path = tree.getPathForLocation(me.getX(), me.getY());
+			if (path == null || !(path.getLastPathComponent() instanceof ITransitionSeries)) return false;
+			tree.setSelectionPath(path);
+			return true;
+		}
+		
+		return tree.getLastSelectedPathComponent() instanceof ITransitionSeries;
 	}
 
 }

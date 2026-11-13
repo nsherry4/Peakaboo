@@ -16,10 +16,10 @@ public class BrightTheme implements Theme {
 	protected Color highlight = PALETTE.getColour("Blue", "3");
 	protected Color highlightText = PALETTE.getColour("Light", "1");
 	
-	protected Color control = new Color(0xfbfbfb);
+	protected Color control = new Color(0xfcfcfc);
 	protected Color controlText = PALETTE.getColour("Dark", "3");
 	protected Color controlTextDisabled = PALETTE.getColour("Light", "5");
-	protected Color negative = new Color(0xebebeb);
+	protected Color negative = new Color(0xededed);
 	protected Color border = new Color(0xdadada);
 	
 	protected Color widget = new Color(0xebebeb);

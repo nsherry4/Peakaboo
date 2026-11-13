@@ -81,8 +81,9 @@ public class BodyShadowPanel extends ClearPanel {
 
 		Graphics2D g2 = Stratus.modernGraphicsCopy(g);
 		Color base = Stratus.getTheme().getShadow();
-		Color top = new Color(base.getRed(), base.getGreen(), base.getBlue(), (int)(base.getAlpha() * SHADOW_STRENGTH));
-		Color mid = new Color(base.getRed(), base.getGreen(), base.getBlue(), (int)(base.getAlpha() * SHADOW_STRENGTH / 4));
+		float strength = Stratus.focusedWindow(this) ? SHADOW_STRENGTH : SHADOW_STRENGTH / 2;
+		Color top = new Color(base.getRed(), base.getGreen(), base.getBlue(), (int)(base.getAlpha() * strength));
+		Color mid = new Color(base.getRed(), base.getGreen(), base.getBlue(), (int)(base.getAlpha() * strength / 4));
 		Color bottom = new Color(base.getRed(), base.getGreen(), base.getBlue(), 0);
 		g2.setPaint(new LinearGradientPaint(
 				0, 0,

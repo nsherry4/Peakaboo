@@ -8,7 +8,7 @@ import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumView;
 
 /**
- * A Savitsky-Golay fit of order p reproduces any polynomial up to degree p exactly, so
+ * A Savitzky-Golay fit of order p reproduces any polynomial up to degree p exactly, so
  * anything the filter changes about one is error it introduced itself. That single
  * property covers most of what can go wrong, including the edges, where the window has
  * to shrink and the filter used to clip the full window's coefficients instead -- which

@@ -88,7 +88,7 @@ public class OptionBox extends OptionComponent {
 			int index = block.children().indexOf(this);
 			int count = block.children().size();
 			if (index != count-1 && block.hasDividers()) {
-				g.setColor(StratusColour.lighten(borderAlpha, 0.5f));
+				g.setColor(StratusColour.moreTransparent(StratusColour.lighten(borderAlpha, 0.5f), 0.075f));
 				g.drawLine(1, getHeight()-1, getWidth()-1, getHeight()-1);
 			}
 			if (hover && isEnabled()) {

@@ -65,7 +65,6 @@ public class OptionBlock extends OptionComponent {
 	}
 	
 	public boolean hasDividers() {
-		// TODO Auto-generated method stub
 		return dividers;
 	}
 	

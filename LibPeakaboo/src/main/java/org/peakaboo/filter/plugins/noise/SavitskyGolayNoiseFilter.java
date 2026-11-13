@@ -117,7 +117,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 
 	@Override
 	public String getFilterName() {
-		return "Savitsky-Golay";
+		return "Savitzky-Golay";
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class SavitskyGolayNoiseFilter extends AbstractFilter {
 	public Spectrum fastSavitskyGolayFilter(SpectrumView data, int reach, float max) {
 
 		if (getCoeffs(reach) == null) {
-			OneLog.log(Level.WARNING, "Failed to load Savitsky Golay coefficients");
+			OneLog.log(Level.WARNING, "Failed to load Savitzky Golay coefficients");
 			return new ArraySpectrum(data);
 		}
 
