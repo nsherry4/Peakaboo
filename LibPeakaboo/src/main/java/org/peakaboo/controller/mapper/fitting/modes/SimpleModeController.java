@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.fitting.modes.components.VisibilityState;
@@ -50,7 +51,12 @@ public abstract class SimpleModeController extends EventfulBeacon implements Mod
 
 	@Override
 	public void setAllVisible(boolean visible) { this.visibility.setAllVisible(visible); }
-	
+
+	/** @see VisibilityState#solo(ITransitionSeries) */
+	public void solo(ITransitionSeries ts) { this.visibility.solo(ts); }
+
+	public Optional<ITransitionSeries> getSoloed() { return this.visibility.getSoloed(); }
+
 	
 	
 			

@@ -48,6 +48,7 @@ public class PlotMenuMain extends JPopupMenu {
 		saveAs = new FluentMenuItem()
 				.withText("Save Session As\u2026")
 				.withIcon(StockIcon.DOCUMENT_SAVE_AS_SYMBOLIC)
+				.withKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK), plot)
 				.withAction(plot::actionSaveSessionAs);
 		this.add(saveAs);
 		

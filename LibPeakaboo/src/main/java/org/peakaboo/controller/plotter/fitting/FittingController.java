@@ -146,6 +146,20 @@ public class FittingController extends EventfulType<Boolean>
 		fittingDataInvalidated();
 	}
 
+	/**
+	 * Removes all of the given fittings as a single undoable change, with one refit
+	 */
+	public void removeAllTransitionSeries(Collection<ITransitionSeries> tss)
+	{
+		if (tss.isEmpty()) return;
+		for (ITransitionSeries ts : tss)
+		{
+			fittingModel.selections.remove(ts);
+		}
+		setUndoPoint(tss.size() == 1 ? "Remove Fitting" : "Remove Fittings");
+		fittingDataInvalidated();
+	}
+
 	public List<ITransitionSeries> getFittedTransitionSeries()
 	{
 		return fittingModel.selections.getFittedTransitionSeries();

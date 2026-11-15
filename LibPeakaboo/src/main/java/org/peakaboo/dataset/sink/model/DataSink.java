@@ -2,14 +2,12 @@ package org.peakaboo.dataset.sink.model;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.logging.Level;
 
 import org.peakaboo.dataset.io.DataOutputAdapter;
 import org.peakaboo.dataset.sink.model.DataSink.DataSinkWriteException;
 import org.peakaboo.dataset.sink.model.components.interaction.CallbackInteraction;
 import org.peakaboo.dataset.sink.model.components.interaction.Interaction;
 import org.peakaboo.dataset.source.model.DataSource;
-import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
 import org.peakaboo.framework.plural.executor.PluralExecutor;
 
@@ -50,15 +48,20 @@ public interface DataSink {
 
 	void setInteraction(Interaction interaction);
 
-	static ExecutorSet<Void> write(DataSink sink, DataSinkContext ctx) {
-		
+	/**
+	 * Returns an {@link ExecutorSet} which writes the data set with the given
+	 * sink. Its result is the exception which stopped the write, or null if there
+	 * wasn't one.
+	 */
+	static ExecutorSet<Exception> write(DataSink sink, DataSinkContext ctx) {
+
 		CallbackInteraction interaction = new CallbackInteraction();
 
 		return PluralExecutor.build("Writing Data Set", "Writing Scans", (execset, exec) -> {
 			interaction.setCallbackAbortRequested(() -> execset.isAborted() || execset.isAbortRequested());
 			interaction.setCallbackScansWritten(exec::workUnitCompleted);
 			exec.setWorkUnits(ctx.source.getScanData().scanCount());
-			
+
 			try {
 				sink.setInteraction(interaction);
 				sink.write(ctx);
@@ -66,9 +69,10 @@ public interface DataSink {
 					execset.aborted();
 				}
 			} catch (IOException | DataSinkWriteException e) {
-				OneLog.log(Level.SEVERE, "Failed to export data", e);
+				// An ordinary failure to write, the caller handles reporting it
+				return e;
 			}
-			
+
 			return null;
 		});
 		

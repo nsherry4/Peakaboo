@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.SwingUtilities;
+
 import org.peakaboo.app.Version;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.controller.mapper.SavedMapSession;
@@ -18,6 +20,7 @@ import org.peakaboo.framework.stratus.components.ui.live.LiveFrame;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedInterface;
 import org.peakaboo.framework.stratus.components.ui.tabui.TabbedLayerPanel;
 import org.peakaboo.tier.Tier;
+import org.peakaboo.ui.swing.mapping.sidebar.MapDimensionsPanel;
 
 
 /**
@@ -131,8 +134,14 @@ public class MapperFrame extends LiveFrame
 		if (mapSession != null) {
 			mapSession.loadInto(newController);
 		}
-		
-		return new MapperPanel(newController, parentPlotter, tabs);				
+
+		MapperPanel panel = new MapperPanel(newController, parentPlotter, tabs);
+		if (mapSession == null) {
+			// Nothing remembered from an earlier map, so we may need to work out the
+			// dimensions. Deferred so the panel can be shown before guessing.
+			SwingUtilities.invokeLater(() -> MapDimensionsPanel.guessOnOpen(panel, newController));
+		}
+		return panel;
 	}
 
 }

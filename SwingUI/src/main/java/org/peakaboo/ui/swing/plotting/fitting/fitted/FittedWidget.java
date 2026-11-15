@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
 
 
@@ -80,9 +81,27 @@ public class FittedWidget extends ClearPanel
 	
 	@Override
 	public void setForeground(Color c) {
-		
 		super.setForeground(c);
+		applyForeground();
+	}
+
+	/** Disabled entries are drawn muted so that enabled ones stand out from them */
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		applyForeground();
+	}
+
+	private void applyForeground() {
+		// Called from the superclass constructor before our labels exist
 		if (elementName == null) return;
+		Color c = getForeground();
+		if (c == null) return;
+		if (!isEnabled()) {
+			// TODO: use the theme's muted text colour once the tooltip work lands, if it
+			// copes with selected rows. Receding from the current foreground does.
+			c = Stratus.getTheme().recede(c, 0.4f);
+		}
 		Color cDetail = new Color(c.getRed(), c.getGreen(), c.getBlue(), 192);
 		elementName.setForeground(c);
 		elementNumber.setForeground(cDetail);

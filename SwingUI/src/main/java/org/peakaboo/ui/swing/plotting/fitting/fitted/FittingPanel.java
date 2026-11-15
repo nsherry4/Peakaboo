@@ -4,6 +4,8 @@ package org.peakaboo.ui.swing.plotting.fitting.fitted;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -11,11 +13,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.DropMode;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -23,6 +29,7 @@ import javax.swing.table.TableColumn;
 
 import org.peakaboo.controller.plotter.fitting.FittingController;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
+import org.peakaboo.framework.accent.Platform;
 import org.peakaboo.framework.stratus.api.Spacing;
 import org.peakaboo.framework.stratus.api.Stratus;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
@@ -76,19 +83,7 @@ public class FittingPanel extends ClearPanel implements Changeable
 		FluentButton removeButton = new FluentButton()
 			.withIcon(StockIcon.EDIT_REMOVE, Stratus.getTheme().getControlText())
 			.withTooltip("Remove Selected Fittings")
-			.withAction(() -> {
-				int[] rows = fitTable.getSelectedRows();
-				List<ITransitionSeries> tss = Arrays.stream(rows)
-						.boxed()
-						.map(i -> controller.getFittedTransitionSeries().get(i))
-						.toList();
-					
-				if (tss.isEmpty()) return;
-				for (ITransitionSeries ts : tss)	{
-					controller.removeTransitionSeries(ts);
-				}
-				owner.changed();
-		});
+			.withAction(this::removeSelected);
 		
 		FluentButton clearButton = new FluentButton()
 			.withIcon(StockIcon.EDIT_DELETE, Stratus.getTheme().getControlText())
@@ -131,7 +126,23 @@ public class FittingPanel extends ClearPanel implements Changeable
 
 	}
 
-	private ITransitionSeries getSelected() {		
+	/**
+	 * Removes every selected fitting as one undoable change, leaving nothing selected
+	 */
+	private void removeSelected() {
+		List<ITransitionSeries> tss = Arrays.stream(fitTable.getSelectedRows())
+				.boxed()
+				.map(i -> controller.getFittedTransitionSeries().get(i))
+				.toList();
+		if (tss.isEmpty()) return;
+
+		// Clear the selection first so the highlight doesn't hang on to removed fittings
+		fitTable.clearSelection();
+		controller.removeAllTransitionSeries(tss);
+		owner.changed();
+	}
+
+	private ITransitionSeries getSelected() {
 		int row = fitTable.getSelectedRow();
 		if (row == -1) {
 			return null;
@@ -232,7 +243,21 @@ public class FittingPanel extends ClearPanel implements Changeable
 		column.setMaxWidth(100);
 
 		fitTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+
+		// Bound on the table rather than the window so Delete still edits text
+		// elsewhere. Mac keyboards label Backspace as delete, so take both there.
+		InputMap keys = fitTable.getInputMap(JComponent.WHEN_FOCUSED);
+		keys.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "remove-selected");
+		if (Platform.getOS() == Platform.OS.MAC) {
+			keys.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "remove-selected");
+		}
+		fitTable.getActionMap().put("remove-selected", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				removeSelected();
+			}
+		});
+
 
 		//On selection change or focus change, update the controller's list of highlighted fits
 		fitTable.getSelectionModel().addListSelectionListener(e -> {

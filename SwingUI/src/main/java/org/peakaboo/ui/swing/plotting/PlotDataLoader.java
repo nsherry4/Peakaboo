@@ -94,12 +94,20 @@ class PlotDataLoader extends DataLoader {
 
 	@Override
 	public void onSessionHasData(File sessionFile, Consumer<Boolean> load) {
+		Runnable openData = () -> {
+			controller.io().setFromSession(sessionFile);
+			load.accept(true);
+		};
+
+		// With no data set open there's nothing to keep, so don't bother asking
+		if (!controller.data().hasDataSet()) {
+			openData.run();
+			return;
+		}
+
 		FluentButton buttonYes = new FluentButton("Yes")
 				.withStateDefault()
-				.withAction(() -> {
-					controller.io().setFromSession(sessionFile);
-					load.accept(true);
-				});
+				.withAction(openData);
 		
 		FluentButton buttonNo = new FluentButton("No")
 				.withAction(() -> load.accept(false));

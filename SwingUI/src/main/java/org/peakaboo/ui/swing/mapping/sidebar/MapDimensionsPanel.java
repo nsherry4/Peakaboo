@@ -4,14 +4,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import org.peakaboo.controller.mapper.MappingController;
+import org.peakaboo.controller.mapper.dimensions.MapDimensionsController;
 import org.peakaboo.framework.accent.Coord;
+import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.plural.monitor.TaskMonitor.Event;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorLayer;
 import org.peakaboo.framework.plural.monitor.swing.TaskMonitorView;
@@ -26,6 +30,9 @@ import org.peakaboo.framework.stratus.components.ui.layers.LayerPanel;
 import org.peakaboo.ui.swing.app.PeakabooIcons;
 
 public class MapDimensionsPanel extends JPanel {
+
+	/** How long a guess can run before we show its progress */
+	private static final int GUESS_PROGRESS_DELAY_MS = 500;
 
 	//either guess or reset, depending on if we have the original dimensions or not
 	private FluentButton magic, reset; 
@@ -138,35 +145,66 @@ public class MapDimensionsPanel extends JPanel {
 				.withTooltip("Try to detect the map's dimensions.")
 				.withLayout(FluentButtonLayout.IMAGE_ON_SIDE)
 				.withBordered(false)
-				.withAction(() -> {
-					StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
-					TaskMonitorView view = new TaskMonitorView(guessTask);
-					TaskMonitorLayer layer = new TaskMonitorLayer(tabPanel, "Detecting Dimensions", view);
+				.withAction(() -> guessDimensions(tabPanel, controller, guess -> {}));
 
-					guessTask.addListener(event -> {
-						SwingUtilities.invokeLater(() -> {
-							if (event == Event.ABORTED) {
-								tabPanel.removeLayer(layer);
-							}
-							if (event == Event.COMPLETED) {
-							
-								tabPanel.removeLayer(layer);
-								
-								Coord<Integer> guess = guessTask.getResult().orElse(null);
-								if (guess != null) {
-									heightSpinner.setValue(1);
-									widthSpinner.setValue(1);
-									heightSpinner.setValue(guess.y);
-									widthSpinner.setValue(guess.x);
-								}							
-							}
-						});
-					});
-					tabPanel.pushLayer(layer);
-					guessTask.start();				
-		
-				});
-		
+	}
+
+	/**
+	 * Guesses the map's dimensions in the background, showing progress on the given
+	 * panel if it takes a while, and applies the guess if there is one.
+	 * @param onGuessed callback for guessed dimensions
+	 */
+	public static void guessDimensions(LayerPanel tabPanel, MappingController controller, Consumer<Coord<Integer>> onGuessed) {
+		StreamExecutor<Coord<Integer>> guessTask = controller.getUserDimensions().guessDataDimensions();
+		TaskMonitorView view = new TaskMonitorView(guessTask);
+		TaskMonitorLayer layer = new TaskMonitorLayer(tabPanel, "Detecting Dimensions", view);
+
+		// Most guesses finish quickly, so we only show progress for ones that don't.
+		// Thread-safe since it's all on the event thread.
+		Mutable<Boolean> finished = new Mutable<>(false);
+		Timer showProgress = new Timer(GUESS_PROGRESS_DELAY_MS, e -> {
+			if (!finished.get()) {
+				tabPanel.pushLayer(layer);
+			}
+		});
+		showProgress.setRepeats(false);
+
+		guessTask.addListener(event -> {
+			SwingUtilities.invokeLater(() -> {
+				if (event == Event.ABORTED || event == Event.COMPLETED) {
+					finished.set(true);
+					showProgress.stop();
+					// Does nothing if the layer was never shown
+					tabPanel.removeLayer(layer);
+				}
+				if (event == Event.COMPLETED) {
+					Coord<Integer> guess = guessTask.getResult().orElse(null);
+					if (guess != null) {
+						controller.getUserDimensions().setUserDimensions(guess);
+						onGuessed.accept(controller.getUserDimensions().getDimensions());
+					}
+				}
+			});
+		});
+		showProgress.start();
+		guessTask.start();
+	}
+
+	/**
+	 * Called when a map is opened with no dimensions available. If the data set doesn't
+	 * declare usable dimensions, we guess them if certain performance conditions are met.
+	 */
+	public static void guessOnOpen(LayerPanel tabPanel, MappingController controller) {
+		if (controller.getUserDimensions().hasUsableDeclaredDimensions()) {
+			return;
+		}
+		if (controller.rawDataController.getMapSize() > MapDimensionsController.AUTO_GUESS_MAX_SCANS) {
+			tabPanel.showToast("Map dimensions weren't provided by the data set.\nUse Guess in the dimensions settings to detect them.");
+			return;
+		}
+		guessDimensions(tabPanel, controller, guess ->
+			tabPanel.showToast("Map dimensions weren't provided, guessed " + guess.x + " × " + guess.y + ".\nCheck them in the dimensions settings.")
+		);
 	}
 	
 	private FluentButton makeResetDimensionsButton(MappingController controller) {

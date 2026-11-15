@@ -309,9 +309,12 @@ public class ApplyCommand implements Callable<Integer> {
 		System.err.println("    image size: " + size.x + "x" + size.y);
 		// Write the maps using the derived sizes
 		try (OutputStream os = new FileOutputStream(file)) {
-			StreamExecutor<Void> archiver = mapController.writeArchive(os, format, size.x, size.y,
+			StreamExecutor<IOException> archiver = mapController.writeArchive(os, format, size.x, size.y,
 					() -> (ExportableSurface) format.create(size));
-			archiver.run();
+			Optional<IOException> failure = archiver.run();
+			if (failure.isPresent()) {
+				throw failure.get();
+			}
 		}
 		System.err.println("    wrote " + file);
 		return ExitCodes.OK;
@@ -339,8 +342,7 @@ public class ApplyCommand implements Callable<Integer> {
 
 		
 		// Second source: from the dataset itself -- except if one dimension is 1 (likely wrong).
-		Coord<Integer> declared = mapController.getUserDimensions().getDimensions();
-		if (declared.x > 1 && declared.y > 1) {
+		if (mapController.getUserDimensions().hasUsableDeclaredDimensions()) {
 			return ExitCodes.OK;
 		}
 

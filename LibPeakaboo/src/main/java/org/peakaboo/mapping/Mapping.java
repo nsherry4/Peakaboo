@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.peakaboo.controller.plotter.data.DataController;
+import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultSetView;
 import org.peakaboo.curvefit.curve.fitting.FittingResultView;
 import org.peakaboo.curvefit.curve.fitting.FittingSet;
@@ -149,8 +151,49 @@ public class Mapping {
 	}
 	
 
+	/**
+	 * Generates a quick map of the raw counts in a single channel
+	 */
 	public static StreamExecutor<RawMapSet> quickMapTask(DataController data, int channel) {
-		
+		return quickMapTask(data, new Range(channel, channel), "Channel " + channel);
+	}
+
+	/**
+	 * Returns the channels within one FWHM centred on the energy of the given
+	 * channel. If there is no energy calibration, the range is just the given channel
+	 */
+	public static Range quickMapWindow(FittingParametersView params, int channel) {
+		EnergyCalibration calibration = params.getCalibration();
+		if (calibration.isZero()) {
+			return new Range(channel, channel);
+		}
+
+		float energy = calibration.energyFromChannel(channel);
+		float hwhm = quickMapWindowHalfWidth(params, channel);
+		int start = Math.max(0, calibration.channelFromEnergy(energy - hwhm));
+		int stop = Math.min(calibration.getDataWidth() - 1, calibration.channelFromEnergy(energy + hwhm));
+		return new Range(start, stop);
+	}
+
+	/** The half width (HWHM, in keV) of the window {@link #quickMapWindow} uses */
+	public static float quickMapWindowHalfWidth(FittingParametersView params, int channel) {
+		return params.getFWHM(params.getCalibration().energyFromChannel(channel)) / 2f;
+	}
+
+	/** Human-readable description for the quickMap window */
+	public static String quickMapWindowDescription(FittingParametersView params, int channel) {
+		float energy = params.getCalibration().energyFromChannel(channel);
+		return String.format("%.2f ± %.2f keV", energy, quickMapWindowHalfWidth(params, channel));
+	}
+
+	/**
+	 * Generates a quick map summed over the given inclusive range of channels.
+	 * @param label the name given to the resulting map
+	 */
+	public static StreamExecutor<RawMapSet> quickMapTask(DataController data, Range channels, String label) {
+
+		final int start = channels.getStart();
+		final int stop = channels.getStop();
 
 		
 		//worker task
@@ -186,7 +229,12 @@ public class Mapping {
 					translated = grid.getIndexFromXY(dataset.getDataSize().getDataCoordinatesAtIndex(index));
 				}
 				SpectrumView scan = ds.getScanData().get(index);
-				mapdata.set(translated, scan.get(channel));
+				if (scan == null) return;
+				float sum = 0;
+				for (int channel = start; channel <= stop; channel++) {
+					sum += scan.get(channel);
+				}
+				mapdata.set(translated, sum);
 			});
 			
 			long timePost = System.currentTimeMillis();
@@ -194,7 +242,7 @@ public class Mapping {
 			OneLog.log(Level.INFO, "Generated a QuickMap in " + timeDelta + " seconds");
 			
 			//build the RawMapSet now that the map Spectrum has been populated
-			RawMap rawmap = new RawMap(new DummyTransitionSeries("Channel " + channel), mapdata);
+			RawMap rawmap = new RawMap(new DummyTransitionSeries(label), mapdata);
 			return new RawMapSet(
 					Collections.singletonList(rawmap), 
 					mapsize, 

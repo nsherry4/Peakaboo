@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -25,10 +24,10 @@ import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 
 import org.peakaboo.framework.accent.Coord;
-import org.peakaboo.framework.cyclops.log.CyclopsLog;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceExporterRegistry;
 import org.peakaboo.framework.stratus.api.Spacing;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SaveFeedback;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.ui.fluentcontrols.button.FluentButton;
@@ -196,31 +195,31 @@ public class SavePicture extends JPanel {
 	}
 
 	private void saveSurfaceType(SurfaceDescriptor descriptor) {
-		
-		setEnabled(false);
-		Cursor oldCursor = getCursor();
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
 		var ext = new SimpleFileExtension(descriptor.title() + " (" + descriptor.extension() + ")", descriptor.extension().toLowerCase());
-		
+
 		StratusFilePanels.saveFile(owner, "Save Picture As...", startingFolder, ext, result -> {
 			if (!result.isPresent()) { return; }
-			
-			try {
-				OutputStream os = new FileOutputStream(result.get());
-				controller.write(descriptor, os, new Coord<>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
-				os.close();
 
-				startingFolder = result.get().getParentFile();
-				onComplete.accept(result);
-				
+			// Only busy once there's a file to write, so cancelling leaves the panel as it was
+			setEnabled(false);
+			Cursor oldCursor = getCursor();
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+
+			try (OutputStream os = new FileOutputStream(result.get())) {
+				controller.write(descriptor, os, new Coord<>(dimensionPicker.getDimensionWidth(), dimensionPicker.getDimensionHeight()));
 			} catch (IOException e) {
-				CyclopsLog.get().log(Level.SEVERE, "Failed to save image", e);
+				SaveFeedback.failed(owner, result.get(), e);
+				return;
 			} finally {
 				hide();
 				setCursor(oldCursor);
 				setEnabled(true);
 			}
+
+			startingFolder = result.get().getParentFile();
+			onComplete.accept(result);
+			SaveFeedback.succeeded(owner, result.get());
 		});
 
 	}

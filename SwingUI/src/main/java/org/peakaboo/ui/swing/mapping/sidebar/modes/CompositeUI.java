@@ -2,10 +2,13 @@ package org.peakaboo.ui.swing.mapping.sidebar.modes;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -29,6 +32,10 @@ class CompositeUI extends JPanel {
 	
 	private CompositeModeController modeController() {
 		return (CompositeModeController) viewController.getModeController(CompositeMapMode.MODE_NAME).get();
+	}
+
+	private boolean isSoloed(ITransitionSeries ts) {
+		return modeController().getSoloed().map(ts::equals).orElse(false);
 	}
 	
 	
@@ -113,9 +120,28 @@ class CompositeUI extends JPanel {
 		table.setShowHorizontalLines(false);
 		table.setFillsViewportHeight(true);
 		
-		MapFittingRenderer renderer = new MapFittingRenderer(ts -> true);
+		// While soloed, everything but the soloed fitting is muted
+		MapFittingRenderer renderer = new MapFittingRenderer(
+				ts -> modeController().getSoloed().isEmpty() || isSoloed(ts),
+				ts -> isSoloed(ts) ? "Double-click to restore the previous fittings" : "Double-click to show only this fitting"
+			);
 		table.getColumnModel().getColumn(1).setCellRenderer(renderer);
 		table.setRowHeight(renderer.getPreferredSize().height);
+
+		// Double-clicking a fitting's name solos it. The checkbox column is left
+		// out since a double-click there would also toggle the box twice.
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (!SwingUtilities.isLeftMouseButton(e) || e.getClickCount() != 2) { return; }
+				int row = table.rowAtPoint(e.getPoint());
+				if (row < 0 || table.columnAtPoint(e.getPoint()) != 1) { return; }
+				modeController().solo(viewController.getAllTransitionSeries().get(row));
+			}
+		});
+
+		// Keep the checkboxes and muting in step with visibility changes made from elsewhere, eg All/None
+		modeController().addListener(table::repaint);
 		
 		TableColumn column = null;
 		column = table.getColumnModel().getColumn(0);

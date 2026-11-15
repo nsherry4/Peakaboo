@@ -48,14 +48,14 @@ public class QuickMapPanel extends HeaderLayer {
 	public QuickMapPanel(
 			LayerPanel plotTab, 
 			TabbedInterface<TabbedLayerPanel> plotTabs, 
-			int channel, 
-			RawMapSet maps, 
+			String subject,
+			RawMapSet maps,
 			Mutable<SavedMapSession> previousMapSession,
 			PlotController plotcontroller
 	) {
 		super(plotTab, true, true);
-		
-		String mapTitle = "QuickMap of Channel " + channel;
+
+		String mapTitle = "QuickMap of " + subject;
 		
 		RawDataController rawDataController = new RawDataController();
 		DataSet sourceDataset = plotcontroller.data().getDataSet();
@@ -137,7 +137,13 @@ public class QuickMapPanel extends HeaderLayer {
 				});
 			}
 		});
-		
+
+		if (session == null) {
+			// Nothing remembered from an earlier map, so we may need to work out the
+			// dimensions. Deferred so the panel can be shown before guessing.
+			SwingUtilities.invokeLater(() -> MapDimensionsPanel.guessOnOpen(plotTab, controller));
+		}
+
 	}
 	
 	public FluentToolbarButton createSizingButton(LayerPanel panel, MappingController controller) {

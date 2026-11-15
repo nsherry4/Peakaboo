@@ -14,8 +14,8 @@ import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -28,7 +28,6 @@ import org.peakaboo.controller.mapper.MapUpdateType;
 import org.peakaboo.controller.mapper.MappingController;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.Coord;
-import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
@@ -39,6 +38,7 @@ import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener;
 import org.peakaboo.framework.stratus.api.hookins.DraggingScrollPaneListener.Buttons;
 import org.peakaboo.framework.stratus.components.Banner;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SaveFeedback;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.panels.BodyShadowPanel;
 import org.peakaboo.framework.stratus.components.panels.ClearPanel;
@@ -251,13 +251,13 @@ public class MapperPanel extends TabbedLayerPanel {
 	}
 	
 	void actionSaveCSV(File file) {
-		try	{
-			FileOutputStream os = new FileOutputStream(file);
+		try (FileOutputStream os = new FileOutputStream(file)) {
 			controller.writeCSV(os);
-			os.close();
 		} catch (IOException e) {
-			OneLog.log(Level.SEVERE, "Error saving plot as csv", e);
+			SaveFeedback.failed(this, file, e);
+			return;
 		}
+		SaveFeedback.succeeded(this, file);
 	}
 	
 
@@ -280,7 +280,7 @@ public class MapperPanel extends TabbedLayerPanel {
 				try {
 					actionSaveArchive(file.get(), format, width, height);
 				} catch (IOException e) {
-					OneLog.log(Level.SEVERE, "Error saving maps as archive", e);
+					SaveFeedback.failed(this, file.get(), e);
 				}
 				
 				
@@ -292,13 +292,24 @@ public class MapperPanel extends TabbedLayerPanel {
 		FileOutputStream fos = new FileOutputStream(file);
 		
 		Supplier<ExportableSurface> surfaceFactory = () -> (ExportableSurface)format.create(new Coord<>(width, height));
-		StreamExecutor<Void> archiver = controller.writeArchive(fos, format, width, height, surfaceFactory);
+		StreamExecutor<IOException> archiver = controller.writeArchive(fos, format, width, height, surfaceFactory);
 		
 		TaskMonitorLayer layer = new TaskMonitorLayer(this, "Generating Archive", archiver);
 		archiver.addListener(event -> {
 			switch(event) {
-			case ABORTED, COMPLETED:
+			case ABORTED:
 				removeLayer(layer);
+				break;
+				
+			case COMPLETED:
+				removeLayer(layer);
+				// The archive's result is the failure which stopped it, if any
+				Optional<IOException> failure = archiver.getResult();
+				if (failure.isPresent()) {
+					SaveFeedback.failed(this, file, failure.get());
+				} else {
+					SaveFeedback.succeeded(this, file);
+				}
 				break;
 				
 			case PROGRESS:

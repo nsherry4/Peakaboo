@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing.mapping.sidebar;
 
 import java.awt.Component;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.JTable;
@@ -17,11 +18,21 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 
 	private FittedWidget tswidget;
 	private Predicate<ITransitionSeries> tsEnabled;
-	
-	
+	private Function<ITransitionSeries, String> tsHint;
+
+
 	public MapFittingRenderer(Predicate<ITransitionSeries> enabled){
-		tswidget = FittedWidget.medium();	
+		this(enabled, ts -> null);
+	}
+
+	/**
+	 * @param hint an extra line for each fitting's tooltip, eg describing what
+	 *             clicking on it does. May return null for no extra line.
+	 */
+	public MapFittingRenderer(Predicate<ITransitionSeries> enabled, Function<ITransitionSeries, String> hint){
+		tswidget = FittedWidget.medium();
 		this.tsEnabled = enabled;
+		this.tsHint = hint;
 	}
 
 	@Override
@@ -61,6 +72,10 @@ public class MapFittingRenderer extends DefaultTableCellRenderer
 						.map(Element::toString)
 						.reduce((a, b) -> a + ", " + b)
 						.orElse("");
+			}
+			String hint = tsHint.apply(ts);
+			if (hint != null) {
+				tooltip = "<html>" + tooltip + "<br>" + hint + "</html>";
 			}
 			tswidget.setToolTipText(tooltip);
 			

@@ -253,7 +253,8 @@ public class FiltersPanel extends JPanel {
 				layout.show(FiltersPanel.this, PANEL_FILTERS);
 			}
 		};
-		
+		controls.approveOnDoubleClick(tree);
+
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(tree, BorderLayout.CENTER);
 		panel.add(controls, BorderLayout.NORTH);

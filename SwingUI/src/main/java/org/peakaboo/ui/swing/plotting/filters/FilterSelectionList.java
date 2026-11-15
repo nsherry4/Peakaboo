@@ -107,7 +107,8 @@ class FilterSelectionList extends ClearPanel
 			}
 		};
 		controls.setOpaque(false);
-		
+		controls.approveOnDoubleClick(tree);
+
 		return controls;
 
 	}

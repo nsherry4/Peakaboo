@@ -163,6 +163,9 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 			fitting().load(saved.fittings);
 			view().getViewModel().copy(saved.view);
 			calibration().load(saved.extended);
+
+			// Flag this change to the fittings since we wholesale replaced the model
+			fittingController.updateListeners(true);
 		} finally {
 			undoController.suppress(wasSuppressed);
 		}
@@ -315,19 +318,22 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 	}
 	
 	
-	public void writeFitleredSpectrumToCSV(File saveFile) {
+	public void writeFitleredSpectrumToCSV(File saveFile) throws IOException {
 		SpectrumView spectrum = currentScan();
 		FilterSet filters = filtering().getActiveFilters();
 		spectrum = filters.applyFiltersUnsynchronized(spectrum, getFilterContext());
 		try (Writer writer = new OutputStreamWriter(new FileOutputStream(saveFile))) {
 			writer.write(spectrum.toString(", ") + "\n");
-		} catch (IOException e) {
-			OneLog.log(Level.SEVERE, "Failed to save fitted data", e);
 		}
 	}
-	
-	public ExecutorSet<Object> writeFitleredDataSetToCSV(File saveFile) {
-		
+
+	/**
+	 * Returns an {@link ExecutorSet} which writes every filtered spectrum to the
+	 * given CSV file. Its result is the {@link IOException} which stopped the
+	 * write, or null if there wasn't one.
+	 */
+	public ExecutorSet<IOException> writeFitleredDataSetToCSV(File saveFile) {
+
 		return PluralExecutor.build("Exporting Data", "Writing", (execset, exec) -> {
 			FilterSet filters = filtering().getActiveFilters();
 			ScanData data = data().getDataSet().getScanData();
@@ -352,7 +358,10 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 						count = 0;
 					}
 				}
-			} catch (Exception e) { 
+			} catch (IOException e) {
+				// An ordinary failure to write, the caller handles reporting it
+				return e;
+			} catch (Exception e) {
 				OneLog.log(Level.SEVERE, "Failed to save fitted data", e);
 				execset.aborted();
 			}
@@ -364,53 +373,51 @@ public class PlotController extends EventfulType<PlotUpdateType> implements Auto
 	
 	
 
-	public void writeFittingInformation(OutputStream os) {
-		
-		List<ITransitionSeries> tss = fitting().getFittedTransitionSeries();
-		
-		try {
-			// get an output stream to write the data to
-			OutputStreamWriter osw = new OutputStreamWriter(os);
-			DetectorProfile profile = calibration().getDetectorProfile();
-			
-			//header
-			osw.write("Fitting, Intensity (Raw), Area (Raw)");
-			if (calibration().hasDetectorProfile()) {
-				osw.write(", Intensity (Calibrated with " + profile.getName() + "), Area (Calibrated with " + profile.getName() + ")");
-			}
-			osw.write("\n");
-			
-			// write out the data
-			float intensity, area;
-			for (ITransitionSeries ts : tss) {
+	/**
+	 * Writes the visible fittings' intensities and areas as CSV. The stream is
+	 * flushed but not closed, since the archive writer reuses it.
+	 */
+	public void writeFittingInformation(OutputStream os) throws IOException {
 
-				if (ts.isVisible()) {
-					intensity = fitting().getTransitionSeriesIntensity(ts);
-					area = fitting().getFittingResultForTransitionSeries(ts).getFitSum();
-					
-					//write uncalibrated data
+		List<ITransitionSeries> tss = fitting().getFittedTransitionSeries();
+
+		// get an output stream to write the data to
+		OutputStreamWriter osw = new OutputStreamWriter(os);
+		DetectorProfile profile = calibration().getDetectorProfile();
+
+		//header
+		osw.write("Fitting, Intensity (Raw), Area (Raw)");
+		if (calibration().hasDetectorProfile()) {
+			osw.write(", Intensity (Calibrated with " + profile.getName() + "), Area (Calibrated with " + profile.getName() + ")");
+		}
+		osw.write("\n");
+
+		// write out the data
+		float intensity, area;
+		for (ITransitionSeries ts : tss) {
+
+			if (ts.isVisible()) {
+				intensity = fitting().getTransitionSeriesIntensity(ts);
+				area = fitting().getFittingResultForTransitionSeries(ts).getFitSum();
+
+				//write uncalibrated data
+				osw.write(
+						ts.toString() +
+						", " + SigDigits.roundFloatTo(intensity, 2) +
+						", " + SigDigits.roundFloatTo(area, 2)
+					);
+
+				//write calibrated data if we have it in this profile for this TS
+				if (profile.contains(ts)) {
 					osw.write(
-							ts.toString() +
-							", " + SigDigits.roundFloatTo(intensity, 2) + 
-							", " + SigDigits.roundFloatTo(area, 2)
+							", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) +
+							", " + SigDigits.roundFloatTo(profile.calibrate(area, ts), 2)
 						);
-					
-					//write calibrated data if we have it in this profile for this TS
-					if (profile.contains(ts)) {
-						osw.write(
-								", " + SigDigits.roundFloatTo(profile.calibrate(intensity, ts), 2) +
-								", " + SigDigits.roundFloatTo(profile.calibrate(area, ts), 2)
-							);
-					}
-					osw.write("\n");
 				}
+				osw.write("\n");
 			}
-			osw.flush();
 		}
-		catch (IOException e)
-		{
-			OneLog.log(Level.SEVERE, "Failed to save fitting information", e);
-		}
+		osw.flush();
 	}
 		
 	/** Write the AIO zip: plot, fitting info, and session. */

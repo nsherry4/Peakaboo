@@ -1,6 +1,7 @@
 package org.peakaboo.ui.swing.plotting;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -33,6 +34,7 @@ import org.peakaboo.controller.plotter.data.DataLoader;
 import org.peakaboo.controller.plotter.fitting.AutoEnergyCalibration;
 import org.peakaboo.controller.session.v2.SavedSession;
 import org.peakaboo.curvefit.curve.fitting.EnergyCalibration;
+import org.peakaboo.curvefit.curve.fitting.FittingParametersView;
 import org.peakaboo.curvefit.peak.transition.ITransitionSeries;
 import org.peakaboo.dataset.DataSet;
 import org.peakaboo.dataset.io.DataInputAdapter;
@@ -50,6 +52,7 @@ import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.Coord;
 import org.peakaboo.framework.accent.Pair;
 import org.peakaboo.framework.accent.log.OneLog;
+import org.peakaboo.framework.accent.numeric.Range;
 import org.peakaboo.framework.cyclops.visualization.backend.awt.SavePicture;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.plural.executor.ExecutorSet;
@@ -69,6 +72,7 @@ import org.peakaboo.framework.stratus.api.hookins.FileDrop;
 import org.peakaboo.framework.stratus.api.icons.IconFactory;
 import org.peakaboo.framework.stratus.api.icons.StockIcon;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.SimpleFileExtension;
+import org.peakaboo.framework.stratus.components.dialogs.fileio.SaveFeedback;
 import org.peakaboo.framework.stratus.components.dialogs.fileio.StratusFilePanels;
 import org.peakaboo.framework.stratus.components.panels.BlankMessagePanel;
 import org.peakaboo.framework.stratus.components.panels.BodyShadowPanel;
@@ -251,6 +255,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 				}
 			}
 		});
+		bindZoomKeys();
 
 		statusBar = new PlotStatusBar(controller, this);
 
@@ -371,9 +376,55 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		// Consume the event immediately to prevent default scrolling behavior
 		e.consume();
 
+		// Scroll up = zoom in, scroll down = zoom out
+		zoomBy(e.getWheelRotation() < 0 ? 1 : -1, e.getX());
+	}
+
+	// Each Ctrl+plus/minus press is worth this many mouse wheel notches
+	private static final int KEYBOARD_ZOOM_STEPS = 3;
+
+	private void bindZoomKeys() {
+		// Plus is a shifted equals on many layouts and a key of its own on others,
+		// so we take every way of typing it, plus the keypad
+		InputMap inputs = getInputMap(WHEN_IN_FOCUSED_WINDOW);
+		int ctrl = ActionEvent.CTRL_MASK;
+		inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, ctrl), "zoom-in");
+		inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, ctrl | ActionEvent.SHIFT_MASK), "zoom-in");
+		inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, ctrl), "zoom-in");
+		inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, ctrl), "zoom-in");
+		inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, ctrl), "zoom-out");
+		inputs.put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, ctrl), "zoom-out");
+
+		getActionMap().put("zoom-in", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				zoomFromKeyboard(KEYBOARD_ZOOM_STEPS);
+			}
+		});
+		getActionMap().put("zoom-out", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				zoomFromKeyboard(-KEYBOARD_ZOOM_STEPS);
+			}
+		});
+	}
+
+	private void zoomFromKeyboard(int steps) {
+		if (!controller.data().hasDataSet()) {
+			return;
+		}
+		// No pointer to zoom around, so hold the middle of the visible plot in place
+		zoomBy(steps, canvas.getVisibleRect().width / 2);
+	}
+
+	/**
+	 * Zooms the plot in (positive steps) or out (negative steps) by the same
+	 * amount as that many mouse wheel notches, keeping the data under the given
+	 * viewport x position where it is
+	 */
+	private void zoomBy(int steps, int anchorX) {
 		// Get current zoom level and calculate new zoom
 		float currentZoom = controller.view().getZoom();
-		int wheelRotation = e.getWheelRotation();
 
 		// Adaptive zoom factor: larger changes when zoomed out, smaller when zoomed in
 		// Uses inverse scaling across full zoom range (0.1 to 10.0)
@@ -382,14 +433,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		float zoomScale = 4.0f / (1.0f + currentZoom * 0.3f);
 		float adaptiveFactor = 1.0f + (baseZoomFactor - 1.0f) * zoomScale;
 
-		float newZoom;
-		if (wheelRotation < 0) {
-			// Scroll up = zoom in
-			newZoom = currentZoom * adaptiveFactor;
-		} else {
-			// Scroll down = zoom out
-			newZoom = currentZoom / adaptiveFactor;
-		}
+		float newZoom = currentZoom * (float) Math.pow(adaptiveFactor, steps);
 
 		// Clamp zoom to valid range using ViewController constants
 		newZoom = Math.max(ViewController.ZOOM_MIN, Math.min(ViewController.ZOOM_MAX, newZoom));
@@ -402,10 +446,9 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		// Get current state before zoom
 		Rectangle visibleRect = canvas.getVisibleRect();
 		Dimension currentSize = canvas.getPreferredSize();
-		int mouseViewportX = e.getX();
 
-		// Calculate what fraction of the total canvas width the mouse is pointing to
-		double mouseFraction = (double)(visibleRect.x + mouseViewportX) / currentSize.width;
+		// Calculate what fraction of the total canvas width the anchor is pointing to
+		double anchorFraction = (double)(visibleRect.x + anchorX) / currentSize.width;
 
 		// Apply the new zoom
 		controller.view().setZoom(newZoom);
@@ -418,10 +461,10 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		Dimension newSize = canvas.getPreferredSize();
 
 		// Calculate where that same data point (fraction) should be in the new canvas
-		int newMouseCanvasX = (int)(mouseFraction * newSize.width);
+		int newAnchorCanvasX = (int)(anchorFraction * newSize.width);
 
-		// Calculate new scroll position to keep the mouse pointing to the same data point
-		int newScrollX = newMouseCanvasX - mouseViewportX;
+		// Calculate new scroll position to keep the anchor on the same data point
+		int newScrollX = newAnchorCanvasX - anchorX;
 
 		// Ensure we don't scroll beyond bounds
 		int maxScrollX = Math.max(0, newSize.width - visibleRect.width);
@@ -557,11 +600,32 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 
 	public void actionExportData(DataSource source, DataSink sink, File file) {
 		var output = new PathDataOutputAdapter(file.toPath());
-		ExecutorSet<Void> writer = DataSink.write(sink, new DataSinkContext(source, output));
+		ExecutorSet<Exception> writer = DataSink.write(sink, new DataSinkContext(source, output));
 		output.close();
 		ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, writer);
+		reportWhenDone(writer, file);
 		pushLayer(layer);
 		writer.startWorking();
+	}
+
+	/**
+	 * Reports how a background export went once it finishes. The executor's
+	 * result is the exception which stopped the write, or null if it worked. A
+	 * cancelled export gets neither a toast nor a message.
+	 */
+	private void reportWhenDone(ExecutorSet<? extends Exception> execset, File file) {
+		execset.addListener(() -> {
+			// Listeners also hear about progress and abort requests
+			if (!execset.isResultSet()) {
+				return;
+			}
+			Exception failure = execset.getResult();
+			if (failure != null) {
+				SaveFeedback.failed(this, file, failure);
+			} else if (execset.getCompleted() && !execset.isAborted()) {
+				SaveFeedback.succeeded(this, file);
+			}
+		});
 	}
 
 	public void actionMap() {
@@ -673,8 +737,10 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 			os.write(session.getBytes(StandardCharsets.UTF_8));
 			controller.history().setSavePoint();
 		} catch (IOException e) {
-			OneLog.log(Level.SEVERE, "Failed to save session", e);
+			SaveFeedback.failed(this, file, e);
+			return;
 		}
+		SaveFeedback.succeeded(this, file);
 	}
 
 	public void actionSavePicture() {
@@ -712,8 +778,10 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			controller.writeArchive(fos, format, new Coord<Integer>(width, height));
 		} catch (IOException e) {
-			OneLog.log(Level.SEVERE, "Could not save archive", e);
+			SaveFeedback.failed(this, file, e);
+			return;
 		}
+		SaveFeedback.succeeded(this, file);
 	}
 
 	public void actionSaveFilteredDataSet() {
@@ -725,15 +793,18 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 					}
 					controller.io().setLastFolder(saveFile.get().getParentFile());
 
-					ExecutorSet<Object> execset = controller.writeFitleredDataSetToCSV(saveFile.get());
+					ExecutorSet<IOException> execset = controller.writeFitleredDataSetToCSV(saveFile.get());
 
 					ExecutorSetViewLayer layer = new ExecutorSetViewLayer(this, execset);
 
+					// Don't leave a partial file behind
 					execset.addListener(() -> {
-						if (execset.isAborted()) {
+						boolean failed = execset.isResultSet() && execset.getResult() != null;
+						if (execset.isAborted() || failed) {
 							saveFile.get().delete();
 						}
 					});
+					reportWhenDone(execset, saveFile.get());
 
 					pushLayer(layer);
 					execset.startWorking();
@@ -749,7 +820,13 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 						return;
 					}
 					controller.io().setLastFolder(saveFile.get().getParentFile());
-					controller.writeFitleredSpectrumToCSV(saveFile.get());
+					try {
+						controller.writeFitleredSpectrumToCSV(saveFile.get());
+					} catch (IOException e) {
+						SaveFeedback.failed(this, saveFile.get(), e);
+						return;
+					}
+					SaveFeedback.succeeded(this, saveFile.get());
 				});
 	}
 
@@ -762,13 +839,13 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 					}
 					controller.io().setLastFolder(file.get().getParentFile());
 
-					try {
-						FileOutputStream os = new FileOutputStream(file.get());
+					try (FileOutputStream os = new FileOutputStream(file.get())) {
 						controller.writeFittingInformation(os);
-						os.close();
 					} catch (IOException e) {
-						OneLog.log(Level.SEVERE, "Failed to save fitting information", e);
+						SaveFeedback.failed(this, file.get(), e);
+						return;
 					}
+					SaveFeedback.succeeded(this, file.get());
 
 				});
 
@@ -968,7 +1045,22 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 	}
 
 	public void actionQuickMap(int channel) {
-		StreamExecutor<RawMapSet> quickmapper = Mapping.quickMapTask(controller.data(), channel);
+		runQuickMap(Mapping.quickMapTask(controller.data(), channel), "Channel " + channel);
+	}
+
+	/**
+	 * Quick maps the counts summed over one FWHM around the energy at the given
+	 * channel, which is much less noisy than a single channel
+	 */
+	public void actionQuickMapWindow(int channel) {
+		FittingParametersView params = controller.fitting().getFittingSelections().getFittingParameters();
+		Range channels = Mapping.quickMapWindow(params, channel);
+		String label = Mapping.quickMapWindowDescription(params, channel);
+		String subject = String.format("%s (Channels %d-%d)", label, channels.getStart(), channels.getStop());
+		runQuickMap(Mapping.quickMapTask(controller.data(), channels, label), subject);
+	}
+
+	private void runQuickMap(StreamExecutor<RawMapSet> quickmapper, String subject) {
 		var layer = new TaskMonitorLayer(this, "Generating Quick Map", quickmapper);
 		pushLayer(layer);
 
@@ -982,7 +1074,7 @@ public class PlotPanel extends TabbedLayerPanel implements AutoCloseable {
 					removeLayer(layer);
 					var result = quickmapper.getResult();
 					if (result.isPresent()) {
-						QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, channel, result.get(), mapSession, controller);
+						QuickMapPanel maplayer = new QuickMapPanel(this, this.tabs, subject, result.get(), mapSession, controller);
 						this.pushLayer(maplayer);
 					}
 					break;

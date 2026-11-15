@@ -117,9 +117,14 @@ public class LayerPanel extends JLayeredPane {
 	 */
 	public void pushLayer(Layer layer) {
 		layer.getContent().setFocusCycleRoot(true);
+
+		// Go one above the current top layer. Using the stack size instead would reuse
+		// a z position whenever a lower layer (eg the toasts) removes itself, and Swing
+		// would then draw the new layer underneath the one already there.
+		int z = layers.isEmpty() ? 201 : getLayer(layers.peek().getJLayer()) + 1;
 		layers.push(layer);
-		
-		this.add(layer.getJLayer(), new StackConstraints(layers.size()+200, "modal-layer-" + layers.size()));
+
+		this.add(layer.getJLayer(), new StackConstraints(z, "modal-layer-" + layers.size()));
 		
 		layer.getJLayer().requestFocus();
 		updateScreen();

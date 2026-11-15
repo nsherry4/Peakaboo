@@ -7,7 +7,6 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -29,7 +28,6 @@ import org.peakaboo.display.map.Mapper;
 import org.peakaboo.display.map.modes.composite.CompositeMapMode;
 import org.peakaboo.framework.accent.Mutable;
 import org.peakaboo.framework.accent.Coord;
-import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.visualization.ExportableSurface;
 import org.peakaboo.framework.cyclops.visualization.descriptor.SurfaceDescriptor;
 import org.peakaboo.framework.eventful.EventfulType;
@@ -199,14 +197,19 @@ public class MappingController extends EventfulType<MapUpdateType>
 		return new Coord<>((int)Math.ceil(natural.x), (int)Math.ceil(natural.y));
 	}
 
-	public StreamExecutor<Void> writeArchive(OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
+	/**
+	 * Returns a {@link StreamExecutor} which writes a composite map for each fitting,
+	 * plus the session, to a zip archive. Its result is the {@link IOException} which
+	 * stopped the write, if there was one.
+	 */
+	public StreamExecutor<IOException> writeArchive(OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
 		//we make a copy of the controller to prevent spamming the UI with changes as we generate map after map
 		MappingController exportController = new MappingController(this.rawDataController, this.plotcontroller);
 		new SavedMapSession().storeFrom(this).loadInto(exportController);
 		return writeArchive(exportController, fos, format, width, height, surfaceFactory);
 	}
 	
-	private static StreamExecutor<Void> writeArchive(MappingController controller, OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
+	private static StreamExecutor<IOException> writeArchive(MappingController controller, OutputStream fos, SurfaceDescriptor format, int width, int height, Supplier<ExportableSurface> surfaceFactory) throws IOException {
 		final ZipOutputStream zos = new ZipOutputStream(fos);
 		
 		List<ITransitionSeries> tss = controller.getFitting().getAllTransitionSeries();
@@ -218,9 +221,9 @@ public class MappingController extends EventfulType<MapUpdateType>
 		 * per-element overlays/ratios doesn't make a lot of sense.
 		 */
 		Coord<Integer> size = new Coord<>(width, height);
-		Mutable<Exception> exceptionBox = new Mutable<>();
+		Mutable<IOException> exceptionBox = new Mutable<>();
 		
-		StreamExecutor<Void> archiver = new StreamExecutor<>("Exporting Map Data", 1);
+		StreamExecutor<IOException> archiver = new StreamExecutor<>("Exporting Map Data", 1);
 		archiver.setParallel(false);
 		archiver.setTask(tss, tsStream -> {
 			
@@ -250,11 +253,8 @@ public class MappingController extends EventfulType<MapUpdateType>
 				}
 			}
 			
-			if (exceptionBox.get() != null) {
-				OneLog.log(Level.SEVERE, "Failed to generate archive", exceptionBox.get());
-			}
-			
-			return null;
+			// An ordinary failure to write, the caller handles reporting it
+			return exceptionBox.get();
 		});
 		
 		return archiver;
