@@ -12,12 +12,12 @@ public class LinearTickGenerator implements TickGenerator {
 		int magnitude = (int) Math.ceil(Math.log10(1+maxValue));
 		
 		int stepsDown = 1;
-		List<Integer> ticks = null;
+		List<Integer> ticks = new ArrayList<>();
 		while (stepsDown < STEPS.length * 3) {
 			// a value less than 1 rounds down to an existing tick, skip it
 			if (calcMultiplier(magnitude, stepsDown) < 1) break;
 			var maybeTicks = getTicksByMagitude(magnitude, stepsDown, maxValue);
-			if (maybeTicks.size() <= maxTicks || ticks == null) {
+			if (maybeTicks.size() <= maxTicks || ticks.isEmpty()) {
 				ticks = maybeTicks;
 			} else if (maybeTicks.size() > maxTicks) {
 				return ticks;

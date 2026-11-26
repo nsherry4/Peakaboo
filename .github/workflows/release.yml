@@ -66,6 +66,7 @@ jobs:
       with:
         java-version: 21
         distribution: 'temurin'
+        check-latest: true
 
     - name: Download Jars
       uses: actions/download-artifact@v8
@@ -107,6 +108,7 @@ jobs:
       with:
         java-version: 21
         distribution: 'temurin'
+        check-latest: true
 
     - name: Download Jars
       uses: actions/download-artifact@v8
@@ -141,6 +143,7 @@ jobs:
       with:
         java-version: 21
         distribution: 'temurin'
+        check-latest: true
 
     - name: Introspect system
       run: uname -a
@@ -183,6 +186,7 @@ jobs:
       with:
         java-version: 21
         distribution: 'temurin'
+        check-latest: true
 
     - name: Introspect system
       run: uname -a
@@ -235,6 +239,7 @@ jobs:
       with:
         java-version: 21
         distribution: 'temurin'
+        check-latest: true
 
     - name: Introspect jpackage
       run: which jpackage.exe && jpackage.exe --version

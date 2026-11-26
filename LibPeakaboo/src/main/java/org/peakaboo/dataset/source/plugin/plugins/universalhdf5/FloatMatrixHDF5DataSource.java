@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.peakaboo.app.PeakabooConfiguration;
 import org.peakaboo.app.PeakabooConfiguration.MemorySize;
@@ -12,6 +13,7 @@ import org.peakaboo.dataset.source.model.DataSource;
 import org.peakaboo.dataset.source.model.DataSourceReadException;
 import org.peakaboo.dataset.source.model.components.datasize.DataSize;
 import org.peakaboo.dataset.source.model.components.datasize.SimpleDataSize;
+import org.peakaboo.framework.accent.log.OneLog;
 import org.peakaboo.framework.cyclops.spectrum.ArraySpectrum;
 import org.peakaboo.framework.cyclops.spectrum.Spectrum;
 import org.peakaboo.framework.cyclops.spectrum.SpectrumCalculations;
@@ -80,6 +82,11 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 			Map<String, Spectrum> livetimes = new HashMap<>();
 			for (String dataPath : dataPaths) {
 				Spectrum livetime = getDeadtimes(dataPath, reader);
+				// If any livetime is not within the proper range (including NaNs), generate a warning in the log
+				long invalid = livetime.stream().filter(f -> !(f >= 0f && f < 1f)).count();
+				if (invalid > 0) {
+					OneLog.log(Level.WARNING, invalid + " points in '" + dataPath + "' have an invalid deadtime value and were not corrected");
+				}
 				SpectrumCalculations.subtractListFrom_inplace(livetime, 1, 0);
 				livetimes.put(dataPath, livetime);
 			}
@@ -214,8 +221,8 @@ public abstract class FloatMatrixHDF5DataSource extends SimpleHDF5DataSource {
 			}
 		}
 		Spectrum scan = new ArraySpectrum(data, false);
-		//deadtime correction (livetime == 1 means no correction, a cheap no-op to skip)
-		if (livetime != 1f) {
+		// Deadtime correction, skip if livetime is 1 (noop) or invalid
+		if (livetime > 0f && livetime < 1f) {
 			SpectrumCalculations.divideBy_inplace(scan, livetime);
 		}
 		return scan;

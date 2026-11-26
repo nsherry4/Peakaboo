@@ -152,25 +152,27 @@ public class PlotDrawing extends Drawing
 
 		context.setLineWidth(getPenWidth());
 		
+		Coord<Bounds<Float>> axisBounds = getPlotOffsetFromBottomLeft();
+		Bounds<Float> availableX = axisBounds.x, availableY = axisBounds.y;
+		
 		context.save();
-	
-			Coord<Bounds<Float>> axisBounds = getPlotOffsetFromBottomLeft();
-			Bounds<Float> availableX = axisBounds.x, availableY = axisBounds.y;
-			plotSize = new Coord<>(availableX.end - availableX.start + 1, availableY.end - availableY.start + 1); 
+		try {
+			
+			plotSize = new Coord<>(availableX.end - availableX.start + 1, availableY.end - availableY.start + 1);
 			if (plotSize.x <= 0 || plotSize.y <= 0) return;
 			
 			// transform to get out past the x axis
 			// we can't scale to make the region fit in the imageHeight/Width values
 			// since the fonts get all squishy
 			context.translate(availableX.start, availableY.start);
-	
+			
 			// clip the region so that we can't draw outside of it
 			context.rectAt(0, 0, plotSize.x, plotSize.y);
 			context.clip();
-	
+			
 			// Draw extensions which request being in front of plot
 			if (painters != null) {
-	
+				
 				for (PlotPainter painter : painters) {
 					try {
 						painter.draw(new PainterData(context, dr, plotSize, dataHeights));
@@ -178,19 +180,21 @@ public class PlotDrawing extends Drawing
 						CyclopsLog.get().log(Level.SEVERE, "Failed to draw painter " + painter.getSourceName(), e);
 					}
 				}
-	
+				
 			}
-
+			
 			if (debugMode) {
 				context.rectAt(0, 0, plotSize.x, plotSize.y);
 				context.setSource(0x80a40000);
 				context.fill();
 			}
-
-		context.restore();
+			
+		} finally {
+			context.restore();
+		}
 
 		context.save();
-			
+		try {
 			availableX = new Bounds<>(0.0f, dr.imageWidth);
 			availableY = new Bounds<>(0.0f, dr.imageHeight);
 			if (axisPainters != null) {
@@ -198,16 +202,16 @@ public class PlotDrawing extends Drawing
 				
 				Pair<Float, Float> axisSizeX, axisSizeY;
 				
-				for (AxisPainter axisPainter : axisPainters){
-				
-					axisPainter.setDimensions( 
+				for (AxisPainter axisPainter : axisPainters) {
+					
+					axisPainter.setDimensions(
 							
 							new Bounds<>(availableX.start, availableX.end),
 							new Bounds<>(availableY.start, availableY.end)
-							
+					
 					);
 					
-					try{
+					try {
 						axisPainter.draw(new PainterData(context, dr, plotSize, dataHeights));
 					} catch (Exception e) {
 						CyclopsLog.get().log(Level.WARNING, "Axis Painter " + axisPainter.getSourceName() + " Failed", e);
@@ -216,7 +220,7 @@ public class PlotDrawing extends Drawing
 					
 					axisSizeX = axisPainter.getAxisSizeX(new PainterData(context, dr, plotSize, dataHeights));
 					axisSizeY = axisPainter.getAxisSizeY(new PainterData(context, dr, plotSize, dataHeights));
-	
+					
 					availableX.start += axisSizeX.first;
 					availableX.end -= axisSizeX.second;
 					availableY.start += axisSizeY.first;
@@ -233,15 +237,15 @@ public class PlotDrawing extends Drawing
 					context.setSource(0x800000a4);
 					context.rectAt(0, availableY.end, dr.imageWidth, dr.imageHeight - availableY.end);
 					context.fill();
-				
+					
 				}
-				
 				
 				
 			}
 			
-
-		context.restore();
+		} finally {
+			context.restore();
+		}
 
 		return;
 	}

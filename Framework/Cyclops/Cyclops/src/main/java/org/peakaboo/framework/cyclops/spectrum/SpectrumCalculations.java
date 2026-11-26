@@ -326,7 +326,7 @@ public class SpectrumCalculations
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!minIsNaN && value < minimum) newvalue = minimum;
+			if (!minIsNaN && newvalue < minimum) newvalue = minimum;
 			result.set(i, newvalue);
 		}
 
@@ -362,7 +362,7 @@ public class SpectrumCalculations
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = source.get(i) - value;
-			if (!minIsNaN && value < minimum) newvalue = minimum;
+			if (!minIsNaN && newvalue < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 
@@ -398,7 +398,7 @@ public class SpectrumCalculations
 		for (int i = 0; i < source.size(); i++)
 		{
 			newvalue = value - source.get(i);
-			if (!minIsNaN && value < minimum) newvalue = minimum;
+			if (!minIsNaN && newvalue < minimum) newvalue = minimum;
 			target.set(i, newvalue);
 		}
 
